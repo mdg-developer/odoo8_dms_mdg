@@ -178,18 +178,17 @@ class mobile_sale_import(osv.osv):
                             DiscountAmount_i = i
                         elif header_field == 'deductionamount':
                             DeductionAmount_i = i
-
                         elif header_field == 'orderreference':
                             OrderRefNo_i = i
-#                         elif header_field == 'Tax':
-#                             Tax_i=i                               
+                        elif header_field == 'tax':
+                            Tax_i=i                               
                       
                     for f in [(OrderRefNo_i, 'orderreference'), (DiscountAmount_i, 'discountamount'), (CustomerCode_i, 'customercode'),
                               (SalemanName_i, 'salemanname'), (SalePlanDay_i, 'saleplanday'), (SalePlanTrip_i, 'saleplantrip'),
                               (Date_i, 'date'), (PaymentType_i, 'paymenttype'), (DeliverRemark_i, 'deliverremark'),
                               (Discount_i, 'discount(%)'), (DeductionAmount_i, 'deductionamount'), (PriceList_i, 'pricelist'),
                               (Paid_i, 'paid'), (Void_i, 'void'), (Products_i, 'product'), (Quantity_i, 'quantity(pcs)'), (UnitPrice_i, 'unitprice'),
-                              (SaleTeam_i, 'saleteam'), (PaymentTerm_i, 'paymentterm')]:
+                              (SaleTeam_i, 'saleteam'), (Tax_i, 'Tax'),(PaymentTerm_i, 'paymentterm')]:
                         if not isinstance(f[0], int):
                             err_log += '\n' + _("Invalid Excel file, Header '%s' is missing !") % f[1]                           
 
@@ -225,6 +224,7 @@ class mobile_sale_import(osv.osv):
                     import_vals['discountamount'] = ln[DiscountAmount_i]
       
                     import_vals['orderreference'] = ln[OrderRefNo_i]
+                    import_vals['Tax']=ln[Tax_i]
                     amls.append(import_vals)
                     
         if err_log:
@@ -233,140 +233,192 @@ class mobile_sale_import(osv.osv):
         else:
             order_id = None
             #fordelete
-            for aml in amls:
-                order_ids = pricelist_ids = payment_term_ids = uom_ids = partner_ids = _tax = _foc = _state = analytic_id = pricelist_id = partner_id = country_id = saleperson_id = warehouse_id = product_id = user_id = sale_plan_day_id = sale_plan_trip_id = section_id = payment_term_id = _duedate = None
-                void = secObj = orderRef = partner_code = payment_type = delivery_remark = saleperson_name = sale_plan_day_name = sale_plan_trip_name = section_name = payment_term_name = pricelist_name = date = pricelist_name = so_partner_id=so_date=so_ref=None
-               # product_code = aml['ProductsCODE']
-                discount_amount = qty_pcs = unit_price = discount = deduct_amt = numberOfDays = 0
-                if aml['product']: 
-                    products = str(aml['product']).strip()
-                if products:
-                    products_name = products  # '['+product_code+'] '+ 
-                
-                if aml['orderreference']:
-                    orderRef = str(aml['orderreference']).strip()
-                if aml['customercode']:
-                    partner_code = str(aml['customercode']).strip()
+            try : 
+                for aml in amls:
+                    order_ids = pricelist_ids = payment_term_ids = uom_ids = partner_ids = _tax = _foc = _state = analytic_id = pricelist_id = partner_id = country_id = saleperson_id = warehouse_id = product_id = user_id = sale_plan_day_id = sale_plan_trip_id = section_id = payment_term_id = _duedate = None
+                    void = secObj = orderRef = partner_code = branch_id=payment_type = delivery_remark = saleperson_name = sale_plan_day_name = sale_plan_trip_name = section_name = payment_term_name = pricelist_name = date = pricelist_name = so_partner_id=so_date=so_ref=None
+                   # product_code = aml['ProductsCODE']
+                    discount_amount = qty_pcs = unit_price = discount = deduct_amt = numberOfDays = 0
+                    if aml['product']: 
+                        products = str(aml['product']).strip()
+                    if products:
+                        products_name = products  # '['+product_code+'] '+ 
                     
-                if aml['paymenttype']:
-                    payment_type = str(aml['paymenttype']).strip()
+                    if aml['orderreference']:
+                        orderRef = str(aml['orderreference']).strip()
+                    if aml['Tax']:
+                        tax=str(aml['Tax']).strip()
+                    if aml['customercode']:
+                        partner_code = str(aml['customercode']).strip()
+                        
+                    if aml['paymenttype']:
+                        payment_type = str(aml['paymenttype']).strip()
+                        
+                        
+                    if aml['deliverremark']:
+                        delivery_remark = str(aml['deliverremark']).strip()
+        
+                        
+                    if aml['salemanname']:
+                        saleperson_name = str(aml['salemanname']).strip()
+        
+                        
+                    if aml['saleplanday']:
+                        sale_plan_day_name = str(aml['saleplanday']).strip()
+        
                     
+                    if aml['saleplantrip']:
+                        sale_plan_trip_name = str(aml['saleplantrip']).strip()
+        
+                        
+                    if aml['saleteam']:
+                        section_name = str(aml['saleteam']).strip()
+        
+                        
+                    if aml['paymentterm']:
+                        payment_term_name = str(aml['paymentterm']).strip()
+        
+                        
+                    if aml['discountamount']:
+                        discount_amount = float(aml['discountamount'])
+                        
+                    if aml['quantity(pcs)']:
+                        qty_pcs = float(aml['quantity(pcs)'])
                     
-                if aml['deliverremark']:
-                    delivery_remark = str(aml['deliverremark']).strip()
-
-                    
-                if aml['salemanname']:
-                    saleperson_name = str(aml['salemanname']).strip()
-
-                    
-                if aml['saleplanday']:
-                    sale_plan_day_name = str(aml['saleplanday']).strip()
-
-                
-                if aml['saleplantrip']:
-                    sale_plan_trip_name = str(aml['saleplantrip']).strip()
-
-                    
-                if aml['saleteam']:
-                    section_name = str(aml['saleteam']).strip()
-
-                    
-                if aml['paymentterm']:
-                    payment_term_name = str(aml['paymentterm']).strip()
-
-                    
-                if aml['discountamount']:
-                    discount_amount = float(aml['discountamount'])
-                    
-                if aml['quantity(pcs)']:
-                    qty_pcs = float(aml['quantity(pcs)'])
-                
-                if aml['unitprice']:
-                    unit_price = float(aml['unitprice'])
-                    
-                if aml['discount(%)']:
-                    discount = float(aml['discount(%)'])
-                    
-                if aml['deductionamount']:
-                    deduct_amt = float(aml['deductionamount'])
-                    
-                if aml['pricelist']:
-                    pricelist_name = str(aml['pricelist']).strip()             
-                    
-                if aml['void']:
-                    void = str(aml['void']).strip()
-                    
-                if aml['date']:
-                    try:
-                        data_time = float(aml['date'])
-                        result = xlrd.xldate.xldate_as_tuple(data_time, 0)
-                        a = str(result[1]) + '/' + str(result[2]) + '/' + str(result[0]) + ' ' + str(result[3]) + ':' + str(result[4]) + ':' + str(result[5])
-                        date = datetime.strptime(a, '%m/%d/%Y %H:%M:%S').date()
-                    except Exception , e:
+                    if aml['unitprice']:
+                        unit_price = float(aml['unitprice'])
+                        
+                    if aml['discount(%)']:
+                        discount = float(aml['discount(%)'])
+                        
+                    if aml['deductionamount']:
+                        deduct_amt = float(aml['deductionamount'])
+                        
+                    if aml['pricelist']:
+                        pricelist_name = str(aml['pricelist']).strip()             
+                        
+                    if aml['void']:
+                        void = str(aml['void']).strip()
+                        
+                    if aml['date']:
                         try:
-                            str_date = str(aml['date']).strip() + ' 00:00:00'
-                            date = datetime.strptime(str_date, '%m/%d/%Y %H:%M:%S').date()
-                        except Exception, e:
+                            data_time = float(aml['date'])
+                            result = xlrd.xldate.xldate_as_tuple(data_time, 0)
+                            a = str(result[1]) + '/' + str(result[2]) + '/' + str(result[0]) + ' ' + str(result[3]) + ':' + str(result[4]) + ':' + str(result[5])
+                            date = datetime.strptime(a, '%m/%d/%Y %H:%M:%S').date()
+                        except Exception , e:
                             try:
                                 str_date = str(aml['date']).strip() + ' 00:00:00'
-                                date = datetime.strptime(str_date, '%Y/%m/%d %H:%M:%S').date()
+                                date = datetime.strptime(str_date, '%m/%d/%Y %H:%M:%S').date()
                             except Exception, e:
                                 try:
                                     str_date = str(aml['date']).strip() + ' 00:00:00'
-                                    date = datetime.strptime(str_date, '%d/%m/%Y %H:%M:%S').date()
+                                    date = datetime.strptime(str_date, '%Y/%m/%d %H:%M:%S').date()
                                 except Exception, e:
                                     try:
-                                        date = None
+                                        str_date = str(aml['date']).strip() + ' 00:00:00'
+                                        date = datetime.strptime(str_date, '%d/%m/%Y %H:%M:%S').date()
                                     except Exception, e:
-                                        raise orm.except_orm(_('Error :'), _("Error while processing Excel Columns. \n\nPlease check your Date!"))                        
-                   
-                if saleperson_name:
-                    cr.execute(""" select id from res_partner where lower(name) = %s""", (saleperson_name.lower(),))
-                    data = cr.fetchall()
-                    if data:
-                        saleperson_ids = data[0]
-#                     saleperson_ids = partner_obj.search(cr, uid, [('name', '=', saleperson_name)])
-                    if saleperson_ids:
-                        saleperson_id = saleperson_ids[0]
-                        user_ids = users_obj.search(cr, uid, [('partner_id', '=', saleperson_id)])
-                        if user_ids:
-                            user_id = user_ids[0]
+                                        try:
+                                            date = None
+                                        except Exception, e:
+                                            raise orm.except_orm(_('Error :'), _("Error while processing Excel Columns. \n\nPlease check your Date!"))                        
+                       
+                    if saleperson_name:
+                        cr.execute(""" select id from res_partner where lower(name) = %s""", (saleperson_name.lower(),))
+                        data = cr.fetchall()
+                        if data:
+                            saleperson_ids = data[0]
+        #                     saleperson_ids = partner_obj.search(cr, uid, [('name', '=', saleperson_name)])
+                        if saleperson_ids:
+                            saleperson_id = saleperson_ids[0]
+                            user_ids = users_obj.search(cr, uid, [('partner_id', '=', saleperson_id)])
+                            if user_ids:
+                                user_id = user_ids[0]
+                                
+                    if pricelist_name:
+                        cr.execute(""" select id from product_pricelist where lower(name) = %s """, (pricelist_name.lower(),))
+                        data = cr.fetchall()
+                        if data:
+                            pricelist_ids = data[0]
+        #                     pricelist_ids = product_pricelist_obj.search(cr, uid, [('name', '=', pricelist_name)])
+                        print 'pricelist_ids', pricelist_ids
+                        if pricelist_ids:
+                            pricelist_id = pricelist_ids[0]
                             
-                if pricelist_name:
-                    cr.execute(""" select id from product_pricelist where lower(name) = %s """, (pricelist_name.lower(),))
-                    data = cr.fetchall()
-                    if data:
-                        pricelist_ids = data[0]
-#                     pricelist_ids = product_pricelist_obj.search(cr, uid, [('name', '=', pricelist_name)])
-                    print 'pricelist_ids', pricelist_ids
-                    if pricelist_ids:
-                        pricelist_id = pricelist_ids[0]
+                    print 'pricelist_name', pricelist_name
+        #                 if warehouse_name:
+        #                     warehouse_ids = warehouse_obj.search(cr,uid,[('name','=',warehouse_name)])
+        #                     if warehouse_ids:
+        #                         warehouse_id = warehouse_ids[0]
+                            
+                    if sale_plan_day_name:
+                        cr.execute(""" select id from sale_plan_day where lower(name) = %s""", (sale_plan_day_name.lower(),))
+                        data = cr.fetchall()
+                        if data:
+                            sale_plan_day_ids = data[0]
+        #                     sale_plan_day_ids = sale_plan_day_obj.search(cr, uid, [('name', '=', sale_plan_day_name)])
+                        if sale_plan_day_ids:
+                            sale_plan_day_id = sale_plan_day_ids[0]
+                            
+                    if sale_plan_trip_name:
+                        cr.execute(""" select id from sale_plan_trip where lower(name) = %s""", (sale_plan_trip_name.lower(),))
+                        data = cr.fetchall()
+                        if data:
+                            sale_plan_trip_ids = data[0]
+        #                     sale_plan_trip_ids = sale_plan_trip_obj.search(cr, uid, [('name', '=', sale_plan_trip_name)])
+                        if sale_plan_trip_ids:
+                            sale_plan_trip_id = sale_plan_trip_ids[0]
+                            
+                    if section_name:
+                        cr.execute(""" select id from crm_case_section where lower(name) =%s """, (section_name.lower(),))
+                        data = cr.fetchall()
+                        if data:
+                            section_ids = data[0]
+        #                     section_ids = section_obj.search(cr, uid, [('name', '=', section_name)])
+                        if section_ids:
+                            section_id = section_ids[0]
+                            secObj = section_obj.browse(cr, uid, section_id, context=None)
+                    if secObj:
+                        warehouse_id = secObj.warehouse_id.id
+                        branch_id=secObj.branch_id.id
+                    if payment_term_name:
+                        cr.execute(""" select id from account_payment_term where lower(name) = %s """, (payment_term_name.lower(),))
+                        data = cr.fetchall()
+                        if data:
+                            payment_term_ids = data[0]
+        #                     payment_term_ids = payment_term_obj.search(cr, uid, [('name', '=', payment_term_name)])
+                        if payment_term_ids:
+                            payment_term_id = payment_term_ids[0]
+                                                                  
+                    if payment_term_id:
+                        cr.execute(""" select days from account_payment_term_line where payment_id=%s""", (payment_term_id,))
+                        data = cr.fetchall()
+                        if data:
+                            numberOfDays = data[0][0]
+                    if products_name:
+                        cr.execute(""" select id from product_product where lower(name_template) = %s """, (products_name.lower(),))
+                        data = cr.fetchall()
+                        if data:
+                            product_ids = data[0]
+        #                     product_ids = product_obj.search(cr, uid, [('name', '=', products_name)])
+                        if product_ids:
+                            product_id = product_ids[0]
+                            productObj = product_obj.browse(cr, uid, product_id, context=None)
+                            uom_ids = productObj.uom_id.id
+                        else:
+                            raise osv.except_osv(_('Warning!'), _("Please Check Your Product Name '%s'!") % (products_name,))                                      
                         
-                print 'pricelist_name', pricelist_name
-#                 if warehouse_name:
-#                     warehouse_ids = warehouse_obj.search(cr,uid,[('name','=',warehouse_name)])
-#                     if warehouse_ids:
-#                         warehouse_id = warehouse_ids[0]
-                        
-                if sale_plan_day_name:
-                    cr.execute(""" select id from sale_plan_day where lower(name) = %s""", (sale_plan_day_name.lower(),))
-                    data = cr.fetchall()
-                    if data:
-                        sale_plan_day_ids = data[0]
-#                     sale_plan_day_ids = sale_plan_day_obj.search(cr, uid, [('name', '=', sale_plan_day_name)])
-                    if sale_plan_day_ids:
-                        sale_plan_day_id = sale_plan_day_ids[0]
-                        
-                if sale_plan_trip_name:
-                    cr.execute(""" select id from sale_plan_trip where lower(name) = %s""", (sale_plan_trip_name.lower(),))
-                    data = cr.fetchall()
-                    if data:
-                        sale_plan_trip_ids = data[0]
-#                     sale_plan_trip_ids = sale_plan_trip_obj.search(cr, uid, [('name', '=', sale_plan_trip_name)])
-                    if sale_plan_trip_ids:
-                        sale_plan_trip_id = sale_plan_trip_ids[0]
-                        
+
+                    if void.lower() == "" and void.lower() == "unvoid": 
+                        _state = "draft"
+                    elif void.lower() == "void":
+                        _state = "cancel"
+                    else:
+                        _state = "draft"
+                     
+                     
+
                 if section_name:
                     cr.execute(""" select id from crm_case_section where lower(name) =%s """, (section_name.lower(),))
                     data = cr.fetchall()
@@ -377,7 +429,8 @@ class mobile_sale_import(osv.osv):
                         section_id = section_ids[0]
                         secObj = section_obj.browse(cr, uid, section_id, context=None)
                 if secObj:
-                    warehouse_id = secObj.warehouse_id.id       
+                    warehouse_id = secObj.warehouse_id.id   
+                    branch_id=secObj.branch_id.id    
                 if payment_term_name:
                     cr.execute(""" select id from account_payment_term where lower(name) = %s """, (payment_term_name.lower(),))
                     data = cr.fetchall()
@@ -403,354 +456,382 @@ class mobile_sale_import(osv.osv):
                         product_id = product_ids[0]
                         productObj = product_obj.browse(cr, uid, product_id, context=None)
                         uom_ids = productObj.uom_id.id
-                        
+                                  
+                    if deduct_amt == "":
+                        deduct_amt = 0
+                    elif deduct_amt is None:
+                        deduct_amt = 0
+                                                          
+                    if section_id:
+                        crm_ids = section_obj.search(cr, uid, [('id', '=', section_id)], context=None)
+                        if crm_ids:
+                            for line in crm_ids:
+                                val = section_obj.browse(cr, uid, line, context=context)
+                                analytic_id = val.analytic_account_id.id
+                                
+                    if partner_code:
+                        print 'partner_code .>> ', partner_code
+                        cr.execute(""" select id from res_partner where lower(customer_code) =%s""", (partner_code.lower(),))
+                        data = cr.fetchall()
+                        if data:
+                            print 'data', data
+                            partner_ids = data[0]
+        #                     va = partner_obj.search(cr, uid, [('customer_code', '=', partner_code)], context=None)
+                        print 'partner_ids .>> ', partner_ids
+                        if partner_ids:
+                            partner_id = partner_ids[0]
                     
-                if void.lower() == "" and void.lower() == "unvoid": 
-                    _state = "draft"
-                elif void.lower() == "void":
-                    _state = "cancel"
-                else:
-                    _state = "draft"
-                 
-                 
+        #                 Calculate the Discount Amount
+                    if discount != 0:
+                        discount_amount = (qty_pcs * unit_price) * (discount / 100)
+          
+                    if tax:
+                        cr.execute(""" select id from account_tax where description = %s """, (tax,))
+                        tax_record = cr.fetchall()     
+                        if tax_record:
+                            taxs = tax_record[0][0]
+                            if taxs and partner_id:
+                                partner=partner_obj.browse(cr, uid, partner_id, context=context)
+                                taxs=self.pool.get('account.tax').browse(cr, uid, taxs, context=context)
+                                fpos = partner.property_account_position or False
+                                tax_id = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, taxs, context=context)
+                                tax_data=[[6, 0, tax_id]]
+                        else:
+                            tax_data=False
+                            raise osv.except_osv(_('Warning!'), _("Please Check Your Tax Name '%s'!") % (tax.lower(),))                                      
                     
-                if deduct_amt == "":
-                    deduct_amt = 0
-                elif deduct_amt is None:
-                    deduct_amt = 0
-                                                      
-                if section_id:
-                    crm_ids = section_obj.search(cr, uid, [('id', '=', section_id)], context=None)
-                    if crm_ids:
-                        for line in crm_ids:
-                            val = section_obj.browse(cr, uid, line, context=context)
-                            analytic_id = val.analytic_account_id.id
-                            
-                if partner_code:
-                    print 'partner_code .>> ', partner_code
-                    cr.execute(""" select id from res_partner where lower(customer_code) =%s""", (partner_code.lower(),))
+                    # Sale Plan Name, Sale Plan Day,Sale Plan Trip, Deliver Remark, Discount, Deduction Amount,Paid Amount, Paid,Void
+
+                    order_value = {
+                                  'partner_id':partner_id,
+                                  'branch_id':branch_id,
+                                  'company_id':1,  # company_id,
+                                  'user_id':user_id,
+                                  'customer_code':partner_code,
+                                  'sale_plan_day_id':sale_plan_day_id,
+                                  'sale_plan_trip_id':sale_plan_trip_id,
+                                  'section_id':section_id,
+                                  'payment_term':payment_term_id,
+                                  'date_order':date,
+                                  
+        #                               'date_confirm':date + timedelta(days=numberOfDays),
+                                  'due_date':date + timedelta(days=numberOfDays),
+                                  'payment_type':payment_type.lower(),
+                                  'delivery_remark':delivery_remark.lower(),
+                                  'project_id':analytic_id,
+                                  'pricelist_id':pricelist_id,
+                                  'state':_state,
+                                  'warehouse_id':warehouse_id,
+                                  'deduct_amt':deduct_amt,
+                                  'tb_ref_no':orderRef
+                                  
+                                  }
+                    cr.execute(""" select id,tb_ref_no from sale_order where lower(tb_ref_no) =%s""", (orderRef.lower(),))
                     data = cr.fetchall()
+                    order_line_flg = False
                     if data:
-                        print 'data', data
-                        partner_ids = data[0]
-#                     va = partner_obj.search(cr, uid, [('customer_code', '=', partner_code)], context=None)
-                    print 'partner_ids .>> ', partner_ids
-                    if partner_ids:
-                        partner_id = partner_ids[0]
-                
-#                 Calculate the Discount Amount
-                if discount != 0:
-                    discount_amount = (qty_pcs * unit_price) * (discount / 100)
-      
-                
-                # Sale Plan Name, Sale Plan Day,Sale Plan Trip, Deliver Remark, Discount, Deduction Amount,Paid Amount, Paid,Void
-                order_value = {
-                              'partner_id':partner_id,
-                              'company_id':1,  # company_id,
-                              'user_id':user_id,
-                              'customer_code':partner_code,
-                              'sale_plan_day_id':sale_plan_day_id,
-                              'sale_plan_trip_id':sale_plan_trip_id,
-                              'section_id':section_id,
-                              'payment_term':payment_term_id,
-                              'date_order':date,
-#                               'date_confirm':date + timedelta(days=numberOfDays),
-                              'due_date':date + timedelta(days=numberOfDays),
-                              'payment_type':payment_type.lower(),
-                              'delivery_remark':delivery_remark.lower(),
-                              'project_id':analytic_id,
-                              'pricelist_id':pricelist_id,
-                              'state':_state,
-                              'warehouse_id':warehouse_id,
-                              'deduct_amt':deduct_amt,
-                              'tb_ref_no':orderRef
-                              }
-                cr.execute(""" select id,tb_ref_no from sale_order where lower(tb_ref_no) =%s""", (orderRef.lower(),))
-                data = cr.fetchall()
-                order_line_flg = False
-                if data:
-                    order_ids = data[0]
-#                 order_ids = order_obj.search(cr, uid, [('tb_ref_no', '=', orderRef)], context=context)
-                if order_ids:
-                    order_id = order_ids[0] 
-                    so_ref = str(order_ids[1]).strip()
-                    if so_ref==orderRef:
-                        cr.execute("""delete from sale_order_line where order_id=%s""", (order_id,))
-            #forinsert
-            for aml in amls:
-                order_ids = pricelist_ids = payment_term_ids = uom_ids = partner_ids = _tax = _foc = _state = analytic_id = pricelist_id = partner_id = country_id = saleperson_id = warehouse_id = product_id = user_id = sale_plan_day_id = sale_plan_trip_id = section_id = payment_term_id = _duedate = None
-                void = secObj = orderRef = partner_code = payment_type = delivery_remark = saleperson_name = sale_plan_day_name = sale_plan_trip_name = section_name = payment_term_name = pricelist_name = date = pricelist_name = so_partner_id=so_date=so_ref=None
-               # product_code = aml['ProductsCODE']
-                discount_amount = qty_pcs = unit_price = discount = deduct_amt = numberOfDays = 0
-                if aml['product']: 
-                    products = str(aml['product']).strip()
-                if products:
-                    products_name = products  # '['+product_code+'] '+ 
-                
-                if aml['orderreference']:
-                    orderRef = str(aml['orderreference']).strip()
-                if aml['customercode']:
-                    partner_code = str(aml['customercode']).strip()
+                        order_ids = data[0]
+        #                 order_ids = order_obj.search(cr, uid, [('tb_ref_no', '=', orderRef)], context=context)
+                    if order_ids:
+                        order_id = order_ids[0] 
+                        so_ref = str(order_ids[1]).strip()
+                        if so_ref==orderRef:
+                            cr.execute("""delete from sale_order_line where order_id=%s""", (order_id,))
+                #forinsert
+                for aml in amls:
+                    order_ids = pricelist_ids = payment_term_ids = uom_ids = partner_ids = tax = _foc = _state = analytic_id = pricelist_id = partner_id = country_id = saleperson_id = warehouse_id = product_id = user_id = sale_plan_day_id = sale_plan_trip_id = section_id = payment_term_id = _duedate = None
+                    void = secObj = orderRef = partner_code = payment_type =branch_id= delivery_remark = saleperson_name = sale_plan_day_name = sale_plan_trip_name = section_name = payment_term_name = pricelist_name = date = pricelist_name = so_partner_id=so_date=so_ref=None
+                   # product_code = aml['ProductsCODE']
+                    discount_amount = qty_pcs = unit_price = discount = deduct_amt = numberOfDays = 0
+                    if aml['product']: 
+                        products = str(aml['product']).strip()
+                    if products:
+                        products_name = products  # '['+product_code+'] '+ 
                     
-                if aml['paymenttype']:
-                    payment_type = str(aml['paymenttype']).strip()
+                    if aml['orderreference']:
+                        orderRef = str(aml['orderreference']).strip()
+                    if aml['customercode']:
+                        partner_code = str(aml['customercode']).strip()
+                        
+                    if aml['paymenttype']:
+                        payment_type = str(aml['paymenttype']).strip()
+                        
+                        
+                    if aml['deliverremark']:
+                        delivery_remark = str(aml['deliverremark']).strip()
+        
+                        
+                    if aml['salemanname']:
+                        saleperson_name = str(aml['salemanname']).strip()
+        
+                        
+                    if aml['saleplanday']:
+                        sale_plan_day_name = str(aml['saleplanday']).strip()
+        
                     
+                    if aml['saleplantrip']:
+                        sale_plan_trip_name = str(aml['saleplantrip']).strip()
+        
+                        
+                    if aml['saleteam']:
+                        section_name = str(aml['saleteam']).strip()
+        
+                        
+                    if aml['paymentterm']:
+                        payment_term_name = str(aml['paymentterm']).strip()
+        
+                        
+                    if aml['discountamount']:
+                        discount_amount = float(aml['discountamount'])
+                        
+                    if aml['quantity(pcs)']:
+                        qty_pcs = float(aml['quantity(pcs)'])
                     
-                if aml['deliverremark']:
-                    delivery_remark = str(aml['deliverremark']).strip()
-
-                    
-                if aml['salemanname']:
-                    saleperson_name = str(aml['salemanname']).strip()
-
-                    
-                if aml['saleplanday']:
-                    sale_plan_day_name = str(aml['saleplanday']).strip()
-
-                
-                if aml['saleplantrip']:
-                    sale_plan_trip_name = str(aml['saleplantrip']).strip()
-
-                    
-                if aml['saleteam']:
-                    section_name = str(aml['saleteam']).strip()
-
-                    
-                if aml['paymentterm']:
-                    payment_term_name = str(aml['paymentterm']).strip()
-
-                    
-                if aml['discountamount']:
-                    discount_amount = float(aml['discountamount'])
-                    
-                if aml['quantity(pcs)']:
-                    qty_pcs = float(aml['quantity(pcs)'])
-                
-                if aml['unitprice']:
-                    unit_price = float(aml['unitprice'])
-                    
-                if aml['discount(%)']:
-                    discount = float(aml['discount(%)'])
-                    
-                if aml['deductionamount']:
-                    deduct_amt = float(aml['deductionamount'])
-                    
-                if aml['pricelist']:
-                    pricelist_name = str(aml['pricelist']).strip()             
-                    
-                if aml['void']:
-                    void = str(aml['void']).strip()
-                    
-                if aml['date']:
-                    try:
-                        data_time = float(aml['date'])
-                        result = xlrd.xldate.xldate_as_tuple(data_time, 0)
-                        a = str(result[1]) + '/' + str(result[2]) + '/' + str(result[0]) + ' ' + str(result[3]) + ':' + str(result[4]) + ':' + str(result[5])
-                        date = datetime.strptime(a, '%m/%d/%Y %H:%M:%S').date()
-                    except Exception , e:
+                    if aml['unitprice']:
+                        unit_price = float(aml['unitprice'])
+                        
+                    if aml['discount(%)']:
+                        discount = float(aml['discount(%)'])
+                        
+                    if aml['deductionamount']:
+                        deduct_amt = float(aml['deductionamount'])
+                        
+                    if aml['pricelist']:
+                        pricelist_name = str(aml['pricelist']).strip()             
+                        
+                    if aml['void']:
+                        void = str(aml['void']).strip()
+                    if aml['Tax']:
+                        tax = str(aml['Tax']).strip()                        
+                        
+                    if aml['date']:
                         try:
-                            str_date = str(aml['date']).strip() + ' 00:00:00'
-                            date = datetime.strptime(str_date, '%m/%d/%Y %H:%M:%S').date()
-                        except Exception, e:
+                            data_time = float(aml['date'])
+                            result = xlrd.xldate.xldate_as_tuple(data_time, 0)
+                            a = str(result[1]) + '/' + str(result[2]) + '/' + str(result[0]) + ' ' + str(result[3]) + ':' + str(result[4]) + ':' + str(result[5])
+                            date = datetime.strptime(a, '%m/%d/%Y %H:%M:%S').date()
+                        except Exception , e:
                             try:
                                 str_date = str(aml['date']).strip() + ' 00:00:00'
-                                date = datetime.strptime(str_date, '%Y/%m/%d %H:%M:%S').date()
+                                date = datetime.strptime(str_date, '%m/%d/%Y %H:%M:%S').date()
                             except Exception, e:
                                 try:
                                     str_date = str(aml['date']).strip() + ' 00:00:00'
-                                    date = datetime.strptime(str_date, '%d/%m/%Y %H:%M:%S').date()
+                                    date = datetime.strptime(str_date, '%Y/%m/%d %H:%M:%S').date()
                                 except Exception, e:
                                     try:
-                                        date = None
+                                        str_date = str(aml['date']).strip() + ' 00:00:00'
+                                        date = datetime.strptime(str_date, '%d/%m/%Y %H:%M:%S').date()
                                     except Exception, e:
-                                        raise orm.except_orm(_('Error :'), _("Error while processing Excel Columns. \n\nPlease check your Date!"))                        
-                   
-                if saleperson_name:
-                    cr.execute(""" select id from res_partner where lower(name) = %s""", (saleperson_name.lower(),))
-                    data = cr.fetchall()
-                    if data:
-                        saleperson_ids = data[0]
-#                     saleperson_ids = partner_obj.search(cr, uid, [('name', '=', saleperson_name)])
-                    if saleperson_ids:
-                        saleperson_id = saleperson_ids[0]
-                        user_ids = users_obj.search(cr, uid, [('partner_id', '=', saleperson_id)])
-                        if user_ids:
-                            user_id = user_ids[0]
+                                        try:
+                                            date = None
+                                        except Exception, e:
+                                            raise orm.except_orm(_('Error :'), _("Error while processing Excel Columns. \n\nPlease check your Date!"))                        
+                       
+                    if saleperson_name:
+                        cr.execute(""" select id from res_partner where lower(name) = %s""", (saleperson_name.lower(),))
+                        data = cr.fetchall()
+                        if data:
+                            saleperson_ids = data[0]
+        #                     saleperson_ids = partner_obj.search(cr, uid, [('name', '=', saleperson_name)])
+                        if saleperson_ids:
+                            saleperson_id = saleperson_ids[0]
+                            user_ids = users_obj.search(cr, uid, [('partner_id', '=', saleperson_id)])
+                            if user_ids:
+                                user_id = user_ids[0]
+                                
+                    if pricelist_name:
+                        cr.execute(""" select id from product_pricelist where lower(name) = %s """, (pricelist_name.lower(),))
+                        data = cr.fetchall()
+                        if data:
+                            pricelist_ids = data[0]
+        #                     pricelist_ids = product_pricelist_obj.search(cr, uid, [('name', '=', pricelist_name)])
+                        print 'pricelist_ids', pricelist_ids
+                        if pricelist_ids:
+                            pricelist_id = pricelist_ids[0]
                             
-                if pricelist_name:
-                    cr.execute(""" select id from product_pricelist where lower(name) = %s """, (pricelist_name.lower(),))
-                    data = cr.fetchall()
-                    if data:
-                        pricelist_ids = data[0]
-#                     pricelist_ids = product_pricelist_obj.search(cr, uid, [('name', '=', pricelist_name)])
-                    print 'pricelist_ids', pricelist_ids
-                    if pricelist_ids:
-                        pricelist_id = pricelist_ids[0]
-                        
-                print 'pricelist_name', pricelist_name
-#                 if warehouse_name:
-#                     warehouse_ids = warehouse_obj.search(cr,uid,[('name','=',warehouse_name)])
-#                     if warehouse_ids:
-#                         warehouse_id = warehouse_ids[0]
-                        
-                if sale_plan_day_name:
-                    cr.execute(""" select id from sale_plan_day where lower(name) = %s""", (sale_plan_day_name.lower(),))
-                    data = cr.fetchall()
-                    if data:
-                        sale_plan_day_ids = data[0]
-#                     sale_plan_day_ids = sale_plan_day_obj.search(cr, uid, [('name', '=', sale_plan_day_name)])
-                    if sale_plan_day_ids:
-                        sale_plan_day_id = sale_plan_day_ids[0]
-                        
-                if sale_plan_trip_name:
-                    cr.execute(""" select id from sale_plan_trip where lower(name) = %s""", (sale_plan_trip_name.lower(),))
-                    data = cr.fetchall()
-                    if data:
-                        sale_plan_trip_ids = data[0]
-#                     sale_plan_trip_ids = sale_plan_trip_obj.search(cr, uid, [('name', '=', sale_plan_trip_name)])
-                    if sale_plan_trip_ids:
-                        sale_plan_trip_id = sale_plan_trip_ids[0]
-                        
-                if section_name:
-                    cr.execute(""" select id from crm_case_section where lower(name) =%s """, (section_name.lower(),))
-                    data = cr.fetchall()
-                    if data:
-                        section_ids = data[0]
-#                     section_ids = section_obj.search(cr, uid, [('name', '=', section_name)])
-                    if section_ids:
-                        section_id = section_ids[0]
-                        secObj = section_obj.browse(cr, uid, section_id, context=None)
-                if secObj:
-                    warehouse_id = secObj.warehouse_id.id       
-                if payment_term_name:
-                    cr.execute(""" select id from account_payment_term where lower(name) = %s """, (payment_term_name.lower(),))
-                    data = cr.fetchall()
-                    if data:
-                        payment_term_ids = data[0]
-#                     payment_term_ids = payment_term_obj.search(cr, uid, [('name', '=', payment_term_name)])
-                    if payment_term_ids:
-                        payment_term_id = payment_term_ids[0]
-                if payment_term_id:
-                    cr.execute(""" select days from account_payment_term_line where payment_id=%s""", (payment_term_id,))
-                    data = cr.fetchall()
-                    if data:
-                        numberOfDays = data[0][0]
-                if products_name:
-                    cr.execute(""" select id from product_product where lower(name_template) = %s """, (products_name.lower(),))
-                    data = cr.fetchall()
-                    if data:
-                        product_ids = data[0]
-#                     product_ids = product_obj.search(cr, uid, [('name', '=', products_name)])
-                    if product_ids:
-                        product_id = product_ids[0]
-                        productObj = product_obj.browse(cr, uid, product_id, context=None)
-                        uom_ids = productObj.uom_id.id
-                        
-                    
-                if void.lower() == "" and void.lower() == "unvoid": 
-                    _state = "draft"
-                elif void.lower() == "void":
-                    _state = "cancel"
-                else:
-                    _state = "draft"
-                 
-                 
-                    
-                if deduct_amt == "":
-                    deduct_amt = 0
-                elif deduct_amt is None:
-                    deduct_amt = 0
-                                                      
-                if section_id:
-                    crm_ids = section_obj.search(cr, uid, [('id', '=', section_id)], context=None)
-                    if crm_ids:
-                        for line in crm_ids:
-                            val = section_obj.browse(cr, uid, line, context=context)
-                            analytic_id = val.analytic_account_id.id
+                    print 'pricelist_name', pricelist_name
+        #                 if warehouse_name:
+        #                     warehouse_ids = warehouse_obj.search(cr,uid,[('name','=',warehouse_name)])
+        #                     if warehouse_ids:
+        #                         warehouse_id = warehouse_ids[0]
                             
-                if partner_code:
-                    print 'partner_code .>> ', partner_code
-                    cr.execute(""" select id from res_partner where lower(customer_code) =%s""", (partner_code.lower(),))
-                    data = cr.fetchall()
-                    if data:
-                        print 'data', data
-                        partner_ids = data[0]
-#                     va = partner_obj.search(cr, uid, [('customer_code', '=', partner_code)], context=None)
-                    print 'partner_ids .>> ', partner_ids
-                    if partner_ids:
-                        partner_id = partner_ids[0]
-                
-                # Calculate the Discount Amount
-                if discount != 0:
-                    discount_amount = (qty_pcs * unit_price) * (discount / 100)
-      
-                
-                # Sale Plan Name, Sale Plan Day,Sale Plan Trip, Deliver Remark, Discount, Deduction Amount,Paid Amount, Paid,Void
-                order_value = {
-                              'partner_id':partner_id,
-                              'company_id':1,  # company_id,
-                              'user_id':user_id,
-                              'customer_code':partner_code,
-                              'sale_plan_day_id':sale_plan_day_id,
-                              'sale_plan_trip_id':sale_plan_trip_id,
-                              'section_id':section_id,
-                              'payment_term':payment_term_id,
-                              'date_order':date,
-#                               'date_confirm':date + timedelta(days=numberOfDays),
-                              'due_date':date + timedelta(days=numberOfDays),
-                              'payment_type':payment_type.lower(),
-                              'delivery_remark':delivery_remark.lower(),
-                              'project_id':analytic_id,
-                              'pricelist_id':pricelist_id,
-                              'state':_state,
-                              'warehouse_id':warehouse_id,
-                              'deduct_amt':deduct_amt,
-                              'tb_ref_no':orderRef
-                              }
-                cr.execute(""" select id,date_order::date,partner_id,tb_ref_no from sale_order where lower(tb_ref_no) =%s""", (orderRef.lower(),))
-                data = cr.fetchall()
-                order_line_flg = False
-                if data:
-                    order_ids = data[0]
-#                 order_ids = order_obj.search(cr, uid, [('tb_ref_no', '=', orderRef)], context=context)
-                if order_ids:
-                    order_id = order_ids[0] 
-                else:
-                    order_id = order_obj.create(cr, uid, order_value, context)
-                
-                # print 'order id',order_id            
-                if products_name:
-                    order_line_value = {
-                                  'order_id':order_id,
-                                  'product_id':product_id,
-                                  'name':products_name,
-                                  'price_unit':unit_price,
-                                  'product_uom':uom_ids,
-                                  'product_uom_qty':qty_pcs,
-                                  'discount':discount,
-                                  'discount_amt':discount_amount,
-                                  'company_id':1,  # company_id,
-                                  'state':'draft',
-                                  # 'invoiced':'TRUE',
-                
-                                }
+                    if sale_plan_day_name:
+                        cr.execute(""" select id from sale_plan_day where lower(name) = %s""", (sale_plan_day_name.lower(),))
+                        data = cr.fetchall()
+                        if data:
+                            sale_plan_day_ids = data[0]
+        #                     sale_plan_day_ids = sale_plan_day_obj.search(cr, uid, [('name', '=', sale_plan_day_name)])
+                        if sale_plan_day_ids:
+                            sale_plan_day_id = sale_plan_day_ids[0]
+                            
+                    if sale_plan_trip_name:
+                        cr.execute(""" select id from sale_plan_trip where lower(name) = %s""", (sale_plan_trip_name.lower(),))
+                        data = cr.fetchall()
+                        if data:
+                            sale_plan_trip_ids = data[0]
+        #                     sale_plan_trip_ids = sale_plan_trip_obj.search(cr, uid, [('name', '=', sale_plan_trip_name)])
+                        if sale_plan_trip_ids:
+                            sale_plan_trip_id = sale_plan_trip_ids[0]
+                            
+                    if section_name:
+                        cr.execute(""" select id from crm_case_section where lower(name) =%s """, (section_name.lower(),))
+                        data = cr.fetchall()
+                        if data:
+                            section_ids = data[0]
+        #                     section_ids = section_obj.search(cr, uid, [('name', '=', section_name)])
+                        if section_ids:
+                            section_id = section_ids[0]
+                            secObj = section_obj.browse(cr, uid, section_id, context=None)
+                    if secObj:
+                        warehouse_id = secObj.warehouse_id.id     
+                        branch_id=secObj.branch_id.id  
+                    if payment_term_name:
+                        cr.execute(""" select id from account_payment_term where lower(name) = %s """, (payment_term_name.lower(),))
+                        data = cr.fetchall()
+                        if data:
+                            payment_term_ids = data[0]
+        #                     payment_term_ids = payment_term_obj.search(cr, uid, [('name', '=', payment_term_name)])
+                        if payment_term_ids:
+                            payment_term_id = payment_term_ids[0]
+                    if payment_term_id:
+                        cr.execute(""" select days from account_payment_term_line where payment_id=%s""", (payment_term_id,))
+                        data = cr.fetchall()
+                        if data:
+                            numberOfDays = data[0][0]
+                    if products_name:
+                        cr.execute(""" select id from product_product where lower(name_template) = %s """, (products_name.lower(),))
+                        data = cr.fetchall()
+                        if data:
+                            product_ids = data[0]
+        #                     product_ids = product_obj.search(cr, uid, [('name', '=', products_name)])
+                        if product_ids:
+                            product_id = product_ids[0]
+                            productObj = product_obj.browse(cr, uid, product_id, context=None)
+                            uom_ids = productObj.uom_id.id
+                            
+                        
+                    if void.lower() == "" and void.lower() == "unvoid": 
+                        _state = "draft"
+                    elif void.lower() == "void":
+                        _state = "cancel"
+                    else:
+                        _state = "draft"
+                     
+                     
+                        
+                    if deduct_amt == "":
+                        deduct_amt = 0
+                    elif deduct_amt is None:
+                        deduct_amt = 0
+                                                          
+                    if section_id:
+                        crm_ids = section_obj.search(cr, uid, [('id', '=', section_id)], context=None)
+                        if crm_ids:
+                            for line in crm_ids:
+                                val = section_obj.browse(cr, uid, line, context=context)
+                                analytic_id = val.analytic_account_id.id
+                                
+                    if partner_code:
+                        print 'partner_code .>> ', partner_code
+                        cr.execute(""" select id from res_partner where lower(customer_code) =%s""", (partner_code.lower(),))
+                        data = cr.fetchall()
+                        if data:
+                            print 'data', data
+                            partner_ids = data[0]
+        #                     va = partner_obj.search(cr, uid, [('customer_code', '=', partner_code)], context=None)
+                        print 'partner_ids .>> ', partner_ids
+                        if partner_ids:
+                            partner_id = partner_ids[0]
+                    
+                    # Calculate the Discount Amount
+                    if discount != 0:
+                        discount_amount = (qty_pcs * unit_price) * (discount / 100)
           
-#                     order_line_flg = order_line_obj.search(cr,uid,[('order_id', '=', order_id),('product_id','=',product_id),
-#                                                                    ('product_uom', '=', uom_ids),('price_unit','=',unit_price),
-#                                                                    ('product_uom_qty', '=', qty_pcs),('discount','=',discount),('discount_amt','=',discount_amount)])
-#                     if len(order_line_flg) > 0:
-#                         order_line_id = order_line_obj.write(cr, uid,order_line_flg, order_line_value, context)
-#                     else:    
-                    order_line_id = order_line_obj.create(cr, uid, order_line_value, context)
-                    self.button_dummy(cr, uid, order_id, context=None)
-                    # Tax Filed is inserted into the sale_order_tax table
-                    cr.execute('select id,name,description  from account_tax where parent_id is null')
-                    tax_rec = cr.fetchall() 
-                
-
-                   
-                self.write(cr, uid, ids[0], {'state': 'completed'})
-                         
+                    if tax:
+                        cr.execute(""" select id from account_tax where description = %s """, (tax,))
+                        tax_record = cr.fetchall()     
+                        if tax_record:
+                            taxs = tax_record[0][0]
+                            if taxs and partner_id:
+                                partner=partner_obj.browse(cr, uid, partner_id, context=context)
+                                taxs=self.pool.get('account.tax').browse(cr, uid, taxs, context=context)
+                                fpos = partner.property_account_position or False
+                                tax_id = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, taxs, context=context)
+                                tax_data=[[6, 0, tax_id]]
+                        else:
+                            tax_data=False
+                            raise osv.except_osv(_('Warning!'), _("Please Check Your Tax Name '%s'!") % (tax.lower(),))                        
+                    # Sale Plan Name, Sale Plan Day,Sale Plan Trip, Deliver Remark, Discount, Deduction Amount,Paid Amount, Paid,Void
+                    order_value = {
+                                  'partner_id':partner_id,
+                                  'branch_id':branch_id,
+                                  'company_id':1,  # company_id,
+                                  'user_id':user_id,
+                                  'customer_code':partner_code,
+                                  'sale_plan_day_id':sale_plan_day_id,
+                                  'sale_plan_trip_id':sale_plan_trip_id,
+                                  'section_id':section_id,
+                                  'payment_term':payment_term_id,
+                                  'date_order':date,
+        #                               'date_confirm':date + timedelta(days=numberOfDays),
+                                  'due_date':date + timedelta(days=numberOfDays),
+                                  'payment_type':payment_type.lower(),
+                                  'delivery_remark':delivery_remark.lower(),
+                                  'project_id':analytic_id,
+                                  'pricelist_id':pricelist_id,
+                                  'state':_state,
+                                  'warehouse_id':warehouse_id,
+                                  'deduct_amt':deduct_amt,
+                                  'tb_ref_no':orderRef
+                                  }
+                    cr.execute(""" select id,date_order::date,partner_id,tb_ref_no from sale_order where lower(tb_ref_no) =%s""", (orderRef.lower(),))
+                    data = cr.fetchall()
+                    order_line_flg = False
+                    if data:
+                        order_ids = data[0]
+        #                 order_ids = order_obj.search(cr, uid, [('tb_ref_no', '=', orderRef)], context=context)
+                    if order_ids:
+                        order_id = order_ids[0] 
+                    else:
+                        order_id = order_obj.create(cr, uid, order_value, context)
+                    
+                    # print 'order id',order_id            
+                    if products_name:
+                        order_line_value = {
+                                      'order_id':order_id,
+                                      'product_id':product_id,
+                                      'name':products_name,
+                                      'price_unit':unit_price,
+                                      'product_uom':uom_ids,
+                                      'product_uom_qty':qty_pcs,
+                                      'discount':discount,
+                                      'discount_amt':discount_amount,
+                                      'company_id':1,  # company_id,
+                                      'state':'draft',
+                                      'tax_id': tax_data,
+                                      # 'invoiced':'TRUE',
+                    
+                                    }
+              
+        #                     order_line_flg = order_line_obj.search(cr,uid,[('order_id', '=', order_id),('product_id','=',product_id),
+        #                                                                    ('product_uom', '=', uom_ids),('price_unit','=',unit_price),
+        #                                                                    ('product_uom_qty', '=', qty_pcs),('discount','=',discount),('discount_amt','=',discount_amount)])
+        #                     if len(order_line_flg) > 0:
+        #                         order_line_id = order_line_obj.write(cr, uid,order_line_flg, order_line_value, context)
+        #                     else:    
+                        order_line_id = order_line_obj.create(cr, uid, order_line_value, context)
+                        self.button_dummy(cr, uid, order_id, context=None)
+                        # Tax Filed is inserted into the sale_order_tax table
+                        cr.execute('select id,name,description  from account_tax where parent_id is null')
+                        tax_rec = cr.fetchall() 
+                    
+        
+                       
+                    self.write(cr, uid, ids[0], {'state': 'completed'})
+            except Exception, e:
+                print e
+                raise osv.except_osv(_('Warning!'), _('Reference No "%s" (Product:%s).(error:%s)') % (orderRef,str(aml['product']).strip(),e))                         
 #            COPY mobile_sale_order_temp FROM '/Users/iMac/akdata/order.csv' WITH CSV header
         
     def button_dummy(self, cr, uid, order_id, context=None):
