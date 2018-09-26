@@ -32,7 +32,7 @@ class stock_return_from_mobile(osv.osv):
         'vehicle_id':fields.many2one('fleet.vehicle', 'Vehicle No'),
         'p_line':fields.one2many('stock.return.mobile.line', 'line_id', 'Product Lines',
                               copy=True),
-               'branch_id':fields.many2one('res.branch', 'Branch'),
+        'branch_id':fields.many2one('res.branch', 'Branch', required=True),
         'company_id':fields.many2one('res.company', 'Company'),
         'manual':fields.boolean('Manual'),
 

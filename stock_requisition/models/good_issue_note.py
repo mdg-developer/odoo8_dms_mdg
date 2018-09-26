@@ -53,8 +53,9 @@ class good_issue_note(osv.osv):
        'request_by':fields.many2one('res.users', "Requested By"),
         'approve_by':fields.many2one('res.users', "Approved By"),
         'receiver':fields.char("Receiver"),
+        'internal_ref':fields.char("Internal Ref"),
        
-#         'request_date' : fields.date('Date Requested'),
+#         'request_date' : fields.date('Date internal_refRequested'),
          'issue_date':fields.date('Date for Issue',required=True),
         'vehicle_id':fields.many2one('fleet.vehicle', 'Vehicle No'),
         'state': fields.selection([

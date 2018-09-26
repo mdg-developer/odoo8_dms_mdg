@@ -21,8 +21,7 @@
 							type="object" states="draft,approve"
 							groups="stock.group_stock_manager,stock.group_stock_user" />
 						<button name="reversed" string="Reversed" class="oe_highlight"
-							type="object" states="issue"
-							groups="base.group_no_one"/>
+							type="object" states="issue" groups="base.group_no_one" />
 						<field name="state" widget="statusbar" />
 					</header>
 					<sheet>
@@ -39,14 +38,15 @@
 								<field name="request_by" readonly="1" />
 								<field name="issue_date" attrs="{'readonly':[('state','=','issue')]}" />
 								<field name="write_date" attrs="{'readonly':[('state','=','issue')]}" />
-								<field name="issue_from_optional_location"/>
+								<field name="issue_from_optional_location" />
 								<!-- <field name="branch_id" widget="selection" attrs="{'readonly':[('state','=','issue')]}"/> -->
 							</group>
 							<group>
 								<field name="request_id" />
 								<field name="from_location_id" readonly="1" />
 								<field name="vehicle_id" readonly="1" />
-								<field name="approve_by" readonly="1"/>
+								<field name="approve_by" readonly="1" />
+								<field name="internal_ref" attrs="{'readonly':[('state','=','issue')]}" />
 								<field name="issue_by"
 									attrs="{'readonly':[('state','=','issue')],'required':[('state','=','approve')]}" />
 								<field name="receiver"
@@ -67,8 +67,8 @@
 											<field name="big_issue_quantity" string="Qty (B)"
 												invisible="1" />
 											<field name="big_uom_id" invisible="1" />
-											<field name="opening_qty"  invisible="1" />
-											<field name="opening_product_uom"  invisible="1" />
+											<field name="opening_qty" invisible="1" />
+											<field name="opening_product_uom" invisible="1" />
 											<field name="issue_quantity" string="Qty" />
 											<field name="product_uom" string="UOM" />
 											<field name="uom_ratio" invisible="1" />
@@ -107,6 +107,7 @@
 					<field name="from_location_id" />
 					<field name="issue_date" />
 					<field name="vehicle_id" />
+					<field name="internal_ref" />
 					<field name="state" />
 				</tree>
 			</field>
