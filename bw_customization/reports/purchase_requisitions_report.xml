@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        
+        <report 
+            string="Purchase Requisition" 
+            id="action_report_purchase_requisition" 
+            model="purchase.requisitions" 
+            report_type="qweb-pdf"
+            name="bw_customization.report_purchase_requisition_document" 
+            file="bw_customization.report_purchase_requisition_document"             
+        />
+
+    </data>
+</openerp>
