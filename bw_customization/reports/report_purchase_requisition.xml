@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<template id="report_purchase_requisition_document">
+			<t t-call="bw_customization.purchase_requisition_custom_layout">
+				<div class="page">
+					<t t-foreach="docs" t-as="o">
+						<br />
+						<div class="row">
+							<div class="col-xs-6">
+								Ref. No.
+								<span t-field="o.name" />
+							</div>
+							<div class="col-xs-6">
+								Date
+								<span t-field="o.date_requisition" />
+							</div>
+						</div>
+						<table class="table table-condensed" style="border:1pt solid;">
+							<thead>
+								<tr style="background-color:#0052cc;color:#ffffff;" height="10pt;">
+									<th class="text-center" style="border:1pt solid;border-color:black;">Sr.</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Purchase Item</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Unit</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Qty Total</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Require Date</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Remark</th>
+								</tr>
+							</thead>
+							<tbody class="requisition_line_tbody">
+								<tr t-foreach="o.line_ids" t-as="l">
+									<td style="border:1pt solid;border-color:black;" align="center">
+										<t t-esc="l_index+1" />
+									</td>
+									<td style="border:1pt solid;border-color:black;">
+										<span t-field="l.product_id.name" />
+									</td>
+									<td style="border:1pt solid;border-color:black;" align="center">
+										<span t-field="l.product_uom_id.name" />
+									</td>
+									<td style="border:1pt solid;border-color:black;" align="center">
+										<span t-esc="'%.0f'%l.product_qty" />
+									</td>
+									<td style="border:1pt solid;border-color:black;" align="center">
+										<span t-field="l.requisition_id.date_expected" />
+									</td>
+									<td class="text-right" style="border:1pt solid;border-color:black;">
+
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2" style="border:1pt solid;border-color:black;" align="center">
+										Total Order Qty
+									</td>									
+									<td style="border:1pt solid;border-color:black;" align="center">
+										
+									</td>
+									<td style="border:1pt solid;border-color:black;" align="center">
+										<t t-esc="'%.0f'%sum(l.product_qty for l in o.line_ids)" />
+									</td>
+									<td style="border:1pt solid;border-color:black;" align="center">
+										
+									</td>
+									<td class="text-right" style="border:1pt solid;border-color:black;">
+
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<div class="row" style="padding-top:-2s0pt;width:1000px">
+							<div class="col-xs-12">
+								<table class="table" style="border:solid;border-color:white;"
+									align="left">
+									<tr style="border:solid;border-color:white;">
+										<td style="margin-top:-10pt;" align="left">
+											<span>
+												<strong>Requested By</strong>
+											</span>
+										</td>
+										<td style="margin-top:-10pt;" align="left">
+											<span>
+												<strong>Checked By</strong>
+											</span>
+										</td>
+										<td style="margin-top:-10pt;" align="left">
+											<span>
+												<strong>Approved By</strong>
+											</span>
+										</td>
+										<td style="margin-top:-10pt;" align="left">
+											<span>
+												<strong>Reapproved By</strong>
+											</span>
+										</td>
+									</tr>
+									<tr style="border:solid;border-color:white;">
+										<td style="margin-top:-10pt;" align="left">
+											<strong>Signature&#160;:</strong>
+											<span>
+												-------------------------
+											</span>
+										</td>
+										<td style="margin-top:-10pt;" align="left">
+											<strong>Signature&#160;:</strong>
+											<span>
+												-------------------------
+											</span>
+										</td>
+										<td style="margin-top:-10pt;" align="left">
+											<strong>Signature&#160;:</strong>
+											<span>
+												-------------------------
+											</span>
+										</td>
+										<td style="margin-top:-10pt;" align="left">
+											<strong>Signature&#160;:</strong>
+											<span>
+												-------------------------
+											</span>
+										</td>
+									</tr>
+									<tr style="border:solid;border-color:white;">
+										<td style="margin-top:-10pt;" align="left">
+											<strong>Name&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;:
+											</strong>
+											<span>
+												-------------------------
+											</span>
+										</td>
+										<td style="margin-top:-10pt;" align="left">
+											<strong>Name&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;:
+											</strong>
+											<span>
+												-------------------------
+											</span>
+										</td>
+										<td style="margin-top:-10pt;" align="left">
+											<strong>Name&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;:
+											</strong>
+											<span>
+												-------------------------
+											</span>
+										</td>
+										<td style="margin-top:-10pt;" align="left">
+											<strong>Name&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;:
+											</strong>
+											<span>
+												-------------------------
+											</span>
+										</td>
+									</tr>	
+									<tr style="border:solid;border-color:white;">
+										<td style="margin-top:-10pt;" align="left">
+											<strong>Position&#160;&#160;&#160;:
+											</strong>
+											<span>
+												-------------------------
+											</span>
+										</td>
+										<td style="margin-top:-10pt;" align="left">
+											<strong>Position&#160;&#160;&#160;:
+											</strong>
+											<span>
+												-------------------------
+											</span>
+										</td>
+										<td style="margin-top:-10pt;" align="left">
+											<strong>Position&#160;&#160;&#160;:
+											</strong>
+											<span>
+												-------------------------
+											</span>
+										</td>
+										<td style="margin-top:-10pt;" align="left">
+											<strong>Position&#160;&#160;&#160;:
+											</strong>
+											<span>
+												-------------------------
+											</span>
+										</td>
+									</tr>																	
+								</table>
+							</div>
+						</div>
+					</t>
+				</div>
+			</t>
+		</template>
+	</data>
+</openerp>
