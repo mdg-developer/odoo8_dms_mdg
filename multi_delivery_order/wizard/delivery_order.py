@@ -25,11 +25,7 @@ class sale_order_delivery_transfer(osv.osv_memory):
     _name = 'order.delivery.transfer'
     _description = 'Order Delivery Transfer'
     _columns = {
-        'confirm':fields.boolean('Complete State' ,readonly=True),
-    }
-
-    _defaults = {
-         'confirm': True,         
+        'date':fields.date('Delivery Date',required=True),
     }
     
     def print_report(self, cr, uid, ids, context=None):
@@ -41,13 +37,14 @@ class sale_order_delivery_transfer(osv.osv_memory):
              'form': data
             }
         order_ids=datas['ids']
+        date =data['date']
         for order in order_ids: 
             order_data=order_obj.browse(cr,uid,order,context=context)
             shipped=order_data.shipped
             if shipped!=True:
-                self.transfer_order_delivery(cr, uid, [order], context=context)       
+                self.transfer_order_delivery(cr, uid, [order],date, context=context)       
                 
-    def transfer_order_delivery(self, cr, uid, ids, context=None):
+    def transfer_order_delivery(self, cr, uid, ids,date, context=None):
         context = {'lang':'en_US', 'params':{'action':458}, 'tz': 'Asia/Rangoon', 'uid': 1}
         soObj = self.pool.get('sale.order')        
         stockPickingObj = self.pool.get('stock.picking')
@@ -73,6 +70,23 @@ class sale_order_delivery_transfer(osv.osv_memory):
                             detailObj = stockDetailObj.browse(cr, uid, wizResult['res_id'], context=context)
                             if detailObj:
                                 detailObj.do_detailed_transfer()    
+                            cr.execute('update stock_picking set date_done =%s where origin=%s',(date,so_data.name,))        
+                            cr.execute('update stock_move set date = %s where origin =%s',(date,so_data.name,))
+                            picking_id=stockViewResult['res_id']   
+                            print 'picking_id',picking_id
+                            pick_date=stockPickingObj.browse(cr, uid, picking_id, context=context)
+                            cr.execute("update account_move_line set date= %s from account_move move where move.id=account_move_line.move_id and move.ref= %s",(date,pick_date.name,))            
+                            cr.execute('''update account_move set period_id=p.id,date=%s
+                            from (
+                            select id,date_start,date_stop
+                            from account_period
+                            where date_start != date_stop
+                            ) p
+                            where p.date_start <= %s and  %s <= p.date_stop
+                            and account_move.ref=%s''',(date,date, date,pick_date.name,))                              
+                                
+                            
+                                                            
                                            
         return True          
             

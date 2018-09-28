@@ -70,7 +70,7 @@
 					<field name="request_by"
 						attrs="{'readonly': [('state', 'in', ('done','cancel'))],'required': [('state', '=', 'confirm')]}" />
 					<field name="validate_by" />
-					<field name="note" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+					<field name="note" attrs="{'readonly': [('state', 'in', ('done','cancel'))]}" />
 
 				</xpath>
 				<xpath expr="//field[@name='product_qty']" position="after">

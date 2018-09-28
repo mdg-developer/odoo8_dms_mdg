@@ -8,7 +8,7 @@
 				<form string="Multi Delivery Order">
 					<separator colspan="4" />
 					<group>
-						<field name="confirm" readonly="1" />
+						<field name="date" />
 					</group>
 					<footer>
 						<button name="print_report" string="Transfer" type="object"
@@ -20,7 +20,7 @@
 			</field>
 		</record>
 
-		<record id="action_view_delivery_invoice_transfer" model="ir.actions.act_window">
+		<record id="action_view_delivery_invoice_transfer1" model="ir.actions.act_window">
 			<field name="name">Multi Delivery And Invoice Create</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">invoice.delivery.transfer</field>
@@ -31,12 +31,12 @@
 			<field name="multi">True</field>
 		</record>
 
-		<record model="ir.values" id="sale_order_delivery_invoice_transfer">
+		<record model="ir.values" id="sale_order_delivery_invoice_transfer1">
 			<field name="model_id" ref="sale.model_sale_order" />
 			<field name="name">Multi Delivery And Invoice Create</field>
 			<field name="key2">client_action_multi</field>
 			<field name="value"
-				eval="'ir.actions.act_window,' + str(ref('action_view_delivery_invoice_transfer'))" />
+				eval="'ir.actions.act_window,' + str(ref('action_view_delivery_invoice_transfer1'))" />
 			<field name="key">action</field>
 			<field name="model">sale.order</field>
 			<field name="groups_id" eval="[(4, ref('base.group_no_one'))]" />

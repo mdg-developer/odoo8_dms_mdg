@@ -6,9 +6,9 @@
 			<field name="model">order.delivery.transfer</field>
 			<field name="arch" type="xml">
 				<form string="Multi Delivery Order">
-					<separator colspan="4"/>
+					<separator colspan="4" />
 					<group>
-						<field name="confirm"  readonly="1"/>
+						<field name="date" />
 					</group>
 					<footer>
 						<button name="print_report" string="Transfer" type="object"
@@ -39,8 +39,7 @@
 				eval="'ir.actions.act_window,' + str(ref('action_view_delivery_order_transfer'))" />
 			<field name="key">action</field>
 			<field name="model">sale.order</field>
-<!-- 	<field name="groups_id" eval="[(4, ref('base.group_no_one'))]" />
- -->
+			<!-- <field name="groups_id" eval="[(4, ref('base.group_no_one'))]" /> -->
 		</record>
 	</data>
 </openerp>

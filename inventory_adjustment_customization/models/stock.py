@@ -134,18 +134,30 @@ class stock_quant(osv.osv):
             period_id = context.get('force_period', self.pool.get('account.period').find(cr, uid, context=context)[0])
             ref_no = context.get('ref')
             if ref_no:
-                move_obj.create(cr, uid, {'journal_id': journal_id,
+                move_id=move_obj.create(cr, uid, {'journal_id': journal_id,
                                       'line_id': move_lines,
                                       'period_id': period_id,
                                       'date': fields.date.context_today(self, cr, uid, context=context),
                                       'ref': ref_no}, context=context)
             else:
                 
-                move_obj.create(cr, uid, {'journal_id': journal_id,
+                move_id=move_obj.create(cr, uid, {'journal_id': journal_id,
                                           'line_id': move_lines,
                                           'period_id': period_id,
                                           'date': fields.date.context_today(self, cr, uid, context=context),
                                           'ref': move.picking_id.name}, context=context)
+                
+            cr.execute("update account_move_line set date =%s where move_id =%s",(move.date,move_id,))            
+            cr.execute('''update account_move set period_id=p.id,date=%s
+            from (
+            select id,date_start,date_stop
+            from account_period
+            where date_start != date_stop
+            ) p
+            where p.date_start <= %s and  %s <= p.date_stop
+            and account_move.id=%s''',(move.date,move.date, move.date,move_id,))   
+            
+                         
 class account_move_line(osv.osv):
     _inherit = "account.move.line"    
     _columns = {
