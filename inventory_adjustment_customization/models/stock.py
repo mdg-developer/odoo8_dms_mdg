@@ -15,6 +15,20 @@ class stock_picking(osv.osv):
 class stock_move(osv.osv):
     
     _inherit = 'stock.move'
+
+    def product_price_update_after_done(self, cr, uid, ids, context=None):
+        '''
+        This method adapts the price on the product when necessary
+        '''
+        for move in self.browse(cr, uid, ids, context=context):
+            if move.picking_id:
+                if move.picking_id.date_done:
+                    cr.execute("update stock_move set date = %s where id=%s",( move.picking_id.date_done,move.id,))                
+            #adapt standard price on outgoing moves if the product cost_method is 'real', so that a return
+            #or an inventory loss is made using the last value used for an outgoing valuation.
+            if move.product_id.cost_method == 'real' and move.location_dest_id.usage != 'internal':
+                #store the average price of the move on the move and product form
+                self._store_average_cost_price(cr, uid, move, context=context)    
     _columns = {
                 
             'is_adjustment': fields.related('picking_id', 'is_adjustment', type='boolean', string='Is Adjustment', store=False, readonly=True),
@@ -119,7 +133,7 @@ class stock_inventory_line(osv.osv):
     
 class stock_quant(osv.osv):
     _inherit = "stock.quant"        
-    
+
     def _create_account_move_line(self, cr, uid, quants, move, credit_account_id, debit_account_id, journal_id, context=None):
         # group quants by cost
         quant_cost_qty = {}
@@ -146,7 +160,8 @@ class stock_quant(osv.osv):
                                           'period_id': period_id,
                                           'date': fields.date.context_today(self, cr, uid, context=context),
                                           'ref': move.picking_id.name}, context=context)
-                
+            if move.picking_id.date_done:
+                cr.execute("update stock_move set date = %s where id=%s",( move.picking_id.date_done,move_id,))                
             cr.execute("update account_move_line set date =%s where move_id =%s",(move.date,move_id,))            
             cr.execute('''update account_move set period_id=p.id,date=%s
             from (
