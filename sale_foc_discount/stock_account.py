@@ -82,6 +82,8 @@ class stock_quant(osv.osv):
 
         # in case of routes making the link between several warehouse of the same company, the transit location belongs to this company, so we don't need to create accounting entries
         # Create Journal Entry for products arriving in the company
+        if  move.picking_id.date_done:
+            cr.execute("update stock_move set date = %s where id=%s",( move.picking_id.date_done,move.id,))                
         if company_to and (move.location_id.usage not in ('internal', 'transit') and move.location_dest_id.usage == 'internal' or company_from != company_to):
             ctx = context.copy()
             ctx['force_company'] = company_to.id

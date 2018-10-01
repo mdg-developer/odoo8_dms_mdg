@@ -8,7 +8,8 @@ class stock_move(osv.osv):
     
     _inherit = 'stock.move'
     _columns = {
-                'manual': fields.boolean('Manual'),        
+                'manual': fields.boolean('Manual'),       
+                'is_exchange':fields.boolean('Exchange'),       
                }
 stock_move()
     

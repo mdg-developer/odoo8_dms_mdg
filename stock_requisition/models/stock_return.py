@@ -82,18 +82,18 @@ class stock_return(osv.osv):
             cr.execute('delete from stock_return_line where line_id=%s', (ids[0],))
             return_data = self.browse(cr, uid, ids, context=context)
             return_date = return_data.return_date
-            to_return_date=return_data.to_return_date
+            to_return_date = return_data.to_return_date
             from_location_id = return_data.from_location.id
             to_location_id = return_data.to_location.id            
 
             # return_from=return_data.return_from.id            
             optional_issue_location_id = return_data.sale_team_id.optional_issue_location_id.id
-            issue_from_optional_location=return_data.issue_from_optional_location
-            if  issue_from_optional_location==True:
+            issue_from_optional_location = return_data.issue_from_optional_location
+            if  issue_from_optional_location == True:
                 to_location_id = optional_issue_location_id
-                cr.execute("update stock_return set to_location=%s where id =%s ",(to_location_id,return_data.id,))
+                cr.execute("update stock_return set to_location=%s where id =%s ", (to_location_id, return_data.id,))
             else:
-                issue_from_optional_location=False
+                issue_from_optional_location = False
 
             sale_team_id = return_data.sale_team_id.id
             team_location_id = return_data.sale_team_id.location_id.id
@@ -109,7 +109,7 @@ class stock_return(osv.osv):
 #                 note_id=note[0]
 #            print 'rereturn_date',return_date,sale_team_id
              # note_ids = note_obj.search(cr, uid, [('sale_team_id', '=', sale_team_id), ('issue_date', '=', return_date),('state','=','issue')])
-            mobile_ids = mobile_obj.search(cr, uid, [('return_date', '>=', return_date),('return_date', '<=', to_return_date) ,('sale_team_id', '=', sale_team_id)], context=context)
+            mobile_ids = mobile_obj.search(cr, uid, [('return_date', '>=', return_date), ('return_date', '<=', to_return_date) , ('sale_team_id', '=', sale_team_id)], context=context)
 #             if  mobile_ids:        
 #                 #cr.execute('select gin.from_location_id as location_id,product_id,big_uom_id,sum(big_issue_quantity) as big_issue_quantity,sum(issue_quantity) as issue_quantity,product_uom  as small_uom_id from good_issue_note gin ,good_issue_note_line  ginl where gin.id = ginl.line_id and gin.id in %s group by product_id,from_location_id,big_uom_id,product_uom', (tuple(note_ids),))
 #                 cr.execute('select product_id,product_uom,sum(return_quantity) as return_quantity,sum(sale_quantity) as sale_quantity from stock_return_mobile srm, stock_return_mobile_line srml where srm.id=srml.line_id and srm.id in %s group by product_id,product_uom', (tuple(mobile_ids),))
@@ -153,14 +153,14 @@ class stock_return(osv.osv):
 #                                         }, context=context)
             for mobile_id in mobile_ids:
                 return_mobile = mobile_obj.browse(cr, uid, mobile_id, context=context)    
-                return_quantity=0
-                manual =return_mobile.manual
+                return_quantity = 0
+                manual = return_mobile.manual
                 for mobile_line in return_mobile.p_line:
                     product_id = mobile_line.product_id.id
                     product_cat = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-                    categ_issue_from_optional_location=product_cat.product_tmpl_id.categ_id.issue_from_optional_location
-                    if issue_from_optional_location ==categ_issue_from_optional_location:
-                        if to_return_date ==mobile_line.line_id.return_date:
+                    categ_issue_from_optional_location = product_cat.product_tmpl_id.categ_id.issue_from_optional_location
+                    if issue_from_optional_location == categ_issue_from_optional_location:
+                        if to_return_date == mobile_line.line_id.return_date:
                             return_quantity = mobile_line.return_quantity      
                         # if return_quantity<0:
                             # substract_qty=return_quantity
@@ -289,12 +289,13 @@ class stock_return(osv.osv):
                                         and date_trunc('day', s.date::date) <= %s                                        
                                         and  s.location_id=%s
                                         and s.product_id =%s
+                                        and s.is_exchange !=True
                                         and s.origin NOT LIKE %s
                                         and s.origin NOT LIKE %s
                                         group by s.location_id, s.product_id
                                         ) transfer_out on transfer_out.product_id=tmp.product_id and transfer_out.location_id=tmp.location_id'''
-                          , (from_location_id, product_id,'PD%', from_location_id, product_id,'PD%', return_date,to_return_date, from_location_id, product_id,'PD%', return_date,to_return_date, from_location_id, product_id,'PD%','SO%',))                
-                        #opening_data = cr.fetchone()                        
+                          , (from_location_id, product_id, 'PD%', from_location_id, product_id, 'PD%', return_date, to_return_date, from_location_id, product_id, 'PD%', return_date, to_return_date, from_location_id, product_id, 'PD%', 'SO%',))                
+                        # opening_data = cr.fetchone()                        
                         
                                     
                         in_qty_data = cr.fetchone()
@@ -304,14 +305,14 @@ class stock_return(osv.osv):
                             else:
                                 in_stock_qty = 0                
                         product_search = stock_return_obj.search(cr, uid, [('product_id', '=', product_id), ('line_id', '=', ids[0])], context=context) 
-                        actual_return_quantity=0
-                        onground_quantity=0
-                        if manual==True:
-                            onground_quantity=return_quantity
-                            actual_return_quantity=return_quantity  
+                        actual_return_quantity = 0
+                        onground_quantity = 0
+                        if manual == True:
+                            onground_quantity = return_quantity
+                            actual_return_quantity = return_quantity  
                         if product_search:                                                                                         
                             # cr.execute("update stock_return_line set receive_quantity=receive_quantity+%s + %s ,return_quantity=%s,sale_quantity=%s,foc_quantity=%s where line_id=%s and product_id=%s", (last_qty,substract_qty,return_quantity, sale_quantity, foc_quantity, ids[0], product_id,))
-                            cr.execute("update stock_return_line set return_quantity=return_quantity + %s,onground_quantity=onground_quantity + %s,actual_return_quantity=actual_return_quantity + %s,sale_quantity=sale_quantity - %s where line_id=%s and product_id=%s", (return_quantity, onground_quantity,actual_return_quantity,sale_quantity, ids[0], product_id,))
+                            cr.execute("update stock_return_line set return_quantity=return_quantity + %s,onground_quantity=onground_quantity + %s,actual_return_quantity=actual_return_quantity + %s,sale_quantity=sale_quantity - %s where line_id=%s and product_id=%s", (return_quantity, onground_quantity, actual_return_quantity, sale_quantity, ids[0], product_id,))
                         else:
                             product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
                             sequence = product.sequence
@@ -326,7 +327,7 @@ class stock_return(osv.osv):
                                                       'return_quantity':return_quantity,
                                                        'onground_quantity':onground_quantity,
                                                        'actual_return_quantity':actual_return_quantity,
-                                                      'sale_quantity':-1*sale_quantity,
+                                                      'sale_quantity':-1 * sale_quantity,
                                                       'status':'Stock Return',
                                                       # 'foc_quantity':foc_quantity,
                                                       'from_location_id':from_location_id ,
@@ -338,21 +339,21 @@ class stock_return(osv.osv):
             disassembly_ids = product_disassembly_obj.search(cr, uid, [('date', '>=', return_date), ('date', '<=', to_return_date), ('section_id', '=', sale_team_id)], context=context),
             for d_list in disassembly_ids:
                 for d_id in d_list:
-                    dis_data=product_disassembly_obj.browse(cr, uid, d_id, context=context)
-                    location_type ='Disassembly'
-                    location_id =dis_data.location_id.id
+                    dis_data = product_disassembly_obj.browse(cr, uid, d_id, context=context)
+                    location_type = 'Disassembly'
+                    location_id = dis_data.location_id.id
                     for product_line in dis_data.product_lines:   
-                        dis_data=product_disassembly_line_obj.browse(cr, uid, product_line.id, context=context)
-                        first_product_id =dis_data.product_id.id
+                        dis_data = product_disassembly_line_obj.browse(cr, uid, product_line.id, context=context)
+                        first_product_id = dis_data.product_id.id
                         product_data = product_obj.browse(cr, uid, first_product_id, context=context)
-                        categ_issue_from_optional_location=product_data.product_tmpl_id.categ_id.issue_from_optional_location
-                        if issue_from_optional_location ==categ_issue_from_optional_location:
+                        categ_issue_from_optional_location = product_data.product_tmpl_id.categ_id.issue_from_optional_location
+                        if issue_from_optional_location == categ_issue_from_optional_location:
                             sequence = product_data.sequence
-                            first_uom_id =dis_data.big_uom_id.id
-                            first_big_quantity=dis_data.big_quantity
-                            sec_to_product_id=dis_data.to_product_id.id
-                            sec_uom_id=dis_data.uom_id.id
-                            sec_quantity=dis_data.quantity
+                            first_uom_id = dis_data.big_uom_id.id
+                            first_big_quantity = dis_data.big_quantity
+                            sec_to_product_id = dis_data.to_product_id.id
+                            sec_uom_id = dis_data.uom_id.id
+                            sec_quantity = dis_data.quantity
                             first_normal_stock_id = stock_return_obj.search(cr, uid , [('line_id', '=', ids[0]) , ('product_id', '=', first_product_id), ('status', '=', 'Stock Return')])
                             if first_normal_stock_id:
                                 cr.execute('update stock_return_line set assembly_qty = assembly_qty - %s where id=%s ', (first_big_quantity, first_normal_stock_id[0],))                        
@@ -389,25 +390,25 @@ class stock_return(osv.osv):
             trans_ids = product_trans_obj.search(cr, uid, [('date', '>=', return_date), ('date', '<=', to_return_date), ('void_flag', '=', 'none'), ('team_id', '=', sale_team_id)], context=context),
             for t_list in trans_ids:
                 for t_id in t_list:
-                    exchange_data=product_trans_obj.browse(cr, uid, t_id, context=context)
-                    location_type =exchange_data.location_type
-                    exchange_name =exchange_data.transaction_id
+                    exchange_data = product_trans_obj.browse(cr, uid, t_id, context=context)
+                    location_type = exchange_data.location_type
+                    exchange_name = exchange_data.transaction_id
                     from datetime import datetime
                     exchange_date = datetime.strptime(exchange_data.date, DEFAULT_SERVER_DATETIME_FORMAT).strftime(DEFAULT_SERVER_DATE_FORMAT)
-                    customer_location_id =exchange_data.customer_id.property_stock_customer.id
-                    out_quant_ids = move_obj.search(cr, uid, [('origin','=',exchange_name),('location_dest_id', '=', customer_location_id)])
+                    customer_location_id = exchange_data.customer_id.property_stock_customer.id
+                    out_quant_ids = move_obj.search(cr, uid, [('origin', '=', exchange_name), ('location_dest_id', '=', customer_location_id)])
                     if  out_quant_ids:        
                         for move_id in out_quant_ids:
                             move_data = move_obj.browse(cr, uid, move_id, context=context)
                             product_id = move_data.product_id.id
                             product_data = product_obj.browse(cr, uid, product_id, context=context)
-                            categ_issue_from_optional_location=product_data.product_tmpl_id.categ_id.issue_from_optional_location
-                            if issue_from_optional_location ==categ_issue_from_optional_location:
+                            categ_issue_from_optional_location = product_data.product_tmpl_id.categ_id.issue_from_optional_location
+                            if issue_from_optional_location == categ_issue_from_optional_location:
                                 sequence = product_data.sequence
                                 uom_id = product_data.uom_id.id
                                 quantity = move_data.product_qty
                                 normal_stock_id = stock_return_obj.search(cr, uid , [('line_id', '=', ids[0]) , ('product_id', '=', product_id), ('status', '=', 'Stock Return')])
-                                if normal_stock_id and exchange_date==to_return_date:
+                                if normal_stock_id and exchange_date == to_return_date:
                                     cr.execute('update stock_return_line set return_quantity = return_quantity - %s where id=%s ', (quantity, normal_stock_id[0],))                        
                                      
                                 return_stock_id = stock_return_obj.search(cr, uid , [('line_id', '=', ids[0]) , ('product_id', '=', product_id), ('status', '=', location_type)])
@@ -419,7 +420,7 @@ class stock_return(osv.osv):
                                                               'product_id': product_id,
                                                               'product_uom': uom_id,
                                                               'return_quantity':0,
-                                                              'exchange_qty':-1*quantity,
+                                                              'exchange_qty':-1 * quantity,
                                                               'sale_quantity':0,
                                                               'status':location_type,
                                                               'from_location_id':from_location_id ,
@@ -439,8 +440,8 @@ class stock_return(osv.osv):
                         quant_data = quant_obj.browse(cr, uid, quant_id, context=context)
                         product_id = quant_data.product_id.id
                         product_data = product_obj.browse(cr, uid, product_id, context=context)
-                        categ_issue_from_optional_location=product_data.product_tmpl_id.categ_id.issue_from_optional_location
-                        if issue_from_optional_location ==categ_issue_from_optional_location:
+                        categ_issue_from_optional_location = product_data.product_tmpl_id.categ_id.issue_from_optional_location
+                        if issue_from_optional_location == categ_issue_from_optional_location:
                             sequence = product_data.sequence
                             uom_id = product_data.uom_id.id
                             quantity = quant_data.qty
@@ -450,7 +451,7 @@ class stock_return(osv.osv):
     #                             
                             return_stock_id = stock_return_obj.search(cr, uid , [('line_id', '=', ids[0]) , ('product_id', '=', product_id), ('status', '=', location_type)])
                             if  return_stock_id:
-                                cr.execute('update stock_return_line set exchange_qty =exchange_qty + %s,return_quantity =return_quantity+ %s where id=%s ', (quantity,quantity, return_stock_id[0],))
+                                cr.execute('update stock_return_line set exchange_qty =exchange_qty + %s,return_quantity =return_quantity+ %s where id=%s ', (quantity, quantity, return_stock_id[0],))
                             else:                       
                                 stock_return_obj.create(cr, uid, {'line_id': ids[0],
                                                            'sequence':sequence,
@@ -476,8 +477,8 @@ class stock_return(osv.osv):
                         quant_data = quant_obj.browse(cr, uid, quant_id, context=context)
                         product_id = quant_data.product_id.id
                         product_data = product_obj.browse(cr, uid, product_id, context=context)
-                        categ_issue_from_optional_location=product_data.product_tmpl_id.categ_id.issue_from_optional_location
-                        if issue_from_optional_location ==categ_issue_from_optional_location:
+                        categ_issue_from_optional_location = product_data.product_tmpl_id.categ_id.issue_from_optional_location
+                        if issue_from_optional_location == categ_issue_from_optional_location:
                             sequence = product_data.sequence
                             uom_id = product_data.uom_id.id
                             quantity = quant_data.qty
@@ -486,7 +487,7 @@ class stock_return(osv.osv):
     #                                 cr.execute('update stock_return_line set return_quantity = return_quantity - %s where id=%s ', (quantity, normal_stock_id[0],))
                             return_stock_id = stock_return_obj.search(cr, uid , [('line_id', '=', ids[0]) , ('product_id', '=', product_id), ('status', '=', location_type)])
                             if  return_stock_id:
-                                cr.execute('update stock_return_line set exchange_qty =exchange_qty + %s,return_quantity =return_quantity+ %s where id=%s ', (quantity,quantity, return_stock_id[0],))
+                                cr.execute('update stock_return_line set exchange_qty =exchange_qty + %s,return_quantity =return_quantity+ %s where id=%s ', (quantity, quantity, return_stock_id[0],))
                             else:                       
                                 stock_return_obj.create(cr, uid, {'line_id': ids[0],
                                                            'sequence':sequence,
@@ -513,8 +514,8 @@ class stock_return(osv.osv):
                         quant_data = quant_obj.browse(cr, uid, quant_id, context=context)
                         product_id = quant_data.product_id.id
                         product_data = product_obj.browse(cr, uid, product_id, context=context)
-                        categ_issue_from_optional_location=product_data.product_tmpl_id.categ_id.issue_from_optional_location
-                        if issue_from_optional_location ==categ_issue_from_optional_location:
+                        categ_issue_from_optional_location = product_data.product_tmpl_id.categ_id.issue_from_optional_location
+                        if issue_from_optional_location == categ_issue_from_optional_location:
                             sequence = product_data.sequence
                             uom_id = product_data.uom_id.id
                             quantity = quant_data.qty
@@ -523,7 +524,7 @@ class stock_return(osv.osv):
     #                                 cr.execute('update stock_return_line set return_quantity = return_quantity - %s where id=%s ', (quantity, normal_stock_id[0],))                                                
                             return_stock_id = stock_return_obj.search(cr, uid , [('line_id', '=', ids[0]) , ('product_id', '=', product_id), ('status', '=', location_type)])
                             if  return_stock_id:
-                                cr.execute('update stock_return_line set exchange_qty =exchange_qty + %s,return_quantity =return_quantity+ %s where id=%s ', (quantity,quantity, return_stock_id[0],))
+                                cr.execute('update stock_return_line set exchange_qty =exchange_qty + %s,return_quantity =return_quantity+ %s where id=%s ', (quantity, quantity, return_stock_id[0],))
                             else:                       
                                 stock_return_obj.create(cr, uid, {'line_id': ids[0],
                                                            'sequence':sequence,
@@ -550,8 +551,8 @@ class stock_return(osv.osv):
                         quant_data = quant_obj.browse(cr, uid, quant_id, context=context)
                         product_id = quant_data.product_id.id
                         product_data = product_obj.browse(cr, uid, product_id, context=context)
-                        categ_issue_from_optional_location=product_data.product_tmpl_id.categ_id.issue_from_optional_location
-                        if issue_from_optional_location ==categ_issue_from_optional_location:
+                        categ_issue_from_optional_location = product_data.product_tmpl_id.categ_id.issue_from_optional_location
+                        if issue_from_optional_location == categ_issue_from_optional_location:
                             sequence = product_data.sequence
                             uom_id = product_data.uom_id.id
                             quantity = quant_data.qty
@@ -560,7 +561,7 @@ class stock_return(osv.osv):
     #                                 cr.execute('update stock_return_line set return_quantity = return_quantity - %s where id=%s ', (quantity, normal_stock_id[0],))                                                
                             return_stock_id = stock_return_obj.search(cr, uid , [('line_id', '=', ids[0]) , ('product_id', '=', product_id), ('status', '=', location_type)])
                             if  return_stock_id:
-                                cr.execute('update stock_return_line set exchange_qty =exchange_qty + %s,return_quantity =return_quantity+ %s where id=%s ', (quantity,quantity, return_stock_id[0],))
+                                cr.execute('update stock_return_line set exchange_qty =exchange_qty + %s,return_quantity =return_quantity+ %s where id=%s ', (quantity, quantity, return_stock_id[0],))
                             else:                       
                                 stock_return_obj.create(cr, uid, {'line_id': ids[0],
                                                            'sequence':sequence,
@@ -571,7 +572,7 @@ class stock_return(osv.osv):
                                                           'sale_quantity':0,
                                                           'status':location_type,
                                                          # 'rec_small_uom_id':small_uom_id,
-                                                          #'rec_big_uom_id':big_uom,
+                                                          # 'rec_big_uom_id':big_uom,
                                                           'from_location_id':location_id ,
                                                           'to_location_id': to_location_id,
                                                           }, context=context)                  
@@ -586,8 +587,8 @@ class stock_return(osv.osv):
                         quant_data = quant_obj.browse(cr, uid, quant_id, context=context)
                         product_id = quant_data.product_id.id
                         product_data = product_obj.browse(cr, uid, product_id, context=context)
-                        categ_issue_from_optional_location=product_data.product_tmpl_id.categ_id.issue_from_optional_location
-                        if issue_from_optional_location ==categ_issue_from_optional_location:
+                        categ_issue_from_optional_location = product_data.product_tmpl_id.categ_id.issue_from_optional_location
+                        if issue_from_optional_location == categ_issue_from_optional_location:
                             sequence = product_data.sequence
                             uom_id = product_data.uom_id.id
                             quantity = quant_data.qty
@@ -596,7 +597,7 @@ class stock_return(osv.osv):
     #                                 cr.execute('update stock_return_line set return_quantity = return_quantity - %s where id=%s ', (quantity, normal_stock_id[0],))                                                
                             return_stock_id = stock_return_obj.search(cr, uid , [('line_id', '=', ids[0]) , ('product_id', '=', product_id), ('status', '=', location_type)])
                             if  return_stock_id:
-                                cr.execute('update stock_return_line set exchange_qty =exchange_qty + %s,return_quantity =return_quantity+ %s where id=%s ', (quantity,quantity, return_stock_id[0],))
+                                cr.execute('update stock_return_line set exchange_qty =exchange_qty + %s,return_quantity =return_quantity+ %s where id=%s ', (quantity, quantity, return_stock_id[0],))
                             else:                       
                                 stock_return_obj.create(cr, uid, {'line_id': ids[0],
                                                            'sequence':sequence,
@@ -607,7 +608,7 @@ class stock_return(osv.osv):
                                                           'sale_quantity':0,
                                                           'status':location_type,
                                                         #  'rec_small_uom_id':small_uom_id,
-                                                          #'rec_big_uom_id':big_uom,
+                                                          # 'rec_big_uom_id':big_uom,
                                                           'from_location_id':location_id ,
                                                           'to_location_id': to_location_id,
                                                           }, context=context)                
@@ -655,7 +656,6 @@ class stock_return(osv.osv):
 #                         cr.execute("update stock_return_line set return_quantity_big=%s,return_quantity=%s where product_id=%s and line_id=%s and id=%s", (big_quantity, small_quantity, product_id, ids[0],record_id,))
 #                 else:
 #                         cr.execute("update stock_return_line set return_quantity_big=0,return_quantity=%s where product_id=%s and line_id=%s and id=%s", ( return_qty, product_id, ids[0],record_id,))
-
         return True 
         
     def _get_default_branch(self, cr, uid, context=None):
@@ -720,8 +720,8 @@ class stock_return(osv.osv):
             to_location_id = sale_team.issue_location_id.id            
             from_location_id = sale_team.location_id.id
         if  vals['issue_from_optional_location']:
-            if vals['issue_from_optional_location']==True:
-                to_location_id=sale_team.optional_issue_location_id.id        
+            if vals['issue_from_optional_location'] == True:
+                to_location_id = sale_team.optional_issue_location_id.id        
         id_code = self.pool.get('ir.sequence').get(cursor, user,
                                                 'stock.return.code') or '/'
         vals['name'] = id_code
@@ -790,10 +790,10 @@ class stock_return(osv.osv):
         product_obj = self.pool.get('product.product')  
         return_obj = self.browse(cr, uid, ids, context=context)    
         tmp_location_id = return_obj.sale_team_id.temp_location_id.id
-        return_date =return_obj.to_return_date
+        return_date = return_obj.to_return_date
         origin = return_obj.name
-        team_id= return_obj.sale_team_id.id
-        branch_id =return_obj.branch_id.id
+        team_id = return_obj.sale_team_id.id
+        branch_id = return_obj.branch_id.id
         for line in return_obj.p_line:
             from_location_id = line.from_location_id.id
             to_location_id = line.to_location_id.id
@@ -810,7 +810,7 @@ class stock_return(osv.osv):
                 if different_qty:
                     if different_qty < 0:
                         # Tmp===> Car
-                        #inventory_location_id = location_obj.search(cr, uid, [('name', '=', 'Inventory loss')])
+                        # inventory_location_id = location_obj.search(cr, uid, [('name', '=', 'Inventory loss')])
                         move_id = move_obj.create(cr, uid, {
                                               'product_id': product_id,
                                               'product_uom_qty':-1 * different_qty ,
@@ -856,19 +856,19 @@ class stock_return(osv.osv):
                                       'sale_team_id':team_id,
                                       'branch_id':branch_id,
                                      }    
-        check_id=check_obj.create(cr,uid,check_value,context=context)
-        cr.execute('select srnl.product_id,srnl.product_uom,srnl.actual_return_quantity,srnl.to_location_id,srnl.status,srn.return_date from stock_return srn, stock_return_line srnl where srn.id=srnl.line_id and srnl.actual_return_quantity >0 and srnl.status != %s and srn.id = %s', ('Stock Return',return_obj.id,))
+        check_id = check_obj.create(cr, uid, check_value, context=context)
+        cr.execute('select srnl.product_id,srnl.product_uom,srnl.actual_return_quantity,srnl.to_location_id,srnl.status,srn.return_date from stock_return srn, stock_return_line srnl where srn.id=srnl.line_id and srnl.actual_return_quantity >0 and srnl.status != %s and srn.id = %s', ('Stock Return', return_obj.id,))
         stock_return = cr.fetchall()
         if stock_return:
             for srn_data_line in stock_return:
                 product_id = srn_data_line[0]
                 pro_data = product_obj.browse(cr, uid, product_id, context=context)
-                sequence=pro_data.sequence
+                sequence = pro_data.sequence
                 uom_id = srn_data_line[1]
                 qty = srn_data_line[2]
                 current_location = srn_data_line[3]            
-                if pro_data.product_tmpl_id.type=='product':
-                    check_line_obj.create(cr, uid,{
+                if pro_data.product_tmpl_id.type == 'product':
+                    check_line_obj.create(cr, uid, {
                                       'line_id':check_id,
                                       'sequence':sequence,
                                       'product_id':product_id,
@@ -877,6 +877,7 @@ class stock_return(osv.osv):
                                       'current_location':current_location,
                                       'current_qty':qty,
                                       }, context=context)    
+        cr.execute("update stock_move set date=%s where origin=%s", (return_date, origin,))
         return self.write(cr, uid, ids, {'state':'received'})      
 
             
@@ -904,9 +905,9 @@ class stock_return_line(osv.osv):  # #prod_pricelist_update_line
         'opening_stock_qty' : fields.float(string='Opening Stock Qty', digits=(16, 0)),
         'sale_quantity' : fields.float(string='Sales Qty', digits=(16, 0)),
         'return_quantity' : fields.float(string='Returned Qty', digits=(16, 0)),
-       #'onground_quantity' : fields.float(string='All Physical Stock Qty', digits=(16, 0),readonly=True),
+       # 'onground_quantity' : fields.float(string='All Physical Stock Qty', digits=(16, 0),readonly=True),
         
-        'onground_quantity': fields.function(_amount_compute, string='All Physical Stock Qty',store=True, digits=(16, 0),readonly=True, type='float'),
+        'onground_quantity': fields.function(_amount_compute, string='All Physical Stock Qty', store=True, digits=(16, 0), readonly=True, type='float'),
 
         'actual_return_quantity' : fields.float(string='Actual Return Qty', digits=(16, 0)),
         'closing_stock_qty' : fields.float(string='Closing Stock Qty', digits=(16, 0)),
@@ -941,7 +942,7 @@ class stock_return_line(osv.osv):  # #prod_pricelist_update_line
             'onground_quantity': closing_qty,
         }
         if ids:
-            cr.execute("update stock_return_line set onground_quantity=%s where id =%s",(closing_qty,ids[0],))
+            cr.execute("update stock_return_line set onground_quantity=%s where id =%s", (closing_qty, ids[0],))
         return {'value': values}        
     
     def on_change_ground_quantity(self, cr, uid, ids, closing_stock_qty, return_quantity, context=None):
@@ -951,6 +952,6 @@ class stock_return_line(osv.osv):  # #prod_pricelist_update_line
             'onground_quantity': closing_qty,
         }
         if ids:
-            cr.execute("update stock_return_line set onground_quantity=%s where id =%s",(closing_qty,ids[0],))
+            cr.execute("update stock_return_line set onground_quantity=%s where id =%s", (closing_qty, ids[0],))
         return {'value': values}     
     

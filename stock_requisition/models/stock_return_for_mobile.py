@@ -154,6 +154,8 @@ class stock_return_from_mobile_line(osv.osv):
     def create(self, cr, uid, data, context=None):
         product=data['product_id']
         if product:
+            if type(product)==str:
+                product=int(product)
             product_data= self.pool.get('product.product').browse(cr, uid, product, context=context)
             uom_id=product_data.uom_id.id
             data['product_uom']=uom_id

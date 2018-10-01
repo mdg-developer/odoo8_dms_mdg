@@ -10,6 +10,9 @@
 				<data>
 					<xpath expr="//field[@name='origin']" position="before">
 						<field name="manual" />
+						<field name="is_exchange" readonly="1"/>
+						
+						
 					</xpath>
 				</data>
 			</field>
