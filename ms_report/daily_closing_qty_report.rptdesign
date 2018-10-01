@@ -448,7 +448,7 @@ where pp.product_tmpl_id = pt.id
                 </structure>
                 <structure>
                     <property name="name">param_4</property>
-                    <property name="paramName">to_date</property>
+                    <property name="paramName">from_date</property>
                     <property name="nativeName"></property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>

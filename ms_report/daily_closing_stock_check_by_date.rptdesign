@@ -324,6 +324,7 @@ where pp.product_tmpl_id = pt.id
                     <property name="columnName">x_team</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">x_team</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">x_team</text-property>
                 </structure>
                 <structure>
@@ -774,12 +775,12 @@ stock_warehouse as w on w.lot_stock_id=m.x_location_id
 left join
 (
 SELECT x_id,x_location_id, x_product_id, x_date
-   , sum(x_balance) OVER (PARTITION BY x_location_id, x_product_id ORDER BY x_date) - x_balance as opening,
-   x_balance as qty, sum(x_balance) OVER (PARTITION BY x_location_id, x_product_id ORDER BY x_date) as closing
+   , sum(x_balance) OVER (PARTITION BY x_location_id, x_product_id ORDER BY x_date,x_uom) - x_balance as opening,
+   x_balance as qty, sum(x_balance) OVER (PARTITION BY x_location_id, x_product_id ORDER BY x_date,x_uom) as closing
 FROM   stock_movement()
 ORDER  BY x_product_id, x_location_id, x_date
 ) d on m.x_location_id=d.x_location_id and m.x_product_id=d.x_product_id  and m.x_date=d.x_date and m.x_id = d.x_id
-order by m.x_location_id,m.x_product_id,m.x_date
+order by m.x_location_id,m.x_product_id,m.x_date,m.x_uom
 )f
 where date between ? and ?
 --$branch_id$
