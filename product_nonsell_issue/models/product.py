@@ -12,6 +12,8 @@ class stock_move(osv.osv):
                         ('sampling', 'Sampling'),
                         ('destruction', 'Destruction'),
                         ('other', 'Others'),
+                        ('temp_adj', 'Temp Adjustment'),
+
                         ], 'Issue Type'),
                }
 class account_invoice(osv.osv):
@@ -29,7 +31,8 @@ class stock_picking(osv.osv):
                         ('sampling', 'Sampling'),
                         ('destruction', 'Destruction'),
                         ('other', 'Others'),
-                        
+                        ('temp_adj', 'Temp Adjustment'),
+
                         ], 'Issue Type'),
                }
 class product_nonsell_issue(osv.osv):
