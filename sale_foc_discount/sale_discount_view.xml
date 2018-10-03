@@ -1,13 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 	<data>
-
+		
+	    <record id="inherit_view_order_form_print" model="ir.ui.view">
+			<field name="name">sale.order.form</field>
+			<field name="model">sale.order</field>
+			<field name="inherit_id" ref="sale_management.inherit_view_order_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//button[@string='Print']" position="replace">
+					
+				</xpath>
+			
+			</field>
+		</record>	
 		<!-- customize form for sale order line view -->
 		<record id="view_order_line_form3" model="ir.ui.view">
 			<field name="name">sale order</field>
 			<field name="model">sale.order</field>
 			<field name="inherit_id" ref="sale.view_order_form" />
 			<field name="arch" type="xml">
+			    	
 				<xpath
 					expr="//form/sheet/notebook/page/field/form/group/group/div/field[@name='discount']"
 					position="replace">
