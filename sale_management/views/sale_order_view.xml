@@ -109,12 +109,14 @@
 					<field name="delivery_remark" />
 					<field name="rebate_later" />
 					<field name="ignore_credit_limit" />
-					
+
 				</field>
 				<field name="date_order" position="after">
-				    <field name="credit_allow" invisible="1"/>
-					<field name="payment_type" options="{'no_create': True}"  on_change="on_change_payment_type(partner_id,payment_type)" attrs="{'readonly':[('credit_allow','!=',True)]}"/>
-					<field name="payment_term" options="{'no_create': True}"  attrs="{'readonly':[('state','!=','draft')]}"/>
+					<field name="credit_allow" invisible="1" />
+					<field name="payment_type" options="{'no_create': True}"
+						on_change="on_change_payment_type(partner_id,payment_type)" attrs="{'readonly':[('credit_allow','!=',True)]}" />
+					<field name="payment_term" options="{'no_create': True}"
+						attrs="{'readonly':[('state','!=','draft')]}" />
 					<field name="due_date"></field>
 				</field>
 				<field name="client_order_ref" position="replace">
@@ -209,6 +211,27 @@
 								<field name="manual" />
 							</tree>
 						</field>
+					</page>
+					<page name="credit_history_ids" string="Credit History">
+						<field name="credit_history_ids">
+							<tree string="Credit Lines" editable="bottom">
+								<field name="date" readonly="1" />
+								<field name="invoice_no" readonly="1" />
+								<field name="invoice_amt" readonly="1" />
+								<field name="paid_amount" readonly="1" />
+								<field name="balance" readonly="1" />
+								<field name="due_date" readonly="1" />
+								<field name="balance_day" readonly="1" />
+								<field name="branch_id" readonly="1" />
+								<field name="status" readonly="1" />
+							</tree>
+						</field>
+						<group class="oe_subtotal_footer oe_center" colspan="2">
+							<field name="credit_invoice_balance" readonly="1" />
+							<field name="credit_limit_amount" readonly="1" />
+							<field name="credit_balance" readonly="1" />
+						</group>
+
 					</page>
 				</xpath>
 			</field>

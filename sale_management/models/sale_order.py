@@ -52,7 +52,7 @@ class sale_order(osv.osv):
             partner_id=sale_data.partner_id.id
             payment_type=sale_data.payment_type
             ignore_credit_limit=sale_data.ignore_credit_limit
-            invoice_ids = invoice_obj.search(cr, uid, [('partner_id', '=', partner_id),('state','=','open')], context=context)
+            invoice_ids = invoice_obj.search(cr, uid, [('payment_type','=','credit'),('partner_id', '=', partner_id),('state','=','open')], context=context)
             for invoice_id in invoice_ids:
                 invoice_data=invoice_obj.browse(cr, uid, invoice_id, context=context)  
                 credit_amt +=invoice_data.residual
@@ -211,11 +211,15 @@ class sale_order(osv.osv):
          'payment_term': fields.many2one('account.payment.term', 'Payment Term', readonly=False),
          'issue_warehouse_id':fields.many2one('stock.warehouse', 'Warehouse'),
          'promos_line_ids':fields.one2many('sale.order.promotion.line', 'promo_line_id', 'Promotion Lines'),
+         'credit_history_ids':fields.one2many('sale.order.credit.history', 'sale_order_id', 'Credit Lines'),
         'cancel_user_id': fields.many2one('res.users', 'Cancel By'),
         'is_entry': fields.boolean('Is Entry Data',default=False),
         'rebate_later': fields.boolean("Rebate Later" , default=False,readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
         'credit_allow':fields.boolean('Credit Allow',default=False),
-        'ignore_credit_limit':fields.boolean('Ignore Credit Limitation',default=False,readonly=True, states={'draft': [('readonly', False)]})
+        'ignore_credit_limit':fields.boolean('Ignore Credit Limitation',default=False,readonly=True, states={'draft': [('readonly', False)]}),
+        'credit_invoice_balance' :fields.float('Credit Invoice Balance'),   
+        'credit_limit_amount' :fields.float('Credit Limit'),   
+        'credit_balance' :fields.float('Credit Balance'),   
                }
     def action_reverse(self, cr, uid, ids, context=None):
         pick_obj = self.pool.get('stock.picking')
@@ -314,7 +318,9 @@ class sale_order(osv.osv):
         return {'value': values}
     
     def onchange_partner_id(self, cr, uid, ids, part, context=None):
-        
+        invoice_obj=self.pool.get('account.invoice')
+        credit_amt_total=credit_limit=credit_balance=0
+        data_line = []
         if not part:
             return {'value': {'partner_invoice_id': False, 'partner_shipping_id': False, 'payment_term': False, 'fiscal_position': False}}
 
@@ -333,6 +339,28 @@ class sale_order(osv.osv):
             payment_type = 'cash'
             payment_term = 1
         dedicated_salesman = part.user_id and part.user_id.id or uid
+        if payment_type =='credit' and part:
+            invoice_ids = invoice_obj.search(cr, uid, [('payment_type','=','credit'),('partner_id', '=', part.id),('state','=','open')], context=context)
+            for invoice_id in invoice_ids:
+                invoice_data=invoice_obj.browse(cr, uid, invoice_id, context=context)  
+                credit_amt_total +=invoice_data.residual 
+                cr.execute("select %s::date - current_date",(invoice_data.date_due,))
+                day=cr.fetchone()[0]
+                data_line.append({
+                                'date':invoice_data.date_invoice,
+                                'invoice_no':invoice_data.number,
+                                'invoice_amt':invoice_data.amount_total,
+                                'paid_amount':invoice_data.paid_amount,
+                                'balance':invoice_data.residual,
+                                'due_date':invoice_data.date_due,
+                                'balance_day':int(day),
+                                'branch_id':invoice_data.branch_id.id,
+                                'status':invoice_data.state,
+                                          })   
+            credit_limit =part.credit_limit
+            credit_balance=credit_limit-credit_amt_total
+
+                 
         val = {
             'partner_invoice_id': addr['invoice'],
             'partner_shipping_id': addr['delivery'],
@@ -348,8 +376,11 @@ class sale_order(osv.osv):
             'country_id': part.country_id and part.country_id.id or False,
             'township': part.township and part.township.id or False,
             'credit_allow':credit_allow,
-        }
-        print 'payment_typepayment_type', payment_type
+            'credit_history_ids':data_line,
+            'credit_invoice_balance' :credit_amt_total,   
+            'credit_limit_amount' :credit_limit,   
+            'credit_balance' :credit_balance, 
+                }
         domain = {'payment_term': [('id', '=', payment_term)]}
         print 'domain', domain
         delivery_onchange = self.onchange_delivery_id(cr, uid, ids, False, part.id, addr['delivery'], False, context=context)
@@ -358,6 +389,7 @@ class sale_order(osv.osv):
             val['pricelist_id'] = pricelist
 #         if not self._get_default_section_id(cr, uid, context=context) and part.section_id:
 #             val['section_id'] = part.section_id.id
+
         sale_note = self.get_salenote(cr, uid, ids, part.id, context=context)
         if sale_note: val.update({'note': sale_note})  
         return {'value': val, 'domain': domain}
@@ -770,7 +802,21 @@ class sale_order_line(osv.osv):
     _columns = { 
                'sale_foc':fields.boolean('FOC')               
                }      
-    
+class sale_order_credit_history(osv.osv):
+    _name = 'sale.order.credit.history'
+    _columns = {  
+                'sale_order_id':fields.many2one('sale.order', 'Credit History'),
+                'date':fields.date('Invoice Date'),
+                'invoice_no':fields.char('Inv No.'),
+                'invoice_amt':fields.float('Amount'),
+                'paid_amount':fields.float('Paid Amount'),
+                'balance':fields.float('Balance'),
+                'due_date':fields.date('Due Date'),
+                'balance_day':fields.integer('Balance Days'),
+                'branch_id':fields.many2one('res.branch','Branch'),
+                'status':fields.char('Status'),
+                }
+  
 class sale_order_promotion_line(osv.osv):
     _name = 'sale.order.promotion.line'
     _columns = {

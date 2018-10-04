@@ -146,7 +146,7 @@
 
 
 		<menuitem action='action_stock_return_manual' id="menu_action_stock_return_manual"
-			parent="stock.menu_stock_warehouse_mgmt" groups="stock.group_stock_manager" />
+			parent="stock.menu_stock_warehouse_mgmt" groups="stock.group_stock_manager" sequence ="10" />
 
 	</data>
 </openerp>
