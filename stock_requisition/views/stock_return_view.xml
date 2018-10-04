@@ -109,7 +109,7 @@
 												on_change="on_change_return_quantity(closing_stock_qty,actual_return_quantity)" attrs="{'readonly':[('state','=','received')]}"/>
 											<field name="closing_stock_qty" string="Closing Stock Qty"
 												on_change="on_change_ground_quantity(closing_stock_qty,actual_return_quantity)" attrs="{'readonly':[('state','=','received')]}"/>
-											<field name="different_qty" group="base.group_no_one"/>
+											<field name="different_qty" groups="base.group_no_one"/>
 											<field name="expiry_date" string="Expiry" attrs="{'readonly':[('state','=','received')]}"/>
 											<field name="remark" string="Remark" attrs="{'readonly':[('state','=','received')]}"/>
 											<field name="state" invisible="1"/>

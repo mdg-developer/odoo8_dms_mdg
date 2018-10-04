@@ -48,5 +48,17 @@
 			<field name="prefix">TR/%(year)s/</field>
 			<field name="padding">7</field>
 		</record>
+		
+		<record id="stock_return_manual_sequence" model="ir.sequence.type">
+			<field name="name">Stock Return Manual Sequence</field>
+			<field name="code">stock.return.manual.code</field>
+		</record>
+
+		<record id="stock_return_manual_seq" model="ir.sequence">
+			<field name="name">Stock Return Manual Sequence</field>
+			<field name="code">stock.return.manual.code</field>
+			<field name="prefix">MSRN/%(year)s/</field>
+			<field name="padding">7</field>
+		</record>		
 	</data>
 </openerp>

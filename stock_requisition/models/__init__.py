@@ -9,3 +9,4 @@ import stock_taking_loading_instruction
 import stock_return_note
 import stock
 import stock_return_check
+import stock_return_manual

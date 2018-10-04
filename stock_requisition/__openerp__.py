@@ -31,7 +31,7 @@ Request For Issue And Good Issue Note Module
 
     """,
     'website': 'https://www.odoo.com/page/warehouse',
-    'depends': ['base','sale','stock'],
+    'depends': ['base', 'sale', 'stock'],
     'category': 'stock',
     'sequence': 16,
     'data': [
@@ -39,6 +39,7 @@ Request For Issue And Good Issue Note Module
         'views/stock_request_view.xml',
         'views/good_issue_note_view.xml',
         'views/stock_return_view.xml',
+        'views/stock_return_manual_view.xml',
         'views/stock_return_for_mobile_view.xml',
        # 'views/good_issue_note_tr_view.xml',
       #  'views/request_for_issue_view.xml',
@@ -48,7 +49,7 @@ Request For Issue And Good Issue Note Module
 		'reports/srn_qweb_view.xml',
         'reports/stock_return_note.xml',
 		'views/stock_taking_loading_instruction_view.xml',
-	#	'views/way_bill_view.xml',
+	# 	'views/way_bill_view.xml',
 		'views/stock_return_note_view.xml',
 		'reports/report_stock_taking_loading_instruction.xml',
         'reports/report_way_bill.xml',
@@ -56,7 +57,9 @@ Request For Issue And Good Issue Note Module
 		'reports/report_good_issue_note_tr.xml',
         'views/stock_view.xml',
         'views/stock_return_check_view.xml',
-        'reports/stock_return_check.xml',        
+        'reports/stock_return_check.xml',
+        'reports/report_stock_return_manual.xml',
+
     ],
     'test': [
 
