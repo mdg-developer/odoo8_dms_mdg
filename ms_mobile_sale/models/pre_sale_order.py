@@ -303,6 +303,7 @@ class pre_sale_order(osv.osv):
                                                         'note':preObj_ids.note,
                                                         'cancel_user_id':cancel_user_id,
                                                         'ignore_credit_limit':True,
+                                                        'credit_history_ids':[],
 
                                                          }
                         so_id = saleOrderObj.create(cr, uid, saleOrderResult, context=context)

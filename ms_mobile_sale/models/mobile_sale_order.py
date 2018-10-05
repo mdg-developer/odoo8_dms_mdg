@@ -752,6 +752,7 @@ class mobile_sale_order(osv.osv):
                                              'note':ms_ids.note,
                                             'rebate_later':ms_ids.rebate_later,
                                              'ignore_credit_limit':True,
+                                             'credit_history_ids':[],
 
 
                                         }
@@ -853,8 +854,7 @@ class mobile_sale_order(osv.osv):
 #                                 invObj.action_number()
 #                                 # validate invoice
 #                                 invObj.invoice_validate()
-                                self.pool['account.invoice'].signal_workflow(cr, uid, [invoice_id], 'invoice_open')
-                                
+                                self.pool['account.invoice'].signal_workflow(cr, uid, [invoice_id], 'invoice_open')                                
                                 # register Payment
                                 # calling the register payment pop-up
 #                                 invoiceObj.invoice_pay_customer(cr, uid, invlist, context=context)
@@ -1084,6 +1084,7 @@ class mobile_sale_order(osv.osv):
 #                             # validate invoice
 #                             invObj.invoice_validate()
                             self.pool['account.invoice'].signal_workflow(cr, uid, [invoice_id], 'invoice_open')
+                            self.pool['account.invoice'].credit_approve(cr, uid, [invoice_id], context=context)                                 
 
                             # clicking the delivery order view button
                             stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)
@@ -1130,6 +1131,7 @@ class mobile_sale_order(osv.osv):
 #                             # validate invoice
 #                             invObj.invoice_validate()
                             self.pool['account.invoice'].signal_workflow(cr, uid, [invoice_id], 'invoice_open')
+                            self.pool['account.invoice'].credit_approve(cr, uid, [invoice_id], context=context)                                 
 
                             # clicking the delivery order view button
                             stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)  # create delivery order with draft state
@@ -1161,6 +1163,7 @@ class mobile_sale_order(osv.osv):
 #                             # validate invoice
 #                             invObj.invoice_validate()
                             self.pool['account.invoice'].signal_workflow(cr, uid, [invoice_id], 'invoice_open')
+                            self.pool['account.invoice'].credit_approve(cr, uid, [invoice_id], context=context)                                 
 
                             # clicking the delivery order view button
                             stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)

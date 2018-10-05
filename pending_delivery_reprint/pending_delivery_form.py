@@ -88,7 +88,9 @@ class pendingdelivery(osv.osv):
                         if invoice_id:
                             self.pool['account.invoice'].signal_workflow(cr, uid, [invoice_id], 'invoice_open')
                             # pre_order =True
-                            invoiceObj.write(cr, uid, invoice_id, {'pre_order':True}, context)                                             
+                            invoiceObj.write(cr, uid, invoice_id, {'pre_order':True}, context)      
+                            if payment_type=='credit':
+                                invoiceObj.credit_approve(cr, uid, [invoice_id], context=context)                                     
             self.write(cr, uid, ids[0], {'state':'done'}, context=context)                        
         return True
             

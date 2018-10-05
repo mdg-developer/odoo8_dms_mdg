@@ -135,7 +135,11 @@ class sale_order_line(osv.osv):
             price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist],
                     product, qty or 1.0, partner_id, ctx)[pricelist]
             
-            if uom and pricelist:
+            if  pricelist:
+                if not uom:
+                    uom=context.get('uom', False)
+                    if not uom:
+                        uom = product_obj.uom_id and product_obj.uom_id.id
                 list_version = self.pool.get('product.pricelist.version').search(cr,uid,[('pricelist_id','=',pricelist)],context=None)
                 if list_version:
                     items = self.pool.get('product.pricelist.item').search(cr,uid,[('price_version_id','=',list_version[0]),('product_id','=',product),('product_uom_id','=',uom)],context=None)

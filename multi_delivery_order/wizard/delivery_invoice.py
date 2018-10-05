@@ -98,7 +98,9 @@ class sale_order_invoice_delivery_transfer(osv.osv_memory):
                         cr.execute('update account_invoice set date_invoice=%s,payment_type=%s ,branch_id =%s,delivery_remark =%s where id =%s', (date,payment_type,branch_id, delivery_remark, invoice_id,))                            
                         if invoice_id:
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
-                            invoiceObj.signal_workflow(cr, uid, [invoice_id], 'invoice_open')                                           
+                            invoiceObj.signal_workflow(cr, uid, [invoice_id], 'invoice_open')  
+                            if payment_type =='credit':        
+                                invoiceObj.credit_approve(cr, uid, [invoice_id], context=context)                                 
         return True          
             
                
