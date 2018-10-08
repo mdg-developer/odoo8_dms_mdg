@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
     <property name="createdBy">Eclipse BIRT Designer Version 4.4.1.v201408290142 Build &lt;4.4.1.v20140916-1320></property>
+    <list-property name="propertyBindings">
+        <structure>
+            <property name="name">queryText</property>
+            <property name="id">264</property>
+        </structure>
+        <structure>
+            <property name="name">queryTimeOut</property>
+            <property name="id">264</property>
+        </structure>
+        <structure>
+            <property name="name">rowFetchSize</property>
+            <property name="id">264</property>
+        </structure>
+    </list-property>
     <property name="units">in</property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="layoutPreference">auto layout</property>
@@ -79,11 +93,11 @@
                 <property name="category">Unformatted</property>
             </structure>
         </scalar-parameter>
-        <cascading-parameter-group name="NewCascadingParameterGroup" id="630">
+        <cascading-parameter-group name="NewCascadingParameterGroup" id="636">
             <property name="dataSet">maingroupDS</property>
             <property name="dataSetMode">multiple</property>
             <parameters>
-                <scalar-parameter name="maingroup" id="631">
+                <scalar-parameter name="Maingroup" id="637">
                     <property name="valueType">dynamic</property>
                     <property name="isRequired">false</property>
                     <property name="dataSetName">maingroupDS</property>
@@ -95,7 +109,7 @@
                     <property name="fixedOrder">true</property>
                     <structure name="format"/>
                 </scalar-parameter>
-                <scalar-parameter name="product" id="632">
+                <scalar-parameter name="Product" id="638">
                     <property name="valueType">dynamic</property>
                     <property name="isRequired">false</property>
                     <property name="dataSetName">productDS</property>
@@ -138,6 +152,12 @@
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="SaleDS" id="264">
             <property name="nullsOrdering">nulls lowest</property>
             <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">tax_id</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">tax_id</text-property>
+                    <text-property name="heading">tax_id</text-property>
+                </structure>
                 <structure>
                     <property name="columnName">reference_no</property>
                     <property name="analysis">dimension</property>
@@ -329,136 +349,141 @@
                 <list-property name="resultSet">
                     <structure>
                         <property name="position">1</property>
+                        <property name="name">tax_id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
                         <property name="name">reference_no</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">2</property>
+                        <property name="position">3</property>
                         <property name="name">order_date</property>
                         <property name="dataType">date</property>
                     </structure>
                     <structure>
-                        <property name="position">3</property>
+                        <property name="position">4</property>
                         <property name="name">vr_no</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">4</property>
+                        <property name="position">5</property>
                         <property name="name">customer_code</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">5</property>
+                        <property name="position">6</property>
                         <property name="name">customer</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">6</property>
+                        <property name="position">7</property>
                         <property name="name">product_code</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">7</property>
+                        <property name="position">8</property>
                         <property name="name">product_name</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">8</property>
+                        <property name="position">9</property>
                         <property name="name">qty</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">9</property>
+                        <property name="position">10</property>
                         <property name="name">price_unit</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">10</property>
+                        <property name="position">11</property>
                         <property name="name">discount</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">11</property>
+                        <property name="position">12</property>
                         <property name="name">total_amount</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">12</property>
+                        <property name="position">13</property>
                         <property name="name">additional_discount</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">13</property>
+                        <property name="position">14</property>
                         <property name="name">deduction_amt</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">14</property>
+                        <property name="position">15</property>
                         <property name="name">tax</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">15</property>
+                        <property name="position">16</property>
                         <property name="name">net_amount</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">16</property>
+                        <property name="position">17</property>
                         <property name="name">sale_team</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">17</property>
+                        <property name="position">18</property>
                         <property name="name">payment_type</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">18</property>
+                        <property name="position">19</property>
                         <property name="name">payment_term</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">19</property>
+                        <property name="position">20</property>
                         <property name="name">city</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">20</property>
+                        <property name="position">21</property>
                         <property name="name">township</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">21</property>
+                        <property name="position">22</property>
                         <property name="name">channel</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">22</property>
+                        <property name="position">23</property>
                         <property name="name">state</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">23</property>
+                        <property name="position">24</property>
                         <property name="name">delivery_remark</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">24</property>
+                        <property name="position">25</property>
                         <property name="name">status</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">25</property>
+                        <property name="position">26</property>
                         <property name="name">branch</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">26</property>
+                        <property name="position">27</property>
                         <property name="name">main_group</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">27</property>
+                        <property name="position">28</property>
                         <property name="name">product_category</property>
                         <property name="dataType">string</property>
                     </structure>
@@ -482,221 +507,290 @@ else
 this.queryText =this.queryText.replace("--$saleteam_id$", " and st.id="+params["saleteam"])
 }
 
-if (params["maingroup"].value == null )
+if (params["Maingroup"].value == null )
 {
 this.queryText =this.queryText.replace("--$maingroup$", "")
 }
 else
 {
-this.queryText =this.queryText.replace("--$maingroup$", " and pt.main_group="+params["maingroup"])
+this.queryText =this.queryText.replace("--$maingroup$", " and pt.main_group="+params["Maingroup"])
 }
 
-if (params["product"].value == null )
+if (params["Product"].value == null )
 {
 this.queryText =this.queryText.replace("--$product$", "")
 }
 else
 {
-this.queryText =this.queryText.replace("--$product$", " and pt.main_group="+params["product"])
+this.queryText =this.queryText.replace("--$product$", " and pp.id="+params["Product"])
 }]]></method>
             <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
                 <structure>
                     <property name="position">1</property>
+                    <property name="name">tax_id</property>
+                    <property name="nativeName">tax_id</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
                     <property name="name">reference_no</property>
                     <property name="nativeName">reference_no</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">2</property>
+                    <property name="position">3</property>
                     <property name="name">order_date</property>
                     <property name="nativeName">order_date</property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                 </structure>
                 <structure>
-                    <property name="position">3</property>
+                    <property name="position">4</property>
                     <property name="name">vr_no</property>
                     <property name="nativeName">vr_no</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">4</property>
+                    <property name="position">5</property>
                     <property name="name">customer_code</property>
                     <property name="nativeName">customer_code</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">5</property>
+                    <property name="position">6</property>
                     <property name="name">customer</property>
                     <property name="nativeName">customer</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">6</property>
+                    <property name="position">7</property>
                     <property name="name">product_code</property>
                     <property name="nativeName">product_code</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">7</property>
+                    <property name="position">8</property>
                     <property name="name">product_name</property>
                     <property name="nativeName">product_name</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">8</property>
+                    <property name="position">9</property>
                     <property name="name">qty</property>
                     <property name="nativeName">qty</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">9</property>
+                    <property name="position">10</property>
                     <property name="name">price_unit</property>
                     <property name="nativeName">price_unit</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">10</property>
+                    <property name="position">11</property>
                     <property name="name">discount</property>
                     <property name="nativeName">discount</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">11</property>
+                    <property name="position">12</property>
                     <property name="name">total_amount</property>
                     <property name="nativeName">total_amount</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">12</property>
+                    <property name="position">13</property>
                     <property name="name">additional_discount</property>
                     <property name="nativeName">additional_discount</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">13</property>
+                    <property name="position">14</property>
                     <property name="name">deduction_amt</property>
                     <property name="nativeName">deduction_amt</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">14</property>
+                    <property name="position">15</property>
                     <property name="name">tax</property>
                     <property name="nativeName">tax</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">15</property>
+                    <property name="position">16</property>
                     <property name="name">net_amount</property>
                     <property name="nativeName">net_amount</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">16</property>
+                    <property name="position">17</property>
                     <property name="name">sale_team</property>
                     <property name="nativeName">sale_team</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">17</property>
+                    <property name="position">18</property>
                     <property name="name">payment_type</property>
                     <property name="nativeName">payment_type</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">18</property>
+                    <property name="position">19</property>
                     <property name="name">payment_term</property>
                     <property name="nativeName">payment_term</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">19</property>
+                    <property name="position">20</property>
                     <property name="name">city</property>
                     <property name="nativeName">city</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">20</property>
+                    <property name="position">21</property>
                     <property name="name">township</property>
                     <property name="nativeName">township</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">21</property>
+                    <property name="position">22</property>
                     <property name="name">channel</property>
                     <property name="nativeName">channel</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">22</property>
+                    <property name="position">23</property>
                     <property name="name">state</property>
                     <property name="nativeName">state</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">23</property>
+                    <property name="position">24</property>
                     <property name="name">delivery_remark</property>
                     <property name="nativeName">delivery_remark</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">24</property>
+                    <property name="position">25</property>
                     <property name="name">status</property>
                     <property name="nativeName">status</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">25</property>
+                    <property name="position">26</property>
                     <property name="name">branch</property>
                     <property name="nativeName">branch</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">26</property>
+                    <property name="position">27</property>
                     <property name="name">main_group</property>
                     <property name="nativeName">main_group</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">27</property>
+                    <property name="position">28</property>
                     <property name="name">product_category</property>
                     <property name="nativeName">product_category</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select h.tb_ref_no reference_no,h.date_order::date order_date,h.name vr_no,h.code customer_code,c.name customer,
+            <xml-property name="queryText"><![CDATA[select sot.tax_id,h.tb_ref_no reference_no,h.date_order::date order_date,h.name vr_no,h.code customer_code,c.name customer,
 pp.default_code product_code,pt.name product_name,d.product_uom_qty qty,d.price_unit price_unit,d.discount_amt discount,
-sum((d.product_uom_qty * d.price_unit)- d.discount_amt) total_amount,(((d.product_uom_qty *d.price_unit)-d.discount_amt)*(h.additional_discount/100)) additional_discount,
-((h.deduct_amt/h.amount_untaxed)*sum((d.product_uom_qty * d.price_unit)- d.discount_amt)) deduction_amt,
-(((d.product_uom_qty *d.price_unit)-d.discount_amt)*5/100) tax,
-(((sum((d.product_uom_qty * d.price_unit)- d.discount_amt)+(((d.product_uom_qty *d.price_unit)-d.discount_amt)*5/100)))-((((d.product_uom_qty *d.price_unit)-d.discount_amt)*(h.additional_discount/100))+((h.deduct_amt/h.amount_untaxed)*sum((d.product_uom_qty * d.price_unit)- d.discount_amt)))) net_amount,
+(case
+     when
+     sot.tax_id = 3 then
+     (sum((d.product_uom_qty * d.price_unit)- d.discount_amt)-(sum((d.product_uom_qty * d.price_unit)- d.discount_amt)*5/105))
+     else
+     sum((d.product_uom_qty * d.price_unit)- d.discount_amt)
+end) total_amount,
+--sum((d.product_uom_qty * d.price_unit)- d.discount_amt) total_amount,
+(((d.product_uom_qty *d.price_unit)-d.discount_amt)*(h.additional_discount/100)) additional_discount,
+(case 
+    when 
+    h.deduct_amt = 0 then 0 
+    else
+((h.deduct_amt/h.amount_untaxed)*(case
+     when
+     sot.tax_id = 3 then
+     (sum((d.product_uom_qty * d.price_unit)- d.discount_amt)-(sum((d.product_uom_qty * d.price_unit)- d.discount_amt)*5/105))
+     else
+     sum((d.product_uom_qty * d.price_unit)- d.discount_amt)
+end)) 
+end) AS deduction_amt,
+--(((d.product_uom_qty *d.price_unit)-d.discount_amt)*5/100) tax,
+(case 
+    when 
+    sot.tax_id IS NULL then 0 
+    else
+    case
+        when
+        sot.tax_id=1 then (((d.product_uom_qty *d.price_unit)-d.discount_amt)*5/100)
+        else 
+        (((d.product_uom_qty *d.price_unit)-d.discount_amt)*5/105)
+        end 
+end )tax,
+(case
+     when
+     sot.tax_id=1 then (
+     (((case
+     when
+     sot.tax_id = 3 then
+     (sum((d.product_uom_qty * d.price_unit)- d.discount_amt)-(sum((d.product_uom_qty * d.price_unit)- d.discount_amt)*5/105))
+     else
+     sum((d.product_uom_qty * d.price_unit)- d.discount_amt)
+end)+(case 
+      when 
+      sot.tax_id IS NULL then 0 
+      else
+      case
+        when
+        sot.tax_id=1 then (((d.product_uom_qty *d.price_unit)-d.discount_amt)*5/100)
+        else 
+        (((d.product_uom_qty *d.price_unit)-d.discount_amt)*5/105)
+        end 
+end )))-((((d.product_uom_qty *d.price_unit)-d.discount_amt)*(h.additional_discount/100))+(case 
+    when 
+    h.deduct_amt = 0 then 0 
+    else
+((h.deduct_amt/h.amount_untaxed)*sum((d.product_uom_qty * d.price_unit)- d.discount_amt)) 
+end)))
+   else
+   (((sum((d.product_uom_qty * d.price_unit)- d.discount_amt)))-((((d.product_uom_qty *d.price_unit)-d.discount_amt)*(h.additional_discount/100))+(case 
+    when 
+    h.deduct_amt = 0 then 0 
+    else
+((h.deduct_amt/h.amount_untaxed)*sum((d.product_uom_qty * d.price_unit)- d.discount_amt)) 
+end)))
+end) net_amount,
 st.name sale_team,h.payment_type payment_type,payment.name payment_term,ci.name city,tp.name township,
 sc.name as channel,cs.name as state,h.delivery_remark delivery_remark,h.state status,branch.name as branch,pm.name as main_group,pc.name as product_category
 from sale_order h inner join sale_order_line d on h.id=d.order_id 
@@ -712,7 +806,10 @@ from sale_order h inner join sale_order_line d on h.id=d.order_id
 	left join res_city ci on c.city = ci.id
 	left join res_township  tp on  c.township = tp.id
 	left join res_country_state cs on c.state_id = cs.id
-where ((h.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date
+	left join sale_order_tax sot on d.id=sot.order_line_id
+where h.state !='cancel'
+and
+((h.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date
 between ? and ?
 --and (h.date_order) between '2018-06-01' and '2018-06-30'
 --$branch_id$
@@ -720,7 +817,7 @@ between ? and ?
 --$maingroup$
 --$product$
 group by h.tb_ref_no,h.date_order,h.name,h.code,c.name,pp.default_code,pt.name,d.product_uom_qty,d.price_unit,d.discount_amt,st.name,h.payment_type,payment.name,h.delivery_remark,ci.name,tp.name,
-	sc.name,cs.name,h.state,branch.name,pm.name,pc.name,h.additional_discount,h.amount_total,h.deduct_amt,h.amount_untaxed,h.amount_tax
+	sc.name,cs.name,h.state,branch.name,pm.name,pc.name,h.additional_discount,h.amount_total,h.deduct_amt,h.amount_untaxed,h.amount_tax,sot.tax_id
 	order by h.tb_ref_no]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
@@ -1655,7 +1752,18 @@ order by code]]></xml-property>
                     <text-property name="heading">name</text-property>
                 </structure>
             </list-property>
-            <list-property name="parameters"/>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">param_1</property>
+                    <property name="paramName">Maingroup</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">1</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
                     <structure>
@@ -1688,10 +1796,27 @@ order by code]]></xml-property>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select pp.id,pt.name from product_product pp,product_template pt
-where pp.product_tmpl_id=pt.id and pp.active='t']]></xml-property>
+where pp.product_tmpl_id=pt.id and pp.active='t' and pt.main_group=?]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
   <design:ResultSets derivedMetaData="true">
     <design:resultSetDefinitions>
       <design:resultSetColumns>
