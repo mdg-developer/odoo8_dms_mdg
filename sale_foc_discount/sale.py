@@ -426,13 +426,14 @@ class sale_order(osv.osv):
         """
         if context is None:
             context = {}
+        data_line=[]
         journal_ids = self.pool.get('account.journal').search(cr, uid,
             [('type', '=', 'sale'), ('company_id', '=', order.company_id.id)],
             limit=1)
         if not journal_ids:
             raise osv.except_osv(_('Error!'),
                 _('Please define sales journal for this company: "%s" (id:%d).') % (order.company_id.name, order.company_id.id))
-        print 'order.partner_id.property_account_receivable.id',order.partner_id.property_account_receivable.id,order.name
+        
         invoice_vals = {
             'name': order.client_order_ref or '',
             'origin': order.name,
@@ -457,6 +458,10 @@ class sale_order(osv.osv):
             'is_entry':order.is_entry,
             'rebate_later':order.rebate_later,
             'credit_allow':order.credit_allow,
+            'ignore_credit_limit':order.ignore_credit_limit,
+            'credit_invoice_balance' : order.credit_invoice_balance,
+            'credit_limit_amount' : order.credit_limit_amount,
+            'credit_balance' :   order.credit_balance,  
         }
 
         # Care for deprecated _inv_get() hook - FIXME: to be removed after 6.1

@@ -7,12 +7,13 @@ class exchange_product(osv.osv):
     _name = "product.transactions"
     _description = "Exchange Product"
     _columns = {
-                'transaction_id':fields.char('ID'),
+                'name':fields.char('SEN No', readonly=True),
+                'transaction_id':fields.char('ID', readonly=False),
                 'customer_id':fields.many2one('res.partner', 'Customer Name'),
                 'customer_code':fields.char('Customer Code', readonly=True),
                 'team_id'  : fields.many2one('crm.case.section', 'Sale Team', required=True),
-                'date':fields.datetime('Date'),
-              'exchange_type':fields.selection([('Exchange', 'Exchange'), ('Color Change', 'Color Change'), ('Sale Return', 'Sale Return'), ], 'Type'),
+                'date':fields.datetime('Date',required=True),
+              'exchange_type':fields.selection([('Exchange', 'Exchange'), ('Sale Return', 'Sale Return'), ], 'Type',required=True),
                 'item_line': fields.one2many('product.transactions.line', 'transaction_id', 'Items Lines', copy=True),
                 'void_flag':fields.selection([('none', 'Unvoid'), ('voided', 'Voided')], 'Void Status'),
                 'location_id': fields.many2one('stock.location', 'Location', required=True),
@@ -26,6 +27,14 @@ class exchange_product(osv.osv):
     _defaults = {        
                  'e_status' : 'draft',
                  }
+    def create(self, cursor, user, vals, context=None):
+        id_code = self.pool.get('ir.sequence').get(cursor, user,
+                                                'product.transactions.code') or '/'
+        vals['name'] = id_code
+        if vals.get('customer_id'):
+            defaults = self.onchange_customer_id(cursor, user, [], vals['customer_id'], context=context)['value']
+            vals = dict(defaults, **vals)            
+        return super(exchange_product, self).create(cursor, user, vals, context=context)    
     
     def onchange_customer_id(self, cr, uid, ids, customer_id, context=None):
         

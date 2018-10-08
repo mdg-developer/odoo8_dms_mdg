@@ -83,9 +83,26 @@ class account_invoice(osv.osv):
     _columns = {
               'sale_order_id':fields.function(_get_corresponding_sale_order, type='many2one', relation='sale.order', string='Sale Order'),
                   'promos_line_ids':fields.one2many('account.invoice.promotion.line', 'promo_line_id', 'Promotion Lines'),           
-          
+                  'credit_line_ids':fields.one2many('account.invoice.credit.history', 'invoice_id', 'Credit History'),           
+                    'ignore_credit_limit':fields.boolean('Ignore Credit Limitation',default=False,readonly=True, states={'draft': [('readonly', False)]}),
+                    'credit_invoice_balance' :fields.float('Credit Invoice Balance'),   
+                    'credit_limit_amount' :fields.float('Credit Limit'),   
+                    'credit_balance' :fields.float('Credit Balance'),                 
               }
-    
+class account_invoice_credit_history(osv.osv):
+    _name = 'account.invoice.credit.history'
+    _columns = {  
+                'invoice_id':fields.many2one('account.invoice', 'Credit History'),
+                'date':fields.date('Invoice Date'),
+                'invoice_no':fields.char('Inv No.'),
+                'invoice_amt':fields.float('Amount'),
+                'paid_amount':fields.float('Paid Amount'),
+                'balance':fields.float('Balance'),
+                'due_date':fields.date('Due Date'),
+                'balance_day':fields.integer('Balance Days'),
+                'branch_id':fields.many2one('res.branch','Branch'),
+                'status':fields.char('Status'),
+                }    
 class sale_order_promotion_line(osv.osv):
     _name = 'account.invoice.promotion.line'
     _columns = {

@@ -13,6 +13,9 @@
 				<field name="origin" position="after">
 					<field name="sale_order_id" invisible="0" />
 				</field>
+				<field name="journal_id" position="after">
+					<field name="ignore_credit_limit" invisible="0" />
+				</field>
 
 				<xpath expr="/form/sheet/notebook/page[@string='Invoice Lines']"
 					position="after">
@@ -48,6 +51,27 @@
 
 							</tree>
 						</field>
+					</page>
+					<page name="credit_line_ids" string="Credit History">
+						<field name="credit_line_ids" attrs="{'readonly':[('state','!=','draft')]}">
+							<tree string="Credit Lines" editable="bottom">
+								<field name="date" readonly="1" />
+								<field name="invoice_no" readonly="1" />
+								<field name="invoice_amt" readonly="1" />
+								<field name="paid_amount" readonly="1" />
+								<field name="balance" readonly="1" />
+								<field name="due_date" readonly="1" />
+								<field name="balance_day" readonly="1" />
+								<field name="branch_id" readonly="1" />
+								<field name="status" readonly="1" />
+							</tree>
+						</field>
+						<group class="oe_subtotal_footer oe_center" colspan="2">
+							<field name="credit_invoice_balance" readonly="1" />
+							<field name="credit_limit_amount" readonly="1" />
+							<field name="credit_balance" readonly="1" />
+						</group>
+
 					</page>
 				</xpath>
 			</field>

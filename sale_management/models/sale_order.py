@@ -211,7 +211,7 @@ class sale_order(osv.osv):
          'payment_term': fields.many2one('account.payment.term', 'Payment Term', readonly=False),
          'issue_warehouse_id':fields.many2one('stock.warehouse', 'Warehouse'),
          'promos_line_ids':fields.one2many('sale.order.promotion.line', 'promo_line_id', 'Promotion Lines'),
-         'credit_history_ids':fields.one2many('sale.order.credit.history', 'sale_order_id', 'Credit Lines'),
+         'credit_history_ids':fields.one2many('sale.order.credit.history', 'sale_order_id', 'Credit Lines',copy=True),
         'cancel_user_id': fields.many2one('res.users', 'Cancel By'),
         'is_entry': fields.boolean('Is Entry Data',default=False),
         'rebate_later': fields.boolean("Rebate Later" , default=False,readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
