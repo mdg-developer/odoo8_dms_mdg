@@ -32,7 +32,10 @@ class exchange_product(osv.osv):
                                                 'product.transactions.code') or '/'
         vals['name'] = id_code
         if vals.get('customer_id'):
-            defaults = self.onchange_customer_id(cursor, user, [], vals['customer_id'], context=context)['value']
+            customer_id=vals['customer_id']
+            if type(customer_id)==str:
+                customer_id=int(customer_id)            
+            defaults = self.onchange_customer_id(cursor, user, [], customer_id, context=context)['value']
             vals = dict(defaults, **vals)            
         return super(exchange_product, self).create(cursor, user, vals, context=context)    
     

@@ -83,7 +83,7 @@ class account_invoice(osv.osv):
     _columns = {
               'sale_order_id':fields.function(_get_corresponding_sale_order, type='many2one', relation='sale.order', string='Sale Order'),
                   'promos_line_ids':fields.one2many('account.invoice.promotion.line', 'promo_line_id', 'Promotion Lines'),           
-                  'credit_line_ids':fields.one2many('account.invoice.credit.history', 'invoice_id', 'Credit History'),           
+                  'credit_line_ids':fields.one2many('account.invoice.credit.history', 'invoice_id', 'Credit History',copy=True),           
                     'ignore_credit_limit':fields.boolean('Ignore Credit Limitation',default=False,readonly=True, states={'draft': [('readonly', False)]}),
                     'credit_invoice_balance' :fields.float('Credit Invoice Balance'),   
                     'credit_limit_amount' :fields.float('Credit Limit'),   
