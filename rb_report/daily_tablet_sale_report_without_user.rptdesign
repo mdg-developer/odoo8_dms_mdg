@@ -1884,7 +1884,7 @@ order by login]]></xml-property>
                     <list-property name="arguments">
                         <structure>
                             <property name="name">Expression</property>
-                            <expression name="value" type="javascript">row["sub_total"]</expression>
+                            <expression name="value" type="javascript">row["net_total"]</expression>
                         </structure>
                     </list-property>
                     <property name="allowExport">true</property>
@@ -1916,7 +1916,7 @@ order by login]]></xml-property>
                     <list-property name="arguments">
                         <structure>
                             <property name="name">Expression</property>
-                            <expression name="value" type="javascript">row["net_total"]</expression>
+                            <expression name="value" type="javascript">row["sub_total"]</expression>
                         </structure>
                     </list-property>
                     <property name="allowExport">true</property>
@@ -3076,14 +3076,8 @@ order by login]]></xml-property>
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <data id="2867">
-                            <property name="fontFamily">sans-serif</property>
-                            <property name="fontSize">9pt</property>
-                            <structure name="numberFormat">
-                                <property name="category">Currency</property>
-                                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
-                            </structure>
-                            <property name="resultSetColumn">sub_total</property>
+                        <data id="2951">
+                            <property name="resultSetColumn">net_total</property>
                         </data>
                     </cell>
                     <cell id="2776">
@@ -3135,16 +3129,9 @@ order by login]]></xml-property>
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <data id="2925">
-                            <property name="fontFamily">sans-serif</property>
-                            <property name="fontSize">9pt</property>
-                            <property name="paddingRight">3pt</property>
-                            <structure name="numberFormat">
-                                <property name="category">Currency</property>
-                                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
-                            </structure>
+                        <data id="2950">
                             <property name="textAlign">right</property>
-                            <property name="resultSetColumn">net_total</property>
+                            <property name="resultSetColumn">sub_total</property>
                         </data>
                     </cell>
                     <cell id="2884">
