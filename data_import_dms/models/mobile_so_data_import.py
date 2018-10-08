@@ -499,7 +499,8 @@ class mobile_sale_import(osv.osv):
                         else:
                             tax_data=False
                             raise osv.except_osv(_('Warning!'), _("Please Check Your Tax Name '%s'!") % (tax.lower(),))                                      
-                    
+                    else:
+                        tax_data=False                    
                     # Sale Plan Name, Sale Plan Day,Sale Plan Trip, Deliver Remark, Discount, Deduction Amount,Paid Amount, Paid,Void
 
                     order_value = {
@@ -762,6 +763,8 @@ class mobile_sale_import(osv.osv):
                         else:
                             tax_data=False
                             raise osv.except_osv(_('Warning!'), _("Please Check Your Tax Name '%s'!") % (tax.lower(),))                        
+                    else:
+                        tax_data=False
                     # Sale Plan Name, Sale Plan Day,Sale Plan Trip, Deliver Remark, Discount, Deduction Amount,Paid Amount, Paid,Void
                     order_value = {
                                   'partner_id':partner_id,
