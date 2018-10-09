@@ -10,12 +10,8 @@
 						<br/>
 						<br/>
 						<br/>
-						<br/>
-						<br/>
-						<br/>
-						<br/>
 						<div class="row" style="padding-top:-2s0pt;">
-						    <h4 align="center">Request for Quotation</h4>
+							<h4 align="center">Request for Quotation</h4>
 							<div class="col-xs-2 pull-right" style="padding-top:7pt;border: 1px solid black;">
 								<table class="table">
 									<tr class="text-center">
@@ -28,23 +24,17 @@
 							</div>
 						</div>
 
-						<!-- <div class="row mt32 mb32">
-							<div class="col-xs-6"> <strong>Shipping address:</strong> <div 
-								t-if="o.dest_address_id"> <div t-field="o.dest_address_id" t-field-options='{"widget": 
-								"contact", "fields": ["address", "name", "phone", "fax"], "no_marker": true}' 
-								/> </div> <div t-if="not o.dest_address_id and o.picking_type_id.warehouse_id"> 
-								<span t-field="o.picking_type_id.warehouse_id.name" /> <div t-field="o.picking_type_id.warehouse_id.partner_id" 
-								t-field-options='{"widget": "contact", "fields": ["address", "phone", "fax"], 
-								"no_marker": true}' /> </div> </div>
-							<div class="col-xs-5 col-xs-offset-1">
-								<div t-field="o.partner_id"
-									t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": true}' />
-								<p t-if="o.partner_id.vat">
-									VAT:
-									<span t-field="o.partner_id.vat" />
-								</p>
-							</div>
-						</div> -->						
+						<!-- <div class="row mt32 mb32"> <div class="col-xs-6"> <strong>Shipping 
+							address:</strong> <div t-if="o.dest_address_id"> <div t-field="o.dest_address_id" 
+							t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", 
+							"fax"], "no_marker": true}' /> </div> <div t-if="not o.dest_address_id and 
+							o.picking_type_id.warehouse_id"> <span t-field="o.picking_type_id.warehouse_id.name" 
+							/> <div t-field="o.picking_type_id.warehouse_id.partner_id" t-field-options='{"widget": 
+							"contact", "fields": ["address", "phone", "fax"], "no_marker": true}' /> 
+							</div> </div> <div class="col-xs-5 col-xs-offset-1"> <div t-field="o.partner_id" 
+							t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", 
+							"fax"], "no_marker": true}' /> <p t-if="o.partner_id.vat"> VAT: <span t-field="o.partner_id.vat" 
+							/> </p> </div> </div> -->
 						<div class="row col-xs-12">
 							<div class="col-xs-6">
 								PR No:
@@ -188,9 +178,6 @@
 				<t t-call="purchase_ext.external_layout_new">
 					<div class="page">
 						<div class="oe_structure" />
-						<br />
-						<br />
-						<br />
 						<br />
 						<br />
 						<br />
