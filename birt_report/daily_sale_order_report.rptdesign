@@ -724,7 +724,7 @@ this.queryText =this.queryText.replace("--$product$", " and pp.id="+params["Prod
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select sot.tax_id,h.tb_ref_no reference_no,h.date_order::date order_date,h.name vr_no,h.code customer_code,c.name customer,
-pp.default_code product_code,pt.name product_name,d.product_uom_qty qty,d.price_unit price_unit,d.discount_amt discount,
+pp.default_code product_code,pt.name product_name,sum(d.product_uom_qty) qty,d.price_unit price_unit,d.discount_amt discount,
 (case
      when
      sot.tax_id = 3 then
