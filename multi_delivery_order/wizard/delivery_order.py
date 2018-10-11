@@ -20,6 +20,7 @@
 ##############################################################################
 import time
 from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 class sale_order_delivery_transfer(osv.osv_memory):
     _name = 'order.delivery.transfer'
@@ -51,15 +52,28 @@ class sale_order_delivery_transfer(osv.osv_memory):
         context = {'lang':'en_US', 'params':{'action':458}, 'tz': 'Asia/Rangoon', 'uid': 1}
         soObj = self.pool.get('sale.order')        
         stockPickingObj = self.pool.get('stock.picking')
-        stockDetailObj = self.pool.get('stock.transfer_details')        
+        stockDetailObj = self.pool.get('stock.transfer_details')    
+        invoiceObj = self.pool.get('account.invoice')             
+        mobile_obj = self.pool.get('mobile.sale.order')              
         solist=[]
         if ids:
             for so_data in soObj.browse(cr, uid, ids, context=context):
                 if so_data:
                         So_id=so_data.id
-                        print 'SO_id'
-                        soObj.action_button_confirm(cr, uid, [So_id], context=context)
-
+                        if so_data.state =='draft':
+                            soObj.action_button_confirm(cr, uid, [So_id], context=context)
+                            invoice_id = mobile_obj.create_invoices(cr, uid,  [So_id], context=context)
+                            branch_id=so_data.branch_id.id
+                            delivery_remark=so_data.delivery_remark
+                            payment_type=so_data.payment_type  
+                            date=so_data.date_order                      
+                            cr.execute('update account_invoice set date_invoice=%s,payment_type=%s ,branch_id =%s,delivery_remark =%s where id =%s', (date,payment_type,branch_id, delivery_remark, invoice_id,))                            
+                            if invoice_id:
+                                invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
+                                invoiceObj.signal_workflow(cr, uid, [invoice_id], 'invoice_open')
+                        else:
+                            raise osv.except_osv(_('Warning!'),_('You cannot confirm sale order which is not draft. You should choose draft order only.'))
+   
 #                         stockViewResult = soObj.action_view_delivery(cr, uid, So_id, context=context)    
 #                         if stockViewResult:
 #                             # stockViewResult is form result
