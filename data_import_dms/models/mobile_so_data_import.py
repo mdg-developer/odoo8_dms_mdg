@@ -235,7 +235,7 @@ class mobile_sale_import(osv.osv):
             #fordelete
             try : 
                 for aml in amls:
-                    order_ids = pricelist_ids = payment_term_ids = uom_ids = partner_ids = _tax = _foc = _state = analytic_id = pricelist_id = partner_id = country_id = saleperson_id = warehouse_id = product_id = user_id = sale_plan_day_id = sale_plan_trip_id = section_id = payment_term_id = _duedate = None
+                    order_ids = pricelist_ids = payment_term_ids = uom_ids = partner_ids = tax = _foc = _state = analytic_id = pricelist_id = partner_id = country_id = saleperson_id = warehouse_id = product_id = user_id = sale_plan_day_id = sale_plan_trip_id = section_id = payment_term_id = _duedate = None
                     void = secObj = orderRef = partner_code = branch_id=payment_type = delivery_remark = saleperson_name = sale_plan_day_name = sale_plan_trip_name = section_name = payment_term_name = pricelist_name = date = pricelist_name = so_partner_id=so_date=so_ref=None
                    # product_code = aml['ProductsCODE']
                     discount_amount = qty_pcs = unit_price = discount = deduct_amt = numberOfDays = 0
