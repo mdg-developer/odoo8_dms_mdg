@@ -99,16 +99,21 @@ class AccountVoucher(osv.osv):
                 move_line_pool.create(cr, uid, ml_writeoff, local_context)
             # We post the voucher.
             print 'write',move_id
+            if voucher.bank_statement_id:
+                for m_line in move_line_pool.search(cr,uid,[('move_id','=',move_id)]):
+                    for bankstatement_id in self.pool.get('account.bank.statement').browse(cr,uid,voucher.bank_statement_id.id):
+                        move_line_pool.write(cr,uid,m_line,{'statement_id':bankstatement_id.id})
+                        
             self.write(cr, uid, [voucher.id], {
                 'move_id': move_id,
                 'state': 'posted',
                 'number': name,
             })
             print 'success'
+            self.create_bank_statement_line(cr, uid, voucher, move_id, name, context=None)
             if voucher.journal_id.entry_posted:
-                move_pool.post(cr, uid, [move_id], context={})
-            
-            self.create_bank_statement_line(cr, uid, voucher, move_id, name, context=None)    
+                move_pool.post(cr, uid, [move_id], context={})            
+                
             # We automatically reconcile the account move lines.
             reconcile = False
             for rec_ids in rec_list_ids:

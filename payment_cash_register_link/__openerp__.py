@@ -9,7 +9,7 @@
 """,
     'author': 'Seventh Computing',
     'website': 'http://www.7thcomputing.com',
-    'depends': ['account','hr_expense','sale_journal_principle'],
+    'depends': ['account','hr_expense','sale_journal_principle','branch_customization'],
     'data': [
              'views/account_bank_statement_view.xml',
              'views/account_voucher_view.xml',

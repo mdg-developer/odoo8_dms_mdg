@@ -189,6 +189,7 @@
 										<field name="type" />
 										<field name="cheque_no" />
 										<field name="journal_id" />
+										<field name="bank_statement_id" domain="[('journal_id', '=', journal_id),('date', '=', date_invoice),('state','=','open')]"/>										
 										<field name="amount" />
 										<field name="notes" />
 										<field name="selected" invisible="0" />
@@ -200,6 +201,7 @@
 										<field name="type" />
 										<field name="cheque_no" />
 										<field name="journal_id" />
+										<field name="bank_statement_id" domain="[('journal_id', '=', journal_id),('date', '=', date_invoice),('brand_id', '=', parent.branch_id),('state','=','open')]"/>
 										<field name="amount" />
 										<field name="notes" />
 										<field name="selected" invisible="0" readonly="1" />

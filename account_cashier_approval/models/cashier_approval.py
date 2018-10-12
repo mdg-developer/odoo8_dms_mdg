@@ -286,7 +286,7 @@ class cashier_approval(osv.osv):
         payment_line_obj = self.pool.get('cashier.customer.payment')
         last_amount=0
 
-        cr.execute("""select journal_id,amount,type,partner_id,account_id,date_invoice,period_id,notes,invoice_id from cashier_customer_payment where cashier_id=%s  and selected=True""", (ids[0],)) 
+        cr.execute("""select journal_id,amount,type,partner_id,account_id,date_invoice,period_id,notes,invoice_id,bank_statement_id from cashier_customer_payment where cashier_id=%s  and selected=True""", (ids[0],)) 
         payment_data = cr.fetchall()
         if payment_data:
             for payment in payment_data:
@@ -319,8 +319,8 @@ class cashier_approval(osv.osv):
                                         'type':'receipt',
                                         'reference':invoice_num,
                                           'payment_option': "without_writeoff",
-                                         'company_id':invoice.company_id.id
-
+                                         'company_id':invoice.company_id.id,
+                                         'bank_statement_id':payment[9]
                                         }
                     # create register payment voucher
                 voucherId = voucherObj.create(cr, uid, accountVResult, context=context)                
@@ -961,7 +961,7 @@ class cashier_customer_payment(osv.osv):
  'pre_so': fields.boolean('Pre So'),
  'selected':fields.boolean('Selected',default=True),
  'cheque_no': fields.integer("Cheque No"),
-
+ 'bank_statement_id' : fields.many2one('account.bank.statement', 'Bank Statement'),
         }      
 		
     def onchange_invoice_id(self, cr, uid, ids, invoice_id, context=None):
