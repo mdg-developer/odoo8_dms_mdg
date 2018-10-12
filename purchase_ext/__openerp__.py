@@ -37,7 +37,8 @@ Purchase Ext
  
     ],
     'data': [        
-       'wizard/product_select_wizard_view.xml',      
+       'wizard/product_select_wizard_view.xml', 
+       'views/external_layout_purchase.xml',     
        'views/account_voucher_view.xml',      
        'views/purchase_order_view.xml',  
        'views/report_purchase_view.xml',

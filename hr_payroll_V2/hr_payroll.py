@@ -1,24 +1,3 @@
-# -*- coding:utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    d$
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
 
 import time
 from datetime import date
@@ -33,6 +12,7 @@ import calendar
 from openerp.tools.safe_eval import safe_eval as eval
 from dateutil import parser
 from datetime import datetime, date, timedelta
+from dateutil.relativedelta import relativedelta
 
 class hr_payslip_worked_days(osv.osv):
     '''
@@ -184,6 +164,18 @@ class hr_payslip_customize(osv.osv):
         structure_ids = contract_obj.get_all_structures(cr, uid, contract_ids, context=context)
         rule_ids = self.pool.get('hr.payroll.structure').get_all_rules(cr, uid, structure_ids, context=context)
         sorted_rule_ids = [id for id, sequence in sorted(rule_ids, key=lambda x:x[1])]
+        if initial_employment_date and date_to:
+            service_start_date = datetime.strptime(
+                    initial_employment_date, '%Y-%m-%d').date()
+            service_end_date = datetime.strptime(
+                    date_from, '%Y-%m-%d').date()
+            service_year = relativedelta(service_end_date, service_start_date)
+            service_bonus=0.0
+            if service_year.years>= 1:
+                cr.execute("""select service_bonus from hr_contract where id=%s""",(contract_ids))
+                service_data=cr.fetchone()
+                if service_data:
+                    service_bonus=service_data[0]
         cr.execute("""select sum(fine_amount) from hr_fine where lost_date between %s and %s
             and employee_id= %s and reason_id in (select id from hr_fine_reason where upper(code) not in ('DPS','UCL','LON','SSB'))""", (date_from, date_to, employee_id,))
         fine_data = cr.fetchone()
@@ -197,7 +189,7 @@ class hr_payslip_customize(osv.osv):
         if ssb_data:
             ssb_amount = ssb_data[0]
         else:
-            deposit_amount = 0.0
+            ssb_amount = 0.0
         cr.execute("""select sum(fine_amount) from hr_fine where lost_date between %s and %s
             and employee_id= %s and reason_id in (select id from hr_fine_reason where upper(code) in ('DPS'))""", (date_from, date_to, employee_id,))
         deposit_data = cr.fetchone()
@@ -345,10 +337,6 @@ class hr_payslip_customize(osv.osv):
         sat_data =cr.fetchone()[0]
         if present_data:
             present_count=present_data[0]+leave_half_count
-#             cr.execute("select employee_id from attendance_data_import where date='2017-11-11' and timetable='Afternoon' and absent='true' and employee_id=%s",(employee_id,))   
-#             oct_fourteen_absent_count=cr.fetchall()   
-#             if oct_fourteen_absent_count:
-#                 present_count=present_count-1
         else:
             present_count=0
         con_date  = date_from
@@ -488,6 +476,13 @@ class hr_payslip_customize(osv.osv):
                                'name': input.name,
                                'code': input.code,
                                'amount':ssb_amount,
+                               'contract_id': contract.id,
+                              }
+                        if input.code == 'SB':
+                            inputs = {
+                               'name': input.name,
+                               'code': input.code,
+                               'amount':service_bonus,
                                'contract_id': contract.id,
                               }
                         if input.code == 'TLC':

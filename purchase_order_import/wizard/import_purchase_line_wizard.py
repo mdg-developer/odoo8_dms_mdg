@@ -265,7 +265,7 @@ class pol_import(orm.TransientModel):
             # process data lines
             else:
                 if ln and ln[0] and ln[0][0] not in ['#', '']:
-
+                    product_product = self.pool.get('product.product')
                     aml_vals = {}
                     product_ids=None
                     product_name=None
@@ -282,6 +282,14 @@ class pol_import(orm.TransientModel):
                         if data:
                             product_ids = data[0][0]
                             product_name = data[0][1]
+                            
+                            product = product_product.browse(cr, uid, product_ids, context=None)                            
+                            
+                            if product.supplier_code:
+                                product_name = product.supplier_code 
+                                
+                            if product.description:
+                                product_name =product.description
 #                         if supplier_code_ids:
 #                             supplier_code_id = supplier_code_ids[0]
 #                             productObj = product_obj.browse(cr, uid, supplier_code_id, context=None)
