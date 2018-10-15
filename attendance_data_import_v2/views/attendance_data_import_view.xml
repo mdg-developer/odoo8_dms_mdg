@@ -35,39 +35,60 @@
         </field>
     </record>
     
-    <record id="view_attendance_filter" model="ir.ui.view">
-            <field name="name">Attendance</field>
-            <field name="model">attendance.data.import</field>
-            <field name="arch" type="xml">
-                <search string="Attendance">
-                    <field name="fingerprint_id" />
-                    <field name="employee_id" />
-                    <field name="department_id" /> 
-                    <filter string="OT" domain="[('ot_time', '>',0)]"/>
-                    <filter string="Irregular" domain="['|',('clockin', '=',False),('clockout','=',False)]"/>  
-                    <filter string="Today Absent" domain="[('absent','=',True),('date', '&gt;=', datetime.datetime.now().strftime('%Y-%m-%d 00:00:00')),('date', '&lt;=', datetime.datetime.now().strftime('%Y-%m-%d 23:23:59'))]"/>    
-                    <filter string="Current Month"  
-                        domain="[('date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%Y-%m-%d')),
-                        ('date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%Y-%m-%d'))]"/>		 
-					<filter string="Current Month OT"  
-					domain="['&amp;',['date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%Y-%m-%d')],['date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%Y-%m-%d')],['ot_time', '>',0,]]"/>
-					<filter string="Current Month Irregular"  
-					domain="['&amp;',['date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%Y-%m-%d')],['date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%Y-%m-%d')],'|',('clockin','=',False),('clockout','=',False)]"/>
-					
-					<filter string="26 Previous Month to 25 Current Month" name="prev_month" 
-					    domain="[('date','&gt;=',(context_today()-relativedelta(months=1)).strftime('%%Y-%%m-26')),
-					    ('date','&lt;',time.strftime('%%Y-%%m-26'))]"/>
-					                                                     
-                    <group expand="0" string="Group By">
-                        <filter string="Employee" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
-                        <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
-                        <filter string="Section" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}"/>
-                        <filter string="Status" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Date" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'date'}"/>
-                    </group>
-                </search>
-             </field>
-         </record>
+	<record id="view_attendance_filter" model="ir.ui.view">
+			<field name="name">Attendance</field>
+			<field name="model">attendance.data.import</field>
+			<field name="arch" type="xml">
+				<search string="Attendance">
+					<field name="fingerprint_id" />
+					<field name="employee_id" />
+					<field name="department_id" />
+					<filter string="OT" domain="[('ot_time', '>',0)]" />
+					<filter string="Irregular"
+						domain="['|',('clockin', '=',False),('clockout','=',False)]" />
+					<filter string="Today Absent"
+						domain="[('absent','=',True),('date', '&gt;=', datetime.datetime.now().strftime('%Y-%m-%d 00:00:00')),('date', '&lt;=', datetime.datetime.now().strftime('%Y-%m-%d 23:23:59'))]" />
+					<filter string="Current Month"
+						domain="[('date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%Y-%m-%d')),
+                        ('date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%Y-%m-%d'))]" />
+					<filter string="Current Month OT"
+						domain="['&amp;',['date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%Y-%m-%d')],['date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%Y-%m-%d')],['ot_time', '>',0,]]" />
+					<filter string="Current Month Irregular"
+						domain="['&amp;',['date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%Y-%m-%d')],['date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%Y-%m-%d')],'|',('clockin','=',False),('clockout','=',False)]" />
+
+					<filter string="28 Previous Month to 27 Current Month" name="prev_month"
+						domain="[('date','&gt;=',(context_today()-relativedelta(months=1)).strftime('%%Y-%%m-28')),
+					    ('date','&lt;',time.strftime('%%Y-%%m-27'))]" />
+
+					<filter string="This Month Absent List" domain="[('date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%Y-%m-%d')),('date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%Y-%m-%d')),('timetable', 
+						'!=','OT'),('absent','=',True)]" />
+					<filter string="This Month Absent List"
+						domain="[('date','&gt;=',(context_today()-relativedelta(months=1)).strftime('%%Y-%%m-26')),
+					    ('date','&lt;',time.strftime('%%Y-%%m-26')),('absent','=',True),('timetable', '!=', 'OT')]" />
+					<group expand="0" string="Group By">
+						<filter string="Employee" icon="terp-personal" domain="[]"
+							context="{'group_by':'employee_id'}" />
+						<filter string="Department" icon="terp-personal+" domain="[]"
+							context="{'group_by':'department_id'}" />
+						<filter string="Section" icon="terp-personal+" domain="[]"
+							context="{'group_by':'section_id'}" />
+						<filter string="Status" icon="terp-gtk-select-all" domain="[]"
+							context="{'group_by':'state'}" />
+						<filter string="Date" icon="terp-gtk-select-all" domain="[]" name="date_filter"
+							context="{'group_by':'date'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+		
+		<record model="ir.actions.act_window" id="open_view_attendance_data_import_form">
+			<field name="name">Attendance</field>
+			<field name="res_model">attendance.data.import</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="context">{"search_default_date_filter":1,"search_default_prev_month":1}</field>
+			<field name="search_view_id" ref="view_attendance_filter" />
+		</record>
          
      <!-- Section form -->
     <record model="ir.ui.view" id="view_attendance_data_import_form">
