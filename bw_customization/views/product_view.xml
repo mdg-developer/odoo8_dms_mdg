@@ -15,8 +15,7 @@
 						<field name="report_uom_lines">
 						</field>
 					</page>
-				</xpath>
-				
+				</xpath>				
             </field>
         </record>
         
@@ -27,7 +26,23 @@
             <field name="arch" type="xml">
            		<xpath expr="//field[@name='uom_po_id']" position="after">
                     <field name="warehouse_id"/>                             
- 				</xpath>				
+ 				</xpath>
+ 				<xpath expr="//page[@string='Procurements']" position="replace">
+					<page string="Procurements" groups="base.group_user">
+                           <group name="procurement">
+                               <group name="general">
+                                   <field name="standard_price"/>
+                               </group>
+                               <group name="procurement_uom" groups="product.group_uom" string="Purchase">
+                                   <field name="uom_po_id"/>
+                               </group>
+                           </group>
+                           <separator string="Suppliers"/>
+                           <field name="seller_ids"/>
+                           <separator string="Description for Suppliers"/>
+                           <field name="description_purchase" placeholder="This note will be displayed on requests for quotation..."/>
+                     </page>
+                 </xpath>				
             </field>
         </record>
         
