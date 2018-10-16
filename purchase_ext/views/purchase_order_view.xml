@@ -30,7 +30,7 @@
 				<xpath
 					expr="//notebook/page/field[@name='order_line']/tree/field[@name='price_subtotal']"
 					position="after">
-					<field name="remark" />
+					<field name="ctn_remark" />
 				</xpath>
 				<xpath
 					expr="//notebook/page/field[@name='order_line']/tree/field[@name='price_unit']"
