@@ -10,12 +10,17 @@
 						<br/>
 						<br/>
 						<br/>
+						<br/>
+						<br/>
+						<br/>
+						<br/>			
+						<br/>											
 						<div class="row" style="padding-top:-2s0pt;">
 							<h4 align="center">Request for Quotation</h4>
 							<div class="col-xs-2 pull-right" style="padding-top:7pt;border: 1px solid black;">
 								<table class="table">
 									<tr class="text-center">
-										BW-EI/F/003 R01
+										BW-EI/F/002 R01
 									</tr>
 									<tr class="text-center">
 										01.01.2016
@@ -76,9 +81,9 @@
 							</tbody>
 						</table>
 
-						<p t-field="o.notes" />
+						<!-- <p t-field="o.notes" />
 						<span>Regards,</span>
-						<span t-field="user.signature" />
+						<span t-field="user.signature" /> -->
 
 						<div class="oe_structure" />
 
@@ -182,6 +187,12 @@
 						<br />
 						<br />
 						<br />
+						<br/>
+						<br/>
+						<br/>
+						<br/>
+						<br/>
+						<br/>					
 						<div class="row" style="padding-top:-2s0pt;">
 							<div class="col-xs-2 pull-right" style="padding-top:7pt;border: 1px solid black;">
 								<table class="table">

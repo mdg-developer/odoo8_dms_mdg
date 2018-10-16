@@ -2,3 +2,4 @@ import account_move_line
 import account_voucher
 import purchase_order
 import purchase_order_line
+import res_company

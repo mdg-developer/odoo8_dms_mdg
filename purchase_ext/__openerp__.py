@@ -42,6 +42,7 @@ Purchase Ext
        'views/account_voucher_view.xml',      
        'views/purchase_order_view.xml',  
        'views/report_purchase_view.xml',
+       'views/res_company.xml',
     ],
     # 'demo': ['hr_recruitment_demo.xml'],
     # 'test': ['test/recruitment_process.yml'],

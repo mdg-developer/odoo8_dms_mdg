@@ -23,8 +23,8 @@
 				<div class="row">
 					<div class="col-xs-12">
 						<img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo"
-							style="max-height: 45px;" />
-						<span style="font-size:20pt;padding: 0mm 0mm 0mm 65mm;">
+							style="max-height: 100px;" />
+						<span style="font-size:20pt;padding: 0mm 0mm 0mm 30mm;">
 							<storong>
 								<t t-esc="company.name" />
 							</storong>
@@ -103,16 +103,16 @@
 		<!-- <template id="external_layout_header_new"> <div class="header"> <div 
 			class="row"> <img src='/purchase_ext/static/img/header2.jpg' style="width:1000px; 
 			height:200px;" /> </div> <div class="row"> <div class="col-xs-12"> <img t-if="company.logo" 
-			t-att-src="'data:image/png;base64,%s' % company.logo" style="max-height:45px;" 
-			/> <span style="font-size:20pt;padding: 0mm 0mm 0mm 65mm;"> <storong> <t 
-			t-esc="company.name" /> </storong> </span> </div> <div class="col-xs-9 text-right" 
-			style="margin-top:20px;" t-field="company.rml_header1" /> <div class="col-xs-9" 
-			style="text-align: left"> <span style="font-size:20pt;text-align:left;"> 
-			<storong> <t t-esc="company.name" /> </storong> </span> </div> </div> <div 
-			class="row"> <div class="col-xs-12"> <span><![CDATA[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]]></span> 
+			t-att-src="'data:image/png;base64,%s' % company.logo" style="max-height: 
+			45px;" /> <span style="font-size:20pt;padding: 0mm 0mm 0mm 65mm;"> <storong> 
+			<t t-esc="company.name" /> </storong> </span> </div> <div class="col-xs-9 
+			text-right" style="margin-top:20px;" t-field="company.rml_header1" /> <div 
+			class="col-xs-9" style="text-align: left"> <span style="font-size:20pt;text-align: 
+			left;"> <storong> <t t-esc="company.name" /> </storong> </span> </div> </div> 
+			<div class="row"> <div class="col-xs-12"> <span><![CDATA[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]]></span> 
 			</div> </div> <div class="row"> <div class="col-xs-6"> <div t-field="company.partner_id" 
-			t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker":true}' 
-			style="border-bottom: 1px solid black;" /> <div> <t t-if="company.partner_id.street"> 
+			t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": 
+			true}' style="border-bottom: 1px solid black;" /> <div> <t t-if="company.partner_id.street"> 
 			<t t-esc="company.partner_id.street" /> <br /> </t> <t t-if="company.partner_id.street2"> 
 			<t t-esc="company.partner_id.street2" /> <br /> </t> <t t-if="company.partner_id.city"> 
 			<t t-esc="company.partner_id.city.name" /> , </t> <t t-if="company.partner_id.state_id"> 
