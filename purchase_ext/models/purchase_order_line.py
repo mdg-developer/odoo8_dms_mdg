@@ -14,6 +14,7 @@ class purchase_order_line(osv.osv):
     _inherit = "purchase.order.line"
 
     _columns = {
+        'remark' : fields.char('Remark'),
         'supplier_code' : fields.char('Supplier Code'),  
         'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True,),
                }

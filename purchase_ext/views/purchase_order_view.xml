@@ -28,6 +28,11 @@
 					<field name="supplier_code" />
 				</xpath>
 				<xpath
+					expr="//notebook/page/field[@name='order_line']/tree/field[@name='price_subtotal']"
+					position="after">
+					<field name="remark" />
+				</xpath>
+				<xpath
 					expr="//notebook/page/field[@name='order_line']/tree/field[@name='price_unit']"
 					position="replace">
 					<field name="price_unit" digits="(16,4)" />
