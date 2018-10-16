@@ -6,11 +6,12 @@ import openerp.addons.decimal_precision as dp
 class hr_fine(osv.osv):
     _name = "hr.fine"
     _description = "HR Fine"
-    
+    _rec_name = 'reason_id'
     _columns = {        
         'lost_date': fields.date('Date', select=True,required=True),
         'employee_id': fields.many2one('hr.employee', "Employee", required=True),
         'department_id':fields.many2one('hr.department','Department'),
+        'section_id':fields.many2one('hr.section','Section'),
         'job_id':fields.many2one('hr.job','Job Position'),
         'reason_id':fields.many2one('hr.fine.reason','Reason',required=True),
         'fine_amount': fields.float('Fine Amount'),
@@ -19,15 +20,16 @@ class hr_fine(osv.osv):
     
     def onchange_employee_id(self, cr, uid, ids, employee_id, context=None):
         emp_obj = self.pool.get('hr.employee')
-        department_id = False
+        department_id =section_id= False
         job_id=False
         badge_id=False
         if employee_id:
             employee = emp_obj.browse(cr, uid, employee_id, context=context)
             department_id = employee.department_id.id
+            section_id = employee.section_id.id
             job_id=employee.job_id.id
             badge_id=employee.employee_id
-        return {'value': {'department_id': department_id, 'job_id':job_id,'badge_id':badge_id}}
+        return {'value': {'department_id': department_id,'section_id': section_id, 'job_id':job_id,'badge_id':badge_id}}
     
     def onchange_reason_id(self, cr, uid, ids, reason_id, context=None):
         fs_obj = self.pool.get('hr.fine.reason')

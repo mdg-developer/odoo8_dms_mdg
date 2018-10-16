@@ -53,6 +53,7 @@
 							<field name="badge_id"/>
 							<field name="lost_date" />
 							<field name="department_id" />
+							<field name="section_id" />
 					        <field name="job_id"/>
 							<field name="reason_id" on_change="onchange_reason_id(reason_id)"/>
 							<field name="fine_amount" />									
@@ -70,6 +71,7 @@
 				    <field name="badge_id" />
 					<field name="employee_id" />				
 					<field name="department_id" />
+					<field name="section_id" />
 					<field name="job_id" />
 					<field name="lost_date" />
 					<field name="reason_id" />

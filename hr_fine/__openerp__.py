@@ -11,6 +11,7 @@ HR Fine
 """,
     'data' : [
         'views/hr_fine.xml',
+        'views/data_import_view.xml',
     ],
     'installable': True,
     'auto_install': False,
