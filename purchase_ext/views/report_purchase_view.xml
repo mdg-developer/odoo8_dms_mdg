@@ -57,6 +57,9 @@
 									<th>
 										<strong>Description</strong>
 									</th>
+									<th>
+										<strong>CTN</strong>
+									</th>
 									<th class="text-center">
 										<strong>Expected Date</strong>
 									</th>
@@ -69,6 +72,9 @@
 								<tr t-foreach="o.order_line" t-as="order_line">
 									<td>
 										<span t-field="order_line.name" />
+									</td>
+									<td>
+										<span t-field="order_line.ctn_remark" />
 									</td>
 									<td class="text-center">
 										<span t-field="order_line.date_planned" />
@@ -290,6 +296,9 @@
 									<th class="text-center">
 										<strong>Unit</strong>
 									</th>
+									<th class="text-center">
+										<strong>CTN</strong>
+									</th>
 									<th class="text-right">
 										<strong>Qty</strong>
 									</th>
@@ -318,6 +327,9 @@
 										<span t-field="line.product_uom.name" groups="product.group_uom" />
 									</td>
 									<td class="text-right">
+										<span t-field="line.ctn_remark" />
+									</td>
+									<td class="text-right">
 										<span t-field="line.product_qty" />
 									</td>
 									<!-- <td class="text-right"> <span t-field="line.price_unit"/> </td> -->
@@ -328,6 +340,9 @@
 								<tr style="border-top: 1px solid black;">
 									<td colspan="3" class="text-center">
 										<strong>Total</strong>
+									</td>
+									<td>
+
 									</td>
 									<td>
 
