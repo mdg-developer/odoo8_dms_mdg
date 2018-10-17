@@ -33,6 +33,23 @@ class account_bank_statement_line(osv.osv):
             val['amount'] = amount
         return {'value': val}        
     
+    def onchange_partner_id(self, cr, uid, ids, partner_id, context=None):
+        partner_obj=self.pool.get('res.partner')
+        val = {'account_id': False}
+        if partner_id:
+            partner_Data=partner_obj.browse(cr, uid, partner_id, context=context)
+            customer=partner_Data.customer
+            supplier=partner_Data.supplier
+            cr.execute('select property_account_receivable from product_maingroup')
+            if supplier ==True:
+                cr.execute('select property_account_payable from product_maingroup')
+                account_id=cr.fetchone()[0]
+            if customer==True:
+                cr.execute('select property_account_receivable from product_maingroup')
+                account_id=cr.fetchone()[0]
+
+            val['account_id'] = account_id
+        return {'value': val}            
     
     def onchange_expense_amt(self, cr, uid, ids, expense_amt, context=None):
         val = {'amount': 0.0}

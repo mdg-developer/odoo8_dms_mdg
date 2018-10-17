@@ -38,7 +38,7 @@
 				<xpath expr="//form/sheet/notebook/page/field/tree/field[@name='date']"
 					position="before">
 					<field name="sequence" />
-					<field name="partner_id" />
+					<field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
 					<field name="ref" />
 
 				</xpath>
