@@ -12,5 +12,5 @@ class res_company(osv.osv):
     _inherit = "res.company"
     
     _columns = {
-        'com_email': fields.related('partner_id', 'email', type='char', string="Email", store=True),
+        'email': fields.related('partner_id', 'email', type='char', string="Email", store=True, size=1000),
     }
