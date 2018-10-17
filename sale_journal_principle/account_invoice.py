@@ -293,8 +293,20 @@ class account_invoice(models.Model):
                         net_total = invoice_line_data.net_total
                         discount_amt = invoice_line_data.discount_amt
                         price_sub_total = invoice_line_data.price_subtotal
-                        total_tax_amt = (net_total - discount_amt) - price_sub_total
-                    line['price'] = line['price'] + discount_amt - total_tax_amt           
+                        invoice_line_tax_id = invoice_line_data.invoice_line_tax_id
+                        amount_tax = invoice_line_data.invoice_id.amount_tax
+                        cr.execute("select count(avl.id) from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s  and avl.foc!=true", (origin,))
+                        line_count= cr.fetchone()  
+                        if invoice_line_tax_id:
+                            cr.execute("select tax_id from account_invoice_line_tax where invoice_line_id =%s",(invoice_line_id,))
+                            tax_data = cr.fetchall()
+                            for tax_id in tax_data:
+                                tax_line_data = self.env['account.tax'].browse(tax_id)
+                                if tax_line_data.price_include==True:
+                                    total_tax_amt = ((net_total - discount_amt) - price_sub_total)
+                                if tax_line_data.price_include==False:
+                                    total_tax_amt=(amount_tax/line_count[0])                        
+                    line['price'] = line['price'] + discount_amt - total_tax_amt       
                 if  line['is_discount'] == True:
                     account_id = product.product_tmpl_id.main_group.property_account_discount.id
                 elif is_inter_customer ==True:
@@ -399,7 +411,23 @@ class account_invoice(models.Model):
                         net_total = invoice_line_data.net_total
                         discount_amt = invoice_line_data.discount_amt
                         price_sub_total = invoice_line_data.price_subtotal
-                        total_tax_amt = (net_total - discount_amt) - price_sub_total 
+                        invoice_line_tax_id = invoice_line_data.invoice_line_tax_id
+                        amount_tax = invoice_line_data.invoice_id.amount_tax
+                        cr.execute("select count(avl.id) from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s  and avl.foc!=true", (origin,))
+                        line_count= cr.fetchone()  
+                        if invoice_line_tax_id:
+                            cr.execute("select tax_id from account_invoice_line_tax where invoice_line_id =%s",(invoice_line_id,))
+                            tax_data = cr.fetchall()
+                            for tax_id in tax_data:
+                                tax_line_data = self.env['account.tax'].browse(tax_id)
+                                if tax_line_data.price_include==True:
+                                    total_tax_amt = ((net_total - discount_amt) - price_sub_total)
+                                if tax_line_data.price_include==False:
+                                    total_tax_amt=(amount_tax/line_count[0])                          
+                        
+                        #total_tax_amt = (net_total - discount_amt) - price_sub_total 
+                        
+                        
                     line['price'] = line['price'] - discount_amt + total_tax_amt    
                 if  line['is_discount'] == True:
                     account_id = product.product_tmpl_id.main_group.property_account_discount.id
