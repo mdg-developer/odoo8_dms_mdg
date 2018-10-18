@@ -176,7 +176,7 @@
 		<template id="external_layout_above_footer">
 			<div class="footer o_boxed_footer">
 
-				<div class="col-xs-12">
+				<!-- <div class="col-xs-12">
 
 					<div class="col-xs-6">
 						<span>Prepared By</span>
@@ -234,7 +234,7 @@
 					</div>
 				</div>
 
-
+ -->
 			</div>
 		</template>
 
