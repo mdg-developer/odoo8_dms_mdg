@@ -262,6 +262,7 @@ class account_invoice(models.Model):
             
     def line_get_convert_dr(self, line, part, date):
         account_id = None
+        discount_amt=0
         cr=self._cr
         type='out_invoice' 
         print 'line_get_convert_newline_get_convert_new',line,part, self.id
@@ -273,14 +274,19 @@ class account_invoice(models.Model):
                 type=type[0]
             else:
                 type=None
-        if type=='out_invoice' :
+        if type=='out_invoice' and line.get('product_id', False) != False:      
             if line['price']<0 or line['name']=='Discount' :
                 product = self.env['product.product'].browse(line.get('product_id', False))
                 print 'product>>>',product.id
                 print 'line.get>>>',line.get('product_id', False)
                 if origin and line['name']!='Discount':
                     cr.execute("select avl.discount_amt from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s",(origin,product.id,))
-                    discount_amt=cr.fetchone()[0]      
+#                    discount_amt=cr.fetchone()[0]   
+                    dis_amt = cr.fetchall()
+                    if dis_amt:     
+                        for amt in dis_amt:
+                            if amt[0] is not None:                                 
+                                discount_amt = discount_amt + amt[0];                       
                     if discount_amt:     
                             line['price'] = line['price']+discount_amt                
                 if  line['name']=='Discount':
@@ -358,7 +364,11 @@ class account_invoice(models.Model):
                 print 'line.get>>>',line.get('product_id', False)
                 if origin and line['name']!='Discount':
                     cr.execute("select avl.discount_amt from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s",(origin,product.id,))
-                    discount_amt=cr.fetchone()[0]      
+                    dis_amt = cr.fetchall()
+                    if dis_amt:     
+                        for amt in dis_amt:
+                            if amt[0] is not None:                                 
+                                discount_amt = discount_amt + amt[0];        
                     if discount_amt:     
                             line['price'] = line['price']-discount_amt
                 if  line['name']=='Discount':
