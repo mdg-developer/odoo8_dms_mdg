@@ -16,7 +16,7 @@
 					</field>
 					<field name="property_stock_account_input_categ" position="replace">
 						<field name="property_stock_account_input_categ"
-							domain="[('type','&lt;&gt;','view'),('type','=','other'),('user_type','=','INVENTORY')]" />
+							domain="[('type','&lt;&gt;','view'),('type','=','other')]" />
 					</field>
 					<field name="property_stock_account_output_categ" position="replace">
 						<field name="property_stock_account_output_categ"
