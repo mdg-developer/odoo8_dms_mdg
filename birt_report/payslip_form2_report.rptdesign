@@ -119,6 +119,12 @@
                     <text-property name="heading">all_allow</text-property>
                 </structure>
                 <structure>
+                    <property name="columnName">lon</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">lon</text-property>
+                    <text-property name="heading">lon</text-property>
+                </structure>
+                <structure>
                     <property name="columnName">dpd</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">dpd</text-property>
@@ -164,12 +170,14 @@
                     <property name="columnName">year</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">year</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">year</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">month</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">month</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">month</text-property>
                 </structure>
             </list-property>
@@ -273,46 +281,51 @@
                     </structure>
                     <structure>
                         <property name="position">11</property>
-                        <property name="name">dpd</property>
+                        <property name="name">lon</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">12</property>
-                        <property name="name">ajd</property>
+                        <property name="name">dpd</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">13</property>
-                        <property name="name">ins</property>
+                        <property name="name">ajd</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">14</property>
-                        <property name="name">form1_amount</property>
+                        <property name="name">ins</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">15</property>
-                        <property name="name">form2_amount</property>
+                        <property name="name">form1_amount</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">16</property>
+                        <property name="name">form2_amount</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">17</property>
                         <property name="name">remark</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">17</property>
+                        <property name="position">18</property>
                         <property name="name">year</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">18</property>
+                        <property name="position">19</property>
                         <property name="name">month</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">19</property>
+                        <property name="position">20</property>
                         <property name="name">total_amt</property>
                         <property name="dataType">float</property>
                     </structure>
@@ -400,71 +413,79 @@ else
                 </structure>
                 <structure>
                     <property name="position">11</property>
+                    <property name="name">lon</property>
+                    <property name="nativeName">lon</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
+                </structure>
+                <structure>
+                    <property name="position">12</property>
                     <property name="name">dpd</property>
                     <property name="nativeName">dpd</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">12</property>
+                    <property name="position">13</property>
                     <property name="name">ajd</property>
                     <property name="nativeName">ajd</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">13</property>
+                    <property name="position">14</property>
                     <property name="name">ins</property>
                     <property name="nativeName">ins</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">14</property>
+                    <property name="position">15</property>
                     <property name="name">form1_amount</property>
                     <property name="nativeName">form1_amount</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">15</property>
+                    <property name="position">16</property>
                     <property name="name">form2_amount</property>
                     <property name="nativeName">form2_amount</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">16</property>
+                    <property name="position">17</property>
                     <property name="name">remark</property>
                     <property name="nativeName">remark</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">17</property>
+                    <property name="position">18</property>
                     <property name="name">year</property>
                     <property name="nativeName">year</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">18</property>
+                    <property name="position">19</property>
                     <property name="name">month</property>
                     <property name="nativeName">month</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select fingerprint_id,myanmar_name,aba,jda,ota,sbn,raa,aja,overtime,all_allow,dpd,ajd,ins,form1_amount,sum(all_allow - form2_ded) as form2_amount,remark,year,month from 
+            <xml-property name="queryText"><![CDATA[select fingerprint_id,myanmar_name,aba,jda,ota,sbn,raa,aja,overtime,all_allow,lon,dpd,ajd,ins,form1_amount,sum(all_allow - form2_ded) as form2_amount,remark,year,month from 
 (
 select sub.emp_id,sub.fingerprint_id,sub.myanmar_name,sub.job_name,sub.dept_name,(all_ded-ssb) as all_deduction,basic_salary,ssb,
 (basic_salary -(all_ded)) as form1_amount,remark,(basic_salary/30) as per_day,join_date,month,year,aba,jda,ota,sbn,raa,aja,overtime,
-sum(aba+ jda+ ota+ sbn+ raa+ aja+ overtime) as all_allow,dpd,ajd,ins,
-sum(dpd+ajd+ins) as form2_ded
+sum(aba+ jda+ ota+ sbn+ raa+ aja+ overtime) as all_allow,dpd,ajd,ins,lon,
+sum(dpd+ajd+ins+lon) as form2_ded
  from 
 (
 	select payslip.emp_id,payslip.fingerprint_id,payslip.myanmar_name,payslip.job_name,payslip.dept_name ,sum(all_deduction) as all_ded,sum(basic_salary) as basic_salary,
-	sum(ssb) as ssb,payslip.remark,join_date,month,year,sum(aba) as aba,sum(jda) as jda,sum(ota) as ota,sum(sbn) as sbn,sum(raa) as raa,sum(aja) as aja,sum(overtime) as overtime,sum(dpd) as dpd,sum(ajd) as ajd,sum(ins) as ins
+	sum(ssb) as ssb,payslip.remark,join_date,month,year,sum(aba) as aba,sum(jda) as jda,sum(ota) as ota,sum(sbn) as sbn,sum(raa) as raa,sum(aja) as aja,sum(overtime) as overtime,
+	sum(lon) lon,sum(dpd) as dpd,sum(ajd) as ajd,sum(ins) as ins
 	from 
 	(
 		select hp.id as payslip_id,he.id as emp_id,he.fingerprint_id,he.myanmar_name,hj.name as job_name,hd.name as dept_name,hp.remark2 as remark,he.initial_employment_date as join_date,
@@ -503,6 +524,8 @@ sum(dpd+ajd+ins) as form2_ded
 	     when hpl.code<> 'AJA' then 0.0 end as aja,
 	case when hpl.code='OT' then hpl.total
 	     when hpl.code<> 'OT' then 0.0 end as overtime,
+	case when hpl.code='LON' then hpl.total 
+	     when hpl.code<> 'LON' then 0.0 end as lon,
 	case when hpl.code='DPD' then hpl.total 
 	     when hpl.code<> 'DPD' then 0.0 end as dpd,
 	case when hpl.code='AJD' then hpl.total 
@@ -521,6 +544,7 @@ sum(dpd+ajd+ins) as form2_ded
 	or hpl.code='RAA'
 	or hpl.code='AJA'
 	or hpl.code='OT' 
+	or hpl.code='LON'
 	or hpl.code='DPD'
 	or hpl.code='AJD'
 	or hpl.code='INS'
@@ -530,9 +554,9 @@ sum(dpd+ajd+ins) as form2_ded
 	group by payslip.emp_id,payslip.fingerprint_id,payslip.myanmar_name,payslip.job_name,payslip.dept_name,join_date,payslip.remark,month,year
 ) sub
 group by sub.emp_id,sub.fingerprint_id,sub.myanmar_name,sub.basic_salary,sub.ssb,sub.all_ded,sub.job_name,sub.dept_name,join_date,remark,month,year,
-aba,jda,ota,sbn,raa,aja,overtime,dpd,ajd,ins
+aba,jda,ota,sbn,raa,aja,overtime,dpd,ajd,ins,lon
 )parent
-group by fingerprint_id,myanmar_name,form1_amount,all_allow,aba,jda,ota,sbn,raa,aja,overtime,dpd,ajd,ins,remark,year,month
+group by fingerprint_id,myanmar_name,form1_amount,all_allow,aba,jda,ota,sbn,raa,aja,overtime,lon,dpd,ajd,ins,remark,year,month
 
 
 ]]></xml-property>
@@ -1165,6 +1189,12 @@ month[dataSetRow["month"]-1];</expression>
                     <expression name="expression" type="javascript">dataSetRow["total_amt"]</expression>
                     <property name="dataType">float</property>
                 </structure>
+                <structure>
+                    <property name="name">lon</property>
+                    <text-property name="displayName">lon</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["lon"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
             </list-property>
             <column id="70">
                 <property name="width">0.6666666666666666in</property>
@@ -1200,6 +1230,10 @@ month[dataSetRow["month"]-1];</expression>
                 <property name="width">1.0208333333333333in</property>
             </column>
             <column id="81">
+                <property name="width">0.8645833333333334in</property>
+            </column>
+            <column id="157">
+                <property name="repeat">1</property>
                 <property name="width">0.8645833333333334in</property>
             </column>
             <column id="82">
@@ -1379,6 +1413,19 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopWidth">thin</property>
                         <label id="98">
                             <text-property name="text">ေခ်းေငြ</text-property>
+                        </label>
+                    </cell>
+                    <cell id="158">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="159">
+                            <text-property name="text">Deposit</text-property>
                         </label>
                     </cell>
                     <cell id="29">
@@ -1656,7 +1703,25 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <data id="119">
+                        <data id="146">
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">lon</property>
+                        </data>
+                    </cell>
+                    <cell id="160">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="161">
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
                                 <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
@@ -1888,6 +1953,16 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopWidth">thin</property>
                     </cell>
                     <cell id="64">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                    </cell>
+                    <cell id="162">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
