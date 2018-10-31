@@ -474,27 +474,27 @@
                     </structure>
                     <structure>
                         <property name="position">12</property>
+                        <property name="name">other_day_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">13</property>
                         <property name="name">actual_visit</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">13</property>
+                        <property name="position">14</property>
                         <property name="name">visit_only_as_plan</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">14</property>
+                        <property name="position">15</property>
                         <property name="name">ar_invoice</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">15</property>
-                        <property name="name">location_yes</property>
-                        <property name="dataType">decimal</property>
-                    </structure>
-                    <structure>
                         <property name="position">16</property>
-                        <property name="name">location_yes_16</property>
+                        <property name="name">location_yes</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
@@ -519,38 +519,42 @@
 this.queryText =this.queryText.replace("--$branch$", "")
 this.queryText =this.queryText.replace("--$cv.branch$", "")
 this.queryText =this.queryText.replace("--$spd.branch$", "")
+this.queryText =this.queryText.replace("--$so_branch$", "")
 }
 else
 {
 this.queryText =this.queryText.replace("--$branch$", " and branch_id="+params["branch"])
 this.queryText =this.queryText.replace("--$cv.branch$", " and cv.branch_id="+params["branch"])
 this.queryText =this.queryText.replace("--$spd.branch$", " and spd.branch_id="+params["branch"])
+this.queryText =this.queryText.replace("--$so_branch$", " and so.branch_id="+params["branch"])
 }
 if (params["sale_team"].value == null )
 {
 this.queryText =this.queryText.replace("--$sale_team$", "")
 this.queryText =this.queryText.replace("--$cv.sale_team$", "")
 this.queryText =this.queryText.replace("--$spd.sale_team$", "")
-this.queryText =this.queryText.replace("--$order_sale_team$", "")
+this.queryText =this.queryText.replace("--$so_order_sale_team$", "")
 }
 else
 {
-this.queryText =this.queryText.replace("--$sale_team$", " and sale_team="+params["sale_team"])
+this.queryText =this.queryText.replace("--$sale_team$", " and sale_team_id="+params["sale_team"])
 this.queryText =this.queryText.replace("--$cv.sale_team$", " and cv.sale_team_id="+params["sale_team"])
 this.queryText =this.queryText.replace("--$spd.sale_team$", " and spd.sale_team="+params["sale_team"])
-this.queryText =this.queryText.replace("--$order_sale_team$", " and section_id="+params["sale_team"])
+this.queryText =this.queryText.replace("--$so_order_sale_team$", " and so.section_id="+params["sale_team"])
 }
 if (params["day_name"].value == null )
 {
 this.queryText =this.queryText.replace("--$sale_plan_day_id$", "")
 this.queryText =this.queryText.replace("--$cv.sale_plan_day_id$", "")
 this.queryText =this.queryText.replace("--$spd.sale_plan_day_id$", "")
+this.queryText =this.queryText.replace("--$so_sale_plan_day_id$", "")
 }
 else
 {
 this.queryText =this.queryText.replace("--$sale_plan_day_id$", " and sale_plan_day_id="+params["day_name"])
 this.queryText =this.queryText.replace("--$cv.sale_plan_day_id$", " and cv.sale_plan_day_id="+params["day_name"])
 this.queryText =this.queryText.replace("--$spd.sale_plan_day_id$", " and spd.id="+params["day_name"])
+this.queryText =this.queryText.replace("--$so_sale_plan_day_id$", " and so.sale_plan_day_id="+params["day_name"])
 }]]></method>
             <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
@@ -622,31 +626,31 @@ this.queryText =this.queryText.replace("--$spd.sale_plan_day_id$", " and spd.id=
                 </structure>
                 <structure>
                     <property name="position">12</property>
+                    <property name="name">other_day_name</property>
+                    <property name="nativeName">other_day_name</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">13</property>
                     <property name="name">actual_visit</property>
                     <property name="nativeName">actual_visit</property>
                     <property name="dataType">decimal</property>
                 </structure>
                 <structure>
-                    <property name="position">13</property>
+                    <property name="position">14</property>
                     <property name="name">visit_only_as_plan</property>
                     <property name="nativeName">visit_only_as_plan</property>
                     <property name="dataType">decimal</property>
                 </structure>
                 <structure>
-                    <property name="position">14</property>
+                    <property name="position">15</property>
                     <property name="name">ar_invoice</property>
                     <property name="nativeName">ar_invoice</property>
                     <property name="dataType">decimal</property>
                 </structure>
                 <structure>
-                    <property name="position">15</property>
-                    <property name="name">location_yes</property>
-                    <property name="nativeName">location_yes</property>
-                    <property name="dataType">decimal</property>
-                </structure>
-                <structure>
                     <property name="position">16</property>
-                    <property name="name">location_yes_16</property>
+                    <property name="name">location_yes</property>
                     <property name="nativeName">location_yes</property>
                     <property name="dataType">decimal</property>
                 </structure>
@@ -680,6 +684,7 @@ COALESCE(plan_invoice.plan_invoice*100/visit_plan.visit_plan,0)effective_rate,
 (COALESCE(visit_only_from_other_visit.visit_only_from_other_visit,0) + COALESCE(total_invoice_from_other_visit.total_invoice_from_other_visit,0))total_other_visit_withoud_plan,
 COALESCE(visit_only_from_other_visit.visit_only_from_other_visit,0)visit_only_from_other_visit,
 COALESCE(total_invoice_from_other_visit.total_invoice_from_other_visit,0)total_invoice_from_other_visit,
+total_invoice_from_other_visit.other_day_name other_day_name,
 -- other_invoice1,
 -- other_day_name1,
 -- other_invoice2,
@@ -690,7 +695,7 @@ COALESCE(total_invoice_from_other_visit.total_invoice_from_other_visit,0)total_i
 COALESCE(visit_only_as_plan.visit_only_as_plan,0)visit_only_as_plan,
 COALESCE(ar_invoice.ar_invoice,0)ar_invoice,
 COALESCE(location_yes.location_yes,0)location_yes,
-location_yes.location_yes location_yes,
+--location_yes.location_yes location_yes,
 COALESCE(location_no.location_no,0)location_no,
 COALESCE(image_yes.image_yes,0)image_yes,
 COALESCE(image_no.image_no,0)image_no
@@ -734,12 +739,12 @@ left join
 left join
 
 
-(select count(partner_id) plan_invoice,branch_id from sale_order
-where ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date
+(select count(so.partner_id) plan_invoice,branch_id from sale_order so
+where ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date
 				between ? and ?
-				--$sale_plan_day_id$
-				--$branch$
-				--$order_sale_team$
+				--$so_sale_plan_day_id$
+				--$so_branch$
+				--$so_order_sale_team$
 				and sale_plan_day_id in(select id from sale_plan_day spd
 				where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date
 				between ? and ?
@@ -766,27 +771,32 @@ and sale_plan_day_id  not in (select id from sale_plan_day spd
  group by branch_id) visit_only_from_other_visit on visit_only_from_other_visit.branch_id=s.branch_id
 
  left join 
-(select count(partner_id) total_invoice_from_other_visit,branch_id  from sale_order 
- where ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date
+(select sum(invoice)total_invoice_from_other_visit,branch_id,string_agg(name, ', ') AS other_day_name 
+from (
+select count(so.partner_id) invoice,so.branch_id,s.name from sale_order so
+left join sale_plan_day s on s.id=so.sale_plan_day_id
+ where ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date
 				between ? and ?
-				--$branch$
-				--$order_sale_team$
+				--$so_branch$
+				--$so_order_sale_team$
 				and sale_plan_day_id not in (select spd.id from sale_plan_day spd
 				where((spd.date at time zone 'utc' )at time zone 'asia/rangoon')::date
 				between ? and ?
 				--$spd.branch$
 				--$spd.sale_plan_day_id$
-				--$spd.sale_team$)
-				group by branch_id) total_invoice_from_other_visit on total_invoice_from_other_visit.branch_id=s.branch_id
+				--$spd.sale_team$
+				)
+				group by so.branch_id,s.name)foo
+group by branch_id) total_invoice_from_other_visit on total_invoice_from_other_visit.branch_id=s.branch_id
 
 left join 
-(select count(partner_id) ar_invoice,branch_id from sale_order
-  where((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date
+(select count(so.partner_id) ar_invoice,so.branch_id from sale_order so
+  where((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date
 				between ? and ?
-				--$branch$
-				--$order_sale_team$
-				--$sale_plan_day_id$
-				and payment_type='credit'
+				--$so_branch$
+				--$so_order_sale_team$
+				--$so_sale_plan_day_id$
+				and so.payment_type='credit'
 				group by branch_id )ar_invoice on ar_invoice.branch_id=s.branch_id
 left join 
 (select count(customer_id) location_yes,branch_id from customer_visit  
@@ -839,6 +849,7 @@ location_yes.location_yes,
 location_no.location_no,
 image_no.image_no,
 image_yes.image_yes,
+total_invoice_from_other_visit.other_day_name,
 ar_invoice
 order by s.date]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
@@ -2099,7 +2110,7 @@ from sale_plan_day]]></xml-property>
         </label>
         <label id="178"/>
         <table id="17">
-            <property name="width">16.466666666666665in</property>
+            <property name="width">16.45in</property>
             <property name="dataSet">DataSet</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -2210,63 +2221,73 @@ from sale_plan_day]]></xml-property>
                     <expression name="expression" type="javascript">dataSetRow["image_no"]</expression>
                     <property name="dataType">decimal</property>
                 </structure>
+                <structure>
+                    <property name="name">other_day_name</property>
+                    <text-property name="displayName">other_day_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["other_day_name"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
             </list-property>
             <column id="75">
-                <property name="width">0.9666666666666667in</property>
+                <property name="width">0.65in</property>
             </column>
             <column id="76">
-                <property name="width">1.3083333333333333in</property>
+                <property name="width">0.725in</property>
             </column>
             <column id="77">
-                <property name="width">1.1166666666666667in</property>
+                <property name="width">0.675in</property>
             </column>
             <column id="78">
-                <property name="width">1.1083333333333334in</property>
+                <property name="width">0.85in</property>
             </column>
             <column id="79">
-                <property name="width">1.0666666666666667in</property>
+                <property name="width">0.775in</property>
             </column>
             <column id="80">
-                <property name="width">1.2083333333333333in</property>
+                <property name="width">0.8in</property>
             </column>
             <column id="81">
-                <property name="width">1.375in</property>
+                <property name="width">1.1916666666666667in</property>
             </column>
             <column id="82">
-                <property name="width">0.9916666666666667in</property>
+                <property name="width">1.1166666666666667in</property>
             </column>
             <column id="83">
-                <property name="width">1.0083333333333333in</property>
+                <property name="width">0.925in</property>
             </column>
             <column id="84">
-                <property name="width">0.9833333333333333in</property>
+                <property name="width">1.25in</property>
             </column>
             <column id="85">
-                <property name="width">0.9166666666666666in</property>
+                <property name="width">1.0333333333333334in</property>
             </column>
             <column id="86">
-                <property name="width">0.9333333333333333in</property>
+                <property name="width">1.2083333333333333in</property>
             </column>
             <column id="87">
-                <property name="width">0.875in</property>
+                <property name="width">1.225in</property>
+            </column>
+            <column id="205">
+                <property name="width">1.0416666666666667in</property>
             </column>
             <column id="88">
-                <property name="width">0.8583333333333333in</property>
-            </column>
-            <column id="89">
-                <property name="width">0.49166666666666664in</property>
-            </column>
-            <column id="90">
-                <property name="width">0.4083333333333333in</property>
+                <property name="width">1.1166666666666667in</property>
             </column>
             <column id="91">
-                <property name="width">0.375in</property>
+                <property name="width">0.5333333333333333in</property>
             </column>
-            <column id="92">
-                <property name="width">0.475in</property>
+            <column id="210">
+                <property name="width">0.45in</property>
+            </column>
+            <column id="215">
+                <property name="width">0.43333333333333335in</property>
+            </column>
+            <column id="218">
+                <property name="width">0.43333333333333335in</property>
             </column>
             <header>
                 <row id="18">
+                    <property name="height">0.49166666666666664in</property>
                     <cell id="19">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -2441,6 +2462,19 @@ from sale_plan_day]]></xml-property>
                             <text-property name="text">Total Invoice From Other Visit</text-property>
                         </label>
                     </cell>
+                    <cell id="203">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="206">
+                            <text-property name="text">Other Day Name</text-property>
+                        </label>
+                    </cell>
                     <cell id="32">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -2455,22 +2489,6 @@ from sale_plan_day]]></xml-property>
                             <text-property name="text">AR Invoice</text-property>
                         </label>
                     </cell>
-                    <cell id="33">
-                        <property name="colSpan">2</property>
-                        <property name="rowSpan">1</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <label id="189">
-                            <property name="textAlign">center</property>
-                            <text-property name="text">Location</text-property>
-                        </label>
-                    </cell>
                     <cell id="35">
                         <property name="colSpan">2</property>
                         <property name="rowSpan">1</property>
@@ -2482,38 +2500,55 @@ from sale_plan_day]]></xml-property>
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <label id="108">
-                            <text-property name="text">Visit Photo</text-property>
+                        <label id="220">
+                            <text-property name="text">Location</text-property>
                         </label>
-                        <grid id="158">
-                            <property name="borderTopStyle">solid</property>
-                            <property name="borderTopWidth">thin</property>
-                            <property name="height">0.2833333333333333in</property>
-                            <column id="159"/>
-                            <column id="160"/>
-                            <row id="161">
-                                <property name="height">0.2833333333333333in</property>
-                                <cell id="162">
-                                    <property name="borderLeftStyle">solid</property>
-                                    <property name="borderLeftWidth">thin</property>
-                                    <property name="borderRightStyle">solid</property>
-                                    <property name="borderRightWidth">thin</property>
-                                    <property name="borderTopStyle">solid</property>
-                                    <property name="borderTopWidth">thin</property>
-                                    <label id="164">
-                                        <property name="textAlign">right</property>
+                        <grid id="223">
+                            <property name="height">0.425in</property>
+                            <column id="224"/>
+                            <column id="225"/>
+                            <row id="226">
+                                <property name="height">0.425in</property>
+                                <cell id="227">
+                                    <label id="229">
                                         <text-property name="text">Yes</text-property>
                                     </label>
                                 </cell>
-                                <cell id="163">
-                                    <property name="borderLeftStyle">solid</property>
-                                    <property name="borderLeftWidth">thin</property>
-                                    <property name="borderRightStyle">solid</property>
-                                    <property name="borderRightWidth">thin</property>
-                                    <property name="borderTopStyle">solid</property>
-                                    <property name="borderTopWidth">thin</property>
-                                    <label id="165">
-                                        <property name="textAlign">right</property>
+                                <cell id="228">
+                                    <label id="230">
+                                        <text-property name="text">No</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                        </grid>
+                    </cell>
+                    <cell id="213">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="219">
+                            <text-property name="text">Visit Photo</text-property>
+                        </label>
+                        <grid id="233">
+                            <property name="height">0.31666666666666665in</property>
+                            <column id="234"/>
+                            <column id="235"/>
+                            <row id="236">
+                                <property name="height">0.31666666666666665in</property>
+                                <cell id="237">
+                                    <label id="239">
+                                        <text-property name="text">Yes</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="238">
+                                    <label id="240">
                                         <text-property name="text">No</text-property>
                                     </label>
                                 </cell>
@@ -2524,7 +2559,7 @@ from sale_plan_day]]></xml-property>
             </header>
             <detail>
                 <row id="109">
-                    <property name="height">0.325in</property>
+                    <property name="height">0.375in</property>
                     <cell id="110">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -2658,8 +2693,14 @@ from sale_plan_day]]></xml-property>
                         <property name="borderTopWidth">thin</property>
                         <data id="141">
                             <property name="textAlign">right</property>
+                            <property name="display">inline</property>
                             <property name="resultSetColumn">effective_rate</property>
                         </data>
+                        <label id="245">
+                            <property name="textAlign">right</property>
+                            <property name="display">inline</property>
+                            <text-property name="text">%</text-property>
+                        </label>
                     </cell>
                     <cell id="120">
                         <property name="borderBottomStyle">solid</property>
@@ -2703,6 +2744,19 @@ from sale_plan_day]]></xml-property>
                             <property name="resultSetColumn">total_invoice_from_other_visit</property>
                         </data>
                     </cell>
+                    <cell id="204">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="207">
+                            <property name="resultSetColumn">other_day_name</property>
+                        </data>
+                    </cell>
                     <cell id="123">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -2717,34 +2771,6 @@ from sale_plan_day]]></xml-property>
                             <property name="resultSetColumn">ar_invoice</property>
                         </data>
                     </cell>
-                    <cell id="124">
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <data id="146">
-                            <property name="textAlign">right</property>
-                            <property name="resultSetColumn">location_yes</property>
-                        </data>
-                    </cell>
-                    <cell id="125">
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <data id="147">
-                            <property name="textAlign">right</property>
-                            <property name="resultSetColumn">location_no</property>
-                        </data>
-                    </cell>
                     <cell id="126">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -2754,12 +2780,12 @@ from sale_plan_day]]></xml-property>
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <data id="148">
+                        <data id="241">
                             <property name="textAlign">right</property>
-                            <property name="resultSetColumn">image_yes</property>
+                            <property name="resultSetColumn">location_yes</property>
                         </data>
                     </cell>
-                    <cell id="127">
+                    <cell id="209">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
@@ -2768,7 +2794,35 @@ from sale_plan_day]]></xml-property>
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <data id="149">
+                        <data id="242">
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">location_no</property>
+                        </data>
+                    </cell>
+                    <cell id="214">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="243">
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">image_yes</property>
+                        </data>
+                    </cell>
+                    <cell id="217">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="244">
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">image_no</property>
                         </data>
