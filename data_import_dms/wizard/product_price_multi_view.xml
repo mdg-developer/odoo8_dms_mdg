@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        
+        <record id="view_product_price_multi_form" model="ir.ui.view">
+            <field name="name">product_price_multi_form</field>
+            <field name="model">product.price.multi</field>
+            <field name="arch"  type="xml">
+                <form string="Product Price Margin">
+                    <group col="4" colspan="6">
+                       <label for="id" string="Product Price Margin (+/-) Percent (e.g 5 or -5)"/>
+                       <div>
+                           <div name="default_price_margin">
+                                <field name="default_price_margin" class="oe_inline" />
+                            </div>                         
+                       </div>
+                    </group>
+                    <footer>
+                        <button name="print_report" string="Update" type="object" class="oe_highlight"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_product_price_multi" model="ir.actions.act_window">
+            <field name="name">Product Price Margin</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.price.multi</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record model="ir.values" id="product_price_multi_value">
+            <field name="name">Product Price Margin</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_product_price_multi'))" />
+            <field name="key">action</field>
+            <field name="model">product.template</field>
+        </record>
+
+    </data>
+</openerp>

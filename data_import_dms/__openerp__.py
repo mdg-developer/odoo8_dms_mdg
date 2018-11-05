@@ -44,6 +44,7 @@ for following data
               'views/stock_move_import_view.xml',
               #'views/hr_employee_import_view.xml',
               'views/price_list_view.xml',
-              'wizard/pricelist_import_view.xml'
+              'wizard/pricelist_import_view.xml',
+              'wizard/product_price_multi_view.xml',  
     ],
 }

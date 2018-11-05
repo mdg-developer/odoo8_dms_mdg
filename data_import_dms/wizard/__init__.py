@@ -1,1 +1,2 @@
 import product_pricelist_import
+import product_price_multi
