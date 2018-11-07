@@ -2,6 +2,7 @@ from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
 from openerp.osv.fields import _column
 from openerp import tools
+from openerp.tools.translate import _
 import time
 from itertools import chain
 from openerp.exceptions import except_orm
