@@ -278,7 +278,8 @@ class product_pricelist_version(osv.osv):
 class product_pricelist_item(osv.osv):
     _inherit = "product.pricelist.item"
     _columns = {
-                 'default_code': fields.char(string="Internal Reference") 
+                 'default_code': fields.char(string="Internal Reference"),
+                 'price_discount':fields.float("Price Discount",digits=(16,6)), 
                 }
     def product_id_change(self, cr, uid, ids, product_id, context=None):
         if not product_id:

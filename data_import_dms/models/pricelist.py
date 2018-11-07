@@ -50,5 +50,28 @@ class product_pricelist_version(orm.Model):
                 'context': ctx,
             }
             return act_import
-
+        
+    def generate_picelist_item(self, cr, uid, ids, context=None):
+        
+        mod_obj = self.pool.get('ir.model.data')
+        wiz_view = mod_obj.get_object_reference(cr, uid, 'data_import_dms', 'product_pricelist_generate_view')
+        for version in self.browse(cr, uid, ids, context=context):
+            ctx = {
+                'company_id': version.company_id.id,
+                'version_id': version.id,
+                'pricelist_id': version.id,
+            }
+            act_import = {
+                'name': _('Generate Price List Item'),
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'product.pricelist.generate',
+                'view_id': [wiz_view[1]],
+                'nodestroy': True,
+                'target': 'new',
+                'type': 'ir.actions.act_window',
+                'context': ctx,
+            }
+            return act_import
+        
 product_pricelist_version()
