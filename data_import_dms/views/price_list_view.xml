@@ -9,6 +9,7 @@
             <field name="arch" type="xml">
 			<xpath expr="//page/field[@name='items_id']" position="before">
 				<button name="import_lines" string="Import" type="object" icon="gtk-execute" />
+				<button name="generate_picelist_item" string="Generate" type="object" icon="gtk-execute"/>
 			</xpath>
             </field>
         </record>
