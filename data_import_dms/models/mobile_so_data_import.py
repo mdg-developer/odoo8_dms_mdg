@@ -232,8 +232,27 @@ class mobile_sale_import(osv.osv):
             self.write(cr, uid, ids[0], {'state': 'error'})
         else:
             order_id = None
-            #fordelete
+            
             try : 
+                #fordelete
+                for aml in amls:
+                    deleteorderRef=orderRef=order_ids=None
+                    if aml['orderreference']:
+                        deleteorderRef = str(aml['orderreference']).strip()       
+                    cr.execute(""" select id,tb_ref_no,state from sale_order where tb_ref_no =%s""", (deleteorderRef,))
+                    data = cr.fetchall()
+                    if data:
+                        order_ids = data[0]
+                    if order_ids:
+                        order_id = order_ids[0] 
+                        so_ref = str(order_ids[1]).strip()
+                        state =order_ids[2]
+                        if state!='draft':
+                            raise osv.except_osv(_('Warning!'), _("Please Check Your Sale Order State '%s'!") % (so_ref,))                                      
+
+                        if so_ref==deleteorderRef:
+                            cr.execute("""delete from sale_order_line where order_id=%s""", (order_id,))     
+                #forinsert                                
                 for aml in amls:
                     order_ids = pricelist_ids = payment_term_ids = uom_ids = partner_ids = tax = _foc = _state = analytic_id = pricelist_id = partner_id = country_id = saleperson_id = warehouse_id = product_id = user_id = sale_plan_day_id = sale_plan_trip_id = section_id = payment_term_id = _duedate = None
                     void = secObj = products_name=product_ids =orderRef = partner_code = branch_id=payment_type = delivery_remark = saleperson_name = sale_plan_day_name = sale_plan_trip_name = section_name = payment_term_name = pricelist_name = date = pricelist_name = so_partner_id=so_date=so_ref=None
@@ -538,9 +557,9 @@ class mobile_sale_import(osv.osv):
                         state =order_ids[2]
                         if state!='draft':
                             raise osv.except_osv(_('Warning!'), _("Please Check Your Sale Order State '%s'!") % (so_ref,))                                      
-
-                        if so_ref==orderRef:
-                            cr.execute("""delete from sale_order_line where order_id=%s""", (order_id,))
+ 
+#                         if so_ref==orderRef:
+#                             cr.execute("""delete from sale_order_line where order_id=%s""", (order_id,))
                     else:
                         order_id = order_obj.create(cr, uid, order_value, context)
 
