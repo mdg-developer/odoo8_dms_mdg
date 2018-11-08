@@ -3261,12 +3261,13 @@ class mobile_sale_order(osv.osv):
                                             and RP.active = true
                                             and RP.outlet_type = OT.id
                                             and RPS.partner_id = RP.id 
-                                            and RP.write_date::date >= %s
                                             and SPD.sale_team = %s                                        
                                             and RPS.sale_plan_day_id = %s                                                                                                                        
                         )A 
                         where A.customer_code is not null
-            ''', (pull_date, section_id, day_id,))
+            ''', (section_id, day_id,))
+         #and RP.write_date::date >= %s
+
         datas = cr.fetchall()
         #print 'dataaaaaaaaaaaaaaaaaasssalepala',datas
         return datas
