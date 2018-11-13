@@ -12,13 +12,13 @@
 						<field name ="delivery_team_id" class="oe_inline" widget="selection" />
 						<field name="category_ids" class="oe_inline" widget="selection" />
 						<field name="outlet_type" class="oe_inline" widget="selection"
-							groups="base.group_no_one" />
+							groups="base.group_no_one,base.group_sale_manager" />
 						<field name="sales_channel" class="oe_inline" widget="selection"
 							groups="base.group_no_one" />
 						<field name="frequency_id" class="oe_inline" widget="selection"
-							groups="base.group_sale_supervisor" />
+							groups="base.group_sale_supervisor,base.group_sale_manager" />
 						<field name="class_id" class="oe_inline" widget="selection"
-							groups="base.group_sale_supervisor" />
+							groups="base.group_sale_supervisor,base.group_sale_manager" />
 						<field name="branch_id" class="oe_inline" widget="selection"
 							groups="base.group_no_one" />
 						<field name="state_id" class="oe_inline" widget="selection"
@@ -26,16 +26,18 @@
 						<field name="city" class="oe_inline" widget="selection"
 							groups="base.group_no_one" />
 						<field name="township" class="oe_inline" widget="selection"
-							default_order="name desc" groups="base.group_no_one" />
+							default_order="name desc" groups="base.group_no_one,base.group_sale_manager" />
 						<field name="property_product_pricelist" class="oe_inline"
 							widget="selection" groups="base.group_no_one" />
 						<!-- <field name="demarcation_id" widget="selection"/> -->
 						<field name="chiller" />
-						<field name="hamper" groups="base.group_sale_supervisor,base.group_no_one" />
+						<field name="hamper" groups="base.group_sale_supervisor,base.group_no_one,base.group_sale_manager" />
 						<field name="chiller_false" />
-						<field name="hamper_false" groups="base.group_sale_supervisor,base.group_no_one" />
+						<field name="hamper_false" groups="base.group_sale_supervisor,base.group_no_one,base.group_sale_manager" />
 						<field name="cheque_true" groups="base.group_sale_supervisor,base.group_no_one" />
 						<field name="cheque_false" groups="base.group_sale_supervisor,base.group_no_one" />
+						<field name="active_action" groups="base.group_sale_supervisor,base.group_no_one,base.group_sale_manager" />
+						
 
 					</group>
 					<footer>

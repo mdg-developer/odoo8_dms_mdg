@@ -98,30 +98,7 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     <text-property name="heading">percent_target</text-property>
                 </structure>
             </list-property>
-            <list-property name="parameters">
-                <structure>
-                    <property name="name">from_date</property>
-                    <property name="paramName">from_date</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                    <property name="position">1</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">to_date</property>
-                    <property name="paramName">to_date</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                    <property name="position">2</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-            </list-property>
+            <list-property name="parameters"/>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
                     <structure>
@@ -217,7 +194,7 @@ this.queryText =this.queryText.replace("--$branch_id$", "and branch_id in ("+ pa
 	and (foc!='true' or foc is null)
 	--$sales_team$
 	--$branch_id$
-	and (date_invoice+ '6 hour'::interval + '30 minutes'::interval)::date between ? and ?),
+	and (date_invoice+ '6 hour'::interval + '30 minutes'::interval)::date between '2018-10-01' and '2018-10-31'),
 
 ach_amt as (	
 	select COALESCE(sum(ach_amt),0) as ach_amt,product_id,name_template,pseq,sum(quantity) quantity
@@ -225,53 +202,26 @@ ach_amt as (
 	group by product_id,name_template,pseq),
 
 target as (
-	select (price_unit*product_uom_qty) as target_amt,sale_team_id,st.month::int,st.year::int,stl.product_id,st.branch_id,pp.name_template
+	select price_unit*product_uom_qty as target_amt,sale_team_id,st.month::int,st.year::int,stl.product_id,st.branch_id,pp.name_template
 	from sales_target st,sales_target_line stl,sale_order so,product_product pp
 	where st.id=stl.sale_ids
 	and pp.id=stl.product_id
-	and so.section_id=st.sale_team_id and so.month=st.month::int and so.year=st.year::int and so.product_id=stl.product_id and so.branch_id=st.branch_id)
+	and so.section_id=st.sale_team_id and so.month=st.month::int 
+	and so.year=st.year::int and so.product_id=stl.product_id 
+	and so.branch_id=st.branch_id
+	group by price_unit,product_uom_qty,sale_team_id,st.month,st.year,stl.product_id,st.branch_id,pp.name_template
+	)
 	
-select row_number() over (order by ach.pseq) as seq,ach.name_template,quantity,ach_amt as ach_amt,case when target_amt is null then 0 else target_amt end as target_amt,
-case when target_amt>0 then concat(round(((ach_amt*100)/target_amt),2),'%') else concat(0,'%') end as percent_target
+select row_number() over (order by ach.pseq) as seq,ach.name_template,quantity,ach_amt as ach_amt,
+case when sum(target_amt) is null then 0 else sum(target_amt) end as target_amt,
+case when sum(target_amt) >0 then concat(round(((ach_amt*100)/sum(target_amt)),2),'%') else concat(0,'%') end as percent_target
 from ach_amt ach
 left join target target on (ach.product_id=target.product_id)
-group by ach.product_id,ach.name_template,target_amt,ach_amt,quantity,ach.pseq
+group by ach.product_id,ach.name_template,ach_amt,quantity,ach.pseq
 order by pseq]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+<model:DesignValues xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
-  <DataSetParameters>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>1</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>2</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-  </DataSetParameters>
 </model:DesignValues>]]></xml-property>
         </oda-data-set>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="company" id="88"
@@ -742,7 +692,7 @@ and uid=?
             <property name="borderLeftStyle">none</property>
             <property name="borderRightStyle">none</property>
             <property name="borderTopStyle">none</property>
-            <property name="width">7.96875in</property>
+            <property name="width">7.958333333333333in</property>
             <property name="dataSet">Data Set</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -830,6 +780,30 @@ and uid=?
                     </list-property>
                     <property name="allowExport">true</property>
                 </structure>
+                <structure>
+                    <property name="name">Aggregation_4</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["Aggregation_1"]/row["Aggregation_2"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">Aggregation_5</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["Aggregation_1"]/row["Aggregation_2"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
             </list-property>
             <column id="33">
                 <property name="width">0.5277777777777778in</property>
@@ -848,6 +822,9 @@ and uid=?
             </column>
             <column id="37">
                 <property name="width">1in</property>
+            </column>
+            <column id="892">
+                <property name="width">0.5104166666666666in</property>
             </column>
             <header>
                 <row id="15">
@@ -940,6 +917,16 @@ and uid=?
                             <property name="textAlign">center</property>
                             <text-property name="text">% on Target</text-property>
                         </label>
+                    </cell>
+                    <cell id="889">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
                     </cell>
                 </row>
             </header>
@@ -1048,6 +1035,16 @@ and uid=?
                             <property name="resultSetColumn">percent_target</property>
                         </data>
                     </cell>
+                    <cell id="890">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                    </cell>
                 </row>
             </detail>
             <footer>
@@ -1151,6 +1148,20 @@ and uid=?
                                 </structure>
                             </list-property>
                             <property name="resultSetColumn">concat</property>
+                        </data>
+                    </cell>
+                    <cell id="891">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="893">
+                            <property name="fontWeight">bold</property>
+                            <property name="resultSetColumn">Aggregation_5</property>
                         </data>
                     </cell>
                 </row>

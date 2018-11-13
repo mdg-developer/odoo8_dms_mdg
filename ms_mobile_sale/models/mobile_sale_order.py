@@ -410,7 +410,7 @@ class mobile_sale_order(osv.osv):
                         order_id =cursor.fetchone()[0]                                
                         cursor.execute('select branch_id from crm_case_section where id=%s', (sync_reprint['section_id'],))
                         branch_id = cursor.fetchone()[0]
-                        cursor.execute("delete from stock_delivery_reprint where presaleorder_id = %s and void_flag = %s ", (order_id,sync_reprint['void_flag'],)) 
+                        cursor.execute("delete from stock_delivery_reprint where reprint_date =%s and presaleorder_id = %s and void_flag=%s", (datetime.now(),order_id,sync_reprint['void_flag'],)) 
                         print_result = {
                             'reprint_date':datetime.now(),
                             'branch_id':branch_id,
@@ -422,6 +422,7 @@ class mobile_sale_order(osv.osv):
                             'reprint_count':sync_reprint['reprint_count'],
                             'void_flag':sync_reprint['void_flag'],
                             }
+                        
                         sync_obj.create(cursor, user, print_result, context=context)
                 return True
              except Exception, e:
@@ -3529,7 +3530,7 @@ class mobile_sale_order(osv.osv):
                     select A.id,A.name,A.image,A.is_company,
                      A.image_small,replace(A.street,',',';') street,replace(A.street2,',',';') street2,A.city,A.website,
                      replace(A.phone,',',';') phone,A.township,A.mobile,A.email,A.company_id,A.customer, 
-                     A.customer_code,A.mobile_customer,A.shop_name ,
+                     A.customer_code,A.mobile_customer,A.shop_name,
                      A.address,
                      A.zip,A.state_name,A.partner_latitude,A.partner_longitude,A.sale_plan_trip_id,A.image_medium,
                      A.credit_limit,A.credit_allow,A.sales_channel,A.branch_id,A.pricelist_id,A.payment_term_id ,A.outlet_type,
@@ -3569,14 +3570,20 @@ class mobile_sale_order(osv.osv):
         return datas
     
     def get_partner_category_rel(self, cr, uid, section_id , context=None):        
-        cr.execute('''select a.* from res_partner_res_partner_category_rel a,
+        cr.execute('''(select a.* from res_partner_res_partner_category_rel a,
                  sale_plan_day_line b
                  , sale_plan_day p
                 where a.partner_id = b.partner_id
                 and b.line_id = p.id
                 and p.sale_team = %s
-                order by b.sequence asc
-                ''', (section_id,))
+                order by b.sequence asc)
+                UNION ALL
+                (select a.* from res_partner_res_partner_category_rel a,sale_plan_trip p,
+                 res_partner_sale_plan_trip_rel b
+                where a.partner_id = b.partner_id
+                and b.sale_plan_trip_id = p.id
+                and p.sale_team = %s)
+                ''', (section_id,section_id,))
         datas = cr.fetchall()        
         return datas
     

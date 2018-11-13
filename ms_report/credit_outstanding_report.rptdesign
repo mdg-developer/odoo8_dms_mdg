@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.4.1.v201408290142 Build &lt;4.4.1.v20140916-1320></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
+    <list-property name="propertyBindings">
+        <structure>
+            <property name="name">queryText</property>
+            <property name="id">2971</property>
+        </structure>
+        <structure>
+            <property name="name">queryTimeOut</property>
+            <property name="id">2971</property>
+        </structure>
+        <structure>
+            <property name="name">rowFetchSize</property>
+            <property name="id">2971</property>
+        </structure>
+    </list-property>
     <property name="units">in</property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="layoutPreference">fixed layout</property>
@@ -45,7 +59,7 @@
         <scalar-parameter name="user_id" id="3690" extends="report_library.user_id"/>
     </parameters>
     <data-sources>
-        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="3694"
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="3710"
  extends="report_library.Data Source"/>
     </data-sources>
     <data-sets>
@@ -813,12 +827,12 @@ case when amount_total<0 then 'Yes' when amount_total>0 then 'No' end as credit_
 from account_invoice ai
 left join res_partner rp on (ai.partner_id=rp.id)
 left join account_payment_term term on (ai.payment_term=term.id)
-left join sale_team_channel_rel rel on (rel.sale_team_id=ai.section_id)
-left join crm_case_section ccs on (rel.sale_team_id=ccs.id)
-left join sale_channel sc on (rel.sale_channel_id=sc.id)
+--left join sale_team_channel_rel rel on (rel.sale_team_id=ai.section_id)
+left join crm_case_section ccs on (ai.section_id=ccs.id)
+left join sale_channel sc on (rp.sales_channel=sc.id)
 where state='open'
 and payment_type='credit'
-and date_due<?
+and ai.date_invoice <=?
 --$branch_id$
 --$sales_team$
 )A]]></xml-property>
@@ -835,6 +849,7 @@ and date_due<?
                     <property name="columnName">string_agg</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">string_agg</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">string_agg</text-property>
                 </structure>
             </list-property>
@@ -846,6 +861,7 @@ and date_due<?
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">1</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -888,7 +904,7 @@ from account_invoice ai
 left join res_branch branch on (ai.branch_id=branch.id)
 where state='open'
 and payment_type='credit'
-and date_due<?
+and ai.date_due<?
 --$branch_id$
 --$sales_team$]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
@@ -1376,6 +1392,12 @@ dataSetRow["fourth_interval"]&#13;
                     <text-property name="displayName">amount_due</text-property>
                     <expression name="expression" type="javascript">dataSetRow["amount_due"]</expression>
                     <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">date_due_1</property>
+                    <text-property name="displayName">date_due</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["date_due_1"]</expression>
+                    <property name="dataType">date</property>
                 </structure>
             </list-property>
             <column id="2595">
@@ -2546,15 +2568,6 @@ dataSetRow["fourth_interval"]&#13;
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <data id="3658">
-                            <property name="fontFamily">sans-serif</property>
-                            <structure name="dateTimeFormat">
-                                <property name="category">Custom</property>
-                                <property name="pattern">dd/MM/yyyy</property>
-                            </structure>
-                            <property name="textAlign">center</property>
-                            <property name="resultSetColumn">date_due</property>
-                        </data>
                     </cell>
                     <cell id="2742">
                         <property name="borderBottomStyle">solid</property>
@@ -2774,14 +2787,12 @@ dataSetRow["fourth_interval"]&#13;
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <data id="3675">
-                            <property name="fontFamily">sans-serif</property>
+                        <data id="3711">
                             <structure name="dateTimeFormat">
                                 <property name="category">Custom</property>
                                 <property name="pattern">dd/MM/yyyy</property>
                             </structure>
-                            <property name="textAlign">center</property>
-                            <property name="resultSetColumn">date_due</property>
+                            <property name="resultSetColumn">date_due_1</property>
                         </data>
                     </cell>
                     <cell id="2771">

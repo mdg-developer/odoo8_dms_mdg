@@ -63,6 +63,18 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
             <property name="nullsOrdering">nulls lowest</property>
             <list-property name="columnHints">
                 <structure>
+                    <property name="columnName">reprint_date</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">reprint_date</text-property>
+                    <text-property name="heading">reprint_date</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">void_flag</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">void_flag</text-property>
+                    <text-property name="heading">void_flag</text-property>
+                </structure>
+                <structure>
                     <property name="columnName">name</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">name</text-property>
@@ -147,41 +159,51 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                 <list-property name="resultSet">
                     <structure>
                         <property name="position">1</property>
-                        <property name="name">name</property>
-                        <property name="dataType">string</property>
+                        <property name="name">reprint_date</property>
+                        <property name="dataType">date</property>
                     </structure>
                     <structure>
                         <property name="position">2</property>
-                        <property name="name">customer_name</property>
+                        <property name="name">void_flag</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">3</property>
-                        <property name="name">customer_code</property>
+                        <property name="name">name</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">4</property>
-                        <property name="name">login</property>
+                        <property name="name">customer_name</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">5</property>
-                        <property name="name">amount_total</property>
+                        <property name="name">customer_code</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">6</property>
-                        <property name="name">branch_id</property>
-                        <property name="dataType">integer</property>
+                        <property name="name">login</property>
+                        <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">7</property>
-                        <property name="name">sale_team</property>
+                        <property name="name">amount_total</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">8</property>
+                        <property name="name">branch_id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">sale_team</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
                         <property name="name">print_count</property>
                         <property name="dataType">string</property>
                     </structure>
@@ -193,62 +215,76 @@ this.queryText =this.queryText.replace("--$branch$", "and mso.branch_id in ("+ p
             <list-property name="resultSet">
                 <structure>
                     <property name="position">1</property>
+                    <property name="name">reprint_date</property>
+                    <property name="nativeName">reprint_date</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">void_flag</property>
+                    <property name="nativeName">void_flag</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
                     <property name="name">name</property>
                     <property name="nativeName">name</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">2</property>
+                    <property name="position">4</property>
                     <property name="name">customer_name</property>
                     <property name="nativeName">customer_name</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">3</property>
+                    <property name="position">5</property>
                     <property name="name">customer_code</property>
                     <property name="nativeName">customer_code</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">4</property>
+                    <property name="position">6</property>
                     <property name="name">login</property>
                     <property name="nativeName">login</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">5</property>
+                    <property name="position">7</property>
                     <property name="name">amount_total</property>
                     <property name="nativeName">amount_total</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">6</property>
+                    <property name="position">8</property>
                     <property name="name">branch_id</property>
                     <property name="nativeName">branch_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">7</property>
+                    <property name="position">9</property>
                     <property name="name">sale_team</property>
                     <property name="nativeName">sale_team</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">8</property>
+                    <property name="position">10</property>
                     <property name="name">print_count</property>
                     <property name="nativeName">print_count</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select so.name,rp.name customer_name,mso.customer_code,res.login,mso.total_amount as amount_total,mso.branch_id,cc.name as sale_team,mso.reprint_count as print_count
+            <xml-property name="queryText"><![CDATA[select mso.reprint_date,mso.void_flag,so.name,rp.name customer_name,mso.customer_code,res.login,mso.total_amount as amount_total,mso.branch_id,cc.name as sale_team,mso.reprint_count as print_count
 from stock_delivery_reprint mso,res_partner rp,sale_order so,res_users res,crm_case_section cc
 where mso.partner_id=rp.id
 and mso.create_uid=res.id
@@ -258,7 +294,7 @@ and mso.reprint_count::integer > 0
 and mso.reprint_date between ? and ?
 --$branch$
 --$sales_team$
-order by sale_team]]></xml-property>
+order by mso.reprint_date,sale_team]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -508,6 +544,8 @@ order by sale_team]]></xml-property>
     </styles>
     <page-setup>
         <simple-master-page name="Simple MasterPage" id="2">
+            <property name="type">us-letter</property>
+            <property name="orientation">landscape</property>
             <property name="topMargin">0in</property>
             <page-footer>
                 <text id="3">
@@ -541,7 +579,7 @@ order by sale_team]]></xml-property>
             <property name="fontSize">12pt</property>
             <property name="fontWeight">bold</property>
             <property name="textAlign">center</property>
-            <text-property name="text">Pre Sales Reprint Count Report</text-property>
+            <text-property name="text">Pending Delivery Reprint Count Report</text-property>
         </label>
         <table id="614">
             <property name="width">7.927083333333333in</property>
@@ -637,7 +675,7 @@ order by sale_team]]></xml-property>
         <table id="703">
             <property name="marginLeft">0.5pt</property>
             <property name="marginRight">0pt</property>
-            <property name="width">7.947916666666667in</property>
+            <property name="width">10.447916666666666in</property>
             <property name="dataSet">Data Set</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -683,27 +721,59 @@ order by sale_team]]></xml-property>
                     <expression name="expression" type="javascript">dataSetRow["sale_team"]</expression>
                     <property name="dataType">string</property>
                 </structure>
+                <structure>
+                    <property name="name">reprint_date</property>
+                    <text-property name="displayName">reprint_date</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["reprint_date"]</expression>
+                    <property name="dataType">date</property>
+                </structure>
+                <structure>
+                    <property name="name">void_flag</property>
+                    <text-property name="displayName">void_flag</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["void_flag"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
             </list-property>
+            <column id="762">
+                <property name="width">1.1145833333333333in</property>
+            </column>
             <column id="722">
-                <property name="width">1.8020833333333333in</property>
+                <property name="width">1.46875in</property>
             </column>
             <column id="755">
-                <property name="width">0.8541666666666666in</property>
+                <property name="width">1.0833333333333333in</property>
             </column>
             <column id="723">
-                <property name="width">1.4895833333333333in</property>
+                <property name="width">1.6666666666666667in</property>
             </column>
             <column id="724">
-                <property name="width">1.6354166666666667in</property>
+                <property name="width">1.2291666666666667in</property>
             </column>
             <column id="725">
-                <property name="width">1.15625in</property>
+                <property name="width">1.3125in</property>
+            </column>
+            <column id="765">
+                <property name="width">1.0208333333333333in</property>
             </column>
             <column id="726">
-                <property name="width">1.0104166666666667in</property>
+                <property name="width">1.5520833333333333in</property>
             </column>
             <header>
                 <row id="704">
+                    <cell id="760">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="766">
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">Reprint Date</text-property>
+                        </label>
+                    </cell>
                     <cell id="705">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -774,6 +844,20 @@ order by sale_team]]></xml-property>
                             <text-property name="text">Amount Total</text-property>
                         </label>
                     </cell>
+                    <cell id="763">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="768">
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">State</text-property>
+                        </label>
+                    </cell>
                     <cell id="709">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -792,6 +876,24 @@ order by sale_team]]></xml-property>
             </header>
             <detail>
                 <row id="710">
+                    <cell id="761">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="767">
+                            <structure name="dateTimeFormat">
+                                <property name="category">Custom</property>
+                                <property name="pattern">dd-MM-yyyy</property>
+                            </structure>
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">reprint_date</property>
+                        </data>
+                    </cell>
                     <cell id="711">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -864,6 +966,20 @@ order by sale_team]]></xml-property>
                             </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">amount_total</property>
+                        </data>
+                    </cell>
+                    <cell id="764">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="769">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">void_flag</property>
                         </data>
                     </cell>
                     <cell id="715">

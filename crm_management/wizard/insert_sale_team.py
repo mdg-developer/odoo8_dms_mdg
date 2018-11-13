@@ -45,7 +45,10 @@ class insert_sale_team(osv.osv_memory):
         'hamper_false':fields.boolean("Hamper False"),
         'cheque_true':fields.boolean("Cheque True"),
         'cheque_false':fields.boolean("Cheque False",default=False),
-        
+         'active_action':fields.selection([
+                        ('active', 'Active'),
+                        ('in_active', 'Inactive'),
+                    ], 'Active Status'),        
 #                 'demarcation_id': fields.many2one('sale.demarcation', 'Demarcation'),
                 
     }
@@ -72,6 +75,7 @@ class insert_sale_team(osv.osv_memory):
         chiller_false=data['chiller_false']
         cheque_true=data['cheque_true']
         cheque_false=data['cheque_false']
+        active_action=data['active_action']
         hamper_false = data['hamper_false']        
         state_id=data['state_id']        
         city=data['city']
@@ -123,7 +127,13 @@ class insert_sale_team(osv.osv_memory):
             if cheque_true is True:
                 cr.execute('update res_partner set is_cheque=%s where id=%s',(True,partner,))
             if cheque_false is True:
-                cr.execute('update res_partner set is_cheque=%s where id=%s',(False,partner,))       
+                cr.execute('update res_partner set is_cheque=%s where id=%s',(False,partner,))  
+            if active_action:
+                if active_action=='active':
+                    cr.execute('update res_partner set active=%s where id=%s',(True,partner,))  
+                if active_action=='in_active':
+                    cr.execute('update res_partner set active=%s where id=%s',(False,partner,))  
+                    
             if delivery_team_id :
                 cr.execute('update res_partner set delivery_team_id=%s where id=%s',(delivery_team_id[0],partner,))       
                                                                    
