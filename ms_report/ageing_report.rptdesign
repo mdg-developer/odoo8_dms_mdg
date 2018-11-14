@@ -1385,6 +1385,10 @@ and ai.date_invoice <= ?
         <data id="341">
             <property name="fontSize">12pt</property>
             <property name="fontWeight">bold</property>
+            <structure name="dateTimeFormat">
+                <property name="category">Custom</property>
+                <property name="pattern">dd/MM/yyyy</property>
+            </structure>
             <property name="textAlign">center</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -1610,16 +1614,16 @@ dataSetRow["age"]=dataSetRow["age"];&#13;
                 <property name="width">0.8666666666666667in</property>
             </column>
             <column id="273">
-                <property name="width">0.5416666666666666in</property>
+                <property name="width">0.7083333333333334in</property>
             </column>
             <column id="274">
-                <property name="width">0.65in</property>
+                <property name="width">0.8333333333333334in</property>
             </column>
             <column id="275">
-                <property name="width">0.8083333333333333in</property>
+                <property name="width">0.6333333333333333in</property>
             </column>
             <column id="276">
-                <property name="width">0.775in</property>
+                <property name="width">0.6in</property>
             </column>
             <column id="277">
                 <property name="width">0.75in</property>
@@ -1984,37 +1988,19 @@ dataSetRow["age"]=dataSetRow["age"];&#13;
                 <header>
                     <row id="358">
                         <cell id="359">
+                            <property name="colSpan">22</property>
+                            <property name="rowSpan">1</property>
                             <data id="404">
+                                <property name="fontWeight">bold</property>
                                 <property name="resultSetColumn">customer</property>
                             </data>
                         </cell>
-                        <cell id="360"/>
-                        <cell id="361"/>
-                        <cell id="362"/>
-                        <cell id="363"/>
-                        <cell id="364"/>
-                        <cell id="365"/>
-                        <cell id="366"/>
-                        <cell id="367"/>
-                        <cell id="368"/>
-                        <cell id="369"/>
-                        <cell id="370"/>
-                        <cell id="371"/>
-                        <cell id="372"/>
-                        <cell id="373"/>
-                        <cell id="374"/>
-                        <cell id="375"/>
-                        <cell id="376"/>
-                        <cell id="377"/>
-                        <cell id="378"/>
-                        <cell id="379"/>
-                        <cell id="380"/>
                     </row>
                 </header>
             </group>
             <detail>
                 <row id="221">
-                    <property name="height">0.275in</property>
+                    <property name="height">0.325in</property>
                     <cell id="222">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -2171,9 +2157,6 @@ dataSetRow["overlimit"]=dataSetRow["overlimit"];&#13;
                             </structure>
                             <property name="textAlign">center</property>
                             <property name="resultSetColumn">sale_date</property>
-                        </data>
-                        <data id="405">
-                            <property name="resultSetColumn">overlimit</property>
                         </data>
                     </cell>
                     <cell id="231">
