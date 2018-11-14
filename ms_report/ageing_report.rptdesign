@@ -892,7 +892,7 @@ and payment_type='credit'
 and ai.date_invoice <= ?
 --$branch_id$
 --$sales_team$
-order by ai.partner_id,ai.number asc
+order by rp.name,ai.partner_id,ai.number asc
 
 )A
 
@@ -2146,27 +2146,12 @@ dataSetRow["age"]=dataSetRow["age"];&#13;
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <data id="406">
+                        <data id="408">
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
                                 <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
-                            <property name="dataSet">Data Set</property>
-                            <list-property name="boundDataColumns">
-                                <structure>
-                                    <property name="name">overlimit</property>
-                                    <text-property name="displayName">overlimit</text-property>
-                                    <expression name="expression" type="javascript">if (dataSetRow["overlimit"]>=0){&#13;
-dataSetRow["overlimit"]=null;&#13;
-}&#13;
-else {&#13;
-dataSetRow["overlimit"]=dataSetRow["overlimit"];&#13;
-}</expression>
-                                    <property name="dataType">float</property>
-                                    <property name="allowExport">true</property>
-                                </structure>
-                            </list-property>
                             <property name="resultSetColumn">overlimit</property>
                         </data>
                     </cell>
