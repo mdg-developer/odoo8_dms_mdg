@@ -1506,8 +1506,8 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopWidth">thin</property>
                         <property name="paddingTop">5pt</property>
                         <data id="246">
-                            <property name="fontFamily">"Myanmar3"</property>
-                            <property name="fontSize">16pt</property>
+                            <property name="fontFamily">"Calibri"</property>
+                            <property name="fontSize">15pt</property>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">myanmar_name</property>
                         </data>

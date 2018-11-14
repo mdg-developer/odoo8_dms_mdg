@@ -1098,7 +1098,8 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="89">
-                            <property name="fontFamily">"Myanmar3"</property>
+                            <property name="fontFamily">"Calibri"</property>
+                            <property name="fontSize">9pt</property>
                             <property name="resultSetColumn">myanmar_name</property>
                         </data>
                     </cell>
