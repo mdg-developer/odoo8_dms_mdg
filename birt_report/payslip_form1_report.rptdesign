@@ -389,10 +389,7 @@ else
 	group by payslip.emp_id,payslip.fingerprint_id,payslip.myanmar_name,payslip.job_name,payslip.dept_name,join_date,payslip.remark,month,year
 ) sub
 group by sub.emp_id,sub.fingerprint_id,sub.myanmar_name,sub.basic_salary,sub.ssb,sub.all_ded,sub.job_name,sub.dept_name,join_date,remark,month,year
-
-
-
-]]></xml-property>
+order by sub.fingerprint_id]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -782,8 +779,8 @@ month[dataSetRow["month"]-1];</expression>
             <list-property name="boundDataColumns">
                 <structure>
                     <property name="name">Aggregation</property>
-                    <property name="dataType">float</property>
-                    <property name="aggregateFunction">RUNNINGSUM</property>
+                    <property name="dataType">integer</property>
+                    <property name="aggregateFunction">RUNNINGCOUNT</property>
                     <list-property name="arguments">
                         <structure>
                             <property name="name">Expression</property>
