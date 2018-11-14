@@ -540,7 +540,7 @@ this.queryText =this.queryText.replace("--$branch_id$", "")
 }
 else
 {
-this.queryText =this.queryText.replace("--$branch_id$", " and branch.id="+params["branch"])
+this.queryText =this.queryText.replace("--$branch_id$", " and h.branch_id="+params["branch"])
 }
 
 if (params["saleteam"].value == null )
@@ -2581,8 +2581,8 @@ params["branch"].displayText='All'&#13;
             <column id="836">
                 <property name="width">0.6in</property>
             </column>
-            <column id="837">
-                <property name="width">0.7666666666666667in</property>
+            <column id="1041">
+                <property name="width">0.6in</property>
             </column>
             <column id="838">
                 <property name="width">0.8833333333333333in</property>
@@ -3008,7 +3008,7 @@ params["branch"].displayText='All'&#13;
                             <text-property name="text">Status</text-property>
                         </label>
                     </cell>
-                    <cell id="745">
+                    <cell id="1038">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
@@ -3017,7 +3017,7 @@ params["branch"].displayText='All'&#13;
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <label id="868">
+                        <label id="1042">
                             <text-property name="text">Branch</text-property>
                         </label>
                     </cell>
@@ -3503,7 +3503,7 @@ params["branch"].displayText='All'&#13;
                             <property name="resultSetColumn">status</property>
                         </data>
                     </cell>
-                    <cell id="776">
+                    <cell id="1039">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
@@ -3512,7 +3512,7 @@ params["branch"].displayText='All'&#13;
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <data id="899">
+                        <data id="1043">
                             <property name="resultSetColumn">branch</property>
                         </data>
                     </cell>
