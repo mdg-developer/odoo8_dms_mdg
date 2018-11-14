@@ -477,15 +477,15 @@ else
             </list-property>
             <xml-property name="queryText"><![CDATA[select fingerprint_id,myanmar_name,aba,jda,ota,sbn,raa,aja,overtime,all_allow,lon,dpd,ajd,ins,form1_amount,sum(all_allow - form2_ded) as form2_amount,remark,year,month from 
 (
-select sub.emp_id,sub.fingerprint_id,sub.myanmar_name,sub.job_name,sub.dept_name,(all_ded-ssb) as all_deduction,basic_salary,ssb,
-(basic_salary -(all_ded)) as form1_amount,remark,(basic_salary/30) as per_day,join_date,month,year,aba,jda,ota,sbn,raa,aja,overtime,
-sum(aba+ jda+ ota+ sbn+ raa+ aja+ overtime) as all_allow,dpd,ajd,ins,lon,
+select sub.emp_id,sub.fingerprint_id,sub.myanmar_name,sub.job_name,sub.dept_name,(all_ded-ssb) as all_deduction,basic_salary,
+(basic_salary -(all_ded)) as form1_amount,remark,(basic_salary/30) as per_day,join_date,month,year,aba,jda,ota,sbn,raa,aja,ssb,
+sum(aba+ jda+ ota+ sbn+ raa+ aja+ overtime+sun_overtime) as all_allow,(overtime+sun_overtime) overtime,dpd,ajd,ins,lon,
 sum(dpd+ajd+ins+lon) as form2_ded
  from 
 (
 	select payslip.emp_id,payslip.fingerprint_id,payslip.myanmar_name,payslip.job_name,payslip.dept_name ,sum(all_deduction) as all_ded,sum(basic_salary) as basic_salary,
 	sum(ssb) as ssb,payslip.remark,join_date,month,year,sum(aba) as aba,sum(jda) as jda,sum(ota) as ota,sum(sbn) as sbn,sum(raa) as raa,sum(aja) as aja,sum(overtime) as overtime,
-	sum(lon) lon,sum(dpd) as dpd,sum(ajd) as ajd,sum(ins) as ins
+	sum(lon) lon,sum(dpd) as dpd,sum(ajd) as ajd,sum(ins) as ins,sum(sun_overtime) sun_overtime
 	from 
 	(
 		select hp.id as payslip_id,he.id as emp_id,he.fingerprint_id,he.myanmar_name,hj.name as job_name,hd.name as dept_name,hp.remark2 as remark,he.initial_employment_date as join_date,
@@ -498,8 +498,8 @@ sum(dpd+ajd+ins+lon) as form2_ded
 		and hp.date_from = ?
 		and hp.date_to = ?
 		--$department_id$
-		and case when ? = true then he.is_management = true
-		         when ?=false then he.is_management in (true,false) end
+ 		and case when ? = true then he.is_management = true
+ 		         when ?=false then he.is_management in (true,false) end
 		group by he.fingerprint_id,he.myanmar_name,hp.id ,he.id,he.is_management,hj.name,hd.name
 	)payslip,
 	(
@@ -524,6 +524,8 @@ sum(dpd+ajd+ins+lon) as form2_ded
 	     when hpl.code<> 'AJA' then 0.0 end as aja,
 	case when hpl.code='OT' then hpl.total
 	     when hpl.code<> 'OT' then 0.0 end as overtime,
+	case when hpl.code='SPOT' then hpl.total
+	     when hpl.code<> 'SPOT' then 0.0 end as sun_overtime,
 	case when hpl.code='LON' then hpl.total 
 	     when hpl.code<> 'LON' then 0.0 end as lon,
 	case when hpl.code='DPD' then hpl.total 
@@ -543,7 +545,8 @@ sum(dpd+ajd+ins+lon) as form2_ded
 	or hpl.code='SBN'
 	or hpl.code='RAA'
 	or hpl.code='AJA'
-	or hpl.code='OT' 
+	or hpl.code='OT'
+	or hpl.code='SPOT' 
 	or hpl.code='LON'
 	or hpl.code='DPD'
 	or hpl.code='AJD'
@@ -553,13 +556,10 @@ sum(dpd+ajd+ins+lon) as form2_ded
 	where payslip.payslip_id = payslip_line.slip_id
 	group by payslip.emp_id,payslip.fingerprint_id,payslip.myanmar_name,payslip.job_name,payslip.dept_name,join_date,payslip.remark,month,year
 ) sub
-group by sub.emp_id,sub.fingerprint_id,sub.myanmar_name,sub.basic_salary,sub.ssb,sub.all_ded,sub.job_name,sub.dept_name,join_date,remark,month,year,
-aba,jda,ota,sbn,raa,aja,overtime,dpd,ajd,ins,lon
+group by sub.emp_id,sub.fingerprint_id,sub.myanmar_name,sub.basic_salary,sub.ssb,sub.all_ded,sub.job_name,sub.dept_name,
+join_date,remark,month,year,aba,jda,ota,sbn,raa,aja,overtime,dpd,ajd,ins,lon,sun_overtime
 )parent
-group by fingerprint_id,myanmar_name,form1_amount,all_allow,aba,jda,ota,sbn,raa,aja,overtime,lon,dpd,ajd,ins,remark,year,month
-
-
-]]></xml-property>
+group by fingerprint_id,myanmar_name,form1_amount,all_allow,aba,jda,ota,sbn,raa,aja,overtime,lon,dpd,ajd,ins,remark,year,month]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -1546,7 +1546,8 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="110">
-                            <property name="fontFamily">"Myanmar3"</property>
+                            <property name="fontFamily">"Calibri"</property>
+                            <property name="fontSize">9pt</property>
                             <property name="resultSetColumn">myanmar_name</property>
                         </data>
                     </cell>
