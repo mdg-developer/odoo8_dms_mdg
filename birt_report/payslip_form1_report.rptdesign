@@ -1096,7 +1096,7 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopWidth">thin</property>
                         <data id="89">
                             <property name="fontFamily">"Myanmar3"</property>
-                            <property name="fontSize">9pt</property>
+                            <property name="fontSize">10pt</property>
                             <property name="textAlign">left</property>
                             <property name="resultSetColumn">myanmar_name</property>
                         </data>
