@@ -1291,6 +1291,12 @@ month[dataSetRow["month"]-1];</expression>
                     <expression name="expression" type="javascript">dataSetRow["net_amount"]</expression>
                     <property name="dataType">decimal</property>
                 </structure>
+                <structure>
+                    <property name="name">jda</property>
+                    <text-property name="displayName">jda</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["jda"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
             </list-property>
             <column id="189">
                 <property name="width">2.6041666666666665in</property>
@@ -1700,13 +1706,16 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <property name="paddingTop">5pt</property>
-                        <data id="252">
+                        <data id="304">
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
                                 <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
                             </structure>
+                            <structure name="stringFormat">
+                                <property name="category">Custom</property>
+                            </structure>
                             <property name="textAlign">right</property>
-                            <property name="resultSetColumn">aja</property>
+                            <property name="resultSetColumn">jda</property>
                         </data>
                     </cell>
                 </row>
