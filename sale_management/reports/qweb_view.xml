@@ -15,6 +15,18 @@
 		<report string="Picking" id="stock.action_report_picking" model="stock.picking" 
             report_type="qweb-pdf"             name="sale_management.report_picking" 
             file="stock.report_picking" />
+		
+		<!-- <report string="Picking A5" id="stock.action_report_picking" model="stock.picking" 
+            report_type="qweb-pdf"             name="sale_management.report_picking" 
+            file="stock.report_picking" /> -->
+		 <report 
+            string="Picking A5" 
+            id="action_report_picking_a5" 
+            model="stock.picking" 
+            report_type="qweb-pdf"
+            name="stock.report_picking" 
+            file="stock.report_picking" 
+        />
          <!--  name="sale_management.report_picking_inherit_document" 
             file="sale_management.report_picking_inherit_document" /> -->  
 	</data>
