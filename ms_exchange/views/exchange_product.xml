@@ -16,6 +16,7 @@
 					<field name="team_id" />
 					<field name="exchange_type" />
 					<field name="void_flag" />
+					<field name="invoice_id" readonly="1" />					
 					<!-- <field name="e_status" /> -->
 				</tree>
 			</field>
@@ -38,7 +39,12 @@
 						<field name="e_status" invisible="1" />
 						<button name="action_convert_ep" string="Convert Stock Move"
 							type="object" class="oe_highlight" groups="base.group_user"
-							attrs="{'invisible':[('e_status', '=', 'done')]}" />
+							attrs="{'invisible':[('e_status', 'in', ('done','complete'))]}" />
+						
+						<button name="action_create_invoice" string="Create Refund Invoice"
+							type="object" class="oe_highlight" groups="base.group_user"
+							attrs="{'invisible':[('e_status', 'in', ('draft','complete'))]}" />
+						
 					</header>
 
 					<sheet>
@@ -55,6 +61,7 @@
 								<field name="customer_id" required="1" on_change='onchange_customer_id(customer_id)' domain="[('customer', '=',True)]"/>
 								<field name="customer_code" />
 								<field name="team_id" on_change='onchange_team_id(team_id)' />
+								<field name="invoice_id" readonly="1"/>
 								<field name="note" />
 							</group>
 							<group>
