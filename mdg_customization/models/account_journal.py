@@ -25,4 +25,5 @@ class account_journal(osv.osv):
     _description = "Journal"
     _columns = {
         'is_tablet': fields.boolean('On Tablet'),
+        'brand_id' :fields.many2one('res.branch', 'Branch', required=True),
     }

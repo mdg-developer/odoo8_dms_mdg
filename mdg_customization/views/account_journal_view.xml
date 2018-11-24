@@ -10,6 +10,10 @@
 					<xpath expr="//field[@name='group_invoice_lines']" position="after">
 						<field name="is_tablet"/>
 					</xpath>
+					
+					<xpath expr="//field[@name='type']" position="after">
+						<field name="brand_id" />
+					</xpath>
 				</data>
 			</field>
 		</record>
