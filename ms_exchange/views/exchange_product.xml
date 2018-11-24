@@ -63,6 +63,8 @@
 								<field name="team_id" on_change='onchange_team_id(team_id)' />
 								<field name="invoice_id" readonly="1"/>
 								<field name="note" />
+								<field name="latitude" />
+								<field name="longitude" />
 							</group>
 							<group>
 								<field name="date" />
@@ -103,6 +105,12 @@
 										<field name="note" />
 									</tree>
 								</field>
+							</page>
+							<page string="Google Map">
+							    <group>
+								    <widget type="gmap_marker" lat="latitude" lng="longitude"
+									description="field_descriptions" />
+							    </group>
 							</page>
 						</notebook>
 					</sheet>
