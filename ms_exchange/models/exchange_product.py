@@ -1,6 +1,7 @@
 from openerp.osv import fields, osv
 import time
 from openerp.tools.translate import _
+from openerp.exceptions import except_orm, Warning, RedirectWarning
 
 class exchange_product(osv.osv):
     
@@ -10,6 +11,7 @@ class exchange_product(osv.osv):
                 'name':fields.char('SEN No', readonly=True),
                 'transaction_id':fields.char('ID', readonly=False),
                 'customer_id':fields.many2one('res.partner', 'Customer Name'),
+                'invoice_id':fields.many2one('account.invoice', 'Refund Invoice'),
                 'customer_code':fields.char('Customer Code', readonly=True),
                 'team_id'  : fields.many2one('crm.case.section', 'Sale Team', required=True),
                 'date':fields.datetime('Date',required=True),
@@ -22,6 +24,8 @@ class exchange_product(osv.osv):
                 'location_type':fields.selection([('Normal stock returned', 'Normal stock returned'), ('Expired', 'Expired'), ('Near expiry', 'Near expiry'), ('Fresh stock minor damage', 'Fresh stock minor damage'), ('Damaged', 'Damaged')], 'Location Type', required=True),
                # 'location_type':fields.char('Location Type', readonly=True),
                 'partner_id':fields.many2one('res.partner', string='Partner'),
+                'latitude':fields.float('Geo Latitude'),
+                'longitude':fields.float('Geo Longitude'),
     }
     
     _defaults = {        
@@ -76,6 +80,69 @@ class exchange_product(osv.osv):
                 location_type_id = sale_team_data.damage_location_id.id            
             result.update({'location_id':location_type_id})            
         return {'value':result}     
+
+    def action_create_invoice(self, cr, uid, ids, context=None):
+        trans_obj=self.pool.get('product.transactions.line')
+        invoice_line_obj = self.pool.get('account.invoice.line')
+        invoice_obj = self.pool.get('account.invoice')
+        journal_obj = self.pool.get('account.journal')
+        payment_obj = self.pool.get('account.payment.term')   
+        currency_obj = self.pool.get('res.currency')           
+        return_data = self.browse(cr, uid, ids, context=context)
+        name = return_data.name
+        note=return_data.note
+        team_id=return_data.team_id.id
+        journal_ids = journal_obj.search(cr, uid, [('code', '=', 'SCNJ')], context=context)
+        journal_id=journal_obj.browse(cr, uid, journal_ids, context=context).id
+        partner_id = return_data.customer_id.id
+        pricelist_id= return_data.customer_id.property_product_pricelist.id
+        payment_id = payment_obj.search(cr, uid, [('name', '=', 'Immediate Payment')], context=context)
+        currency_id = currency_obj.search(cr, uid, [('name', '=', 'MMK')], context=context)
+        inv = {
+            'name': name,
+            'origin': name,
+            'type': 'out_refund',
+            'journal_id': journal_id,
+            'reference': name,
+            'partner_id': partner_id,
+            'currency_id': currency_id[0],
+            'comment': note,
+            'payment_term': payment_id[0],
+            'section_id':team_id,
+             'user_id':uid,
+            'fiscal_position': return_data.customer_id.property_account_position.id
+        }
+        inv_id = invoice_obj.create(cr, uid, inv, context=context)
+        for line_id in return_data.item_line:
+            product_line_ids = trans_obj.browse(cr, uid, line_id.id, context=context)
+            product_id=product_line_ids.product_id.id
+            product_name =product_line_ids.product_id.name_template
+            uom_id=product_line_ids.uom_id.id
+            product_qty=product_line_ids.product_qty
+            if not pricelist_id:
+                raise except_orm(_('No PriceList!'), _('Please Insert PriceList.'))        
+            product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+            cr.execute("select new_price from product_pricelist_item where price_version_id in ( select id from product_pricelist_version where pricelist_id=%s) and product_id=%s and product_uom_id=%s", (pricelist_id, product.id,uom_id,))
+            product_price = cr.fetchone()
+            if not product_price:
+                raise except_orm(_('No PriceList!'), _('Please Insert PriceList.'))    
+                        
+            if product_price and inv_id:
+                inv_line = {'name': product_name,
+                            'invoice_id':inv_id,
+                    'account_id': product_line_ids.product_id.product_tmpl_id.categ_id.property_account_income_categ.id,
+                    'price_unit': product_price[0],
+                    'quantity': product_qty,
+                    'product_id': product_id,
+                    'uos_id': uom_id,
+                    'agreed_price': 0.0,
+                    'gross_margin':0.0,
+                    'line_paid':False,
+                    }
+                invoice_line_obj.create(cr, uid, inv_line, context=context)        
+        
+        return self.write(cr, uid, ids, {'e_status':'complete','invoice_id':inv_id})          
+
     
     def action_convert_ep(self, cr, uid, ids, context=None):
         product_line_obj = self.pool.get('product.transactions.line')

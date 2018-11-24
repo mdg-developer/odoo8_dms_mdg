@@ -137,6 +137,9 @@ class account_invoice(osv.osv):
         'is_entry':fields.boolean('Is Entry'),
         'rebate_later': fields.boolean('Rebate Later', default=False, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
         'credit_allow':fields.boolean('Credit Allow',default=False),
+        'latitude':fields.float('Geo Latitude'),
+        'longitude':fields.float('Geo Longitude'),
+        
 
 }
         
