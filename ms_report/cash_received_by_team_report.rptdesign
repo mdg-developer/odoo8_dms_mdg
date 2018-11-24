@@ -10,6 +10,10 @@
             <property name="fileName">birt_report/general_library.rptlibrary</property>
             <property name="namespace">general_library</property>
         </structure>
+        <structure>
+            <property name="fileName">ms_report/birt_report/report_library.rptlibrary</property>
+            <property name="namespace">report_library</property>
+        </structure>
     </list-property>
     <parameters>
         <scalar-parameter name="from_date" id="8">
@@ -82,8 +86,8 @@
         </scalar-parameter>
     </parameters>
     <data-sources>
-        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="76"
- extends="general_library.Data Source"/>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="77"
+ extends="report_library.Data Source"/>
     </data-sources>
     <data-sets>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="sale_team" id="12">
