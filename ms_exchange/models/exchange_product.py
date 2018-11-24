@@ -89,6 +89,7 @@ class exchange_product(osv.osv):
         return_data = self.browse(cr, uid, ids, context=context)
         name = return_data.name
         note=return_data.note
+        team_id=return_data.team_id.id
         journal_ids = journal_obj.search(cr, uid, [('code', '=', 'SCNJ')], context=context)
         journal_id=journal_obj.browse(cr, uid, journal_ids, context=context).id
         partner_id = return_data.customer_id.id
@@ -105,6 +106,8 @@ class exchange_product(osv.osv):
             'currency_id': currency_id[0],
             'comment': note,
             'payment_term': payment_id[0],
+            'section_id':team_id,
+             'user_id':uid,
             'fiscal_position': return_data.customer_id.property_account_position.id
         }
         inv_id = invoice_obj.create(cr, uid, inv, context=context)
@@ -131,6 +134,8 @@ class exchange_product(osv.osv):
                     'product_id': product_id,
                     'uos_id': uom_id,
                     'agreed_price': 0.0,
+                    'gross_margin':0.0,
+                    'line_paid':False,
                     }
                 invoice_line_obj.create(cr, uid, inv_line, context=context)        
         
