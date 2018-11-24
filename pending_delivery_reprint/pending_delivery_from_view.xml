@@ -23,7 +23,11 @@
 							<field name="delivery_team_id" class="oe_inline" />
 							<field name="miss" />
 							<field name="state" />
+							<field name="latitude" />
+							<field name="longitude" />							
 						</group>
+						<widget type="gmap_marker" lat="latitude" lng="longitude"
+							description="field_descriptions" />
 					</sheet>
 				</form>
 			</field>

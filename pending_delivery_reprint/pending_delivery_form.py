@@ -20,6 +20,8 @@ class pendingdelivery(osv.osv):
                 'state':fields.selection([('draft', 'Draft'),
                                                 ('done', 'Complete')], string='Status',readonly=True),     
                 'delivery_team_id':fields.many2one('crm.case.section','Delivery Team',readonly=True),
+                'latitude':fields.float('Geo Latitude'),
+                'longitude':fields.float('Geo Longitude'),
                 
               }
 #     def create_automation_pending_delivery(self, cr, uid, pending_ids, context=None):

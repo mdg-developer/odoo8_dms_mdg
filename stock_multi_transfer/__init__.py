@@ -7,7 +7,7 @@
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
 #    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
+#    License, or (at your option) any later version.faction_move_create
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -18,12 +18,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp.osv import fields, osv
 
-class account_journal(osv.osv):
-    _inherit = "account.journal"
-    _description = "Journal"
-    _columns = {
-        'is_tablet': fields.boolean('On Tablet'),
-        'brand_id' :fields.many2one('res.branch', 'Branch', required=True),
-    }
+import models
+

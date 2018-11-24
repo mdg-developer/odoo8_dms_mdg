@@ -18,12 +18,29 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp.osv import fields, osv
 
-class account_journal(osv.osv):
-    _inherit = "account.journal"
-    _description = "Journal"
-    _columns = {
-        'is_tablet': fields.boolean('On Tablet'),
-        'brand_id' :fields.many2one('res.branch', 'Branch', required=True),
-    }
+{
+    'name': 'Adjustment Transfer',
+    'version': '1.1',
+    'author': '7thcomputing developers',
+    'summary': 'Warehouse >> Adjustment >> Adjustment Transfer',
+    'description': """
+
+Stock Adjustment Transfer Module
+==================================================
+
+    """,
+    'website': 'https://www.odoo.com/page/warehouse',
+    'depends': ['base','stock'],
+    'category': 'stock',
+    'sequence': 17,
+    'data': [
+        'views/stock_adjustment_view.xml', 
+        'views/stock_adjustment_sequence_view.xml', 
+    ],
+    'test': [
+
+    ],
+    
+    'installable': True,
+}
