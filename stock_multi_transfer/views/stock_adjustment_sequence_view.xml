@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+	    <record id="stock_adjustment_transfer_sequence" model="ir.sequence.type">
+			<field name="name">Stock Adjustment Transfer Sequence</field>
+			<field name="code">stock.adjustment.code</field>
+		</record>
+
+		<record id="stock_adjustment_transfer_seq" model="ir.sequence">
+			<field name="name">Stock Adjustment Transfer Sequence</field>
+			<field name="code">stock.adjustment.code</field>
+			<field name="prefix">GSRN/%(year)s/</field>
+			<field name="padding">7</field>
+		</record>
+	</data>
+</openerp>

@@ -1,4 +1,5 @@
 from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 class account_voucher(osv.osv):
     _inherit = 'account.voucher'
@@ -74,9 +75,14 @@ class account_voucher(osv.osv):
 
         if not partner_id or not journal_id:
             return default
-
+        partner_ids =[]
         journal = journal_pool.browse(cr, uid, journal_id, context=context)
         partner = partner_pool.browse(cr, uid, partner_id, context=context)
+        if partner:
+           partner_ids.append(partner.id)
+        for partnerid in partner_pool.search(cr, uid, [('parent_id','=',partner_id)], context=context):
+            partner_ids.append(partnerid) 
+            
         currency_id = currency_id or journal.company_id.currency_id.id
 
         total_credit = 0.0
@@ -94,7 +100,8 @@ class account_voucher(osv.osv):
                 account_type = 'receivable','payable'
         print 'account_type',account_type
         if not context.get('move_line_ids', False):
-            ids = move_line_pool.search(cr, uid, [('state','=','valid'), ('account_id.type', 'in', (account_type)), ('reconcile_id', '=', False), ('partner_id', '=', partner_id)], context=context)
+            #ids = move_line_pool.search(cr, uid, [('state','=','valid'), ('account_id.type', 'in', (account_type)), ('reconcile_id', '=', False), ('partner_id', '=', partner_id)], context=context)
+            ids = move_line_pool.search(cr, uid, [('state','=','valid'), ('account_id.type', 'in', (account_type)), ('reconcile_id', '=', False), ('partner_id', 'in', partner_ids)], context=context)
         else:
             ids = context['move_line_ids']
         invoice_id = context.get('invoice_id', False)
@@ -189,3 +196,5 @@ class account_voucher(osv.osv):
             default['value']['writeoff_amount'] = self._compute_writeoff_amount(cr, uid, default['value']['line_dr_ids'], default['value']['line_cr_ids'], price, ttype)
         return default    
 account_voucher()
+
+  
