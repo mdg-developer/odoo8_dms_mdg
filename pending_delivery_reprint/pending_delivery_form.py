@@ -22,7 +22,8 @@ class pendingdelivery(osv.osv):
                 'delivery_team_id':fields.many2one('crm.case.section','Delivery Team',readonly=True),
                 'latitude':fields.float('Geo Latitude'),
                 'longitude':fields.float('Geo Longitude'),
-                
+                'distance_status':fields.char('Distance Status'),
+                'geo_point':fields.char('Geo Point'),
               }
 #     def create_automation_pending_delivery(self, cr, uid, pending_ids, context=None):
 #         session = ConnectorSession(cr, uid, context)
