@@ -65,6 +65,8 @@
 								<field name="note" />
 								<field name="latitude" />
 								<field name="longitude" />
+								<field name="distance_status" class="oe_inline"/>
+								<field name="geo_point" class="oe_inline"/>
 							</group>
 							<group>
 								<field name="date" />
