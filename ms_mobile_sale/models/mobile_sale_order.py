@@ -15,7 +15,7 @@ from openerp.addons.connector.exception import FailedJobError
 from openerp.addons.connector.jobrunner.runner import ConnectorRunner
 
 @job(default_channel='root.directpending')
-def automation_pending_delivery(session,delivery_mobile):
+def automation_pending_delivery(session, delivery_mobile):
     delivery_obj = session.pool['pending.delivery']    
     context = session.context.copy()
     cr = session.cr
@@ -155,17 +155,17 @@ class mobile_sale_order(osv.osv):
                     if so['order_saleteam'] != 'null':
                         cursor.execute('select id from crm_case_section where name=%s', (so['order_saleteam'],))
                         order_team = cursor.fetchone()[0]
-                        #so['sale_team']=order_team
-                        so['sale_team']=so['sale_team']
-                        order_team=None
+                        # so['sale_team']=order_team
+                        so['sale_team'] = so['sale_team']
+                        order_team = None
                     else:
                         order_team = None
-                    if so['order_saleperson']!= 'null' and so['order_saleperson']:
+                    if so['order_saleperson'] != 'null' and so['order_saleperson']:
                        # so['user_id']=so['order_saleperson']
-                        so['user_id']=so['user_id']
-                        so['order_saleperson']=None
+                        so['user_id'] = so['user_id']
+                        so['order_saleperson'] = None
                     else:
-                        so['order_saleperson']=None
+                        so['order_saleperson'] = None
                         
                     cursor.execute('select branch_id from crm_case_section where id=%s', (so['sale_team'],))
                     branch_id = cursor.fetchone()[0]     
@@ -247,20 +247,20 @@ class mobile_sale_order(osv.osv):
                                     manual_foc = True
                                 else:
                                     manual_foc = False                 
-                                if sol['promotion_action'] and sol['promotion_action']!='null':
-                                    cursor.execute("select promotion from promos_rules_actions where id =%s",(sol['promotion_action'],))
+                                if sol['promotion_action'] and sol['promotion_action'] != 'null':
+                                    cursor.execute("select promotion from promos_rules_actions where id =%s", (sol['promotion_action'],))
                                     promotion_id = cursor.fetchone()[0]  
                                 else:
-                                    promotion_id=None   
+                                    promotion_id = None   
                                 if sol['manual_promotion'] and sol['manual_promotion'] != 'null':
                                     promotion_id = sol['manual_promotion']                                           
-                                price =sol['price_unit']
+                                price = sol['price_unit']
 #                                 if  float(price) < 0:
 #                                     product_price= 0
 #                                     discount_amt =-1 * float(price)
 #                                 else:
-                                product_price=sol['price_unit']
-                                discount_amt=sol['discount_amt']                                          
+                                product_price = sol['price_unit']
+                                discount_amt = sol['discount_amt']                                          
                                 mso_line_res = {                                                            
                                   'order_id':s_order_id,
                                   'product_type':product_type,
@@ -406,11 +406,11 @@ class mobile_sale_order(osv.osv):
                     reprint_count.append(r)  
                 if reprint_count:
                     for sync_reprint in reprint_count:
-                        cursor.execute("select id from sale_order where name = %s", (sync_reprint['presaleorder_id'].replace("\\",""),))    
-                        order_id =cursor.fetchone()[0]                                
+                        cursor.execute("select id from sale_order where name = %s", (sync_reprint['presaleorder_id'].replace("\\", ""),))    
+                        order_id = cursor.fetchone()[0]                                
                         cursor.execute('select branch_id from crm_case_section where id=%s', (sync_reprint['section_id'],))
                         branch_id = cursor.fetchone()[0]
-                        cursor.execute("delete from stock_delivery_reprint where reprint_date =%s and presaleorder_id = %s and void_flag=%s", (datetime.now(),order_id,sync_reprint['void_flag'],)) 
+                        cursor.execute("delete from stock_delivery_reprint where reprint_date =%s and presaleorder_id = %s and void_flag=%s", (datetime.now(), order_id, sync_reprint['void_flag'],)) 
                         print_result = {
                             'reprint_date':datetime.now(),
                             'branch_id':branch_id,
@@ -467,21 +467,21 @@ class mobile_sale_order(osv.osv):
 #                     else:
 #                         saleManId = None
                     sale_team_id = int(pt['team_id'])
-                    sale_team_data = sale_team_obj.browse(cursor, user,sale_team_id , context=None)
-                    if pt['type'] =='Normal stock returned':
+                    sale_team_data = sale_team_obj.browse(cursor, user, sale_team_id , context=None)
+                    if pt['type'] == 'Normal stock returned':
                         location_type_id = sale_team_data.normal_return_location_id.id
-                    elif pt['type'] =='Expired':
+                    elif pt['type'] == 'Expired':
                         location_type_id = sale_team_data.exp_location_id.id
-                    elif pt['type'] =='Near expiry':
+                    elif pt['type'] == 'Near expiry':
                         location_type_id = sale_team_data.near_exp_location_id.id
-                    elif pt['type'] =='Fresh stock minor damage':
+                    elif pt['type'] == 'Fresh stock minor damage':
                         location_type_id = sale_team_data.fresh_stock_not_good_location_id.id
-                    elif pt['type'] =='Damaged':
+                    elif pt['type'] == 'Damaged':
                         location_type_id = sale_team_data.damage_location_id.id
                     if pt['date']:
-                        exchange_date_time =pt['date']
-                        exhange_date = datetime.strptime(exchange_date_time, '%Y-%m-%d %H:%M:%S')- timedelta(hours=6,minutes=30)
-                        #check_date = date.date()                        
+                        exchange_date_time = pt['date']
+                        exhange_date = datetime.strptime(exchange_date_time, '%Y-%m-%d %H:%M:%S') - timedelta(hours=6, minutes=30)
+                        # check_date = date.date()                        
                     mso_result = {
                                 'transaction_id':pt['transaction_id'],
                                 'customer_id':pt['customer_id'],
@@ -490,8 +490,11 @@ class mobile_sale_order(osv.osv):
                                 'date':exhange_date,
                                 'exchange_type':pt['exchange_type'],
                                 'void_flag':pt['void_flag'],
-                                'location_id':location_type_id, #pt['location_id'],
+                                'location_id':location_type_id,  # pt['location_id'],
                                 'location_type':pt['type'],
+                                'latitude':pt['mosLatitude'],
+                                'longitude':pt['mosLongitude']    
+
                                 }
                     s_order_id = product_trans_obj.create(cursor, user, mso_result, context=context)
                     
@@ -593,7 +596,7 @@ class mobile_sale_order(osv.osv):
     def create_visit(self, cursor, user, vals, context=None):
         
         try:
-            #print 'vals', vals
+            # print 'vals', vals
             customer_visit_obj = self.pool.get('customer.visit')
             str = "{" + vals + "}"    
             str = str.replace("'',", "',")  # null
@@ -622,7 +625,7 @@ class mobile_sale_order(osv.osv):
                             'sale_plan_day_id':vs['sale_plan_day_id'],
                             'sale_plan_trip_id':vs['sale_plan_trip_id'] ,
                           #  'sale_plan_name':vs['sale_plan_name'],
-                            #'sale_team':vs['sale_team'],
+                            # 'sale_team':vs['sale_team'],
                             'sale_team_id':vs['sale_team_id'],
                             'user_id':vs['user_id'],
                             'date':vs['date'],
@@ -675,7 +678,7 @@ class mobile_sale_order(osv.osv):
         msoPromoLineObj = self.pool.get('sale.order.promotion.line')
         mso_promotion_line_obj = self.pool.get('mso.promotion.line')
         mso_inv_PromoLineObj = self.pool.get('account.invoice.promotion.line')        
-        product_obj=self.pool.get('product.product')
+        product_obj = self.pool.get('product.product')
         soResult = {}
         solResult = {}
         accountVResult = {}
@@ -759,9 +762,9 @@ class mobile_sale_order(osv.osv):
                                         }
                     soId = soObj.create(cr, uid, soResult, context=context)
                     if soId:
-                        #Insert Mobile Sale Order Promotion Line
+                        # Insert Mobile Sale Order Promotion Line
                         for mso_p_line in ms_ids.promos_line_ids:
-                            mso_promo_data=mso_promotion_line_obj.browse(cr, uid, mso_p_line.id, context=context)
+                            mso_promo_data = mso_promotion_line_obj.browse(cr, uid, mso_p_line.id, context=context)
                             mso_promo_line_result = {
                                               'promo_line_id':soId,
                                               'pro_id':mso_promo_data.pro_id.id,
@@ -783,13 +786,13 @@ class mobile_sale_order(osv.osv):
                                             product_name = line_id.product_id.name
                                         else:
                                             product_name = line_id.product_id.name
-                                        product_data=product_obj.browse(cr, uid, line_id.product_id.id, context=context)
-                                        tax_data=False    
+                                        product_data = product_obj.browse(cr, uid, line_id.product_id.id, context=context)
+                                        tax_data = False    
                                         taxes = product_data.taxes_id
                                         if taxes:
                                             fpos = ms_ids.partner_id.property_account_position or False
                                             tax_id = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, taxes, context=context)
-                                            tax_data=[[6, 0, tax_id]]
+                                            tax_data = [[6, 0, tax_id]]
                                         # FOC with price_unit or foc true, false
                                     if line_id.sub_total == 0.0 or line_id.foc:
                                         foc = True
@@ -1170,9 +1173,9 @@ class mobile_sale_order(osv.osv):
                             stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)
                             # cr.execute('update stock_move set location_id=%s where picking_id=%s',(ms_ids.location_id.id,stockViewResult['res_id'],))
                         if invoice_id:
-                                #Insert account invoice promotion line
+                                # Insert account invoice promotion line
                                 for mso_inv_p_line in ms_ids.promos_line_ids:
-                                    mso_inv_promo_data=mso_promotion_line_obj.browse(cr, uid, mso_inv_p_line.id, context=context)
+                                    mso_inv_promo_data = mso_promotion_line_obj.browse(cr, uid, mso_inv_p_line.id, context=context)
                                     mso_inv_promo_line_result = {
                                                       'promo_line_id':invoice_id,
                                                       'pro_id':mso_inv_promo_data.pro_id.id,
@@ -1737,7 +1740,7 @@ class mobile_sale_order(osv.osv):
                     for data_pro in invoice_ids:
                         pre_mobile_ids.append(data_pro[0])
                 if pre_mobile_ids:
-                    #invoice_data = inv_Obj.search(cursor, user, [('id', 'in', tuple(pre_mobile_ids))], context=context)   
+                    # invoice_data = inv_Obj.search(cursor, user, [('id', 'in', tuple(pre_mobile_ids))], context=context)   
                     invoice_data = Order_obj.search(cursor, user, [('id', 'in', tuple(pre_mobile_ids))], context=context)   
                     for invoice_id in invoice_data:
                         invoice = Order_obj.browse(cursor, user, invoice_id, context=context)
@@ -1746,17 +1749,17 @@ class mobile_sale_order(osv.osv):
                         deduct_percent = invoice.additional_discount / 100
                         discount_total += amount_total * deduct_percent
                         discount_amount += deduct_amt                    
-                    #line_ids = invoice_obj.search(cursor, user, [('order_id', 'in', pre_mobile_ids)], context=context)         
+                    # line_ids = invoice_obj.search(cursor, user, [('order_id', 'in', pre_mobile_ids)], context=context)         
                     line_ids = Order_Lineobj.search(cursor, user, [('order_id', 'in', pre_mobile_ids)], context=context)         
 #                     order_line_ids = Order_Lineobj.browse(cursor, user, line_ids, context=context)         
 #                     cursor.execute('select product_id,sum(product_uom_qty) as quantity,sum((product_uom_qty*price_unit)-discount_amt ) as  sub_total,product_uom from sale_order_line group by product_id,product_uom', (tuple(order_line_ids.ids),))
 #                     order_line = cursor.fetchall()
                     for data in line_ids:
                         order_line_data = Order_Lineobj.browse(cursor, user, data, context=context)
-                        product_id=order_line_data.product_id.id      
+                        product_id = order_line_data.product_id.id      
                         product_amount += order_line_data.price_subtotal
-                        pre_qty=order_line_data.product_uom_qty
-                        pre_p_uom=order_line_data.product_uom.id
+                        pre_qty = order_line_data.product_uom_qty
+                        pre_p_uom = order_line_data.product_uom.id
                         product = self.pool.get('product.product').browse(cursor, user, product_id, context=context)
                         sequence = product.sequence
                         if pre_p_uom != product.product_tmpl_id.uom_id.id:                                                                          
@@ -1782,12 +1785,12 @@ class mobile_sale_order(osv.osv):
                 if total_mobile_ids:
                     invoice_data = inv_Obj.search(cursor, user, [('id', 'in', tuple(total_mobile_ids))], context=context)   
                     for invoice_id in invoice_data:
-                        invoice =inv_Obj.browse(cursor, user, invoice_id, context=context)
-                        deduct_amt= invoice.deduct_amt
-                        amount_total= invoice.amount_untaxed
-                        deduct_percent=invoice.additional_discount/100
-                        discount_total +=  amount_total * deduct_percent
-                        discount_amount+=deduct_amt                    
+                        invoice = inv_Obj.browse(cursor, user, invoice_id, context=context)
+                        deduct_amt = invoice.deduct_amt
+                        amount_total = invoice.amount_untaxed
+                        deduct_percent = invoice.additional_discount / 100
+                        discount_total += amount_total * deduct_percent
+                        discount_amount += deduct_amt                    
                     line_ids = invoice_obj.search(cursor, user, [('invoice_id', 'in', total_mobile_ids)], context=context)         
                     order_line_ids = invoice_obj.browse(cursor, user, line_ids, context=context)         
                     cursor.execute('select product_id,sum(quantity) as quantity,sum(quantity * price_unit) as  sub_total,uos_id from account_invoice_line where id in %s group by product_id,uos_id', (tuple(order_line_ids.ids),))
@@ -1795,9 +1798,9 @@ class mobile_sale_order(osv.osv):
                     for data in order_line:
                         product = self.pool.get('product.product').browse(cursor, user, data[0], context=context)
                         sequence = product.sequence
-                        product_amount+=data[2]
-                        pre_qty=data[1]
-                        pre_p_uom=data[3]
+                        product_amount += data[2]
+                        pre_qty = data[1]
+                        pre_p_uom = data[3]
                         if pre_p_uom != product.product_tmpl_id.uom_id.id:                                                                          
                             cursor.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (pre_p_uom,))
                             bigger_qty = cursor.fetchone()[0]
@@ -1808,9 +1811,9 @@ class mobile_sale_order(osv.osv):
                                           'denomination_product_ids':deno_id,
                                           'sequence':sequence,
                                           'amount':data[2]}
-                        exit_data=deno_product_obj.search(cursor, user, [('denomination_product_ids', '=', deno_id),('product_id','=',data[0])], context=context)         
+                        exit_data = deno_product_obj.search(cursor, user, [('denomination_product_ids', '=', deno_id), ('product_id', '=', data[0])], context=context)         
                         if exit_data:
-                            cursor.execute("update sales_denomination_product_line set product_uom_qty = product_uom_qty + %s , amount = amount + %s where denomination_product_ids = %s and product_id =%s",(pre_qty,data[2],deno_id,data[0],))
+                            cursor.execute("update sales_denomination_product_line set product_uom_qty = product_uom_qty + %s , amount = amount + %s where denomination_product_ids = %s and product_id =%s", (pre_qty, data[2], deno_id, data[0],))
                         else:
                             deno_product_obj.create(cursor, user, data_id, context=context)             							
                 if  m_mobile_ids:
@@ -2066,7 +2069,7 @@ class mobile_sale_order(osv.osv):
                         'rental_month':ar['month'],
                         'latitude':ar['latitude'],
                         'longitude':ar['longitude'],
-                        'address':ar['address'],                       
+                        'address':ar['address'],
                         'name':ar['name'],
                         'total_amt':ar['total_amt'],
                     }
@@ -2287,8 +2290,8 @@ class mobile_sale_order(osv.osv):
             stockPickingObj = self.pool.get('stock.picking')
             stockDetailObj = self.pool.get('stock.transfer_details')        
             partner_obj = self.pool.get('res.partner')
-            pending_obj =self.pool.get('pending.delivery')
-            pending_ids=[]            
+            pending_obj = self.pool.get('pending.delivery')
+            pending_ids = []            
             str = "{" + saleorderList + "}"    
             str = str.replace("'',", "',")  # null
             str = str.replace(":',", ":'',")  # due to order_id
@@ -2312,38 +2315,38 @@ class mobile_sale_order(osv.osv):
                         So_id = soObj.search(cr, uid, [('pre_order', '=', True), ('shipped', '=', False), ('invoiced', '=', False)
                                                        , ('name', '=', so_ref_no)], context=context)    
                         so_data = soObj.browse(cr, uid, So_id, context=context)
-                        delivery_team_id =so_data.delivery_id.id
+                        delivery_team_id = so_data.delivery_id.id
                         delivery = {                                                            
                                   'order_id':So_id[0],
                                   'miss':True,
                                   'delivery_date':datetime.now(),
-                                  'due_date':deli['due_date'],                        
-                                  'state':'draft', 
+                                  'due_date':deli['due_date'],
+                                  'state':'draft',
                                   'delivery_team_id': delivery_team_id ,
-                                 'latitude':deli['mosLatitude'],    
+                                 'latitude':deli['mosLatitude'],
                                   'longitude':deli['mosLongitude']    
                             }
-                        pending_id=pending_obj.create(cr, uid, delivery, context=context)                                            
+                        pending_id = pending_obj.create(cr, uid, delivery, context=context)                                            
                     else:                            
                         So_id = soObj.search(cr, uid, [('pre_order', '=', True), ('shipped', '=', False), ('invoiced', '=', False)
                                                        , ('name', '=', so_ref_no)], context=context)
                         so_data = soObj.browse(cr, uid, So_id, context=context)
-                        delivery_team_id =so_data.delivery_id.id                        
+                        delivery_team_id = so_data.delivery_id.id                        
                         delivery = {                                                            
                                   'order_id':So_id[0],
                                   'miss':False,
                                   'due_date':deli['due_date'],
                                   'delivery_date':datetime.now(),
-                                  'state':'draft', 
-                                  'delivery_team_id': delivery_team_id , 
-                                  'latitude':deli['mosLatitude'],    
+                                  'state':'draft',
+                                  'delivery_team_id': delivery_team_id ,
+                                  'latitude':deli['mosLatitude'],
                                   'longitude':deli['mosLongitude']                             
                             }
-                        pending_id=pending_obj.create(cr, uid, delivery, context=context)                                                                                                                                 
+                        pending_id = pending_obj.create(cr, uid, delivery, context=context)                                                                                                                                 
                     pending_ids.append(pending_id)
             session = ConnectorSession(cr, uid, context)
-            #jobid=pending_obj.create_automation_pending_delivery(cr, uid, pending_ids, context=context)       
-            jobid=automation_pending_delivery.delay(session,pending_ids, priority = 50)
+            # jobid=pending_obj.create_automation_pending_delivery(cr, uid, pending_ids, context=context)       
+            jobid = automation_pending_delivery.delay(session, pending_ids, priority=50)
             runner = ConnectorRunner()
             runner.run_jobs()
             return True                                                                    
@@ -2483,7 +2486,7 @@ class mobile_sale_order(osv.osv):
                                                    , ('name', '=', so_ref_no)], context=context)
                     if So_id:
                         print 'Sale Order Id', So_id[0]
-                        cr.execute('''update sale_order set state ='cancel',cancel_user_id=%s where id = %s ''', (uid,So_id[0],))
+                        cr.execute('''update sale_order set state ='cancel',cancel_user_id=%s where id = %s ''', (uid, So_id[0],))
                         cr.execute('select tb_ref_no from sale_order where id=%s', (So_id[0],))
                         ref_no = cr.fetchone()[0]
                         cr.execute("update pre_sale_order set void_flag = 'voided' where name=%s", (ref_no,))                                                                                                                                                                                                                            
@@ -2562,7 +2565,7 @@ class mobile_sale_order(osv.osv):
         try : 
             stock_request_obj = self.pool.get('stock.requisition')
             stock_request_line_obj = self.pool.get('stock.requisition.line')
-            product_obj=self.pool.get('product.product')
+            product_obj = self.pool.get('product.product')
             str = "{" + vals + "}"
             str = str.replace(":''", ":'")  # change Order_id
             str = str.replace("'',", "',")  # null
@@ -2595,7 +2598,7 @@ class mobile_sale_order(osv.osv):
                         delivery_id = data[0][3]             
                         receiver = data[0][4] 
                         branch_id = data[0][5] 
-                        optional_issue_location_id=data[0][6]
+                        optional_issue_location_id = data[0][6]
                     else:
                         vehcle_no = None
                         from_location_id = None
@@ -2603,7 +2606,7 @@ class mobile_sale_order(osv.osv):
                         delivery_id = None          
                         receiver = None
                         branch_id = None
-                        optional_issue_location_id=None
+                        optional_issue_location_id = None
                         
                     cursor.execute('select company_id from res_users where id = %s ', (sr['request_by'],))
                     data = cursor.fetchone()         
@@ -2645,7 +2648,7 @@ class mobile_sale_order(osv.osv):
                                 sequence = None
                             product_data = product_obj.browse(cursor, user, int(srl['product_id']), context=context)
                             if product_data:
-                                issue_category=product_data.categ_id.issue_from_optional_location                                
+                                issue_category = product_data.categ_id.issue_from_optional_location                                
                             ori_req_quantity = int(srl['req_quantity'])
                             ori_uom_id = int(srl['product_uom'])
                             # print 'product_idddddddddddd',req_quantity
@@ -2665,8 +2668,8 @@ class mobile_sale_order(osv.osv):
                                 qty_on_hand = qty_on_hand[0]
                             else:
                                 qty_on_hand = 0    
-                            if issue_category ==True:
-                                request_ids = stock_request_obj.search(cursor, user , [('issue_from_optional_location','=',True),('sale_team_id', '=', delivery_id),('request_date', '=', sr['request_date']), ('so_no', '=', sr['rfi_no'])])
+                            if issue_category == True:
+                                request_ids = stock_request_obj.search(cursor, user , [('issue_from_optional_location', '=', True), ('sale_team_id', '=', delivery_id), ('request_date', '=', sr['request_date']), ('so_no', '=', sr['rfi_no'])])
                                 cursor.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (optional_issue_location_id, srl['product_id'],))
                                 qty_on_hand = cursor.fetchone()
                                 if qty_on_hand:
@@ -2674,7 +2677,7 @@ class mobile_sale_order(osv.osv):
                                 else:
                                     qty_on_hand = 0              
                                 if request_ids:
-                                    issue_stock_id=request_ids[0]
+                                    issue_stock_id = request_ids[0]
                                 else:
                                     mso_result = {
                                         'request_date':sr['request_date'],
@@ -2694,7 +2697,7 @@ class mobile_sale_order(osv.osv):
                                     }
                                     issue_stock_id = stock_request_obj.create(cursor, user, mso_result, context=context)
 
-                            #comment by EMTW           
+                            # comment by EMTW           
 #                             if int(srl['product_uom']) == int(big_uom_id):                                                                          
 #                                 mso_line_res = {                                                            
 #                                       'line_id':stock_id,
@@ -2709,10 +2712,10 @@ class mobile_sale_order(osv.osv):
 #                                       'sequence':sequence,
 #                                       }
 #                             else:
-                            if issue_category ==True:
-                                master_id=issue_stock_id
+                            if issue_category == True:
+                                master_id = issue_stock_id
                             else:
-                                master_id=stock_id
+                                master_id = stock_id
                             mso_line_res = {                                                            
                                       'line_id':master_id,
                                       'remark':srl['remark'],
@@ -2766,18 +2769,18 @@ class mobile_sale_order(osv.osv):
                     if customer_data:
                         customer_id = customer_data[0]
                         township_id = customer_data[1]
-                        outlet_type =customer_data[2]
+                        outlet_type = customer_data[2]
 
                     else:
                         customer_id = None
                         township_id = None
-                        outlet_type= None
+                        outlet_type = None
                     
                     if  sr['date']:
-                        check_date_time =sr['date'].replace('\\', '').replace('\\', '').replace('/','-')
-                        date = datetime.strptime(check_date_time, '%Y-%m-%d %H:%M:%S')- timedelta(hours=6,minutes=30)
+                        check_date_time = sr['date'].replace('\\', '').replace('\\', '').replace('/', '-')
+                        date = datetime.strptime(check_date_time, '%Y-%m-%d %H:%M:%S') - timedelta(hours=6, minutes=30)
                         check_date = date.date()
-                    cursor.execute("delete from partner_stock_check where check_datetime =%s and partner_id=%s",(date,customer_id,))
+                    cursor.execute("delete from partner_stock_check where check_datetime =%s and partner_id=%s", (date, customer_id,))
                     mso_result = {
                         'partner_id':customer_id,
                         'sale_team_id':sr['sale_team_id'] ,
@@ -2785,7 +2788,7 @@ class mobile_sale_order(osv.osv):
                         'township_id': township_id,
                         'outlet_type':outlet_type,
                         'date':check_date,
-                        'check_datetime':date,                        
+                        'check_datetime':date,
                         'customer_code':sr['customer_code'],
                         'branch_id':sr['branch'],
                     }
@@ -2793,16 +2796,16 @@ class mobile_sale_order(osv.osv):
                     
                     for srl in stock_line:
                         if (sr['st_id'] == srl['stock_check_no']):
-                            cursor.execute("select sequence from product_product where id =%s",(srl['product_id'],))
+                            cursor.execute("select sequence from product_product where id =%s", (srl['product_id'],))
                             product_data = cursor.fetchone()
                             if  product_data:
                                 sequence = product_data[0]
                             else:
-                                sequence=None
-                            if srl['avail']=='false':
-                                avaliable=False
+                                sequence = None
+                            if srl['avail'] == 'false':
+                                avaliable = False
                             else:
-                                avaliable=True
+                                avaliable = True
                         
                             mso_line_res = {                                                            
                                       'stock_check_ids':stock_id,
@@ -3210,7 +3213,7 @@ class mobile_sale_order(osv.osv):
                     and inv.partner_id in %s
                     and inv.id NOT IN %s        
                     and inv.section_id = %s'''
-                    , (branch_id, partner_list, invoiceList,sale_team_id,))
+                    , (branch_id, partner_list, invoiceList, sale_team_id,))
             else:
                 cr.execute(''' 
                     select inv.id,inv.number,inv.partner_id,rp.name customer_name,
@@ -3227,7 +3230,7 @@ class mobile_sale_order(osv.osv):
                     and inv.section_id = crm.id
                     and inv.partner_id in %s
                     and inv.section_id = %s'''
-                    , (branch_id, partner_list,sale_team_id,))            
+                    , (branch_id, partner_list, sale_team_id,))            
             data_line = cr.fetchall()                    
         print 'data_lineeeeeeeeeeeeeee', data_line        
         return data_line
@@ -3587,7 +3590,7 @@ class mobile_sale_order(osv.osv):
                 where a.partner_id = b.partner_id
                 and b.sale_plan_trip_id = p.id
                 and p.sale_team = %s)
-                ''', (section_id,section_id,))
+                ''', (section_id, section_id,))
         datas = cr.fetchall()        
         return datas
     
@@ -3762,7 +3765,7 @@ class sale_order(osv.osv):
         inv_id = inv_obj.create(cr, uid, inv, context=context)
         if order.credit_history_ids:
             for invoice_data in order.credit_history_ids:
-                    credit_vals={
+                    credit_vals = {
                                  'invoice_id':inv_id,
                                 'date':invoice_data.date,
                                 'invoice_no':invoice_data.invoice_no,
