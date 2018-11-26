@@ -18,8 +18,8 @@
 							<group>
 								<field name="name" class="oe_inline" readonly="1" />
 								<field name="branch_id" />
-								<field name="from_location_id" />
-								<field name="to_location_id" />
+								<field name="from_location_id"  domain="[('usage','&lt;&gt;','view')]" />
+								<field name="to_location_id" domain="[('usage','&lt;&gt;','view')]" />
 								<field name="sale_team_id" />
 							</group>
 							<group>

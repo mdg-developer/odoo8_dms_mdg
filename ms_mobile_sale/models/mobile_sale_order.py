@@ -2320,6 +2320,8 @@ class mobile_sale_order(osv.osv):
                                   'due_date':deli['due_date'],                        
                                   'state':'draft', 
                                   'delivery_team_id': delivery_team_id ,
+                                 'latitude':deli['mosLatitude'],    
+                                  'longitude':deli['mosLongitude']    
                             }
                         pending_id=pending_obj.create(cr, uid, delivery, context=context)                                            
                     else:                            
@@ -2333,7 +2335,9 @@ class mobile_sale_order(osv.osv):
                                   'due_date':deli['due_date'],
                                   'delivery_date':datetime.now(),
                                   'state':'draft', 
-                                  'delivery_team_id': delivery_team_id ,                                  
+                                  'delivery_team_id': delivery_team_id , 
+                                  'latitude':deli['mosLatitude'],    
+                                  'longitude':deli['mosLongitude']                             
                             }
                         pending_id=pending_obj.create(cr, uid, delivery, context=context)                                                                                                                                 
                     pending_ids.append(pending_id)
