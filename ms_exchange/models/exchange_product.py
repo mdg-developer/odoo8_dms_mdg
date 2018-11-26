@@ -26,6 +26,8 @@ class exchange_product(osv.osv):
                 'partner_id':fields.many2one('res.partner', string='Partner'),
                 'latitude':fields.float('Geo Latitude'),
                 'longitude':fields.float('Geo Longitude'),
+                'distance_status':fields.char('Distance Status'),
+                'geo_point':fields.char('Geo Point'),
     }
     
     _defaults = {        

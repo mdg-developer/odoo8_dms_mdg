@@ -24,7 +24,9 @@
 							<field name="miss" />
 							<field name="state" />
 							<field name="latitude" />
-							<field name="longitude" />							
+							<field name="longitude" />
+							<field name="distance_status" class="oe_inline"/>
+							<field name="geo_point" class="oe_inline"/>							
 						</group>
 						<widget type="gmap_marker" lat="latitude" lng="longitude"
 							description="field_descriptions" />
