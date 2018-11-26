@@ -451,7 +451,7 @@ class mobile_sale_order(osv.osv):
             product_trans_line = []
             for r in result:
                 print "length", len(r)
-                if len(r) >= 13:
+                if len(r) > 13:
                     product_trans_line.append(r)                   
                 else:
                     product_trans.append(r)
