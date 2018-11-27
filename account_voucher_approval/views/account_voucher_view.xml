@@ -16,22 +16,32 @@
 						<button name="cashier_approve" string="Cashier Approved"
 							type="object" states="finance_approve" class="oe_highlight"
 							sequence="3" />
-						<button name="proforma_voucher" string="Validate"  states="cashier_approve"
+						<button name="proforma_voucher" string="Validate" states="cashier_approve"
 							class="oe_highlight" />
 						<button name="cancel_voucher" string="Cancel Receipt"
 							states="draft,proforma,finance_approve,cashier_approve" />
 					</xpath>
-					
+
 					<xpath expr="//field[@name='amount']" position="replace">
-					    <!-- <field name="amount" class="oe_inline" string="Paid Amount" widget="monetary" options="{'currency_field': 'currency_id'}" on_change="onchange_amount(amount, payment_rate, partner_id, journal_id, currency_id, type, date, payment_rate_currency_id, company_id, context)"/> -->
-					    <field name="amount" class="oe_inline" string="Paid Amount" widget="monetary" options="{'currency_field': 'currency_id'}" />
-					</xpath> 
-					   
+						<!-- <field name="amount" class="oe_inline" string="Paid Amount" widget="monetary" 
+							options="{'currency_field': 'currency_id'}" on_change="onchange_amount(amount, 
+							payment_rate, partner_id, journal_id, currency_id, type, date, payment_rate_currency_id, 
+							company_id, context)"/> -->
+						<field name="amount" class="oe_inline" string="Paid Amount"
+							widget="monetary" options="{'currency_field': 'currency_id'}" />
+					</xpath>
+
 					<xpath expr="//field[@name='state']" position="replace">
 						<field name="state" widget="statusbar"
 							statusbar_visible="draft,finance_approve,cashier_approve,posted"
 							statusbar_colors='{"proforma":"blue"}' />
 					</xpath>
+					<xpath expr="//field[@name='writeoff_acc_id']" position="replace">
+						<field name="writeoff_acc_id"
+							attrs="{'invisible':['|', ('payment_option','!=','with_writeoff'), ('writeoff_amount','=',0)], 'required':[('payment_option','=','with_writeoff')]}"
+							domain="[('type','!=','view')]" />
+					</xpath>
+
 
 				</data>
 
