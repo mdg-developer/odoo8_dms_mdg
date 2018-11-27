@@ -833,7 +833,7 @@ and date_invoice between ? and ?
                     <label id="884">
                         <property name="fontSize">12pt</property>
                         <property name="fontWeight">bold</property>
-                        <text-property name="text">Sale Income By Team</text-property>
+                        <text-property name="text">Sales Income By Team</text-property>
                     </label>
                 </cell>
             </row>
