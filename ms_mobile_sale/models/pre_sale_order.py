@@ -362,6 +362,7 @@ class pre_sale_order(osv.osv):
         solist = []        
         saleOrderResult = {}
         detailResult = {}
+        is_add_discount = False
         if ids:
             try:
                 # default price list need in sale order form
@@ -395,6 +396,8 @@ class pre_sale_order(osv.osv):
                         date = datetime.strptime(preObj_ids.date, '%Y-%m-%d %H:%M:%S')
                         de_date = date.date()                                   
                         print 'so_ssssssssssssstae',so_state
+                        if preObj_ids.additional_discount > 0:
+                            is_add_discount = True
                         saleOrderResult = {'partner_id':preObj_ids.partner_id.id,
                                                         'customer_code':preObj_ids.customer_code,
                                                         'sale_plan_name':preObj_ids.sale_plan_name,
@@ -413,7 +416,7 @@ class pre_sale_order(osv.osv):
                                                         'deduct_amt':preObj_ids.deduction_amount,
                                                         'cash_discount':preObj_ids.cash_discount,
                                                         'additional_discount':preObj_ids.additional_discount*100,
-
+                                                        'is_add_discount':is_add_discount,
 #                                                         'client_order_ref':preObj_ids.tablet_id.name,
                                                          'state':so_state,
                                                          'payment_type':preObj_ids.type,
