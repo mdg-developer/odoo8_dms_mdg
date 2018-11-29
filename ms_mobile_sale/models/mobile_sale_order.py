@@ -1019,8 +1019,7 @@ class mobile_sale_order(osv.osv):
                         and pp.active = true
                         and ccs.id = crm_real.crm_case_section_id
                         and pc.id = pt.categ_id
-                        and pt.write_date::date >= %s                        
-                        and ccs.id = %s ''', (last_date, section_id,))
+                        and ccs.id = %s ''', (section_id,))
         datas = cr.fetchall()
         return datas
     
@@ -1039,9 +1038,8 @@ class mobile_sale_order(osv.osv):
                         and pt.id = pp.product_tmpl_id
                         and ccs.id = crm_real.crm_case_section_id
                         and pc.id = pt.categ_id
-                        and pc.write_date::date >= %s
                         and ccs.id = %s
-                        )A ''', (last_date, section_id,))
+                        )A ''', (section_id,))
         datas = cr.fetchall()
         cr.execute
         return datas
@@ -1258,9 +1256,8 @@ class mobile_sale_order(osv.osv):
                 where pp.product_tmpl_id = pur.product_template_id
                 and crm.product_product_id = pp.id
                 and pu.id = pur.product_uom_id
-                and pu.write_date::date >= %s
                 and crm.crm_case_section_id = %s            
-                )A''' , (last_date, saleteam_id,))
+                )A''' , (saleteam_id,))
         datas = cr.fetchall()
         cr.execute
         return datas
@@ -2746,7 +2743,7 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()        
         return datas
     def get_division_state(self, cr, uid , last_date, context=None):        
-        cr.execute('''select id,name from res_country_state rcs where rcs.write_date::date >= %s ''', (last_date,))
+        cr.execute('''select id,name from res_country_state''')
         datas = cr.fetchall()        
         return datas
     
@@ -2761,7 +2758,7 @@ class mobile_sale_order(osv.osv):
         return datas
 
     def get_outlet_type(self, cr, uid , last_date, context=None):        
-        cr.execute('''select id,name from outlettype_outlettype ol where ol.write_date::date >= %s''', (last_date,))
+        cr.execute('''select id,name from outlettype_outlettype''')
         datas = cr.fetchall()        
         return datas
     
