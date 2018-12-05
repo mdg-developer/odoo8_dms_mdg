@@ -35,7 +35,7 @@
         - open invoices
 
     """,
-    'depends': ['report_xls', 'account_financial_report_webkit'],
+    'depends': ['report_xls', 'account_financial_report_webkit','report_xlsx'],
     'demo': [],
     'data': [
         'wizard/general_ledger_wizard_view.xml',
