@@ -16,7 +16,7 @@
             <attribute name="col">6</attribute>
           </xpath>
           <button string="Print" position="replace">
-            <button icon="gtk-execute" name="xls_export" string="Export" type="object" context="{'xls_export':1}" colspan="2"/>
+            <button icon="gtk-execute" name="xls_export" string="Export XLSX" type="object" context="{'xls_export':1}" colspan="2"/>
           </button>
         </data>
       </field>
