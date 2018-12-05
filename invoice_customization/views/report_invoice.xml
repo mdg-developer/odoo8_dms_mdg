@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 	<data>
+
 		<template id="report_invoice_inherit" >
+		    div.br {
+			display:block;		
+			}
 			<xpath expr="//t[@t-call='report.external_layout']" position="replace">
 			<t t-call="invoice_customization.invoice_custom_layout">
-					<div class="page" style="font-size:9pt;padding-top:2pt;">
+					<div class="page" style="font-size:10pt;padding-top:2pt;">
 						<div class="row">
 								<div class="col-xs-1">
 									<img t-if="o.company_id.logo" t-att-src="'data:image/png;base64,%s' % o.company_id.logo" 	style="max-height: 50pt;" />
@@ -16,8 +20,9 @@
 								</div>
 						</div>
 						<div class="row">
-							<div align="center">
-								<span style="font-size:14pt;"><b>INVOICE</b></span>
+							<div align="center" class="text-uppercase" style="font-size:14pt;">							    
+							    <b><span t-field="o.payment_type" /></b>
+								<span><b>INVOICE</b></span>
 							</div>
 						</div>
 						<table class="table"	style="border-color:white;padding-top: 1pt;">
@@ -52,15 +57,18 @@
 								</td>
 							</tr>
 						</table>
-						<table class="table table-condensed" style="border:1pt solid;padding-top:-2s0pt;">
+						<table class="table table-condensed" style="border:1pt solid;padding-top:0pt;">
+						    <t t-set="qty" t-value="0"/>
 							<thead>
 								<tr height="10pt;">
 									<th class="text-center" style="border:1pt solid;border-color:black;">No
 									</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Item No
+									</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">Description
 									</th>
-									<th class="text-center" style="border:1pt solid;border-color:black;">Quantity</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">Uom</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Quantity</th>									
 									<th class="text-center" style="border:1pt solid;border-color:black;">Unit Price</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">(-)Trade Disc</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">(+)Tax</th>
@@ -79,11 +87,16 @@
 										</t>
 									</td>
 									<td class="text-right" style="border:1pt solid;border-color:black;">
-										<span t-field="l.quantity" />
+										<span t-field="l.product_id" />
 									</td>
 									<td class="text-right" style="border:1pt solid;border-color:black;">
 										<span t-field="l.uos_id" groups="product.group_uom" />
 									</td>
+									<td class="text-right" style="border:1pt solid;border-color:black;">
+										<span t-field="l.quantity" />
+										<t t-set="qty" t-value="qty + l.quantity"/>
+									</td>
+									
 									<td class="text-right" style="border:1pt solid;border-color:black;">
 										<!-- <span t-field="l.price_unit" /> -->
 										<span t-esc="'%.2f'%l.price_unit" />
@@ -106,8 +119,9 @@
 								</tr>
 							</tbody>
 						</table>
-						<div class="row" style="padding-top:-2s0pt;">
-							<div class="col-xs-4 pull-right" style="padding-top:2pt;">
+						    
+						<div class="row" style="padding-top:0pt;">
+							<div class="col-xs-4 pull-right" style="padding-top:0pt;">
 								<table class="table">
 									<tr>
 										<td style="border:1pt solid;border-color:black;">
@@ -150,47 +164,83 @@
 									</tr>
 								</table>
 							</div>
-						</div>
-						<div class="row" style="padding-top:-2s0pt;width:750px;">
-							<div class="col-xs-4 pull-left" style="width:250px;" align="left">
+							<div class="row" style="padding-top:0pt;width:680px;">
+							<div class="col-xs-4 pull-left" style="width:522px;" align="center">
 								<table class="table" style="border:solid;border-color:white;"
 									align="left">
 									<tr style="border:solid;border-color:white;">
-										<td style="margin-top:-10pt;" align="left">
+										<td style="margin-top:-10pt;" align="center">
 											<span>
-												<strong>Customer's ................................</strong>
+												TOTAL :
 											</span>
 										</td>
 									</tr>
 								</table>
 							</div>
 
-							<div class="col-xs-2 pull-left" style="width:250px;" align="right">
+							<div class="col-xs-2 pull-left" style="width:80px;" align="right">
+								<table class="table" style="border:solid;border-color:white;"
+									align="right">
+									<tr style="border:solid;border-color:white;">
+										<td style="margin-top:-10pt;" align="left">											
+											<span t-esc="'%.2f'%qty" />
+										</td>
+									</tr>
+								</table>
+							</div>
+							<div class="col-xs-2 pull-left" style="width:600px;" align="right">
 								<table class="table" style="border:solid;border-color:white;"
 									align="right">
 									<tr style="border:solid;border-color:white;">
 										<td style="margin-top:-10pt;" align="left">
+											<b>										
+											<span t-esc="o.currency_id.amount_to_text(o.amount_total)"/></b>
+										</td>
+									</tr>
+								</table>
+							</div>
+						</div>	
+						</div>
+						<div class="row" style="padding-top:0pt;width:750px;">
+							<div class="col-xs-4 pull-left" style="width:230px;" align="right">
+								<table class="table" style="border:solid;border-color:white;"
+									align="left">
+									<tr style="border:solid;border-color:white;">
+										<td style="margin-top:-10pt;" align="left">
 											<span>
-												<strong>Sales ................................</strong>
+												<strong>Customer's .......................</strong>
 											</span>
 										</td>
 									</tr>
 								</table>
 							</div>
-							<div class="col-xs-2 pull-left" style="width:250px;" align="right">
+
+							<div class="col-xs-2 pull-left" style="width:190px;" align="right">
 								<table class="table" style="border:solid;border-color:white;"
 									align="right">
 									<tr style="border:solid;border-color:white;">
 										<td style="margin-top:-10pt;" align="left">
 											<span>
-												<strong>Computerized By ................................</strong>
+												<strong>Sales .......................</strong>
+											</span>
+										</td>
+									</tr>
+								</table>
+							</div>
+							<div class="col-xs-2 pull-left" style="width:300px;" align="right">
+								<table class="table" style="border:solid;border-color:white;"
+									align="right">
+									<tr style="border:solid;border-color:white;">
+										<td style="margin-top:-10pt;" align="left">
+											<span>
+												<strong>Computerized By total.......................</strong>
 											</span>
 										</td>
 									</tr>
 								</table>
 							</div>
 						</div>
-					</div>
+					</div>					
 				</t>
 			</xpath>
 		</template>
