@@ -139,9 +139,7 @@
 												t-field-options='{"widget": "monetary", "display_currency": "o.pricelist_id.currency_id"}' /></td>
     							</tr>
     							<tr >					    
-    							    <td colspan="2" style="border:1pt solid;border-color:white;">Customer's ..........</td>
-    							    <td colspan="1" style="border:1pt solid;border-color:white;">Sale ..........</td>
-    							    <td colspan="2" style="border:1pt solid;border-color:white;">Computerized By ..........</td>
+    							    <td colspan="5" style="border:1pt solid;border-color:white;">Customer's .......................   Sale........................  Computerized By ..........................</td>
     								<td colspan="3" align="center" style="border:1pt solid;border-color:black;padding-left:1pt">Net Amount(Kyat)</td>
     								<td align="right" style="border:1pt solid;border-color:black;"><span t-field="o.amount_total" /></td>
     							</tr> 
