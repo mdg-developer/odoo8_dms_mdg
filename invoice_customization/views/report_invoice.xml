@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 	<data>
-
 		<template id="report_invoice_inherit" >
-		    div.br {
-			display:block;		
-			}
 			<xpath expr="//t[@t-call='report.external_layout']" position="replace">
 			<t t-call="invoice_customization.invoice_custom_layout">
-					<div class="page" style="font-size:10pt;padding-top:2pt;">
+					<div class="page" style="font-size:10pt;padding-top:0pt;">
 						<div class="row">
 								<div class="col-xs-1">
 									<img t-if="o.company_id.logo" t-att-src="'data:image/png;base64,%s' % o.company_id.logo" 	style="max-height: 50pt;" />
@@ -20,13 +16,13 @@
 								</div>
 						</div>
 						<div class="row">
-							<div align="center" class="text-uppercase" style="font-size:14pt;">							    
+							<div align="center" class="text-uppercase" style="font-size:12pt;">							    
 							    <b><span t-field="o.payment_type" /></b>
 								<span><b>INVOICE</b></span>
 							</div>
 						</div>
-						<table class="table"	style="border-color:white;padding-top: 1pt;">
-							<tr style="border:solid;border-color:white;">
+						<table class="table" style="border-color:white;padding-top:0pt;">
+							<tr height="5pt;" style="border:solid;border-color:white;">
 								<td>
 									<b>Customer :</b>
 									<span t-field="o.partner_id.name" />
@@ -42,7 +38,7 @@
 								</td>
 							</tr>
 
-							<tr style="border:solid;border-color:white;">
+							<tr height="5pt;" style="border:solid;border-color:white;">
 								<td>
 									<b>Location :</b>
 									<span t-field="o.section_id.name" />
@@ -75,7 +71,7 @@
 									<th class="text-center" style="border:1pt solid;border-color:black;">Amount</th>
 								</tr>
 							</thead>
-							<tbody class="invoice_tbody">
+							<tbody class="invoice_tbody" style="padding-bottom:1pt">
 								<tr t-foreach="o.invoice_line" t-as="l">
 									<td style="border:1pt solid;border-color:black;" align="center">
 										<t t-esc="l_index+1" />
@@ -118,129 +114,43 @@
 									</td>
 								</tr>
 							</tbody>
-						</table>
-						    
-						<div class="row" style="padding-top:0pt;">
-							<div class="col-xs-4 pull-right" style="padding-top:0pt;">
-								<table class="table">
-									<tr>
-										<td style="border:1pt solid;border-color:black;">
-											Total
-										</td>
-										<td class="text-right"	style="border:1pt solid;border-color:black;">
-											<span t-field="o.amount_untaxed" />
-										</td>
-									</tr>
-									<tr class="border-black">
-										<td style="border:1pt solid;border-color:black;">
-											Cash Discount
-										</td>
-										<td class="text-right" style="border:1pt solid;border-color:black;">
-											<span t-field="o.cash_discount" />
-										</td>
-									</tr>
-									<tr class="border-black">
-										<td style="border:1pt solid;border-color:black;">
-											Net
-										</td>
-										<td class="text-right" style="border:1pt solid;border-color:black;">
-											<span t-esc="o.amount_untaxed - o.cash_discount" />
-										</td>
-									</tr>
-									<tr class="border-black">
-										<td style="border:1pt solid;border-color:black;">Taxes</td>
-										<td class="text-right" style="border:1pt solid;border-color:black;">
-											<span t-esc="'%.2f'% o.amount_tax"
-												t-field-options='{"widget": "monetary", "display_currency": "o.pricelist_id.currency_id"}' />
-										</td>
-									</tr>
-									<tr class="border-black">
-										<td style="border:1pt solid;border-color:black;">
-											Net Amount(Kyats)
-										</td>
-										<td class="text-right" style="border:1pt solid;border-color:black;">
-											<span t-field="o.amount_total" />
-										</td>
-									</tr>
-								</table>
-							</div>
-							<div class="row" style="padding-top:0pt;width:680px;">
-							<div class="col-xs-4 pull-left" style="width:522px;" align="center">
-								<table class="table" style="border:solid;border-color:white;"
-									align="left">
-									<tr style="border:solid;border-color:white;">
-										<td style="margin-top:-10pt;" align="center">
-											<span>
-												TOTAL :
-											</span>
-										</td>
-									</tr>
-								</table>
-							</div>
-
-							<div class="col-xs-2 pull-left" style="width:80px;" align="right">
-								<table class="table" style="border:solid;border-color:white;"
-									align="right">
-									<tr style="border:solid;border-color:white;">
-										<td style="margin-top:-10pt;" align="left">											
-											<span t-esc="'%.2f'%qty" />
-										</td>
-									</tr>
-								</table>
-							</div>
-							<div class="col-xs-2 pull-left" style="width:600px;" align="right">
-								<table class="table" style="border:solid;border-color:white;"
-									align="right">
-									<tr style="border:solid;border-color:white;">
-										<td style="margin-top:-10pt;" align="left">
-											<b>										
-											<span t-esc="o.currency_id.amount_to_text(o.amount_total)"/></b>
-										</td>
-									</tr>
-								</table>
-							</div>
-						</div>	
-						</div>
-						<div class="row" style="padding-top:0pt;width:750px;">
-							<div class="col-xs-4 pull-left" style="width:230px;" align="right">
-								<table class="table" style="border:solid;border-color:white;"
-									align="left">
-									<tr style="border:solid;border-color:white;">
-										<td style="margin-top:-10pt;" align="left">
-											<span>
-												<strong>Customer's .......................</strong>
-											</span>
-										</td>
-									</tr>
-								</table>
-							</div>
-
-							<div class="col-xs-2 pull-left" style="width:190px;" align="right">
-								<table class="table" style="border:solid;border-color:white;"
-									align="right">
-									<tr style="border:solid;border-color:white;">
-										<td style="margin-top:-10pt;" align="left">
-											<span>
-												<strong>Sales .......................</strong>
-											</span>
-										</td>
-									</tr>
-								</table>
-							</div>
-							<div class="col-xs-2 pull-left" style="width:300px;" align="right">
-								<table class="table" style="border:solid;border-color:white;"
-									align="right">
-									<tr style="border:solid;border-color:white;">
-										<td style="margin-top:-10pt;" align="left">
-											<span>
-												<strong>Computerized By total.......................</strong>
-											</span>
-										</td>
-									</tr>
-								</table>
-							</div>
-						</div>
-					</div>					
+							
+							<tfoot class="invoice_tfoot">
+							   <tr style="border:1pt solid;border-color:white;">
+    								<td colspan="4" rowspan="2" align="center">Total</td>
+    								<td rowspan="6" align="right"><span t-esc="'%.2f'%qty" /></td>
+    								<td colspan="3" align="center" style="border:1pt solid;border-color:black;">Total</td>
+    								<td align="right" style="border:1pt solid;border-color:black;"><span t-field="o.amount_untaxed" /></td>
+    							</tr>
+    							<tr>
+    								<td colspan="3" align="center" style="border:1pt solid;border-color:black;">Cash Discount</td>
+    								<td align="right" style="border:1pt solid;border-color:black;"><span t-field="o.cash_discount" /></td>
+    							</tr>
+    							<tr style="border-color:white;">
+    							    <td colspan="5" rowspan="3" align="center" style="border:1pt solid;border-color:white;">KYAT:<span t-esc="o.amount_to_text(o.amount_total, o.currency_id)"/></td> 							    
+    							</tr>			
+    							<tr>
+    								<td colspan="3" align="center" style="border:1pt solid;border-color:black;">Net</td>
+    								<td align="right" style="border:1pt solid;border-color:black;"><span t-esc="o.amount_untaxed - o.cash_discount" /></td>
+    							</tr>
+    							<tr style="border-color:black;">
+    								<td colspan="3" align="center" style="border:1pt solid;border-color:black;">Tax</td>
+    								<td align="right" style="border:1pt solid;border-color:black;"><span t-esc="'%.2f'% o.amount_tax"
+												t-field-options='{"widget": "monetary", "display_currency": "o.pricelist_id.currency_id"}' /></td>
+    							</tr>
+    							<tr >					    
+    							    <td colspan="2" style="border:1pt solid;border-color:white;">Customer's ..........</td>
+    							    <td colspan="1" style="border:1pt solid;border-color:white;">Sale ..........</td>
+    							    <td colspan="2" style="border:1pt solid;border-color:white;">Computerized By ..........</td>
+    								<td colspan="3" align="center" style="border:1pt solid;border-color:black;padding-left:1pt">Net Amount(Kyat)</td>
+    								<td align="right" style="border:1pt solid;border-color:black;"><span t-field="o.amount_total" /></td>
+    							</tr> 
+    							 							
+							</tfoot>
+						
+						</table>	
+						 					    									
+					</div>
 				</t>
 			</xpath>
 		</template>
