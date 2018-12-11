@@ -7,13 +7,6 @@
 			<field name="category_id" ref="base.module_category_sales_management" />
 			<field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
 		</record> -->
-		
-		<record id="base.group_allow_collection_team" model="res.groups">
-			<field name="name">Allow Collection Team</field>
-			<!-- <field name="category_id" ref="base.module_category_sales_management" />
-			<field name="implied_ids" eval="[(4, ref('base.group_user'))]" /> -->
-		</record>
-		
 		<record id="base.group_allow_product" model="res.groups">
 			<field name="name">Allow Product</field>
 			<field name="category_id" ref="base.module_category_sales_management" />
@@ -85,7 +78,11 @@
 			<field name="category_id" ref="base.module_category_sales_management" />
 			<field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
 		</record>
-		
+		<record id="base.group_allow_collection_team" model="res.groups">
+			<field name="name">Allow Collection Team</field>
+			<field name="category_id" ref="base.module_category_sales_management" />
+			<field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+		</record>
 		<record id="base.group_allow_daily_order_report" model="res.groups">
 			<field name="name">Allow Daily Order Report</field>
 			<field name="category_id" ref="base.module_category_sales_management" />
