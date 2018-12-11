@@ -37,7 +37,7 @@ class general_ledger_webkit_wizard(orm.TransientModel):
             # we update form with display account value
             data = self.pre_print_report(cr, uid, ids, data, context=context)
             return {'type': 'ir.actions.report.xml',
-                    'report_name': 'account.account_report_general_ledger_xls',
+                    'report_name': 'account.account_report_general_ledger_xlsx',
                     'datas': data}
         else:
             return super(general_ledger_webkit_wizard, self)._print_report(
