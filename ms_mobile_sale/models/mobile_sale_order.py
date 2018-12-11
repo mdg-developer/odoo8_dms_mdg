@@ -3204,9 +3204,13 @@ class mobile_sale_order(osv.osv):
             credit_data=cr.fetchone()
             
             if credit_data:
-                is_credit_team=True
+                if credit_data[0] is not None:
+                    is_credit_team=True
+                else:
+                    is_credit_team=False
             else:
                 is_credit_team=False
+                
             if is_credit_team==True:
                 if invoiceList:        
                     cr.execute(''' 
