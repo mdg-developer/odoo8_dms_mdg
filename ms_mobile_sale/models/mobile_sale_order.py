@@ -7,6 +7,7 @@ import time
 import urllib
 from openerp import netsvc
 import pytz
+
 DEFAULT_SERVER_DATE_FORMAT = "%Y-%m-%d"
 from openerp.http import request
 from openerp.addons.connector.queue.job import job, related_action
@@ -1529,10 +1530,11 @@ class mobile_sale_order(osv.osv):
         cr.execute('''
             select id,active,login,password,partner_id,branch_id ,
             (select uid from res_groups_users_rel where gid in (select id from res_groups  
-            where name='Allow To Active') and uid= %s) allow_to_active
+            where name='Allow To Active') and uid= %s) allow_to_active,(select uid from res_groups_users_rel where gid in (select id from res_groups  
+            where name='Allow Collection Team') and uid= %s) allow_credit_team
             from res_users 
             where id = %s
-            ''', (user_id, user_id,))
+            ''', (user_id, user_id,user_id,))
         datas = cr.fetchall()        
         return datas
 
@@ -3196,41 +3198,88 @@ class mobile_sale_order(osv.osv):
             
             invoiceList = str(tuple(invoiceList))
             invoiceList = eval(invoiceList)
-            if invoiceList:        
-                cr.execute(''' 
-                    select inv.id,inv.number,inv.partner_id,rp.name customer_name,
-                           rp.customer_code customer_code,inv.origin so_no,inv.date_invoice,
-                           inv.amount_total,inv.residual balance,inv.payment_type,
-                           inv.journal_id,crm.name,inv.date_due
-                    from account_invoice inv, res_partner rp, crm_case_section crm
-                    where inv.payment_type='credit' 
-                    and inv.state='open' 
-                    and inv.type = 'out_invoice'
-                    and inv.branch_id = %s 
-                    and residual > 0
-                    and inv.partner_id = rp.id
-                    and inv.section_id = crm.id
-                    and inv.partner_id in %s
-                    and inv.id NOT IN %s        
-                    and inv.section_id = %s'''
-                    , (branch_id, partner_list, invoiceList, sale_team_id,))
+            
+            cr.execute('''(select uid from res_groups_users_rel where gid in (select id from res_groups  
+            where name='Allow Collection Team') and uid= %s)''',(uid,))
+            credit_data=cr.fetchone()
+            
+            if credit_data:
+                is_credit_team=True
             else:
-                cr.execute(''' 
-                    select inv.id,inv.number,inv.partner_id,rp.name customer_name,
-                           rp.customer_code customer_code,inv.origin so_no,inv.date_invoice,
-                           inv.amount_total,inv.residual balance,inv.payment_type,
-                           inv.journal_id,crm.name,inv.date_due
-                    from account_invoice inv, res_partner rp, crm_case_section crm
-                    where inv.payment_type='credit' 
-                    and inv.state='open' 
-                    and inv.type = 'out_invoice'
-                    and inv.branch_id = %s 
-                    and residual > 0
-                    and inv.partner_id = rp.id
-                    and inv.section_id = crm.id
-                    and inv.partner_id in %s
-                    and inv.section_id = %s'''
-                    , (branch_id, partner_list, sale_team_id,))            
+                is_credit_team=False
+            if is_credit_team==True:
+                if invoiceList:        
+                    cr.execute(''' 
+                        select inv.id,inv.number,inv.partner_id,rp.name customer_name,
+                               rp.customer_code customer_code,inv.origin so_no,inv.date_invoice,
+                               inv.amount_total,inv.residual balance,inv.payment_type,
+                               inv.journal_id,crm.name,inv.date_due
+                        from account_invoice inv, res_partner rp, crm_case_section crm
+                        where inv.payment_type='credit' 
+                        and inv.state='open' 
+                        and inv.type = 'out_invoice'
+                        and inv.branch_id = %s 
+                        and residual > 0
+                        and inv.partner_id = rp.id
+                        and inv.section_id = crm.id
+                        and inv.partner_id in %s
+                        and inv.id NOT IN %s        
+                        '''
+                        , (branch_id, partner_list, invoiceList,))
+                else:
+                    cr.execute(''' 
+                        select inv.id,inv.number,inv.partner_id,rp.name customer_name,
+                               rp.customer_code customer_code,inv.origin so_no,inv.date_invoice,
+                               inv.amount_total,inv.residual balance,inv.payment_type,
+                               inv.journal_id,crm.name,inv.date_due
+                        from account_invoice inv, res_partner rp, crm_case_section crm
+                        where inv.payment_type='credit' 
+                        and inv.state='open' 
+                        and inv.type = 'out_invoice'
+                        and inv.branch_id = %s 
+                        and residual > 0
+                        and inv.partner_id = rp.id
+                        and inv.section_id = crm.id
+                        and inv.partner_id in %s
+                        '''
+                        , (branch_id, partner_list,))  
+            else:
+                
+                if invoiceList:        
+                    cr.execute(''' 
+                        select inv.id,inv.number,inv.partner_id,rp.name customer_name,
+                               rp.customer_code customer_code,inv.origin so_no,inv.date_invoice,
+                               inv.amount_total,inv.residual balance,inv.payment_type,
+                               inv.journal_id,crm.name,inv.date_due
+                        from account_invoice inv, res_partner rp, crm_case_section crm
+                        where inv.payment_type='credit' 
+                        and inv.state='open' 
+                        and inv.type = 'out_invoice'
+                        and inv.branch_id = %s 
+                        and residual > 0
+                        and inv.partner_id = rp.id
+                        and inv.section_id = crm.id
+                        and inv.partner_id in %s
+                        and inv.id NOT IN %s        
+                        and inv.section_id = %s'''
+                        , (branch_id, partner_list, invoiceList, sale_team_id,))
+                else:
+                    cr.execute(''' 
+                        select inv.id,inv.number,inv.partner_id,rp.name customer_name,
+                               rp.customer_code customer_code,inv.origin so_no,inv.date_invoice,
+                               inv.amount_total,inv.residual balance,inv.payment_type,
+                               inv.journal_id,crm.name,inv.date_due
+                        from account_invoice inv, res_partner rp, crm_case_section crm
+                        where inv.payment_type='credit' 
+                        and inv.state='open' 
+                        and inv.type = 'out_invoice'
+                        and inv.branch_id = %s 
+                        and residual > 0
+                        and inv.partner_id = rp.id
+                        and inv.section_id = crm.id
+                        and inv.partner_id in %s
+                        and inv.section_id = %s'''
+                        , (branch_id, partner_list, sale_team_id,))            
             data_line = cr.fetchall()                    
         print 'data_lineeeeeeeeeeeeeee', data_line        
         return data_line
@@ -3472,15 +3521,16 @@ class mobile_sale_order(osv.osv):
                      RP.sales_channel,RP.branch_id,RP.pricelist_id,RP.payment_term_id,RP.outlet_type,RP.city as city_id,RP.township as township_id,
                      RP.country_id,RP.state_id,RP.unit,RP.class_id,RP.chiller,RP.frequency_id,RP.temp_customer,RP.is_consignment,RP.hamper,
                      RP.is_bank,RP.is_cheque
-                     from sale_team_customer_rel ST ,outlettype_outlettype OT,
+                     from outlettype_outlettype OT,
                                              res_partner RP ,res_country_state RS, res_city RC,res_township RT
-                                            where ST.partner_id = RP.id 
-                                            and  RS.id = RP.state_id
+                                            where RS.id = RP.state_id
                                             and RP.township =RT.id
                                             and RP.city = RC.id
                                             and RP.active = true                                            
-                                            and RP.outlet_type = OT.id                                            
-                                            and ST.sale_team_id = %s                                   
+                                            and RP.outlet_type = OT.id   
+                                            and RP.credit_allow =True                                         
+                                            and RP.collection_team=%s
+                             
                         )A 
                         where A.customer_code is not null
             ''', (section_id ,))

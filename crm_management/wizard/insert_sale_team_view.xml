@@ -9,7 +9,8 @@
 				<form string="Assign Sales Team">
 					<group col="4" colspan="6">
 						<field name="section_id" class="oe_inline" widget="selection" />
-						<field name ="delivery_team_id" class="oe_inline" widget="selection" />
+						<field name="delivery_team_id" class="oe_inline" widget="selection" />
+						<field name="collection_team_id" class="oe_inline" widget="selection" />
 						<field name="category_ids" class="oe_inline" widget="selection" />
 						<field name="outlet_type" class="oe_inline" widget="selection"
 							groups="base.group_no_one,base.group_sale_manager" />
@@ -31,13 +32,16 @@
 							widget="selection" groups="base.group_no_one" />
 						<!-- <field name="demarcation_id" widget="selection"/> -->
 						<field name="chiller" />
-						<field name="hamper" groups="base.group_sale_supervisor,base.group_no_one,base.group_sale_manager" />
+						<field name="hamper"
+							groups="base.group_sale_supervisor,base.group_no_one,base.group_sale_manager" />
 						<field name="chiller_false" />
-						<field name="hamper_false" groups="base.group_sale_supervisor,base.group_no_one,base.group_sale_manager" />
+						<field name="hamper_false"
+							groups="base.group_sale_supervisor,base.group_no_one,base.group_sale_manager" />
 						<field name="cheque_true" groups="base.group_sale_supervisor,base.group_no_one" />
 						<field name="cheque_false" groups="base.group_sale_supervisor,base.group_no_one" />
-						<field name="active_action" groups="base.group_sale_supervisor,base.group_no_one,base.group_sale_manager" />
-						
+						<field name="active_action"
+							groups="base.group_sale_supervisor,base.group_no_one,base.group_sale_manager" />
+
 
 					</group>
 					<footer>

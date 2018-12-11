@@ -64,7 +64,7 @@ class res_partner(osv.osv):
          'sun':fields.boolean('SUN'),
      'section_id':fields.many2many('crm.case.section', 'sale_team_customer_rel', 'partner_id', 'sale_team_id', string='Sales Team'),
      'is_exclusive':fields.boolean('Exclusive'),
-     'collection_team':fields.many2one('crm.case.section','Collection Teams'),
+     'collection_team':fields.many2one('crm.case.section','Collection Team'),
     }
     _defaults = {
                'start_time':'01',

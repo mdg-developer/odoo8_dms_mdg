@@ -48,7 +48,9 @@ class insert_sale_team(osv.osv_memory):
          'active_action':fields.selection([
                         ('active', 'Active'),
                         ('in_active', 'Inactive'),
-                    ], 'Active Status'),        
+                    ], 'Active Status'),  
+        'collection_team_id':fields.many2one('crm.case.section','Collection Team' ),
+                      
 #                 'demarcation_id': fields.many2one('sale.demarcation', 'Demarcation'),
                 
     }
@@ -65,6 +67,7 @@ class insert_sale_team(osv.osv_memory):
             }
         partner_id=datas['ids']
         section_id=data['section_id']
+        collection_team_id=data['collection_team_id']
         outlet_type=data['outlet_type']
         sales_channel=data['sales_channel']        
         frequency_id=data['frequency_id']
@@ -96,6 +99,8 @@ class insert_sale_team(osv.osv_memory):
                     raise osv.except_osv(_('Warning!'),_('You inserted this sales team (%s) in (%s ,%s).')%(team_name,partner_data.name,partner_data.customer_code,))                    
                 else:
                     cr.execute('INSERT INTO sale_team_customer_rel (sale_team_id,partner_id) VALUES (%s,%s)', ( section_id[0],partner))
+            if collection_team_id:
+                cr.execute('update res_partner set collection_team=%s where id=%s',(collection_team_id[0],partner,))
             if  outlet_type:
                 cr.execute('update res_partner set outlet_type=%s where id=%s',(outlet_type[0],partner,))
             if  sales_channel:
