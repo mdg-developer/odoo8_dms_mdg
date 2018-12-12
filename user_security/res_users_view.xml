@@ -13,30 +13,34 @@
 							<field name="section_ids" nolabel="1" widget="many2many_tags" />
 						</group>
 					</xpath>
-					
+
 					<xpath expr="//page[@string='Preferences']" position="after">
-                       <page string="Tablet Access Right">
-                           <separator string="Tablet Access Right"/>
-                           <field name="allow_product"/>
-                           <field name="allow_promotions"/>
-                           <field name="allow_customers"/>
-                           <field name="allow_route_plan"/>
-                           <field name="allow_sale_plan_trip"/>
-                           <field name="allow_stock_request"/>
-                           <field name="allow_stock_exchange"/>
-                           <field name="allow_visit_record"/>
-                           <field name="allow_pending_delivery"/>
-                           <field name="allow_credit_collection"/>
-                           <field name="allow_collection_team"/>
-                           <field name="allow_daily_order_report"/>
-                           <field name="allow_daily_sale_report"/>
-                           <field name="allow_pre_sale"/>
-                           <field name="allow_direct_sale"/>
-                           <field name="allow_visit_record"/>
-                           <field name="allow_assets"/>
-                           <field name="allow_customer_location_update"/>
-                       </page>
-                   </xpath>
+						<page string="Tablet Access Right">
+							<group>
+								<group>
+									<field name="allow_product" />
+									<field name="allow_promotion" />
+									<field name="allow_customer" />
+									<field name="allow_sale_plan_day" />
+									<field name="allow_sale_plan_trip" />
+									<field name="allow_stock_request" />
+									<field name="allow_stock_exchange" />
+									<field name="allow_visit_record" />
+									<field name="allow_pending_delivery" />
+								</group>
+								<group>
+									<field name="allow_credit_collection" />
+									<field name="allow_collection_team" />
+									<field name="allow_daily_order_report" />
+									<field name="allow_daily_sale_report" />
+									<field name="allow_pre_sale" />
+									<field name="allow_direct_sale" />
+									<field name="allow_assets" />
+									<field name="allow_customer_location_update" />
+								</group>
+							</group>
+						</page>
+					</xpath>
 
 				</data>
 			</field>

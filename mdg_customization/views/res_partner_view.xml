@@ -320,18 +320,22 @@
 			</field>
 		</record>
 		
-		<record id="res_partner_team_form_view1" model="ir.ui.view">
-			<field name="name">res.partner.form.view</field>
+		<!-- Partner group by -->
+		<record id="view_collection_res_partner_filter_inherit" model="ir.ui.view">
+			<field name="name">Customer Filter</field>
 			<field name="model">res.partner</field>
-			<field name="inherit_id" ref="crm.view_partners_form_crm1" />
+			<field name="inherit_id" ref="base.view_res_partner_filter" />
 			<field name="arch" type="xml">
-				<data>
-					<xpath expr="//field[@name='section_id']" position="after">
-						<field name="collection_team" />
-					</xpath>
-				</data>
+				<xpath expr="//field[@name='name']" position="after">
+					<field name="collection_team" />
+				</xpath>
+				<xpath expr="//group/filter[@string='Country']" position="after">
+					<filter string="Collection Team" icon="terp-personal" domain="[]"
+						context="{'group_by' : 'collection_team'}" />
+				</xpath>
 			</field>
 		</record>
+		
 		<record id="mdg_account_view_partner_property_form" model="ir.ui.view">
 			<field name="name">res.partner.property.form.inherit</field>
 			<field name="model">res.partner</field>

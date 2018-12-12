@@ -1528,14 +1528,17 @@ class mobile_sale_order(osv.osv):
     
     def get_res_users(self, cr, uid, user_id , context=None, **kwargs):
         cr.execute('''
+            
             select id,active,login,password,partner_id,branch_id ,
             (select uid from res_groups_users_rel where gid in (select id from res_groups  
-            where name='Allow To Active') and uid= %s) allow_to_active,(select uid from res_groups_users_rel where gid in (select id from res_groups  
-            where name='Allow Collection Team') and uid= %s) allow_credit_team
+            where name='Allow To Active') and uid=%s) allow_to_active,allow_collection_team,allow_product,allow_promotion,allow_customer,allow_sale_plan_day,
+            allow_sale_plan_trip,allow_stock_request,allow_stock_exchange,allow_visit_record,allow_pending_delivery,allow_credit_collection,allow_daily_order_report,
+            allow_daily_sale_report,allow_pre_sale,allow_direct_sale,allow_assets,allow_customer_location_update
             from res_users 
             where id = %s
-            ''', (user_id, user_id,user_id,))
-        datas = cr.fetchall()        
+            ''', (user_id,user_id,))
+        datas = cr.fetchall() 
+        print 'userdataaaaaaaaaaaaaaa',      datas 
         return datas
 
     
@@ -2149,6 +2152,8 @@ class mobile_sale_order(osv.osv):
                         'customer_code':vs['customer_code'],
                         'customer_id':vs['customer_id'],
                         'comment':vs['comment'],
+                        'partner_latitude':vs['latitude'],
+                        'partner_longitude':vs['longitude'],
                         'image_one':vs['image_one'].replace('\\', ""),
                         'image_two':vs['image_two'].replace('\\', ""),
                         'image_three':vs['image_three'].replace('\\', ""),
@@ -2159,15 +2164,15 @@ class mobile_sale_order(osv.osv):
                                                                   
                     # For Custoemr Photo temp table to Res Parnter Table for Appear
                     cursor.execute('''select customer_code,image_one,image_two,image_three,image_four,
-                            image_five,comment From partner_photo where customer_code = %s''', (code,))
+                            image_five,comment,partner_latitude,partner_longitude From partner_photo where customer_code = %s''', (code,))
                     data = cursor.fetchall()
                     for r in data:
                         code = r[0]
                         print 'customer id', code
                         cursor.execute('''update res_partner set image_one = %s, image_two = %s,
-                        image_three = %s, image_four = %s, image_five = %s, comment = %s where customer_code = %s'''
+                        image_three = %s, image_four = %s, image_five = %s, comment = %s,partner_latitude=%s,partner_longitude=%s where customer_code = %s'''
                         , (r[1], r[2], r[3], r[4], r[5]
-                        , r[6], code,))
+                        , r[6],r[7],r[8], code,))
                         cursor.execute('''delete from partner_photo where customer_code = %s''', (vs['customer_code'],))
             return True
         except Exception, e:
@@ -3195,21 +3200,11 @@ class mobile_sale_order(osv.osv):
         if partner_list:
             partner_list = str(tuple(partner_list))
             partner_list = eval(partner_list)
-            
             invoiceList = str(tuple(invoiceList))
             invoiceList = eval(invoiceList)
             
-            cr.execute('''(select uid from res_groups_users_rel where gid in (select id from res_groups  
-            where name='Allow Collection Team') and uid= %s)''',(uid,))
-            credit_data=cr.fetchone()
-            
-            if credit_data:
-                if credit_data[0] is not None:
-                    is_credit_team=True
-                else:
-                    is_credit_team=False
-            else:
-                is_credit_team=False
+            cr.execute('''select allow_collection_team from res_users where id= %s''',(uid,))
+            is_credit_team=cr.fetchone()[0]
                 
             if is_credit_team==True:
                 if invoiceList:        
@@ -3918,6 +3913,8 @@ class partner_photo(osv.osv):
         'image_two':fields.binary('image_two'),
         'image_three':fields.binary('image_three'),
         'image_four':fields.binary('image_four'),
-        'image_five':fields.binary('image_five')
+        'image_five':fields.binary('image_five'),
+        'partner_latitude': fields.float('Geo Latitude', digits=(16, 5), readonly=True),
+        'partner_longitude': fields.float('Geo Longitude', digits=(16, 5), readonly=True),
        }
 partner_photo()    
