@@ -12,7 +12,6 @@ class ar_collection(osv.osv):
         
     _columns = {
                'branch_id':fields.many2one('res.branch', 'Branch',required=True),
-               'collection_team_id':fields.many2one('crm.case.section', 'Collection Team'),
                }
     _defaults = {
         'branch_id': _get_default_branch,

@@ -307,6 +307,31 @@
 				</data>
 			</field>
 		</record>
+		<record id="collection_res_partner_tree_view" model="ir.ui.view">
+			<field name="name">res.partner.tree.view</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="base.view_partner_tree" />
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//field[@name='parent_id']" position="after">
+						<field name="collection_team" />
+					</xpath>
+				</data>
+			</field>
+		</record>
+		
+		<record id="res_partner_team_form_view1" model="ir.ui.view">
+			<field name="name">res.partner.form.view</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="crm.view_partners_form_crm1" />
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//field[@name='section_id']" position="after">
+						<field name="collection_team" />
+					</xpath>
+				</data>
+			</field>
+		</record>
 		<record id="mdg_account_view_partner_property_form" model="ir.ui.view">
 			<field name="name">res.partner.property.form.inherit</field>
 			<field name="model">res.partner</field>

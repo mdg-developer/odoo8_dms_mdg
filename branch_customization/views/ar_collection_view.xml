@@ -11,23 +11,11 @@
 				<field name="due_date" position="before">
 					<field name="branch_id" />
 				</field>
-				<field name="sale_team_id" position="after">
-					<field name="collection_team_id" />
-				</field>
+				
 			</field>
 		</record>
 		
-		<record id="inherit_view_mobile_ar_collection_tree" model="ir.ui.view">
-			<field name="name">mobile.ar.collection.tree</field>
-			<field name="model">mobile.ar.collection</field>
-			<field name="inherit_id" ref="ms_mobile_sale_credit.view_mobile_ar_collection_tree" />
-			<field name="arch" type="xml">
-				
-				<field name="sale_team_id" position="after">
-					<field name="collection_team_id" />
-				</field>
-			</field>
-		</record>
+		
 		
 	</data>
 </openerp>
