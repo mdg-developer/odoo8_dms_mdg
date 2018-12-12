@@ -34,7 +34,7 @@
     'depends': ['base', 'account'],
     'data': [
                 'security/account_security.xml',
-                'security/tablet_sale_security.xml',
+               # 'security/tablet_sale_security.xml',
                 'res_users_view.xml',
                 ],
                 'installable': True,
