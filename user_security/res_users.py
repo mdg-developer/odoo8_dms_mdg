@@ -7,64 +7,26 @@ from openerp import SUPERUSER_ID, models
 class res_users(osv.osv):
     _inherit = "res.users"
     _description = "Users"
- 
-    def _get_group(self, cr, uid, context=None):
-        dataobj = self.pool.get('ir.model.data')
-        result = []
-        try:
-            dummy, group_id = dataobj.get_object_reference(cr, SUPERUSER_ID, 'base', 'group_user')
-            result.append(group_id)
-            dummy, group_id = dataobj.get_object_reference(cr, SUPERUSER_ID, 'base', 'group_partner_manager')
-            result.append(group_id)
-            dummy, group_id = dataobj.get_object_reference(cr, SUPERUSER_ID, 'base', 'group_allow_product')
-            result.append(group_id)  
-            dummy, group_id = dataobj.get_object_reference(cr, SUPERUSER_ID, 'base', 'group_allow_promotions')
-            result.append(group_id)  
-            dummy, group_id = dataobj.get_object_reference(cr, SUPERUSER_ID, 'base', 'group_allow_customers')
-            result.append(group_id)  
-            dummy, group_id = dataobj.get_object_reference(cr, SUPERUSER_ID, 'base', 'group_allow_route_plan')
-            result.append(group_id)              
-            dummy, group_id = dataobj.get_object_reference(cr, SUPERUSER_ID, 'base', 'group_allow_sale_plan_trip')
-            result.append(group_id)                
-            dummy, group_id = dataobj.get_object_reference(cr, SUPERUSER_ID, 'base', 'group_allow_stock_request')
-            result.append(group_id)                 
-            dummy, group_id = dataobj.get_object_reference(cr, SUPERUSER_ID, 'base', 'group_allow_stock_exchange')
-            result.append(group_id)                 
-            dummy, group_id = dataobj.get_object_reference(cr, SUPERUSER_ID, 'base', 'group_allow_visit_record')
-            result.append(group_id)    
-            dummy, group_id = dataobj.get_object_reference(cr, SUPERUSER_ID, 'base', 'group_allow_direct_sale_invoices')
-            result.append(group_id)             
-            dummy, group_id = dataobj.get_object_reference(cr, SUPERUSER_ID, 'base', 'group_allow_pre_sale_order')
-            result.append(group_id) 
-            dummy, group_id = dataobj.get_object_reference(cr, SUPERUSER_ID, 'base', 'group_allow_pending_delivery')
-            result.append(group_id)         
-            dummy, group_id = dataobj.get_object_reference(cr, SUPERUSER_ID, 'base', 'group_allow_credit_collection')
-            result.append(group_id)   
-            dummy, group_id = dataobj.get_object_reference(cr, SUPERUSER_ID, 'base', 'group_allow_collection_team')
-            result.append(group_id)   
-            dummy, group_id = dataobj.get_object_reference(cr, SUPERUSER_ID, 'base', 'group_allow_daily_order_report')
-            result.append(group_id)            
-            dummy, group_id = dataobj.get_object_reference(cr, SUPERUSER_ID, 'base', 'group_allow_daily_sale_report')
-            result.append(group_id)               
-            dummy, group_id = dataobj.get_object_reference(cr, SUPERUSER_ID, 'base', 'group_allow_direct_sale')
-            result.append(group_id)       
-            dummy, group_id = dataobj.get_object_reference(cr, SUPERUSER_ID, 'base', 'group_allow_pre_sale')
-            result.append(group_id)                 
-            dummy, group_id = dataobj.get_object_reference(cr, SUPERUSER_ID, 'base', 'group_allow_visit_record')
-            result.append(group_id)        
-            dummy, group_id = dataobj.get_object_reference(cr, SUPERUSER_ID, 'base', 'group_allow_assets')
-            result.append(group_id)                                                                                             
-        except ValueError:
-            # If these groups does not exists anymore
-            pass
-        return result  
-        
     _columns = {
         'section_ids':fields.many2many('crm.case.section', 'section_users_rel', 'uid', 'section_id', 'Teams', required=True),
+        'allow_product':fields.boolean('Allow Product',default=True),
+        'allow_promotions':fields.boolean('Allow Promotions',default=True),
+        'allow_customers':fields.boolean('Allow Customers',default=True),
+        'allow_route_plan':fields.boolean('Allow Product',default=True),
+        'allow_sale_plan_trip':fields.boolean('Allow Sale Plan Trip',default=True),
+        'allow_stock_request':fields.boolean('Allow Stock Request',default=True),
+        'allow_stock_exchange':fields.boolean('Allow Stock Exchange',default=True),
+        'allow_visit_record':fields.boolean('Allow Visit Record',default=True),
+        'allow_pending_delivery':fields.boolean('Allow Pending Delivery',default=True),
+        'allow_credit_collection':fields.boolean('Allow Credit Collection',default=True),
+        'allow_collection_team':fields.boolean('Allow Collection Team',default=True),
+        'allow_daily_order_report':fields.boolean('Allow Daily Order Report',default=True),
+        'allow_daily_sale_report':fields.boolean('Allow Daily Sale Report',default=True),
+        'allow_pre_sale':fields.boolean('Allow Pre Sale',default=True),
+        'allow_direct_sale':fields.boolean('Allow Direct Sale',default=True),
+        'allow_visit_record':fields.boolean('Allow Visit Record',default=True),
+        'allow_assets':fields.boolean('Allow Assets',default=True),
+        'allow_customer_location_update':fields.boolean('Allow Customer Location Update',default=True)
     }
     
-    _defaults = {
-        'groups_id': _get_group,
-    }    
-  
 res_users()
