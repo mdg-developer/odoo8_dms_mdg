@@ -1237,6 +1237,8 @@ class sale_plan_for_day_setting(osv.osv):
                                         'line_id':plan.id,
                                                   }, context=context)   
                     sale_plan_obj.write(cr, uid, ids, {'partner_count':  partner_count+count})  
+        cr.execute("delete from sale_plan_day_setting_line where partner_id in (select id from res_partner where active=False)")
+        cr.execute("delete from sale_plan_day_line where partner_id in (select id from res_partner where active=False)")
         return True   
 sale_plan_for_day_setting()
     
