@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.4.1.v201408290142 Build &lt;4.4.1.v20140916-1320></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.6.0.v201606072122</property>
     <property name="units">in</property>
     <method name="initialize"><![CDATA[branchList = params["branch_id"].value.join(",");
 teamList = params["sales_team_id"].value.join(",");]]></method>
@@ -372,8 +372,8 @@ crm.name team,
 0 as invoice_amount,
 0 as total,
 so.name,
-((so.date_order at time zone 'utc') at time zone 'asia/rangoon')::date date_order,
-(select name from stock_picking where id=sm.picking_id)as inventory_ref,
+ai.date_invoice date_order,
+(select name from stock_picking where id=sm.picking_id) as inventory_ref,
 case when ail.uos_id=pt.uom_id then sum(round(quantity,0)) when ail.uos_id!=pt.uom_id 
 then sum(round(quantity*(select floor(round(1/factor,2)) from product_uom where id=ail.uos_id),0)) end as invoice_qty
 ,case when sm.product_uom=pt.uom_id then sum(round(product_uom_qty,0)) when sm.product_uom!=pt.uom_id 
@@ -387,18 +387,17 @@ left join product_template pt on pt.id=pp.product_tmpl_id
 left join res_partner rp on rp.id=so.partner_id
 left join res_branch branch on branch.id=so.branch_id
 left join crm_case_section crm on crm.id=so.section_id 
-where 
-((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date
+where ai.date_invoice
  between ? and ?
  and ail.product_id=sm.product_id
  and pt.type!='service'
- and so.state not in('draft','cancel')
+ and so.state not in ('draft','cancel')
  and sm.state='done'
  --$branch_id$
  --$sale_team_id$
  and ail.uos_id=sm.product_uom
- group by ail.uos_id,pt.uom_id,sm.product_uom,pp.name_template,pp.id,ai.number,rp.name,rp.customer_code,branch.name,crm.name,sm.picking_id,so.date_order,so.name
- order by ai.number
+ group by ail.uos_id,pt.uom_id,sm.product_uom,pp.name_template,pp.id,ai.number,rp.name,rp.customer_code,branch.name,crm.name,sm.picking_id,ai.date_invoice,so.name
+ order by ai.date_invoice,ai.number
  )A
 
 
@@ -407,38 +406,6 @@ where
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
-  <DataSetParameters>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>1</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>2</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-  </DataSetParameters>
   <design:ResultSets derivedMetaData="true">
     <design:resultSetDefinitions>
       <design:resultSetColumns>
