@@ -28,7 +28,7 @@
 								<field name="due_date" />
 								<field name="date" />
 								<field name="so_amount" />
-								<field name="payment_amount" />
+								<field name="payment_amount" on_change="on_change_payment_amount(so_amount,payment_amount)" />
 								<field name="balance" />
 								<field name="credit_limit" />
 								<field name="state" invisible="1" />

@@ -107,10 +107,20 @@ class mobile_ar_collection(osv.osv):
                 'user_id':invoice.user_id.id,
                 'branch_id':invoice.branch_id.id,
                 'due_date':invoice.date_due,
-                'so_amount':invoice.amount_total,
+                'so_amount':invoice.residual,
                 'credit_limit':invoice.partner_id.credit_limit,
             }
         return {'value': values}     
+    
+    def on_change_payment_amount(self, cr, uid, ids, so_amount ,payment_amount, context=None):
+        balance=0
+
+        if so_amount and payment_amount:
+            balance=so_amount - payment_amount
+            
+        return {'value': {'balance':balance}}     
+
+    
 mobile_ar_collection()
 
 
