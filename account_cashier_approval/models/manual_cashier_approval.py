@@ -318,6 +318,8 @@ class manual_cashier_approval(osv.osv):
                                       
     'sign_diff_amount': fields.function(_get_plusorminus_diff_amount, string="Difference Amount", type="char"),
     'diff_amount': fields.function(_get_diff_amount, string="Difference Amount", type="float", store=True),
+    'reference': fields.char('Payment Ref'),
+
         }
     
     
@@ -422,6 +424,7 @@ class manual_cashier_approval(osv.osv):
         voucherLineObj = self.pool.get('account.voucher.line')
         payment_line_obj = self.pool.get('manual.cashier.customer.payment')
         last_amount = 0
+        cashier_data = self.browse(cr, uid, ids, context=context)
         cr.execute("""select journal_id,amount,type,partner_id,account_id,date_invoice,period_id,notes,invoice_id from manual_cashier_customer_payment where cashier_id=%s  and selected=True""", (ids[0],)) 
         payment_data = cr.fetchall()
         if payment_data:
@@ -454,7 +457,8 @@ class manual_cashier_approval(osv.osv):
                                         'account_id':default_credit_account_id,
                                         'pre_line':True,
                                         'type':'receipt',
-                                        'reference':invoice_num,
+                                        'reference':cashier_data.reference,
+                                        'name':invoice_num,
                                           'payment_option': "without_writeoff",
                                          'company_id':invoice.company_id.id
 
