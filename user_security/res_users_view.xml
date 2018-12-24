@@ -27,6 +27,9 @@
 									<field name="allow_stock_exchange" />
 									<field name="allow_visit_record" />
 									<field name="allow_pending_delivery" />
+									<field name="allow_stock_check" />
+									<field name="allow_feedback" />
+
 								</group>
 								<group>
 									<field name="allow_credit_collection" />
@@ -37,6 +40,7 @@
 									<field name="allow_direct_sale" />
 									<field name="allow_assets" />
 									<field name="allow_customer_location_update" />
+									<field name="allow_rental" />
 								</group>
 							</group>
 						</page>

@@ -25,7 +25,10 @@ class res_users(osv.osv):
         'allow_pre_sale':fields.boolean('Allow Pre Sale',default=True),
         'allow_direct_sale':fields.boolean('Allow Direct Sale',default=True),
         'allow_assets':fields.boolean('Allow Assets',default=True),
-        'allow_customer_location_update':fields.boolean('Allow Customer Location Update',default=True)
+        'allow_customer_location_update':fields.boolean('Allow Customer Location Update',default=False),
+        'allow_stock_check':fields.boolean('Allow Stock Check',default=True),
+        'allow_rental':fields.boolean('Allow Customer Rental',default=True),
+        'allow_feedback':fields.boolean('Allow Customer Feedback',default=True),
     }
     
 res_users()

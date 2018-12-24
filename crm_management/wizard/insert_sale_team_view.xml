@@ -11,6 +11,7 @@
 						<field name="section_id" class="oe_inline" widget="selection" />
 						<field name="delivery_team_id" class="oe_inline" widget="selection" />
 						<field name="collection_team_id" class="oe_inline" widget="selection" />
+						<field name="collection_false" class="oe_inline"/>
 						<field name="category_ids" class="oe_inline" widget="selection" />
 						<field name="outlet_type" class="oe_inline" widget="selection"
 							groups="base.group_no_one,base.group_sale_manager" />

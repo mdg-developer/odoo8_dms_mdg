@@ -326,7 +326,7 @@ union all
 select av.section_id,payment_partial.move_id,payment_partial.id move_line_id,av.number,av.partner_id,av.date_invoice,paidmove.date,aml.reconcile_id,aml.id,payment_partial.ref,coalesce(payment_partial.credit,0) as payment_amount,avl.amount_original invoice_amount,(avl.amount_unreconciled-avl.amount) as balance
 from account_invoice av 
 left join account_move am  on av.move_id =am.id
-left join account_move_line aml on aml.move_id=am.id and aml.reconcile_id is not null
+left join account_move_line aml on aml.move_id=am.id and aml.reconcile_partial_id is not null
 left join account_voucher_line avl on avl.move_line_id=aml.id and avl.amount >0
 left join account_voucher avr on avr.id=avl.voucher_id 
 left join account_move paidmove on paidmove.id= avr.move_id
@@ -851,21 +851,6 @@ and date_invoice between ? and ?
                 <cell id="425">
                     <property name="colSpan">2</property>
                     <property name="rowSpan">1</property>
-                    <data id="882">
-                        <property name="fontFamily">"Arial"</property>
-                        <property name="fontSize">12pt</property>
-                        <property name="fontWeight">bold</property>
-                        <property name="dataSet">param_sales_team</property>
-                        <list-property name="boundDataColumns">
-                            <structure>
-                                <property name="name">string_agg</property>
-                                <text-property name="displayName">string_agg</text-property>
-                                <expression name="expression" type="javascript">dataSetRow["string_agg"]</expression>
-                                <property name="dataType">string</property>
-                            </structure>
-                        </list-property>
-                        <property name="resultSetColumn">string_agg</property>
-                    </data>
                     <label id="884">
                         <property name="fontSize">12pt</property>
                         <property name="fontWeight">bold</property>

@@ -71,6 +71,7 @@
 									<field name="tablet_id" />
 									<field name="latitude" />
 									<field name="longitude" />
+									<field name="distance_status"/>
 									<field name="branch_id"/>
 								</group>
 								<group>

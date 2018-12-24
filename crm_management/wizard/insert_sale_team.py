@@ -50,6 +50,7 @@ class insert_sale_team(osv.osv_memory):
                         ('in_active', 'Inactive'),
                     ], 'Active Status'),  
         'collection_team_id':fields.many2one('crm.case.section','Collection Team' ),
+        'collection_false':fields.boolean("UnAssign Collection Team",default=False),
                       
 #                 'demarcation_id': fields.many2one('sale.demarcation', 'Demarcation'),
                 
@@ -68,6 +69,7 @@ class insert_sale_team(osv.osv_memory):
         partner_id=datas['ids']
         section_id=data['section_id']
         collection_team_id=data['collection_team_id']
+        collection_false=data['collection_false']
         outlet_type=data['outlet_type']
         sales_channel=data['sales_channel']        
         frequency_id=data['frequency_id']
@@ -133,6 +135,8 @@ class insert_sale_team(osv.osv_memory):
                 cr.execute('update res_partner set is_cheque=%s where id=%s',(True,partner,))
             if cheque_false is True:
                 cr.execute('update res_partner set is_cheque=%s where id=%s',(False,partner,))  
+            if collection_false is True:
+                cr.execute('update res_partner set collection_team=null where id=%s',(partner,))  
             if active_action:
                 if active_action=='active':
                     cr.execute('update res_partner set active=%s where id=%s',(True,partner,))  

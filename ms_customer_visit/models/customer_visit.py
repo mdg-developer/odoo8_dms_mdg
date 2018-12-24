@@ -35,7 +35,8 @@ class customer_visit(osv.osv):
                 'other_reason':fields.text('Remark'),
         'm_status':fields.selection([('pending', 'Pending'), ('approved', 'Approved'),
                                                       ('reject', 'Reject')], string='Status'),
-   'branch_id': fields.many2one('res.branch', 'Branch',required=True),
+     'branch_id': fields.many2one('res.branch', 'Branch',required=True),
+    'distance_status':fields.char('Distance Status'),
                 
     }
     _defaults = {        

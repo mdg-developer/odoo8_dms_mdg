@@ -75,6 +75,8 @@
 					<field name="allow_foc" />
 					<field name="allow_tax" />
 					<field name="default_division" />
+					<field name="is_supervisor" />
+					<field name="supervisor_team" domain="[('is_supervisor','=',True)]"/>
 				</field>
 				<page string="Team Members" position="after">
 					<page string="Products">

@@ -1471,32 +1471,58 @@ class mobile_sale_order(osv.osv):
         return datas       
        
     def sale_plan_day_return(self, cr, uid, section_id, pull_date , context=None, **kwargs):
-        
+        section = self.pool.get('crm.case.section')
         lastdate = datetime.strptime(pull_date, "%Y-%m-%d")
         print 'DateTime', lastdate
+        sale_team_data = section.browse(cr, uid, section_id, context=context)
+        is_supervisor=sale_team_data.is_supervisor
+        if is_supervisor==True:
+            cr.execute('''            
+                select p.id,p.date,p.sale_team,p.name,p.principal,p.week from sale_plan_day p
+                join  crm_case_section c on p.sale_team=c.id
+                where p.sale_team in (select id from crm_case_section where supervisor_team= %s) and p.active = true        
+                ''', (section_id,))
+            datas = cr.fetchall()            
+            
+        else:
         
-        cr.execute('''            
-            select p.id,p.date,p.sale_team,p.name,p.principal,p.week from sale_plan_day p
-            join  crm_case_section c on p.sale_team=c.id
-            where p.sale_team=%s and p.active = true        
-            ''', (section_id,))
-        datas = cr.fetchall()
-        cr.execute      
+            cr.execute('''            
+                select p.id,p.date,p.sale_team,p.name,p.principal,p.week from sale_plan_day p
+                join  crm_case_section c on p.sale_team=c.id
+                where p.sale_team=%s and p.active = true        
+                ''', (section_id,))
+            datas = cr.fetchall()
         return datas    
+    
     def sale_plan_trip_return(self, cr, uid, section_id, pull_date , context=None, **kwargs):
-     
+        section = self.pool.get('crm.case.section')
         lastdate = datetime.strptime(pull_date, "%Y-%m-%d")
         print 'DateTime', lastdate
-        cr.execute('''            
-            select distinct p.id,p.date,p.sale_team,p.name,p.principal from sale_plan_trip p
-            ,  crm_case_section c,res_partner_sale_plan_trip_rel d, res_partner e
-            where  p.sale_team=c.id
-            and p.sale_team= %s
-            and p.active = true 
-            and p.id = d.sale_plan_trip_id
-            and e.id = d.partner_id            
-            ''', (section_id,))
-        datas = cr.fetchall()                      
+        sale_team_data = section.browse(cr, uid, section_id, context=context)
+        is_supervisor=sale_team_data.is_supervisor 
+        if is_supervisor==True:
+            cr.execute('''            
+                select distinct p.id,p.date,p.sale_team,p.name,p.principal from sale_plan_trip p
+                ,  crm_case_section c,res_partner_sale_plan_trip_rel d, res_partner e
+                where  p.sale_team=c.id
+                and p.sale_team in (select id from crm_case_section where supervisor_team= %s) 
+                and p.active = true 
+                and p.id = d.sale_plan_trip_id
+                and e.id = d.partner_id            
+                ''', (section_id,))
+            datas = cr.fetchall()        
+            
+        else:
+            cr.execute('''            
+                select distinct p.id,p.date,p.sale_team,p.name,p.principal from sale_plan_trip p
+                ,  crm_case_section c,res_partner_sale_plan_trip_rel d, res_partner e
+                where  p.sale_team=c.id
+                and p.sale_team= %s
+                and p.active = true 
+                and p.id = d.sale_plan_trip_id
+                and e.id = d.partner_id            
+                ''', (section_id,))
+            datas = cr.fetchall()                      
         return datas
         
         # kzo
@@ -1533,7 +1559,7 @@ class mobile_sale_order(osv.osv):
             (select uid from res_groups_users_rel where gid in (select id from res_groups  
             where name='Allow To Active') and uid=%s) allow_to_active,allow_collection_team,allow_product,allow_promotion,allow_customer,allow_sale_plan_day,
             allow_sale_plan_trip,allow_stock_request,allow_stock_exchange,allow_visit_record,allow_pending_delivery,allow_credit_collection,allow_daily_order_report,
-            allow_daily_sale_report,allow_pre_sale,allow_direct_sale,allow_assets,allow_customer_location_update
+            allow_daily_sale_report,allow_pre_sale,allow_direct_sale,allow_assets,allow_customer_location_update,allow_stock_check,allow_rental,allow_feedback
             from res_users 
             where id = %s
             ''', (user_id,user_id,))
@@ -3568,13 +3594,12 @@ class mobile_sale_order(osv.osv):
                                             and RP.active = true
                                             and RP.outlet_type = OT.id
                                             and RPS.partner_id = RP.id 
-                                            and SPD.sale_team = %s          
                                             and RPS.line_id = %s       
                                             order by  RPS.sequence asc                         
                                                                                                                  
                         )A 
                         where A.customer_code is not null
-            ''', (section_id, day_id,))
+            ''', (day_id,))
         datas = cr.fetchall()
         return datas
 # kzo Edit add Sale Plan Trip and Day ID
