@@ -1471,9 +1471,9 @@ class mobile_sale_order(osv.osv):
         return datas       
        
     def sale_plan_day_return(self, cr, uid, section_id, pull_date , context=None, **kwargs):
-        section = self.pool.get('crm.case.section')
         lastdate = datetime.strptime(pull_date, "%Y-%m-%d")
         print 'DateTime', lastdate
+        section = self.pool.get('crm.case.section')
         sale_team_data = section.browse(cr, uid, section_id, context=context)
         is_supervisor=sale_team_data.is_supervisor
         if is_supervisor==True:
@@ -3555,7 +3555,6 @@ class mobile_sale_order(osv.osv):
                                             and RP.outlet_type = OT.id   
                                             and RP.credit_allow =True                                         
                                             and RP.collection_team=%s
-                             
                         )A 
                         where A.customer_code is not null
             ''', (section_id ,))
@@ -3564,9 +3563,15 @@ class mobile_sale_order(osv.osv):
 
 # kzo Eidt
     def res_partners_return_day(self, cr, uid, section_id, day_id, pull_date  , context=None, **kwargs):
-    
+        section = self.pool.get('crm.case.section')
+        sale_team_data = section.browse(cr, uid, section_id, context=context)
+        is_supervisor=sale_team_data.is_supervisor    
         lastdate = datetime.strptime(pull_date, "%Y-%m-%d")
         print 'DateTime', lastdate
+        if is_supervisor==True:
+            where ='and SPD.sale_team in (select id from crm_case_section where supervisor_team= %s)' % (section_id,)
+        else:
+            where ='and SPD.sale_team = %s' % (section_id,)
         cr.execute('''                    
                      select A.id,A.name,A.image,A.is_company, A.image_small,replace(A.street,',',';') street, replace(A.street2,',',';') street2,A.city,A.website,
                      replace(A.phone,',',';') phone,A.township, replace(A.mobile,',',';') mobile,A.email,A.company_id,A.customer, 
@@ -3594,19 +3599,28 @@ class mobile_sale_order(osv.osv):
                                             and RP.active = true
                                             and RP.outlet_type = OT.id
                                             and RPS.partner_id = RP.id 
-                                            and RPS.line_id = %s       
+                                            %s
+                                            and RPS.line_id = %%s       
                                             order by  RPS.sequence asc                         
                                                                                                                  
                         )A 
                         where A.customer_code is not null
-            ''', (day_id,))
+            '''%(where),(day_id,))
         datas = cr.fetchall()
         return datas
+    
 # kzo Edit add Sale Plan Trip and Day ID
     def res_partners_return_trip(self, cr, uid, section_id, day_id , pull_date, context=None, **kwargs):
         
+        section = self.pool.get('crm.case.section')
+        sale_team_data = section.browse(cr, uid, section_id, context=context)
+        is_supervisor=sale_team_data.is_supervisor    
         lastdate = datetime.strptime(pull_date, "%Y-%m-%d")
         print 'DateTime', lastdate
+        if is_supervisor==True:
+            where ='and SPT.sale_team in (select id from crm_case_section where supervisor_team= %s)' % (section_id,)
+        else:
+            where ='and SPT.sale_team = %s' % (section_id,)
         cr.execute('''        
                     select A.id,A.name,A.image,A.is_company,
                      A.image_small,replace(A.street,',',';') street,replace(A.street2,',',';') street2,A.city,A.website,
@@ -3636,12 +3650,11 @@ class mobile_sale_order(osv.osv):
                      and  RP.city = RC.id
                      and RP.township = RT.id
                      and RP.active = true
-                     and SPT.sale_team = %s
-                     and RPT.sale_plan_trip_id = %s
-                     
+                     %s
+                     and RPT.sale_plan_trip_id = %%s
                         )A 
                     where A.customer_code is not null 
-            ''', (section_id, day_id,))
+            ''' %(where),(day_id,))
         datas = cr.fetchall()
         return datas
 

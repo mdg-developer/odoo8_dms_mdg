@@ -734,6 +734,9 @@ class stock_return(osv.osv):
     
     def cancel(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'cancel', })
+    
+    def set_to_draft(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state': 'draft', })    
 
     def reversed(self, cr, uid, ids, context=None):
         pick_obj = self.pool.get('stock.picking')
@@ -742,6 +745,7 @@ class stock_return(osv.osv):
         detailObj = None
         srn_value = self.browse(cr, uid, ids[0], context=context)
         srn_no = srn_value.name
+        return_date = srn_value.to_return_date
         move_ids = []
         move_ids = move_obj.search(cr, uid, [('origin', '=', srn_no), ('state', '=', 'done')], context=context)
         # choose the view_mode accordingly
@@ -779,7 +783,7 @@ class stock_return(osv.osv):
                                     'move_dest_id': move_dest_id,
                             })
                 move_obj.action_done(cr, uid, move_new_id, context=context)
-
+            cr.execute("update stock_move set date=%s where origin=%s", (return_date, 'Reverse ' +move.origin,))
         return self.write(cr, uid, ids, {'state': 'reversed', })    
         
     def received(self, cr, uid, ids, context=None):
