@@ -35,6 +35,8 @@
 								<field name="return_date" attrs="{'readonly':[('state','=','issue')]}" />
 								<field name="branch_id" required="1" widget="selection"
 									attrs="{'readonly':[('state','=','issue')]}" />
+  								<field name="reverse_date"
+									attrs="{'readonly':[('state','=','reversed')],'invisible': [('state','not in',('issue','reversed'))]}" />									
 							</group>
 							<group>
 								<field name="vehicle_id" readonly="1" />

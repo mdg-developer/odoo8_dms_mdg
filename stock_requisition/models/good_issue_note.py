@@ -75,12 +75,15 @@ class good_issue_note(osv.osv):
                 'partner_id':fields.many2one('res.partner', string='Partner'),
                 'is_return':fields.boolean('Return'),
                 'issue_from_optional_location':fields.boolean('Issue from Optional Location',readonly=True),
+                'reverse_date':fields.date('Date for Reverse',required=False),
+
 }
     _defaults = {
         'state' : 'draft',
          'company_id': _get_default_company,
         # 'branch_id': _get_default_branch,
          'is_return':False,
+         
     }     
     def create(self, cursor, user, vals, context=None):
         id_code = self.pool.get('ir.sequence').get(cursor, user,
@@ -114,6 +117,10 @@ class good_issue_note(osv.osv):
         detailObj = None
         gin_value = self.browse(cr, uid, ids[0], context=context)
         gin_no=gin_value.name
+        reverse_date=gin_value.reverse_date
+        if not reverse_date:
+            raise osv.except_osv(_('Warning'),
+                     _('Please Insert Reverse Date'))
         pick_ids = []
         pick_ids = pick_obj.search(cr, uid, [('origin', '=', gin_no)], context=context)
         #choose the view_mode accordingly
@@ -147,6 +154,7 @@ class good_issue_note(osv.osv):
                                         'procure_method': 'make_to_stock',
                                       #  'restrict_lot_id': data_get.lot_id.id,
                                         'move_dest_id': move_dest_id,
+                                        'origin':'Reverse ' + move.origin,
                                 })
             pick_obj.action_confirm(cr, uid, [new_picking], context=context)
             pick_obj.force_assign(cr, uid, [new_picking], context)  
@@ -155,6 +163,7 @@ class good_issue_note(osv.osv):
             detailObj = stockDetailObj.browse(cr, uid, wizResult['res_id'], context=context)
             if detailObj:
                 detailObj.do_detailed_transfer()
+            cr.execute("update stock_move set date=%s where origin=%s", (reverse_date, 'Reverse ' +move.origin,))
 
         req_id = req_obj.search(cr, uid, [('good_issue_id', '=', ids[0])], context=context)
         req_value = req_obj.browse(cr, uid, req_id, context=context)

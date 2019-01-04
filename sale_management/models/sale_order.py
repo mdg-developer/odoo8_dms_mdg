@@ -220,6 +220,7 @@ class sale_order(osv.osv):
         'credit_invoice_balance' :fields.float('Credit Invoice Balance'),   
         'credit_limit_amount' :fields.float('Credit Limit'),   
         'credit_balance' :fields.float('Credit Balance'),   
+        'reverse_date':fields.date('Date for Reverse',required=False),
                }
     def action_reverse(self, cr, uid, ids, context=None):
         pick_obj = self.pool.get('stock.picking')
@@ -229,6 +230,10 @@ class sale_order(osv.osv):
         detailObj = None
         so_value = self.browse(cr, uid, ids[0], context=context)
         so_no=so_value.name
+        reverse_date=so_value.reverse_date    
+        if not reverse_date:
+            raise osv.except_osv(_('Warning'),
+                     _('Please Insert Reverse Date'))            
         pick_ids = []
         pick_ids = pick_obj.search(cr, uid, [('origin', '=', so_no),('state','=','done')], context=context)
         invoice_ids = invoice_obj.search(cr, uid, [('origin', '=', so_no),('state','in',('open','credit_state'))], context=context)
@@ -264,8 +269,10 @@ class sale_order(osv.osv):
                                         'procure_method': 'make_to_stock',
                                       #  'restrict_lot_id': data_get.lot_id.id,
                                         'move_dest_id': move_dest_id,
+                                        'origin':'Reverse ' + move.origin,
                                 })
                     move_obj.action_done(cr, uid, move_id, context=context)  
+            cr.execute("update stock_move set date=%s where origin=%s", (reverse_date, 'Reverse ' +move.origin,))
 
          #   pick_obj.action_confirm(cr, uid, [new_picking], context=context)
           #  pick_obj.force_assign(cr, uid, [new_picking], context)  

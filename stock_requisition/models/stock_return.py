@@ -881,7 +881,7 @@ class stock_return(osv.osv):
                                       'current_location':current_location,
                                       'current_qty':qty,
                                       }, context=context)    
-        cr.execute("update stock_move set date=%s where origin=%s", (return_date, origin,))
+        cr.execute("update stock_move set is_exchange =False,date=%s where origin=%s", (return_date, origin,))
         return self.write(cr, uid, ids, {'state':'received'})      
 
             

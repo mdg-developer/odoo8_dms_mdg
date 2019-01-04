@@ -109,7 +109,8 @@
 					<field name="delivery_remark" />
 					<field name="rebate_later" />
 					<field name="ignore_credit_limit" />
-
+					<field name="reverse_date"
+						attrs="{'readonly':[('state','=','reversed')],'invisible': [('state','not in',('manual','progress'))]}" />
 				</field>
 				<field name="date_order" position="after">
 					<field name="credit_allow" invisible="1" />

@@ -61,7 +61,7 @@
 						<group>
 							<group>
 								<button name="retrieve_data" string="Retrieve" type="object"
-									widget="statinfo" class="oe_highlight" />
+									widget="statinfo" class="oe_highlight"  attrs="{'invisible':[('state','!=','draft')]}"/>
 
 							</group>
 							<group>
