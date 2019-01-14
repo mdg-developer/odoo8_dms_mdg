@@ -20,8 +20,8 @@ class pendingdelivery(osv.osv):
                 'state':fields.selection([('draft', 'Draft'),
                                                 ('done', 'Complete')], string='Status',readonly=True),     
                 'delivery_team_id':fields.many2one('crm.case.section','Delivery Team',readonly=True),
-                'latitude':fields.float('Geo Latitude'),
-                'longitude':fields.float('Geo Longitude'),
+                'latitude':fields.float('Geo Latitude', digits=(14,15)),
+                'longitude':fields.float('Geo Longitude', digits=(14,15)),
                 'distance_status':fields.char('Distance Status'),
                 'geo_point':fields.char('Geo Point'),
               }

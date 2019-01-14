@@ -295,6 +295,8 @@
 				<field name="picking_policy" position="after">
 					<field name="so_latitude" digits="(14,15)"></field>
 					<field name="so_longitude" digits="(14,15)"></field>
+									<field name="distance_status"/>
+
 					<button name="geo_location" string="Show Geo Location"
 						class="oe_highlight" type="object" />
 				</field>

@@ -462,6 +462,8 @@ class sale_order(osv.osv):
             'credit_invoice_balance' : order.credit_invoice_balance,
             'credit_limit_amount' : order.credit_limit_amount,
             'credit_balance' :   order.credit_balance,  
+            'latitude':order.so_latitude,
+            'longitude':order.so_longitude,
         }
 
         # Care for deprecated _inv_get() hook - FIXME: to be removed after 6.1

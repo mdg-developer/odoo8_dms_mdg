@@ -20,8 +20,8 @@ class customer_visit(osv.osv):
         'sale_plan_day_id':fields.many2one('sale.plan.day', 'Sale Plan Day'),
         'sale_plan_trip_id':fields.many2one('sale.plan.trip', 'Sale Plan Trip'),
         'tablet_id':fields.many2one('tablets.information', 'Tablet ID'),
-        'latitude':fields.float('Geo Latitude'),
-        'longitude':fields.float('Geo Longitude'),
+        'latitude':fields.float('Geo Latitude', digits=(14,15)),
+        'longitude':fields.float('Geo Longitude', digits=(14,15)),
        'sale_team_id':fields.many2one('crm.case.section', 'Sale Team'),
        'date':fields.datetime('Date'),
         'visit_reason':fields.selection([

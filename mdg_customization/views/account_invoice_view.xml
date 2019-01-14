@@ -37,6 +37,9 @@
 					<field name="is_entry" readonly="1" />
 					<field name="latitude" />
 					<field name="longitude" />
+									<field name="distance_status"/>
+
+					
 				</field>
 				<xpath expr="//field[@name='tax_line']" position="before">
 				    <group>
