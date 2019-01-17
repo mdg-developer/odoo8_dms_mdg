@@ -172,6 +172,10 @@
 						attrs="{'invisible':[('is_entry','!=',True)]}" />
 					<field name="cancel_user_id"
 						attrs="{'readonly':[('state','=','cancel')],'invisible':[('state','not in',('cancel'))]}"></field>
+					<field name="so_latitude" digits="(14,15)"></field>
+					<field name="so_longitude" digits="(14,15)"></field>
+					<field name="distance_status" />
+
 				</field>
 				<field name="invoiced" position="before">
 
@@ -292,13 +296,12 @@
 						domain="[('id', '=',issue_warehouse_id)]" options="{'no_create': True}"
 						groups="stock.group_locations" attrs="{'readonly':[('state','!=','draft')]}" />
 				</field>
-				<field name="picking_policy" position="after">
-					<field name="so_latitude" digits="(14,15)"></field>
-					<field name="so_longitude" digits="(14,15)"></field>
-									<field name="distance_status"/>
+				<field name="incoterm" position="before">
 
 					<button name="geo_location" string="Show Geo Location"
 						class="oe_highlight" type="object" />
+					<br />
+
 				</field>
 			</field>
 		</record>
