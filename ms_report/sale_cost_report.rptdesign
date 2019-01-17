@@ -9,7 +9,7 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
     <property name="imageDPI">96</property>
     <list-property name="libraries">
         <structure>
-            <property name="fileName">ms_report/birt_report/report_library.rptlibrary</property>
+            <property name="fileName">birt_report/report_library.rptlibrary</property>
             <property name="namespace">report_library</property>
         </structure>
     </list-property>
@@ -396,6 +396,7 @@ where ai.date_invoice
  --$branch_id$
  --$sale_team_id$
  and ail.uos_id=sm.product_uom
+ and ail.quantity=sm.product_uom_qty
  group by ail.uos_id,pt.uom_id,sm.product_uom,pp.name_template,pp.id,ai.number,rp.name,rp.customer_code,branch.name,crm.name,sm.picking_id,ai.date_invoice,so.name
  order by ai.date_invoice,ai.number
  )A
