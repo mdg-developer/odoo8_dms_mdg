@@ -499,8 +499,16 @@ class mobile_sale_import(osv.osv):
                             partner_id = partner_ids[0]
                     
         #                 Calculate the Discount Amount
+                    if discount_amount!=0:
+                        discount_amount=discount_amount
+                        
                     if discount != 0:
-                        discount_amount = (qty_pcs * unit_price) * (discount / 100)
+                        if discount_amount >0:
+                            discount_amount = discount_amount + (qty_pcs * unit_price) * (discount / 100)
+                        else:
+                            
+                            discount_amount = (qty_pcs * unit_price) * (discount / 100)
+                        
           
                     if tax:
                         cr.execute(""" select id from account_tax where description = %s """, (tax,))

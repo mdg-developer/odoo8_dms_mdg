@@ -41,6 +41,7 @@ class sale_report(osv.osv):
        'district': fields.text('district','District', readonly=True),
        'demarcation_id': fields.many2one('sale.demarcation','Demarcation', readonly=True),
        'state_id': fields.many2one('res.country.state','Region', readonly=True),
+        'tb_ref_no': fields.char('Order Reference', size=64),
     }
     
     
@@ -75,6 +76,7 @@ class sale_report(osv.osv):
                     s.branch_id as branch_id,
                     s.township as township_id,
                     s.state_id as state_id,
+                    s.tb_ref_no,
                     rp.district as district,
                     rp.demarcation_id as demarcation_id,
                     t.group as group_id,
@@ -122,7 +124,8 @@ class sale_report(osv.osv):
                     s.township,
                     s.state_id,
                     rp.district,
-                    rp.demarcation_id
+                    rp.demarcation_id,
+                    s.tb_ref_no
         """
         return group_by_str
 
