@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.4.1.v201408290142 Build &lt;4.4.1.v20140916-1320></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.7.0.v201706222054</property>
     <property name="units">in</property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="bidiLayoutOrientation">ltr</property>
     <property name="imageDPI">120</property>
     <list-property name="libraries">
         <structure>
-            <property name="fileName">birt_report/general_library.rptlibrary</property>
-            <property name="namespace">general_library</property>
+            <property name="fileName">birt_report/rb_report_library.rptlibrary</property>
+            <property name="namespace">rb_report_library</property>
         </structure>
     </list-property>
     <parameters>
@@ -20,6 +20,7 @@
             <property name="distinct">true</property>
             <list-property name="selectionList"/>
             <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
             <property name="controlType">text-box</property>
             <structure name="format">
                 <property name="category">Unformatted</property>
@@ -33,6 +34,7 @@
             <property name="distinct">true</property>
             <list-property name="selectionList"/>
             <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
             <property name="controlType">text-box</property>
             <structure name="format">
                 <property name="category">Unformatted</property>
@@ -80,7 +82,7 @@
         <scalar-parameter name="day_name" id="16">
             <text-property name="promptText">Day Name</text-property>
             <property name="valueType">dynamic</property>
-            <property name="isRequired">false</property>
+            <property name="isRequired">true</property>
             <property name="dataSetName">plan_day</property>
             <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
             <expression name="labelExpr" type="javascript">dataSetRow["name"]</expression>
@@ -99,12 +101,134 @@
         </scalar-parameter>
     </parameters>
     <data-sources>
-        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="199"
- extends="general_library.Data Source"/>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="301"
+ extends="rb_report_library.Data Source"/>
     </data-sources>
     <data-sets>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="DataSet" id="8">
-            <list-property name="columnHints"/>
+            <property name="nullsOrdering">nulls lowest</property>
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">date</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">date</text-property>
+                    <text-property name="heading">date</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">branch</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">branch</text-property>
+                    <text-property name="heading">branch</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">sale_team</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">sale_team</text-property>
+                    <text-property name="heading">sale_team</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">day_name</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">day_name</text-property>
+                    <text-property name="heading">day_name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">visit_plan</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">visit_plan</text-property>
+                    <text-property name="heading">visit_plan</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">visit_only_as_plan</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">visit_only_as_plan</text-property>
+                    <text-property name="heading">visit_only_as_plan</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">not_visit_as_plan</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">not_visit_as_plan</text-property>
+                    <text-property name="heading">not_visit_as_plan</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">plan_invoice</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">plan_invoice</text-property>
+                    <text-property name="heading">plan_invoice</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">effective_rate</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">effective_rate</text-property>
+                    <text-property name="heading">effective_rate</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">total_other_visit_withoud_plan</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">total_other_visit_withoud_plan</text-property>
+                    <text-property name="heading">total_other_visit_withoud_plan</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">visit_only_from_other_visit</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">visit_only_from_other_visit</text-property>
+                    <text-property name="heading">visit_only_from_other_visit</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">total_invoice_from_other_visit</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">total_invoice_from_other_visit</text-property>
+                    <text-property name="heading">total_invoice_from_other_visit</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">other_day_name</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">other_day_name</text-property>
+                    <text-property name="heading">other_day_name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">actual_visit</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">actual_visit</text-property>
+                    <text-property name="heading">actual_visit</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">visit_only_as_plan_1</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">visit_only_as_plan</text-property>
+                    <text-property name="heading">visit_only_as_plan</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">ar_invoice</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">ar_invoice</text-property>
+                    <text-property name="heading">ar_invoice</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">location_yes</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">location_yes</text-property>
+                    <text-property name="heading">location_yes</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">location_no</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">location_no</text-property>
+                    <text-property name="heading">location_no</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">image_yes</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">image_yes</text-property>
+                    <text-property name="heading">image_yes</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">image_no</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">image_no</text-property>
+                    <text-property name="heading">image_no</text-property>
+                </structure>
+            </list-property>
             <list-property name="parameters">
                 <structure>
                     <property name="name">param_1</property>
@@ -113,7 +237,6 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">1</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -124,7 +247,6 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">2</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -135,7 +257,6 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">3</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -146,7 +267,6 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">4</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -157,7 +277,6 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">5</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -168,7 +287,6 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">6</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -179,7 +297,6 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">7</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -190,7 +307,6 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">8</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -201,7 +317,6 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">9</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -212,7 +327,6 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">10</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -223,7 +337,6 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">11</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -234,7 +347,6 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">12</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -245,7 +357,6 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">13</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -256,7 +367,6 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">14</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -267,7 +377,6 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">15</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -278,7 +387,6 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">16</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -289,7 +397,6 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">17</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -300,7 +407,6 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">18</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -311,7 +417,6 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">19</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -322,7 +427,6 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">20</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -333,7 +437,6 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">21</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -344,7 +447,6 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">22</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -355,7 +457,6 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">23</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -366,7 +467,6 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">24</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -377,7 +477,6 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">25</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -388,7 +487,6 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">26</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -399,7 +497,6 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">27</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -410,7 +507,6 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">28</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -444,118 +540,119 @@
                     </structure>
                     <structure>
                         <property name="position">6</property>
-                        <property name="name">not_visit_as_plan</property>
-                        <property name="dataType">decimal</property>
-                    </structure>
-                    <structure>
-                        <property name="position">7</property>
-                        <property name="name">plan_invoice</property>
-                        <property name="dataType">decimal</property>
-                    </structure>
-                    <structure>
-                        <property name="position">8</property>
-                        <property name="name">effective_rate</property>
-                        <property name="dataType">decimal</property>
-                    </structure>
-                    <structure>
-                        <property name="position">9</property>
-                        <property name="name">total_other_visit_withoud_plan</property>
-                        <property name="dataType">decimal</property>
-                    </structure>
-                    <structure>
-                        <property name="position">10</property>
-                        <property name="name">visit_only_from_other_visit</property>
-                        <property name="dataType">decimal</property>
-                    </structure>
-                    <structure>
-                        <property name="position">11</property>
-                        <property name="name">total_invoice_from_other_visit</property>
-                        <property name="dataType">decimal</property>
-                    </structure>
-                    <structure>
-                        <property name="position">12</property>
-                        <property name="name">other_day_name</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">13</property>
-                        <property name="name">actual_visit</property>
-                        <property name="dataType">decimal</property>
-                    </structure>
-                    <structure>
-                        <property name="position">14</property>
                         <property name="name">visit_only_as_plan</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
+                        <property name="position">7</property>
+                        <property name="name">not_visit_as_plan</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">plan_invoice</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">effective_rate</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
+                        <property name="name">total_other_visit_withoud_plan</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">11</property>
+                        <property name="name">visit_only_from_other_visit</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">12</property>
+                        <property name="name">total_invoice_from_other_visit</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">13</property>
+                        <property name="name">other_day_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">14</property>
+                        <property name="name">actual_visit</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
                         <property name="position">15</property>
-                        <property name="name">ar_invoice</property>
+                        <property name="name">visit_only_as_plan_1</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">16</property>
-                        <property name="name">location_yes</property>
+                        <property name="name">ar_invoice</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">17</property>
-                        <property name="name">location_no</property>
+                        <property name="name">location_yes</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">18</property>
-                        <property name="name">image_yes</property>
+                        <property name="name">location_no</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">19</property>
+                        <property name="name">image_yes</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">20</property>
                         <property name="name">image_no</property>
                         <property name="dataType">decimal</property>
                     </structure>
                 </list-property>
             </structure>
-            <method name="beforeOpen"><![CDATA[if (params["branch"].value == null )
+            <method name="beforeOpen"><![CDATA[if (params["day_name"].value == null )
 {
-this.queryText =this.queryText.replace("--$branch$", "")
-this.queryText =this.queryText.replace("--$cv.branch$", "")
-this.queryText =this.queryText.replace("--$spd.branch$", "")
-this.queryText =this.queryText.replace("--$so_branch$", "")
+   this.queryText =this.queryText.replace("--$cv_sale_plan_id$", "")
+   this.queryText =this.queryText.replace("--$spd_sale_plan_id$", "")
+   this.queryText =this.queryText.replace("--$so_sale_plan_day_id$", "")
 }
 else
 {
-this.queryText =this.queryText.replace("--$branch$", " and branch_id="+params["branch"])
-this.queryText =this.queryText.replace("--$cv.branch$", " and cv.branch_id="+params["branch"])
-this.queryText =this.queryText.replace("--$spd.branch$", " and spd.branch_id="+params["branch"])
-this.queryText =this.queryText.replace("--$so_branch$", " and so.branch_id="+params["branch"])
+this.queryText =this.queryText.replace("--$cv_sale_plan_id$", "and cv.sale_plan_day_id="+params["day_name"])
+this.queryText =this.queryText.replace("--$spd_sale_plan_id$", "and spd.id="+params["day_name"])
+this.queryText =this.queryText.replace("--$so_sale_plan_day_id$", "and so.sale_plan_day_id="+params["day_name"])
+}
+if (params["branch"].value == null )
+{
+   this.queryText =this.queryText.replace("--$cv_branch_id$", "")
+   this.queryText =this.queryText.replace("--$spd_branch_id$", "")
+   this.queryText =this.queryText.replace("--$so_branch_id$", "")
+  
+}
+else
+{
+this.queryText =this.queryText.replace("--$cv_branch_id$", " and cv.branch_id="+params["branch"])
+this.queryText =this.queryText.replace("--$spd_branch_id$", "and spd.branch_id="+params["branch"])
+this.queryText =this.queryText.replace("--$so_branch_id$", "and so.branch_id="+params["branch"])
 }
 if (params["sale_team"].value == null )
 {
-this.queryText =this.queryText.replace("--$sale_team$", "")
-this.queryText =this.queryText.replace("--$cv.sale_team$", "")
-this.queryText =this.queryText.replace("--$spd.sale_team$", "")
-this.queryText =this.queryText.replace("--$so_order_sale_team$", "")
+    this.queryText =this.queryText.replace("--$cv_sale_team_id$", "")
+   this.queryText =this.queryText.replace("--$spd_sale_team$", "")
+   this.queryText =this.queryText.replace("--$so_sale_team_id$", "")
 }
 else
 {
-this.queryText =this.queryText.replace("--$sale_team$", " and sale_team_id="+params["sale_team"])
-this.queryText =this.queryText.replace("--$cv.sale_team$", " and cv.sale_team_id="+params["sale_team"])
-this.queryText =this.queryText.replace("--$spd.sale_team$", " and spd.sale_team="+params["sale_team"])
-this.queryText =this.queryText.replace("--$so_order_sale_team$", " and so.section_id="+params["sale_team"])
+this.queryText =this.queryText.replace("--$cv_sale_team_id$", "and cv.sale_team_id="+params["sale_team"])
+this.queryText =this.queryText.replace("--$spd_sale_team$", "and spd.sale_team="+params["sale_team"])
+this.queryText =this.queryText.replace("--$so_sale_team_id$", "and so.section_id="+params["sale_team"])
 }
-if (params["day_name"].value == null )
-{
-this.queryText =this.queryText.replace("--$sale_plan_day_id$", "")
-this.queryText =this.queryText.replace("--$cv.sale_plan_day_id$", "")
-this.queryText =this.queryText.replace("--$spd.sale_plan_day_id$", "")
-this.queryText =this.queryText.replace("--$so_sale_plan_day_id$", "")
-}
-else
-{
-this.queryText =this.queryText.replace("--$sale_plan_day_id$", " and sale_plan_day_id="+params["day_name"])
-this.queryText =this.queryText.replace("--$cv.sale_plan_day_id$", " and cv.sale_plan_day_id="+params["day_name"])
-this.queryText =this.queryText.replace("--$spd.sale_plan_day_id$", " and spd.id="+params["day_name"])
-this.queryText =this.queryText.replace("--$so_sale_plan_day_id$", " and so.sale_plan_day_id="+params["day_name"])
-}]]></method>
+]]></method>
             <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
                 <structure>
@@ -563,659 +660,285 @@ this.queryText =this.queryText.replace("--$so_sale_plan_day_id$", " and so.sale_
                     <property name="name">date</property>
                     <property name="nativeName">date</property>
                     <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
                 </structure>
                 <structure>
                     <property name="position">2</property>
                     <property name="name">branch</property>
                     <property name="nativeName">branch</property>
                     <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
                     <property name="position">3</property>
                     <property name="name">sale_team</property>
                     <property name="nativeName">sale_team</property>
                     <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
                     <property name="position">4</property>
                     <property name="name">day_name</property>
                     <property name="nativeName">day_name</property>
                     <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
                     <property name="position">5</property>
                     <property name="name">visit_plan</property>
                     <property name="nativeName">visit_plan</property>
                     <property name="dataType">decimal</property>
+                    <property name="nativeDataType">-5</property>
                 </structure>
                 <structure>
                     <property name="position">6</property>
-                    <property name="name">not_visit_as_plan</property>
-                    <property name="nativeName">not_visit_as_plan</property>
-                    <property name="dataType">decimal</property>
-                </structure>
-                <structure>
-                    <property name="position">7</property>
-                    <property name="name">plan_invoice</property>
-                    <property name="nativeName">plan_invoice</property>
-                    <property name="dataType">decimal</property>
-                </structure>
-                <structure>
-                    <property name="position">8</property>
-                    <property name="name">effective_rate</property>
-                    <property name="nativeName">effective_rate</property>
-                    <property name="dataType">decimal</property>
-                </structure>
-                <structure>
-                    <property name="position">9</property>
-                    <property name="name">total_other_visit_withoud_plan</property>
-                    <property name="nativeName">total_other_visit_withoud_plan</property>
-                    <property name="dataType">decimal</property>
-                </structure>
-                <structure>
-                    <property name="position">10</property>
-                    <property name="name">visit_only_from_other_visit</property>
-                    <property name="nativeName">visit_only_from_other_visit</property>
-                    <property name="dataType">decimal</property>
-                </structure>
-                <structure>
-                    <property name="position">11</property>
-                    <property name="name">total_invoice_from_other_visit</property>
-                    <property name="nativeName">total_invoice_from_other_visit</property>
-                    <property name="dataType">decimal</property>
-                </structure>
-                <structure>
-                    <property name="position">12</property>
-                    <property name="name">other_day_name</property>
-                    <property name="nativeName">other_day_name</property>
-                    <property name="dataType">string</property>
-                </structure>
-                <structure>
-                    <property name="position">13</property>
-                    <property name="name">actual_visit</property>
-                    <property name="nativeName">actual_visit</property>
-                    <property name="dataType">decimal</property>
-                </structure>
-                <structure>
-                    <property name="position">14</property>
                     <property name="name">visit_only_as_plan</property>
                     <property name="nativeName">visit_only_as_plan</property>
                     <property name="dataType">decimal</property>
+                    <property name="nativeDataType">-5</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">not_visit_as_plan</property>
+                    <property name="nativeName">not_visit_as_plan</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">-5</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">plan_invoice</property>
+                    <property name="nativeName">plan_invoice</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">-5</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
+                    <property name="name">effective_rate</property>
+                    <property name="nativeName">effective_rate</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">-5</property>
+                </structure>
+                <structure>
+                    <property name="position">10</property>
+                    <property name="name">total_other_visit_withoud_plan</property>
+                    <property name="nativeName">total_other_visit_withoud_plan</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
+                </structure>
+                <structure>
+                    <property name="position">11</property>
+                    <property name="name">visit_only_from_other_visit</property>
+                    <property name="nativeName">visit_only_from_other_visit</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">-5</property>
+                </structure>
+                <structure>
+                    <property name="position">12</property>
+                    <property name="name">total_invoice_from_other_visit</property>
+                    <property name="nativeName">total_invoice_from_other_visit</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
+                </structure>
+                <structure>
+                    <property name="position">13</property>
+                    <property name="name">other_day_name</property>
+                    <property name="nativeName">other_day_name</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">14</property>
+                    <property name="name">actual_visit</property>
+                    <property name="nativeName">actual_visit</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
                     <property name="position">15</property>
-                    <property name="name">ar_invoice</property>
-                    <property name="nativeName">ar_invoice</property>
+                    <property name="name">visit_only_as_plan_1</property>
+                    <property name="nativeName">visit_only_as_plan</property>
                     <property name="dataType">decimal</property>
+                    <property name="nativeDataType">-5</property>
                 </structure>
                 <structure>
                     <property name="position">16</property>
-                    <property name="name">location_yes</property>
-                    <property name="nativeName">location_yes</property>
+                    <property name="name">ar_invoice</property>
+                    <property name="nativeName">ar_invoice</property>
                     <property name="dataType">decimal</property>
+                    <property name="nativeDataType">-5</property>
                 </structure>
                 <structure>
                     <property name="position">17</property>
-                    <property name="name">location_no</property>
-                    <property name="nativeName">location_no</property>
+                    <property name="name">location_yes</property>
+                    <property name="nativeName">location_yes</property>
                     <property name="dataType">decimal</property>
+                    <property name="nativeDataType">-5</property>
                 </structure>
                 <structure>
                     <property name="position">18</property>
-                    <property name="name">image_yes</property>
-                    <property name="nativeName">image_yes</property>
+                    <property name="name">location_no</property>
+                    <property name="nativeName">location_no</property>
                     <property name="dataType">decimal</property>
+                    <property name="nativeDataType">-5</property>
                 </structure>
                 <structure>
                     <property name="position">19</property>
+                    <property name="name">image_yes</property>
+                    <property name="nativeName">image_yes</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">-5</property>
+                </structure>
+                <structure>
+                    <property name="position">20</property>
                     <property name="name">image_no</property>
                     <property name="nativeName">image_no</property>
                     <property name="dataType">decimal</property>
+                    <property name="nativeDataType">-5</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select s.date,s.branch,s.sale_team,s.day_name,
-COALESCE(visit_plan.visit_plan,0)visit_plan,
-
-COALESCE(visit_plan.visit_plan,0)-COALESCE(visit_only_as_plan.visit_only_as_plan,0)not_visit_as_plan,
---(visit_plan.visit_plan-visit_only_as_plan.visit_only_as_plan) not_visit_as_plan,
-COALESCE(plan_invoice.plan_invoice,0) plan_invoice,
-COALESCE(plan_invoice.plan_invoice*100/visit_plan.visit_plan,0)effective_rate,
---(plan_invoice.plan_invoice*100/visit_plan.visit_plan) effective_rate,
-(COALESCE(visit_only_from_other_visit.visit_only_from_other_visit,0) + COALESCE(total_invoice_from_other_visit.total_invoice_from_other_visit,0))total_other_visit_withoud_plan,
-COALESCE(visit_only_from_other_visit.visit_only_from_other_visit,0)visit_only_from_other_visit,
-COALESCE(total_invoice_from_other_visit.total_invoice_from_other_visit,0)total_invoice_from_other_visit,
-total_invoice_from_other_visit.other_day_name other_day_name,
--- other_invoice1,
--- other_day_name1,
--- other_invoice2,
--- other_day_name2,
--- other_invoice3,
--- oter_day_name3,
-(COALESCE(visit_only_as_plan.visit_only_as_plan,0) + COALESCE(plan_invoice.plan_invoice,0)+ COALESCE((COALESCE(visit_only_from_other_visit.visit_only_from_other_visit,0) + COALESCE(total_invoice_from_other_visit.total_invoice_from_other_visit,0)),0)) actual_visit,
-COALESCE(visit_only_as_plan.visit_only_as_plan,0)visit_only_as_plan,
-COALESCE(ar_invoice.ar_invoice,0)ar_invoice,
-COALESCE(location_yes.location_yes,0)location_yes,
---location_yes.location_yes location_yes,
-COALESCE(location_no.location_no,0)location_no,
-COALESCE(image_yes.image_yes,0)image_yes,
-COALESCE(image_no.image_no,0)image_no
-
+            <xml-property name="queryText"><![CDATA[select
+a.date,a.branch,a.sale_team,a.day_name,
+COALESCE(a.visit_plan,0)visit_plan,
+COALESCE(a.visit_only_as_plan,0)visit_only_as_plan,
+COALESCE(a.visit_plan,0)-COALESCE(a.visit_only_as_plan+a.plan_invoice,0)not_visit_as_plan,
+COALESCE(a.plan_invoice,0) plan_invoice,
+COALESCE(a.plan_invoice*100/a.visit_plan,0)effective_rate,
+(COALESCE(a.visit_only_from_other_visit,0) + COALESCE(a.total_invoice_from_other_visit,0))total_other_visit_withoud_plan,
+COALESCE(a.visit_only_from_other_visit,0)visit_only_from_other_visit,
+COALESCE(a.total_invoice_from_other_visit,0)total_invoice_from_other_visit,
+a.other_day_name other_day_name,
+(COALESCE(a.visit_only_as_plan,0) + COALESCE(a.plan_invoice,0)+ COALESCE((COALESCE(a.visit_only_from_other_visit,0) + COALESCE(a.total_invoice_from_other_visit,0)),0)) actual_visit,
+COALESCE(a.visit_only_as_plan,0)visit_only_as_plan,
+COALESCE(a.ar_invoice,0)ar_invoice,
+COALESCE(a.location_yes,0)location_yes,
+COALESCE(a.location_no,0)location_no,
+COALESCE(a.image_yes,0)image_yes,
+COALESCE(a.image_no,0)image_no
 from
-(select  distinct cv.date::date date,branch.name branch,ccs.name sale_team,spd.name day_name,spd.branch_id from customer_visit cv
+((select  distinct cv.date::date date,branch.name branch,ccs.name sale_team,spd.name day_name,spd.branch_id,cv.sale_plan_day_id,cv.sale_team_id from customer_visit cv
   left join res_branch branch on cv.branch_id=branch.id
   left join crm_case_section ccs on cv.sale_team_id=ccs.id
   left join sale_plan_day spd on spd.id=cv.sale_plan_day_id
-  
-     where ((cv.date at time zone 'utc' )at time zone 'asia/rangoon')::date
-				between ? and ?
-				--$cv.branch$
-				--$cv.sale_team$
-				--$cv.sale_plan_day_id$
+  where ((cv.date at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
+				--$cv_branch_id$
+				--$cv_sale_team_id$
+				--$cv_sale_plan_id$
   )s
- left join
+left join
 (select  count(rspd.partner_id) visit_plan,spd.branch_id from sale_plan_day spd 
 		join res_partner_sale_plan_day_rel rspd on rspd.sale_plan_day_id=spd.id
-		where ((spd.date at time zone 'utc' )at time zone 'asia/rangoon')::date
-				between ? and ?
-				--$spd.branch$
-				--$spd.sale_team$
-				--$spd.sale_plan_day_id$
-				group by spd.branch_id
-				
-)as visit_plan on visit_plan.branch_id=s.branch_id
+		where ((spd.date at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
+		--$spd_sale_plan_id$
+		--$spd_branch_id$
+		--$spd_sale_team_id$		
+		group by spd.branch_id
+		)as visit_plan on visit_plan.branch_id=s.branch_id
 left join
-
-
-(select count(customer_id) visit_only_as_plan,branch_id from customer_visit 
-				where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date
+(select count(cv.customer_id) visit_only_as_plan,cv.branch_id from customer_visit  cv
+				where ((cv.date at time zone 'utc' )at time zone 'asia/rangoon')::date
 				between ? and ?
-				--$sale_plan_day_id$
-				--$branch$
-				--$sale_team$
-				group by branch_id
-				
+				--$cv_branch_id$
+				--$cv_sale_team_id$
+				--$cv_sale_plan_id$
+				group by cv.branch_id
 				)visit_only_as_plan on visit_only_as_plan.branch_id=s.branch_id
-
 left join
-
-
-(select count(so.partner_id) plan_invoice,branch_id from sale_order so
+(select count(so.partner_id) plan_invoice,so.branch_id from sale_order so
 where ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date
 				between ? and ?
-				--$so_sale_plan_day_id$
-				--$so_branch$
-				--$so_order_sale_team$
-				and sale_plan_day_id in(select id from sale_plan_day spd
-				where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date
-				between ? and ?
-				--$spd sale_plan_day_id$
-				--$spd.branch$
-				--$spd.sale_team$)
+				--$so_branch_id$
+				--$so_sale_team_id$
+				and so.sale_plan_day_id in(select id from sale_plan_day spd
+				where ((spd.date at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
+				--$spd_sale_plan_id$
+				--$spd_branch_id$
+				--$spd_sale_team_id$
+				)
 				group by branch_id
 				)plan_invoice on plan_invoice.branch_id=s.branch_id
-
 left join
-
-(select count(customer_id) visit_only_from_other_visit,branch_id from customer_visit 
- where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date
+(select count(cv.customer_id) visit_only_from_other_visit,cv.branch_id from customer_visit cv 
+				where ((cv.date at time zone 'utc' )at time zone 'asia/rangoon')::date
 				between ? and ?
-				--$branch$
-				--$sale_team$
-and sale_plan_day_id  not in (select id from sale_plan_day spd 
-				join res_partner_sale_plan_day_rel rspd on rspd.sale_plan_day_id=spd.id
-				where((spd.date at time zone 'utc' )at time zone 'asia/rangoon')::date
-				between ? and ?
-				--$spd.branch$
-				--$spd.sale_team$
-				--$spd.sale_plan_day_id$)
- group by branch_id) visit_only_from_other_visit on visit_only_from_other_visit.branch_id=s.branch_id
-
- left join 
+				--$cv_branch_id$
+				--$cv_sale_team_id$
+                and cv.sale_plan_day_id  not in (select spd.id from sale_plan_day spd 
+                where ((spd.date at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
+                --$spd_sale_plan_id$
+                --$spd_branch_id$
+                --$spd_sale_team_id$
+				)
+ group by cv.branch_id) visit_only_from_other_visit on visit_only_from_other_visit.branch_id=s.branch_id
+left join 
 (select sum(invoice)total_invoice_from_other_visit,branch_id,string_agg(name, ', ') AS other_day_name 
 from (
 select count(so.partner_id) invoice,so.branch_id,s.name from sale_order so
 left join sale_plan_day s on s.id=so.sale_plan_day_id
  where ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date
 				between ? and ?
-				--$so_branch$
-				--$so_order_sale_team$
-				and sale_plan_day_id not in (select spd.id from sale_plan_day spd
-				where((spd.date at time zone 'utc' )at time zone 'asia/rangoon')::date
-				between ? and ?
-				--$spd.branch$
-				--$spd.sale_plan_day_id$
-				--$spd.sale_team$
+				--$so_branch_id$
+				--$so_sale_team_id$
+				and so.sale_plan_day_id not in (select id from sale_plan_day spd
+				where ((spd.date at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
+				--$spd_sale_plan_id$
+				--$spd_branch_id$
+				--$spd_sale_team_id$
 				)
 				group by so.branch_id,s.name)foo
 group by branch_id) total_invoice_from_other_visit on total_invoice_from_other_visit.branch_id=s.branch_id
-
 left join 
 (select count(so.partner_id) ar_invoice,so.branch_id from sale_order so
-  where((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date
+ where((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date
 				between ? and ?
-				--$so_branch$
-				--$so_order_sale_team$
+				--$so_branch_id$
+				--$so_sale_team_id$
 				--$so_sale_plan_day_id$
 				and so.payment_type='credit'
 				group by branch_id )ar_invoice on ar_invoice.branch_id=s.branch_id
 left join 
-(select count(customer_id) location_yes,branch_id from customer_visit  
-where((date at time zone 'utc' )at time zone 'asia/rangoon')::date
+(select count(cv.customer_id) location_yes,cv.branch_id from customer_visit cv  
+where((cv.date at time zone 'utc' )at time zone 'asia/rangoon')::date
 				between ? and ?
-				--$branch$
-				--$sale_team$
-				and latitude!=0
-				--$sale_plan_day_id$
-				group by branch_id)location_yes on location_yes.branch_id=s.branch_id
+				--$cv_branch_id$
+				--$cv_sale_team_id$
+				--$cv_sale_plan_id$
+				and cv.latitude!=0
+				and cv.longitude!=0
+				group by cv.branch_id)location_yes on location_yes.branch_id=s.branch_id
+left join 
+(select count(cv.customer_id) location_no,cv.branch_id from customer_visit  cv
+where((cv.date at time zone 'utc' )at time zone 'asia/rangoon')::date
+				between ? and ?
+				--$cv_branch_id$
+				--$cv_sale_team_id$
+				--$cv_sale_plan_id$
+				and cv.latitude=0
+				and cv.longitude=0
+				group by cv.branch_id)location_no on location_no.branch_id=s.branch_id
+left join 
+(select count(cv.customer_id) image_no,cv.branch_id from customer_visit cv
+where((cv.date at time zone 'utc' )at time zone 'asia/rangoon')::date
+				between ? and ?
+				--$cv_branch_id$
+				--$cv_sale_team_id$
+				--$cv_sale_plan_id$
+				and cv.image is not null
+				group by cv.branch_id)image_no on image_no.branch_id=s.branch_id
 
 left join 
-
-(select count(customer_id) location_no,branch_id from customer_visit  
-where((date at time zone 'utc' )at time zone 'asia/rangoon')::date
+(select count(cv.customer_id) image_yes,cv.branch_id from customer_visit cv
+where((cv.date at time zone 'utc' )at time zone 'asia/rangoon')::date
 				between ? and ?
-				--$branch$
-				--$sale_team$
-				and latitude=0
-				--$sale_plan_day_id$
-				group by branch_id) location_no on location_no.branch_id=s.branch_id
-
-left join 
-(select count(customer_id) image_no,branch_id from customer_visit
-where((date at time zone 'utc' )at time zone 'asia/rangoon')::date
-				between ? and ?
-				--$branch$
-				--$sale_team$
-				--$sale_plan_day_id$
-				and image is null
-				group by branch_id)image_no on image_no.branch_id=s.branch_id
-
-left join 
-(select count(customer_id) image_yes,branch_id from customer_visit
-where((date at time zone 'utc' )at time zone 'asia/rangoon')::date
-				between ? and ?
-				--$branch$
-				--$sale_team$
-				--$sale_plan_day_id$
-				and  image is not null 
-				group by branch_id)image_yes on image_yes.branch_id=s.branch_id
-				
-group by s.date,s.branch,s.sale_team,s.day_name,
-visit_plan.visit_plan ,
-visit_only_as_plan.visit_only_as_plan ,
-plan_invoice.plan_invoice,
-visit_only_from_other_visit.visit_only_from_other_visit ,
-total_invoice_from_other_visit.total_invoice_from_other_visit ,
-location_yes.location_yes,
-location_no.location_no,
-image_no.image_no,
-image_yes.image_yes,
-total_invoice_from_other_visit.other_day_name,
-ar_invoice
-order by s.date]]></xml-property>
+				--$cv_branch_id$
+				--$cv_sale_team_id$
+				--$cv_sale_plan_id$
+				and  cv.image is null 
+				group by cv.branch_id)image_yes on image_yes.branch_id=s.branch_id
+)a ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
   <DataSetParameters>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>1</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-        <design:inputAttributes>
-          <design:elementAttributes/>
-        </design:inputAttributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>2</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-        <design:inputAttributes>
-          <design:elementAttributes/>
-        </design:inputAttributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>3</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-        <design:inputAttributes>
-          <design:elementAttributes/>
-        </design:inputAttributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>4</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-        <design:inputAttributes>
-          <design:elementAttributes/>
-        </design:inputAttributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>5</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-        <design:inputAttributes>
-          <design:elementAttributes/>
-        </design:inputAttributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>6</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-        <design:inputAttributes>
-          <design:elementAttributes/>
-        </design:inputAttributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>7</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-        <design:inputAttributes>
-          <design:elementAttributes/>
-        </design:inputAttributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>8</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-        <design:inputAttributes>
-          <design:elementAttributes/>
-        </design:inputAttributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>9</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-        <design:inputAttributes>
-          <design:elementAttributes/>
-        </design:inputAttributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>10</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-        <design:inputAttributes>
-          <design:elementAttributes/>
-        </design:inputAttributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>11</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-        <design:inputAttributes>
-          <design:elementAttributes/>
-        </design:inputAttributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>12</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-        <design:inputAttributes>
-          <design:elementAttributes/>
-        </design:inputAttributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>13</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-        <design:inputAttributes>
-          <design:elementAttributes/>
-        </design:inputAttributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>14</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-        <design:inputAttributes>
-          <design:elementAttributes/>
-        </design:inputAttributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>15</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-        <design:inputAttributes>
-          <design:elementAttributes/>
-        </design:inputAttributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>16</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-        <design:inputAttributes>
-          <design:elementAttributes/>
-        </design:inputAttributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>17</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-        <design:inputAttributes>
-          <design:elementAttributes/>
-        </design:inputAttributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>18</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-        <design:inputAttributes>
-          <design:elementAttributes/>
-        </design:inputAttributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>19</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-        <design:inputAttributes>
-          <design:elementAttributes/>
-        </design:inputAttributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>20</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-        <design:inputAttributes>
-          <design:elementAttributes/>
-        </design:inputAttributes>
-      </design:ParameterDefinition>
-    </parameter>
     <parameter>
       <design:ParameterDefinition>
         <design:inOutMode>In</design:inOutMode>
@@ -1229,9 +952,6 @@ order by s.date]]></xml-property>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
         </design:attributes>
-        <design:inputAttributes>
-          <design:elementAttributes/>
-        </design:inputAttributes>
       </design:ParameterDefinition>
     </parameter>
     <parameter>
@@ -1247,9 +967,6 @@ order by s.date]]></xml-property>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
         </design:attributes>
-        <design:inputAttributes>
-          <design:elementAttributes/>
-        </design:inputAttributes>
       </design:ParameterDefinition>
     </parameter>
     <parameter>
@@ -1265,9 +982,6 @@ order by s.date]]></xml-property>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
         </design:attributes>
-        <design:inputAttributes>
-          <design:elementAttributes/>
-        </design:inputAttributes>
       </design:ParameterDefinition>
     </parameter>
     <parameter>
@@ -1283,9 +997,6 @@ order by s.date]]></xml-property>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
         </design:attributes>
-        <design:inputAttributes>
-          <design:elementAttributes/>
-        </design:inputAttributes>
       </design:ParameterDefinition>
     </parameter>
     <parameter>
@@ -1301,9 +1012,6 @@ order by s.date]]></xml-property>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
         </design:attributes>
-        <design:inputAttributes>
-          <design:elementAttributes/>
-        </design:inputAttributes>
       </design:ParameterDefinition>
     </parameter>
     <parameter>
@@ -1319,9 +1027,6 @@ order by s.date]]></xml-property>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
         </design:attributes>
-        <design:inputAttributes>
-          <design:elementAttributes/>
-        </design:inputAttributes>
       </design:ParameterDefinition>
     </parameter>
     <parameter>
@@ -1337,9 +1042,6 @@ order by s.date]]></xml-property>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
         </design:attributes>
-        <design:inputAttributes>
-          <design:elementAttributes/>
-        </design:inputAttributes>
       </design:ParameterDefinition>
     </parameter>
     <parameter>
@@ -1355,9 +1057,6 @@ order by s.date]]></xml-property>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
         </design:attributes>
-        <design:inputAttributes>
-          <design:elementAttributes/>
-        </design:inputAttributes>
       </design:ParameterDefinition>
     </parameter>
   </DataSetParameters>
@@ -2091,8 +1790,10 @@ from sale_plan_day]]></xml-property>
     </styles>
     <page-setup>
         <simple-master-page name="Simple MasterPage" id="2">
-            <property name="type">us-ledger</property>
+            <property name="type">custom</property>
             <property name="orientation">landscape</property>
+            <property name="height">13in</property>
+            <property name="width">24in</property>
             <page-footer>
                 <text id="3">
                     <property name="contentType">html</property>
@@ -2110,7 +1811,7 @@ from sale_plan_day]]></xml-property>
         </label>
         <label id="178"/>
         <table id="17">
-            <property name="width">16.45in</property>
+            <property name="width">23.458333333333332in</property>
             <property name="dataSet">DataSet</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -2229,65 +1930,66 @@ from sale_plan_day]]></xml-property>
                 </structure>
             </list-property>
             <column id="75">
-                <property name="width">0.65in</property>
+                <property name="width">1.3541666666666667in</property>
             </column>
             <column id="76">
-                <property name="width">0.725in</property>
+                <property name="width">1.15625in</property>
             </column>
             <column id="77">
-                <property name="width">0.675in</property>
+                <property name="width">1.125in</property>
             </column>
             <column id="78">
-                <property name="width">0.85in</property>
+                <property name="width">1.3958333333333333in</property>
             </column>
             <column id="79">
-                <property name="width">0.775in</property>
+                <property name="width">1.2395833333333333in</property>
             </column>
             <column id="80">
-                <property name="width">0.8in</property>
+                <property name="width">0.9791666666666666in</property>
             </column>
             <column id="81">
-                <property name="width">1.1916666666666667in</property>
+                <property name="width">1.6145833333333333in</property>
             </column>
             <column id="82">
-                <property name="width">1.1166666666666667in</property>
+                <property name="width">1.5520833333333333in</property>
             </column>
             <column id="83">
-                <property name="width">0.925in</property>
+                <property name="width">1.4375in</property>
             </column>
             <column id="84">
-                <property name="width">1.25in</property>
+                <property name="textAlign">right</property>
+                <property name="width">1.40625in</property>
             </column>
             <column id="85">
-                <property name="width">1.0333333333333334in</property>
+                <property name="width">2.0208333333333335in</property>
             </column>
             <column id="86">
-                <property name="width">1.2083333333333333in</property>
+                <property name="width">1.2604166666666667in</property>
             </column>
             <column id="87">
-                <property name="width">1.225in</property>
+                <property name="width">1.2916666666666667in</property>
             </column>
             <column id="205">
-                <property name="width">1.0416666666666667in</property>
+                <property name="width">2.3645833333333335in</property>
             </column>
             <column id="88">
-                <property name="width">1.1166666666666667in</property>
+                <property name="width">0.8229166666666666in</property>
             </column>
             <column id="91">
-                <property name="width">0.5333333333333333in</property>
+                <property name="width">0.6458333333333334in</property>
             </column>
             <column id="210">
-                <property name="width">0.45in</property>
+                <property name="width">0.5833333333333334in</property>
             </column>
             <column id="215">
-                <property name="width">0.43333333333333335in</property>
+                <property name="width">0.625in</property>
             </column>
             <column id="218">
-                <property name="width">0.43333333333333335in</property>
+                <property name="width">0.5833333333333334in</property>
             </column>
             <header>
                 <row id="18">
-                    <property name="height">0.5083333333333333in</property>
+                    <property name="height">0.5625in</property>
                     <cell id="19">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -2500,45 +2202,9 @@ from sale_plan_day]]></xml-property>
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <label id="220">
+                        <label id="290">
                             <text-property name="text">Location</text-property>
                         </label>
-                        <grid id="223">
-                            <property name="height">0.3416666666666667in</property>
-                            <column id="224"/>
-                            <column id="225"/>
-                            <row id="226">
-                                <property name="height">0.3416666666666667in</property>
-                                <cell id="227">
-                                    <property name="borderBottomStyle">solid</property>
-                                    <property name="borderBottomWidth">thin</property>
-                                    <property name="borderLeftStyle">solid</property>
-                                    <property name="borderLeftWidth">thin</property>
-                                    <property name="borderRightStyle">solid</property>
-                                    <property name="borderRightWidth">thin</property>
-                                    <property name="borderTopStyle">solid</property>
-                                    <property name="borderTopWidth">thin</property>
-                                    <label id="229">
-                                        <property name="textAlign">right</property>
-                                        <text-property name="text">Yes</text-property>
-                                    </label>
-                                </cell>
-                                <cell id="228">
-                                    <property name="borderBottomStyle">solid</property>
-                                    <property name="borderBottomWidth">thin</property>
-                                    <property name="borderLeftStyle">solid</property>
-                                    <property name="borderLeftWidth">thin</property>
-                                    <property name="borderRightStyle">solid</property>
-                                    <property name="borderRightWidth">thin</property>
-                                    <property name="borderTopStyle">solid</property>
-                                    <property name="borderTopWidth">thin</property>
-                                    <label id="230">
-                                        <property name="textAlign">right</property>
-                                        <text-property name="text">No</text-property>
-                                    </label>
-                                </cell>
-                            </row>
-                        </grid>
                     </cell>
                     <cell id="213">
                         <property name="colSpan">2</property>
@@ -2551,51 +2217,82 @@ from sale_plan_day]]></xml-property>
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <label id="219">
-                            <text-property name="text">Visit Photo</text-property>
+                        <label id="291">
+                            <text-property name="text">Image</text-property>
                         </label>
-                        <grid id="233">
-                            <property name="height">0.3333333333333333in</property>
-                            <column id="234"/>
-                            <column id="235"/>
-                            <row id="236">
-                                <property name="height">0.3333333333333333in</property>
-                                <cell id="237">
-                                    <property name="borderBottomStyle">solid</property>
-                                    <property name="borderBottomWidth">thin</property>
-                                    <property name="borderLeftStyle">solid</property>
-                                    <property name="borderLeftWidth">thin</property>
-                                    <property name="borderRightStyle">solid</property>
-                                    <property name="borderRightWidth">thin</property>
-                                    <property name="borderTopStyle">solid</property>
-                                    <property name="borderTopWidth">thin</property>
-                                    <label id="239">
-                                        <property name="textAlign">right</property>
-                                        <text-property name="text">Yes</text-property>
-                                    </label>
-                                </cell>
-                                <cell id="238">
-                                    <property name="borderBottomStyle">solid</property>
-                                    <property name="borderBottomWidth">thin</property>
-                                    <property name="borderLeftStyle">solid</property>
-                                    <property name="borderLeftWidth">thin</property>
-                                    <property name="borderRightStyle">solid</property>
-                                    <property name="borderRightWidth">thin</property>
-                                    <property name="borderTopStyle">solid</property>
-                                    <property name="borderTopWidth">thin</property>
-                                    <label id="240">
-                                        <property name="textAlign">right</property>
-                                        <text-property name="text">No</text-property>
-                                    </label>
-                                </cell>
-                            </row>
-                        </grid>
+                    </cell>
+                </row>
+                <row id="268">
+                    <property name="height">0.3125in</property>
+                    <cell id="269">
+                        <property name="colSpan">15</property>
+                        <property name="rowSpan">1</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                    </cell>
+                    <cell id="284">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="292">
+                            <text-property name="text">Yes</text-property>
+                        </label>
+                    </cell>
+                    <cell id="285">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="293">
+                            <text-property name="text">No</text-property>
+                        </label>
+                    </cell>
+                    <cell id="286">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="294">
+                            <text-property name="text">Yes</text-property>
+                        </label>
+                    </cell>
+                    <cell id="287">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="295">
+                            <text-property name="text">No</text-property>
+                        </label>
                     </cell>
                 </row>
             </header>
             <detail>
                 <row id="109">
-                    <property name="height">0.30833333333333335in</property>
+                    <property name="height">0.3229166666666667in</property>
                     <cell id="110">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -2790,6 +2487,7 @@ from sale_plan_day]]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="207">
+                            <property name="textAlign">center</property>
                             <property name="resultSetColumn">other_day_name</property>
                         </data>
                     </cell>
