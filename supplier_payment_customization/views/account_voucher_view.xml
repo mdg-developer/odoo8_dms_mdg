@@ -94,6 +94,12 @@
 							on_change="onchange_journal(journal_id, line_cr_ids, False, partner_id, date, amount, type, company_id, context)"
 							string="Payment Method" />
 					</xpath>
+					<xpath expr="//notebook/page/field[@name='line_cr_ids']/tree/field[@name='account_id']" position="before">
+					    <field name="partner_id"/>
+					</xpath>
+					<xpath expr="//notebook/page/field[@name='line_dr_ids']/tree/field[@name='account_id']" position="before">
+					    <field name="partner_id"/>
+					</xpath>
 				</data>
 			</field>
 		</record>

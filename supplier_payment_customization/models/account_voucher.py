@@ -545,10 +545,28 @@ class account_voucher(osv.osv):
 #                    self.pool.get('account.move').button_validate(cr,uid,rec_id.move_id.id,context=context) 
         return (tot_line, rec_lst_ids)
     
+    def onchange_line_ids(self, cr, uid, ids, line_dr_ids, line_cr_ids, amount, voucher_currency, type, partner_id, context=None):
+        context = context or {}
+        if not line_dr_ids and not line_cr_ids:
+            return {'value':{'writeoff_amount': 0.0}}
+        # resolve lists of commands into lists of dicts
+        line_dr_ids = self.resolve_2many_commands(cr, uid, 'line_dr_ids', line_dr_ids, ['amount'], context)
+        line_cr_ids = self.resolve_2many_commands(cr, uid, 'line_cr_ids', line_cr_ids, ['amount'], context)
+        #compute the field is_multi_currency that is used to hide/display options linked to secondary currency on the voucher
+        is_multi_currency = False
+        #loop on the voucher lines to see if one of these has a secondary currency. If yes, we need to see the options
+        for voucher_line in line_dr_ids+line_cr_ids:
+            line_id = voucher_line.get('id') and self.pool.get('account.voucher.line').browse(cr, uid, voucher_line['id'], context=context).move_line_id.id or voucher_line.get('move_line_id')
+            if line_id and self.pool.get('account.move.line').browse(cr, uid, line_id, context=context).currency_id:
+                is_multi_currency = True
+                break
+        return {'value': {'writeoff_amount': self._compute_writeoff_amount(cr, uid, line_dr_ids, line_cr_ids, amount, type), 'is_multi_currency': is_multi_currency}}
+    
 account_voucher()
 
 class account_voucher_line(osv.osv):
-    _inherit = 'account.voucher.line'    
+    _inherit = 'account.voucher.line'  
+    
     
     def onchange_discount_amount(self, cr, uid, vals, total_discount, context=None):
        
