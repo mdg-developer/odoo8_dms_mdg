@@ -3755,7 +3755,8 @@ class mobile_sale_order_line(osv.osv):
         'sub_total':fields.float('Sub Total'),
         'foc':fields.boolean('FOC'),
         'manual_foc':fields.boolean('Manual Foc'),
-        'promotion_id': fields.many2one('promos.rules', 'Promotion', readonly=True)  
+        'promotion_id': fields.many2one('promos.rules', 'Promotion', readonly=True),
+        'product_available': fields.boolean('Available')  
     }
     _defaults = {
        'product_uos_qty':1.0,

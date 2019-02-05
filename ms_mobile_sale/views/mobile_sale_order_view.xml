@@ -110,7 +110,7 @@
 										<field name="sub_total" readonly="1" />
 										<field name="foc" readonly="1" />
 										<field name="manual_foc" readonly="1" />
-
+										<field name="product_available" />
 									</tree>
 								</field>
 							</page>

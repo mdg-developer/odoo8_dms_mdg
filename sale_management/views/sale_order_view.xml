@@ -239,6 +239,11 @@
 
 					</page>
 				</xpath>
+				
+				<xpath expr="//notebook/page/field/tree/field[@name='price_subtotal']" position="after"> 
+					<field name="sale_available"/>
+				</xpath>
+				
 			</field>
 		</record>
 
