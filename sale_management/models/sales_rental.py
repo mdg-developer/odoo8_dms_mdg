@@ -64,9 +64,9 @@ class sale_rental(osv.osv):
         'township': fields.many2one('res.township', 'Township', ondelete='restrict',readonly=True),
         'total_amt':fields.float('Total Amount'  , required=True),
      #   'image': fields.binary("Location Photo"),
-        'latitude':fields.float('Geo Latitude', digits=(14,15)),
-        'longitude':fields.float('Geo Longitude', digits=(14,15)),
-        'distance_status':fields.char('Distance Status'),
+        'latitude':fields.float('Geo Latitude',  digits=(16, 5)),
+        'longitude':fields.float('Geo Longitude',  digits=(16, 5)),
+        'distance_status':fields.char('Distance Status', readonly=True),
 
         'month_cost':fields.char("Monthly Cost"),
         'rental_month':fields.integer('Rental Month'),

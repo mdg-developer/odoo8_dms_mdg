@@ -325,6 +325,7 @@ class mobile_sale_order(osv.osv):
                 return True
              except Exception, e:
                 return False        
+            
     def create_customer_feedback(self, cursor, user, vals, context=None):
              try :
                 sync_obj = self.pool.get('customer.feedback')
@@ -352,7 +353,9 @@ class mobile_sale_order(osv.osv):
                             'feedback_type':sync_log['feedback_type'],
                             'contents':urllib.unquote(urllib.unquote(sync_log['contents'])),
                             'branch_id':branch_id,
-                            'maingroup_id':sync_log['maingroup_id']
+                            'maingroup_id':sync_log['maingroup_id'],
+                            'latitude':sync_log['latitude'],
+                            'longitude':sync_log['longitude'],
                             }
                         sync_obj.create(cursor, user, print_result, context=context)
                 return True
@@ -2055,6 +2058,8 @@ class mobile_sale_order(osv.osv):
                      'due_date': due_date,
                     'payment_term':payment_term,
                     'invoice_date':invoice_date,
+                    'latitude':ar['latitude'],
+                    'longitude':ar['longitude'],
                 }
                 ar_obj.create(cursor, user, ar_result, context=context)
         return True
@@ -2824,6 +2829,8 @@ class mobile_sale_order(osv.osv):
                         'check_datetime':date,
                         'customer_code':sr['customer_code'],
                         'branch_id':sr['branch'],
+                                                    'latitude':sr['latitude'],
+                            'longitude':sr['longitude'],
                     }
                     stock_id = stock_check_obj.create(cursor, user, mso_result, context=context)
                     

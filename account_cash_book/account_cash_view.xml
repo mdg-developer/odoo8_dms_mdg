@@ -141,6 +141,30 @@
 				</xpath>
 			</field>
 		</record>
+		<record id="account.action_view_bank_statement_tree" model="ir.actions.act_window">
+			<field name="name">Cash Book</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">account.bank.statement</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form,graph</field>
+			<field name="view_id" ref="account.view_cash_statement_tree" />
+			<field name="search_view_id" ref="account.view_account_bank_statement_filter" />
+            <field name="domain">[('journal_id.type', 'in', ('cash','bank'))]</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to create a new cash log.
+				</p>
+				<p>
+					A Cash Register allows you to manage cash entries in your cash
+					journals. This feature provides an easy way to follow up cash
+					payments on a daily basis. You can enter the coins that are in
+					your
+					cash box, and then post entries when money comes in or
+					goes out of
+					the cash box.
+				</p>
+			</field>
+		</record>
 
 		<record id="inherit_view_bank_statement_form_branch" model="ir.ui.view">
 			<field name="name">account.bank.statement.form</field>

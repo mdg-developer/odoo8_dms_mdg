@@ -44,6 +44,12 @@
 								<field name="month_cost" />
 								<field name="rental_month" />
 								<field name="total_amt" />
+								<field name="latitude" />
+								<field name="longitude" />
+								<field name="distance_status" />
+
+
+
 							</group>
 						</group>
 						<notebook>

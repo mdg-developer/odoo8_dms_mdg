@@ -8,33 +8,36 @@
 			<field name="arch" type="xml">
 				<form string="Customer Feedback" version="7.0">
 					<header>
-						<button name="action_assign" string="Approve"
-							type="object" class="oe_highlight" groups="base.group_user"
+						<button name="action_assign" string="Approve" type="object"
+							class="oe_highlight" groups="base.group_user"
 							attrs="{'invisible':[('m_status', 'in', ('resolve','open'))]}">
 						</button>
-						<button name="action_done" string="Assign"
-							type="object" class="oe_highlight" groups="base.group_user"
+						<button name="action_done" string="Assign" type="object"
+							class="oe_highlight" groups="base.group_user"
 							attrs="{'invisible':[('m_status', '!=', 'open')]}">
-						</button>						
-						
+						</button>
+
 						<field name="m_status" widget="statusbar" statusbar_visible="draft,open,resolve"
 							statusbar_colors='{"draft":"red","open":"blue","resolve":"blue"}' />
 					</header>
 					<sheet>
 						<group>
 							<group>
-								<field name="date" />	
-								<field name="sale_team_id" class="oe_inline" />											
-								<field name="customer_id" />					
+								<field name="date" />
+								<field name="sale_team_id" class="oe_inline" />
+								<field name="customer_id" />
 								<field name="customer_code" />
 								<field name="feedback_type" />
 								<field name="maingroup_id" class="oe_inline" />
 								<field name="contents" />
 							</group>
-							<group>						
-								<field name="assignby" />	
-								<field name="assignto" class="oe_inline" />	
-								<field name="solution" />																			
+							<group>
+								<field name="assignby" />
+								<field name="assignto" class="oe_inline" />
+								<field name="solution" />
+								<field name="latitude" />
+								<field name="longitude" />
+								<field name="distance_status" />
 							</group>
 						</group>
 					</sheet>
@@ -47,14 +50,14 @@
 			<field name="model">customer.feedback</field>
 			<field name="arch" type="xml">
 				<tree string="Customer Feedback" default_order="date desc">
-					<field name="date" />	
-					<field name="sale_team_id" class="oe_inline" />		
-					<field name="customer_id" class="oe_inline"/>																			
+					<field name="date" />
+					<field name="sale_team_id" class="oe_inline" />
+					<field name="customer_id" class="oe_inline" />
 					<field name="customer_code" />
 					<field name="m_status" />
 					<field name="assignby" />
 					<field name="assignto" />
-					<field name="feedback_type" />		
+					<field name="feedback_type" />
 				</tree>
 			</field>
 		</record>
@@ -64,15 +67,19 @@
 			<field name="model">customer.feedback</field>
 			<field name="arch" type="xml">
 				<search string="Search Customer Feedback">
-				<filter string="Open" domain="[ ('m_status', '=', 'open')]"
+					<filter string="Open" domain="[ ('m_status', '=', 'open')]"
 						name="state" />
 					<group expand="0" string="Group By...">
 						<filter string="Sales Team" icon="terp-partner" domain="[]"
 							context="{'group_by':'sale_team_id'}" />
-						<filter string="Branch" icon="terp-partner" domain="[]" context="{'group_by':'branch_id'}" /> 
-						<filter string="Status" icon="terp-partner" domain="[]" context="{'group_by':'m_status'}" /> 
-						<filter string="Assign By" icon="terp-partner" domain="[]" context="{'group_by':'assignby'}" /> 
-						<filter string="Assign To" icon="terp-partner" domain="[]" context="{'group_by':'assignto'}" /> 
+						<filter string="Branch" icon="terp-partner" domain="[]"
+							context="{'group_by':'branch_id'}" />
+						<filter string="Status" icon="terp-partner" domain="[]"
+							context="{'group_by':'m_status'}" />
+						<filter string="Assign By" icon="terp-partner" domain="[]"
+							context="{'group_by':'assignby'}" />
+						<filter string="Assign To" icon="terp-partner" domain="[]"
+							context="{'group_by':'assignto'}" />
 					</group>
 				</search>
 			</field>

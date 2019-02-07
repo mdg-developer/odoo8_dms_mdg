@@ -28,10 +28,14 @@
 								<field name="due_date" />
 								<field name="date" />
 								<field name="so_amount" />
-								<field name="payment_amount" on_change="on_change_payment_amount(so_amount,payment_amount)" />
+								<field name="payment_amount"
+									on_change="on_change_payment_amount(so_amount,payment_amount)" />
 								<field name="balance" />
 								<field name="credit_limit" />
 								<field name="state" invisible="1" />
+								<field name="latitude" />
+								<field name="longitude" />
+								<field name="distance_status" />
 							</group>
 						</group>
 						<notebook>
@@ -39,8 +43,9 @@
 								<field name="payment_line_ids">
 									<tree string="Payment Lines" editable="bottom">
 										<field name="date" />
-										<field name="journal_id" widget="selection" on_change="on_change_journal_id(journal_id,parent.ref_no)"/>
-										<field name="payment_code" invisible="1"/>
+										<field name="journal_id" widget="selection"
+											on_change="on_change_journal_id(journal_id,parent.ref_no)" />
+										<field name="payment_code" invisible="1" />
 										<field name="cheque_no" />
 										<field name="amount" sum="Price" />
 										<field name="notes" />

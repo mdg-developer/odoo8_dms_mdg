@@ -62,6 +62,9 @@ class mobile_ar_collection(osv.osv):
                 'payment_term':fields.many2one('account.payment.term','Payment Terms'),
                 'due_date':fields.date('Due Date'),
                 'name':fields.char('Payment Reference',readonly=True),
+         'latitude':fields.float('Geo Latitude',  digits=(16, 5)),
+        'longitude':fields.float('Geo Longitude',  digits=(16, 5)),
+        'distance_status':fields.char('Distance Status'),
     }
     _defaults = {
                  'state' : 'draft',

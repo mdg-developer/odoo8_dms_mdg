@@ -24,8 +24,8 @@ class exchange_product(osv.osv):
                 'location_type':fields.selection([('Normal stock returned', 'Normal stock returned'), ('Expired', 'Expired'), ('Near expiry', 'Near expiry'), ('Fresh stock minor damage', 'Fresh stock minor damage'), ('Damaged', 'Damaged')], 'Location Type', required=True),
                # 'location_type':fields.char('Location Type', readonly=True),
                 'partner_id':fields.many2one('res.partner', string='Partner'),
-                'latitude':fields.float('Geo Latitude', digits=(14,15)),
-                'longitude':fields.float('Geo Longitude', digits=(14,15)),
+                'latitude':fields.float('Geo Latitude',  digits=(16, 5)),
+                'longitude':fields.float('Geo Longitude',  digits=(16, 5)),
                 'distance_status':fields.char('Distance Status'),
                 'geo_point':fields.char('Geo Point'),
     }
