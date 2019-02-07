@@ -723,7 +723,7 @@ this.queryText =this.queryText.replace("--$location_id$", " and x_location_id in
             <xml-property name="queryText"><![CDATA[select *,
 case when f.x_move_type in ('sale_out','sale_return') then f.x_qty end as sales,
 case when f.x_move_type in ('purchase_in','purchase_return') then f.x_qty end as purchase,
-case when f.x_move_type='transfer_in' then f.x_qty end as transfer_in,
+case when f.x_move_type in ('transfer_in','sale_return_in') then f.x_qty end as transfer_in,
 case when f.x_move_type='transfer_out' then f.x_qty end as transfer_out,
 case when f.x_move_type like '%adjustment%' then f.x_qty end as adjustment
 from
