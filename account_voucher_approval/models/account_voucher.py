@@ -155,9 +155,13 @@ class account_voucher(osv.osv):
                 amount_original = currency_pool.compute(cr, uid, company_currency, currency_id, line.credit or line.debit or 0.0, context=context_multi_currency)
                 amount_unreconciled = currency_pool.compute(cr, uid, company_currency, currency_id, abs(line.amount_residual), context=context_multi_currency)
             line_currency_id = line.currency_id and line.currency_id.id or company_currency
+            voucher_partner=None
+            if line.partner_id:
+                voucher_partner=line.partner_id.id
             rs = {
                 'name':line.move_id.name,
                 'type': line.credit and 'dr' or 'cr',
+                'partner_id':voucher_partner,
                 'move_line_id':line.id,
                 'account_id':line.account_id.id,
                 'amount_original': amount_original,
