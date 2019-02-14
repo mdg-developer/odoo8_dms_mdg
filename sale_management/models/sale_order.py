@@ -809,7 +809,7 @@ class sale_order_line(osv.osv):
         
     _columns = { 
                'sale_foc':fields.boolean('FOC'),
-               'sale_available': fields.boolean('Available')                  
+               'sale_available': fields.boolean('Available',default=True)                  
                }      
 class sale_order_credit_history(osv.osv):
     _name = 'sale.order.credit.history'
