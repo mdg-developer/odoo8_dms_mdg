@@ -139,7 +139,7 @@ class account_invoice(osv.osv):
         'credit_allow':fields.boolean('Credit Allow',default=False),
         'latitude':fields.float('Geo Latitude',  digits=(16, 5)),
         'longitude':fields.float('Geo Longitude',  digits=(16, 5)),
-        'distance_status':fields.char('Distance Status'),
+        'distance_status':fields.char('Distance Status', readonly=True),
 
 }
         

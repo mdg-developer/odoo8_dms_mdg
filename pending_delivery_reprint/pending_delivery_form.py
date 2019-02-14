@@ -22,7 +22,7 @@ class pendingdelivery(osv.osv):
                 'delivery_team_id':fields.many2one('crm.case.section','Delivery Team',readonly=True),
                 'latitude':fields.float('Geo Latitude',  digits=(16, 5)),
                 'longitude':fields.float('Geo Longitude',  digits=(16, 5)),
-                'distance_status':fields.char('Distance Status'),
+                'distance_status':fields.char('Distance Status', readonly=True),
                 'geo_point':fields.char('Geo Point'),
               }
 #     def create_automation_pending_delivery(self, cr, uid, pending_ids, context=None):

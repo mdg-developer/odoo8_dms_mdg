@@ -191,7 +191,7 @@ class sale_order(osv.osv):
               'due_date' : fields.function(get_due_date,type='date', string='Due Date', readonly=True, store=True),
                'so_latitude':fields.float('Geo Latitude'),
                'so_longitude':fields.float('Geo Longitude'),
-                'distance_status':fields.char('Distance Status'),
+                'distance_status':fields.char('Distance Status', readonly=True),
                'customer_code':fields.char('Customer Code'),
                'sale_plan_name':fields.char('Sale Plan Name'),
                'sale_plan_day_id':fields.many2one('sale.plan.day', 'Sale Plan Day'),

@@ -64,7 +64,7 @@ class mobile_ar_collection(osv.osv):
                 'name':fields.char('Payment Reference',readonly=True),
          'latitude':fields.float('Geo Latitude',  digits=(16, 5)),
         'longitude':fields.float('Geo Longitude',  digits=(16, 5)),
-        'distance_status':fields.char('Distance Status'),
+        'distance_status':fields.char('Distance Status', readonly=True),
     }
     _defaults = {
                  'state' : 'draft',
