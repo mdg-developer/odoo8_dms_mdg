@@ -2092,8 +2092,8 @@ class mobile_sale_order(osv.osv):
                     rental_result = {
                         'partner_id':partner_id,
                         'from_date':ar['from_date'],
-                        'date':ar['date'] ,
-                        'to_date':ar['to_date'],
+                        'date':datetime.now() ,                       
+						'to_date':ar['to_date'],
                         'image':ar['image1'],
                         'image1':ar['image2'],
                         'image2':ar['image3'],
