@@ -230,7 +230,6 @@ class mobile_sale_order(osv.osv):
                     so_ids.append(s_order_id);
                     for sol in sale_order_line:
                         if sol['so_name'] == so['name']:
-                                product_available=False
                                 cursor.execute('select id From product_product where id  = %s ', (sol['product_id'],))
                                 data = cursor.fetchall()
                                 if data:
@@ -255,10 +254,7 @@ class mobile_sale_order(osv.osv):
                                 else:
                                     promotion_id = None   
                                 if sol['manual_promotion'] and sol['manual_promotion'] != 'null':
-                                    promotion_id = sol['manual_promotion']     
-                                    
-                                if sol['product_available'] and sol['product_available'] != 'null':
-                                    product_available = sol['product_available']                                                                            
+                                    promotion_id = sol['manual_promotion']                                           
                                 price = sol['price_unit']
 #                                 if  float(price) < 0:
 #                                     product_price= 0
@@ -279,7 +275,6 @@ class mobile_sale_order(osv.osv):
                                   'uom_id':sol['uom_id'],
                                   'manual_foc':manual_foc,
                                   'promotion_id':promotion_id,
-                                  'product_available':product_available,
                                 }
                                 mobile_sale_order_line_obj.create(cursor, user, mso_line_res, context=context) 
                     # convertintablet(KM)
@@ -825,7 +820,6 @@ class mobile_sale_order(osv.osv):
                                               'net_total':line_id.sub_total,
                                               'sale_foc':foc,
                                              'promotion_id':line_id.promotion_id.id,
-                                             'sale_available':line_id.product_available,
 
                                            }
                                 
@@ -2098,7 +2092,7 @@ class mobile_sale_order(osv.osv):
                     rental_result = {
                         'partner_id':partner_id,
                         'from_date':ar['from_date'],
-                        'date':datetime.now() ,
+                        'date':ar['date'] ,
                         'to_date':ar['to_date'],
                         'image':ar['image1'],
                         'image1':ar['image2'],
@@ -2111,7 +2105,7 @@ class mobile_sale_order(osv.osv):
                         'rental_month':ar['month'],
                         'latitude':ar['latitude'],
                         'longitude':ar['longitude'],
-                       # 'address':ar['address'],
+                        'address':ar['address'],
                         'name':ar['name'],
                         'total_amt':ar['total_amt'],
                     }

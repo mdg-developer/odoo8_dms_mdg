@@ -234,7 +234,6 @@ class sale_order_line(osv.osv):
                 'discount': line.discount,
                 'discount_amt':line.discount_amt,
                 'foc':line.sale_foc,
-                'invoice_available':line.sale_available,
                 'uos_id': uos_id,
                 'product_id': line.product_id.id or False,
                 'invoice_line_tax_id': [(6, 0, [x.id for x in line.tax_id])],
