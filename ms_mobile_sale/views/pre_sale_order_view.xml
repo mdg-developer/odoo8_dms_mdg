@@ -95,7 +95,6 @@
 										<field name="foc" readonly="1" />
 										<field name="sub_total" readonly="1" />
 										<field name="manual_foc" readonly="1" />
-										<field name="pre_available"/>
 									</tree>
 								</field>
 
