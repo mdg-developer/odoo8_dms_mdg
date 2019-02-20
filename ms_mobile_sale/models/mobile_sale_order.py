@@ -258,11 +258,7 @@ class mobile_sale_order(osv.osv):
                                     promotion_id = sol['manual_promotion']     
                                     
                                 if sol['product_available'] and sol['product_available'] != 'null':
-                                    #product_available = sol['product_available']  
-                                    if sol['product_available']=='true':   
-                                        product_available = True
-                                    else:
-                                        product_available = False                                                                                                              
+                                    product_available = sol['product_available']                                                                            
                                 price = sol['price_unit']
 #                                 if  float(price) < 0:
 #                                     product_price= 0
@@ -3773,7 +3769,7 @@ class mobile_sale_order_line(osv.osv):
         'foc':fields.boolean('FOC'),
         'manual_foc':fields.boolean('Manual Foc'),
         'promotion_id': fields.many2one('promos.rules', 'Promotion', readonly=True),
-        'product_available': fields.boolean('Available',default=False)  
+        'product_available': fields.boolean('Available')  
     }
     _defaults = {
        'product_uos_qty':1.0,

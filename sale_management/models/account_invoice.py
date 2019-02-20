@@ -141,7 +141,7 @@ class account_invoice_line(osv.osv):
     _inherit = "account.invoice.line"
     
     _columns = {
-            'invoice_available':fields.boolean('Available',default=False)
+            'invoice_available':fields.boolean('Available')
     }
     
 account_invoice_line()

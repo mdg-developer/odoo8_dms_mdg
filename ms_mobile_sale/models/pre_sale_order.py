@@ -163,7 +163,6 @@ class pre_sale_order(osv.osv):
                     print "Create Sale Order", so['name']
                     for sol in sale_order_line:
                         if sol['so_name'] == so['name']:
-                                product_available=False
                                 cursor.execute('select id From product_product where id  = %s ', (sol['product_id'],))
                                 data = cursor.fetchall()
                                 if data:
@@ -185,13 +184,6 @@ class pre_sale_order(osv.osv):
                                     promotion_id=False
                                 if sol['manual_promotion'] and sol['manual_promotion'] != 'null':
                                     promotion_id = sol['manual_promotion']  
-                                if sol['product_available'] and sol['product_available'] != 'null':
-                                    print 'pppppppppppppppppppppppp',sol['product_available']
-                                    if sol['product_available']=='true':   
-                                        product_available = True
-                                    else:
-                                        product_available = False
-
                                 price =sol['price_unit']
 #                                 if  float(price) < 0:
 #                                     product_price= 0
@@ -212,8 +204,6 @@ class pre_sale_order(osv.osv):
                                   'uom_id':sol['uom_id'],
                                   'manual_foc':manual_foc,
                                   'promotion_id':promotion_id,
-                                 'pre_available':product_available,
-
                                 }
                                 mobile_sale_order_line_obj.create(cursor, user, mso_line_res, context=context) 
                                 print 'Create Order line', sol['so_name']                     
@@ -349,7 +339,6 @@ class pre_sale_order(osv.osv):
                                                         'price_unit':priceUnit,
                                                         'company_id':company_id,  
                                                          'promotion_id':line_id.promotion_id.id,# company_id,
-                                                         'sale_available':line_id.pre_available,
                                                         }   
                                 saleOrderLineObj.create(cr, uid, detailResult, context=context)
                     if so_id:
@@ -446,7 +435,7 @@ class pre_sale_order_line(osv.osv):
         'foc':fields.boolean('FOC'),
         'manual_foc':fields.boolean('Manual Foc'),
         'promotion_id': fields.many2one('promos.rules', 'Promotion', readonly=True),
-        'pre_available':fields.boolean('Available',default=False)
+        'pre_available':fields.boolean('Available')
     }
     _defaults = {
        'product_uos_qty':1.0,
