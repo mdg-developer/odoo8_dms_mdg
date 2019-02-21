@@ -44,8 +44,7 @@ class plan_trip_customer(osv.osv_memory):
         partner_ids=customer_data.partner_ids
         #print 'partner_ids',partner_ids
         for partner_id in partner_ids:
-            par_id = plan_line_obj.search(cr, uid, [('partner_id', '=', partner_id.id)], context=context)
-            #print 'par_id',par_id
+            par_id = plan_line_obj.search(cr, uid, [('partner_id', '=', partner_id.id),('line_id', '=', customer_data.id)], context=context)
             if par_id:
                 partner = partner_obj.browse(cr, uid,partner_id.id, context=context)
                 raise osv.except_osv(_('Warning!'),_('You inserted this customer name (%s ,%s).')%(partner.name,partner.customer_code,))    
@@ -54,7 +53,7 @@ class plan_trip_customer(osv.osv_memory):
                 cr.execute("select max(id) from sale_plan_trip_setting")
                 exp_id_rec = cr.fetchone()
                 max_id = exp_id_rec[0]
-                cr.execute("select date_order::date from sale_order  where partner_id =%s order by id desc",(partner_id.id,))
+                cr.execute("select date_order::date from sale_order  where partner_id =%s and state !='cancel' order by id desc",(partner_id.id,))
                 last_order=cr.fetchone()
                 if last_order:
                     last_order_date=last_order[0]
