@@ -2088,12 +2088,18 @@ class mobile_sale_order(osv.osv):
                         partner_id = data[0][0]
                     else:
                         partner_id = None
+                    import datetime
+                    if ar['date']:
+                        date = datetime.datetime.strptime(ar['date'], '%d-%m-%Y %H:%M:%S %p') - timedelta(hours=6, minutes=30)
+                    from_date = datetime.datetime.strptime(ar['from_date'], '%d-%m-%Y')
+                    to_date = datetime.datetime.strptime(ar['to_date'], '%d-%m-%Y')
+                        #date = datetime.strptime( ar['date'], '%Y-%m-%d %H:%M:%S') - timedelta(hours=6, minutes=30)
                     
                     rental_result = {
                         'partner_id':partner_id,
-                        'from_date':ar['from_date'],
-                        'date':datetime.now() ,                       
-						'to_date':ar['to_date'],
+                        'from_date':from_date.date(),
+                        'date':date,                       
+						'to_date':to_date.date(),
                         'image':ar['image1'],
                         'image1':ar['image2'],
                         'image2':ar['image3'],
@@ -2105,7 +2111,7 @@ class mobile_sale_order(osv.osv):
                         'rental_month':ar['month'],
                         'latitude':ar['latitude'],
                         'longitude':ar['longitude'],
-                        'address':ar['address'],
+                  #      'address':ar['address'],
                         'name':ar['name'],
                         'total_amt':ar['total_amt'],
                     }
