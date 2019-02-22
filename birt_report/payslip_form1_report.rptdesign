@@ -691,7 +691,8 @@ order by sub.fingerprint_id]]></xml-property>
     </page-setup>
     <body>
         <data id="100">
-            <property name="fontSize">12pt</property>
+            <property name="fontFamily">"Myanmar3"</property>
+            <property name="fontSize">14pt</property>
             <property name="fontWeight">bold</property>
             <property name="textAlign">center</property>
             <property name="dataSet">company</property>
@@ -708,10 +709,10 @@ order by sub.fingerprint_id]]></xml-property>
         <grid id="114">
             <property name="width">13.4375in</property>
             <column id="115">
-                <property name="width">6.072916666666667in</property>
+                <property name="width">5.90625in</property>
             </column>
             <column id="116">
-                <property name="width">0.53125in</property>
+                <property name="width">0.6979166666666666in</property>
             </column>
             <column id="117">
                 <property name="width">6.833333333333333in</property>
@@ -719,6 +720,8 @@ order by sub.fingerprint_id]]></xml-property>
             <row id="118">
                 <cell id="119">
                     <data id="132">
+                        <property name="fontFamily">"Myanmar3"</property>
+                        <property name="fontSize">12pt</property>
                         <property name="fontWeight">bold</property>
                         <property name="textAlign">right</property>
                         <property name="dataSet">Data Set</property>
@@ -735,6 +738,8 @@ order by sub.fingerprint_id]]></xml-property>
                 </cell>
                 <cell id="120">
                     <data id="131">
+                        <property name="fontFamily">"Myanmar3"</property>
+                        <property name="fontSize">12pt</property>
                         <property name="fontWeight">bold</property>
                         <property name="textAlign">center</property>
                         <property name="dataSet">Data Set</property>
@@ -766,6 +771,8 @@ month[dataSetRow["month"]-1];</expression>
                 </cell>
                 <cell id="121">
                     <label id="130">
+                        <property name="fontFamily">"Myanmar3"</property>
+                        <property name="fontSize">12pt</property>
                         <property name="fontWeight">bold</property>
                         <property name="textAlign">left</property>
                         <text-property name="text">Pay Summary Form1</text-property>
@@ -907,6 +914,7 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="68">
+                            <property name="fontSize">11pt</property>
                             <text-property name="text">No</text-property>
                         </label>
                     </cell>
@@ -920,6 +928,7 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="69">
+                            <property name="fontSize">11pt</property>
                             <text-property name="text">Fingerprint ID</text-property>
                         </label>
                     </cell>
@@ -933,6 +942,7 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="70">
+                            <property name="fontSize">11pt</property>
                             <text-property name="text">အမည္</text-property>
                         </label>
                     </cell>
@@ -946,6 +956,7 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="71">
+                            <property name="fontSize">11pt</property>
                             <text-property name="text">ရာထူး</text-property>
                         </label>
                     </cell>
@@ -959,6 +970,7 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="72">
+                            <property name="fontSize">11pt</property>
                             <text-property name="text">ဌာန</text-property>
                         </label>
                     </cell>
@@ -972,6 +984,7 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="73">
+                            <property name="fontSize">11pt</property>
                             <text-property name="text">အေျခခံလစာ</text-property>
                         </label>
                     </cell>
@@ -985,6 +998,7 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="74">
+                            <property name="fontSize">11pt</property>
                             <text-property name="text">ျဖတ္ေငြ</text-property>
                         </label>
                     </cell>
@@ -998,6 +1012,7 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="75">
+                            <property name="fontSize">11pt</property>
                             <text-property name="text">လူမႈ ဖူလံုေရး</text-property>
                         </label>
                     </cell>
@@ -1011,6 +1026,7 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="76">
+                            <property name="fontSize">11pt</property>
                             <text-property name="text">ပံုစံ(1) ထုတ္ေပးေငြ</text-property>
                         </label>
                     </cell>
@@ -1024,6 +1040,7 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="77">
+                            <property name="fontSize">11pt</property>
                             <text-property name="text">မွတ္ခ်က္</text-property>
                         </label>
                     </cell>
@@ -1037,6 +1054,7 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="78">
+                            <property name="fontSize">11pt</property>
                             <text-property name="text">တရက္ေၾကး</text-property>
                         </label>
                     </cell>
@@ -1050,6 +1068,7 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="79">
+                            <property name="fontSize">11pt</property>
                             <text-property name="text">အလုပ္၀င္ေန႔</text-property>
                         </label>
                     </cell>
@@ -1067,6 +1086,7 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="87">
+                            <property name="fontSize">12pt</property>
                             <property name="textAlign">center</property>
                             <property name="resultSetColumn">Aggregation</property>
                         </data>
@@ -1081,6 +1101,8 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="88">
+                            <property name="fontFamily">"Myanmar3"</property>
+                            <property name="fontSize">12pt</property>
                             <property name="textAlign">center</property>
                             <property name="resultSetColumn">fingerprint_id</property>
                         </data>
@@ -1096,7 +1118,7 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopWidth">thin</property>
                         <data id="89">
                             <property name="fontFamily">"Myanmar3"</property>
-                            <property name="fontSize">10pt</property>
+                            <property name="fontSize">13pt</property>
                             <property name="textAlign">left</property>
                             <property name="resultSetColumn">myanmar_name</property>
                         </data>
@@ -1111,6 +1133,8 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="90">
+                            <property name="fontFamily">"Myanmar3"</property>
+                            <property name="fontSize">12pt</property>
                             <property name="resultSetColumn">job_name</property>
                         </data>
                     </cell>
@@ -1124,6 +1148,8 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="91">
+                            <property name="fontFamily">"Myanmar3"</property>
+                            <property name="fontSize">12pt</property>
                             <property name="resultSetColumn">dept_name</property>
                         </data>
                     </cell>
@@ -1137,6 +1163,8 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="92">
+                            <property name="fontFamily">"Myanmar3"</property>
+                            <property name="fontSize">12pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
                                 <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
@@ -1155,6 +1183,8 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="93">
+                            <property name="fontFamily">"Myanmar3"</property>
+                            <property name="fontSize">12pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
                                 <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
@@ -1173,6 +1203,8 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="94">
+                            <property name="fontFamily">"Myanmar3"</property>
+                            <property name="fontSize">12pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
                                 <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
@@ -1191,6 +1223,8 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="98">
+                            <property name="fontFamily">"Myanmar3"</property>
+                            <property name="fontSize">12pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
                                 <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
@@ -1209,6 +1243,8 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="99">
+                            <property name="fontFamily">"Myanmar3"</property>
+                            <property name="fontSize">12pt</property>
                             <property name="resultSetColumn">remark</property>
                         </data>
                     </cell>
@@ -1222,6 +1258,8 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="95">
+                            <property name="fontFamily">"Myanmar3"</property>
+                            <property name="fontSize">12pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
                                 <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
@@ -1240,6 +1278,8 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="97">
+                            <property name="fontFamily">"Myanmar3"</property>
+                            <property name="fontSize">12pt</property>
                             <property name="textAlign">center</property>
                             <property name="resultSetColumn">join_date</property>
                         </data>
