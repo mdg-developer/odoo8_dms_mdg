@@ -1331,8 +1331,8 @@ month[dataSetRow["month"]-1];</expression>
                                     <property name="textAlign">right</property>
                                     <image id="15">
                                         <property name="marginRight">10pt</property>
-                                        <property name="height">0.7708333333333334in</property>
-                                        <property name="width">0.84375in</property>
+                                        <property name="height">0.7in</property>
+                                        <property name="width">0.8in</property>
                                         <property name="source">embed</property>
                                         <property name="imageName">company_logo.jpg</property>
                                     </image>
@@ -1387,7 +1387,7 @@ month[dataSetRow["month"]-1];</expression>
                                     <property name="fontWeight">bold</property>
                                     <property name="textAlign">center</property>
                                     <data id="212">
-                                        <property name="fontSize">14pt</property>
+                                        <property name="fontSize">13pt</property>
                                         <property name="marginRight">5pt</property>
                                         <list-property name="boundDataColumns">
                                             <structure>
@@ -1404,21 +1404,21 @@ month[dataSetRow["month"]-1];</expression>
                             <row id="208">
                                 <cell id="209">
                                     <label id="213">
-                                        <property name="fontSize">14pt</property>
+                                        <property name="fontSize">12pt</property>
                                         <property name="fontWeight">bold</property>
                                         <text-property name="text">Pay Slip For :</text-property>
                                     </label>
                                 </cell>
                                 <cell id="210">
                                     <data id="214">
-                                        <property name="fontSize">14pt</property>
+                                        <property name="fontSize">12pt</property>
                                         <property name="fontWeight">bold</property>
                                         <property name="resultSetColumn">month</property>
                                     </data>
                                 </cell>
                                 <cell id="211">
                                     <data id="215">
-                                        <property name="fontSize">14pt</property>
+                                        <property name="fontSize">12pt</property>
                                         <property name="fontWeight">bold</property>
                                         <property name="resultSetColumn">year</property>
                                     </data>
