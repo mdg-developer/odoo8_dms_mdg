@@ -22,8 +22,32 @@ from openerp.osv import fields, osv
 from mako.runtime import _inherit_from
 import ast
 
+class account_voucher (osv.osv):
+    _inherit = 'account.voucher'
+    
+    def proforma_voucher(self, cr, uid, ids, context=None):
+        self.action_move_line_create(cr, uid, ids, context=context)
+        voucher_data=self.browse(cr, uid, ids, context=context)
+        move_id =None
+        if voucher_data.move_id:
+            move_id=voucher_data.move_id.id
+        cr.execute('''
+        update  account_invoice set offset_by=%s where move_id in (
+        select move_id from account_move_line where reconcile_id in (select reconcile_id from account_move_line where move_id =%s )
+        and move_id !=%s)
+        ''',(uid,move_id,move_id))
+        return True    
+    
 class account_invoice(osv.osv):
     _inherit = 'account.invoice'
+    
+    def invoice_validate(self, cr, uid, ids, context=None):
+        res = super(account_invoice, self).invoice_validate(cr, uid, ids, context=context) 
+        if ids:
+            cr.execute("update account_invoice set approved_by=%s where id =%s",(uid,ids[0],))
+            
+        return res
+    
     def _get_corresponding_sale_order(self, cr, uid, ids, field_name, arg, context=None):
         result = {}
         order_id = None
@@ -80,6 +104,7 @@ class account_invoice(osv.osv):
             return True        
         except Exception, e:
             return False         
+        
     _columns = {
               'sale_order_id':fields.function(_get_corresponding_sale_order, type='many2one', relation='sale.order', string='Sale Order'),
                   'promos_line_ids':fields.one2many('account.invoice.promotion.line', 'promo_line_id', 'Promotion Lines'),           
@@ -88,7 +113,17 @@ class account_invoice(osv.osv):
                     'credit_invoice_balance' :fields.float('Credit Invoice Balance'),   
                     'credit_limit_amount' :fields.float('Credit Limit'),   
                     'credit_balance' :fields.float('Credit Balance'),                 
+                    'approved_by' :fields.many2one('res.users','Approved By'),       
+                    'offset_by' :fields.many2one('res.users','Offset By'),    
+                    'cdnreference_no' :fields.char('Reference No'),       
+                    'dn_currency_id':fields.many2one('res.currency','Currency'),        
+                    'dn_rate':fields.float('F/X Currency - MMK Rate'),
+                    'dn_bank':fields.char('Bank'),
+                    'dn_date':fields.date('Date'),
+                    'document_fname': fields.char('Filename', size=128),
+                    'document_file':fields.binary('File', required=False),
               }
+    
 class account_invoice_credit_history(osv.osv):
     _name = 'account.invoice.credit.history'
     _columns = {  

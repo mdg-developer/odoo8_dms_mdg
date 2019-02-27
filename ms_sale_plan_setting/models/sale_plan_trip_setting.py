@@ -13,7 +13,7 @@ class sale_plan_for_trip_setting(osv.osv):
         main_group=team_data.main_group_id
         branch_id=team_data.branch_id.id        
         if sale_team_id:            
-            partner_ids = customer_obj.search(cr, uid, [('section_id', '=', sale_team_id)], context=context)
+            partner_ids = customer_obj.search(cr, uid, [('section_id', '=', sale_team_id),('mobile_customer','!=',True),('active','=',True)], context=context)
             if  partner_ids:                
                 for line in partner_ids:
                     print ' line', line
@@ -535,28 +535,44 @@ class sale_plan_for_trip_setting(osv.osv):
                                   
         return self.write(cr, uid, ids, {'state': 'confirm' })      
     
-    def refresh(self, cr, uid, ids, context=None):
-        # data_line=[]
-#         res=[]
-#         customer_obj=self.pool.get('res.partner')
-#         plan = self.browse(cr, uid, ids, context=context)
-#         customer_list=plan.plan_line.partner_id.id
-#         sale_team_id=plan.sale_team_id.id
-#         partner_ids = customer_obj.search(cr, uid, [('section_id', '=', sale_team_id),('id','not in',[customer_list])], context=context)
-#         if  partner_ids:                
-#                 for line in partner_ids:
-#                     print ' line',line,ids
-#                     partner = customer_obj.browse(cr, uid, line, context=context)
-#                     plan_line={
-#                                         'code':partner.customer_code,
-#                                          'class':partner.class_id.id,
-#                                         'partner_id': line,
-#                                         'line_id':ids[0],
-#                                                   }
-#                     print 'data_line',plan_line
-# 
-#                     res.append(plan_line) 
-        # print 'res',res
+    def refresh_customer(self, cr, uid, ids, context=None):
+        data_line=[]
+        res=[]
+        customer_obj=self.pool.get('res.partner')
+        sale_plan_obj=self.pool.get('sale.plan.trip.setting')       
+        plan_obj=self.pool.get('sale.plan.trip.setting.line')
+        plan = self.browse(cr, uid, ids, context=context)
+        partner_count=plan.partner_count
+        plan_line=plan.plan_line
+        for plan_line_id in plan_line:
+            partner_id=plan_line_id.partner_id.id
+            partner_code= plan_line_id.partner_id.customer_code
+            cr.execute("update sale_plan_trip_setting_line set code =%s where partner_id=%s and id = %s",(partner_code,partner_id,plan_line_id.id,))
+            data_line.append(partner_id)
+        sale_team_id=plan.sale_team_id.id
+        partner_ids = customer_obj.search(cr, uid, [('section_id', '=', sale_team_id),('id','not in',data_line),('mobile_customer','!=',True),('active','=',True)], context=context)
+        if  partner_ids:
+                count=len(partner_ids)                
+                for line in partner_ids:
+                    print ' line',line,ids
+                    partner = customer_obj.browse(cr, uid, line, context=context)
+                    cr.execute("select date_order::date from sale_order  where partner_id =%s and state!='cancel' order by id desc", (partner.id,))
+                    last_order = cr.fetchone()
+                    if last_order:
+                        last_order_date = last_order[0]
+                    else:
+                        last_order_date = False                 
+                    plan_id = plan_obj.create(cr, uid, {
+                                        'code':partner.customer_code,
+                                         'class':partner.class_id.id,
+                                         'frequency':partner.frequency_id.id,
+                                         'purchase_date':last_order_date,
+                                        'partner_id': line,
+                                        'line_id':plan.id,
+                                                  }, context=context)   
+                    sale_plan_obj.write(cr, uid, ids, {'partner_count':  partner_count+count})  
+        cr.execute("delete from sale_plan_trip_setting_line where partner_id in (select id from res_partner where active=False)")
+        cr.execute("delete from res_partner_sale_plan_trip_rel where partner_id in (select id from res_partner where active=False)")
         return True   
 sale_plan_for_trip_setting()
     

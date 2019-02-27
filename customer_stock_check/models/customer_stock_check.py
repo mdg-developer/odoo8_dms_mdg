@@ -16,8 +16,8 @@ class customer_stock_check(osv.osv):
                 'customer_code':fields.char('Customer Code'),
                 'branch_id' :fields.many2one('res.branch', 'Branch'),
                 'stock_check_line':fields.one2many('partner.stock.check.line', 'stock_check_ids', string='Product'),
-                'latitude':fields.float('Geo Latitude', digits=(16, 5)),
-                    'longitude':fields.float('Geo Longitude', digits=(16, 5)),
+                'latitude':fields.float('Geo Latitude', digits=(16, 5), readonly=True),
+                    'longitude':fields.float('Geo Longitude', digits=(16, 5), readonly=True),
                     'distance_status':fields.char('Distance Status', readonly=True),
                 }    
     

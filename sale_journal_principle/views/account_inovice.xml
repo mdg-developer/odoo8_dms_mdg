@@ -37,7 +37,7 @@
 					<field name="credit_control"  invisible="1"/>
 				</xpath>
 				<xpath expr="//field[@name='account_id']" position="replace">
-					<field name="credit_approve_by" />
+					<field name="credit_approve_by" attrs="{'invisible':[('type','!=','out_invoice')]}"/>
 				</xpath>
 
 

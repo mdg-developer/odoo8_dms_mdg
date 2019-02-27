@@ -131,7 +131,7 @@ class product_service_claim(osv.osv):
         inv = {
             'name': name,
             'origin': name,
-            'type': 'out_invoice',
+            'type': 'in_refund',
             'journal_id': journal_id,
             'reference': name,
             'is_nonsale':True,
@@ -164,7 +164,8 @@ class product_service_claim(osv.osv):
                     'quantity': invoice_line.quantity,
                     'product_id': invoice_line.product_id.id or False,
                     'uos_id': invoice_line.uom_id.id or False,
-                    'agreed_price': 0.0,
+                    'agreed_price':invoice_line.quantity *  invoice_line.claim_price ,
+                    'gross_margin':0.0,
                     }
                 invoice_line_obj.create(cr, uid, inv_line, context=context)
         return self.write(cr, uid, ids, {'state': 'done', 'debit_note':inv_id, })        

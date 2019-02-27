@@ -7,9 +7,10 @@
 			<field name="arch" type="xml">
 
 				<field name="journal_id" position="after">
-					<field name="is_nonsale" attrs="{'invisible':[('is_nonsale','!=',True)]}"
-						readonly="1" />
-					<field name="subject" attrs="{'invisible':[('is_nonsale','!=',True)]}" />
+					<field name="is_nonsale" readonly="1" invisible="1" />
+					<field name="cdnreference_no" attrs="{'readonly': [('state', '=', 'paid')]}" />
+					<field name="subject"
+						attrs="{'invisible':[('is_nonsale','!=',True)],'readonly': [('state', '=', 'paid')]}" />
 				</field>
 
 			</field>

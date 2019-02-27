@@ -19,8 +19,8 @@ class sync_log(osv.osv):
                 'assignby':fields.many2one('res.users', 'Assigned By', readonly=True),
                 'assignto':fields.many2one('res.users', 'Assign To'),
                 'solution':fields.text('Solution'),
-                     'latitude':fields.float('Geo Latitude', digits=(16, 5)),
-                    'longitude':fields.float('Geo Longitude', digits=(16, 5)),
+                     'latitude':fields.float('Geo Latitude', digits=(16, 5), readonly=True),
+                    'longitude':fields.float('Geo Longitude', digits=(16, 5), readonly=True),
                     'distance_status':fields.char('Distance Status', readonly=True),
   }
     _defaults = {

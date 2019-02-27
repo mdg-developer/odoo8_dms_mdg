@@ -13,7 +13,7 @@
 					expr="//form/sheet/notebook/page/field/tree/field[@name='discount']"
 					position="before">
 
-					<field name="promotion_id" />
+					<field name="promotion_id"/>
 				</xpath>
 
 

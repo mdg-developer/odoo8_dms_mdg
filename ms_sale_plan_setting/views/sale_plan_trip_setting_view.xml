@@ -27,7 +27,7 @@
 							<field name="to_date" />
 						</group>
 					</group>
-					    <button name="%(action_plan_trip_by_customer)d"  type="action" states="draft" string="Add Customer"   icon="fa-pencil-square-o" widget="statinfo" class="oe_inline oe_stat_button"/>		    
+					    <button name="refresh_customer"  type="object"  string="Refresh Customer" class="oe_highlight"/>		    
 					<notebook>
 						<page string="Plan Setting">
 							<field name="plan_line" attrs="{'readonly':[('state','=','confirm')]}" >

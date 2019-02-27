@@ -23,7 +23,7 @@
 					<field name="discount_amt" groups="sale.group_discount_per_so_line" />
 
 					<field name="foc" 
-						on_change="foc_change(product_id,quantity,context)" />
+						on_change="foc_change(product_id,quantity,context)"/>
 
 				</xpath>
 			</field>

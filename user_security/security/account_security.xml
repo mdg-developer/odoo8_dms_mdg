@@ -12,7 +12,7 @@
 			<field name="category_id" ref="base.module_category_accounting_and_finance" />
 			<field name="implied_ids" eval="[(4, ref('base.group_cashier_create'))]" />
 		</record>
-		
+
 		<record id="base.group_account_entry" model="res.groups">
 			<field name="name">Account Entry Staff</field>
 			<field name="category_id" ref="base.module_category_accounting_and_finance" />
@@ -23,6 +23,14 @@
 			<field name="category_id" ref="base.module_category_sales_management" />
 			<field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
 		</record>
+		<record id="base.group_allow_credit_note" model="res.groups">
+			<field name="name">Allow To Credit Note</field>
+			<field name="category_id" ref="base.module_category_accounting_and_finance" />
+		</record>
+		<record id="base.group_allow_debit_note" model="res.groups">
+			<field name="name">Allow To Debit Note</field>
+			<field name="category_id" ref="base.module_category_accounting_and_finance" />
 
+		</record>
 	</data>
 </openerp>

@@ -9,17 +9,36 @@
 			<field name="model">account.invoice</field>
 			<field name="inherit_id" ref="account.invoice_form" />
 			<field name="arch" type="xml">
-
+				<xpath expr="//form/sheet/h1" position="replace">
+					<h1>
+						<label string="Draft Invoice"
+							attrs="{'invisible': ['|',('state','not in',('draft',)), ('type','&lt;&gt;','out_invoice')]}" />
+						<label string="Draft Credit Note"
+							attrs="{'invisible': ['|',('state','not in',('draft',)), ('type','&lt;&gt;','out_refund')]}" />
+						<label string="Pro Forma Invoice"
+							attrs="{'invisible': [('state','not in',('proforma','proforma2'))]}" />
+						<label string="Invoice"
+							attrs="{'invisible': ['|',('state','in',('draft','proforma','proforma2')), ('type','&lt;&gt;','out_invoice')]}" />
+						<label string="Credit Note"
+							attrs="{'invisible': ['|',('state','in',('draft','proforma','proforma2')), ('type','&lt;&gt;','out_refund')]}" />
+						<field name="number" readonly="1" class="oe_inline" />
+					</h1>
+				</xpath>
 				<field name="origin" position="after">
-					<field name="sale_order_id" invisible="0" />
+					<field name="sale_order_id" attrs="{'invisible':[('type','!=','out_invoice')]}" />
 				</field>
 				<field name="journal_id" position="after">
-					<field name="ignore_credit_limit" invisible="0" />
+					<field name="ignore_credit_limit" attrs="{'invisible':[('type','!=','out_invoice')]}" />
+					<field name="approved_by"
+						attrs="{'invisible':[('type','in',('out_invoice','in_invoice'))]}" />
+					<field name="offset_by"
+						attrs="{'invisible':[('type','in',('out_invoice','in_invoice'))]}" />
 				</field>
 
 				<xpath expr="/form/sheet/notebook/page[@string='Invoice Lines']"
 					position="after">
-					<page name='promo_lines' string="Promotion Lines">
+					<page name='promo_lines' string="Promotion Lines"
+						attrs="{'invisible':[('type','!=','out_invoice')]}">
 						<field name="promos_line_ids" attrs="{'readonly':[('state','!=','draft')]}">
 							<form string="Promotion Lines" version="7.0">
 								<group>
@@ -52,7 +71,8 @@
 							</tree>
 						</field>
 					</page>
-					<page name="credit_line_ids" string="Credit History">
+					<page name="credit_line_ids" string="Credit History"
+						attrs="{'invisible':[('type','!=','out_invoice')]}">
 						<field name="credit_line_ids" attrs="{'readonly':[('state','!=','draft')]}">
 							<tree string="Credit Lines" editable="bottom">
 								<field name="date" readonly="1" />
@@ -74,9 +94,73 @@
 
 					</page>
 				</xpath>
+				<xpath
+					expr="/form/sheet/notebook/page[@string='Payments']/field/tree/field[@name='move_id']"
+					position="after">
+					<field name="partner_id" />
+				</xpath>
 			</field>
 		</record>
+		<record id="invoice_supplier_form_pending" model="ir.ui.view">
+			<field name="name">account.invoice.supplier.form</field>
+			<field name="model">account.invoice</field>
+			<field name="inherit_id" ref="account.invoice_supplier_form" />
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//form/sheet/div[@class='oe_title']" position="replace">
+						<h1>
+							<label string="Draft Invoice"
+								attrs="{'invisible': ['|',('state','&lt;&gt;','draft'), ('type','&lt;&gt;','in_invoice')]}" />
+							<label string="Draft Debit Note"
+								attrs="{'invisible': ['|',('state','&lt;&gt;','draft'), ('type','&lt;&gt;','in_refund')]}" />
+							<label string="Invoice"
+								attrs="{'invisible': ['|',('state', '=', 'draft'), ('type','&lt;&gt;','in_invoice')]}" />
+							<label string="Debit Note"
+								attrs="{'invisible': ['|',('state', '=', 'draft'), ('type','&lt;&gt;','in_refund')]}" />
+							<field name="number" class="oe_inline"
+								attrs="{'invisible': [('state', '=', 'draft')]}" />
+						</h1>
+					</xpath>
+					<xpath
+						expr="/form/sheet/notebook/page[@string='Payments']/field/tree/field[@name='move_id']"
+						position="after">
+						<field name="partner_id" />
+					</xpath>
+					<field name="user_id" position="replace">
 
+						<field name="user_id" string="Prepared By"
+							context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'account.group_account_invoice']}" />
+
+					</field>
+					<field name="journal_id" position="after">
+						<field name="cdnreference_no" attrs="{'readonly': [('state', '=', 'paid')]}" />
+						<field name="subject" attrs="{'readonly': [('state', '=', 'paid')]}" />
+						<field name="approved_by"
+							attrs="{'invisible':[('type','in',('out_invoice','in_invoice'))]}" />
+						<field name="offset_by"
+							attrs="{'invisible':[('type','in',('out_invoice','in_invoice'))]}" />
+					</field>
+					<xpath expr="/form/sheet/notebook/page[@string='Other Info']"
+						position="before">
+						<page name='fx_rates' string="F/X"
+							attrs="{'invisible':[('type','!=','in_refund')]}">
+							<group>
+								<group>
+									<field name="dn_currency_id" attrs="{'readonly': [('state', '=', 'paid')]}" />
+									<field name="dn_rate" attrs="{'readonly': [('state', '=', 'paid')]}" />
+									<field name="dn_bank" attrs="{'readonly': [('state', '=', 'paid')]}" />
+								</group>
+								<group>
+									<field name="document_file" filename="document_fname" attrs="{'readonly': [('state', '=', 'paid')]}" />
+									<field name="document_fname" attrs="{'readonly': [('state', '=', 'paid')]}" />
+								</group>
+							</group>
+						</page>
+					</xpath>
+				</data>
+
+			</field>
+		</record>
 
 	</data>
 </openerp>
