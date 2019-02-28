@@ -61,9 +61,9 @@ Sale Management
         'reports/deliver_order_custom_layouts.xml',
         'reports/report_pre_sale_order.xml',
         'reports/credit_debit_note_layout.xml',
-
         'views/report_invoice_with_price.xml',
         'reports/report_credit_note.xml',
+        'reports/report_debit_note.xml',
         
     ],
     'installable': True,

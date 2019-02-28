@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 	<data>
-		<template id="report_invoice_credit_note_document">
+		<template id="report_invoice_debit_note_document">
 			<t t-call="sale_management.credit_debit_note_layout">
 				<div class="page">
 					<br />
 					<center>
 						<h2 style="border:1pt solid;border-color:black;">
-							CREDIT NOTE
+							DEBIT NOTE
 						</h2>
 					</center>
 					<div class="row mt32 mb32">
@@ -64,20 +64,37 @@
 							<tr style="background-color:#b4b4b4;">
 								<th class="text-center" style="border:1pt solid;border-color:black;">No</th>
 								<th class="text-center" style="border:1pt solid;border-color:black;">PRODUCT</th>
+								<th class="text-center" style="border:1pt solid;border-color:black;">PRODUCT CODE</th>
+								<th class="text-center" style="border:1pt solid;border-color:black;">PACK SIZE</th>
 								<th class="text-center" style="border:1pt solid;border-color:black;">DESCRIPTION</th>
 								<th class="text-center" style="border:1pt solid;border-color:black;">U/M</th>
 								<th class="text-center" style="border:1pt solid;border-color:black;">QTY</th>
-								<th class="text-center" style="border:1pt solid;border-color:black;">AMOUNT(<span t-field="o.currency_id.symbol" />)
+								<th class="text-center" style="border:1pt solid;border-color:black;">
+									AMOUNT
+									(<span t-field="o.currency_id.symbol" />)
+								</th>
+								<th class="text-center" style="border:1pt solid;border-color:black;">FX RATE</th>
+								<th class="text-center" style="border:1pt solid;border-color:black;">
+									AMOUNT
+									(<span t-field="o.dn_currency_id.symbol" />)
 								</th>
 							</tr>
 						</thead>
 						<tbody class="invoice_tbody">
 							<tr t-foreach="o.invoice_line" t-as="l">
+								<t t-set="convert_amount" t-value="0" />
+
 								<td style="border:1pt solid;border-color:black;" align="center">
 									<t t-esc="l_index+1" />
 								</td>
 								<td style="border:1pt solid;border-color:black;">
 									<span t-field="l.product_id.name_template" />
+								</td>
+								<td style="border:1pt solid;border-color:black;">
+									<span t-field="l.product_id.product_tmpl_id.default_code" />
+								</td>
+								<td style="border:1pt solid;border-color:black;">
+									<span t-field="l.product_id.product_tmpl_id.uom_ratio" />
 								</td>
 								<td style="border:1pt solid;border-color:black;">
 									<span t-field="l.name" />
@@ -91,6 +108,15 @@
 								<td class="text-right" style="border:1pt solid;border-color:black;">
 									<span t-field="l.price_subtotal"
 										t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}' />
+								</td>
+								<td class="text-right" style="border:1pt solid;border-color:black;">
+									<span t-esc="'{:,.2f}'.format(o.dn_rate)" />
+								</td>
+								<td class="text-right" style="border:1pt solid;border-color:black;">
+									<t t-set="convert_amount" t-value="l.price_subtotal/o.dn_rate" />
+									<span t-esc="'{:,.2f}'.format(convert_amount)" />
+									<span t-field="o.dn_currency_id.symbol" />
+
 								</td>
 							</tr>
 						</tbody>
@@ -177,8 +203,6 @@
 							</tr>
 						</thead>
 					</table>
-
-
 					<h2 align="left">
 						<span t-if="o.residual== o.amount_total">Pending</span>
 					</h2>
@@ -222,7 +246,7 @@
 										</td>
 										<td class="text-right">
 											<t t-set="amount" t-value="t.debit+t.credit" />
-											<span t-esc="amount" />
+											<span t-esc="'{:,.2f}'.format(amount)" />
 										</td>
 
 									</tr>
@@ -230,16 +254,19 @@
 							</table>
 						</div>
 					</div>
-
+					<p t-if="o.comment">
+						<strong>Comment:</strong>
+						<span t-field="o.comment" />
+					</p>
 				</div>
 			</t>
 		</template>
 
-		<template id="report_invoice_refund_credit_note">
+		<template id="report_supplier_refund_debit_note">
 			<t t-call="report.html_container">
 				<t t-foreach="doc_ids" t-as="doc_id">
 					<t
-						t-raw="translate_doc(doc_id, doc_model, 'partner_id.lang', 'sale_management.report_invoice_credit_note_document')" />
+						t-raw="translate_doc(doc_id, doc_model, 'partner_id.lang', 'sale_management.report_invoice_debit_note_document')" />
 				</t>
 			</t>
 		</template>
