@@ -32,7 +32,7 @@ Product Nonsell Issue
 """,
     'author': 'Seventh Computing',
     'website': 'http://www.7thcomputing.com',
-    'depends': ['base',
+    'depends': ['base','account',
          'stock'
  
     ],

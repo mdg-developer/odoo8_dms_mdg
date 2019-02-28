@@ -3,6 +3,7 @@ from openerp.tools.translate import _
 from openerp.exceptions import except_orm, Warning, RedirectWarning
 from openerp.osv import orm
 
+
 class stock_move(osv.osv):
     _inherit = "stock.move"
     _columns = {
@@ -16,12 +17,17 @@ class stock_move(osv.osv):
 
                         ], 'Issue Type'),
                }
+
+
 class account_invoice(osv.osv):
     _inherit = "account.invoice"
     _columns = {
               'is_nonsale':fields.boolean('To Claim', default=False),
               'subject':fields.char('Subject', required=False, readonly=False),
+                                  'cdnreference_no' :fields.char('Reference No'),
+
                }
+
         
 class stock_picking(osv.osv):
     _inherit = "stock.picking"
@@ -35,6 +41,8 @@ class stock_picking(osv.osv):
 
                         ], 'Issue Type'),
                }
+
+
 class product_nonsell_issue(osv.osv):
 
     _name = "product.nonsell.issue"    
@@ -44,6 +52,7 @@ class product_nonsell_issue(osv.osv):
         if not branch_id:
             raise osv.except_osv(_('Error!'), _('There is no default branch for the current user!'))
         return branch_id        
+
     def on_change_branch_id(self, cr, uid, ids, branch_id, context=None):
         values = {}
         if branch_id:
@@ -66,6 +75,7 @@ class product_nonsell_issue(osv.osv):
                 'location_id':location_id,
             }
         return {'value': values}      
+
     def on_change_principle_id(self, cr, uid, ids, principle_id, context=None):
         values = {}
         if principle_id:
@@ -86,6 +96,7 @@ class product_nonsell_issue(osv.osv):
             res[data.id] = len(data.plan_line)
             print 'res', res
         return res                
+
     _columns = {
         'name': fields.char('Ref ID', readonly=True),
         'date': fields.date('Request Date', required=True),
@@ -132,8 +143,6 @@ class product_nonsell_issue(osv.osv):
         'state': 'draft',
        # 'receive_date':fields.datetime.now,
                   }    
-    
-
         
     def create(self, cursor, user, vals, context=None):
         id_code = self.pool.get('ir.sequence').get(cursor, user,
@@ -257,7 +266,7 @@ class product_nonsell_issue(osv.osv):
         if sell_data.receive_date:
             raise osv.except_osv(_('Warning'),
                                  _('You Cannot Cancel This Form!')) 
-        picking_id =sell_data.picking_id
+        picking_id = sell_data.picking_id
         if picking_id:
             picking_obj.action_cancel(cr, uid, picking_id.id, context=context)
         return self.write(cr, uid, ids, {'state': 'cancel'})       
@@ -275,8 +284,10 @@ class product_nonsell_issue(osv.osv):
                 total_claim = total_price * (principle_support / 100)
                 cr.execute("update product_nonsell_issue_line set claim_price =%s,claim_total=%s where id =%s", (claim_price, total_claim, line_data.id,))
         return True               
+
     
 product_nonsell_issue()   
+
 
 class product_nonsell_issue_line(osv.osv):
 
@@ -297,7 +308,6 @@ class product_nonsell_issue_line(osv.osv):
             defaults = self.on_change_product_id(cr, uid, [], values['product_id'], order['pricelist_id'][0], context=dict(context or {}))['value']
             values = dict(defaults, **values)
         return super(product_nonsell_issue_line, self).create(cr, uid, values, context=context)
-    
 
     _columns = {
         'line_id': fields.many2one('product.nonsell.issue', 'Master Data'),
@@ -353,5 +363,7 @@ class product_nonsell_issue_line(osv.osv):
                 
             }
         return {'value': values}    
+
+
 product_nonsell_issue_line()   
 

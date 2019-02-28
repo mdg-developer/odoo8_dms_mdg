@@ -227,7 +227,7 @@
 
 
 		<record id="action_invoice_tree_for_claim" model="ir.actions.act_window">
-			<field name="name">Supplier Debit Note</field>
+			<field name="name">Supplier Debit Notes</field>
 			<field name="res_model">account.invoice</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form,calendar,graph</field>
@@ -275,7 +275,7 @@
 			parent="account.menu_finance_payables" sequence="10" />
 
 		<record id="action_invoice_tree3_credit_note" model="ir.actions.act_window">
-			<field name="name">Customer Credit Note</field>
+			<field name="name">Customer Credit Notes</field>
 			<field name="res_model">account.invoice</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form,calendar,graph</field>
