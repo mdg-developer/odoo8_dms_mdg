@@ -99,7 +99,7 @@
 				</xpath>
 
 				<field name="base" position="after">
-					<field name="list_price" />
+					<field name="list_price" invisible="1"/>
 				</field>
 			</field>
 		</record>
@@ -119,7 +119,7 @@
 					<field name="new_price" />
 				</field>
 				<field name="categ_id" position="after">
-					<field name="list_price" />
+					<field name="list_price" invisible="1"/>
 					<field name="price_discount" string="%Change" />
 					<field name="price_surcharge" string=" +/- " />
 				</field>
@@ -162,7 +162,7 @@
 							<field name="categ_id" invisible="1" />
 							<field name="product_tmpl_id" invisible="1" />
 							<field name="product_uom_id" />
-							<field name="list_price" />
+							<field name="list_price" invisible="1"/>
 							<field name="price_discount" string="%Change"
 								on_change="price_dis_change(product_id,price_discount,new_price,price_surcharge)" />
 							<field name="price_surcharge" string=" +/- "

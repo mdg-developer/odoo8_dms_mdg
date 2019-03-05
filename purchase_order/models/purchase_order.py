@@ -138,9 +138,15 @@ class purchase_order_line(osv.osv):
         if product.description_purchase:
             name += '\n' + product.description_purchase
         res['value'].update({'name': name})
-
+        cr.execute("""SELECT uom.id FROM product_product pp 
+                      LEFT JOIN product_template pt ON (pp.product_tmpl_id=pt.id)
+                      LEFT JOIN product_template_product_uom_rel rel ON (rel.product_template_id=pt.id)
+                      LEFT JOIN product_uom uom ON (rel.product_uom_id=uom.id)
+                      WHERE pp.id = %s""", (product.id,))
+        uom_list = cr.fetchall()
+        print 'UOM-->>',uom_list
         # - set a domain on product_uom
-        res['domain'] = {'product_uom': [('category_id', '=', product.uom_id.category_id.id)]}
+        res['domain'] = {'product_uom': [('category_id', '=', product.uom_id.category_id.id),('id', 'in', uom_list)]}
 
         # - check that uom and product uom belong to the same category
         product_uom_po_id = product.uom_po_id.id
