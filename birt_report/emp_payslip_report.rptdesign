@@ -45,139 +45,174 @@
                     <property name="columnName">fingerprint_id</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">fingerprint_id</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">fingerprint_id</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">myanmar_name</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">myanmar_name</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">myanmar_name</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">job_name</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">job_name</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">job_name</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">dept_name</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">dept_name</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">dept_name</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">basic_salary</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">basic_salary</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">basic_salary</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">ssb</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">ssb</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">ssb</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">aba</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">aba</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">aba</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">jda</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">jda</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">jda</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">ota</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">ota</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">ota</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">sbn</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">sbn</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">sbn</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">raa</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">raa</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">raa</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">aja</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">aja</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">aja</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">overtime</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">overtime</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">overtime</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">all_allow</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">all_allow</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">all_allow</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">dpd</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">dpd</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">dpd</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">ajd</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">ajd</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">ajd</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">ins</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">ins</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">ins</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">form1_amount</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">form1_amount</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">form1_amount</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">form2_amount</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">form2_amount</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">form2_amount</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">remark</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">remark</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">remark</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">year</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">year</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">year</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">month</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">month</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">month</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">net_amount</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">net_amount</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">net_amount</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">lon</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">lon</text-property>
+                    <text-property name="heading">lon</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">all_deduction</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">all_deduction</text-property>
+                    <text-property name="heading">all_deduction</text-property>
                 </structure>
             </list-property>
             <list-property name="parameters">
@@ -188,6 +223,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">1</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -198,6 +234,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">2</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -208,6 +245,7 @@
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">3</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -218,6 +256,7 @@
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">4</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -337,6 +376,16 @@
                     <structure>
                         <property name="position">23</property>
                         <property name="name">net_amount</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">24</property>
+                        <property name="name">lon</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">25</property>
+                        <property name="name">all_deduction</property>
                         <property name="dataType">decimal</property>
                     </structure>
                 </list-property>
@@ -512,17 +561,33 @@ else
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
+                <structure>
+                    <property name="position">24</property>
+                    <property name="name">lon</property>
+                    <property name="nativeName">lon</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
+                </structure>
+                <structure>
+                    <property name="position">25</property>
+                    <property name="name">all_deduction</property>
+                    <property name="nativeName">all_deduction</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
+                </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select fingerprint_id,myanmar_name,job_name,dept_name,basic_salary,ssb,aba,jda,ota,sbn,raa,aja,overtime,all_allow,dpd,ajd,ins,form1_amount,sum(all_allow - form2_ded) as form2_amount,remark,year,month,net_amount from 
+            <xml-property name="queryText"><![CDATA[select fingerprint_id,myanmar_name,job_name,dept_name,basic_salary,ssb,aba,jda,ota,sbn,raa,aja,overtime,all_allow,dpd,ajd,ins,
+form1_amount,sum(all_allow - form2_ded) as form2_amount,remark,year,month,net_amount,lon,all_deduction from 
 (
 select sub.emp_id,sub.fingerprint_id,sub.myanmar_name,sub.job_name,sub.dept_name,(all_ded-ssb) as all_deduction,basic_salary,ssb,
 (basic_salary -(all_ded)) as form1_amount,remark,(basic_salary/30) as per_day,join_date,month,year,aba,jda,ota,sbn,raa,aja,overtime,
-sum(aba+ jda+ ota+ sbn+ raa+ aja+ overtime) as all_allow,dpd,ajd,ins,sub.net_amount,
+sum(aba+ jda+ ota+ sbn+ raa+ aja+ overtime) as all_allow,dpd,ajd,ins,sub.net_amount,lon,
 sum(dpd+ajd+ins) as form2_ded
  from 
 (
 	select payslip.emp_id,payslip.fingerprint_id,payslip.myanmar_name,payslip.dept_name as dept_name,payslip.job_name,sum(all_deduction) as all_ded,sum(basic_salary) as basic_salary,sum(net_amount) as net_amount,
-	sum(ssb) as ssb,payslip.remark,join_date,month,year,sum(aba) as aba,sum(jda) as jda,sum(ota) as ota,sum(sbn) as sbn,sum(raa) as raa,sum(aja) as aja,sum(overtime) as overtime,sum(dpd) as dpd,sum(ajd) as ajd,sum(ins) as ins
+	sum(ssb) as ssb,payslip.remark,join_date,month,year,sum(aba) as aba,sum(jda) as jda,sum(ota) as ota,sum(sbn) as sbn,sum(raa) as raa,sum(aja) as aja,sum(overtime) as overtime,
+	sum(dpd) as dpd,sum(ajd) as ajd,sum(ins) as ins,sum(lon) lon
 	from 
 	(
 		select hp.id as payslip_id,he.id as emp_id,he.fingerprint_id,he.myanmar_name,hd.name as dept_name,hj.name as job_name,hp.remark2 as remark,he.initial_employment_date as join_date,
@@ -568,7 +633,9 @@ sum(dpd+ajd+ins) as form2_ded
 	case when hpl.code='AJD' then hpl.total 
 	     when hpl.code<> 'DPD' then 0.0 end as ajd,
 	case when hpl.code='INS' then hpl.total 
-	     when hpl.code<>'INS' then 0.0 end as ins
+	     when hpl.code<>'INS' then 0.0 end as ins,
+	case when hpl.code='LON' then hpl.total 
+	     when hpl.code<>'LON' then 0.0 end as lon     
 	from hr_payslip_line hpl
 	left join hr_salary_rule_category hsr on hsr.id=hpl.category_id
 	where hsr.code='DED'
@@ -585,15 +652,17 @@ sum(dpd+ajd+ins) as form2_ded
 	or hpl.code='DPD'
 	or hpl.code='AJD'
 	or hpl.code='INS'
+	or hpl.code='LON'
 	group by hpl.slip_id,hpl.code,hpl.employee_id,hpl.total,hsr.code
 	)payslip_line
 	where payslip.payslip_id = payslip_line.slip_id
 	group by payslip.emp_id,payslip.fingerprint_id,payslip.myanmar_name,payslip.job_name,payslip.dept_name,join_date,payslip.remark,month,year
 ) sub
 group by sub.emp_id,sub.fingerprint_id,sub.myanmar_name,sub.basic_salary,sub.ssb,sub.all_ded,sub.job_name,sub.dept_name,join_date,remark,month,year,
-net_amount,aba,jda,ota,sbn,raa,aja,overtime,dpd,ajd,ins
+net_amount,aba,jda,ota,sbn,raa,aja,overtime,dpd,ajd,ins,lon
 )parent
-group by fingerprint_id,myanmar_name,form1_amount,all_allow,aba,jda,ota,sbn,raa,aja,overtime,dpd,ajd,ins,remark,year,month,job_name,ssb,dept_name,basic_salary,net_amount
+group by fingerprint_id,myanmar_name,form1_amount,all_allow,aba,jda,ota,sbn,raa,aja,overtime,dpd,ajd,ins,remark,year,month,job_name,ssb,
+dept_name,basic_salary,net_amount,lon,all_deduction
 ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
@@ -1297,6 +1366,18 @@ month[dataSetRow["month"]-1];</expression>
                     <expression name="expression" type="javascript">dataSetRow["jda"]</expression>
                     <property name="dataType">decimal</property>
                 </structure>
+                <structure>
+                    <property name="name">lon</property>
+                    <text-property name="displayName">lon</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["lon"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">all_deduction</property>
+                    <text-property name="displayName">all_deduction</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["all_deduction"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
             </list-property>
             <column id="189">
                 <property name="width">2.6041666666666665in</property>
@@ -1449,7 +1530,7 @@ month[dataSetRow["month"]-1];</expression>
                     <property name="borderLeftStyle">none</property>
                     <property name="borderRightStyle">none</property>
                     <property name="borderTopStyle">none</property>
-                    <property name="height">0.4895833333333333in</property>
+                    <property name="height">0.41in</property>
                     <cell id="136">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1486,7 +1567,7 @@ month[dataSetRow["month"]-1];</expression>
                     <property name="borderLeftStyle">none</property>
                     <property name="borderRightStyle">none</property>
                     <property name="borderTopStyle">none</property>
-                    <property name="height">0.5in</property>
+                    <property name="height">0.41in</property>
                     <cell id="139">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1525,7 +1606,7 @@ month[dataSetRow["month"]-1];</expression>
                     <property name="borderLeftStyle">none</property>
                     <property name="borderRightStyle">none</property>
                     <property name="borderTopStyle">none</property>
-                    <property name="height">0.4895833333333333in</property>
+                    <property name="height">0.41in</property>
                     <cell id="142">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1562,7 +1643,7 @@ month[dataSetRow["month"]-1];</expression>
                     <property name="borderLeftStyle">none</property>
                     <property name="borderRightStyle">none</property>
                     <property name="borderTopStyle">none</property>
-                    <property name="height">0.4791666666666667in</property>
+                    <property name="height">0.41in</property>
                     <cell id="145">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1599,7 +1680,7 @@ month[dataSetRow["month"]-1];</expression>
                     <property name="borderLeftStyle">none</property>
                     <property name="borderRightStyle">none</property>
                     <property name="borderTopStyle">none</property>
-                    <property name="height">0.4895833333333333in</property>
+                    <property name="height">0.41in</property>
                     <cell id="148">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1640,7 +1721,7 @@ month[dataSetRow["month"]-1];</expression>
                     <property name="borderLeftStyle">none</property>
                     <property name="borderRightStyle">none</property>
                     <property name="borderTopStyle">none</property>
-                    <property name="height">0.5in</property>
+                    <property name="height">0.41in</property>
                     <cell id="151">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1681,7 +1762,7 @@ month[dataSetRow["month"]-1];</expression>
                     <property name="borderLeftStyle">none</property>
                     <property name="borderRightStyle">none</property>
                     <property name="borderTopStyle">none</property>
-                    <property name="height">0.4895833333333333in</property>
+                    <property name="height">0.41in</property>
                     <cell id="154">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1725,7 +1806,7 @@ month[dataSetRow["month"]-1];</expression>
                     <property name="borderLeftStyle">none</property>
                     <property name="borderRightStyle">none</property>
                     <property name="borderTopStyle">none</property>
-                    <property name="height">0.5104166666666666in</property>
+                    <property name="height">0.41in</property>
                     <cell id="157">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1766,7 +1847,7 @@ month[dataSetRow["month"]-1];</expression>
                     <property name="borderLeftStyle">none</property>
                     <property name="borderRightStyle">none</property>
                     <property name="borderTopStyle">none</property>
-                    <property name="height">0.5104166666666666in</property>
+                    <property name="height">0.41in</property>
                     <cell id="160">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1807,7 +1888,7 @@ month[dataSetRow["month"]-1];</expression>
                     <property name="borderLeftStyle">none</property>
                     <property name="borderRightStyle">none</property>
                     <property name="borderTopStyle">none</property>
-                    <property name="height">0.4895833333333333in</property>
+                    <property name="height">0.41in</property>
                     <cell id="163">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1848,7 +1929,7 @@ month[dataSetRow["month"]-1];</expression>
                     <property name="borderLeftStyle">none</property>
                     <property name="borderRightStyle">none</property>
                     <property name="borderTopStyle">none</property>
-                    <property name="height">0.46875in</property>
+                    <property name="height">0.41in</property>
                     <cell id="166">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1889,7 +1970,7 @@ month[dataSetRow["month"]-1];</expression>
                     <property name="borderLeftStyle">none</property>
                     <property name="borderRightStyle">none</property>
                     <property name="borderTopStyle">none</property>
-                    <property name="height">0.46875in</property>
+                    <property name="height">0.41in</property>
                     <cell id="169">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1930,7 +2011,7 @@ month[dataSetRow["month"]-1];</expression>
                     <property name="borderLeftStyle">none</property>
                     <property name="borderRightStyle">none</property>
                     <property name="borderTopStyle">none</property>
-                    <property name="height">0.4895833333333333in</property>
+                    <property name="height">0.41in</property>
                     <cell id="172">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1971,7 +2052,7 @@ month[dataSetRow["month"]-1];</expression>
                     <property name="borderLeftStyle">none</property>
                     <property name="borderRightStyle">none</property>
                     <property name="borderTopStyle">none</property>
-                    <property name="height">0.4895833333333333in</property>
+                    <property name="height">0.41in</property>
                     <cell id="175">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1983,10 +2064,47 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopWidth">thin</property>
                         <property name="paddingTop">5pt</property>
                         <label id="229">
-                            <text-property name="text">Loan deduction</text-property>
+                            <text-property name="text">ေခ်းေငြ</text-property>
                         </label>
                     </cell>
                     <cell id="176">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <property name="paddingTop">5pt</property>
+                        <data id="309">
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">lon</property>
+                        </data>
+                    </cell>
+                </row>
+                <row id="305">
+                    <property name="fontSize">14pt</property>
+                    <property name="borderBottomStyle">none</property>
+                    <property name="borderLeftStyle">none</property>
+                    <property name="borderRightStyle">none</property>
+                    <property name="borderTopStyle">none</property>
+                    <property name="height">0.41in</property>
+                    <cell id="306">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <property name="paddingTop">5pt</property>
+                        <label id="308">
+                            <text-property name="text">Deposit Deduction</text-property>
+                        </label>
+                    </cell>
+                    <cell id="307">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
@@ -2006,13 +2124,87 @@ month[dataSetRow["month"]-1];</expression>
                         </data>
                     </cell>
                 </row>
+                <row id="310">
+                    <property name="fontSize">14pt</property>
+                    <property name="borderBottomStyle">none</property>
+                    <property name="borderLeftStyle">none</property>
+                    <property name="borderRightStyle">none</property>
+                    <property name="borderTopStyle">none</property>
+                    <property name="height">0.41in</property>
+                    <cell id="311">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <property name="paddingTop">5pt</property>
+                        <label id="313">
+                            <text-property name="text">အျခားျဖတ္ ေငြ</text-property>
+                        </label>
+                    </cell>
+                    <cell id="312">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <property name="paddingTop">5pt</property>
+                        <data id="314">
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">ajd</property>
+                        </data>
+                    </cell>
+                </row>
+                <row id="315">
+                    <property name="fontSize">14pt</property>
+                    <property name="borderBottomStyle">none</property>
+                    <property name="borderLeftStyle">none</property>
+                    <property name="borderRightStyle">none</property>
+                    <property name="borderTopStyle">none</property>
+                    <property name="height">0.41in</property>
+                    <cell id="316">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <property name="paddingTop">5pt</property>
+                        <label id="318">
+                            <text-property name="text">စုစုေပါင္းျဖတ္ ေငြ</text-property>
+                        </label>
+                    </cell>
+                    <cell id="317">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <property name="paddingTop">5pt</property>
+                        <data id="319">
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">all_deduction</property>
+                        </data>
+                    </cell>
+                </row>
                 <row id="177">
                     <property name="fontSize">14pt</property>
                     <property name="borderBottomStyle">none</property>
                     <property name="borderLeftStyle">none</property>
                     <property name="borderRightStyle">none</property>
                     <property name="borderTopStyle">none</property>
-                    <property name="height">0.4791666666666667in</property>
+                    <property name="height">0.41in</property>
                     <cell id="178">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -2053,7 +2245,7 @@ month[dataSetRow["month"]-1];</expression>
                     <property name="borderLeftStyle">none</property>
                     <property name="borderRightStyle">none</property>
                     <property name="borderTopStyle">none</property>
-                    <property name="height">0.4791666666666667in</property>
+                    <property name="height">0.41in</property>
                     <cell id="181">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -2086,7 +2278,7 @@ month[dataSetRow["month"]-1];</expression>
                     <property name="borderLeftStyle">none</property>
                     <property name="borderRightStyle">none</property>
                     <property name="borderTopStyle">none</property>
-                    <property name="height">0.5104166666666666in</property>
+                    <property name="height">0.41in</property>
                     <cell id="184">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
