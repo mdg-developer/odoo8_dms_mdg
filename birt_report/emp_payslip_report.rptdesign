@@ -2078,6 +2078,10 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopWidth">thin</property>
                         <property name="paddingTop">5pt</property>
                         <data id="309">
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">lon</property>
                         </data>
@@ -2156,6 +2160,10 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopWidth">thin</property>
                         <property name="paddingTop">5pt</property>
                         <data id="314">
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">ajd</property>
                         </data>
@@ -2193,6 +2201,10 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopWidth">thin</property>
                         <property name="paddingTop">5pt</property>
                         <data id="319">
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">all_deduction</property>
                         </data>
