@@ -31,4 +31,22 @@ class res_users(osv.osv):
         'allow_feedback':fields.boolean('Allow Customer Feedback',default=True),
     }
     
+    def automation_cashier_approval(self, cr, uid,context=None):
+        cr.execute('''
+        UPDATE customer_payment SET payment_id = mobile_sale_order.id FROM mobile_sale_order  WHERE mobile_sale_order.name = customer_payment.notes AND
+        customer_payment.date=current_date ;
+        ''')
+        return True
+        
+
+    def automation_account_invoice(self, cr, uid,context=None):
+        cr.execute('''
+            select count(*) from account_invoice where residual =0 and state='open' and type='out_invoice' and payment_type='credit'
+        ''')
+        credit_count=cr.fetchone()[0]
+        if credit_count>0:
+            cr.execute('''
+                  update account_invoice set state ='paid' where state='open' and type='out_invoice' and payment_type='credit' and residual =0 
+                  ''')
+        return True
 res_users()
