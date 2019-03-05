@@ -351,7 +351,7 @@ class mobile_sale_order(osv.osv):
                             'customer_id':sync_log['customer_id'],
                             'customer_code':sync_log['customer_code'],
                             'feedback_type':sync_log['feedback_type'],
-                            'contents':urllib.unquote(urllib.unquote(sync_log['contents'])),
+                            'contents':sync_log['contents'],
                             'branch_id':branch_id,
                             'maingroup_id':sync_log['maingroup_id'],
                             'latitude':sync_log['latitude'],
