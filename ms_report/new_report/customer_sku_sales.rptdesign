@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.6.0.v201606072122</property>
     <property name="units">in</property>
     <method name="initialize"><![CDATA[branchList = params["branch_id"].value.join(",");
 teamList = params["sales_team_id"].value.join(",");]]></method>
@@ -311,6 +311,66 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
+                <structure>
+                    <property name="name">param_1</property>
+                    <property name="paramName">from_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">9</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_2</property>
+                    <property name="paramName">to_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">10</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_3</property>
+                    <property name="paramName">from_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">11</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_4</property>
+                    <property name="paramName">to_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">12</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_5</property>
+                    <property name="paramName">from_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">13</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_6</property>
+                    <property name="paramName">to_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">14</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
             </list-property>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
@@ -402,6 +462,44 @@ else
 if (params["status"].value == 'non_foc' )
 {     
    this.queryText =this.queryText.replace("--$status$", "and ail.foc!='true'")
+}
+this.queryText =this.queryText.replace("--$sales_team_check$", "and ai.sale_team_id in ("+ params["sales_team_id"].value.join(",")+")")
+this.queryText =this.queryText.replace("--$branch_id_check$", "and ai.branch_id in ("+ params["branch_id"].value.join(",")+")")
+if (params["township_id"].value[0] == 'ALL')
+{  
+	this.queryText =this.queryText.replace("--$township_id_check$", "")   
+}
+else
+{     
+   this.queryText =this.queryText.replace("--$township_id_check$", "and rp.township in ("+ params["township_id"].value.join(",")+")")
+}
+if (params["outlettype_id"].value[0] == 'ALL')
+{  
+	this.queryText =this.queryText.replace("--$outlettype_id_check$", "")
+}
+else
+{
+	this.queryText =this.queryText.replace("--$outlettype_id_check$", "and oo.id in ('"+ params["outlettype_id"].value.join("','")+"')");
+}
+	
+	
+this.queryText =this.queryText.replace("--$sales_team_inv$", "and ai.section_id in ("+ params["sales_team_id"].value.join(",")+")")
+this.queryText =this.queryText.replace("--$branch_id_inv$", "and ai.branch_id in ("+ params["branch_id"].value.join(",")+")")
+if (params["township_id"].value[0] == 'ALL')
+{  
+	this.queryText =this.queryText.replace("--$township_id_inv$", "")   
+}
+else
+{     
+   this.queryText =this.queryText.replace("--$township_id_inv$", "and rp.township in ("+ params["township_id"].value.join(",")+")")
+}
+if (params["outlettype_id"].value[0] == 'ALL')
+{  
+	this.queryText =this.queryText.replace("--$outlettype_id_inv$", "")
+}
+else
+{
+	this.queryText =this.queryText.replace("--$outlettype_id_inv$", "and oo.id in ('"+ params["outlettype_id"].value.join("','")+"')");
 }]]></method>
             <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
@@ -498,7 +596,7 @@ if (params["status"].value == 'non_foc' )
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[with sale_qty as (
-	select rp.name,rp.customer_code as customer_code,oo.name as outlettype,oo.id as outlettype_id,rt.code as township,rt.id township_id,ccs.name sales_team,ai.section_id,ai.branch_id,name_template,'Sales Qty'::text as status,pp.sequence as seq,
+	( select rp.name,rp.customer_code as customer_code,oo.name as outlettype,oo.id as outlettype_id,rt.code as township,rt.id township_id,ccs.name sales_team,ai.section_id,ai.branch_id,name_template,'Sales Qty'::text as status,pp.sequence as seq,
 	case when ail.uos_id=pt.uom_id then sum(round(quantity,0)) when ail.uos_id!=pt.uom_id then sum(round(quantity*(select floor(round(1/factor,2)) from product_uom where id=ail.uos_id),0)) end as quantity
 	from account_invoice ai,res_partner rp,res_township rt,account_invoice_line ail,product_uom uom,product_product pp,product_template pt,crm_case_section ccs,outlettype_outlettype oo
 	where ai.partner_id=rp.id
@@ -511,8 +609,57 @@ if (params["status"].value == 'non_foc' )
 	and oo.id=rp.outlet_type
 	and date_invoice between ? and ?
 	--$status$
+	--$sales_team_inv$
+	--$branch_id_inv$
+	--$township_id_inv$
+	--$outlettype_id_inv$
 	group by rp.name,rp.customer_code,oo.name,oo.id,rt.code,rt.id,ccs.name,ai.section_id,ai.branch_id,name_template,pp.sequence,ail.uos_id,pt.uom_id,big_uom_id
-	order by seq),
+	UNION ALL
+	select rp.name,rp.customer_code as customer_code,oo.name as outlettype,oo.id as outlettype_id,rt.code as township,rt.id township_id,ccs.name sales_team,ai.sale_team_id,ai.branch_id,name_template,'Sales Qty'::text as status,pp.sequence as seq,
+	case when ail.available=True then 0  end as quantity
+	from partner_stock_check ai,res_partner rp,res_township rt,partner_stock_check_line ail,product_product pp ,outlettype_outlettype oo,product_uom uom,product_template pt,crm_case_section ccs
+	where rp.id=ai.partner_id
+	and rp.township=rt.id
+	and ail.stock_check_ids=ai.id
+	and pp.id=ail.product_id
+	and pp.product_tmpl_id=pt.id
+	and ail.product_uom=uom.id
+	and ai.sale_team_id=ccs.id
+	and oo.id=rp.outlet_type
+	and ai.date between ? and ?
+	--$sales_team_check$
+	--$branch_id_check$
+	--$township_id_check$
+	--$outlettype_id_check$
+	and ai.partner_id  in (
+	select ai.partner_id from account_invoice ai,account_invoice_line ail ,outlettype_outlettype oo,res_partner rp
+	where  ai.id=ail.invoice_id
+	and ai.partner_id=rp.id
+	and date_invoice between ? and ?
+	and oo.id=rp.outlet_type
+	--$status$
+	--$sales_team_inv$
+	--$branch_id_inv$
+	--$township_id_inv$
+	--$outlettype_id_inv$
+	group by ai.partner_id ,ail.product_id)
+	and ail.product_id not in (
+	select ail.product_id from account_invoice ai,account_invoice_line ail ,outlettype_outlettype oo,res_partner rp
+	where  ai.id=ail.invoice_id
+	and oo.id=rp.outlet_type
+	and ai.partner_id=rp.id
+	and date_invoice between ? and ?
+	--$status$
+	--$sales_team_inv$
+	--$branch_id_inv$
+	--$township_id_inv$
+	--$outlettype_id_inv$
+	group by ai.partner_id ,ail.product_id
+	)
+	group by rp.name,rp.customer_code,oo.name,oo.id,rt.code,rt.id,ccs.name,ai.sale_team_id,ai.branch_id,name_template,pp.sequence,ail.product_uom,pt.uom_id,big_uom_id,ail.available
+	)order by seq
+
+),
 total_amt as (
 	select rp.name,rp.customer_code as customer_code,oo.name as outlettype,oo.id as outlettype_id,rt.code as township,rt.id township_id,ccs.name sales_team,ai.section_id,ai.branch_id,'Gross Net Amt.'::character varying name_template,''::text as status,90001::int as seq,
 	round((amount_untaxed)+(amount_tax*1)+(discount_total*1),0) as quantity
@@ -579,7 +726,7 @@ order by seq]]></xml-property>
         <design:attributes>
           <design:identifier>
             <design:name></design:name>
-            <design:position>1</design:position>
+            <design:position>9</design:position>
           </design:identifier>
           <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
@@ -594,7 +741,7 @@ order by seq]]></xml-property>
         <design:attributes>
           <design:identifier>
             <design:name></design:name>
-            <design:position>2</design:position>
+            <design:position>10</design:position>
           </design:identifier>
           <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
@@ -609,7 +756,7 @@ order by seq]]></xml-property>
         <design:attributes>
           <design:identifier>
             <design:name></design:name>
-            <design:position>3</design:position>
+            <design:position>11</design:position>
           </design:identifier>
           <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
@@ -624,7 +771,7 @@ order by seq]]></xml-property>
         <design:attributes>
           <design:identifier>
             <design:name></design:name>
-            <design:position>4</design:position>
+            <design:position>12</design:position>
           </design:identifier>
           <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
@@ -639,7 +786,7 @@ order by seq]]></xml-property>
         <design:attributes>
           <design:identifier>
             <design:name></design:name>
-            <design:position>5</design:position>
+            <design:position>13</design:position>
           </design:identifier>
           <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
@@ -654,37 +801,7 @@ order by seq]]></xml-property>
         <design:attributes>
           <design:identifier>
             <design:name></design:name>
-            <design:position>6</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>7</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>8</design:position>
+            <design:position>14</design:position>
           </design:identifier>
           <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
