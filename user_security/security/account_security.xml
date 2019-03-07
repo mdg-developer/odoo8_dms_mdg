@@ -28,7 +28,7 @@
 			<field name="category_id" ref="base.module_category_accounting_and_finance" />
 		</record>
 		<record id="base.group_allow_debit_note" model="res.groups">
-			<field name="name">Allow To Debit Notes</field>
+			<field name="name">Allow To Debit Note</field>
 			<field name="category_id" ref="base.module_category_accounting_and_finance" />
 
 		</record>

@@ -35,17 +35,21 @@
 			<field name="model">account.invoice</field>
 			<field name="inherit_id" ref="account.invoice_supplier_form" />
 			<field name="arch" type="xml">
-			    <xpath expr="//field[@name='currency_id']" position="after">
-                    <!-- <button name="claim_journal" states="open" string="Submit Claim" attrs="{'invisible':[('state','!=',('open')),('type','!=','in_invoice')]}" /> -->
-                    
-                    <field name="journal_claim" invisible="1"/>
-                    <field name="due_date_rate" attrs="{'readonly' : [('journal_claim', '=', True)]}"/>
-                    <button name="claim_journal" string="Submit Claim" type="object" class="oe_highlight" attrs="{'invisible':['|',('state','in',('done','draft','proforma','proforma2','credit_state','paid','cancel')),('journal_claim','=',True)]}"/>
-                </xpath>
-                
+				<xpath expr="//field[@name='currency_id']" position="after">
+					<!-- <button name="claim_journal" states="open" string="Submit Claim" 
+						attrs="{'invisible':[('state','!=',('open')),('type','!=','in_invoice')]}" 
+						/> -->
+
+					<field name="journal_claim" invisible="1" />
+					<field name="due_date_rate" attrs="{'readonly' : [('journal_claim', '=', True)]}" />
+					<button name="claim_journal" string="Submit Claim" type="object"
+						class="oe_highlight"
+						attrs="{'invisible':['|',('state','in',('done','draft','proforma','proforma2','credit_state','paid','cancel')),('journal_claim','=',True)]}" />
+				</xpath>
+
 				<field name="price_subtotal" position="after">
-					<field name="agreed_price" />
-					<field name="gross_margin" />
+					<field name="agreed_price" groups="purchase.group_purchase_manager"/>
+					<field name="gross_margin" groups="purchase.group_purchase_manager"/>
 				</field>
 			</field>
 		</record>

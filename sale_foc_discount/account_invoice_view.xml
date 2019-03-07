@@ -22,8 +22,8 @@
 
 					<field name="discount_amt" groups="sale.group_discount_per_so_line" />
 
-					<field name="foc" 
-						on_change="foc_change(product_id,quantity,context)"/>
+					<field name="foc"  attrs="{'invisible':[('type','!=','out_invoice')]}"
+						on_change="foc_change(product_id,quantity,context)" groups="sale.group_discount_per_so_line"/>
 
 				</xpath>
 			</field>
@@ -62,8 +62,8 @@
 					position="after">
 
 					<field name="discount_amt" groups="sale.group_discount_per_so_line" />
-					<field name="foc" 
-						on_change="foc_change(product_id,quantity,context)" />
+					<field name="foc" attrs="{'invisible':[('type','!=','out_invoice')]}"
+						on_change="foc_change(product_id,quantity,context)" groups="sale.group_discount_per_so_line"/>
 
 				</xpath>
 <!-- 				<xpath expr="//form/sheet/notebook/page/group/field[@name='amount_tax']" -->

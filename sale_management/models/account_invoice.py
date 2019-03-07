@@ -23,25 +23,25 @@ from mako.runtime import _inherit_from
 import ast
 from openerp.tools.amount_to_text_en import amount_to_text
 
+
 class account_voucher (osv.osv):
     _inherit = 'account.voucher'
     
     def proforma_voucher(self, cr, uid, ids, context=None):
         self.action_move_line_create(cr, uid, ids, context=context)
-        voucher_data=self.browse(cr, uid, ids, context=context)
-        move_id =None
+        voucher_data = self.browse(cr, uid, ids, context=context)
+        move_id = None
         if voucher_data.move_id:
-            move_id=voucher_data.move_id.id
+            move_id = voucher_data.move_id.id
         cr.execute('''
         update  account_invoice set offset_by=%s where move_id in (
         select move_id from account_move_line where reconcile_id in (select reconcile_id from account_move_line where move_id =%s )
         and move_id !=%s)
-        ''',(uid,move_id,move_id))
+        ''', (uid, move_id, move_id))
         return True    
-    
+
 class account_invoice(osv.osv):
     _inherit = 'account.invoice'
-
 
     def amount_to_text(self, cr, uid, amount, currency_id, context=None):
         # Currency complete name is not available in res.currency model
@@ -56,15 +56,14 @@ class account_invoice(osv.osv):
             currency_name = 'reais'
         else:
             currency_name = currency.name
-        #TODO : generic amount_to_text is not ready yet, otherwise language (and country) and currency can be passed
-        #amount_in_word = amount_to_text(amount, context=context)
+        # TODO : generic amount_to_text is not ready yet, otherwise language (and country) and currency can be passed
+        # amount_in_word = amount_to_text(amount, context=context)
         return amount_to_text(amount, currency=currency_name)
         
     def invoice_validate(self, cr, uid, ids, context=None):
         res = super(account_invoice, self).invoice_validate(cr, uid, ids, context=context) 
         if ids:
-            cr.execute("update account_invoice set approved_by=%s where id =%s",(uid,ids[0],))
-            
+            cr.execute("update account_invoice set approved_by=%s where id =%s", (uid, ids[0],))
         return res
     
     def _get_corresponding_sale_order(self, cr, uid, ids, field_name, arg, context=None):
@@ -105,12 +104,12 @@ class account_invoice(osv.osv):
                         saleOrder_Id = data[0][0]
                     else:
                         saleOrder_Id = None
-                    cursor.execute("select manual from promos_rules where id=%s",(pro_line['pro_id'],))
-                    manual =cursor.fetchone()[0]
+                    cursor.execute("select manual from promos_rules where id=%s", (pro_line['pro_id'],))
+                    manual = cursor.fetchone()[0]
                     if manual is not None:
-                        manual=manual
+                        manual = manual
                     else:
-                        manual=False                                    
+                        manual = False                                    
                     promo_line_result = {
                         'promo_line_id':saleOrder_Id,
                         'pro_id':pro_line['pro_id'],
@@ -126,22 +125,32 @@ class account_invoice(osv.osv):
         
     _columns = {
               'sale_order_id':fields.function(_get_corresponding_sale_order, type='many2one', relation='sale.order', string='Sale Order'),
-                  'promos_line_ids':fields.one2many('account.invoice.promotion.line', 'promo_line_id', 'Promotion Lines'),           
-                  'credit_line_ids':fields.one2many('account.invoice.credit.history', 'invoice_id', 'Credit History',copy=True),           
-                    'ignore_credit_limit':fields.boolean('Ignore Credit Limitation',default=False,readonly=True, states={'draft': [('readonly', False)]}),
-                    'credit_invoice_balance' :fields.float('Credit Invoice Balance'),   
-                    'credit_limit_amount' :fields.float('Credit Limit'),   
-                    'credit_balance' :fields.float('Credit Balance'),                 
-                    'approved_by' :fields.many2one('res.users','Approved By'),       
-                    'offset_by' :fields.many2one('res.users','Offset By'),    
-                    'cdnreference_no' :fields.char('Reference No'),       
-                    'dn_currency_id':fields.many2one('res.currency','Currency'),        
+                  'promos_line_ids':fields.one2many('account.invoice.promotion.line', 'promo_line_id', 'Promotion Lines'),
+                  'credit_line_ids':fields.one2many('account.invoice.credit.history', 'invoice_id', 'Credit History', copy=True),
+                    'ignore_credit_limit':fields.boolean('Ignore Credit Limitation', default=False, readonly=True, states={'draft': [('readonly', False)]}),
+                    'credit_invoice_balance' :fields.float('Credit Invoice Balance'),
+                    'credit_limit_amount' :fields.float('Credit Limit'),
+                    'credit_balance' :fields.float('Credit Balance'),
+                    'approved_by' :fields.many2one('res.users', 'Approved By', readonly=True),
+                    'offset_by' :fields.many2one('res.users', 'Offset By', readonly=True),
+                    'cdnreference_no' :fields.char('Reference No'),
+                    'dn_currency_id':fields.many2one('res.currency', 'Currency'),
                     'dn_rate':fields.float('F/X Currency - MMK Rate'),
                     'dn_bank':fields.char('Bank'),
                     'dn_date':fields.date('Date'),
-                    'document_fname': fields.char('Filename', size=128),
-                    'document_file':fields.binary('File', required=False),
+                    'document_fname1': fields.char('Filename', size=128),
+                    'document_file1':fields.binary('File', required=False),
+                    'document_fname2': fields.char('Filename', size=128),
+                    'document_file2':fields.binary('File', required=False),
+                    'document_fname3': fields.char('Filename', size=128),
+                    'document_file3':fields.binary('File', required=False),
+                    'principle_id':fields.many2one('product.maingroup', 'Principle'),
+                    'claim_type': fields.selection([('trade_discount', 'Trade Discount Foc'),
+                                      ('mis_claim', 'Mis Claim'),
+                                      ('gid_loss', 'Gid Loss/Damage'),
+                                      ('expired', 'Expired/Damage')], 'Type'),
               }
+
     
 class account_invoice_credit_history(osv.osv):
     _name = 'account.invoice.credit.history'
@@ -154,9 +163,11 @@ class account_invoice_credit_history(osv.osv):
                 'balance':fields.float('Balance'),
                 'due_date':fields.date('Due Date'),
                 'balance_day':fields.integer('Balance Days'),
-                'branch_id':fields.many2one('res.branch','Branch'),
+                'branch_id':fields.many2one('res.branch', 'Branch'),
                 'status':fields.char('Status'),
                 }    
+
+
 class sale_order_promotion_line(osv.osv):
     _name = 'account.invoice.promotion.line'
     _columns = {
@@ -165,29 +176,30 @@ class sale_order_promotion_line(osv.osv):
               'from_date':fields.datetime('From Date'),
               'to_date':fields.datetime('To Date'),
               'manual':fields.boolean('Manual'),
-              'product_id': fields.many2one('product.product', 'Product',readonly=False),
-              'is_foc': fields.boolean('Is FOC',readonly=False),
-              'is_discount': fields.boolean('Is Discount',readonly=False),
-              'foc_qty': fields.float('Foc Qty',readonly=False),
-              'discount_amount': fields.float('Discount Amount',readonly=False),
-              'discount_percent': fields.float('Discount Percent',readonly=False),                             
+              'product_id': fields.many2one('product.product', 'Product', readonly=False),
+              'is_foc': fields.boolean('Is FOC', readonly=False),
+              'is_discount': fields.boolean('Is Discount', readonly=False),
+              'foc_qty': fields.float('Foc Qty', readonly=False),
+              'discount_amount': fields.float('Discount Amount', readonly=False),
+              'discount_percent': fields.float('Discount Percent', readonly=False),
               }
     _defaults = {
         'manual':False,
         'is_foc':False,
-        'is_discount':False,              
+        'is_discount':False,
     }
     
     def onchange_promo_id(self, cr, uid, ids, pro_id, context=None):
             result = {}
             promo_pool = self.pool.get('promos.rules')
-            datas = promo_pool.read(cr, uid, pro_id, ['from_date', 'to_date','manual'], context=context)
+            datas = promo_pool.read(cr, uid, pro_id, ['from_date', 'to_date', 'manual'], context=context)
     
             if datas:
                 result.update({'from_date':datas['from_date']})
                 result.update({'to_date':datas['to_date']})
                 result.update({'manual':datas['manual']})
             return {'value':result}
+
             
 sale_order_promotion_line()    
     

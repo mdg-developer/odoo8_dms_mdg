@@ -65,6 +65,8 @@ class purchase_order_line(osv.osv):
     
     def _amount_margin(self, cr, uid, ids, prop, arg, context=None):
         res = {}
+        agreed_price =0
+        sale_price=0
         for line in self.browse(cr, uid, ids, context=context):
             product_qty = line.product_qty
             price_unit = line.price_unit
@@ -217,11 +219,15 @@ class account_invoice_line(osv.osv):
     
     def _amount_margin(self, cr, uid, ids, prop, arg, context=None):
         res = {}
+        agreed_price =0
+        sale_price=0
         for line in self.browse(cr, uid, ids, context=context):
-            product_qty = line.quantity
-            price_unit = line.price_unit
-            sale_price = price_unit * product_qty
-            agreed_price = product_qty * line.agreed_price
+            if line.invoice_id.type=='in_invoice':
+
+                product_qty = line.quantity
+                price_unit = line.price_unit
+                sale_price = price_unit * product_qty
+                agreed_price = product_qty * line.agreed_price
             res[line.id] = agreed_price -sale_price
         return res    
         
