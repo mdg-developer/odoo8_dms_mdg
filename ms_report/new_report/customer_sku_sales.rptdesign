@@ -1584,7 +1584,7 @@ order by code,name]]></xml-property>
                         <property name="fontSize">12pt</property>
                         <property name="fontWeight">bold</property>
                         <property name="textAlign">center</property>
-                        <text-property name="text">Report : By Customer SKU Sales Report</text-property>
+                        <text-property name="text">Report : By Customer SKU Sales </text-property>
                     </label>
                     <table id="614">
                         <property name="fontFamily">"Arial"</property>

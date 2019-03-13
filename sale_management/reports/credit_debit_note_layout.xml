@@ -41,26 +41,28 @@
 
 		<template id="credit_debit_note_layout_header">
 			<div class="header">
-				<div class="row">
-					<div class="col-xs-6"></div>
-					<div class="col-xs-6 text-right" style="font-size:10pt;color:#4d94ff;"
-						t-field="company.rml_header1" />
-				</div>
-				<div class="row">
-					<div class="col-xs-4">
-						<img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo"
-							style="max-height: 50pt;" />
+				<t t-name="letter_head_report.external_letter_head_layout_header">
+					<div class="header">
+						<div class="row" align="center">
+							<div class="row" align="center">
+								<span>
+									<img
+										src="/sale_management/static/description/MDGLetterhead2019.png"
+										style="max-height: 1500pt;width:1500px;" />
+
+								</span>
+							</div>
+						</div>
 					</div>
-					<div class="col-xs-4">
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-xs-3">
-						<div t-field="company.partner_id"
-							t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'
-							style="border-bottom: 1pt solid black;" />
-					</div>
-				</div>
+				</t>
+				<!-- <div class="row"> <div class="col-xs-6"></div> <div class="col-xs-6 
+					text-right" style="font-size:10pt;color:#4d94ff;" t-field="company.rml_header1" 
+					/> </div> <div class="row"> <div class="col-xs-4"> <img t-if="company.logo" 
+					t-att-src="'data:image/png;base64,%s' % company.logo" style="max-height: 
+					50pt;" /> </div> <div class="col-xs-4"> </div> </div> <div class="row"> <div 
+					class="col-xs-3"> <div t-field="company.partner_id" t-field-options='{"widget": 
+					"contact", "fields": ["address", "name"], "no_marker": true}' style="border-bottom: 
+					1pt solid black;" /> </div> </div> -->
 			</div>
 		</template>
 

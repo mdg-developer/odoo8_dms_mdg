@@ -63,9 +63,9 @@
 						<thead>
 							<tr style="background-color:#b4b4b4;">
 								<th class="text-center" style="border:1pt solid;border-color:black;">No</th>
-								<th class="text-center" style="border:1pt solid;border-color:black;">PRODUCT</th>
-								<th class="text-center" style="border:1pt solid;border-color:black;">PRODUCT CODE</th>
-								<th class="text-center" style="border:1pt solid;border-color:black;">PACK SIZE</th>
+								<th class="text-center" style="border:1pt solid;border-color:black;">ITEM</th>
+<!-- 								<th class="text-center" style="border:1pt solid;border-color:black;">PRODUCT CODE</th> -->
+<!-- 								<th class="text-center" style="border:1pt solid;border-color:black;">PACK SIZE</th> -->
 								<th class="text-center" style="border:1pt solid;border-color:black;">DESCRIPTION</th>
 								<th class="text-center" style="border:1pt solid;border-color:black;">U/M</th>
 								<th class="text-center" style="border:1pt solid;border-color:black;">QTY</th>
@@ -90,12 +90,12 @@
 								<td style="border:1pt solid;border-color:black;">
 									<span t-field="l.product_id.name_template" />
 								</td>
-								<td style="border:1pt solid;border-color:black;">
-									<span t-field="l.product_id.product_tmpl_id.default_code" />
-								</td>
-								<td style="border:1pt solid;border-color:black;">
-									<span t-field="l.product_id.product_tmpl_id.uom_ratio" />
-								</td>
+<!-- 								<td style="border:1pt solid;border-color:black;"> -->
+<!-- 									<span t-field="l.product_id.product_tmpl_id.default_code" /> -->
+<!-- 								</td> -->
+<!-- 								<td style="border:1pt solid;border-color:black;"> -->
+<!-- 									<span t-field="l.product_id.product_tmpl_id.uom_ratio" /> -->
+<!-- 								</td> -->
 								<td style="border:1pt solid;border-color:black;">
 									<span t-field="l.name" />
 								</td>
@@ -116,22 +116,21 @@
 									<t t-set="convert_amount" t-value="l.price_subtotal/o.dn_rate" />
 									<span t-esc="'{:,.2f}'.format(convert_amount)" />
 									<span t-field="o.dn_currency_id.symbol" />
-
 								</td>
 							</tr>
 						</tbody>
 					</table>
-					<p>
-						<I>
-							<b>AMOUNT IN WORDS: ( </b>
-						</I>
-						<span t-esc="o.amount_to_text(o.residual,o.currency_id.id)" />
-						<b>
-							)
-							<span t-field="o.currency_id.symbol" />
-						</b>
+<!-- 					<p> -->
+<!-- 						<I> -->
+<!-- 							<b>AMOUNT IN WORDS: ( </b> -->
+<!-- 						</I> -->
+<!-- 						<span t-esc="o.amount_to_text(o.residual,o.currency_id.id)" /> -->
+<!-- 						<b> -->
+<!-- 							) -->
+<!-- 							<span t-field="o.currency_id.symbol" /> -->
+<!-- 						</b> -->
 
-					</p>
+<!-- 					</p> -->
 					<table class="table table-condensed" style="border:0pt;">
 						<thead>
 							<tr>
@@ -142,7 +141,7 @@
 								</td>
 								<td>
 								</td>
-								<td style="margin-top:-5pt;" align="right">
+								<td style="margin-top:-5pt;" align="left">
 									<b>
 										<span>APPROVED BY:</span>
 									</b>
@@ -150,7 +149,7 @@
 								<td>
 								</td>
 
-								<td style="margin-top:-5pt;" align="right">
+								<td style="margin-top:-5pt;" align="left">
 									<b>
 										<span>OFFEST BY:</span>
 									</b>
@@ -166,14 +165,14 @@
 									<span t-field="o.user_id.partner_id.name" />
 
 								</td>
-								<td style="margin-top:-5pt;font-size:12px;" align="right">
+								<td style="margin-top:-5pt;font-size:12px;" align="left">
 									<span>NAME:</span>
 								</td>
 								<td style="margin-top:-5pt;font-size:12px;">
 									<span t-field="o.approved_by.partner_id.name" />
 								</td>
 
-								<td style="margin-top:-5pt;font-size:12px;" align="right">
+								<td style="margin-top:-5pt;font-size:12px;" align="left">
 									<span>NAME:</span>
 								</td>
 								<td style="margin-top:-5pt;font-size:12px;">
@@ -187,14 +186,14 @@
 								<td>
 								<![CDATA[&nbsp;&nbsp;]]>
 								</td>
-								<td style="margin-top:-5pt;font-size:12px;" align="right">
+								<td style="margin-top:-5pt;font-size:12px;" align="left">
 									<span>POSITION:</span>
 								</td>
 								<td>
 								<![CDATA[&nbsp;&nbsp;]]>
 								</td>
 
-								<td style="margin-top:-5pt;font-size:12px;" align="right">
+								<td style="margin-top:-5pt;font-size:12px;" align="left">
 									<span>POSITION:</span>
 								</td>
 								<td>
@@ -247,6 +246,7 @@
 										<td class="text-right">
 											<t t-set="amount" t-value="t.debit+t.credit" />
 											<span t-esc="'{:,.2f}'.format(amount)" />
+											<span t-field="t.currency_id.symbol" />
 										</td>
 
 									</tr>
