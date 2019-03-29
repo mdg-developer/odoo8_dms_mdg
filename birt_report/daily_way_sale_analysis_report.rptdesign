@@ -800,7 +800,7 @@ this.queryText =this.queryText.replace("--$so_sale_team_id$", "and so.section_id
 a.date,a.branch,a.sale_team,a.day_name,
 COALESCE(a.visit_plan,0)visit_plan,
 COALESCE(a.visit_only_as_plan,0)visit_only_as_plan,
-COALESCE(a.visit_plan,0)-COALESCE(a.visit_only_as_plan+a.plan_invoice,0)not_visit_as_plan,
+(COALESCE(a.visit_plan,0)-(COALESCE(a.visit_only_as_plan,0)+COALESCE(a.plan_invoice,0)))not_visit_as_plan,
 COALESCE(a.plan_invoice,0) plan_invoice,
 COALESCE(a.plan_invoice*100/a.visit_plan,0)effective_rate,
 (COALESCE(a.visit_only_from_other_visit,0) + COALESCE(a.total_invoice_from_other_visit,0))total_other_visit_withoud_plan,
@@ -938,128 +938,6 @@ where((cv.date at time zone 'utc' )at time zone 'asia/rangoon')::date
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
-  <DataSetParameters>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>21</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>22</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>23</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>24</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>25</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>26</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>27</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>28</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-  </DataSetParameters>
   <design:ResultSets derivedMetaData="true">
     <design:resultSetDefinitions>
       <design:resultSetColumns>
@@ -2303,6 +2181,10 @@ from sale_plan_day]]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="132">
+                            <structure name="dateTimeFormat">
+                                <property name="category">Custom</property>
+                                <property name="pattern">dd/MM/yyyy</property>
+                            </structure>
                             <property name="resultSetColumn">date</property>
                         </data>
                     </cell>
