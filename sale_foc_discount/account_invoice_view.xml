@@ -22,7 +22,7 @@
 
 					<field name="discount_amt" groups="sale.group_discount_per_so_line" />
 
-					<field name="foc"  attrs="{'invisible':[('type','!=','out_invoice')]}"
+					<field name="foc"  
 						on_change="foc_change(product_id,quantity,context)" groups="sale.group_discount_per_so_line"/>
 
 				</xpath>
@@ -62,7 +62,7 @@
 					position="after">
 
 					<field name="discount_amt" groups="sale.group_discount_per_so_line" />
-					<field name="foc" attrs="{'invisible':[('type','!=','out_invoice')]}"
+					<field name="foc" 
 						on_change="foc_change(product_id,quantity,context)" groups="sale.group_discount_per_so_line"/>
 
 				</xpath>

@@ -8,6 +8,7 @@ class res_users(osv.osv):
     _inherit = "res.users"
     _description = "Users"
     _columns = {
+        'is_entry':fields.boolean('Is entry',default=False),
         'section_ids':fields.many2many('crm.case.section', 'section_users_rel', 'uid', 'section_id', 'Teams', required=True),
         'allow_product':fields.boolean('Allow Product',default=True),
         'allow_promotion':fields.boolean('Allow Promotion',default=True),

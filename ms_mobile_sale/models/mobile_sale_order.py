@@ -1506,7 +1506,7 @@ class mobile_sale_order(osv.osv):
         if is_supervisor==True:
             cr.execute('''            
                 select distinct p.id,p.date,p.sale_team,p.name,p.principal from sale_plan_trip p
-                ,  crm_case_section c,res_partner_sale_plan_trip_rel d, res_partner e
+                ,crm_case_section c,res_partner_sale_plan_trip_rel d, res_partner e
                 where  p.sale_team=c.id
                 and p.sale_team in (select id from crm_case_section where supervisor_team= %s) 
                 and p.active = true 
@@ -1768,7 +1768,7 @@ class mobile_sale_order(osv.osv):
                 m_mobile_ids = cursor.fetchall()
 #                 cursor.execute("select id from account_invoice where date_invoice=%s and section_id =%s and state='open' and payment_type='cash' ", (de_date, team_id,))
 #                 invoice_ids = cursor.fetchall()       
-                cursor.execute("select order_id from pending_delivery where delivery_date=%s and delivery_team_id =%s and state='draft'  and miss !=True ", (de_date, team_id,))
+                cursor.execute("select order_id from pending_delivery pd,sale_order so where pd.order_id =so.id and so.payment_type ='cash' and pd.delivery_date=%s and pd.delivery_team_id =%s and pd.state='draft'  and pd.miss !=True ", (de_date, team_id,))
                 invoice_ids = cursor.fetchall()                       
                 if invoice_ids:
                     for data_pro in invoice_ids:
