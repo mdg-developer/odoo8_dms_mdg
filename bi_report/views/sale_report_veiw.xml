@@ -19,6 +19,7 @@
         	  	<filter string="Group" context="{'group_by':'group_id'}"/>
         	  	<filter string="Main Group" context="{'group_by':'main_group_id'}"/>
         	  	<filter string="Product Division" context="{'group_by':'division_id'}"/>
+        	  	<filter string="Order Reference" context="{'group_by':'tb_ref_no'}"/>
         	  </xpath>           
         </field>
     </record>

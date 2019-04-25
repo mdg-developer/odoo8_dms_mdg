@@ -42,6 +42,7 @@ class sale_report(osv.osv):
        'demarcation_id': fields.many2one('sale.demarcation','Demarcation', readonly=True),
        'state_id': fields.many2one('res.country.state','Region', readonly=True),
         'tb_ref_no': fields.char('Order Reference', size=64),
+        'channel_id': fields.many2one('sale.channel','Sale Channel', readonly=True),
     }
     
     
@@ -81,7 +82,8 @@ class sale_report(osv.osv):
                     rp.demarcation_id as demarcation_id,
                     t.group as group_id,
                     t.main_group as main_group_id,
-                    t.division as division_id
+                    t.division as division_id,
+                    rp.sales_channel as channel_id
         """
         return select_str
 
@@ -125,7 +127,8 @@ class sale_report(osv.osv):
                     s.state_id,
                     rp.district,
                     rp.demarcation_id,
-                    s.tb_ref_no
+                    s.tb_ref_no,
+                    rp.sales_channel
         """
         return group_by_str
 
