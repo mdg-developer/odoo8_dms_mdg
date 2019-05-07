@@ -45,12 +45,42 @@ def geo_query_address(street=None, zip=None, city=None, state=None, country=None
 
 class outlet_type(osv.osv):
     _name = 'outlettype.outlettype'
+    
+    def retrieve_data(self, cr, uid, ids, context=None):
+        product_outlet_obj = self.pool.get('product.outlettype')
+        cr.execute('delete from product_outlettype where outlettype_id=%s', (ids[0],))
+        cr.execute('''select pp.id,pp.sequence from product_template pt,product_product pp where pt.id=pp.product_tmpl_id
+            and pt.type!='service' and pt.sale_ok=True''')
+        product_data=cr.fetchall()
+        if product_data:                
+            for val in product_data:
+                product_id=val[0]    
+                product_sequence =val[1]   
+                product_outlet_obj.create(cr, uid, {'outlettype_id': ids[0],
+                               'sequence':product_sequence,
+                              'product_id': product_id,
+                              'type':'none',
+                        }, context=context)        
     _columns = {
                 'name':fields.char('Outlet Name'),
+                'outlet_product_line':fields.one2many('product.outlettype','outlettype_id','Outlet'),
                 }
 
     
 outlet_type()
+
+class product_outlet(osv.osv):
+    _name = 'product.outlettype'
+    _columns = {
+                'outlettype_id':fields.many2one('outlettype.outlettype','Outlet'),
+                'product_id':fields.many2one('product.product','Product'),
+                'sequence':fields.integer('Sequence'),         
+                'type':fields.selection([('none', 'None'),
+                                   ('must_sell','Must Sell'), # used by cash statements
+                                   ('available', 'Available')],'Type', select=True),
+                }
+    
+product_outlet()
 
 class res_partner(osv.osv):
 
