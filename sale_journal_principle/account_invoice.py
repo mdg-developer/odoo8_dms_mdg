@@ -605,7 +605,7 @@ class account_invoice(models.Model):
                     if account_id is None:
                         raise except_orm(_('Warning!'), _('Please define payable control account.'))
                     
-                if line['ref'][:2] == 'PO':
+                if line['ref'][:2] == 'PO'  and line.get('product_id', False) != False:
                     cr.execute("select avl.id from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s and avl.foc!=true", (origin, product.id,))
                     invoice_line_id = cr.fetchone()
                     if invoice_line_id:
@@ -948,7 +948,9 @@ class account_invoice(models.Model):
                             gross_margin =invoice_line_data.gross_margin    
                         different_id = invoice_line_data.product_id.product_tmpl_id.main_group.property_account_difference.id
                         if different_id != line['account_id']:
+                            print ' tax_amttax_amttax_amt',tax_amt,different_id,line['account_id'],invoice_line_data.product_id.name_template
                             line['price'] = line['price'] - discount_amt + tax_amt - gross_margin
+                            
                         else:
                             line['price'] = 0
 
@@ -982,9 +984,9 @@ class account_invoice(models.Model):
                 print 'line[price]', line['price']
                 if line['price'] > 0:
                     line['price'] = -line['price']
-                if tax_amount_currency:
-                    if line['ref'][:2] == 'PO':
-                        line['amount_currency'] += tax_amount_currency
+#                 if tax_amount_currency:
+#                     if line['ref'][:2] == 'PO':
+#                         line['amount_currency'] += tax_amount_currency
                 res = {
                     'date_maturity': line.get('date_maturity', False),
                     'partner_id': part,
