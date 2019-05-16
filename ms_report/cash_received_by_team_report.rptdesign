@@ -47,8 +47,8 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
             </structure>
         </scalar-parameter>
         <scalar-parameter name="branch_id" id="81" extends="report_library.branch_id"/>
-        <scalar-parameter name="sales_team_id" id="82" extends="report_library.sales_team_id"/>
         <scalar-parameter name="user_id" id="83" extends="report_library.user_id"/>
+        <scalar-parameter name="sales_team_id" id="1013" extends="report_library.sales_team_id"/>
     </parameters>
     <data-sources>
         <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="77"

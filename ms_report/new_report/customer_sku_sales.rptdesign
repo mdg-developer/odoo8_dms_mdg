@@ -150,14 +150,8 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
         </scalar-parameter>
     </parameters>
     <data-sources>
-        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="892"
- extends="report_library.Data Source">
-            <property name="odaDriverClass">org.postgresql.Driver</property>
-            <property name="odaURL">jdbc:postgresql://localhost:5432/mdg_testing</property>
-            <property name="odaUser">odoo</property>
-            <encrypted-property name="odaPassword" encryptionID="base64">b3BlbnBncHdk</encrypted-property>
-            <property name="odaJndiName">java:comp/env/jdbc/ReportDB</property>
-        </oda-data-source>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="1046"
+ extends="report_library.Data Source"/>
     </data-sources>
     <data-sets>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="company" id="12"
@@ -860,7 +854,7 @@ select id from sales_target ai where ai.month in (select EXTRACT(MONTH FROM TIME
 )::char(2)) 
 and 
 ai.year in (select EXTRACT(YEAR FROM TIMESTAMP --$date$ 
-)::char(2)) 
+)::char(4)) 
 --$sales_team_check$ 
 order by id desc limit 1
 )
@@ -1817,6 +1811,25 @@ else
                         </tabular-measure>
                     </property>
                 </tabular-measure-group>
+                <tabular-measure-group name="Summary Field3" id="961">
+                    <property name="measures">
+                        <tabular-measure name="target_qty" id="962">
+                            <expression name="measureExpression" type="javascript">dataSetRow["target_qty"]</expression>
+                            <property name="dataType">integer</property>
+                        </tabular-measure>
+                    </property>
+                </tabular-measure-group>
+                <tabular-measure-group name="Summary Field4" id="998">
+                    <property name="measures">
+                        <tabular-measure name="status" id="999">
+                            <property name="function">first</property>
+                            <property name="isCalculated">false</property>
+                            <expression name="measureExpression" type="javascript">dataSetRow["status"]</expression>
+                            <property name="dataType">string</property>
+                            <property name="isVisible">true</property>
+                        </tabular-measure>
+                    </property>
+                </tabular-measure-group>
             </property>
             <property name="dataSet">Data Set</property>
         </tabular-cube>
@@ -2180,7 +2193,7 @@ else
                             <property name="borderLeftWidth">thin</property>
                             <property name="borderBottomStyle">solid</property>
                             <property name="borderBottomWidth">thin</property>
-                            <property name="width">145px</property>
+                            <property name="width">148px</property>
                             <property name="content">
                                 <data id="881">
                                     <property name="fontWeight">normal</property>
@@ -2235,16 +2248,66 @@ else
                             <property name="borderBottomStyle">solid</property>
                             <property name="borderBottomWidth">thin</property>
                             <property name="content">
-                                <data id="890">
-                                    <property name="fontWeight">bold</property>
-                                    <property name="paddingLeft">5pt</property>
-                                    <structure name="numberFormat">
-                                        <property name="category">Currency</property>
-                                        <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
-                                    </structure>
-                                    <property name="textAlign">right</property>
-                                    <property name="resultSetColumn">quantity_Group1/name_template</property>
-                                </data>
+                                <grid id="973">
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="height">1.25in</property>
+                                    <column id="974"/>
+                                    <row id="977">
+                                        <property name="height">0.4479166666666667in</property>
+                                        <cell id="978">
+                                            <property name="borderBottomStyle">solid</property>
+                                            <property name="borderBottomWidth">thin</property>
+                                            <data id="890">
+                                                <property name="fontWeight">bold</property>
+                                                <property name="paddingLeft">5pt</property>
+                                                <structure name="numberFormat">
+                                                    <property name="category">Currency</property>
+                                                    <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
+                                                </structure>
+                                                <property name="textAlign">right</property>
+                                                <property name="resultSetColumn">quantity_Group1/name_template</property>
+                                            </data>
+                                        </cell>
+                                    </row>
+                                    <row id="981">
+                                        <property name="height">0.3854166666666667in</property>
+                                        <cell id="982">
+                                            <property name="borderBottomStyle">solid</property>
+                                            <property name="borderBottomWidth">thin</property>
+                                            <property name="borderTopStyle">solid</property>
+                                            <property name="borderTopWidth">thin</property>
+                                            <data id="966">
+                                                <property name="fontWeight">bold</property>
+                                                <structure name="numberFormat">
+                                                    <property name="category">Currency</property>
+                                                    <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
+                                                </structure>
+                                                <property name="textAlign">right</property>
+                                                <property name="resultSetColumn">target_qty_Group1/name_template</property>
+                                            </data>
+                                        </cell>
+                                    </row>
+                                    <row id="985">
+                                        <property name="height">0.4166666666666667in</property>
+                                        <cell id="986">
+                                            <property name="borderBottomStyle">solid</property>
+                                            <property name="borderBottomWidth">thin</property>
+                                            <property name="borderTopStyle">solid</property>
+                                            <property name="borderTopWidth">thin</property>
+                                            <data id="972">
+                                                <property name="fontWeight">bold</property>
+                                                <property name="paddingLeft">5pt</property>
+                                                <structure name="numberFormat">
+                                                    <property name="category">Currency</property>
+                                                    <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
+                                                </structure>
+                                                <property name="textAlign">right</property>
+                                                <property name="resultSetColumn">test</property>
+                                            </data>
+                                        </cell>
+                                    </row>
+                                </grid>
                             </property>
                         </extended-item>
                     </property>
@@ -2290,15 +2353,37 @@ else
                             <property name="borderBottomStyle">solid</property>
                             <property name="borderBottomWidth">thin</property>
                             <property name="content">
-                                <data id="907">
-                                    <list-property name="visibility">
-                                        <structure>
-                                            <property name="format">all</property>
-                                            <expression name="valueExpr" type="javascript">true</expression>
-                                        </structure>
-                                    </list-property>
-                                    <property name="resultSetColumn">type_Group1/name_template</property>
-                                </data>
+                                <grid id="1013">
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="height">1.2395833333333333in</property>
+                                    <column id="1014"/>
+                                    <row id="1015">
+                                        <property name="height">0.4479166666666667in</property>
+                                        <cell id="1016">
+                                            <property name="borderBottomStyle">solid</property>
+                                            <property name="borderBottomWidth">thin</property>
+                                        </cell>
+                                    </row>
+                                    <row id="1018">
+                                        <property name="height">0.3854166666666667in</property>
+                                        <cell id="1019">
+                                            <property name="borderBottomStyle">solid</property>
+                                            <property name="borderBottomWidth">thin</property>
+                                            <property name="borderTopStyle">solid</property>
+                                            <property name="borderTopWidth">thin</property>
+                                        </cell>
+                                    </row>
+                                    <row id="1021">
+                                        <property name="height">0.40625in</property>
+                                        <cell id="1022">
+                                            <property name="borderBottomStyle">solid</property>
+                                            <property name="borderBottomWidth">thin</property>
+                                            <property name="borderTopStyle">solid</property>
+                                            <property name="borderTopWidth">thin</property>
+                                        </cell>
+                                    </row>
+                                </grid>
                             </property>
                         </extended-item>
                     </property>
@@ -2322,9 +2407,7 @@ else
                             <property name="borderTopWidth">thin</property>
                             <property name="borderBottomStyle">solid</property>
                             <property name="borderBottomWidth">thin</property>
-                            <property name="borderRightStyle">solid</property>
-                            <property name="borderRightWidth">thin</property>
-                            <property name="width">0in</property>
+                            <property name="width">0px</property>
                             <property name="content">
                                 <data id="917">
                                     <list-property name="visibility">
@@ -2345,18 +2428,38 @@ else
                             <property name="borderTopWidth">thin</property>
                             <property name="borderBottomStyle">solid</property>
                             <property name="borderBottomWidth">thin</property>
-                            <property name="borderRightStyle">solid</property>
-                            <property name="borderRightWidth">thin</property>
                             <property name="content">
-                                <data id="916">
-                                    <list-property name="visibility">
-                                        <structure>
-                                            <property name="format">all</property>
-                                            <expression name="valueExpr" type="javascript">true</expression>
-                                        </structure>
-                                    </list-property>
-                                    <property name="resultSetColumn">test_Group1/name_template</property>
-                                </data>
+                                <grid id="1024">
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="height">1.2395833333333333in</property>
+                                    <column id="1025"/>
+                                    <row id="1026">
+                                        <property name="height">0.4479166666666667in</property>
+                                        <cell id="1027">
+                                            <property name="borderBottomStyle">solid</property>
+                                            <property name="borderBottomWidth">thin</property>
+                                        </cell>
+                                    </row>
+                                    <row id="1029">
+                                        <property name="height">0.3854166666666667in</property>
+                                        <cell id="1030">
+                                            <property name="borderBottomStyle">solid</property>
+                                            <property name="borderBottomWidth">thin</property>
+                                            <property name="borderTopStyle">solid</property>
+                                            <property name="borderTopWidth">thin</property>
+                                        </cell>
+                                    </row>
+                                    <row id="1032">
+                                        <property name="height">0.40625in</property>
+                                        <cell id="1033">
+                                            <property name="borderBottomStyle">solid</property>
+                                            <property name="borderBottomWidth">thin</property>
+                                            <property name="borderTopStyle">solid</property>
+                                            <property name="borderTopWidth">thin</property>
+                                        </cell>
+                                    </row>
+                                </grid>
                             </property>
                         </extended-item>
                     </property>
@@ -2370,17 +2473,145 @@ else
                         </extended-item>
                     </property>
                 </extended-item>
+                <extended-item extensionName="MeasureView" id="963">
+                    <property name="measure">target_qty</property>
+                    <property name="detail">
+                        <extended-item extensionName="AggregationCell" id="964">
+                            <property name="aggregationOnRow">Group3/township</property>
+                            <property name="aggregationOnColumn">Group1/name_template</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">thin</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">thin</property>
+                            <property name="width">0px</property>
+                            <property name="content">
+                                <data id="967">
+                                    <list-property name="visibility">
+                                        <structure>
+                                            <property name="format">all</property>
+                                            <expression name="valueExpr" type="javascript">true</expression>
+                                        </structure>
+                                    </list-property>
+                                    <property name="resultSetColumn">target_qty_Group3/township_Group1/name_template</property>
+                                </data>
+                            </property>
+                        </extended-item>
+                    </property>
+                    <property name="aggregations">
+                        <extended-item extensionName="AggregationCell" id="965">
+                            <property name="aggregationOnColumn">Group1/name_template</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">thin</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">thin</property>
+                            <property name="content">
+                                <grid id="1035">
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="height">1.2395833333333333in</property>
+                                    <column id="1036"/>
+                                    <row id="1037">
+                                        <property name="height">0.4479166666666667in</property>
+                                        <cell id="1038">
+                                            <property name="borderBottomStyle">solid</property>
+                                            <property name="borderBottomWidth">thin</property>
+                                        </cell>
+                                    </row>
+                                    <row id="1040">
+                                        <property name="height">0.3854166666666667in</property>
+                                        <cell id="1041">
+                                            <property name="borderBottomStyle">solid</property>
+                                            <property name="borderBottomWidth">thin</property>
+                                            <property name="borderTopStyle">solid</property>
+                                            <property name="borderTopWidth">thin</property>
+                                        </cell>
+                                    </row>
+                                    <row id="1043">
+                                        <property name="height">0.40625in</property>
+                                        <cell id="1044">
+                                            <property name="borderBottomStyle">solid</property>
+                                            <property name="borderBottomWidth">thin</property>
+                                            <property name="borderTopStyle">solid</property>
+                                            <property name="borderTopWidth">thin</property>
+                                        </cell>
+                                    </row>
+                                </grid>
+                            </property>
+                        </extended-item>
+                    </property>
+                    <property name="header">
+                        <extended-item extensionName="CrosstabCell" id="968">
+                            <property name="content">
+                                <label id="969">
+                                    <text-property name="text">target_qty</text-property>
+                                </label>
+                            </property>
+                        </extended-item>
+                    </property>
+                </extended-item>
             </property>
             <property name="rows">
                 <extended-item extensionName="CrosstabView" id="856">
                     <property name="grandTotal">
                         <extended-item extensionName="CrosstabCell" id="888">
                             <property name="content">
-                                <label id="891">
-                                    <property name="fontWeight">bold</property>
-                                    <property name="textAlign">center</property>
-                                    <text-property name="text">Total Sale Qty</text-property>
-                                </label>
+                                <grid id="990">
+                                    <property name="height">0.96875in</property>
+                                    <column id="991"/>
+                                    <column id="1004"/>
+                                    <column id="1008"/>
+                                    <column id="1012"/>
+                                    <row id="992">
+                                        <property name="height">0.4375in</property>
+                                        <cell id="993">
+                                            <property name="colSpan">4</property>
+                                            <property name="rowSpan">1</property>
+                                            <property name="borderBottomStyle">solid</property>
+                                            <property name="borderBottomWidth">thin</property>
+                                            <label id="891">
+                                                <property name="fontWeight">bold</property>
+                                                <property name="textAlign">center</property>
+                                                <text-property name="text">Total Sale Qty</text-property>
+                                            </label>
+                                        </cell>
+                                    </row>
+                                    <row id="994">
+                                        <property name="height">0.40625in</property>
+                                        <cell id="995">
+                                            <property name="colSpan">4</property>
+                                            <property name="rowSpan">1</property>
+                                            <property name="borderBottomStyle">solid</property>
+                                            <property name="borderBottomWidth">thin</property>
+                                            <property name="borderTopStyle">solid</property>
+                                            <property name="borderTopWidth">thin</property>
+                                            <label id="970">
+                                                <property name="fontWeight">bold</property>
+                                                <property name="textAlign">center</property>
+                                                <text-property name="text">Total Sale Target Qty</text-property>
+                                            </label>
+                                        </cell>
+                                    </row>
+                                    <row id="996">
+                                        <property name="height">0.4166666666666667in</property>
+                                        <cell id="997">
+                                            <property name="colSpan">4</property>
+                                            <property name="rowSpan">1</property>
+                                            <property name="borderBottomStyle">solid</property>
+                                            <property name="borderBottomWidth">thin</property>
+                                            <property name="borderTopStyle">solid</property>
+                                            <property name="borderTopWidth">thin</property>
+                                            <label id="971">
+                                                <property name="fontWeight">bold</property>
+                                                <property name="textAlign">center</property>
+                                                <text-property name="text">Total Sale SKU Distribution Qty</text-property>
+                                            </label>
+                                        </cell>
+                                    </row>
+                                </grid>
                             </property>
                             <property name="borderTopStyle">solid</property>
                             <property name="borderTopWidth">thin</property>
@@ -2643,12 +2874,17 @@ else
                 </structure>
                 <structure>
                     <property name="name">quantity_Group1/name_template</property>
-                    <expression name="expression">measure["quantity"]</expression>
                     <property name="dataType">float</property>
                     <simple-property-list name="aggregateOn">
                         <value>Group1/name_template</value>
                     </simple-property-list>
-                    <property name="aggregateFunction">sum</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">measure["quantity"]</expression>
+                        </structure>
+                    </list-property>
                 </structure>
                 <structure>
                     <property name="name">customer_code</property>
@@ -2692,6 +2928,58 @@ else
                         <value>Group1/name_template</value>
                     </simple-property-list>
                     <property name="aggregateFunction">FIRST</property>
+                </structure>
+                <structure>
+                    <property name="name">target_qty_Group1/name_template</property>
+                    <property name="dataType">integer</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Group1/name_template</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">FIRST</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">measure["target_qty"]</expression>
+                        </structure>
+                    </list-property>
+                </structure>
+                <structure>
+                    <property name="name">target_qty_Group3/township_Group1/name_template</property>
+                    <property name="dataType">integer</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Group3/township</value>
+                        <value>Group1/name_template</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">FIRST</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">measure["target_qty"]</expression>
+                        </structure>
+                    </list-property>
+                </structure>
+                <structure>
+                    <property name="name">test</property>
+                    <property name="dataType">integer</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Group1/name_template</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">COUNT</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">measure["quantity"]</expression>
+                        </structure>
+                    </list-property>
+                    <expression name="filterExpr" type="javascript">if (measure["quantity"]>0){&#13;
+	measure["quantity"]=1&#13;
+}&#13;
+else{&#13;
+    measure["quantity"]=0&#13;
+}&#13;
+if (measure["status"] !='Sales Qty'){&#13;
+    measure["quantity"]=0&#13;
+}</expression>
                 </structure>
             </list-property>
         </extended-item>
