@@ -2258,6 +2258,25 @@ else
                         </list-property>
                         <property name="resultSetColumn">string_agg</property>
                     </data>
+                </cell>
+            </row>
+        </grid>
+        <grid id="872">
+            <property name="width">10.4375in</property>
+            <column id="928">
+                <property name="width">8.25in</property>
+            </column>
+            <column id="881">
+                <property name="width">1.1458333333333333in</property>
+            </column>
+            <column id="873">
+                <property name="width">0.8333333333333334in</property>
+            </column>
+            <column id="874">
+                <property name="width">0.20833333333333334in</property>
+            </column>
+            <row id="875">
+                <cell id="927">
                     <data id="125">
                         <property name="fontFamily">"Arial"</property>
                         <property name="fontSize">12pt</property>
@@ -2274,22 +2293,6 @@ else
                         <property name="resultSetColumn">from_date</property>
                     </data>
                 </cell>
-            </row>
-            <row id="868">
-                <cell id="869"/>
-            </row>
-        </grid>
-        <grid id="872">
-            <column id="881">
-                <property name="width">9.385416666666666in</property>
-            </column>
-            <column id="873">
-                <property name="width">0.8125in</property>
-            </column>
-            <column id="874">
-                <property name="width">0.25in</property>
-            </column>
-            <row id="875">
                 <cell id="880">
                     <label id="882">
                         <property name="fontWeight">bold</property>
@@ -2359,6 +2362,7 @@ else
                 </cell>
                 <cell id="843">
                     <data id="845">
+                        <property name="fontFamily">"Arial"</property>
                         <property name="fontWeight">bold</property>
                         <property name="dataSet">AllOutlet</property>
                         <list-property name="boundDataColumns">
@@ -2407,6 +2411,7 @@ else
                 </cell>
                 <cell id="884">
                     <data id="838">
+                        <property name="fontFamily">"Arial"</property>
                         <property name="fontWeight">bold</property>
                         <property name="dataSet">NonSaleOutletCount</property>
                         <list-property name="boundDataColumns">
@@ -2439,6 +2444,7 @@ else
                             <property name="borderBottomStyle">solid</property>
                             <property name="borderBottomWidth">thin</property>
                             <property name="borderRightStyle">none</property>
+                            <property name="height">0.5416666666666666in</property>
                             <property name="width">140px</property>
                             <property name="content">
                                 <data id="821">
@@ -2490,7 +2496,7 @@ else
                             <property name="borderLeftWidth">thin</property>
                             <property name="borderBottomStyle">solid</property>
                             <property name="borderBottomWidth">thin</property>
-                            <property name="height">0.5416666666666666in</property>
+                            <property name="height">0.3229166666666667in</property>
                             <property name="content">
                                 <data id="830">
                                     <property name="fontWeight">bold</property>
@@ -2548,6 +2554,7 @@ else
                             <property name="borderBottomWidth">thin</property>
                             <property name="content">
                                 <data id="861">
+                                    <property name="fontWeight">bold</property>
                                     <list-property name="visibility">
                                         <structure>
                                             <property name="format">all</property>
@@ -2606,6 +2613,7 @@ else
                             <property name="borderRightWidth">thin</property>
                             <property name="content">
                                 <data id="921">
+                                    <property name="fontWeight">bold</property>
                                     <list-property name="visibility">
                                         <structure>
                                             <property name="format">all</property>
@@ -2635,6 +2643,7 @@ else
                             <property name="content">
                                 <label id="831">
                                     <property name="fontWeight">bold</property>
+                                    <property name="paddingTop">1pt</property>
                                     <property name="textAlign">center</property>
                                     <text-property name="text">Total Billing</text-property>
                                 </label>
@@ -2686,6 +2695,7 @@ else
                                         <extended-item extensionName="CrosstabCell" id="912">
                                             <property name="content">
                                                 <data name="code" id="914">
+                                                    <property name="fontWeight">normal</property>
                                                     <property name="resultSetColumn">code</property>
                                                 </data>
                                             </property>
@@ -2900,21 +2910,33 @@ else
                 </structure>
                 <structure>
                     <property name="name">quantity_Group1/name_template</property>
-                    <expression name="expression">measure["quantity"]</expression>
+                    <text-property name="displayName">sum_quantity</text-property>
                     <property name="dataType">float</property>
                     <simple-property-list name="aggregateOn">
                         <value>Group1/name_template</value>
                     </simple-property-list>
-                    <property name="aggregateFunction">sum</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">measure["quantity"]</expression>
+                        </structure>
+                    </list-property>
                 </structure>
                 <structure>
                     <property name="name">type_Group1/name_template</property>
-                    <expression name="expression">measure["type"]</expression>
+                    <text-property name="displayName">type</text-property>
                     <property name="dataType">string</property>
                     <simple-property-list name="aggregateOn">
                         <value>Group1/name_template</value>
                     </simple-property-list>
                     <property name="aggregateFunction">FIRST</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">measure["type"]</expression>
+                        </structure>
+                    </list-property>
                 </structure>
                 <structure>
                     <property name="name">type_Group3/tspcode_Group1/name_template</property>
@@ -2933,12 +2955,18 @@ else
                 </structure>
                 <structure>
                     <property name="name">test_Group1/name_template</property>
-                    <expression name="expression">measure["test"]</expression>
+                    <text-property name="displayName">test_group</text-property>
                     <property name="dataType">string</property>
                     <simple-property-list name="aggregateOn">
                         <value>Group1/name_template</value>
                     </simple-property-list>
                     <property name="aggregateFunction">FIRST</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">measure["test"]</expression>
+                        </structure>
+                    </list-property>
                 </structure>
                 <structure>
                     <property name="name">test_Group3/tspcode_Group1/name_template</property>

@@ -2011,6 +2011,30 @@ else
                         </list-property>
                         <property name="resultSetColumn">string_agg</property>
                     </data>
+                </cell>
+            </row>
+            <row id="136">
+                <cell id="138">
+                    <label id="951"/>
+                </cell>
+            </row>
+        </grid>
+        <grid id="939">
+            <property name="width">10.4375in</property>
+            <column id="1050">
+                <property name="width">8.020833333333334in</property>
+            </column>
+            <column id="940">
+                <property name="width">1.3229166666666667in</property>
+            </column>
+            <column id="941">
+                <property name="width">0.8645833333333334in</property>
+            </column>
+            <column id="942">
+                <property name="width">0.22916666666666666in</property>
+            </column>
+            <row id="943">
+                <cell id="1049">
                     <data id="125">
                         <property name="fontFamily">"Arial"</property>
                         <property name="fontSize">12pt</property>
@@ -2027,24 +2051,6 @@ else
                         <property name="resultSetColumn">from_date</property>
                     </data>
                 </cell>
-            </row>
-            <row id="136">
-                <cell id="138">
-                    <label id="951"/>
-                </cell>
-            </row>
-        </grid>
-        <grid id="939">
-            <column id="940">
-                <property name="width">9.385416666666666in</property>
-            </column>
-            <column id="941">
-                <property name="width">0.8125in</property>
-            </column>
-            <column id="942">
-                <property name="width">0.25in</property>
-            </column>
-            <row id="943">
                 <cell id="944">
                     <label id="945">
                         <property name="fontWeight">bold</property>
@@ -2575,7 +2581,7 @@ else
                                             <label id="891">
                                                 <property name="fontWeight">bold</property>
                                                 <property name="textAlign">center</property>
-                                                <text-property name="text">Total Sale Qty</text-property>
+                                                <text-property name="text">Total Sale Ach Qty</text-property>
                                             </label>
                                         </cell>
                                     </row>
