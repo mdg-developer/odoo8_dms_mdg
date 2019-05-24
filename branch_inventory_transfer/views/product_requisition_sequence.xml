@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record id="branch_product_req_sequence" model="ir.sequence.type">
+			<field name="name">Branch Stock Request Sequence</field>
+			<field name="code">branch.request.code</field>
+		</record>
+
+		<record id="branch_product_req_seq" model="ir.sequence">
+			<field name="name">Branch Stock Request Sequence</field>
+			<field name="code">branch.request.code</field>
+			<field name="prefix">BRFI/%(year)s/</field>
+			<field name="padding">7</field>
+		</record>
+
+	
+	</data>
+</openerp>
