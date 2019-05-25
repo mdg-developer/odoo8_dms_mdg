@@ -38,8 +38,9 @@ Branch Inventory Transfer Module
         'views/product_requisition_sequence.xml',
         'views/stock_request_view.xml',
         'views/product_view.xml',
-       
-
+        'views/transport_route_view.xml',
+        'views/fleet_view.xml',
+        'views/branch_good_issue_note_view.xml',
     ],
     'test': [
 
