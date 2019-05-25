@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<!-- ==============================Content Form============================== -->
+		<record id="transport_route_form" model="ir.ui.view">
+			<field name="name">transport_route_form</field>
+			<field name="model">transport.route</field>
+			<field name="arch" type="xml">
+				<form string="Transport Route">					
+					<sheet>						
+						<group>
+							<group>
+								<field name="name" />								
+							</group>							
+						</group>
+						<group>
+							<notebook>
+								<page string="Info">
+									<field name="route_line">
+										<tree string="Route Line" editable="bottom">																				
+											<field name="supplier_id" domain="[('supplier','=','true')]"/>
+											<field name="vehicle_id" />
+											<field name="transport_cost" />
+											<field name="labor_cost" />
+										</tree>
+									</field>
+								</page>
+							</notebook>
+						</group>					
+					</sheet>					
+				</form>
+			</field>
+		</record>
+
+		<!-- ============================== Content Tree ============================== -->
+		<record id="transport_route_tree" model="ir.ui.view">
+			<field name="name">transport_route_tree</field>
+			<field name="model">transport.route</field>
+			<field name="arch" type="xml">
+				<tree string="Transport Route">
+					<field name="name" />					
+				</tree>
+			</field>
+		</record>
+		
+		<!-- Transport Route -->
+		<record id="action_transport_route" model="ir.actions.act_window">
+			<field name="name">Transport Route</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">transport.route</field>			
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="transport_route_tree" />			
+			<field name="domain">[]
+			</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to Register Transport Route.
+				</p>
+			</field>
+		</record>
+
+		<menuitem action='action_transport_route' id="menu_transport_route"
+			parent="branch_inventory_transfer.menu_branch_inventory_transfer" sequence="2" />
+
+	</data>
+</openerp>
