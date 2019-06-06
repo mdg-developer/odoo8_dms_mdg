@@ -43,6 +43,7 @@ class sale_make_location(osv.osv_memory):
             request_id=data_obj.request_id.id
             assign_obj=self.pool.get('section.warehouse').browse(cr, uid, location_id, context=context)
             cr.execute("update stock_requisition set to_location_id=%s where id =%s",(assign_obj.location_id.id,request_id,))
+            cr.execute("update stock_requisition_line set qty_on_hand=0 where line_id =%s",(request_id,))
         return True        
         
 

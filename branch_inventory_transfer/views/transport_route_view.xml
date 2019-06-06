@@ -6,28 +6,33 @@
 			<field name="name">transport_route_form</field>
 			<field name="model">transport.route</field>
 			<field name="arch" type="xml">
-				<form string="Transport Route">					
-					<sheet>						
+				<form string="Transport Route">
+					<sheet>
 						<group>
 							<group>
-								<field name="name" />								
-							</group>							
+								<field name="name"  class="oe_inline"/>
+								<field name="from_dest_id" />
+								<field name="to_dest_id" />
+							</group>
 						</group>
 						<group>
 							<notebook>
 								<page string="Info">
 									<field name="route_line">
-										<tree string="Route Line" editable="bottom">																				
-											<field name="supplier_id" domain="[('supplier','=','true')]"/>
-											<field name="vehicle_id" />
+										<tree string="Route Line" editable="bottom">
+											<field name="supplier_id" domain="[('supplier','=','true')]" />
+											<field name="vehicle_id" on_change="on_change_vehicle_id(vehicle_id)" />
+											<field name="truck_type" />
 											<field name="transport_cost" />
 											<field name="labor_cost" />
+											<field name="total_cost" />
+											<field name="git_day" />
 										</tree>
 									</field>
 								</page>
 							</notebook>
-						</group>					
-					</sheet>					
+						</group>
+					</sheet>
 				</form>
 			</field>
 		</record>
@@ -38,19 +43,19 @@
 			<field name="model">transport.route</field>
 			<field name="arch" type="xml">
 				<tree string="Transport Route">
-					<field name="name" />					
+					<field name="name" />
 				</tree>
 			</field>
 		</record>
-		
+
 		<!-- Transport Route -->
 		<record id="action_transport_route" model="ir.actions.act_window">
 			<field name="name">Transport Route</field>
 			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">transport.route</field>			
+			<field name="res_model">transport.route</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
-			<field name="view_id" ref="transport_route_tree" />			
+			<field name="view_id" ref="transport_route_tree" />
 			<field name="domain">[]
 			</field>
 			<field name="help" type="html">
@@ -61,7 +66,8 @@
 		</record>
 
 		<menuitem action='action_transport_route' id="menu_transport_route"
-			parent="branch_inventory_transfer.menu_branch_inventory_transfer" sequence="2" />
+			parent="branch_inventory_transfer.menu_branch_inventory_transfer"
+			sequence="2" />
 
 	</data>
 </openerp>

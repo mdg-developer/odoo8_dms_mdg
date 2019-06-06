@@ -1,24 +1,86 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
 	<data>
+		<!-- ==============================Content Form============================== -->
+		<record id="truck_type_form" model="ir.ui.view">
+			<field name="name">truck_type_form</field>
+			<field name="model">truck.type</field>
+			<field name="arch" type="xml">
+				<form string="Type">
+					<sheet>
+						<group>
+							<group>
+								<field name="name"  class="oe_inline"/>
+								<field name="est_cbm" />
+								<field name="est_viss" />
+							</group>
+						</group>
+
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- ============================== Content Tree ============================== -->
+		<record id="truck_type_tree" model="ir.ui.view">
+			<field name="name">truck_type_tree</field>
+			<field name="model">truck.type</field>
+			<field name="arch" type="xml">
+				<tree string="Type">
+					<field name="name" />
+					<field name="est_cbm" />
+					<field name="est_viss" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- Transport Route -->
+		<record id="action_truck_type" model="ir.actions.act_window">
+			<field name="name">Truck Type</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">truck.type</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="truck_type_tree" />
+			<field name="domain">[]
+			</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to Register Transport Route.
+				</p>
+			</field>
+		</record>
+
+		<menuitem action='action_truck_type' id="menu_truck_type"
+			parent="branch_inventory_transfer.menu_branch_inventory_transfer"
+			sequence="3" />
 
 		<record id="fleet_vehicle_form_inherit" model="ir.ui.view">
 			<field name="name">fleet.vehicle.form</field>
 			<field name="model">fleet.vehicle</field>
 			<field name="inherit_id" ref="fleet.fleet_vehicle_form" />
 			<field name="arch" type="xml">
-				<xpath expr="//field[@name='company_id']" position="after">
-					<field name="3pl" />		
-					<field name="supplier_id" domain="[('supplier','=','true')]" attrs="{'invisible':[('3pl','=',False)]}"/>				
+				<xpath expr="//form/sheet" position="inside">
+					<notebook>
+						<page string="Supply Chain Configuration" position="inside">
+							<group>
+								<field name="3pl" />
+								<field name="supplier_id" domain="[('supplier','=','true')]"
+									attrs="{'invisible':[('3pl','=',False)]}"  class="oe_inline"/>
+								<field name="truck_type_id"  class="oe_inline"/>
+								<field name="weight_viss" />
+								<field name="vol_cbm" />
+								<field name="alert_weight_viss" />
+								<field name="alert_vol_cbm" />
+								<field name="branch_id" invisible="1" />
+							</group>
+						</page>
+					</notebook>
 				</xpath>
-				<xpath expr="//field[@name='color']" position="after">
-					<field name="weight_viss" />		
-					<field name="vol_cbm" />
-					<field name="alert_weight_viss" />
-					<field name="alert_vol_cbm" />				
-				</xpath>
+
+
 			</field>
 		</record>
-		
+
 	</data>
 </openerp>		

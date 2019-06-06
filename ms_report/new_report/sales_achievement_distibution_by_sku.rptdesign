@@ -50,17 +50,12 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
         </scalar-parameter>
     </parameters>
     <data-sources>
-        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="688"
- extends="report_library.Data Source">
-            <property name="odaDriverClass">org.postgresql.Driver</property>
-            <property name="odaURL">jdbc:postgresql://localhost:5432/mdg_testing</property>
-            <property name="odaUser">odoo</property>
-            <encrypted-property name="odaPassword" encryptionID="base64">b3BlbnBncHdk</encrypted-property>
-            <property name="odaJndiName">java:comp/env/jdbc/ReportDB</property>
-        </oda-data-source>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="984"
+ extends="report_library.Data Source"/>
     </data-sources>
     <data-sets>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="Data Set" id="44">
+            <property name="nullsOrdering">nulls lowest</property>
             <list-property name="columnHints">
                 <structure>
                     <property name="columnName">seq</property>
@@ -96,6 +91,24 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     <text-property name="heading">target_qty</text-property>
                 </structure>
                 <structure>
+                    <property name="columnName">avil_count</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">avil_count</text-property>
+                    <text-property name="heading">avil_count</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">target_qty_count</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">target_qty_count</text-property>
+                    <text-property name="heading">target_qty_count</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">dis_qty_count</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">dis_qty_count</text-property>
+                    <text-property name="heading">dis_qty_count</text-property>
+                </structure>
+                <structure>
                     <property name="columnName">target_amt</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">target_amt</text-property>
@@ -127,6 +140,18 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     <text-property name="displayName">dis_percent</text-property>
                     <text-property name="heading">dis_percent</text-property>
                 </structure>
+                <structure>
+                    <property name="columnName">date_rate</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">date_rate</text-property>
+                    <text-property name="heading">date_rate</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">product_color</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">product_color</text-property>
+                    <text-property name="heading">product_color</text-property>
+                </structure>
             </list-property>
             <list-property name="parameters">
                 <structure>
@@ -146,6 +171,26 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">2</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_3</property>
+                    <property name="paramName">from_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">3</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_4</property>
+                    <property name="paramName">to_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">4</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -179,33 +224,67 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     </structure>
                     <structure>
                         <property name="position">6</property>
-                        <property name="name">target_amt</property>
-                        <property name="dataType">integer</property>
+                        <property name="name">avil_count</property>
+                        <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">7</property>
-                        <property name="name">distribution_target</property>
+                        <property name="name">target_qty_count</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
                         <property name="position">8</property>
-                        <property name="name">dis_ach</property>
+                        <property name="name">dis_qty_count</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
                         <property name="position">9</property>
+                        <property name="name">target_amt</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
+                        <property name="name">distribution_target</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">11</property>
+                        <property name="name">dis_ach</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">12</property>
                         <property name="name">percent_target</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">10</property>
+                        <property name="position">13</property>
                         <property name="name">dis_percent</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">14</property>
+                        <property name="name">date_rate</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">15</property>
+                        <property name="name">product_color</property>
                         <property name="dataType">string</property>
                     </structure>
                 </list-property>
             </structure>
             <method name="beforeOpen"><![CDATA[this.queryText =this.queryText.replace("--$sales_team$", "and section_id  in ("+ params["sales_team_id"].value.join(",")+")")
 this.queryText =this.queryText.replace("--$branch_id$", "and branch_id in ("+ params["branch_id"].value.join(",")+")")
+this.queryText =this.queryText.replace("--$sales_team_check$", "and ai.sale_team_id  in ("+ params["sales_team_id"].value.join(",")+")")
+if (params["to_date"].value == null ){     
+   this.queryText =this.queryText.replace("--$date$", "'now'")
+}
+else
+{     
+   this.queryText =this.queryText.replace("--$date$", "'"+params["to_date"]+"'::timestamptz")
+}
+
 ]]></method>
             <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
@@ -246,36 +325,71 @@ this.queryText =this.queryText.replace("--$branch_id$", "and branch_id in ("+ pa
                 </structure>
                 <structure>
                     <property name="position">6</property>
+                    <property name="name">avil_count</property>
+                    <property name="nativeName">avil_count</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">-5</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">target_qty_count</property>
+                    <property name="nativeName">target_qty_count</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">dis_qty_count</property>
+                    <property name="nativeName">dis_qty_count</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
                     <property name="name">target_amt</property>
                     <property name="nativeName">target_amt</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">7</property>
+                    <property name="position">10</property>
                     <property name="name">distribution_target</property>
                     <property name="nativeName">distribution_target</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">8</property>
+                    <property name="position">11</property>
                     <property name="name">dis_ach</property>
                     <property name="nativeName">dis_ach</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">9</property>
+                    <property name="position">12</property>
                     <property name="name">percent_target</property>
                     <property name="nativeName">percent_target</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">10</property>
+                    <property name="position">13</property>
                     <property name="name">dis_percent</property>
                     <property name="nativeName">dis_percent</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">14</property>
+                    <property name="name">date_rate</property>
+                    <property name="nativeName">date_rate</property>
+                    <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
+                </structure>
+                <structure>
+                    <property name="position">15</property>
+                    <property name="name">product_color</property>
+                    <property name="nativeName">product_color</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
@@ -304,24 +418,42 @@ ach_amt as (
 	group by product_id,name_template,pseq),
 
 target as (
-	select price_unit*product_uom_qty as target_amt,distribution_price,product_uom_qty as target_qty,sale_team_id,st.month::int,st.year::int,stl.product_id,st.branch_id,pp.name_template,sum(so.count) as count
+    select * from 
+	(select price_unit*product_uom_qty as target_amt,distribution_price,product_uom_qty as target_qty,sale_team_id,st.month::int,st.year::int,stl.product_id,st.branch_id,pp.name_template,sum(so.count) as count
 	from sales_target st,sales_target_line stl,sale_order so,product_product pp
 	where st.id=stl.sale_ids
 	and pp.id=stl.product_id
 	and so.section_id=st.sale_team_id and so.month=st.month::int 
 	and so.year=st.year::int and so.product_id=stl.product_id 
 	and so.branch_id=st.branch_id
-	group by price_unit,product_uom_qty,sale_team_id,st.month,st.year,stl.product_id,st.branch_id,pp.name_template,distribution_price
+	group by price_unit,product_uom_qty,sale_team_id,st.month,st.year,stl.product_id,st.branch_id,pp.name_template,distribution_price)a
+	left join 
+	(
+	select ail.product_id as pid,count(ail.id) as avil_count from partner_stock_check ai ,partner_stock_check_line ail
+	where ail.stock_check_ids=ai.id
+	and ail.available = True
+	--$sales_team_check$
+	--$branch_id$
+    and ai.date between ? and ?
+	group by product_id
+	)b
+	on a.product_Id =b.pid
 	)
-	
-select row_number() over (order by ach.pseq) as seq,ach.name_template,quantity,ach_amt as ach_amt,target.target_qty,
+select * ,case when percent_target_value <= dis_percent_value then percent_target_value  else  dis_percent_value  end as product_color  from (
+select row_number() over (order by ach.pseq) as seq,ach.name_template,quantity,ach_amt as ach_amt,target.target_qty,target.avil_count,case when target_qty >0 then 1  else  0  end as target_qty_count,case when distribution_price >0 then 1  else  0  end as dis_qty_count,
 0 as target_amt,target.distribution_price as distribution_target,count::int as dis_ach,
-case when target_qty >0 then concat(round(((quantity*100)/target_qty),2),'%') else concat(0,'%') end as percent_target,
-case when count >0 then concat(round(((count*100)/target.distribution_price),2),'%') else concat(0,'%') end as dis_percent
+case when target_qty >0 then concat(round((  CASE WHEN (quantity*100)/sum(target_qty)>120 THEN 120 ELSE (quantity*100)/sum(target_qty) END),0),'%') else concat(0,'%') end as percent_target,
+case when distribution_price >0 then concat(round((CASE WHEN (count*100)/sum(target.distribution_price)>120 THEN 120 ELSE (count*100)/sum(target.distribution_price) END),0),'%') else concat(0,'%') end as dis_percent,
+case when target_qty >0 then round((  CASE WHEN (quantity*100)/sum(target_qty)>120 THEN 120 ELSE (quantity*100)/sum(target_qty) END),0) else 0 end as percent_target_value,
+case when distribution_price >0 then round((CASE WHEN (count*100)/sum(target.distribution_price)>120 THEN 120 ELSE (count*100)/sum(target.distribution_price) END),0) else 0 end as dis_percent_value,
+((EXTRACT(DAY FROM TIMESTAMP --$date$
+)::float / (DATE_PART('days', DATE_TRUNC('month',TIMESTAMP --$date$
+) + '1 MONTH'::INTERVAL - '1 DAY'::INTERVAL))::float)*100) as date_rate
 from ach_amt ach
 left join target target on (ach.product_id=target.product_id)
-group by ach.product_id,ach.name_template,ach_amt,quantity,ach.pseq,target.target_qty,target.distribution_price,count
+group by ach.product_id,ach.name_template,ach_amt,quantity,ach.pseq,target.target_qty,target.distribution_price,count,target.avil_count
 order by pseq
+)a
 ]]></xml-property>
         </oda-data-set>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="company" id="88"
@@ -610,13 +742,8 @@ and uid=?
                     </structure>
                 </list-property>
             </structure>
-            <method name="beforeOpen"><![CDATA[if (params["to_date"].value == null ){     
-   this.queryText =this.queryText.replace("--$date$", "'now'")
-}
-else
-{     
-   this.queryText =this.queryText.replace("--$date$", "'"+params["to_date"]+"'::timestamptz")
-}]]></method>
+            <method name="beforeOpen"><![CDATA[this.queryText =this.queryText.replace("--$date$", "'"+params["to_date"]+"'::timestamptz")
+]]></method>
             <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
                 <structure>
@@ -671,6 +798,20 @@ else
                     </structure>
                 </list-property>
             </structure>
+            <method name="beforeOpen"><![CDATA[if (params["sales_team_id"].value == null ){     
+   this.queryText =this.queryText.replace("--$sales_team$", "")
+}
+else
+{     
+   this.queryText =this.queryText.replace("--$sales_team$", "and ai.section_id in ("+params["sales_team_id"].value.join(",")+")")
+}
+if (params["branch_id"].value == null ){     
+   this.queryText =this.queryText.replace("--$branch$", "")
+}
+else
+{     
+   this.queryText =this.queryText.replace("--$branch$", "and ai.branch_id in ("+params["branch_id"].value.join(",")+")")
+}]]></method>
             <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
                 <structure>
@@ -681,18 +822,16 @@ else
                     <property name="nativeDataType">-5</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select count(ai.partner_id)
+            <xml-property name="queryText"><![CDATA[select count(distinct(ai.partner_id))
 	from account_invoice ai,account_invoice_line ail,product_product pp,product_template pt
 	where ai.id=ail.invoice_id
 	and ail.product_id=pp.id
 	and pp.product_tmpl_id=pt.id
 	and ai.state!='cancel'
 	and pt.type !='service'
-	and (foc!='true' or foc is null)
 	--$sales_team$
-	--$branch_id$
-	and date_invoice between ? and ?
-	group by ai.partner_id]]></xml-property>
+	--$branch$
+	and date_invoice between ? and ?]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -803,7 +942,7 @@ else
                         <property name="fontSize">12pt</property>
                         <property name="fontWeight">bold</property>
                         <property name="textAlign">center</property>
-                        <text-property name="text">Sales Achievement by SKU Report</text-property>
+                        <text-property name="text">Sales And Distribution By SKU Report</text-property>
                     </label>
                 </cell>
             </row>
@@ -987,7 +1126,7 @@ else
                         <property name="fontWeight">bold</property>
                         <structure name="numberFormat">
                             <property name="category">Currency</property>
-                            <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
+                            <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
                         </structure>
                         <property name="textAlign">center</property>
                         <property name="dataSet">day_rate</property>
@@ -1004,22 +1143,13 @@ else
                 </cell>
                 <cell id="958">
                     <label id="960">
+                        <property name="fontFamily">"Arial"</property>
                         <property name="fontWeight">bold</property>
                         <text-property name="text">%</text-property>
                     </label>
                 </cell>
-                <cell id="977">
-                    <label id="981">
-                        <property name="fontWeight">bold</property>
-                        <text-property name="text"></text-property>
-                    </label>
-                </cell>
-                <cell id="979">
-                    <label id="982">
-                        <property name="fontWeight">bold</property>
-                        <text-property name="text"></text-property>
-                    </label>
-                </cell>
+                <cell id="977"/>
+                <cell id="979"/>
             </row>
         </grid>
         <table id="14">
@@ -1058,7 +1188,11 @@ else
                 <structure>
                     <property name="name">percent_target</property>
                     <text-property name="displayName">percent_target</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["percent_target"]</expression>
+                    <expression name="expression" type="javascript">if (dataSetRow["target_qty"] > 0) {&#13;
+  dataSetRow["percent_target"] = dataSetRow["percent_target"];&#13;
+} else {&#13;
+  dataSetRow["percent_target"] ='-  %';&#13;
+}</expression>
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
                 </structure>
@@ -1137,8 +1271,13 @@ else
                 <structure>
                     <property name="name">dis_percent</property>
                     <text-property name="displayName">dis_percent</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["dis_percent"]</expression>
+                    <expression name="expression" type="javascript">if (dataSetRow["distribution_target"]  > 0) {&#13;
+  dataSetRow["dis_percent"] = dataSetRow["dis_percent"] ;&#13;
+} else {&#13;
+  dataSetRow["dis_percent"]='-  %';&#13;
+}</expression>
                     <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
                 </structure>
                 <structure>
                     <property name="name">Aggregation_4</property>
@@ -1159,7 +1298,7 @@ else
                     <list-property name="arguments">
                         <structure>
                             <property name="name">Expression</property>
-                            <expression name="value" type="javascript">row["Aggregation"]/row["Aggregation_4"]</expression>
+                            <expression name="value" type="javascript">row["Aggregation_12"]/row["Aggregation_11"]</expression>
                         </structure>
                     </list-property>
                     <property name="allowExport">true</property>
@@ -1195,13 +1334,169 @@ else
                     <list-property name="arguments">
                         <structure>
                             <property name="name">Expression</property>
-                            <expression name="value" type="javascript">row["Aggregation_7"]/row["Aggregation_6"]</expression>
+                            <expression name="value" type="javascript">row["Aggregation_14"]/row["Aggregation_13"]</expression>
                         </structure>
                     </list-property>
                     <property name="allowExport">true</property>
                 </structure>
+                <structure>
+                    <property name="name">Aggregation_9</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">FIRST</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">(row["Aggregation_15"]+row["Aggregation_16"])/2</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">avil_count</property>
+                    <text-property name="displayName">avil_count</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["avil_count"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">Aggregation_10</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">dataSetRow["avil_count"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">Aggregation_11</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">dataSetRow["target_qty_count"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">Aggregation_12</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">dataSetRow["percent_target"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">Aggregation_13</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">dataSetRow["dis_qty_count"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">Aggregation_14</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">dataSetRow["dis_percent"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">date_rate</property>
+                    <text-property name="displayName">date_rate</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["date_rate"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="name">Aggregation_15</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">FIRST</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["Aggregation_12"]/row["Aggregation_11"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">Aggregation_16</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">FIRST</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["Aggregation_14"]/row["Aggregation_13"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">Aggregation_17</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">FIRST</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["Aggregation_12"]/row["Aggregation_11"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">Aggregation_18</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">FIRST</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["Aggregation_14"]/row["Aggregation_13"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">product_color</property>
+                    <text-property name="displayName">product_color</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["product_color"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
             </list-property>
             <column id="33">
+                <property name="width">0.5277777777777778in</property>
+            </column>
+            <column id="1063">
+                <list-property name="visibility">
+                    <structure>
+                        <property name="format">all</property>
+                        <expression name="valueExpr" type="javascript">true</expression>
+                    </structure>
+                </list-property>
+                <property name="width">0.5277777777777778in</property>
+            </column>
+            <column id="1040">
+                <list-property name="visibility">
+                    <structure>
+                        <property name="format">all</property>
+                        <expression name="valueExpr" type="javascript">true</expression>
+                    </structure>
+                </list-property>
                 <property name="width">0.5277777777777778in</property>
             </column>
             <column id="34">
@@ -1244,12 +1539,41 @@ else
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                        <property name="paddingTop">10pt</property>
                         <label id="38">
                             <property name="fontWeight">bold</property>
-                            <property name="paddingTop">15pt</property>
+                            <property name="borderBottomStyle">none</property>
+                            <property name="borderLeftStyle">none</property>
+                            <property name="borderRightStyle">none</property>
+                            <property name="borderTopStyle">none</property>
+                            <property name="paddingTop">1pt</property>
                             <property name="textAlign">center</property>
                             <text-property name="text">No.</text-property>
                         </label>
+                    </cell>
+                    <cell id="1058">
+                        <property name="colSpan">1</property>
+                        <property name="rowSpan">2</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                    </cell>
+                    <cell id="1035">
+                        <property name="colSpan">1</property>
+                        <property name="rowSpan">2</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
                     </cell>
                     <cell id="891">
                         <property name="colSpan">1</property>
@@ -1262,9 +1586,14 @@ else
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                        <property name="paddingTop">10pt</property>
                         <label id="39">
                             <property name="fontWeight">bold</property>
-                            <property name="paddingTop">15pt</property>
+                            <property name="borderBottomStyle">none</property>
+                            <property name="borderLeftStyle">none</property>
+                            <property name="borderRightStyle">none</property>
+                            <property name="borderTopStyle">none</property>
+                            <property name="paddingTop">1pt</property>
                             <property name="textAlign">center</property>
                             <text-property name="text">SKU</text-property>
                         </label>
@@ -1444,6 +1773,32 @@ else
                             <property name="resultSetColumn">seq</property>
                         </data>
                     </cell>
+                    <cell id="1060">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="1065">
+                            <property name="resultSetColumn">product_color</property>
+                        </data>
+                    </cell>
+                    <cell id="1037">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="1042">
+                            <property name="resultSetColumn">date_rate</property>
+                        </data>
+                    </cell>
                     <cell id="23">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1455,6 +1810,52 @@ else
                         <property name="borderTopWidth">thin</property>
                         <data id="90">
                             <property name="textAlign">left</property>
+                            <list-property name="highlightRules">
+                                <structure>
+                                    <property name="operator">lt</property>
+                                    <property name="backgroundColor">#FE2323</property>
+                                    <expression name="testExpr" type="javascript">row["product_color"]</expression>
+                                    <simple-property-list name="value1">
+                                        <value type="javascript">row["date_rate"]-40</value>
+                                    </simple-property-list>
+                                </structure>
+                                <structure>
+                                    <property name="operator">eq</property>
+                                    <property name="backgroundColor">#FFFFFF</property>
+                                    <expression name="testExpr" type="javascript">if (row["dis_percent"] &lt;= row["percent_target"]) {&#13;
+    row["dis_percent"];&#13;
+}else {&#13;
+    row["percent_target"];&#13;
+}</expression>
+                                    <simple-property-list name="value1">
+                                        <value type="javascript">'-  %'</value>
+                                    </simple-property-list>
+                                </structure>
+                                <structure>
+                                    <property name="operator">ge</property>
+                                    <property name="backgroundColor">#FDB52F</property>
+                                    <expression name="testExpr" type="javascript">row["product_color"]</expression>
+                                    <simple-property-list name="value1">
+                                        <value type="javascript">row["date_rate"]-40</value>
+                                    </simple-property-list>
+                                </structure>
+                                <structure>
+                                    <property name="operator">ge</property>
+                                    <property name="backgroundColor">#FFFF00</property>
+                                    <expression name="testExpr" type="javascript">row["product_color"]</expression>
+                                    <simple-property-list name="value1">
+                                        <value type="javascript">row["date_rate"]-15</value>
+                                    </simple-property-list>
+                                </structure>
+                                <structure>
+                                    <property name="operator">ge</property>
+                                    <property name="backgroundColor">#00FF00</property>
+                                    <expression name="testExpr" type="javascript">row["product_color"]</expression>
+                                    <simple-property-list name="value1">
+                                        <value type="javascript">row["date_rate"]</value>
+                                    </simple-property-list>
+                                </structure>
+                            </list-property>
                             <property name="resultSetColumn">name_template</property>
                         </data>
                     </cell>
@@ -1532,9 +1933,51 @@ else
                             <property name="paddingRight">1pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
-                                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
+                                <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
+                            <list-property name="highlightRules">
+                                <structure>
+                                    <property name="operator">lt</property>
+                                    <property name="backgroundColor">#FE2323</property>
+                                    <expression name="testExpr" type="javascript">row["percent_target"]</expression>
+                                    <simple-property-list name="value1">
+                                        <value type="javascript">row["date_rate"]-40</value>
+                                    </simple-property-list>
+                                </structure>
+                                <structure>
+                                    <property name="operator">eq</property>
+                                    <property name="backgroundColor">#FFFFFF</property>
+                                    <expression name="testExpr" type="javascript">row["percent_target"]</expression>
+                                    <simple-property-list name="value1">
+                                        <value type="javascript">'-  %'</value>
+                                    </simple-property-list>
+                                </structure>
+                                <structure>
+                                    <property name="operator">ge</property>
+                                    <property name="backgroundColor">#FDB52F</property>
+                                    <expression name="testExpr" type="javascript">row["percent_target"]</expression>
+                                    <simple-property-list name="value1">
+                                        <value type="javascript">row["date_rate"]-40</value>
+                                    </simple-property-list>
+                                </structure>
+                                <structure>
+                                    <property name="operator">ge</property>
+                                    <property name="backgroundColor">#FFFF00</property>
+                                    <expression name="testExpr" type="javascript">row["percent_target"]</expression>
+                                    <simple-property-list name="value1">
+                                        <value type="javascript">row["date_rate"]-15</value>
+                                    </simple-property-list>
+                                </structure>
+                                <structure>
+                                    <property name="operator">ge</property>
+                                    <property name="backgroundColor">#00FF00</property>
+                                    <expression name="testExpr" type="javascript">row["percent_target"]</expression>
+                                    <simple-property-list name="value1">
+                                        <value type="javascript">row["date_rate"]</value>
+                                    </simple-property-list>
+                                </structure>
+                            </list-property>
                             <property name="resultSetColumn">percent_target</property>
                         </data>
                     </cell>
@@ -1592,9 +2035,51 @@ else
                             <property name="paddingRight">1pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
-                                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
+                                <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
+                            <list-property name="highlightRules">
+                                <structure>
+                                    <property name="operator">lt</property>
+                                    <property name="backgroundColor">#FE2323</property>
+                                    <expression name="testExpr" type="javascript">row["dis_percent"]</expression>
+                                    <simple-property-list name="value1">
+                                        <value type="javascript">row["date_rate"] - 40</value>
+                                    </simple-property-list>
+                                </structure>
+                                <structure>
+                                    <property name="operator">eq</property>
+                                    <property name="backgroundColor">#FFFFFF</property>
+                                    <expression name="testExpr" type="javascript">row["dis_percent"]</expression>
+                                    <simple-property-list name="value1">
+                                        <value type="javascript">'-  %'</value>
+                                    </simple-property-list>
+                                </structure>
+                                <structure>
+                                    <property name="operator">ge</property>
+                                    <property name="backgroundColor">#FDB52F</property>
+                                    <expression name="testExpr" type="javascript">row["dis_percent"]</expression>
+                                    <simple-property-list name="value1">
+                                        <value type="javascript">row["date_rate"] - 40</value>
+                                    </simple-property-list>
+                                </structure>
+                                <structure>
+                                    <property name="operator">ge</property>
+                                    <property name="backgroundColor">#FFFF00</property>
+                                    <expression name="testExpr" type="javascript">row["dis_percent"]</expression>
+                                    <simple-property-list name="value1">
+                                        <value type="javascript">row["date_rate"] - 15</value>
+                                    </simple-property-list>
+                                </structure>
+                                <structure>
+                                    <property name="operator">ge</property>
+                                    <property name="backgroundColor">#00FF00</property>
+                                    <expression name="testExpr" type="javascript">row["dis_percent"]</expression>
+                                    <simple-property-list name="value1">
+                                        <value type="javascript">row["date_rate"]</value>
+                                    </simple-property-list>
+                                </structure>
+                            </list-property>
                             <property name="resultSetColumn">dis_percent</property>
                         </data>
                     </cell>
@@ -1607,17 +2092,22 @@ else
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <label id="921">
+                        <data id="1009">
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
+                            </structure>
                             <property name="textAlign">right</property>
-                            <text-property name="text">1</text-property>
-                        </label>
+                            <property name="resultSetColumn">avil_count</property>
+                        </data>
                     </cell>
                 </row>
             </detail>
             <footer>
                 <row id="675">
+                    <property name="height">0.3645833333333333in</property>
                     <cell id="676">
-                        <property name="colSpan">2</property>
+                        <property name="colSpan">4</property>
                         <property name="rowSpan">1</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1703,33 +2193,50 @@ else
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <grid id="930">
-                            <property name="width">0.9791666666666666in</property>
-                            <column id="931">
-                                <property name="width">0.84375in</property>
+                        <grid id="1051">
+                            <property name="width">0.9895833333333334in</property>
+                            <column id="1052">
+                                <property name="width">0.8229166666666666in</property>
                             </column>
-                            <column id="932"/>
-                            <row id="933">
-                                <cell id="934">
-                                    <data id="924">
+                            <column id="1053"/>
+                            <row id="1054">
+                                <cell id="1055">
+                                    <data id="1043">
                                         <property name="fontWeight">bold</property>
                                         <structure name="numberFormat">
                                             <property name="category">Currency</property>
-                                            <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
+                                            <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
                                         </structure>
                                         <property name="textAlign">right</property>
-                                        <property name="resultSetColumn">Aggregation_5</property>
+                                        <property name="resultSetColumn">Aggregation_15</property>
                                     </data>
                                 </cell>
-                                <cell id="935">
-                                    <label id="936">
+                                <cell id="1056">
+                                    <label id="1057">
                                         <property name="fontWeight">bold</property>
-                                        <property name="textAlign">right</property>
                                         <text-property name="text">%</text-property>
                                     </label>
                                 </cell>
                             </row>
                         </grid>
+                        <data id="1011">
+                            <list-property name="visibility">
+                                <structure>
+                                    <property name="format">all</property>
+                                    <expression name="valueExpr" type="javascript">true</expression>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">Aggregation_11</property>
+                        </data>
+                        <data id="1012">
+                            <list-property name="visibility">
+                                <structure>
+                                    <property name="format">all</property>
+                                    <expression name="valueExpr" type="javascript">true</expression>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">Aggregation_12</property>
+                        </data>
                     </cell>
                     <cell id="681">
                         <property name="borderBottomStyle">solid</property>
@@ -1780,35 +2287,50 @@ else
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <grid id="937">
-                            <property name="width">1.0416666666666667in</property>
-                            <column id="938">
-                                <property name="width">0.8541666666666666in</property>
+                        <grid id="1109">
+                            <property name="width">0.9479166666666666in</property>
+                            <column id="1110">
+                                <property name="width">0.6979166666666666in</property>
                             </column>
-                            <column id="939">
-                                <property name="width">0.1875in</property>
-                            </column>
-                            <row id="940">
-                                <cell id="941">
-                                    <data id="927">
+                            <column id="1111"/>
+                            <row id="1112">
+                                <cell id="1113">
+                                    <data id="1044">
                                         <property name="fontWeight">bold</property>
                                         <structure name="numberFormat">
                                             <property name="category">Currency</property>
-                                            <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
+                                            <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
                                         </structure>
-                                        <property name="textAlign">right</property>
-                                        <property name="resultSetColumn">Aggregation_8</property>
+                                        <property name="textAlign">center</property>
+                                        <property name="resultSetColumn">Aggregation_16</property>
                                     </data>
                                 </cell>
-                                <cell id="942">
-                                    <label id="943">
+                                <cell id="1114">
+                                    <label id="1115">
                                         <property name="fontWeight">bold</property>
-                                        <property name="textAlign">right</property>
                                         <text-property name="text">%</text-property>
                                     </label>
                                 </cell>
                             </row>
                         </grid>
+                        <data id="1013">
+                            <list-property name="visibility">
+                                <structure>
+                                    <property name="format">all</property>
+                                    <expression name="valueExpr" type="javascript">true</expression>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">Aggregation_13</property>
+                        </data>
+                        <data id="1014">
+                            <list-property name="visibility">
+                                <structure>
+                                    <property name="format">all</property>
+                                    <expression name="valueExpr" type="javascript">true</expression>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">Aggregation_14</property>
+                        </data>
                     </cell>
                     <cell id="901">
                         <property name="borderBottomStyle">solid</property>
@@ -1819,10 +2341,86 @@ else
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <label id="983">
+                        <data id="1010">
+                            <property name="fontWeight">bold</property>
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
+                            </structure>
                             <property name="textAlign">right</property>
-                            <text-property name="text">1</text-property>
+                            <property name="resultSetColumn">Aggregation_10</property>
+                        </data>
+                    </cell>
+                </row>
+                <row id="988">
+                    <property name="height">0.2708333333333333in</property>
+                    <cell id="989">
+                        <property name="colSpan">4</property>
+                        <property name="rowSpan">1</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="999">
+                            <property name="fontWeight">bold</property>
+                            <property name="borderBottomStyle">none</property>
+                            <property name="borderLeftStyle">none</property>
+                            <property name="borderRightStyle">none</property>
+                            <property name="borderTopStyle">none</property>
+                            <property name="textAlign">right</property>
+                            <text-property name="text">S&amp;D(%):</text-property>
                         </label>
+                    </cell>
+                    <cell id="991">
+                        <property name="colSpan">1</property>
+                        <property name="rowSpan">1</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="1007">
+                            <property name="fontWeight">bold</property>
+                            <property name="borderBottomStyle">none</property>
+                            <property name="borderLeftStyle">none</property>
+                            <property name="borderRightStyle">none</property>
+                            <property name="borderTopStyle">none</property>
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">Aggregation_9</property>
+                        </data>
+                    </cell>
+                    <cell id="1000">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">none</property>
+                        <property name="borderRightStyle">none</property>
+                        <property name="borderTopStyle">none</property>
+                        <label id="1108">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">left</property>
+                            <text-property name="text">%</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1001">
+                        <property name="colSpan">6</property>
+                        <property name="rowSpan">1</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
                     </cell>
                 </row>
             </footer>

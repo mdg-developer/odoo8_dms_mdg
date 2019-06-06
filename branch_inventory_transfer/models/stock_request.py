@@ -173,6 +173,7 @@ class branch_stock_requisition(osv.osv):
                     qty_on_hand = qty_on_hand[0]
                 else:
                     qty_on_hand = 0 
+                print 'productname',product.name_template
                 cr.execute("select new_price from product_pricelist_item where price_version_id in ( select id from product_pricelist_version where pricelist_id=%s) and product_id=%s and product_uom_id=%s", (pricelist_id, product.id, product.report_uom_id.id,))
                 product_price = cr.fetchone()[0]                
                 branch_req_line_obj.create(cr, uid, {'line_id': ids[0],
@@ -253,7 +254,7 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'req_quantity' : fields.float(string='Request (Qty)', digits=(16, 0)),
         'issue_quantity': fields.float(string='Issued (Qty)', digits=(16, 0)),
-        'diff_quantity':fields.function(_diff_quantity_value,string= 'Total Value', digits=(16, 0),type='float', readonly=True),
+        'diff_quantity':fields.function(_diff_quantity_value,string= 'Diff(Qty)', digits=(16, 0),type='float', readonly=True),
         'loss' : fields.boolean(string='Loss'),
         'product_value' : fields.float(string='Value', digits=(16, 0)),
         'viss_value' : fields.float(string='Viss', digits=(16, 0)),
