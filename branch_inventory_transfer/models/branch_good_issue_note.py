@@ -7,11 +7,11 @@ class branch_good_issue_note(osv.osv):
     _columns = {
         'name': fields.char('GIN Ref', readonly=True),
         'branch_id':fields.many2one('res.branch', 'Branch',required=True),
-        'to_location_id':fields.many2one('stock.location', 'Requesting Location', required=True),
+        'to_location_id':fields.many2one('stock.location', 'Requesting Location',  readonly=True, required=True),
         'request_by':fields.many2one('res.users', "Requested By"),
         'issue_date':fields.date('Date for Issue',required=True),
         'request_id':fields.many2one('stock.requisition', 'RFI Ref', readonly=True),
-        'from_location_id':fields.many2one('stock.location', 'Request Warehouse', required=True),
+        'from_location_id':fields.many2one('stock.location', 'Request Warehouse',  readonly=True,required=True),
         'supplier_id': fields.many2one('res.partner', 'Supplier'),
         'vehicle_id': fields.many2one('fleet.vehicle', 'Vehicle'),
         'route_id': fields.many2one('transport.route', 'Route'),

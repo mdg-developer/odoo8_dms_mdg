@@ -31,17 +31,26 @@
 								<field name="company_id" attrs="{'readonly':[('state','!=','draft')]}"
 									invisible="1" />
 								<!-- <field name="good_issue_id" invisible="0" /> -->
-								<field name="vehicle_id" attrs="{'readonly':[('state','!=','draft')]}" />
+								<field name="vehicle_id" on_change="on_change_vehicle_id(vehicle_id)"
+									attrs="{'readonly':[('state','!=','draft')]}" />
 							</group>
 							<group>
 								<field name="issue_to" attrs="{'readonly':[('state','!=','draft')]}" />
 								<field name="to_location_id" domain="[('usage','=','internal')]"
 									attrs="{'readonly':[('state','!=','draft')]}" />
+
 								<field name="request_by" />
 								<field name="approve_by" />
 								<field name="total_value" />
+								<field name="truck_type_id" on_change="on_change_truck_id(truck_type_id)"
+									attrs="{'readonly':[('state','!=','draft')]}" />
+								<field name="max_viss" />
+								<field name="max_cbm" />
 								<field name="total_viss" />
 								<field name="total_cbm" />
+								<field name="bal_viss" />
+								<field name="bal_cbm" />
+
 								<field name="pricelist_id" attrs="{'readonly':[('state','!=','draft')]}" />
 							</group>
 						</group>
@@ -59,7 +68,7 @@
 											<field name="req_quantity" />
 											<field name="issue_quantity" />
 											<field name="diff_quantity" />
-											<field name="product_uom" string="UOM"/>
+											<field name="product_uom" string="UOM" />
 											<field name="qty_on_hand" string="Qty on Hand (S)"
 												readonly="True" />
 											<field name="product_value" />
@@ -126,7 +135,7 @@
 		</record>
 		<!-- Stock Requisition -->
 		<record id="action_branch_stock_requsition" model="ir.actions.act_window">
-			<field name="name">Request For Issue</field>
+			<field name="name">Branch Request For Issue</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">branch.stock.requisition</field>
 			<field name="context">{'search_default_state_filter': 1}</field>
