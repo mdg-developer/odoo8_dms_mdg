@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<report id="report_branch_request" model="branch.stock.requisition"
+			string="Branch RFI Report" report_type="qweb-pdf"
+			name="branch_inventory_transfer.branch_request"
+			file="branch_inventory_transfer.branch_request"
+			attachment="('Request For Issue')+'.pdf'" />
+
+	</data>
+</openerp>			
