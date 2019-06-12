@@ -7,6 +7,12 @@
 			name="branch_inventory_transfer.branch_request"
 			file="branch_inventory_transfer.branch_request"
 			attachment="('Request For Issue')+'.pdf'" />
+		
+		<report id="report_loose_request" model="branch.stock.requisition"
+			string="Branch RFI Loose Report" report_type="qweb-pdf"
+			name="branch_inventory_transfer.branch_loose"
+			file="branch_inventory_transfer.branch_loose"
+			attachment="('Request Loose For Issue')+'.pdf'" />	
 			
 		<report id="report_good_issue_request" model="branch.good.issue.note"
 			string="Good Issue Note Report" report_type="qweb-pdf"

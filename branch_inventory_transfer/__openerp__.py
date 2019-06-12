@@ -46,6 +46,7 @@ Branch Inventory Transfer Module
         'reports/report_branch_request_issue.xml',
         'reports/report_issue_note.xml',
         'reports/report_receive_note.xml',
+        'reports/report_branch_request_loose.xml',
     ],
     'test': [
 

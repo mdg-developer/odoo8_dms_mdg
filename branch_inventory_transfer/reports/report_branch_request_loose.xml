@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 	<data>
-		<template id="report_branch_request_document">
+		<template id="report_branch_request_loose_document">
 			<div class="page">
 				<div class="row">
 					<div class="col-xs-3">
@@ -144,7 +144,7 @@
 
                             <!-- <t t-if="(l.big_req_quantity)+(l.req_quantity)!=0"> -->
                             <t t-if="(l.req_quantity)!=0">
-                            <t t-if="(l.loss)==False">
+                            <t t-if="(l.loss)==True">
 								<td>
 									<span t-field="l.product_id" />
 								</td>
@@ -164,7 +164,7 @@
 								<td>
 									<span t-field="l.remark" />
 								</td>
-							</t>
+							   </t>	
 							</t>
 						</tr>
 					</tbody>
@@ -208,11 +208,11 @@
 			</div>
 		</template>
 
-		<template id="branch_request">
+		<template id="branch_loose">
 			<t t-call="report.html_container">
 				<t t-foreach="doc_ids" t-as="doc_id">
 					<t
-						t-raw="translate_doc(doc_id, doc_model, 'request_by.lang', 'branch_inventory_transfer.report_branch_request_document')" />
+						t-raw="translate_doc(doc_id, doc_model, 'request_by.lang', 'branch_inventory_transfer.report_branch_request_loose_document')" />
 				</t>
 			</t>
 		</template>
