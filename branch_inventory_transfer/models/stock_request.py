@@ -169,14 +169,14 @@ class branch_stock_requisition(osv.osv):
                               copy=True),
     'company_id':fields.many2one('res.company', 'Company'),
     'truck_type_id': fields.many2one('truck.type', 'Truck Type'),
-    'max_viss': fields.float(string='Viss (Est)', digits=(16, 2)),
-    'max_cbm': fields.float(string='CBM (Est)', digits=(16, 2)),
+    'max_viss': fields.float(string='Max CBM', digits=(16, 2)),
+    'max_cbm': fields.float(string='Max Viss', digits=(16, 2)),
     'total_viss':fields.function(_viss_amount, string='Total Viss', digits_compute=dp.get_precision('Product Price'), type='float'),
     'total_cbm':fields.function(_cbm_amount, string='Total CBM', digits_compute=dp.get_precision('Product Price'), type='float'),
     'bal_viss':fields.function(_bal_cbm_amount, string='Bal Viss', digits_compute=dp.get_precision('Product Price'), type='float'),
     'bal_cbm':fields.function(_bal_viss_amount, string='Bal CBM', digits_compute=dp.get_precision('Product Price'), type='float'),
     'total_value':fields.function(_total_value, string='Total Value', digits_compute=dp.get_precision('Product Price'), type='float'),
-   'pricelist_id': fields.many2one('product.pricelist', 'Price list', required=True),
+   'pricelist_id': fields.many2one('product.pricelist', 'Price list', required=True , readonly=True),
 
 }
     _defaults = {
@@ -308,7 +308,7 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
         'req_quantity' : fields.float(string='Request (Qty)', digits=(16, 0)),
         'issue_quantity': fields.float(string='Issued (Qty)', digits=(16, 0)),
         'diff_quantity':fields.function(_diff_quantity_value, string='Diff(Qty)', digits=(16, 0), type='float', readonly=True),
-        'loss' : fields.boolean(string='Loss'),
+        'loss' : fields.boolean(string='Loose'),
         'product_value' : fields.float(string='Value', digits=(16, 0)),
         'viss_value' : fields.float(string='Viss', digits=(16, 0)),
         'cbm_value' : fields.float(string='CBM', digits=(16, 0)),

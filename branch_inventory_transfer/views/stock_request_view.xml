@@ -50,8 +50,7 @@
 								<field name="total_cbm" />
 								<field name="bal_viss" />
 								<field name="bal_cbm" />
-
-								<field name="pricelist_id" attrs="{'readonly':[('state','!=','draft')]}" />
+                                <field name="pricelist_id"/>
 							</group>
 						</group>
 						<button name="retrieve_data" string="Retrieve" type="object"
