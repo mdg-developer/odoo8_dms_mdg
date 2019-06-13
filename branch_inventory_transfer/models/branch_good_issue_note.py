@@ -18,7 +18,7 @@ class branch_good_issue_note(osv.osv):
         'max_weight': fields.float('Max Weight'),
         'max_cbm': fields.float('Max CBM'),
         'approve_by':fields.many2one('res.users', "Approved By"),
-        'pricelist_id': fields.many2one('product.pricelist', 'Price list', required=True),
+        'pricelist_id': fields.many2one('product.pricelist', 'Price list', required=True, readonly=True),
         'issue_by':fields.char("Issuer"),
         'receiver':fields.char("Receiver"),
         'loading_date' : fields.date('Loading Date'),
@@ -28,6 +28,8 @@ class branch_good_issue_note(osv.osv):
         'labor_cost': fields.float('Labor Cost'),
         'total_tcl': fields.float('Total TCL'),
         'total_value': fields.float('Total Value'),
+        'transit_location':fields.many2one('stock.location', "Transit Location"),
+        'tcl_value':fields.float("TCL / Value (%)"),
         'p_line':fields.one2many('branch.good.issue.note.line', 'line_id', 'Product Lines',
                               copy=True),
         'state': fields.selection([
@@ -48,7 +50,14 @@ class branch_good_issue_note(osv.osv):
          'request_by':lambda obj, cr, uid, context: uid,
          'pricelist_id':1,
          
-    }  
+    }
+    
+    def onchange_total_tcl_calculate(self, cr, uid, ids,transport_cost, labor_cost,total_tcl ,context=None):
+        labor_cost = float(labor_cost)
+        transport_cost= float(transport_cost)
+        total_tcl=float(total_tcl)
+        return {'value' : {'total_tcl' :(labor_cost+transport_cost),}}
+ 
     
 class branch_good_issue_note_line(osv.osv):  
     _name = 'branch.good.issue.note.line'
@@ -63,7 +72,7 @@ class branch_good_issue_note_line(osv.osv):
         'qty_on_hand':fields.float(string='Qty On Hand(S)', digits=(16, 0)),
         'sequence':fields.integer('Sequence'),
         'product_value' : fields.float(string='Value', digits=(16, 0)),
-        'product_loss' : fields.boolean(string='Loss'),
+        'product_loss' : fields.boolean(string='Loose'),
         'product_viss' : fields.float(string='Viss', digits=(16, 0)),
         'product_cbm' : fields.float(string='CBM', digits=(16, 0)),
         'remark':fields.selection([

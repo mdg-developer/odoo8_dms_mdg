@@ -27,16 +27,17 @@
 						</h1>
 						<group>
 							<group>
-								<field name="branch_id" />
+								<field name="branch_id"/>
 								<field name="to_location_id" />
 								<field name="request_by" />
 								<field name="issue_date" />
 								<field name="write_date" />
-								<field name="supplier_id" domain="[('supplier','=','true')]"/>
+								<field name="route_id"/>
 								<field name="vehicle_id" />
-								<field name="route_id" />
+								<field name="supplier_id" domain="[('supplier','=','true')]"/>								
 								<field name="max_weight" />
 								<field name="max_cbm" />
+								<field name="transit_location"/>
 							</group>						
 							<group>
 								<field name="request_id" />	
@@ -48,10 +49,11 @@
 								<field name="loading_date" />	
 								<field name="eta_date" />	
 								<field name="variable_costing" />	
-								<field name="transport_cost" />	
-								<field name="labor_cost" />	
-								<field name="total_tcl" />		
-								<field name="total_value" />						
+								<field name="transport_cost" on_change="onchange_total_tcl_calculate(transport_cost, labor_cost,total_tcl)"/>	
+								<field name="labor_cost" on_change="onchange_total_tcl_calculate(transport_cost, labor_cost,total_tcl)"/>	
+								<field name="total_tcl" on_change="onchange_total_tcl_calculate(transport_cost, labor_cost,total_tcl)"/>		
+								<field name="total_value" />
+								<field name="tcl_value"/>						
 							</group>						
 						</group>	
 						<group>

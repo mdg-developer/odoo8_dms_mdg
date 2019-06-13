@@ -72,7 +72,7 @@
 								<field name="supplier_id"
 									domain="[('supplier','=','true')]"
 									attrs="{'invisible':[('3pl','=',False)]}" class="oe_inline" />
-								<field name="truck_type_id" class="oe_inline" />
+								<field name="truck_type_id"  class="oe_inline" />
 								<field name="weight_viss" />
 								<field name="vol_cbm" />
 								<field name="alert_weight_viss" />
