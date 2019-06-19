@@ -14,6 +14,17 @@
 			<field name="padding">7</field>
 		</record>
 
-	
+		<record id="branch_gin_req_sequence" model="ir.sequence.type">
+			<field name="name">Branch Good Issue Sequence</field>
+			<field name="code">branch.gin.code</field>
+		</record>
+
+		<record id="branch_gin_req_seq" model="ir.sequence">
+			<field name="name">Branch Good Issue Sequence</field>
+			<field name="code">branch.gin.code</field>
+			<field name="prefix">BGIN/%(year)s/</field>
+			<field name="padding">7</field>
+		</record>
+		
 	</data>
 </openerp>

@@ -10,7 +10,7 @@
 					<sheet>
 						<group>
 							<group>
-								<field name="name"  class="oe_inline"/>
+								<field name="name" />
 								<field name="from_dest_id" />
 								<field name="to_dest_id" />
 							</group>
