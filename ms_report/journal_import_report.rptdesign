@@ -378,7 +378,7 @@ from res_company
                     <structure>
                         <property name="position">11</property>
                         <property name="name">acc_code</property>
-                        <property name="dataType">string</property>
+                        <property name="dataType">integer</property>
                     </structure>
                     <structure>
                         <property name="position">12</property>
@@ -498,7 +498,7 @@ else
                     <property name="position">11</property>
                     <property name="name">acc_code</property>
                     <property name="nativeName">acc_code</property>
-                    <property name="dataType">string</property>
+                    <property name="dataType">integer</property>
                 </structure>
                 <structure>
                     <property name="position">12</property>
@@ -546,7 +546,7 @@ else
             <xml-property name="queryText"><![CDATA[select * ,(select count(absl.id) from account_move_line absl where absl.move_id=ms_id) as no_of_distribution,get_journal_import_seq(ms_id,msl_id) as so_propo_dis
 from (
 select abs.name,absl.id as msl_id,abs.id as ms_id,(select customer_code from res_partner where id =absl.partner_id ) as customer_code,(select name from res_partner where id =absl.partner_id ) as partner,absl.partner_id,abs.date,
-abs.ref as check_name,(select name from account_journal where id =abs.journal_id) journal,abs.journal_id,aa.code as acc_code,absl.account_id,absl.name as description
+abs.ref as check_name,(select name from account_journal where id =abs.journal_id) journal,abs.journal_id,aa.code::integer as acc_code,absl.account_id,absl.name as description
 ,(select name from account_period where id =abs.period_id )period,abs.period_id,CASE WHEN absl.debit>0 THEN absl.debit ELSE -1* absl.credit  END amount
 from account_move abs,account_move_line absl,account_account aa
 where abs.id=absl.move_id
@@ -824,7 +824,8 @@ or brand_id is null]]></xml-property>
                     <property name="name">acc_code</property>
                     <text-property name="displayName">acc_code</text-property>
                     <expression name="expression" type="javascript">dataSetRow["acc_code"]</expression>
-                    <property name="dataType">string</property>
+                    <property name="dataType">integer</property>
+                    <property name="allowExport">true</property>
                 </structure>
                 <structure>
                     <property name="name">amount_1</property>
@@ -843,6 +844,12 @@ or brand_id is null]]></xml-property>
                     <text-property name="displayName">check_name</text-property>
                     <expression name="expression" type="javascript">dataSetRow["check_name"]</expression>
                     <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">acc_code_1</property>
+                    <text-property name="displayName">acc_code</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["acc_code"]</expression>
+                    <property name="dataType">integer</property>
                 </structure>
             </list-property>
             <column id="2659">
@@ -1092,7 +1099,7 @@ or brand_id is null]]></xml-property>
                         <data id="3279">
                             <structure name="dateTimeFormat">
                                 <property name="category">Custom</property>
-                                <property name="pattern">YYYY-MM-dd</property>
+                                <property name="pattern">MM/dd/YYYY</property>
                             </structure>
                             <property name="resultSetColumn">date</property>
                         </data>
@@ -1143,7 +1150,11 @@ or brand_id is null]]></xml-property>
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <data id="3280">
+                        <data id="3291">
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
                             <property name="textAlign">center</property>
                             <property name="resultSetColumn">acc_code</property>
                         </data>

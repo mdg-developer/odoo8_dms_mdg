@@ -378,7 +378,7 @@ from res_company
                     <structure>
                         <property name="position">11</property>
                         <property name="name">acc_code</property>
-                        <property name="dataType">string</property>
+                        <property name="dataType">integer</property>
                     </structure>
                     <structure>
                         <property name="position">12</property>
@@ -498,7 +498,7 @@ else
                     <property name="position">11</property>
                     <property name="name">acc_code</property>
                     <property name="nativeName">acc_code</property>
-                    <property name="dataType">string</property>
+                    <property name="dataType">integer</property>
                 </structure>
                 <structure>
                     <property name="position">12</property>
@@ -546,7 +546,7 @@ else
             <xml-property name="queryText"><![CDATA[select * ,(select count(absl.id) from account_bank_statement_line absl where absl.statement_id=ms_id and absl.expense_amt>0) as no_of_distribution,get_cashbook_payment_seq(ms_id,msl_id) as so_propo_dis
 from (
 select abs.name,absl.id as msl_id,abs.id as ms_id,(select customer_code from res_partner where id =absl.partner_id ) as customer_code,(select name from res_partner where id =absl.partner_id ) as partner,absl.partner_id,abs.date,
-absl.ref as check_name,(select name from account_journal where id =abs.journal_id) journal,abs.journal_id,aa.code as acc_code,absl.account_id,absl.name as description
+absl.ref as check_name,(select name from account_journal where id =abs.journal_id) journal,abs.journal_id,aa.code::integer as acc_code,absl.account_id,absl.name as description
 ,(select name from account_period where id =abs.period_id )period,abs.period_id,absl.expense_amt as amount
 from account_bank_statement abs,account_bank_statement_line absl,account_account aa
 where abs.id=absl.statement_id
@@ -694,8 +694,9 @@ order by res.name
     </page-setup>
     <body>
         <grid id="2537">
+            <property name="width">29.260416666666668in</property>
             <column id="2538">
-                <property name="width">28.5in</property>
+                <property name="width">29.260416666666668in</property>
             </column>
             <row id="2965">
                 <cell id="2966">
@@ -825,7 +826,8 @@ order by res.name
                     <property name="name">acc_code</property>
                     <text-property name="displayName">acc_code</text-property>
                     <expression name="expression" type="javascript">dataSetRow["acc_code"]</expression>
-                    <property name="dataType">string</property>
+                    <property name="dataType">integer</property>
+                    <property name="allowExport">true</property>
                 </structure>
                 <structure>
                     <property name="name">amount_1</property>
@@ -838,6 +840,18 @@ order by res.name
                     <text-property name="displayName">period</text-property>
                     <expression name="expression" type="javascript">dataSetRow["period"]</expression>
                     <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">check_name</property>
+                    <text-property name="displayName">check_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["check_name"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">acc_code_1</property>
+                    <text-property name="displayName">acc_code</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["acc_code"]</expression>
+                    <property name="dataType">integer</property>
                 </structure>
             </list-property>
             <column id="2659">
@@ -1695,6 +1709,10 @@ order by res.name
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                        <data id="3291">
+                            <property name="textAlign">left</property>
+                            <property name="resultSetColumn">check_name</property>
+                        </data>
                     </cell>
                     <cell id="3037">
                         <property name="borderBottomStyle">solid</property>
@@ -1708,7 +1726,7 @@ order by res.name
                         <data id="3263">
                             <structure name="dateTimeFormat">
                                 <property name="category">Custom</property>
-                                <property name="pattern">YYYY-MM-dd</property>
+                                <property name="pattern">MM/dd/YYYY</property>
                             </structure>
                             <property name="resultSetColumn">date</property>
                         </data>
@@ -1976,7 +1994,11 @@ order by res.name
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <data id="3267">
+                        <data id="3292">
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
                             <property name="textAlign">center</property>
                             <property name="resultSetColumn">acc_code</property>
                         </data>
