@@ -10,9 +10,11 @@
 					<sheet>
 						<group>
 							<group>
-								<field name="name"  class="oe_inline"/>
+								<field name="name" class="oe_inline" />
 								<field name="est_cbm" />
 								<field name="est_viss" />
+								<field name="order_cbm" />
+								<field name="order_viss" />
 							</group>
 						</group>
 
@@ -30,6 +32,8 @@
 					<field name="name" />
 					<field name="est_cbm" />
 					<field name="est_viss" />
+					<field name="order_cbm" />
+					<field name="order_viss" />
 				</tree>
 			</field>
 		</record>
@@ -65,22 +69,166 @@
 						<page string="Supply Chain Configuration" position="inside">
 							<group>
 								<field name="3pl" />
-								<field name="supplier_id" domain="[('supplier','=','true')]"
-									attrs="{'invisible':[('3pl','=',False)]}"  class="oe_inline"/>
-								<field name="truck_type_id"  class="oe_inline"/>
+								<field name="supplier_id"
+									domain="[('supplier','=','true')]"
+									attrs="{'invisible':[('3pl','=',False)]}" class="oe_inline" />
+								<field name="truck_type_id"  class="oe_inline" />
 								<field name="weight_viss" />
 								<field name="vol_cbm" />
 								<field name="alert_weight_viss" />
 								<field name="alert_vol_cbm" />
+								<field name="length"
+									on_change="onchange_box_calculation(length,width,height,cbm)" />
+								<field name="width"
+									on_change="onchange_box_calculation(length,width,height,cbm)" />
+								<field name="height"
+									on_change="onchange_box_calculation(length,width,height,cbm)" />
+								<field name="cbm"
+									on_change="onchange_box_calculation(length,width,height,cbm)" />
 								<field name="branch_id" invisible="1" />
 							</group>
 						</page>
+
+						<page string="Vechicle Detailed Specs" position="inside">
+							<group>
+								<field name="engine"  class="oe_inline"/>
+								<field name="displacement_id" />
+								<field name="gvw_id" on_change="onchange_gvw_calculate(gvw_id,gvw_viss)" />
+								<field name="payload_id" on_change="onchange_payload_calculate(payload_id,payload_viss)"/>
+								<field name="gvw_viss" on_change="onchange_gvw_calculate(gvw_id,gvw_viss)" />
+								<field name="payload_viss" on_change="onchange_payload_calculate(payload_id,payload_viss)"/>
+								<field name="gear_box" />
+								<field name="clutch" />
+								<field name="steering" />
+								<field name="brake" />
+								<field name="suspension" />
+								<field name="fuel_tank_litre" on_change="onchange_fuel_tank_capacity_calculate(fuel_tank_litre,fuel_tank_gal)" />
+								<field name="fuel_tank_gal" on_change="onchange_fuel_tank_capacity_calculate(fuel_tank_litre,fuel_tank_gal)" />
+								<field name="type_size" />
+								<field name="warranty" />
+								<label for="image" />
+								<div>
+									<field name="image" widget='image' width='70' height='60' />
+
+								
+									<field name="image2" widget='image' width='70' height='60' />
+
+								
+									<field name="image3" widget='image' width='70' height='60' />
+
+								</div>
+								<field name="wheel_tax" widget='image' width='70' height='60' />
+								
+								<field name="branch_id" invisible="1" />
+							</group>
+						</page>
+
+						<page string="Operational Specs" position="inside">
+							<group>
+								<field name="fleet_manager" />
+								<field name="fleet_auditor" />
+								<field name="average_monthly_mileage" />
+								<field name="average_daily_paylood" />
+								<field name="average_fuel_consumption" />
+								<field name="branch_id" invisible="1" />
+							</group>
+						</page>
+
+					</notebook>
+					<notebook>
+
 					</notebook>
 				</xpath>
-
-
+				<xpath expr="//field[@name='color']" position="after">
+					<field name="office_vehicle" />
+					<field name="sale_vehicle" />
+					<field name="logistic_vehicle" />
+				</xpath>
 			</field>
 		</record>
+		
+        <record model='ir.actions.act_window' id='inherit_fleet_vehicle_office_new'>
+            <field name="name">Office Vehicles</field>
+            <field name="res_model">fleet.vehicle</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{
+                      'default_office_vehicle':True
+				}
+			</field>
 
+			<field name="domain">[('office_vehicle','=',True)]
+			</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new vehicle.
+              </p><p>
+                You will be able to manage your fleet by keeping track of the
+                contracts, services, fixed and recurring costs, odometers and
+                fuel logs associated to each vehicle.
+            </p><p>
+                Odoo will warn you when services or contract have to be
+                renewed.
+              </p>
+            </field>
+        </record>
+        
+         <record model='ir.actions.act_window' id='inherit_fleet_vehicle_sale_new'>
+            <field name="name">Sale Vehicles</field>
+            <field name="res_model">fleet.vehicle</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{
+                      'default_sale_vehicle':True
+				}
+			</field>
+
+			<field name="domain">[('sale_vehicle','=',True)]
+			</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new vehicle.
+              </p><p>
+                You will be able to manage your fleet by keeping track of the
+                contracts, services, fixed and recurring costs, odometers and
+                fuel logs associated to each vehicle.
+            </p><p>
+                Odoo will warn you when services or contract have to be
+                renewed.
+              </p>
+            </field>
+        </record>
+        
+         <record model='ir.actions.act_window' id='inherit_fleet_vehicle_logistic_new'>
+            <field name="name">Logistic Vehicles</field>
+            <field name="res_model">fleet.vehicle</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{
+                      'default_logistic_vehicle':True
+				}
+			</field>
+
+			<field name="domain">[('logistic_vehicle','=',True)]
+			</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new vehicle.
+              </p><p>
+                You will be able to manage your fleet by keeping track of the
+                contracts, services, fixed and recurring costs, odometers and
+                fuel logs associated to each vehicle.
+            </p><p>
+                Odoo will warn you when services or contract have to be
+                renewed.
+              </p>
+            </field>
+        </record>
+
+		<menuitem action="inherit_fleet_vehicle_office_new" parent="fleet.fleet_vehicles" id="fleet_vehicle_office" sequence="2" groups="fleet.group_fleet_user"/>
+		<menuitem action="inherit_fleet_vehicle_sale_new" parent="fleet.fleet_vehicles" id="fleet_vehicle_sale" sequence="3" groups="fleet.group_fleet_user"/>
+		<menuitem action="inherit_fleet_vehicle_logistic_new" parent="fleet.fleet_vehicles" id="fleet_vehicle_logistic" sequence="4" groups="fleet.group_fleet_user"/>
+		
+		
 	</data>
 </openerp>		

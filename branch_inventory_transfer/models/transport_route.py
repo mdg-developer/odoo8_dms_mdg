@@ -25,11 +25,10 @@ class transport_route_line(osv.osv):
             truck_type_id = vehicle_data.truck_type_id
             if truck_type_id:
                 type_id=truck_type_id.id
-
-            values = {
-                 'truck_type':type_id,
-
-            }
+                values = {
+                     'truck_type':type_id,
+    
+                }
         return {'value': values}   
       
     def _total_value(self, cr, uid, ids, field_name, arg, context=None):

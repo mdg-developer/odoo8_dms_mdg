@@ -42,6 +42,11 @@ Branch Inventory Transfer Module
         'views/fleet_view.xml',
         'views/branch_good_issue_note_view.xml',
         'views/branch_view.xml',
+        'reports/qweb_view.xml',
+        'reports/report_branch_request_issue.xml',
+        'reports/report_issue_note.xml',
+        'reports/report_receive_note.xml',
+        'reports/report_branch_request_loose.xml',
     ],
     'test': [
 
