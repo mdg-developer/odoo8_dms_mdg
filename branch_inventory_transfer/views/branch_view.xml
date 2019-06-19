@@ -24,7 +24,6 @@
 							<field name="request_line">
 								<tree string="Request Location" editable="bottom">
 									<field name="location_id" domain="[('usage','=','internal')]" />
-									<field name="transit_location_id" domain="[('usage','=','internal')]" />
 								</tree>
 							</field>
 						</page>
@@ -32,6 +31,7 @@
 							<field name="requesting_line">
 								<tree string="Requesting Warehouse" editable="bottom">
 									<field name="location_id" domain="[('usage','=','internal')]" />
+									<field name="transit_location_id" domain="[('usage','=','internal')]" />
 								</tree>
 							</field>
 						</page>

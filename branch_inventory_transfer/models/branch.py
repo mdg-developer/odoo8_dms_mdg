@@ -48,7 +48,6 @@ class request_location_line(osv.osv):
     _columns = {
                 'request_id': fields.many2one('res.branch', 'Line', required=True, ondelete='cascade'),
                     'location_id' : fields.many2one('stock.location', 'Request Location'),
-                    'transit_location_id' : fields.many2one('stock.location', 'Transit Location'),
                 }
 
     
@@ -56,6 +55,7 @@ class requesting_location_line(osv.osv):
     _name = "branch.requesting.line"
     _columns = {
                 'requesting_id': fields.many2one('res.branch', 'Line', required=True, ondelete='cascade'),
+                'transit_location_id' : fields.many2one('stock.location', 'Transit Location'),
                  'location_id' : fields.many2one('stock.location', 'Requesting Warehouse'),
 
                 }

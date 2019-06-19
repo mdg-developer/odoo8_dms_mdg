@@ -8,16 +8,16 @@
 			<field name="arch" type="xml">
 				<form string="Branch Good Issue Note">
 					<header>
-					    <button name="approve" string="Approve" class="oe_highlight"
+						<button name="approve" string="Approve" class="oe_highlight"
 							type="object" states="pending" />
-					    <button name="cancel" string="Cancel" class="oe_highlight"
+						<button name="cancel" string="Cancel" class="oe_highlight"
 							type="object" states="pending" />
-					    <button name="change_location" string="Change Location" class="oe_highlight"
-							type="object" />
-					    <button name="issue" string="Issue" class="oe_highlight"
-							type="object" />
-					    <button name="receive" string="Receive" class="oe_highlight"
-							type="object" />
+						<button name="change_location" string="Change Location"
+							class="oe_highlight" type="object" states="receive" />
+						<button name="issue" string="Issue" class="oe_highlight"
+							type="object" states="approve" />
+						<button name="receive" string="Receive" class="oe_highlight"
+							type="object" states="issue" />
 						<field name="state" widget="statusbar" />
 					</header>
 					<sheet>
@@ -27,35 +27,36 @@
 						</h1>
 						<group>
 							<group>
-								<field name="branch_id"/>
+								<field name="branch_id" />
 								<field name="to_location_id" />
 								<field name="request_by" />
 								<field name="issue_date" />
+								<field name="receive_date" />
 								<field name="write_date" />
-								<field name="route_id" on_change="onchange_route(route_id)"/>
-								<field name="vehicle_id" on_change="onchange_vehicle(vehicle_id)"/>
-								<field name="supplier_id" domain="[('supplier','=','true')]"/>								
+								<field name="route_id" on_change="onchange_route(route_id)" />
+								<field name="vehicle_id" on_change="onchange_vehicle(vehicle_id)" />
+								<field name="supplier_id" domain="[('supplier','=','true')]" />
 								<field name="max_weight" />
 								<field name="max_cbm" />
-								<field name="transit_location"/>
-							</group>						
+								<field name="transit_location" />
+							</group>
 							<group>
-								<field name="request_id" />	
-								<field name="from_location_id" />	
-								<field name="approve_by" />		
-								<field name="pricelist_id" />	
-								<field name="issue_by" />	
-								<field name="receiver" />	
-								<field name="loading_date" />	
-								<field name="eta_date" />	
-								<field name="variable_costing" />	
-								<field name="transport_cost" />	
-								<field name="labor_cost" />									
-								<field name="total_tcl" />		
+								<field name="request_id" />
+								<field name="from_location_id" />
+								<field name="approve_by" />
+								<field name="pricelist_id" />
+								<field name="issue_by" />
+								<field name="receiver" />
+								<field name="loading_date" />
+								<field name="eta_date" />
+								<field name="variable_costing" />
+								<field name="transport_cost" />
+								<field name="labor_cost" />
+								<field name="total_tcl" />
 								<field name="total_value" />
-								<field name="tcl_value"/>						
-							</group>						
-						</group>	
+								<field name="tcl_value" />
+							</group>
+						</group>
 						<group>
 							<notebook>
 								<page string="Stock">
@@ -69,7 +70,7 @@
 											<field name="diff_quantity" />
 											<field name="product_uom" />
 											<field name="qty_on_hand" />
-											<field name="product_value"/>
+											<field name="product_value" />
 											<field name="product_loss" />
 											<field name="product_viss" />
 											<field name="product_cbm" />
@@ -78,7 +79,7 @@
 									</field>
 								</page>
 							</notebook>
-						</group>			
+						</group>
 					</sheet>
 					<div class="oe_chatter">
 						<field name="message_follower_ids" widget="mail_followers"
@@ -95,19 +96,27 @@
 			<field name="model">branch.good.issue.note</field>
 			<field name="arch" type="xml">
 				<tree string="Branch Good Issue Note">
-					<field name="name" />									
+					<field name="branch_id" />
+					<field name="name" />
+					<field name="request_id" />
+					<field name="to_location_id" />
+					<field name="from_location_id" />
+					<field name="issue_date" />
+					<field name="receive_date" />
+					<field name="vehicle_id" />
+					<field name="state" />
 				</tree>
 			</field>
 		</record>
-		
+
 		<!-- Stock Requisition -->
 		<record id="action_branch_good_issue_note" model="ir.actions.act_window">
 			<field name="name">Branch Good Issue Note</field>
 			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">branch.good.issue.note</field>			
+			<field name="res_model">branch.good.issue.note</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
-			<field name="view_id" ref="branch_good_issue_note_tree" />			
+			<field name="view_id" ref="branch_good_issue_note_tree" />
 			<field name="domain">[]
 			</field>
 			<field name="help" type="html">

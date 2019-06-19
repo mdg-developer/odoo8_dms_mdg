@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<record id="view_change_diff_location" model="ir.ui.view">
+			<field name="name">Change Warehouse</field>
+			<field name="model">change.diff.location</field>
+			<field name="arch" type="xml">
+				<form string="Change Location">
+					<separator colspan="4" />
+					<group>
+						<field name="from_location_id" class="oe_inline" invisible="0" />
+						<field name="note_id" class="oe_inline" invisible="0" />
+						<field name="to_location_id" class="oe_inline" />
+						<field name="transfer_date" class="oe_inline" />
+					</group>
+					<footer>
+						<button name="make_location" string="Transfer" type="object"
+							class="oe_highlight" />
+						or
+						<button string="Cancel" class="oe_link" special="cancel" />
+					</footer>
+				</form>
+			</field>
+		</record>
+
+		<record id="open_change_diff_location" model="ir.actions.act_window">
+			<field name="name">Change Location</field>
+			<field name="res_model">change.diff.location</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_change_diff_location" />
+			<field name="target">new</field>
+		</record>
+	</data>
+</openerp>

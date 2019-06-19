@@ -1,4 +1,5 @@
 from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 class branch_good_issue_note(osv.osv):    
     _inherit = ['mail.thread', 'ir.needaction_mixin']
@@ -49,12 +50,32 @@ class branch_good_issue_note(osv.osv):
             res[gin_data.id] = total_value            
         return res   
     
+    def change_location(self, cr, uid, ids, context=None):
+        if not ids: return []
+        dummy, view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'branch_inventory_transfer', 'view_change_diff_location')
+        inv = self.browse(cr, uid, ids[0], context=context)
+        return {
+            'name':_("Change Location"),
+            'view_mode': 'form',
+            'view_id': view_id,
+            'view_type': 'form',
+            'res_model': 'change.diff.location',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+            'domain': '[]',
+            'context': {
+            'default_from_location_id': inv.transit_location.id,
+            'default_note_id':inv.id,
+            }
+        }    
     _columns = {
         'name': fields.char('GIN Ref', readonly=True),
         'branch_id':fields.many2one('res.branch', 'Branch',required=True),
         'to_location_id':fields.many2one('stock.location', 'Requesting Location',  readonly=True, required=True),
         'request_by':fields.many2one('res.users', "Requested By"),
         'issue_date':fields.date('Date for Issue',required=True),
+        'receive_date':fields.date('Date for Receive',required=False),
         'request_id':fields.many2one('stock.requisition', 'RFI Ref', readonly=True),
         'from_location_id':fields.many2one('stock.location', 'Request Warehouse',  readonly=True,required=True),
         'supplier_id': fields.many2one('res.partner', 'Supplier'), 
@@ -104,6 +125,161 @@ class branch_good_issue_note(osv.osv):
         vals['name'] = id_code       
         return super(branch_good_issue_note, self).create(cursor, user, vals, context=context)
     
+    def approve(self, cr, uid, ids, context=None):
+        
+        return self.write(cr, uid, ids, {'state': 'approve','approve_by':uid})   
+    
+    
+    def issue(self, cr, uid, ids, context=None):
+        product_line_obj = self.pool.get('branch.good.issue.note.line')
+        note_obj = self.pool.get('branch.good.issue.note')
+        picking_obj = self.pool.get('stock.picking')
+        move_obj = self.pool.get('stock.move')
+        note_value = req_lines = {}
+        if ids:
+            note_value = note_obj.browse(cr, uid, ids[0], context=context)
+            issue_date = note_value.issue_date
+            #location_id = note_value.tansit_location.id
+            location_id = note_value.to_location_id.id
+            from_location_id = note_value.transit_location.id
+            origin = note_value.name
+            cr.execute('select id from stock_picking_type where default_location_dest_id=%s and name like %s', (location_id, '%Internal Transfer%',))
+            price_rec = cr.fetchone()
+            if price_rec: 
+                picking_type_id = price_rec[0] 
+            else:
+                raise osv.except_osv(_('Warning'),
+                                     _('Picking Type has not for this transition'))
+            picking_id = picking_obj.create(cr, uid, {
+                                          'date': issue_date,
+                                          'origin':origin,
+                                          'picking_type_id':picking_type_id}, context=context)
+            note_line_id = product_line_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context)
+            if note_line_id and picking_id:
+                for note_id in note_value.p_line:
+                    note_line_value = product_line_obj.browse(cr, uid, note_id.id, context=context)
+                    product_id = note_line_value.product_id.id
+                    name = note_line_value.product_id.name_template
+                    product_uom = note_line_value.product_uom.id
+                    origin = origin
+                    quantity = note_line_value.issue_quantity                        
+                    move_id=move_obj.create(cr, uid, {'picking_id': picking_id,
+                                              'picking_type_id':picking_type_id,
+                                          'product_id': product_id,
+                                          'product_uom_qty': quantity,
+                                          'product_uos_qty': quantity,
+                                          'product_uom':product_uom,
+                                          'location_id':location_id,
+                                          'location_dest_id':from_location_id,
+                                          'name':name,
+                                           'origin':origin,
+                                          'state':'confirmed'}, context=context)     
+                    move_obj.action_done(cr, uid, move_id, context=context)  
+                    cr.execute('''update stock_move set date=((%s::date)::text || ' ' || date::time(0))::timestamp where state='done' and origin =%s''',(issue_date,origin,))
+        return self.write(cr, uid, ids, {'state': 'issue'})       
+
+    def receive(self, cr, uid, ids, context=None):
+        product_line_obj = self.pool.get('branch.good.issue.note.line')
+        note_obj = self.pool.get('branch.good.issue.note')
+        picking_obj = self.pool.get('stock.picking')
+        move_obj = self.pool.get('stock.move')
+        note_value = req_lines = {}
+        if ids:
+            note_value = note_obj.browse(cr, uid, ids[0], context=context)
+            receive_date=note_value.receive_date
+            if not receive_date:
+                raise osv.except_osv(_('Warning'),
+                         _('Please Insert Receive Date'))
+            #location_id = note_value.tansit_location.id
+            location_id = note_value.transit_location.id
+            from_location_id = note_value.from_location_id.id
+            origin = 'REC '+ note_value.name
+            cr.execute('select id from stock_picking_type where default_location_dest_id=%s and name like %s', (from_location_id, '%Internal Transfer%',))
+            price_rec = cr.fetchone()
+            if price_rec: 
+                picking_type_id = price_rec[0] 
+            else:
+                raise osv.except_osv(_('Warning'),
+                                     _('Picking Type has not for this transition'))
+            picking_id = picking_obj.create(cr, uid, {
+                                          'date': receive_date,
+                                          'origin':origin,
+                                          'picking_type_id':picking_type_id}, context=context)
+            note_line_id = product_line_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context)
+            if note_line_id and picking_id:
+                for note_id in note_value.p_line:
+                    note_line_value = product_line_obj.browse(cr, uid, note_id.id, context=context)
+                    product_id = note_line_value.product_id.id
+                    name = note_line_value.product_id.name_template
+                    product_uom = note_line_value.product_uom.id
+                    origin = origin
+                    quantity = note_line_value.receive_quantity                        
+                    move_id=move_obj.create(cr, uid, {'picking_id': picking_id,
+                                              'picking_type_id':picking_type_id,
+                                          'product_id': product_id,
+                                          'product_uom_qty': quantity,
+                                          'product_uos_qty': quantity,
+                                          'product_uom':product_uom,
+                                          'location_id':location_id,
+                                          'location_dest_id':from_location_id,
+                                          'name':name,
+                                           'origin':origin,
+                                          'state':'confirmed'}, context=context)     
+                    move_obj.action_done(cr, uid, move_id, context=context)  
+                    cr.execute('''update stock_move set date=((%s::date)::text || ' ' || date::time(0))::timestamp where state='done' and origin =%s''',(receive_date,origin,))
+        return self.write(cr, uid, ids, {'state': 'receive'}) 
+    
+    def transfer_other_location(self, cr, uid,ids,from_location_id,to_location_id,date, context=None):
+        product_line_obj = self.pool.get('branch.good.issue.note.line')
+        note_obj = self.pool.get('branch.good.issue.note')
+        picking_obj = self.pool.get('stock.picking')
+        move_obj = self.pool.get('stock.move')
+        note_value = req_lines = {}
+        if ids:
+            note_value = note_obj.browse(cr, uid, ids, context=context)
+            receive_date=note_value.receive_date
+            if not receive_date:
+                raise osv.except_osv(_('Warning'),
+                         _('Please Insert Receive Date'))
+            #location_id = note_value.tansit_location.id
+            location_id = from_location_id
+            from_location_id = to_location_id
+            origin = 'CHANGE '+ note_value.name
+            cr.execute('select id from stock_picking_type where default_location_dest_id=%s and name like %s', (from_location_id, '%Internal Transfer%',))
+            price_rec = cr.fetchone()
+            if price_rec: 
+                picking_type_id = price_rec[0] 
+            else:
+                raise osv.except_osv(_('Warning'),
+                                     _('Picking Type has not for this transition'))
+            picking_id = picking_obj.create(cr, uid, {
+                                          'date': receive_date,
+                                          'origin':origin,
+                                          'picking_type_id':picking_type_id}, context=context)
+            note_line_id = product_line_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context)
+            if note_line_id and picking_id:
+                for note_id in note_value.p_line:
+                    note_line_value = product_line_obj.browse(cr, uid, note_id.id, context=context)
+                    product_id = note_line_value.product_id.id
+                    name = note_line_value.product_id.name_template
+                    product_uom = note_line_value.product_uom.id
+                    origin = origin
+                    quantity = note_line_value.diff_quantity                        
+                    move_id=move_obj.create(cr, uid, {'picking_id': picking_id,
+                                              'picking_type_id':picking_type_id,
+                                          'product_id': product_id,
+                                          'product_uom_qty': quantity,
+                                          'product_uos_qty': quantity,
+                                          'product_uom':product_uom,
+                                          'location_id':location_id,
+                                          'location_dest_id':from_location_id,
+                                          'name':name,
+                                           'origin':origin,
+                                          'state':'confirmed'}, context=context)     
+                    move_obj.action_done(cr, uid, move_id, context=context)  
+                    cr.execute('''update stock_move set date=((%s::date)::text || ' ' || date::time(0))::timestamp where state='done' and origin =%s''',(receive_date,origin,))
+        return self.write(cr, uid, ids, {'state': 'receive'}) 
+        
     def onchange_vehicle(self, cr, uid,ids,vehicle_id,context=None):  
         if vehicle_id:
             vehicle = self.pool.get('fleet.vehicle').browse(cr, uid, vehicle_id, context=context)                       
@@ -129,12 +305,23 @@ class branch_good_issue_note(osv.osv):
 class branch_good_issue_note_line(osv.osv):  
     _name = 'branch.good.issue.note.line'
     
+    def _diff_quantity_value(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        if context is None:
+            context = {}               
+        for order in self.browse(cr, uid, ids, context=context):
+            val1 = 0.0            
+
+            val1 = order.issue_quantity - order.receive_quantity                      
+            res[order.id] = val1
+        return res               
+    
     _columns = {                
         'line_id':fields.many2one('branch.good.issue.note', 'Line', ondelete='cascade', select=True),
         'product_id': fields.many2one('product.product', 'Product', required=True),        
-        'issue_quantity': fields.float(string='Issued (Qty)', digits=(16, 0)),
+        'issue_quantity': fields.float(string='Issued (Qty)', digits=(16, 0), readonly=True),
         'receive_quantity' : fields.float(string='Received (Qty)', digits=(16, 0)),
-        'diff_quantity' : fields.float(string='Diff (Qty)', digits=(16, 0)),        
+        'diff_quantity':fields.function(_diff_quantity_value, string='Diff(Qty)', digits=(16, 0), type='float', readonly=True),
         'product_uom': fields.many2one('product.uom', ' UOM'),        
         'qty_on_hand':fields.float(string='Qty On Hand(S)', digits=(16, 0)),
         'sequence':fields.integer('Sequence'),

@@ -177,6 +177,7 @@ class branch_stock_requisition(osv.osv):
     'bal_cbm':fields.function(_bal_viss_amount, string='Bal CBM', digits_compute=dp.get_precision('Product Price'), type='float'),
     'total_value':fields.function(_total_value, string='Total Value', digits_compute=dp.get_precision('Product Price'), type='float'),
    'pricelist_id': fields.many2one('product.pricelist', 'Price list', required=True , readonly=True),
+   'good_issue_id': fields.many2one('branch.good.issue.note', 'GIN No', required=False , readonly=True),
 
 }
     _defaults = {
@@ -197,11 +198,54 @@ class branch_stock_requisition(osv.osv):
         return super(branch_stock_requisition, self).create(cursor, user, vals, context=context)
  
     def approve(self, cr, uid, ids, context=None):
-        # , 'good_issue_id':good_id
-        return self.write(cr, uid, ids, {'state':'approve' , 'approve_by':uid})    
+        product_line_obj = self.pool.get('branch.stock.requisition.line')
+        requisition_obj = self.pool.get('branch.stock.requisition')
+        good_obj = self.pool.get('branch.good.issue.note')
+        branch_obj = self.pool.get('res.branch')
+        good_line_obj = self.pool.get('branch.good.issue.note.line')
+        if ids:
+            req_value = requisition_obj.browse(cr, uid, ids[0], context=context)  
+            request_id = req_value.id
+            request_date = req_value.request_date
+            request_by = req_value.request_by.id
+            to_location_id = req_value.to_location_id.id
+            from_location_id = req_value.from_location_id.id
+            vehicle_no = req_value.vehicle_id.id
+            branch_id = req_value.branch_id.id
+            branch_data=branch_obj.browse(cr, uid,branch_id, context=context)  
+            for branch in branch_data.requesting_line:
+                if branch.location_id.id ==to_location_id:
+                    tansit_location=branch.transit_location_id.id
+            receiver = req_value.issue_to      
+            pricelist_id = req_value.pricelist_id.id  
+            good_id = good_obj.create(cr, uid, {
+                                          'issue_date': request_date,
+                                          'pricelist_id':pricelist_id,
+                                          'request_id':request_id,
+                                          'request_by':request_by,
+                                          'to_location_id':to_location_id,
+                                          'from_location_id':from_location_id,
+                                          'vehicle_id':vehicle_no,
+                                          'receiver':receiver,
+                                          'transit_location':tansit_location,
+                                          'branch_id':branch_id}, context=context)         
+            if good_id:       
+                for req_line_id in req_value.p_line:
+                    request_line_data=product_line_obj.browse(cr, uid, req_line_id.id, context=context)
+                    good_line_obj.create(cr, uid, {'line_id': good_id,
+                                          'product_id': request_line_data.product_id.id,
+                                          'product_uom': request_line_data.product_uom.id,
+                                          'issue_quantity':request_line_data.req_quantity,
+                                          'qty_on_hand':request_line_data.qty_on_hand,
+                                          'sequence':request_line_data.sequence,
+                                          'product_value':request_line_data.product_value,
+                                          'product_loss':request_line_data.loss,
+                                            'product_viss':request_line_data.viss_value,
+                                            'product_cbm':request_line_data.cbm_value,
+                                          }, context=context)                                    
+        return self.write(cr, uid, ids, {'state':'approve' , 'approve_by':uid, 'good_issue_id':good_id})    
     
     def confirm(self, cr, uid, ids, context=None):
-        # , 'good_issue_id':good_id
         return self.write(cr, uid, ids, {'state':'confirm' })        
     
     def cancel(self, cr, uid, ids, context=None):
