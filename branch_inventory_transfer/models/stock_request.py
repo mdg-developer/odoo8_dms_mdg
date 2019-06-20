@@ -156,10 +156,10 @@ class branch_stock_requisition(osv.osv):
         'state': fields.selection([
             ('draft', 'Draft'),
             ('confirm', 'Confirm'),
-            ('approve', 'Open'),
-            ('partial', 'Partial'),
-            ('done', 'Done'),
-            ('complete_partial', 'Complete Partial'),
+            ('approve', 'Approved'),
+#             ('partial', 'Partial'),
+#             ('done', 'Done'),
+#             ('complete_partial', 'Complete Partial'),
             ('cancel', 'Cancel'),
             ], 'Status', readonly=True, copy=False, help="Gives the status of the quotation or sales order.\
               \nThe exception status is automatically set when a cancel operation occurs \
@@ -304,7 +304,7 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
             qty_on_hand = 0
         data['qty_on_hand'] = qty_on_hand
         # comment by EMTW
-        data['product_uom'] = product_data.product_tmpl_id.report_uom_id.id
+        #data['product_uom'] = product_data.product_tmpl_id.report_uom_id.id
         return super(stock_requisition_line, self).create(cr, uid, data, context=context)
     
     def on_change_product_id(self, cr, uid, ids, product_id, to_location_id, context=None):
@@ -335,6 +335,18 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
             
         return {'value': values, 'domain':domain}
     
+    def on_change_product_uom(self, cr, uid, ids, product_id,uom_id, context=None):
+        values = {}
+        domain = {}
+        if product_id and uom_id:
+            product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+            if uom_id==product.product_tmpl_id.uom_id.id:
+                values = {
+                    'loss':True,
+                }            
+        return {'value': values}
+
+            
     def _diff_quantity_value(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         if context is None:
@@ -346,6 +358,33 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
             res[order.id] = val1
         return res           
     
+    def _cal_viss_value(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        if context is None:
+            context = {}               
+        for order in self.browse(cr, uid, ids, context=context):
+            val1 = 0.0            
+            product = self.pool.get('product.product').browse(cr, uid, order.product_id.id, context=context)
+            if order.req_quantity >0:
+                val1 = order.req_quantity * product.viss_value
+            else:
+                val1 = product.viss_value                                     
+            res[order.id] = val1
+        return res   
+         
+    def _cal_cbm_value(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        if context is None:
+            context = {}               
+        for order in self.browse(cr, uid, ids, context=context):
+            product = self.pool.get('product.product').browse(cr, uid, order.product_id.id, context=context)
+            if order.req_quantity >0:
+                val1 = order.req_quantity * product.cbm_value      
+            else:
+                val1 = product.cbm_value      
+            res[order.id] = val1
+        return res     
+           
     _columns = {                
         'line_id':fields.many2one('branch.stock.requisition', 'Line', ondelete='cascade', select=True),
         'product_id': fields.many2one('product.product', 'Product', required=True),
@@ -353,9 +392,11 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
         'issue_quantity': fields.float(string='Issued (Qty)', digits=(16, 0)),
         'diff_quantity':fields.function(_diff_quantity_value, string='Diff(Qty)', digits=(16, 0), type='float', readonly=True),
         'loss' : fields.boolean(string='Loose'),
-        'product_value' : fields.float(string='Value', digits=(16, 0)),
-        'viss_value' : fields.float(string='Viss', digits=(16, 0)),
-        'cbm_value' : fields.float(string='CBM', digits=(16, 0)),
+        'product_value' : fields.float(string='Value', digits=(16, 0), readonly=True),
+        'viss_value':fields.function(_cal_viss_value, string='Viss', digits_compute=dp.get_precision('Product Price'), type='float'),
+        'cbm_value':fields.function(_cal_cbm_value, string='CBM', digits_compute=dp.get_precision('Product Price'), type='float'),
+      #  'viss_value' : fields.float(string='Viss', digits=(16, 0)),
+       # 'cbm_value' : fields.float(string='CBM', digits=(16, 0)),
         'product_uom': fields.many2one('product.uom', ' UOM'),
         'uom_ratio':fields.char('Packing Unit'),
          'remark':fields.char('Remark'),

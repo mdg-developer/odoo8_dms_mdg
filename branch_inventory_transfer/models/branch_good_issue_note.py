@@ -71,18 +71,20 @@ class branch_good_issue_note(osv.osv):
         }    
     _columns = {
         'name': fields.char('GIN Ref', readonly=True),
+        'grn_no':fields.char('GRN Ref', readonly=True),
         'branch_id':fields.many2one('res.branch', 'Branch',required=True),
         'to_location_id':fields.many2one('stock.location', 'Requesting Location',  readonly=True, required=True),
         'request_by':fields.many2one('res.users', "Requested By"),
         'issue_date':fields.date('Date for Issue',required=True),
         'receive_date':fields.date('Date for Receive',required=False),
-        'request_id':fields.many2one('stock.requisition', 'RFI Ref', readonly=True),
+        'request_id':fields.many2one('branch.stock.requisition', 'RFI Ref', readonly=True),
         'from_location_id':fields.many2one('stock.location', 'Request Warehouse',  readonly=True,required=True),
         'supplier_id': fields.many2one('res.partner', 'Supplier'), 
         'vehicle_id': fields.many2one('fleet.vehicle', 'Vehicle'),
         'route_id': fields.many2one('transport.route', 'Route'),
         'max_weight': fields.float('Max Weight'),
         'max_cbm': fields.float('Max CBM'),
+        'is_changed': fields.boolean('Is Changed'),
         'approve_by':fields.many2one('res.users', "Approved By"),
         'pricelist_id': fields.many2one('product.pricelist', 'Price list', required=True, readonly=True),
         'issue_by':fields.char("Issuer"),
@@ -184,6 +186,8 @@ class branch_good_issue_note(osv.osv):
         picking_obj = self.pool.get('stock.picking')
         move_obj = self.pool.get('stock.move')
         note_value = req_lines = {}
+        grn_code = self.pool.get('ir.sequence').get(cr, uid,
+                                                'branch.grn.code') or '/'    
         if ids:
             note_value = note_obj.browse(cr, uid, ids[0], context=context)
             receive_date=note_value.receive_date
@@ -193,7 +197,7 @@ class branch_good_issue_note(osv.osv):
             #location_id = note_value.tansit_location.id
             location_id = note_value.transit_location.id
             from_location_id = note_value.from_location_id.id
-            origin = 'REC '+ note_value.name
+            origin = grn_code
             cr.execute('select id from stock_picking_type where default_location_dest_id=%s and name like %s', (from_location_id, '%Internal Transfer%',))
             price_rec = cr.fetchone()
             if price_rec: 
@@ -227,7 +231,8 @@ class branch_good_issue_note(osv.osv):
                                           'state':'confirmed'}, context=context)     
                     move_obj.action_done(cr, uid, move_id, context=context)  
                     cr.execute('''update stock_move set date=((%s::date)::text || ' ' || date::time(0))::timestamp where state='done' and origin =%s''',(receive_date,origin,))
-        return self.write(cr, uid, ids, {'state': 'receive'}) 
+    
+        return self.write(cr, uid, ids, {'state': 'receive','grn_no':grn_code}) 
     
     def transfer_other_location(self, cr, uid,ids,from_location_id,to_location_id,date, context=None):
         product_line_obj = self.pool.get('branch.good.issue.note.line')
@@ -256,15 +261,16 @@ class branch_good_issue_note(osv.osv):
                                           'date': receive_date,
                                           'origin':origin,
                                           'picking_type_id':picking_type_id}, context=context)
-            note_line_id = product_line_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context)
-            if note_line_id and picking_id:
-                for note_id in note_value.p_line:
-                    note_line_value = product_line_obj.browse(cr, uid, note_id.id, context=context)
-                    product_id = note_line_value.product_id.id
-                    name = note_line_value.product_id.name_template
-                    product_uom = note_line_value.product_uom.id
-                    origin = origin
-                    quantity = note_line_value.diff_quantity                        
+#             note_line_id = product_line_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context)
+#             if note_line_id and picking_id:
+            for note_id in note_value.p_line:
+                note_line_value = product_line_obj.browse(cr, uid, note_id.id, context=context)
+                product_id = note_line_value.product_id.id
+                name = note_line_value.product_id.name_template
+                product_uom = note_line_value.product_uom.id
+                origin = origin
+                quantity = note_line_value.diff_quantity      
+                if quantity > 0:             
                     move_id=move_obj.create(cr, uid, {'picking_id': picking_id,
                                               'picking_type_id':picking_type_id,
                                           'product_id': product_id,
@@ -277,8 +283,8 @@ class branch_good_issue_note(osv.osv):
                                            'origin':origin,
                                           'state':'confirmed'}, context=context)     
                     move_obj.action_done(cr, uid, move_id, context=context)  
-                    cr.execute('''update stock_move set date=((%s::date)::text || ' ' || date::time(0))::timestamp where state='done' and origin =%s''',(receive_date,origin,))
-        return self.write(cr, uid, ids, {'state': 'receive'}) 
+            cr.execute('''update stock_move set date=((%s::date)::text || ' ' || date::time(0))::timestamp where state='done' and origin =%s''',(receive_date,origin,))
+        return self.write(cr, uid, ids, {'state': 'receive','is_changed':True}) 
         
     def onchange_vehicle(self, cr, uid,ids,vehicle_id,context=None):  
         if vehicle_id:
@@ -315,11 +321,31 @@ class branch_good_issue_note_line(osv.osv):
             val1 = order.issue_quantity - order.receive_quantity                      
             res[order.id] = val1
         return res               
-    
+
+    def on_change_product_id(self, cr, uid, ids, product_id, context=None):
+        values = {}
+        domain = {}
+
+        if product_id:
+            product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+            values = {
+                'product_uom': product.product_tmpl_id.report_uom_id and product.product_tmpl_id.report_uom_id.id or False,
+                'sequence':product.sequence,
+            }
+            cr.execute("""SELECT uom.id FROM product_product pp 
+                          LEFT JOIN product_template pt ON (pp.product_tmpl_id=pt.id)
+                          LEFT JOIN product_template_product_uom_rel rel ON (rel.product_template_id=pt.id)
+                          LEFT JOIN product_uom uom ON (rel.product_uom_id=uom.id)
+                          WHERE pp.id = %s""", (product.id,))
+            uom_list = cr.fetchall()
+            domain = {'product_uom': [('id', 'in', uom_list)]}
+            
+        return {'value': values, 'domain':domain}
+        
     _columns = {                
         'line_id':fields.many2one('branch.good.issue.note', 'Line', ondelete='cascade', select=True),
         'product_id': fields.many2one('product.product', 'Product', required=True),        
-        'issue_quantity': fields.float(string='Issued (Qty)', digits=(16, 0), readonly=True),
+        'issue_quantity': fields.float(string='Issued (Qty)', digits=(16, 0), readonly=False),
         'receive_quantity' : fields.float(string='Received (Qty)', digits=(16, 0)),
         'diff_quantity':fields.function(_diff_quantity_value, string='Diff(Qty)', digits=(16, 0), type='float', readonly=True),
         'product_uom': fields.many2one('product.uom', ' UOM'),        
@@ -329,9 +355,7 @@ class branch_good_issue_note_line(osv.osv):
         'product_loss' : fields.boolean(string='Loose'),
         'product_viss' : fields.float(string='Viss', digits=(16, 0)),
         'product_cbm' : fields.float(string='CBM', digits=(16, 0)),
-        'remark':fields.selection([
-                ('predefined', 'Predefined'),
-                ('other_reason', 'Other Reason'),                
-            ], 'Remark'),        
+         'remark':fields.char('Remark'),
+
     }
     

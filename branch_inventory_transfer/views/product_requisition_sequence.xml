@@ -26,5 +26,16 @@
 			<field name="padding">7</field>
 		</record>
 		
+		<record id="branch_grn_req_sequence" model="ir.sequence.type">
+			<field name="name">Branch Good Receive Sequence</field>
+			<field name="code">branch.grn.code</field>
+		</record>
+
+		<record id="branch_grn_req_seq" model="ir.sequence">
+			<field name="name">Branch Good Receive Sequence</field>
+			<field name="code">branch.grn.code</field>
+			<field name="prefix">BGRN/%(year)s/</field>
+			<field name="padding">7</field>
+		</record>		
 	</data>
 </openerp>

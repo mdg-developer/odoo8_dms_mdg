@@ -16,14 +16,14 @@
 			
 		<report id="report_good_issue_request" model="branch.good.issue.note"
 			string="Good Issue Note Report" report_type="qweb-pdf"
-			name="good_receive_note.good_issue_note"
-			file="good_receive_note.good_issue_note"
+			name="branch_inventory_transfer.good_issue_note"
+			file="branch_inventory_transfer.good_issue_note"
 			attachment="('Request For Issue')+'.pdf'" />
 			
 		<report id="report_good_receive_request" model="branch.good.issue.note"
 		string="Good Receive Note Report" report_type="qweb-pdf"
-		name="good_receive_note.good_receives_note"
-		file="good_receive_note.good_receives_note"
+		name="branch_inventory_transfer.good_receives_note"
+		file="branch_inventory_transfer.good_receives_note"
 		attachment="('Request For Receive')+'.pdf'" />				
 
 	</data>

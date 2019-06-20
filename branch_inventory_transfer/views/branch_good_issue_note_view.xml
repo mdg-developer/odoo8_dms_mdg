@@ -13,7 +13,7 @@
 						<button name="cancel" string="Cancel" class="oe_highlight"
 							type="object" states="pending" />
 						<button name="change_location" string="Change Location"
-							class="oe_highlight" type="object" states="receive" />
+							class="oe_highlight" type="object" states="receive" attrs="{'invisible': [('is_changed','=',True)]}"/>
 						<button name="issue" string="Issue" class="oe_highlight"
 							type="object" states="approve" />
 						<button name="receive" string="Receive" class="oe_highlight"
@@ -24,6 +24,11 @@
 						<h1>
 							<label string="GIN Ref" />
 							<field name="name" class="oe_inline" readonly="1" />
+						</h1>
+						<h1 attrs="{'invisible': [('state','!=','receive')]}">
+							<label string="GRN Ref" attrs="{'invisible': [('state','!=','receive')]}" />
+							<field name="grn_no" class="oe_inline" readonly="1"
+								attrs="{'invisible': [('state','!=','receive')]}" />
 						</h1>
 						<group>
 							<group>
@@ -55,6 +60,9 @@
 								<field name="total_tcl" />
 								<field name="total_value" />
 								<field name="tcl_value" />
+								<field name="is_changed" invisible="1"/>
+
+								
 							</group>
 						</group>
 						<group>
@@ -64,7 +72,7 @@
 										<tree string="Stock Request Line" editable="bottom"
 											default_order="sequence asc">
 											<field name="sequence" invisible="1" />
-											<field name="product_id" />
+											<field name="product_id" on_change="on_change_product_id(product_id)" />
 											<field name="issue_quantity" />
 											<field name="receive_quantity" />
 											<field name="diff_quantity" />
