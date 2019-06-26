@@ -146,6 +146,7 @@
 										options="{'no_create': True}" />
 								</group>
 								<group>
+								    <field name="transporter" />
 									<field name="customer" readonly="1" />
 									<field name="supplier" />
                                     <field name="mobile_customer" readonly="1" attrs="{'invisible':[('supplier','=',True)]}"  />

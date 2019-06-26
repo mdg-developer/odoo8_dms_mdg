@@ -69,10 +69,9 @@
 						<page string="Supply Chain Configuration" position="inside">
 							<group>
 								<field name="3pl" />
-								<field name="supplier_id"
-									domain="[('supplier','=','true')]"
+								<field name="supplier_id" domain="[('supplier','=','true')]"
 									attrs="{'invisible':[('3pl','=',False)]}" class="oe_inline" />
-								<field name="truck_type_id"  class="oe_inline" />
+								<field name="truck_type_id" class="oe_inline" />
 								<field name="weight_viss" />
 								<field name="vol_cbm" />
 								<field name="alert_weight_viss" />
@@ -91,34 +90,47 @@
 
 						<page string="Vechicle Detailed Specs" position="inside">
 							<group>
-								<field name="engine"  class="oe_inline"/>
+								<field name="engine" class="oe_inline" />
 								<field name="displacement_id" />
 								<field name="gvw_id" on_change="onchange_gvw_calculate(gvw_id,gvw_viss)" />
-								<field name="payload_id" on_change="onchange_payload_calculate(payload_id,payload_viss)"/>
+								<field name="payload_id"
+									on_change="onchange_payload_calculate(payload_id,payload_viss)" />
 								<field name="gvw_viss" on_change="onchange_gvw_calculate(gvw_id,gvw_viss)" />
-								<field name="payload_viss" on_change="onchange_payload_calculate(payload_id,payload_viss)"/>
+								<field name="payload_viss"
+									on_change="onchange_payload_calculate(payload_id,payload_viss)" />
 								<field name="gear_box" />
 								<field name="clutch" />
 								<field name="steering" />
 								<field name="brake" />
 								<field name="suspension" />
-								<field name="fuel_tank_litre" on_change="onchange_fuel_tank_capacity_calculate(fuel_tank_litre,fuel_tank_gal)" />
-								<field name="fuel_tank_gal" on_change="onchange_fuel_tank_capacity_calculate(fuel_tank_litre,fuel_tank_gal)" />
+								<field name="fuel_tank_litre"
+									on_change="onchange_fuel_tank_capacity_calculate(fuel_tank_litre,fuel_tank_gal)" />
+								<field name="fuel_tank_gal"
+									on_change="onchange_fuel_tank_capacity_calculate(fuel_tank_litre,fuel_tank_gal)" />
 								<field name="type_size" />
 								<field name="warranty" />
 								<label for="image" />
 								<div>
 									<field name="image" widget='image' width='70' height='60' />
 
-								
+
 									<field name="image2" widget='image' width='70' height='60' />
 
-								
+
 									<field name="image3" widget='image' width='70' height='60' />
+
+
+									<field name="image4" widget='image' width='70' height='60' />
+
+
+									<field name="image5" widget='image' width='70' height='60' />
+
+
+									<field name="image6" widget='image' width='70' height='60' />
 
 								</div>
 								<field name="wheel_tax" widget='image' width='70' height='60' />
-								
+
 								<field name="branch_id" invisible="1" />
 							</group>
 						</page>
@@ -143,92 +155,150 @@
 					<field name="office_vehicle" />
 					<field name="sale_vehicle" />
 					<field name="logistic_vehicle" />
+
 				</xpath>
 			</field>
 		</record>
-		
-        <record model='ir.actions.act_window' id='inherit_fleet_vehicle_office_new'>
-            <field name="name">Office Vehicles</field>
-            <field name="res_model">fleet.vehicle</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">kanban,tree,form</field>
-            <field name="context">{
-                      'default_office_vehicle':True
+
+		<record model='ir.actions.act_window' id='inherit_fleet_vehicle_office_new'>
+			<field name="name">Office Vehicles</field>
+			<field name="res_model">fleet.vehicle</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">kanban,tree,form</field>
+			<field name="context">{
+				'default_office_vehicle':True
 				}
 			</field>
 
 			<field name="domain">[('office_vehicle','=',True)]
 			</field>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create a new vehicle.
-              </p><p>
-                You will be able to manage your fleet by keeping track of the
-                contracts, services, fixed and recurring costs, odometers and
-                fuel logs associated to each vehicle.
-            </p><p>
-                Odoo will warn you when services or contract have to be
-                renewed.
-              </p>
-            </field>
-        </record>
-        
-         <record model='ir.actions.act_window' id='inherit_fleet_vehicle_sale_new'>
-            <field name="name">Sale Vehicles</field>
-            <field name="res_model">fleet.vehicle</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">kanban,tree,form</field>
-            <field name="context">{
-                      'default_sale_vehicle':True
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to create a new vehicle.
+				</p>
+				<p>
+					You will be able to manage your fleet by keeping track of the
+					contracts, services, fixed and recurring costs, odometers and
+					fuel
+					logs associated to each vehicle.
+				</p>
+				<p>
+					Odoo will warn you when services or contract have to be
+					renewed.
+				</p>
+			</field>
+		</record>
+
+		<record model='ir.actions.act_window' id='inherit_fleet_vehicle_sale_new'>
+			<field name="name">Sale Vehicles</field>
+			<field name="res_model">fleet.vehicle</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">kanban,tree,form</field>
+			<field name="context">{
+				'default_sale_vehicle':True
 				}
 			</field>
 
 			<field name="domain">[('sale_vehicle','=',True)]
 			</field>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create a new vehicle.
-              </p><p>
-                You will be able to manage your fleet by keeping track of the
-                contracts, services, fixed and recurring costs, odometers and
-                fuel logs associated to each vehicle.
-            </p><p>
-                Odoo will warn you when services or contract have to be
-                renewed.
-              </p>
-            </field>
-        </record>
-        
-         <record model='ir.actions.act_window' id='inherit_fleet_vehicle_logistic_new'>
-            <field name="name">Logistic Vehicles</field>
-            <field name="res_model">fleet.vehicle</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">kanban,tree,form</field>
-            <field name="context">{
-                      'default_logistic_vehicle':True
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to create a new vehicle.
+				</p>
+				<p>
+					You will be able to manage your fleet by keeping track of the
+					contracts, services, fixed and recurring costs, odometers and
+					fuel
+					logs associated to each vehicle.
+				</p>
+				<p>
+					Odoo will warn you when services or contract have to be
+					renewed.
+				</p>
+			</field>
+		</record>
+
+		<record model='ir.actions.act_window' id='inherit_fleet_vehicle_logistic_new'>
+			<field name="name">Logistic Vehicles</field>
+			<field name="res_model">fleet.vehicle</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">kanban,tree,form</field>
+			<field name="context">{
+				'default_logistic_vehicle':True
 				}
 			</field>
 
 			<field name="domain">[('logistic_vehicle','=',True)]
 			</field>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create a new vehicle.
-              </p><p>
-                You will be able to manage your fleet by keeping track of the
-                contracts, services, fixed and recurring costs, odometers and
-                fuel logs associated to each vehicle.
-            </p><p>
-                Odoo will warn you when services or contract have to be
-                renewed.
-              </p>
-            </field>
-        </record>
-
-		<menuitem action="inherit_fleet_vehicle_office_new" parent="fleet.fleet_vehicles" id="fleet_vehicle_office" sequence="2" groups="fleet.group_fleet_user"/>
-		<menuitem action="inherit_fleet_vehicle_sale_new" parent="fleet.fleet_vehicles" id="fleet_vehicle_sale" sequence="3" groups="fleet.group_fleet_user"/>
-		<menuitem action="inherit_fleet_vehicle_logistic_new" parent="fleet.fleet_vehicles" id="fleet_vehicle_logistic" sequence="4" groups="fleet.group_fleet_user"/>
-		
-		
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to create a new vehicle.
+				</p>
+				<p>
+					You will be able to manage your fleet by keeping track of the
+					contracts, services, fixed and recurring costs, odometers and
+					fuel
+					logs associated to each vehicle.
+				</p>
+				<p>
+					Odoo will warn you when services or contract have to be
+					renewed.
+				</p>
+			</field>
+		</record>
+		<record id="action_partner_customer_form1" model="ir.actions.act_window">
+			<field name="name">Transporter</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">res.partner</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">kanban,tree,form</field>
+			<field name="domain">[]</field>
+			<field name="context">{'search_default_transporter':True,'default_transporter':True,'default_customer':False,'default_supplier':False}
+			</field>
+			<!-- <field name="context">{'default_customer':1, 'search_default_customer':1}</field> -->
+			<field name="filter" eval="True" />
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to add a contact in your address book.
+				</p>
+				<p>
+					Odoo helps you easily track all activities related to
+					a customer:
+					discussions, history of business opportunities,
+					documents, etc.
+				</p>
+			</field>
+		</record>
+<!-- 		<record id="view_partner_form_inherit" model="ir.ui.view">
+			<field name="name">res.partner.form</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="base.view_partner_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='phone']" position="before">
+					<field name="transporter" />
+				</xpath>
+			</field>
+		</record> -->
+		<record id="view_res_partner_filter_inherit" model="ir.ui.view">
+			<field name="model">res.partner</field>
+			<field name="priority" eval="15" />
+			<field name="arch" type="xml">
+				<search string=" Search Transporter">
+					<field name="transporter" />
+					<filter string="Transporter" name="transporter_filter" domain="[['transporter','=',True]]" />
+				</search>
+			</field>
+		</record>
+		<menuitem action="inherit_fleet_vehicle_office_new" parent="fleet.fleet_vehicles"
+			id="fleet_vehicle_office" sequence="2" groups="fleet.group_fleet_user" />
+		<menuitem action="inherit_fleet_vehicle_sale_new" parent="fleet.fleet_vehicles"
+			id="fleet_vehicle_sale" sequence="3" groups="fleet.group_fleet_user"
+			name="Sales Vehicles" />
+		<menuitem action="inherit_fleet_vehicle_logistic_new" parent="fleet.fleet_vehicles"
+			id="fleet_vehicle_logistic" sequence="4" groups="fleet.group_fleet_user"
+			name="Logistics Vehicles" />
+		<menuitem action="action_partner_customer_form1" parent="fleet.fleet_vehicles"
+			id="fleet_transporter" sequence="5" groups="fleet.group_fleet_user"
+			name="Transporter" />
 	</data>
 </openerp>		
