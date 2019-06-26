@@ -3,7 +3,7 @@
 	<data>
 		<template id="report_good_receive_note_document">
 			<div class="page">
-			    <t t-foreach="docs" t-as="o">
+				<t t-foreach="docs" t-as="o">
 					<div class="row">
 						<div class="col-xs-3">
 							<img t-if="o.create_uid.company_id.logo"
@@ -31,13 +31,13 @@
 						<span t-field="o.create_uid.company_id.country_id.name" />
 						.
 					</div>
-	
+
 					<h4>
 						<strong>
 							Good Receive Note
 						</strong>
 					</h4>
-	
+
 					<table class="table table-condensed">
 						<tr>
 							<td style="border:0pt;font-size:10pt;">
@@ -52,146 +52,148 @@
 							<td style="border:0pt;font-size:10pt;">
 								<span t-field="o.request_id" />
 							</td>
-							
-						</tr>
-	
-					<tr>
-						<td style="border:0pt;font-size:10pt;">
-							<strong>Branch:</strong>
-						</td>
-						<td style="border:0pt;font-size:10pt;">
-							<span t-field="o.branch_id.name" />
-						</td>
-						<td style="border:0pt;font-size:10pt;">
-							<strong>Receiver:</strong>
-						</td>
-						<td style="border:0pt;font-size:10pt;">
-							<span t-field="o.receiver" />
-						</td>
-					</tr>
-					<tr>
-						<td style="border:0pt;font-size:10pt;">
-							<strong>Requesting Location:</strong>
-						</td>
-						<td style="border:0pt;font-size:10pt;">
-							<span t-field="o.from_location_id.location_id.name" />
-							<b>/</b>
-							<span t-field="o.from_location_id.name" />
-						</td>
-						<td style="border:0pt;font-size:10pt;">
-							<strong>Request Warehouse:</strong>
-						</td>
-						<td style="border:0pt;font-size:10pt;">
-							<span t-field="o.to_location_id.location_id.name" />
-							<b>/</b>
-							<span t-field="o.to_location_id.name" />
-						</td>
-					</tr>
-					<tr>
-						<td style="border:0pt;font-size:10pt;">
-							<strong>Requested By:</strong>
-						</td>
-						<td style="border:0pt;font-size:10pt;">
-							<span t-field="o.request_by" />
-						</td>
-						<td style="border:0pt;font-size:10pt;">
-							<strong>Approved By:</strong>
-						</td>
-						<td style="border:0pt;font-size:10pt;">
-							<span t-field="o.approve_by" />
-						</td>											 
-					</tr>
-					
-					<tr>
-						<td style="border:0pt;font-size:10pt;">
-							<strong>Date for Issue:</strong>
-						</td>
-						<td style="border:0pt;font-size:10pt;">
-							<span t-field="o.issue_date" />
-						</td>
-						<td style="border:0pt;font-size:10pt;">
-							<strong>Issuer:</strong>
-						</td>
-						<td style="border:0pt;font-size:10pt;">
-							<span t-field="o.issue_by" />
-						</td>											 
-					</tr>
-					
-					<tr>
-						<td style="border:0pt;font-size:10pt;">
-							<strong>Last Updated on:</strong>
-						</td>
-						<td style="border:0pt;font-size:10pt;">
-							<span t-field="o.write_date" />
-						</td>
-						<td style="border:0pt;font-size:10pt;">
-							<strong>Loading Date</strong>
-						</td>
-						<td style="border:0pt;font-size:10pt;">
-							<span t-field="o.loading_date" />
-						</td>
 
-						
-					</tr>
-					<tr>
-						<td style="border:0pt;font-size:10pt;">
-							<strong>Vehicle No:</strong>
-						</td>
-						<td style="border:0pt;font-size:10pt;">
-							<span t-field="o.vehicle_id" />
-						</td>
-						<td style="border:0pt;font-size:10pt;">
-						<strong>Transport Cost :</strong>
-						</td>
-						<td style="border:0pt;font-size:10pt;">
-							<span t-field="o.transport_cost" />
-						</td>
-					</tr>
-					<tr>
-					    <td style="border:0pt;font-size:10pt;">
-						   <strong>Route :</strong>
-						</td>
-						<td style="border:0pt;font-size:10pt;">
-							<span t-field="o.route_id" />
-						</td>
-					 <td style="border:0pt;font-size:10pt;">
-						<strong>Labor Cost :</strong>
-						</td>
-						<td style="border:0pt;font-size:10pt;">
-							<span t-field="o.labor_cost" />
-						</td>  
-					</tr>
-					<tr>
-					 <td style="border:0pt;font-size:10pt;">
-						<strong>Supplier :</strong>
-						</td>
-						<td style="border:0pt;font-size:10pt;">
-							<span t-field="o.supplier_id" />
-						</td>  
-					<td style="border:0pt;font-size:10pt;">
-						<strong>Total TCL :</strong>
-						</td>
-						<td style="border:0pt;font-size:10pt;">
-							<span t-field="o.total_tcl" />
-						</td>
-					</tr>
-					<tr>
-					<td style="border:0pt;font-size:10pt;"></td>
-					<td style="border:0pt;font-size:10pt;"></td>
-					<td style="border:0pt;font-size:10pt;">
-						<strong>Total Value :</strong>
-						</td>
-						<td style="border:0pt;font-size:10pt;">
-							<span t-field="o.total_value" />
-						</td>
-					</tr>
+						</tr>
+
+						<tr>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Branch:</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.branch_id.name" />
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Receiver:</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.receiver" />
+							</td>
+						</tr>
+						<tr>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Requesting Location:</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.from_location_id.location_id.name" />
+								<b>/</b>
+								<span t-field="o.from_location_id.name" />
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Request Warehouse:</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.to_location_id.location_id.name" />
+								<b>/</b>
+								<span t-field="o.to_location_id.name" />
+							</td>
+						</tr>
+						<tr>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Requested By:</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.request_by" />
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Approved By:</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.approve_by" />
+							</td>
+						</tr>
+
+						<tr>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Date for Issue:</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.issue_date" />
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Issuer:</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.issue_by" />
+							</td>
+						</tr>
+
+						<tr>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Last Updated on:</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.write_date" />
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Loading Date</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.loading_date" />
+							</td>
+
+
+						</tr>
+						<tr>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Vehicle No:</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.vehicle_id" />
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Transport Cost :</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.transport_cost" />
+							</td>
+						</tr>
+						<tr>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Route :</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.route_id" />
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Labor Cost :</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.labor_cost" />
+							</td>
+						</tr>
+						<tr>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Supplier :</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.supplier_id" />
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Total TCL :</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.total_tcl" />
+							</td>
+						</tr>
+						<tr>
+							<td style="border:0pt;font-size:10pt;"></td>
+							<td style="border:0pt;font-size:10pt;"></td>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Total Value :</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.total_value" />
+							</td>
+						</tr>
 					</table>
-					
+
 					<table class="table table-condensed">
 						<thead>
 							<tr>
 								<th>Product</th>
+								<th>Issued(QTY)</th>
 								<th>Received(QTY)</th>
+								<th>Diff(QTY)</th>
 								<th>UOM</th>
 								<th>Qty on Hands(S)</th>
 								<th>Remark</th>
@@ -203,9 +205,15 @@
 									<span t-field="l.product_id" />
 								</td>
 								<td>
+									<span t-field="l.issue_quantity" />
+								</td>
+								<td>
 									<span t-field="l.receive_quantity" />
 								</td>
-								<td >
+								<td>
+									<span t-field="l.diff_quantity" />
+								</td>
+								<td>
 									<span t-field="l.product_uom" />
 								</td>
 								<td>
@@ -217,19 +225,19 @@
 							</tr>
 						</tbody>
 					</table>
-	
-					<table class="table table-condensed" >
+
+					<table class="table table-condensed">
 						<thead>
 							<tr>
 								<th></th>
 								<th>Issued By</th>
 								<th>Approved By</th>
 								<th>Received By</th>
-	
+
 							</tr>
 						</thead>
 						<tbody class="invoice_tbody">
-							
+
 							<tr t-foreach="o" t-as="l">
 								<td>Name</td>
 								<td>

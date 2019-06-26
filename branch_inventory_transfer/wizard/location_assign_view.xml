@@ -8,8 +8,8 @@
 				<form string="Change Location">
 					<separator colspan="4" />
 					<group>
-						<field name="from_location_id" class="oe_inline" invisible="0" />
-						<field name="note_id" class="oe_inline" invisible="0" />
+						<field name="from_location_id" class="oe_inline" invisible="0" readonly="1"/>
+						<field name="note_id" class="oe_inline" invisible="1" />
 						<field name="to_location_id" class="oe_inline" />
 						<field name="transfer_date" class="oe_inline" />
 					</group>

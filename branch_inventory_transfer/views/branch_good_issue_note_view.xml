@@ -13,7 +13,9 @@
 						<button name="cancel" string="Cancel" class="oe_highlight"
 							type="object" states="pending" />
 						<button name="change_location" string="Change Location"
-							class="oe_highlight" type="object" states="receive" attrs="{'invisible': [('is_changed','=',True)]}"/>
+							class="oe_highlight" type="object"
+							attrs="{'invisible': ['|',('is_changed','=',True),('state','!=','receive')]}" />
+
 						<button name="issue" string="Issue" class="oe_highlight"
 							type="object" states="approve" />
 						<button name="receive" string="Receive" class="oe_highlight"
@@ -32,37 +34,52 @@
 						</h1>
 						<group>
 							<group>
-								<field name="branch_id" />
-								<field name="to_location_id" />
+								<field name="branch_id"
+									attrs="{'readonly':[('state','in',('issue','receive','cancel'))]}" />
+								<field name="to_location_id" readonly="1" />
 								<field name="request_by" />
-								<field name="issue_date" />
-								<field name="receive_date" />
-								<field name="write_date" />
-								<field name="route_id" on_change="onchange_route(route_id)" />
-								<field name="vehicle_id" on_change="onchange_vehicle(vehicle_id)" />
-								<field name="supplier_id" domain="[('supplier','=','true')]" />
-								<field name="max_weight" />
-								<field name="max_cbm" />
-								<field name="transit_location" />
+								<field name="issue_date"
+									attrs="{'readonly':[('state','in',('issue','receive','cancel'))]}" />
+								<field name="receive_date"
+									attrs="{'readonly':[('state','in',('receive','cancel'))],'required':[('state','=','issue')]}" />
+								<field name="write_date" readonly="1" />
+								<field name="route_id" on_change="onchange_route(route_id)"
+									attrs="{'readonly':[('state','in',('issue','receive','cancel'))],'required':[('state','!','draft')]}" />
+								<field name="vehicle_id" on_change="onchange_vehicle(vehicle_id)"
+									attrs="{'readonly':[('state','in',('issue','receive','cancel'))],'required':[('state','!','draft')]}" />
+								<field name="supplier_id" domain="[('supplier','=','true')]"
+									attrs="{'readonly':[('state','in',('issue','receive','cancel'))],'required':[('state','!','draft')]}" />
+								<field name="max_weight" readonly="1" />
+								<field name="max_cbm" readonly="1" />
+								<field name="transit_location" readonly="1" />
 							</group>
 							<group>
-								<field name="request_id" />
-								<field name="from_location_id" />
-								<field name="approve_by" />
-								<field name="pricelist_id" />
-								<field name="issue_by" />
-								<field name="receiver" />
-								<field name="loading_date" />
-								<field name="eta_date" />
-								<field name="variable_costing" />
-								<field name="transport_cost" />
-								<field name="labor_cost" />
-								<field name="total_tcl" />
-								<field name="total_value" />
-								<field name="tcl_value" />
-								<field name="is_changed" invisible="1"/>
-
-								
+								<field name="request_id" readonly="1" />
+								<field name="from_location_id" readonly="1" />
+								<field name="approve_by" readonly="1" />
+								<field name="pricelist_id" readonly="1" />
+								<field name="issue_by"
+									attrs="{'readonly':[('state','in',('issue','receive','cancel'))],'required':[('state','=','approve')]}" />
+								<field name="receiver"
+									attrs="{'readonly':[('state','in',('receive','cancel'))],'required':[('state','=','issue')]}" />
+								<field name="loading_date"
+									attrs="{'readonly':[('state','in',('issue','receive','cancel'))],'required':[('state','!','draft')]}" />
+								<field name="eta_date"
+									attrs="{'readonly':[('state','in',('issue','receive','cancel'))],'required':[('state','!','draft')]}" />
+								<field name="variable_costing"
+									attrs="{'readonly':[('state','in',('issue','receive','cancel'))]}" />
+								<field name="transport_cost"
+									attrs="{'readonly':[('state','in',('issue','receive','cancel'))]}" />
+								<field name="labor_cost"
+									attrs="{'readonly':[('state','in',('issue','receive','cancel'))],'required':[('state','!','draft')]}" />
+								<field name="total_tcl" readonly="1" />
+								<field name="total_value" readonly="1" />
+								<field name="tcl_value" readonly="1" />
+								<field name="is_changed" invisible="1" />
+								<field name="total_viss" readonly="1" />
+								<field name="total_cbm" readonly="1" />
+								<field name="bal_viss" readonly="1" />
+								<field name="bal_cbm" readonly="1" />
 							</group>
 						</group>
 						<group>
@@ -72,17 +89,21 @@
 										<tree string="Stock Request Line" editable="bottom"
 											default_order="sequence asc">
 											<field name="sequence" invisible="1" />
-											<field name="product_id" on_change="on_change_product_id(product_id)" />
-											<field name="issue_quantity" />
-											<field name="receive_quantity" />
-											<field name="diff_quantity" />
-											<field name="product_uom" />
-											<field name="qty_on_hand" />
-											<field name="product_value" />
-											<field name="product_loss" />
-											<field name="product_viss" />
-											<field name="product_cbm" />
-											<field name="remark" />
+											<field name="product_id" on_change="on_change_product_id(product_id)"
+												attrs="{'readonly':[('state','in',('issue','receive','cancel'))]}" />
+											<field name="issue_quantity"
+												attrs="{'readonly':[('state','in',('issue','receive','cancel'))]}" />
+											<field name="receive_quantity" attrs="{'readonly':[('state','!=','issue')]}" />
+											<field name="diff_quantity" readonly="1" />
+											<field name="product_uom" readonly="1" />
+											<field name="qty_on_hand" readonly="1" />
+											<field name="product_value" readonly="1" />
+											<field name="product_loss" readonly="1" />
+											<field name="product_viss" readonly="1" />
+											<field name="product_cbm" readonly="1" />
+											<field name="remark"
+												attrs="{'readonly':[('state','in',('receive','cancel'))]}" />
+											<field name="state" invisible="1" />
 										</tree>
 									</field>
 								</page>

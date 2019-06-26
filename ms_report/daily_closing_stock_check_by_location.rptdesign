@@ -857,8 +857,9 @@ pp.maingroup as x_product_maingroup,
 pp.pgroup as x_product_group,
 m.x_source,  
 case when m.x_source like 'GIN%' then (select internal_ref from good_issue_note where name =m.x_source)
-else ''
-end as x_ref,  
+when m.x_source like 'SO%' then  (select (select code from res_township where id in (select  township from res_partner where id= so.partner_id)) || ','||tb_ref_no from sale_order so where name =m.x_source)
+when m.x_source like 'MSRN%' then  (select (case when internal_ref is null then '' else internal_ref end ) || ' ' ||  (case when internal_ref_note is null then '' else internal_ref_note end ) from stock_return_manual where name =m.x_source)  
+end as x_ref,
 case when m.x_from is null then m.x_to
 when m.x_to is null then m.x_from
 end as x_team,
