@@ -47,7 +47,7 @@
 									attrs="{'readonly':[('state','in',('issue','receive','cancel'))],'required':[('state','!','draft')]}" />
 								<field name="vehicle_id" on_change="onchange_vehicle(vehicle_id)"
 									attrs="{'readonly':[('state','in',('issue','receive','cancel'))],'required':[('state','!','draft')]}" />
-								<field name="supplier_id" domain="[('supplier','=','true')]"
+								<field name="supplier_id" domain="[('transporter','=',True)]"
 									attrs="{'readonly':[('state','in',('issue','receive','cancel'))],'required':[('state','!','draft')]}" />
 								<field name="max_weight" readonly="1" />
 								<field name="max_cbm" readonly="1" />

@@ -486,7 +486,7 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
                 if order.req_quantity >0:
                     val1 = order.req_quantity * product_value      
                 else:
-                    val1 = product_price     
+                    val1 = product_value     
                 res[order.id] = val1
         return res  
                

@@ -452,7 +452,7 @@ class branch_good_issue_note_line(osv.osv):
                 if order.issue_quantity > 0:
                     val1 = order.issue_quantity * product_value      
                 else:
-                    val1 = product_price     
+                    val1 = product_value     
                 res[order.id] = val1
         return res          
 

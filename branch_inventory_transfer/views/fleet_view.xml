@@ -69,7 +69,7 @@
 						<page string="Supply Chain Configuration" position="inside">
 							<group>
 								<field name="3pl" />
-								<field name="supplier_id" domain="[('supplier','=','true')]"
+								<field name="supplier_id" domain="[('transporter','=',True)]"
 									attrs="{'invisible':[('3pl','=',False)]}" class="oe_inline" />
 								<field name="truck_type_id" class="oe_inline" />
 								<field name="weight_viss" />
@@ -252,10 +252,12 @@
 			<field name="res_model">res.partner</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">kanban,tree,form</field>
-			<field name="domain">[]</field>
-			<field name="context">{'search_default_transporter':True,'default_transporter':True,'default_customer':False,'default_supplier':False}
+			<field name="domain">[('transporter','=',True)]
 			</field>
-			<!-- <field name="context">{'default_customer':1, 'search_default_customer':1}</field> -->
+			<field name="context">{
+					'default_transporter':True,'default_customer':False,'default_supplier':True
+				}
+			</field>			
 			<field name="filter" eval="True" />
 			<field name="help" type="html">
 				<p class="oe_view_nocontent_create">
@@ -269,26 +271,10 @@
 				</p>
 			</field>
 		</record>
-<!-- 		<record id="view_partner_form_inherit" model="ir.ui.view">
-			<field name="name">res.partner.form</field>
-			<field name="model">res.partner</field>
-			<field name="inherit_id" ref="base.view_partner_form" />
-			<field name="arch" type="xml">
-				<xpath expr="//field[@name='phone']" position="before">
-					<field name="transporter" />
-				</xpath>
-			</field>
-		</record> -->
-		<record id="view_res_partner_filter_inherit" model="ir.ui.view">
-			<field name="model">res.partner</field>
-			<field name="priority" eval="15" />
-			<field name="arch" type="xml">
-				<search string=" Search Transporter">
-					<field name="transporter" />
-					<filter string="Transporter" name="transporter_filter" domain="[['transporter','=',True]]" />
-				</search>
-			</field>
-		</record>
+
+
+
+
 		<menuitem action="inherit_fleet_vehicle_office_new" parent="fleet.fleet_vehicles"
 			id="fleet_vehicle_office" sequence="2" groups="fleet.group_fleet_user" />
 		<menuitem action="inherit_fleet_vehicle_sale_new" parent="fleet.fleet_vehicles"

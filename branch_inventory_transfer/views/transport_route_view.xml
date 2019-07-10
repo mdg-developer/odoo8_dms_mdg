@@ -20,7 +20,7 @@
 								<page string="Info">
 									<field name="route_line">
 										<tree string="Route Line" editable="bottom">
-											<field name="supplier_id" domain="[('supplier','=','true')]" />
+											<field name="supplier_id" domain="[('transporter','=',True)]" />
 											<field name="vehicle_id" on_change="on_change_vehicle_id(vehicle_id)" />
 											<field name="truck_type" />
 											<field name="transport_cost" />

@@ -16,7 +16,7 @@ class truck_type(osv.osv):
     }
 
     
-class product_template(osv.osv):
+class fleet_vehicle(osv.osv):
     _inherit = 'fleet.vehicle'
     
     _columns = {        
@@ -70,12 +70,7 @@ class product_template(osv.osv):
            
     }
          
-class Partner(osv.osv):
-    _inherit = 'res.partner'
-       
-    _columns = {        
-        'transporter': fields.boolean('Transporter',default=True),
-     }
+
       
     def onchange_payload_calculate(self, cr, uid, ids, payload_id, payload_viss, context=None):
         payload_id = float(payload_id)
@@ -99,3 +94,11 @@ class Partner(osv.osv):
         cbm = float(cbm)
         
         return {'value' : {'cbm' : round(length * width * height), }}
+    
+fleet_vehicle()    
+class Partner(osv.osv):
+    _inherit = 'res.partner'
+       
+    _columns = {        
+        'transporter': fields.boolean('Transporter',default=False),
+     }
