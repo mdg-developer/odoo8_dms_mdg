@@ -20,6 +20,8 @@
 							type="object" states="approve" />
 						<button name="receive" string="Receive" class="oe_highlight"
 							type="object" states="issue" />
+						<button name="reversed" string="Reversed" class="oe_highlight"
+							type="object" states="issue" groups="base.group_no_one" />
 						<field name="state" widget="statusbar" />
 					</header>
 					<sheet>
@@ -52,6 +54,7 @@
 								<field name="max_weight" readonly="1" />
 								<field name="max_cbm" readonly="1" />
 								<field name="transit_location" readonly="1" />
+								<field name="reverse_date" attrs="{'readonly':[('state','=','reversed')],'invisible': [('state','not in',('issue','reversed'))]}"/>
 							</group>
 							<group>
 								<field name="request_id" readonly="1" />
