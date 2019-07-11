@@ -12,6 +12,8 @@
 							type="object" states="draft" groups="base.group_sale_manager,base.group_no_one" />
 						<button name="approve" string="Approve" class="oe_highlight"
 							type="object" states="confirm" groups="base.group_sale_manager,base.group_no_one" />
+						<button name="approve" string="Create GIN" class="oe_highlight"
+							type="object" states="approve" groups="base.group_sale_manager,base.group_no_one" />
 						<button name="cancel" string="Cancel" class="oe_highlight"
 							type="object" states="draft,confirm" groups="base.group_sale_manager,base.group_no_one" />
 						<field name="state" widget="statusbar" />
@@ -88,7 +90,10 @@
 										</tree>
 									</field>
 								</page>
-
+								<page string="GIN">
+								    <field name="good_issue_line" attrs="{'readonly':[('state','!=','draft')]}">
+								     </field>   
+								</page>
 							</notebook>
 
 						</group>

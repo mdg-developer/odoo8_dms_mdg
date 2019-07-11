@@ -160,6 +160,7 @@ class branch_good_issue_note(osv.osv):
     'total_cbm':fields.function(_cbm_amount, string='Total CBM', digits_compute=dp.get_precision('Product Price'), type='float'),
     'bal_viss':fields.function(_bal_cbm_amount, string='Bal Viss', digits_compute=dp.get_precision('Product Price'), type='float'),
     'bal_cbm':fields.function(_bal_viss_amount, string='Bal CBM', digits_compute=dp.get_precision('Product Price'), type='float'),
+    'remark': fields.text("Remark",copy=False)
         }
     
     _defaults = {
@@ -291,6 +292,22 @@ class branch_good_issue_note(osv.osv):
                     cr.execute('''update stock_move set date=((%s::date)::text || ' ' || date::time(0))::timestamp where state='done' and origin =%s''', (receive_date, origin,))
     
         return self.write(cr, uid, ids, {'state': 'receive', 'grn_no':grn_code}) 
+    
+    def transfer_other_location_gin(self,cr,uid,id,default_val,context=None):
+        gin_obj = self.pool.get('branch.good.issue.note')
+        gin_line = self.pool.get('branch.good.issue.note.line')
+        gin_id = gin_obj.copy(cr,uid,id,default_val,context=None)
+        for o in self.browse(cr, uid,gin_id, context=context):
+            for line in o.p_line:
+                if line.diff_quantity == 0:
+                    line.unlink()
+                elif line.diff_quantity > 0:
+                    line.write({'issue_quantity':line.diff_quantity,'receive_quantity':0})
+            #approve GIN        
+            o.approve() 
+            #issue GIN  
+            o.issue()           
+        return gin_id
     
     def transfer_other_location(self, cr, uid, ids, from_location_id, to_location_id, date, context=None):
         product_line_obj = self.pool.get('branch.good.issue.note.line')

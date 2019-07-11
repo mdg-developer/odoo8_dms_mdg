@@ -108,7 +108,9 @@
 									</field>
 								</page>
 							</notebook>
-						</group>
+						</group>						
+						<div class="oe_clear"/>
+                        <field name="remark" class="oe_inline" placeholder="Remark"/>
 					</sheet>
 					<div class="oe_chatter">
 						<field name="message_follower_ids" widget="mail_followers"
