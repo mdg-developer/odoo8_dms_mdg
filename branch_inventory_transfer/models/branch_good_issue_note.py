@@ -152,6 +152,7 @@ class branch_good_issue_note(osv.osv):
             ('issue', 'Issued'),
             ('receive', 'Received'),
             ('cancel', 'Cancel'),
+            ('reversed','Reversed'),
             ], 'Status', readonly=True, copy=False, help="Gives the status of the quotation or sales order.\
               \nThe exception status is automatically set when a cancel operation occurs \
               in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\nThe 'Waiting Schedule' status is set when the invoice is confirmed\
@@ -160,7 +161,8 @@ class branch_good_issue_note(osv.osv):
     'total_cbm':fields.function(_cbm_amount, string='Total CBM', digits_compute=dp.get_precision('Product Price'), type='float'),
     'bal_viss':fields.function(_bal_cbm_amount, string='Bal Viss', digits_compute=dp.get_precision('Product Price'), type='float'),
     'bal_cbm':fields.function(_bal_viss_amount, string='Bal CBM', digits_compute=dp.get_precision('Product Price'), type='float'),
-    'remark': fields.text("Remark",copy=False)
+    'remark': fields.text("Remark",copy=False),
+    'reverse_date':fields.date('Date for Reverse',required=False),
         }
     
     _defaults = {
@@ -190,6 +192,66 @@ class branch_good_issue_note(osv.osv):
                         _('Please Check Your CBM and Viss Value.It is Over!')
                     )         
         return self.write(cr, uid, ids, {'state': 'approve', 'approve_by':uid})   
+    
+    def reversed(self, cr, uid, ids, context=None):
+        pick_obj = self.pool.get('stock.picking')
+        move_obj = self.pool.get('stock.move')
+        stockDetailObj = self.pool.get('stock.transfer_details')
+        
+        
+        detailObj = None
+        gin_value = self.browse(cr, uid, ids[0], context=context)
+        gin_no=gin_value.name
+        reverse_date=gin_value.reverse_date
+        if not reverse_date:
+            raise osv.except_osv(_('Warning'),
+                     _('Please Insert Reverse Date'))
+        pick_ids = []
+        pick_ids = pick_obj.search(cr, uid, [('origin', '=', gin_no)], context=context)
+        #choose the view_mode accordingly
+        for pick_id in pick_ids:
+            pick = pick_obj.browse(cr, uid, pick_id, context=context)                
+            #Create new picking for returned products
+            pick_type_id = pick.picking_type_id.return_picking_type_id and pick.picking_type_id.return_picking_type_id.id or pick.picking_type_id.id
+            new_picking = pick_obj.copy(cr, uid, pick.id, {
+                'move_lines': [],
+                'picking_type_id': pick_type_id,
+                'state': 'draft',
+                'origin': pick.name,
+            }, context=context)
+            for move in pick.move_lines:
+                if move.origin_returned_move_id.move_dest_id.id and move.origin_returned_move_id.move_dest_id.state != 'cancel':
+                    move_dest_id = move.origin_returned_move_id.move_dest_id.id
+                else:
+                    move_dest_id = False
+                if move.product_uom_qty >0:
+                    move_obj.copy(cr, uid, move.id, {
+                                        'product_id': move.product_id.id,
+                                        'product_uom_qty': move.product_uom_qty,
+                                        'product_uos_qty': move.product_uom_qty * move.product_uos_qty / move.product_uom_qty,
+                                        'picking_id': new_picking,
+                                        'state': 'draft',
+                                        'location_id': move.location_dest_id.id,
+                                        'location_dest_id': move.location_id.id,
+                                        'picking_type_id': pick_type_id,
+                                        'warehouse_id': pick.picking_type_id.warehouse_id.id,
+                                        'origin_returned_move_id': move.id,
+                                        'procure_method': 'make_to_stock',
+                                      #  'restrict_lot_id': data_get.lot_id.id,
+                                        'move_dest_id': move_dest_id,
+                                        'origin':'Reverse ' + move.origin,
+                                })
+            pick_obj.action_confirm(cr, uid, [new_picking], context=context)
+            pick_obj.force_assign(cr, uid, [new_picking], context)  
+            wizResult = pick_obj.do_enter_transfer_details(cr, uid, [new_picking], context=context)
+            # pop up wizard form => wizResult
+            detailObj = stockDetailObj.browse(cr, uid, wizResult['res_id'], context=context)
+            if detailObj:
+                detailObj.do_detailed_transfer()
+            cr.execute("update stock_move set date=%s where origin=%s", (reverse_date, 'Reverse ' +move.origin,))
+
+                                                                      
+        return self.write(cr, uid, ids, {'state':'reversed'}) 
     
     def issue(self, cr, uid, ids, context=None):
         product_line_obj = self.pool.get('branch.good.issue.note.line')
