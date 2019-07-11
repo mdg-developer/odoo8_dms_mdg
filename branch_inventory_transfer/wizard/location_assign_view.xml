@@ -12,6 +12,7 @@
 						<field name="note_id" class="oe_inline" invisible="1" />
 						<field name="to_location_id" class="oe_inline" />
 						<field name="transfer_date" class="oe_inline" />
+						<field name="remark" class="oe_inline" />
 					</group>
 					<footer>
 						<button name="make_location" string="Transfer" type="object"
