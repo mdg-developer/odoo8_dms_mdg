@@ -12,8 +12,11 @@
 							type="object" states="draft" groups="base.group_sale_manager,base.group_no_one" />
 						<button name="approve" string="Approve" class="oe_highlight"
 							type="object" states="confirm" groups="base.group_sale_manager,base.group_no_one" />
-						<button name="approve" string="Create GIN" class="oe_highlight"
-							type="object" states="approve" groups="base.group_sale_manager,base.group_no_one" />
+						<button name="create_gin" string="Create GIN" class="oe_highlight" 
+							type="object" states="partial" groups="base.group_sale_manager,base.group_no_one" />
+						<button name="full_complete" string="Full Complete" class="oe_highlight"
+							type="object" states="partial" groups="base.group_sale_manager,base.group_no_one" />
+						
 						<button name="cancel" string="Cancel" class="oe_highlight"
 							type="object" states="draft,confirm" groups="base.group_sale_manager,base.group_no_one" />
 						<field name="state" widget="statusbar" />
@@ -74,6 +77,9 @@
 											<field name="req_quantity" />
 											<field name="issue_quantity" invisible="1" />
 											<field name="diff_quantity" invisible="1" />
+											<field name="gin_issue_quantity" readonly="1"/>
+											<field name="gin_diff_quantity" />
+											
 											<field name="product_uom"
 												on_change="on_change_product_uom(product_id,product_uom)"
 												string="UOM" />
@@ -91,7 +97,7 @@
 									</field>
 								</page>
 								<page string="GIN">
-								    <field name="good_issue_line" attrs="{'readonly':[('state','!=','draft')]}">
+								    <field name="good_issue_line" readonly="1"> <!-- attrs="{'readonly':[('state','!=','draft')]}"> -->
 								     </field>   
 								</page>
 							</notebook>

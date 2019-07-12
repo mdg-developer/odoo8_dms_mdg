@@ -191,8 +191,40 @@ class branch_good_issue_note(osv.osv):
                         _('Warning!'),
                         _('Please Check Your CBM and Viss Value.It is Over!')
                     )         
-        return self.write(cr, uid, ids, {'state': 'approve', 'approve_by':uid})   
-    
+        return self.write(cr, uid, ids, {'state': 'approve', 'approve_by':uid})
+       
+    def update_status_to_rfi(self, cr, uid, ids, context=None):
+        requisition_obj = self.pool.get('branch.stock.requisition')
+        requisition_line_obj = self.pool.get('branch.stock.requisition.line')        
+        ginline_obj = self.pool.get('branch.good.issue.note.line')
+        gin_value = self.browse(cr, uid, ids[0], context=context)
+        rfi_id = gin_value.request_id
+        if gin_value.request_id.state not in ('cancel','full_complete'):
+            requisition_id = requisition_obj.browse(cr, uid, rfi_id.id, context=context)
+            for line in requisition_id.p_line:
+                request_qty = line.req_quantity or 0
+                issue_qty = line.gin_issue_quantity or 0
+                if request_qty == 0:
+                    continue
+                
+                
+                grn_ids = self.search(cr, uid, [('request_id', '=', gin_value.request_id.id),('state','=','approve')], context=context)
+                gin_line_ids = ginline_obj.search(cr, uid, [('line_id', 'in', grn_ids), ('product_id', '=', line.product_id.id),('product_uom','=',line.product_uom.id)], context=context)
+                
+                for gin_line in ginline_obj.browse(cr,uid,gin_line_ids,context=context):
+                    issue_qty += gin_line.issue_quantity
+                    
+                line.write({'gin_issue_quantity':issue_qty})    
+                if request_qty > issue_qty:
+                    requisition_id.write({'state':'partial'})
+                    
+            #partial_line_ids = requisition_line_obj.search(cr, uid, [('line_id', '=', rfi_id.id), ('req_quantity', '!=', 'gin_issue_quantity')])
+            cr.execute('select count(id) from branch_stock_requisition_line where line_id=%s and req_quantity <> gin_issue_quantity', (rfi_id.id,))
+            partial_line_ids = cr.fetchone()
+            if partial_line_ids[0] == 0:   
+                requisition_id.write({'state':'full_complete'})
+            return True  
+          
     def reversed(self, cr, uid, ids, context=None):
         pick_obj = self.pool.get('stock.picking')
         move_obj = self.pool.get('stock.move')
@@ -299,6 +331,8 @@ class branch_good_issue_note(osv.osv):
                                           'state':'confirmed'}, context=context)     
                     move_obj.action_done(cr, uid, move_id, context=context)  
                     cr.execute('''update stock_move set date=((%s::date)::text || ' ' || date::time(0))::timestamp where state='done' and origin =%s''', (issue_date, origin,))
+        #update status to BRFI >>> partial or complete
+        self.update_status_to_rfi(cr, uid, ids, context=context)            
         return self.write(cr, uid, ids, {'state': 'issue'})       
 
     def receive(self, cr, uid, ids, context=None):
@@ -355,6 +389,55 @@ class branch_good_issue_note(osv.osv):
     
         return self.write(cr, uid, ids, {'state': 'receive', 'grn_no':grn_code}) 
     
+    def gin_issue(self, cr, uid, ids, context=None):
+        product_line_obj = self.pool.get('branch.good.issue.note.line')
+        note_obj = self.pool.get('branch.good.issue.note')
+        picking_obj = self.pool.get('stock.picking')
+        move_obj = self.pool.get('stock.move')
+        note_value = req_lines = {}
+        if ids:
+            note_value = note_obj.browse(cr, uid, ids[0], context=context)
+            issue_date = note_value.issue_date
+            # location_id = note_value.tansit_location.id
+            location_id = note_value.to_location_id.id
+            from_location_id = note_value.transit_location.id
+            origin = note_value.name
+            cr.execute('select id from stock_picking_type where default_location_dest_id=%s and name like %s', (location_id, '%Internal Transfer%',))
+            price_rec = cr.fetchone()
+            if price_rec: 
+                picking_type_id = price_rec[0] 
+            else:
+                raise osv.except_osv(_('Warning'),
+                                     _('Picking Type has not for this transition'))
+            picking_id = picking_obj.create(cr, uid, {
+                                          'date': issue_date,
+                                          'origin':origin,
+                                          'picking_type_id':picking_type_id}, context=context)
+            note_line_id = product_line_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context)
+            if note_line_id and picking_id:
+                for note_id in note_value.p_line:
+                    note_line_value = product_line_obj.browse(cr, uid, note_id.id, context=context)
+                    product_id = note_line_value.product_id.id
+                    name = note_line_value.product_id.name_template
+                    product_uom = note_line_value.product_uom.id
+                    origin = origin
+                    quantity = note_line_value.issue_quantity                        
+                    move_id = move_obj.create(cr, uid, {'picking_id': picking_id,
+                                              'picking_type_id':picking_type_id,
+                                          'product_id': product_id,
+                                          'product_uom_qty': quantity,
+                                          'product_uos_qty': quantity,
+                                          'product_uom':product_uom,
+                                          'location_id':location_id,
+                                          'location_dest_id':from_location_id,
+                                          'name':name,
+                                           'origin':origin,
+                                          'state':'confirmed'}, context=context)     
+                    move_obj.action_done(cr, uid, move_id, context=context)  
+                    cr.execute('''update stock_move set date=((%s::date)::text || ' ' || date::time(0))::timestamp where state='done' and origin =%s''', (issue_date, origin,))
+                
+        return self.write(cr, uid, ids, {'state': 'issue'})
+    
     def transfer_other_location_gin(self,cr,uid,id,default_val,context=None):
         gin_obj = self.pool.get('branch.good.issue.note')
         gin_line = self.pool.get('branch.good.issue.note.line')
@@ -368,7 +451,7 @@ class branch_good_issue_note(osv.osv):
             #approve GIN        
             o.approve() 
             #issue GIN  
-            o.issue()           
+            o.gin_issue()           
         return gin_id
     
     def transfer_other_location(self, cr, uid, ids, from_location_id, to_location_id, date, context=None):

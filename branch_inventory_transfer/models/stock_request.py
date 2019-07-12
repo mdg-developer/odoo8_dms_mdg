@@ -192,7 +192,8 @@ class branch_stock_requisition(osv.osv):
             ('draft', 'Draft'),
             ('confirm', 'Confirm'),
             ('approve', 'Approved'),
-#             ('partial', 'Partial'),
+            ('partial', 'Partial Complete'),
+            ('full_complete', 'Full Complete'),
 #             ('done', 'Done'),
 #             ('complete_partial', 'Complete Partial'),
             ('cancel', 'Cancel'),
@@ -201,7 +202,7 @@ class branch_stock_requisition(osv.osv):
               in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\nThe 'Waiting Schedule' status is set when the invoice is confirmed\
                but waiting for the scheduler to run on the order date.", select=True),
         'p_line':fields.one2many('branch.stock.requisition.line', 'line_id', 'Product Lines',
-                              copy=True),
+                              copy=True),                
     'company_id':fields.many2one('res.company', 'Company'),
     'truck_type_id': fields.many2one('truck.type', 'Truck Type'),
 #     'max_viss': fields.float(string='Max CBM', digits=(16, 2)),
@@ -215,7 +216,8 @@ class branch_stock_requisition(osv.osv):
     'total_value':fields.function(_total_value, string='Total Value', digits_compute=dp.get_precision('Product Price'), type='float'),
    'pricelist_id': fields.many2one('product.pricelist', 'Price list', required=True , readonly=True),
    'good_issue_id': fields.many2one('branch.good.issue.note', 'GIN No', required=False , readonly=True),
-
+   'good_issue_line': fields.one2many('branch.good.issue.note', 'request_id', 'Good Issue Note Lines', copy=False),
+   
 }
     _defaults = {
         'state' : 'draft',
@@ -233,7 +235,78 @@ class branch_stock_requisition(osv.osv):
         # vals['from_location_id'] = from_location_id
         
         return super(branch_stock_requisition, self).create(cursor, user, vals, context=context)
- 
+    
+    def full_complete(self,cr,uid,ids,context=None):
+        return self.write(cr, uid, ids, {'state':'full_complete' }) 
+    
+    def create_gin(self,cr,uid,ids,context=None):        
+        product_line_obj = self.pool.get('branch.stock.requisition.line')
+        requisition_obj = self.pool.get('branch.stock.requisition')
+        good_obj = self.pool.get('branch.good.issue.note')
+        branch_obj = self.pool.get('res.branch')
+        good_line_obj = self.pool.get('branch.good.issue.note.line')
+        if ids:
+            req_value = requisition_obj.browse(cr, uid, ids[0], context=context)  
+            request_id = req_value.id
+            request_date = req_value.request_date
+            request_by = req_value.request_by.id
+            to_location_id = req_value.to_location_id.id
+            from_location_id = req_value.from_location_id.id
+            vehicle_no = req_value.vehicle_id.id
+            branch_id = req_value.branch_id.id
+            branch_data=branch_obj.browse(cr, uid,branch_id, context=context)            
+            for branch in branch_data.requesting_line:
+                if branch.location_id.id ==to_location_id:
+                    tansit_location=branch.transit_location_id.id
+            receiver = req_value.issue_to      
+            pricelist_id = req_value.pricelist_id.id   
+            gin_ids= []
+            for gin_id in good_obj.search(cr,uid,[('request_id','=',request_id),('state','in',('pending','approve'))]):
+                gin_name = good_obj.browse(cr,uid,gin_id,context=context)
+                gin_ids.append(gin_name.name)
+            if len(gin_ids) > 0:
+                raise osv.except_osv(_('Warning'),
+                                 _('Please make the first GIN %s to Issued state') % (gin_ids[0],))                
+            good_id = good_obj.create(cr, uid, {
+                                          'issue_date': request_date,
+                                          'pricelist_id':pricelist_id,
+                                          'request_id':request_id,
+                                          'request_by':request_by,
+                                          'to_location_id':to_location_id,
+                                          'from_location_id':from_location_id,
+                                          'vehicle_id':vehicle_no,
+                                          'receiver':receiver,
+                                          'transit_location':tansit_location,
+                                          'branch_id':branch_id}, context=context)         
+            if good_id:       
+                for req_line_id in req_value.p_line:
+                    request_line_data=product_line_obj.browse(cr, uid, req_line_id.id, context=context)
+                    quantity_on_hand=request_line_data.gin_diff_quantity
+                    product = self.pool.get('product.product').browse(cr, uid, request_line_data.product_id.id, context=context)   
+                    if request_line_data.product_uom.id  != product.product_tmpl_id.uom_id.id  :                                                                  
+                        cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (request_line_data.product_uom.id,))
+                        bigger_qty = cr.fetchone()[0]
+                        bigger_qty = int(bigger_qty)
+                        if  bigger_qty:
+                            quantity_on_hand = request_line_data.gin_diff_quantity * bigger_qty
+                    if quantity_on_hand > request_line_data.qty_on_hand:
+                        raise osv.except_osv(_('Warning'),
+                                 _('Please Check Qty On Hand For (%s)') % (product.name_template,))
+                    else:   
+                        if request_line_data.gin_diff_quantity > 0:                  
+                            good_line_obj.create(cr, uid, {'line_id': good_id,
+                                          'product_id': request_line_data.product_id.id,
+                                          'product_uom': request_line_data.product_uom.id,
+                                          'issue_quantity':request_line_data.gin_diff_quantity,
+                                          'qty_on_hand':request_line_data.qty_on_hand,
+                                          'sequence':request_line_data.sequence,
+                                          'product_value':request_line_data.product_value,
+                                          'product_loss':request_line_data.loss,
+                                            'product_viss':request_line_data.viss_value,
+                                            'product_cbm':request_line_data.cbm_value,
+                                          }, context=context) 
+        return self.write(cr, uid, ids, {'approve_by':uid}) 
+                        
     def approve(self, cr, uid, ids, context=None):
         product_line_obj = self.pool.get('branch.stock.requisition.line')
         requisition_obj = self.pool.get('branch.stock.requisition')
@@ -422,7 +495,17 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
                     'loss':True,
                 }            
         return {'value': values}
+    
+    def _gin_diff_quantity_value(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        if context is None:
+            context = {}               
+        for order in self.browse(cr, uid, ids, context=context):
+            val1 = 0.0            
 
+            val1 = order.req_quantity - order.gin_issue_quantity                      
+            res[order.id] = val1
+        return res  
             
     def _diff_quantity_value(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
@@ -495,6 +578,8 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'req_quantity' : fields.float(string='Request (Qty)', digits=(16, 0)),
         'issue_quantity': fields.float(string='Issued (Qty)', digits=(16, 0)),
+        'gin_issue_quantity': fields.float(string='GIN Issued (Qty)', digits=(16, 0),copy=False),
+        'gin_diff_quantity':fields.function(_gin_diff_quantity_value, string='Diff(Qty)', digits=(16, 0), type='float', readonly=True,copy=False),
         'diff_quantity':fields.function(_diff_quantity_value, string='Diff(Qty)', digits=(16, 0), type='float', readonly=True),
         'loss' : fields.boolean(string='Loose'),
        # 'product_value' : fields.float(string='Value', digits=(16, 0), readonly=True),

@@ -55,6 +55,7 @@
 								<field name="max_cbm" readonly="1" />
 								<field name="transit_location" readonly="1" />
 								<field name="reverse_date" attrs="{'readonly':[('state','=','reversed')],'invisible': [('state','not in',('issue','reversed'))]}"/>
+								 <field name="remark" />
 							</group>
 							<group>
 								<field name="request_id" readonly="1" />
@@ -93,9 +94,9 @@
 											default_order="sequence asc">
 											<field name="sequence" invisible="1" />
 											<field name="product_id" on_change="on_change_product_id(product_id)"
-												attrs="{'readonly':[('state','in',('issue','receive','cancel'))]}" />
+												attrs="{'readonly':[('state','in',('issue','receive','cancel','reversed'))]}" />
 											<field name="issue_quantity"
-												attrs="{'readonly':[('state','in',('issue','receive','cancel'))]}" />
+												attrs="{'readonly':[('state','in',('issue','receive','cancel','reversed'))]}" />
 											<field name="receive_quantity" attrs="{'readonly':[('state','!=','issue')]}" />
 											<field name="diff_quantity" readonly="1" />
 											<field name="product_uom" readonly="1" />
@@ -112,8 +113,8 @@
 								</page>
 							</notebook>
 						</group>						
-						<div class="oe_clear"/>
-                        <field name="remark" class="oe_inline" placeholder="Remark"/>
+						<!-- <div class="oe_clear"/>
+                        <field name="remark" class="oe_inline" placeholder="Remark"/> -->
 					</sheet>
 					<div class="oe_chatter">
 						<field name="message_follower_ids" widget="mail_followers"
