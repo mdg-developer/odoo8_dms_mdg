@@ -451,7 +451,9 @@ class branch_good_issue_note(osv.osv):
             #approve GIN        
             o.approve() 
             #issue GIN  
-            o.gin_issue()           
+            o.gin_issue() 
+            #hide change location button
+            self.write(cr, uid, id,{'is_changed':True})         
         return gin_id
     
     def transfer_other_location(self, cr, uid, ids, from_location_id, to_location_id, date, context=None):
