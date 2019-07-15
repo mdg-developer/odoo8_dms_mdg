@@ -135,6 +135,7 @@
 					<field name="branch_id" />
 					<field name="name" />
 					<field name="request_id" />
+				     <field name="change_gin" readonly="1" />								
 					<field name="to_location_id" />
 					<field name="from_location_id" />
 					<field name="issue_date" />
