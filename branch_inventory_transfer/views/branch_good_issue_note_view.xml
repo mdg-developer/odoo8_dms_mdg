@@ -55,6 +55,7 @@
 								<field name="max_cbm" readonly="1" />
 								<field name="transit_location" readonly="1" />
 								<field name="reverse_date" attrs="{'readonly':[('state','=','reversed')],'invisible': [('state','not in',('issue','reversed'))]}"/>
+								<field name="change_gin" readonly="1" />								
 								 <field name="remark" />
 							</group>
 							<group>

@@ -46,9 +46,10 @@ class change_location(osv.osv_memory):
             note_data=self.pool.get('branch.good.issue.note').browse(cr, uid, note_id, context=context)
             default.update({
             'state':'pending',
-            'from_location_id':from_location_id,
+            'from_location_id':to_location_id,
             'issue_date':date,
-            'remark':data_obj.remark,            
+            'remark':data_obj.remark, 
+            'change_gin': 'Change Location of ' + str(note_data.name)           
             })
             gin = self.pool.get('branch.good.issue.note').transfer_other_location_gin(cr,uid,note_id,default,context=context)
             #self.pool.get('branch.good.issue.note').transfer_other_location(cr, uid,note_id,from_location_id,to_location_id,date, context=context)

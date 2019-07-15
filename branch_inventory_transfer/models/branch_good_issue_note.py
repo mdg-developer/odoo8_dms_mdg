@@ -162,6 +162,7 @@ class branch_good_issue_note(osv.osv):
     'bal_viss':fields.function(_bal_cbm_amount, string='Bal Viss', digits_compute=dp.get_precision('Product Price'), type='float'),
     'bal_cbm':fields.function(_bal_viss_amount, string='Bal CBM', digits_compute=dp.get_precision('Product Price'), type='float'),
     'remark': fields.text("Remark",copy=False),
+    'change_gin': fields.char("Change GIN",copy=False),
     'reverse_date':fields.date('Date for Reverse',required=False),
         }
     
@@ -448,10 +449,7 @@ class branch_good_issue_note(osv.osv):
                     line.unlink()
                 elif line.diff_quantity > 0:
                     line.write({'issue_quantity':line.diff_quantity,'receive_quantity':0})
-            #approve GIN        
-            o.approve() 
-            #issue GIN  
-            o.gin_issue() 
+            o.write({'state': 'issue'})
             #hide change location button
             self.write(cr, uid, id,{'is_changed':True})         
         return gin_id
