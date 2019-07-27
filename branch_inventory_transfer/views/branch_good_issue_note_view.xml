@@ -14,8 +14,7 @@
 							type="object" states="pending" />
 						<button name="change_location" string="Change Location"
 							class="oe_highlight" type="object"
-							attrs="{'invisible': ['|',('is_changed','=',True),('state','!=','receive')]}" />
-
+							attrs="{'invisible': ['|',('is_changed','=',True),('state','!=','partial_receive')]}" />
 						<button name="issue" string="Issue" class="oe_highlight"
 							type="object" states="approve" />
 						<button name="receive" string="Receive" class="oe_highlight"
@@ -29,10 +28,10 @@
 							<label string="GIN Ref" />
 							<field name="name" class="oe_inline" readonly="1" />
 						</h1>
-						<h1 attrs="{'invisible': [('state','!=','receive')]}">
-							<label string="GRN Ref" attrs="{'invisible': [('state','!=','receive')]}" />
+						<h1 attrs="{'invisible': [('state','not in',('receive','partial_receive'))]}">
+							<label string="GRN Ref" attrs="{'invisible': [('state','not in',('receive','partial_receive'))]}"/>
 							<field name="grn_no" class="oe_inline" readonly="1"
-								attrs="{'invisible': [('state','!=','receive')]}" />
+								attrs="{'invisible': [('state','not in',('receive','partial_receive'))]}" />
 						</h1>
 						<group>
 							<group>
@@ -54,9 +53,10 @@
 								<field name="max_weight" readonly="1" />
 								<field name="max_cbm" readonly="1" />
 								<field name="transit_location" readonly="1" />
-								<field name="reverse_date" attrs="{'readonly':[('state','=','reversed')],'invisible': [('state','not in',('issue','reversed'))]}"/>
-								<field name="change_gin" readonly="1" />								
-								 <field name="remark" />
+								<field name="reverse_date"
+									attrs="{'readonly':[('state','=','reversed')],'invisible': [('state','not in',('issue','reversed'))]}" />
+								<field name="change_gin" readonly="1" />
+								<field name="remark" />
 							</group>
 							<group>
 								<field name="request_id" readonly="1" />
@@ -85,6 +85,8 @@
 								<field name="total_cbm" readonly="1" />
 								<field name="bal_viss" readonly="1" />
 								<field name="bal_cbm" readonly="1" />
+								<field name="total_diff_qty" readonly="1" />
+
 							</group>
 						</group>
 						<group>
@@ -113,9 +115,9 @@
 									</field>
 								</page>
 							</notebook>
-						</group>						
-						<!-- <div class="oe_clear"/>
-                        <field name="remark" class="oe_inline" placeholder="Remark"/> -->
+						</group>
+						<!-- <div class="oe_clear"/> <field name="remark" class="oe_inline" 
+							placeholder="Remark"/> -->
 					</sheet>
 					<div class="oe_chatter">
 						<field name="message_follower_ids" widget="mail_followers"
@@ -135,7 +137,7 @@
 					<field name="branch_id" />
 					<field name="name" />
 					<field name="request_id" />
-				     <field name="change_gin" readonly="1" />								
+					<field name="change_gin" readonly="1" />
 					<field name="to_location_id" />
 					<field name="from_location_id" />
 					<field name="issue_date" />
@@ -145,12 +147,34 @@
 				</tree>
 			</field>
 		</record>
-
+		<record id="view_branch_good_issue_note_filter" model="ir.ui.view">
+			<field name="name">Good Issue Note Filter</field>
+			<field name="model">branch.good.issue.note</field>
+			<field name="arch" type="xml">
+				<search string="Search Good Issue Note">
+					<group expand="0" string="Group By...">
+						<filter string="Branch" icon="terp-partner" domain="[]"
+							context="{'group_by':'branch_id'}" />
+						<filter string="Request Warehouse" icon="terp-partner"
+							domain="[]" context="{'group_by':'from_location_id'}" />
+						<filter string="Requesting Location" icon="terp-partner"
+							domain="[]" context="{'group_by':'to_location_id'}" />
+						<filter string="Issue Date" icon="terp-partner" domain="[]"
+							context="{'group_by':'issue_date'}" />
+						<filter string="Received Date" icon="terp-partner" domain="[]"
+							context="{'group_by':'receive_date'}" />
+						<filter string="Pending" domain="[('state','=','draft')]"
+							name="state_filter" />
+					</group>
+				</search>
+			</field>
+		</record>
 		<!-- Stock Requisition -->
 		<record id="action_branch_good_issue_note" model="ir.actions.act_window">
 			<field name="name">Branch Good Issue Note</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">branch.good.issue.note</field>
+			<field name="context">{'search_default_state_filter': 1}</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field name="view_id" ref="branch_good_issue_note_tree" />

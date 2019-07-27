@@ -140,7 +140,7 @@
 				<search string="Search Stock Request">
 					<group expand="0" string="Group By...">
 						<filter string="Branch" icon="terp-partner" domain="[]"
-							context="{'group_by':'brach_id'}" />
+							context="{'group_by':'branch_id'}" />
 						<filter string="Request From" icon="terp-partner" domain="[]"
 							context="{'group_by':'from_location_id'}" />
 						<filter string="Request To" icon="terp-partner" domain="[]"

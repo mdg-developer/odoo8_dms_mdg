@@ -72,7 +72,19 @@ class branch_good_issue_note(osv.osv):
                 req_data = self.pool.get('branch.good.issue.note.line').browse(cr, uid, line.id, context=context)
                 val1 += req_data.product_cbm                      
             res[order.id] = val1
-        return res       
+        return res   
+        
+    def _total_diff_qty(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        if context is None:
+            context = {}               
+        for order in self.browse(cr, uid, ids, context=context):
+            val1 = 0.0            
+            for line in order.p_line:
+                req_data = self.pool.get('branch.good.issue.note.line').browse(cr, uid, line.id, context=context)
+                val1 += req_data.diff_quantity                      
+            res[order.id] = val1
+        return res         
     
     def _bal_cbm_amount(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
@@ -150,6 +162,7 @@ class branch_good_issue_note(osv.osv):
             ('pending', 'Pending'),
             ('approve', 'Approved'),
             ('issue', 'Issued'),
+            ('partial_receive', 'Partial Received'),
             ('receive', 'Received'),
             ('cancel', 'Cancel'),
             ('reversed','Reversed'),
@@ -159,8 +172,10 @@ class branch_good_issue_note(osv.osv):
                but waiting for the scheduler to run on the order date.", select=True),
     'total_viss':fields.function(_viss_amount, string='Total Viss', digits_compute=dp.get_precision('Product Price'), type='float'),
     'total_cbm':fields.function(_cbm_amount, string='Total CBM', digits_compute=dp.get_precision('Product Price'), type='float'),
-    'bal_viss':fields.function(_bal_cbm_amount, string='Bal Viss', digits_compute=dp.get_precision('Product Price'), type='float'),
-    'bal_cbm':fields.function(_bal_viss_amount, string='Bal CBM', digits_compute=dp.get_precision('Product Price'), type='float'),
+    'bal_viss':fields.function(_bal_viss_amount, string='Bal Viss', digits_compute=dp.get_precision('Product Price'), type='float'),
+    'bal_cbm':fields.function(_bal_cbm_amount, string='Bal CBM', digits_compute=dp.get_precision('Product Price'), type='float'),
+    'total_diff_qty':fields.function(_total_diff_qty, string='Total Diff Qty', digits_compute=dp.get_precision('Product Price'), type='float'),
+
     'remark': fields.text("Remark",copy=False),
     'change_gin': fields.char("Change GIN",copy=False),
     'reverse_date':fields.date('Date for Reverse',required=False),
@@ -168,7 +183,6 @@ class branch_good_issue_note(osv.osv):
     
     _defaults = {
          'state' : 'pending',
-         'request_date': fields.datetime.now,
          'request_by':lambda obj, cr, uid, context: uid,
          'pricelist_id':1,
          
@@ -342,6 +356,7 @@ class branch_good_issue_note(osv.osv):
         picking_obj = self.pool.get('stock.picking')
         move_obj = self.pool.get('stock.move')
         note_value = req_lines = {}
+        state='receive'
         grn_code = self.pool.get('ir.sequence').get(cr, uid,
                                                 'branch.grn.code') or '/'    
         if ids:
@@ -373,7 +388,12 @@ class branch_good_issue_note(osv.osv):
                     name = note_line_value.product_id.name_template
                     product_uom = note_line_value.product_uom.id
                     origin = origin
-                    quantity = note_line_value.receive_quantity                        
+                    quantity = note_line_value.receive_quantity 
+                    if note_line_value.diff_quantity < 0:
+                        raise osv.except_osv(_('Warning'),
+                                             _('Cannot Receive Over Qty')) 
+                                               
+                                           
                     move_id = move_obj.create(cr, uid, {'picking_id': picking_id,
                                               'picking_type_id':picking_type_id,
                                           'product_id': product_id,
@@ -387,8 +407,10 @@ class branch_good_issue_note(osv.osv):
                                           'state':'confirmed'}, context=context)     
                     move_obj.action_done(cr, uid, move_id, context=context)  
                     cr.execute('''update stock_move set date=((%s::date)::text || ' ' || date::time(0))::timestamp where state='done' and origin =%s''', (receive_date, origin,))
-    
-        return self.write(cr, uid, ids, {'state': 'receive', 'grn_no':grn_code}) 
+        
+            if note_value.total_diff_qty>0:
+                state='partial_receive'
+        return self.write(cr, uid, ids, {'state': state, 'grn_no':grn_code}) 
     
     def gin_issue(self, cr, uid, ids, context=None):
         product_line_obj = self.pool.get('branch.good.issue.note.line')
