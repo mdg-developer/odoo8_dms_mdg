@@ -390,7 +390,7 @@ this.queryText =this.queryText.replace("--$principle$", "")
 }
 else
 {
-this.queryText =this.queryText.replace("--$principle$", " and b.main_group_id in (" + params["principle_id"].value.join(",") + ")" );
+this.queryText =this.queryText.replace("--$principle$", " where b.main_group_id in (" + params["principle_id"].value.join(",") + ")" );
 }]]></method>
             <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
@@ -564,7 +564,7 @@ this.queryText =this.queryText.replace("--$principle$", " and b.main_group_id in
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select b.*,a.*,(select name from crm_case_section where id = a.section_id) as sale_team,(select name from res_branch where id = a.branch_id) as branch from 
-(select ai.section_id,ai.branch_id,count(ai.partner_id) as outlet_count,count(ai.id) as  invoice_count ,ail.promotion_id,
+(select ai.section_id,ai.branch_id,count(DISTINCT ai.partner_id) as outlet_count,count(ai.id) as  invoice_count ,ail.promotion_id,
 case when ail.uos_id=pt.uom_id and sum(ail.price_unit)=0 then sum(round(quantity,0)) when ail.uos_id=pt.uom_id and sum(ail.price_unit)<0  then 1 when ail.uos_id!=pt.uom_id then sum(round(quantity*(select floor(round(1/factor,2)) from product_uom where id=ail.uos_id),0)) end as quantity,
 case when sum(ail.price_unit)=0 then string_agg(DISTINCT  pp.name_template,', ') else  '' end as foc_product,
 case when sum(ail.price_unit)<0 then string_agg(DISTINCT  pp.name_template,', ') else  '' end as discount_product,
