@@ -3749,6 +3749,19 @@ class mobile_sale_order_line(osv.osv):
     _name = "mobile.sale.order.line"
     _description = "Mobile Sales Order"
     
+    def _get_on_hand_qty(self, cr, uid, ids, field_name, arg, context=None):
+        result = {}
+        for rec in self.browse(cr, uid, ids, context=context):
+            if rec.product_id and rec.order_id.location_id:
+                cr.execute('''select COALESCE(sum(qty),0)
+                                    from stock_quant
+                                    where product_id=%s
+                                    and location_id=%s''',(rec.product_id.id,rec.order_id.location_id.id,))
+                quantity = cr.fetchall() 
+                if quantity:                
+                    result[rec.id] = quantity[0][0]
+        return result    
+    
     def _get_uom_from_product(self, cr, uid, ids, field_name, arg, context=None):
         result = {}
         for rec in self.browse(cr, uid, ids, context=context):
@@ -3768,7 +3781,8 @@ class mobile_sale_order_line(osv.osv):
         'sub_total':fields.float('Sub Total'),
         'foc':fields.boolean('FOC'),
         'manual_foc':fields.boolean('Manual Foc'),
-        'promotion_id': fields.many2one('promos.rules', 'Promotion', readonly=True)  
+        'promotion_id': fields.many2one('promos.rules', 'Promotion', readonly=True),        
+        'on_hand_qty': fields.function(_get_on_hand_qty, string='On Hand Qty', type='float'),  
     }
     _defaults = {
        'product_uos_qty':1.0,

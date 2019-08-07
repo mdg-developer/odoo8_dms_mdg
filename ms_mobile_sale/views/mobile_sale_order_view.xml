@@ -81,6 +81,7 @@
 											<group>
 												<field name="product_type" invisible="1" />
 												<field name="product_id" readonly="1" />
+												<field name="on_hand_qty" />
 												<field name="uom_id" readonly="1" />
 												<field name="product_uos_qty" readonly="1" />
 												<field name="price_unit" readonly="1" />
@@ -98,9 +99,10 @@
 
 									</form>
 									<tree string="Sales Order Lines" editable="bottom">
-										<field name="product_type" invisible="1" />
+										<field name="product_type" invisible="1" />										
 										<field name="product_id"
-											attrs="{'readonly':[('product_type','!=','service')]}" />
+											attrs="{'readonly':[('product_type','!=','service')]}" />										
+										<field name="on_hand_qty" />
 										<field name="uom_id" readonly="1" />
 										<field name="product_uos_qty" readonly="1" />
 										<field name="price_unit" readonly="1" />
