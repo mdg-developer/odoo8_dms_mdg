@@ -36,13 +36,15 @@ Welcome to Multi Delivery Order Transfer Module.
     'images': [],
     
     'depends': [
-                'base',
+                'base','sale'
                 ],
                 
                 
     'data' : [
               'wizard/delivery_order_view.xml',
               'wizard/delivery_invoice_view.xml',
+            'views/sale_order_view.xml',
+
     ],
              
     'demo': [],
