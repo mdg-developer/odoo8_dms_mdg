@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="inherit_view_sale_order_confirm_form" model="ir.ui.view">
+			<field name="name">sale.order.tree</field>
+			<field name="model">sale.order</field>
+			<field name="inherit_id" ref="sale.view_order_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='invoiced']" position="after">
+					<field name="is_confirm"  />
+
+				</xpath>
+				
+				
+			</field>
+		</record>
+
+	</data>
+</openerp>
+		
