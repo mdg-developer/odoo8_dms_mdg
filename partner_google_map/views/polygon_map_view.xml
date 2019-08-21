@@ -16,7 +16,7 @@
         </script>
         <div id="odoo-polygon-map"></div>
         <script src="//maps.google.com/maps/api/js?key=AIzaSyD_JRi0FT3uXn4DQEsiW8-tm0w9WX7tdGI&amp;callback=init_map"></script>        
-        <!-- <script type="text/javascript" src="/partner_google_map/static/src/js/markerclusterer_compiled.js"></script> -->
+        <script type="text/javascript" src="/partner_google_map/static/src/js/markerclusterer_compiled.js"></script>
         <script type="text/javascript" src="/partner_google_map/static/src/js/polygon_map.js"></script>
     </body>
 </html>

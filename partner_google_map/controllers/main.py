@@ -199,7 +199,8 @@ class partner_map(http.Controller):
         "partners": []
         }
         
-        partner_details =  partner_obj.browse(cr, SUPERUSER_ID, clean_ids)
+        #partner_details =  partner_obj.browse(cr, SUPERUSER_ID, clean_ids)
+        partner_details =  partner_obj.browse(cr, SUPERUSER_ID, clean_ids , context = {'show_address': True})
         print('polygon partner_details')
         print(partner_details);
         request.context.update({'show_address': True})
