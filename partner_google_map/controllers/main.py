@@ -209,6 +209,7 @@ class partner_map(http.Controller):
             partner_data["partners"].append({
                 'id': partner.id,
                 'name': escape(partner.name),
+                'outlet_type': escape(partner.outlet_type.name or ''),
                 'address': escape('\n'.join(partner.name_get()[0][1].split('\n')[1:])),
                 'latitude': escape(str(partner.partner_latitude)),
                 'longitude': escape(str(partner.partner_longitude)),
@@ -224,4 +225,5 @@ class partner_map(http.Controller):
             'partner_url': partner_url,
             'partner_data': json.dumps(partner_data)
         }
+        print 'map value>>>',values
         return request.website.render("partner_google_map.partners_polygon_map", values)

@@ -55,10 +55,12 @@ function init_map() {
     var onMarkerClick = function() {
         var marker = this;
         var p = marker.partner;
+        
         infoWindow.setContent(
               '<div class="marker">'+
               (partner_url.length ? '<a target="_top" href="'+partner_url+p.id+'"><b>'+p.name +'</b></a>' : '<b>'+p.name+'</b>' )+
               (p.type ? '  <b>' + p.type + '</b>' : '')+
+              '  <pre>' + p.outlet_type + '</pre>'+
               '  <pre>' + p.address + '</pre>'+
               '</div>'
           );
