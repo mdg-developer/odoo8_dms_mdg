@@ -24,11 +24,12 @@ function initialize_map() {
     // Display the bubble once clicked
     var onMarkerClick = function() {
         var marker = this;
-        var p = marker.partner;
+        var p = marker.partner;        
         infoWindow.setContent(
               '<div class="marker">'+
               (partner_url.length ? '<a target="_top" href="'+partner_url+p.id+'"><b>'+p.name +'</b></a>' : '<b>'+p.name+'</b>' )+
               (p.type ? '  <b>' + p.type + '</b>' : '')+
+              '  <pre>' + p.outlet_type.name + '</pre>'+
               '  <pre>' + p.address + '</pre>'+
               '</div>'
           );
@@ -51,7 +52,7 @@ function initialize_map() {
                         map: map,
                         icon: partners,
                         position: location
-                    });
+                    });                    
                     google.maps.event.addListener(marker, 'click', onMarkerClick);
                     markers.push(marker);
                 } else {

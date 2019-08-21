@@ -137,6 +137,7 @@ class partner_map(http.Controller):
             partner_data["partners"].append({
                 'id': partner.id,
                 'name': escape(partner.name),
+                'outlet_type': escape(partner.outlet_type.name or ''),
                 'address': escape('\n'.join(partner.name_get()[0][1].split('\n')[1:])),
                 'latitude': escape(str(partner.partner_latitude)),
                 'longitude': escape(str(partner.partner_longitude)),
