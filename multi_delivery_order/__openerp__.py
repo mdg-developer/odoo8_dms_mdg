@@ -36,7 +36,7 @@ Welcome to Multi Delivery Order Transfer Module.
     'images': [],
     
     'depends': [
-                'base','sale'
+                'base','sale_management'
                 ],
                 
                 

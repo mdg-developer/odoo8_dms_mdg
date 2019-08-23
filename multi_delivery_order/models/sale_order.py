@@ -8,7 +8,7 @@ from openerp import SUPERUSER_ID
 class sale_order(osv.osv):
     _inherit = "sale.order"
     _columns = {
-         'is_confirm': fields.boolean('Is Confirm',readonly=True),       
+         'is_confirm': fields.boolean('In Progress',readonly=True),       
               }
 sale_order()
 
