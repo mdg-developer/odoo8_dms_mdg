@@ -45,13 +45,24 @@ class unassign_customer_tag(osv.osv_memory):
     _name = 'partner.unassign.customer.tag'
     _description = 'Unassign Delivery Team'
     _columns = {
-        'confirm':fields.boolean('Confirm' ,readonly=True),
-    }
+        'confirm':fields.boolean('All' ),
+        'category_id':fields.many2one('res.partner.category','Customer Type'),
+        'data':fields.boolean('Data'),   
+         }
 
     _defaults = {
-         'confirm': True,                  
+         'confirm': True,       
+        'data': False,         
+           
     }
-
+    def onchange_category_id(self, cr, uid, ids, category_id, context=None):
+        customer_code = False        
+        if category_id:
+            print 'ssssssssss'
+            return {'value': {'confirm': customer_code,'data':True}}
+        else:
+            return True
+        
     def print_report(self, cr, uid, ids, context=None):
         data = self.read(cr, uid, ids, context=context)[0]
         partner_obj = self.pool.get('res.partner')
@@ -62,8 +73,14 @@ class unassign_customer_tag(osv.osv_memory):
             }
         partner_id=datas['ids']
         confirm=data['confirm']
-        for partner in partner_id: 
-            if (confirm==True):
+        category_id=data['category_id']
+        
+        for partner in partner_id:
+            print  'confirmconfirm',confirm,category_id
+            if category_id:
+                cr.execute('delete from res_partner_res_partner_category_rel where partner_id=%s and  category_id =%s ',(partner,category_id[0],)) 
+            else:
                 cr.execute('delete from res_partner_res_partner_category_rel where  partner_id=%s',(partner,))      
+
         return True
                                                                                                      

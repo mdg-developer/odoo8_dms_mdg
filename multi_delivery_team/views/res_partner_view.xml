@@ -28,7 +28,7 @@
 				<xpath expr="//field[@name='name']" position="after">
 					<field name="section_id" />
 					<field name="delivery_team_id" />
-				</xpath>			    
+				</xpath>
 				<xpath expr="//group/filter[@string='Country']" position="after">
 					<filter string="Delivery Team" icon="terp-personal" domain="[]"
 						context="{'group_by' : 'delivery_team_id'}" />
@@ -83,7 +83,10 @@
 			<field name="arch" type="xml">
 				<form string="Unassign Delivery Team">
 					<group>
-						<field name="confirm" />
+						<field name="data" invisible="1" />
+						<field name="confirm" attrs="{'readonly': [('data','=',True)]}" />
+						<field name="category_id" attrs="{'readonly': [('confirm','=',True)]}"
+							on_change="onchange_category_id(category_id)" class="oe_inline" />
 					</group>
 					<footer>
 						<button name="print_report" string="Confirm" type="object"
