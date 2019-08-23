@@ -77,6 +77,46 @@
 		</record>
 
 
+		<record id="view_unassign_customer_tag_form" model="ir.ui.view">
+			<field name="name">partner.unassign.customer.tag.form</field>
+			<field name="model">partner.unassign.customer.tag</field>
+			<field name="arch" type="xml">
+				<form string="Unassign Delivery Team">
+					<group>
+						<field name="confirm" />
+					</group>
+					<footer>
+						<button name="print_report" string="Confirm" type="object"
+							class="oe_highlight" />
+						or
+
+						<button string="Cancel" class="oe_link" special="cancel" />
+
+					</footer>
+				</form>
+			</field>
+		</record>
+
+		<record id="action_unassign_customer_tag" model="ir.actions.act_window">
+			<field name="name">Unassign Customer Tag</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">partner.unassign.customer.tag</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+
+
+		<record model="ir.values" id="action_unassign_customer_tag1">
+			<field name="name">Unassign Customer Tag</field>
+			<field name="key2">client_action_multi</field>
+			<field name="value"
+				eval="'ir.actions.act_window,' + str(ref('action_unassign_customer_tag'))" />
+			<field name="key">action</field>
+			<field name="model">res.partner</field>
+		</record>
+
+
 		<!-- customer tree view -->
 		<record id="res_partner_tree_view" model="ir.ui.view">
 			<field name="name">res.partner.tree.view</field>

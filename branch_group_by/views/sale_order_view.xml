@@ -12,6 +12,8 @@
 				<xpath expr="//search/group/filter[@string='Order Month']"
 					position="before">
 					<filter string="Branch" context="{'group_by': 'branch_id'}" />
+                        <filter string="Invoice Month" context="{'group_by':'date_invoice'}"/>
+                        <filter string="Invoice Day" domain="[ ]" context="{'group_by': 'date_invoice:day'}" />					
 				</xpath>
 
 			</field>

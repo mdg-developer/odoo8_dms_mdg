@@ -10,42 +10,42 @@ plan_frequency()
 class sale_plan_for_day_setting(osv.osv):
     _name = 'sale.plan.day.setting'
     
-    def on_change_sale_team_id(self, cr, uid, ids, sale_team_id, context=None):
-        customer_obj = self.pool.get('res.partner')
-        sale_team_obj = self.pool.get('crm.case.section')        
-        sale_team = sale_team_obj.search(cr, uid, [('id', '=', sale_team_id)], context=context)
-        team_data=sale_team_obj.browse(cr, uid, sale_team, context=context)
-        main_group=team_data.main_group_id
-        branch_id=team_data.branch_id.id
-        print 'dddddddddd',branch_id,main_group
-        values = {}
-        data_line = []
-        if sale_team_id:            
-            partner_ids = customer_obj.search(cr, uid, [('section_id', '=', sale_team_id),('mobile_customer','!=',True),('active','=',True)], context=context)
-            if  partner_ids:                
-                for line in partner_ids:
-                    print ' line', line
-                    cr.execute("select date_order::date from sale_order  where partner_id =%s order by id desc", (line,))
-                    last_order = cr.fetchone()
-                    if last_order:
-                        last_order_date = last_order[0]
-                    else:
-                        last_order_date = False
-                    partner = customer_obj.browse(cr, uid, line, context=context)
-                    print 'partner.class_id.id',partner.class_id.id
-                    data_line.append({
-                                        'code':partner.customer_code,
-                                         'class':partner.class_id.id,
-                                         'frequency':partner.frequency_id.id,
-                                         'purchase_date':last_order_date,
-                                        'partner_id': line,
-                                                  })
-            values = {
-                      'main_group':main_group,
-                      'branch_id':branch_id,
-                'plan_line': data_line,
-            }
-        return {'value': values}    
+#     def on_change_sale_team_id(self, cr, uid, ids, sale_team_id, context=None):
+#         customer_obj = self.pool.get('res.partner')
+#         sale_team_obj = self.pool.get('crm.case.section')        
+#         sale_team = sale_team_obj.search(cr, uid, [('id', '=', sale_team_id)], context=context)
+#         team_data=sale_team_obj.browse(cr, uid, sale_team, context=context)
+#         main_group=team_data.main_group_id
+#         branch_id=team_data.branch_id.id
+#         print 'dddddddddd',branch_id,main_group
+#         values = {}
+#         data_line = []
+#         if sale_team_id:            
+#             partner_ids = customer_obj.search(cr, uid, [('section_id', '=', sale_team_id),('mobile_customer','!=',True),('active','=',True)], context=context)
+#             if  partner_ids:                
+#                 for line in partner_ids:
+#                     print ' line', line
+#                     cr.execute("select date_order::date from sale_order  where partner_id =%s order by id desc", (line,))
+#                     last_order = cr.fetchone()
+#                     if last_order:
+#                         last_order_date = last_order[0]
+#                     else:
+#                         last_order_date = False
+#                     partner = customer_obj.browse(cr, uid, line, context=context)
+#                     print 'partner.class_id.id',partner.class_id.id
+#                     data_line.append({
+#                                         'code':partner.customer_code,
+#                                          'class':partner.class_id.id,
+#                                          'frequency':partner.frequency_id.id,
+#                                          'purchase_date':last_order_date,
+#                                         'partner_id': line,
+#                                                   })
+#             values = {
+#                       'main_group':main_group,
+#                       'branch_id':branch_id,
+#                 'plan_line': data_line,
+#             }
+#         return {'value': values}    
     
     def get_partner_count(self, cr, uid, ids, field, arg, context=None):
         
@@ -319,7 +319,7 @@ class sale_plan_for_day_setting(osv.osv):
     
     _columns = {
                 'name': fields.char('Description', required=True),
-                'sale_team_id':fields.many2one('crm.case.section', 'Sale Team', required=True),
+                'sale_team_id':fields.many2many('crm.case.section', 'sale_plan_day_sale_team_rel', 'sale_plan_day_id', 'sale_team_id', 'Sale Team',required=False),
                  'date':fields.date('Apply Date', required=True),
                  'start_date':fields.date('W1 Monday'),
                 'state': fields.selection([
@@ -377,830 +377,874 @@ class sale_plan_for_day_setting(osv.osv):
         plan_obj = self.pool.get('sale.plan.day')
         sale_plan_day_line_obj = self.pool.get('sale.plan.day.line')
         plan_setting = self.browse(cr, uid, ids, context=context)
-        sale_team_id = plan_setting.sale_team_id.id
-        sale_team_name = plan_setting.sale_team_id.name
+        sale_team_ids = plan_setting.sale_team_id
         principal = plan_setting.principal.id
         main_group = plan_setting.main_group.ids
         print ' main_group',main_group
         branch = plan_setting.branch_id.id
         
         date = plan_setting.date
-        for plan_line in plan_setting.plan_line:
-            w1_mon = plan_line.w1_mon
-            w1_tue = plan_line.w1_tue
-            w1_wed = plan_line.w1_wed
-            w1_thur = plan_line.w1_thur
-            w1_fri = plan_line.w1_fri           
-            w1_sat = plan_line.w1_sat           
-            w2_mon = plan_line.w2_mon
-            w2_tue = plan_line.w2_tue
-            w2_wed = plan_line.w2_wed
-            w2_thur = plan_line.w2_thur
-            w2_fri = plan_line.w2_fri           
-            w2_sat = plan_line.w2_sat       
-            w3_mon = plan_line.w3_mon
-            w3_tue = plan_line.w3_tue
-            w3_wed = plan_line.w3_wed
-            w3_thur = plan_line.w3_thur
-            w3_fri = plan_line.w3_fri           
-            w3_sat = plan_line.w3_sat
-            w4_mon = plan_line.w4_mon
-            w4_tue = plan_line.w4_tue
-            w4_wed = plan_line.w4_wed
-            w4_thur = plan_line.w4_thur
-            w4_fri = plan_line.w4_fri           
-            w4_sat = plan_line.w4_sat                                  
-            partner_id = plan_line.partner_id.id
-            if w1_mon == True:
-               # if w1_mon == True:status = 'Monday' + '(' + sale_team_name + ')'                
-                
-                if w1_mon == True:status = 'W1 Monday'          
-                setting_id = plan_obj.search(cr, uid, [('week', '=', 1), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
-                if setting_id:
-                    #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
-                    cr.execute("select partner_id from sale_plan_day_line where line_id=%s and partner_id=%s",(setting_id[0],partner_id,))
-                    rel_partner_id = cr.fetchone()
-                    if rel_partner_id:
-                        cr.execute("delete from sale_plan_day_line where partner_id=%s and line_id=%s", (rel_partner_id[0], setting_id[0]))
+        for sale_team in sale_team_ids:
+            sale_team_id=sale_team.id
+            for plan_line in plan_setting.plan_line:
+                w1_mon = plan_line.w1_mon
+                w1_tue = plan_line.w1_tue
+                w1_wed = plan_line.w1_wed
+                w1_thur = plan_line.w1_thur
+                w1_fri = plan_line.w1_fri           
+                w1_sat = plan_line.w1_sat           
+                w2_mon = plan_line.w2_mon
+                w2_tue = plan_line.w2_tue
+                w2_wed = plan_line.w2_wed
+                w2_thur = plan_line.w2_thur
+                w2_fri = plan_line.w2_fri           
+                w2_sat = plan_line.w2_sat       
+                w3_mon = plan_line.w3_mon
+                w3_tue = plan_line.w3_tue
+                w3_wed = plan_line.w3_wed
+                w3_thur = plan_line.w3_thur
+                w3_fri = plan_line.w3_fri           
+                w3_sat = plan_line.w3_sat
+                w4_mon = plan_line.w4_mon
+                w4_tue = plan_line.w4_tue
+                w4_wed = plan_line.w4_wed
+                w4_thur = plan_line.w4_thur
+                w4_fri = plan_line.w4_fri           
+                w4_sat = plan_line.w4_sat                                  
+                partner_id = plan_line.partner_id.id
+                if w1_mon == True:
+                   # if w1_mon == True:status = 'Monday' + '(' + sale_team_name + ')'                
                     
-                    for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                        partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                        sale_plan_day_line_obj.create(cr,uid,partner,context=context)
-                        self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context)                        
-                    #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))                    
-                else:                
-                    plan_id = plan_obj.create(cr, uid, {'name': status,
-                                                        'sale_team':sale_team_id,
-                                                        'date':date,
-                                                  'principal': principal,
-                                                  'branch_id':branch,
-                                                  'main_group':main_group,
-                                                  'active':True,
-                                                  'week':1,
-                                                  }, context=context)   
-                    #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
-                    for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                        partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                        sale_plan_day_line_obj.create(cr,uid,partner,context=context)
-                        self.create_sale_team_rel(cr, uid, plan_id, res_id.id, context=context)
+                    if w1_mon == True:status = 'W1 Monday'          
+                    setting_id = plan_obj.search(cr, uid, [('week', '=', 1), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
+                    if setting_id:
+                        #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
+                        cr.execute("select partner_id from sale_plan_day_line where line_id=%s and partner_id=%s",(setting_id[0],partner_id,))
+                        rel_partner_id = cr.fetchone()
+                        if rel_partner_id:
+                            cr.execute("delete from sale_plan_day_line where partner_id=%s and line_id=%s", (rel_partner_id[0], setting_id[0]))
                         
-                    for main_group_id in main_group:
-                        cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                    
-            if w1_tue == True:
-                if w1_tue == True:status = 'W1 Tuesday'                   
-                setting_id = plan_obj.search(cr, uid, [('week', '=', 1), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
-                if setting_id:
-                    #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
-                    cr.execute("select partner_id from sale_plan_day_line where line_id=%s and partner_id=%s",(setting_id[0],partner_id,))
-                    rel_partner_id = cr.fetchone()
-                    if rel_partner_id:
-                        #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))
-                        cr.execute("delete from sale_plan_day_line where partner_id=%s and line_id=%s", (rel_partner_id[0], setting_id[0]))
-                    for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                        partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                        sale_plan_day_line_obj.create(cr,uid,partner,context=context)
-                        self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context)                        
-                    #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
-                else:                
-                    plan_id = plan_obj.create(cr, uid, {'name': status,
-                                                        'sale_team':sale_team_id,
-                                                        'date':date,
-                                                  'principal': principal,
-                                                  'main_group':main_group,
-                                                  'branch_id':branch,
-                                                  'active':True,
-                                                  'week':1,
-                                                  }, context=context)   
-                    #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
-                    for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                        #partner = {'line_id':plan_id,'partner_id': partner_id.id,'outlet_type':partner_id.outlet_type.id,'township':partner_id.township.id,'address':partner_id.street,'delivery_team_id':partner_id.delivery_team_id.id,'branch_id':partner_id.branch_id.id}
-                        partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                        sale_plan_day_line_obj.create(cr,uid,partner,context=context)
-                        self.create_sale_team_rel(cr, uid, plan_id, res_id.id, context=context)
+                        for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
+                            partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context)                        
+                        #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))                    
+                    else:                
+                        plan_id = plan_obj.create(cr, uid, {'name': status,
+                                                            'sale_team':sale_team_id,
+                                                            'date':date,
+                                                      'principal': principal,
+                                                      'branch_id':branch,
+                                                      'main_group':main_group,
+                                                      'active':True,
+                                                      'week':1,
+                                                      }, context=context)   
+                        #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
+                        for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
+                            partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            self.create_sale_team_rel(cr, uid, plan_id, res_id.id, context=context)
+                            
+                        for main_group_id in main_group:
+                            cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                    
+                if w1_tue == True:
+                    if w1_tue == True:status = 'W1 Tuesday'                   
+                    setting_id = plan_obj.search(cr, uid, [('week', '=', 1), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
+                    if setting_id:
+                        #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
+                        cr.execute("select partner_id from sale_plan_day_line where line_id=%s and partner_id=%s",(setting_id[0],partner_id,))
+                        rel_partner_id = cr.fetchone()
+                        if rel_partner_id:
+                            #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))
+                            cr.execute("delete from sale_plan_day_line where partner_id=%s and line_id=%s", (rel_partner_id[0], setting_id[0]))
+                        for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
+                            partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context)                        
+                        #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
+                    else:                
+                        plan_id = plan_obj.create(cr, uid, {'name': status,
+                                                            'sale_team':sale_team_id,
+                                                            'date':date,
+                                                      'principal': principal,
+                                                      'main_group':main_group,
+                                                      'branch_id':branch,
+                                                      'active':True,
+                                                      'week':1,
+                                                      }, context=context)   
+                        #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
+                        for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
+                            #partner = {'line_id':plan_id,'partner_id': partner_id.id,'outlet_type':partner_id.outlet_type.id,'township':partner_id.township.id,'address':partner_id.street,'delivery_team_id':partner_id.delivery_team_id.id,'branch_id':partner_id.branch_id.id}
+                            partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            self.create_sale_team_rel(cr, uid, plan_id, res_id.id, context=context)
+                            
+                        for main_group_id in main_group:
+                            cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                        
+                if w1_wed == True:
+                    if w1_wed == True:status = 'W1 Wednesday'                      
+                    setting_id = plan_obj.search(cr, uid, [('week', '=', 1), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
+                    if setting_id:
+                        #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
+                        cr.execute("select partner_id from sale_plan_day_line where line_id=%s and partner_id=%s",(setting_id[0],partner_id,))
+                        rel_partner_id = cr.fetchone()
+                        if rel_partner_id:
+                            #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))
+                            cr.execute("delete from sale_plan_day_line where partner_id=%s and line_id=%s", (rel_partner_id[0], setting_id[0]))                    
+                        #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
+                        for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
+                            partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context) 
+                    else:                
+                        plan_id = plan_obj.create(cr, uid, {'name': status,
+                                                            'sale_team':sale_team_id,
+                                                            'date':date,
+                                                      'principal': principal,
+                                                      'main_group':main_group,
+                                                      'branch_id':branch,
+                                                      'active':True,
+                                                      'week':1,
+                                                      }, context=context)   
+                        #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
+                        for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
+                            partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            self.create_sale_team_rel(cr, uid, plan_id, res_id.id, context=context)  
+                        for main_group_id in main_group:
+                            cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                        
+                if w1_thur == True:
+                    if w1_thur == True:status = 'W1 Thursday'                 
+                    setting_id = plan_obj.search(cr, uid, [('week', '=', 1), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
+                    if setting_id:
+                        #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
+                        cr.execute("select partner_id from sale_plan_day_line where line_id=%s and partner_id=%s",(setting_id[0],partner_id,))
+                        rel_partner_id = cr.fetchone()
+                        if rel_partner_id:
+                            #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))
+                            cr.execute("delete from sale_plan_day_line where partner_id=%s and line_id=%s", (rel_partner_id[0], setting_id[0]))
                         
-                    for main_group_id in main_group:
-                        cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                        
-            if w1_wed == True:
-                if w1_wed == True:status = 'W1 Wednesday'                      
-                setting_id = plan_obj.search(cr, uid, [('week', '=', 1), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
-                if setting_id:
-                    #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
-                    cr.execute("select partner_id from sale_plan_day_line where line_id=%s and partner_id=%s",(setting_id[0],partner_id,))
-                    rel_partner_id = cr.fetchone()
-                    if rel_partner_id:
-                        #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))
-                        cr.execute("delete from sale_plan_day_line where partner_id=%s and line_id=%s", (rel_partner_id[0], setting_id[0]))                    
-                    #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
-                    for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                        partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                        sale_plan_day_line_obj.create(cr,uid,partner,context=context)
-                        self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context) 
-                else:                
-                    plan_id = plan_obj.create(cr, uid, {'name': status,
-                                                        'sale_team':sale_team_id,
-                                                        'date':date,
-                                                  'principal': principal,
-                                                  'main_group':main_group,
-                                                  'branch_id':branch,
-                                                  'active':True,
-                                                  'week':1,
-                                                  }, context=context)   
-                    #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
-                    for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                        partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                        sale_plan_day_line_obj.create(cr,uid,partner,context=context)
-                        self.create_sale_team_rel(cr, uid, plan_id, res_id.id, context=context)  
-                    for main_group_id in main_group:
-                        cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                        
-            if w1_thur == True:
-                if w1_thur == True:status = 'W1 Thursday'                 
-                setting_id = plan_obj.search(cr, uid, [('week', '=', 1), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
-                if setting_id:
-                    #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
-                    cr.execute("select partner_id from sale_plan_day_line where line_id=%s and partner_id=%s",(setting_id[0],partner_id,))
-                    rel_partner_id = cr.fetchone()
-                    if rel_partner_id:
-                        #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))
-                        cr.execute("delete from sale_plan_day_line where partner_id=%s and line_id=%s", (rel_partner_id[0], setting_id[0]))
-                    
-                    for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                        partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                        sale_plan_day_line_obj.create(cr,uid,partner,context=context)
-                        self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context)                         
-                    #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
-                else:                
-                    plan_id = plan_obj.create(cr, uid, {'name': status,
-                                                        'sale_team':sale_team_id,
-                                                        'date':date,
-                                                  'principal': principal,
-                                                  'main_group':main_group,
-                                                  'branch_id':branch,
-                                                  'active':True,
-                                                  'week':1,
-                                                  }, context=context)
-                    for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                        partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                        sale_plan_day_line_obj.create(cr,uid,partner,context=context)
-                        self.create_sale_team_rel(cr, uid, plan_id, res_id.id, context=context)    
-                    #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
-                    for main_group_id in main_group:
-                        cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                        
-            if w1_fri == True:
-                if w1_fri == True:status = 'W1 Friday'                   
-                setting_id = plan_obj.search(cr, uid, [('week', '=', 1), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
-                if setting_id:
-                    #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
-                    cr.execute("select partner_id from sale_plan_day_line where line_id=%s and partner_id=%s",(setting_id[0],partner_id,))
-                    rel_partner_id = cr.fetchone()
-                    if rel_partner_id:
-                        cr.execute("delete from sale_plan_day_line where partner_id=%s and line_id=%s", (rel_partner_id[0], setting_id[0]))
-                        #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))                    
-                    #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
-                    for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                        partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                        sale_plan_day_line_obj.create(cr,uid,partner,context=context)
-                        self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context) 
-                else:                
-                    plan_id = plan_obj.create(cr, uid, {'name': status,
-                                                        'sale_team':sale_team_id,
-                                                        'date':date,
-                                                  'principal': principal,
-                                                  'main_group':main_group,
-                                                  'branch_id':branch,
-                                                  'active':True,
-                                                  'week':1,
-                                                  }, context=context)   
-                    #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
-                    for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                        partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                        sale_plan_day_line_obj.create(cr,uid,partner,context=context) 
-                        self.create_sale_team_rel(cr, uid, plan_id, res_id.id, context=context)
-                    for main_group_id in main_group:
-                        cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))    
-            if w1_sat == True:
-                if w1_sat == True:status = 'W1 Saturday'              
-                setting_id = plan_obj.search(cr, uid, [('week', '=', 1), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
-                if setting_id:
-                    #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
-                    cr.execute("select partner_id from sale_plan_day_line where line_id=%s and partner_id=%s",(setting_id[0],partner_id,))
-                    rel_partner_id = cr.fetchone()
-                    if rel_partner_id:
-                        #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))
-                        cr.execute("delete from sale_plan_day_line where partner_id=%s and line_id=%s", (rel_partner_id[0], setting_id[0]))                    
-                    #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
-                    for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                        partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                        sale_plan_day_line_obj.create(cr,uid,partner,context=context)
-                        self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context) 
-                else:                
-                    plan_id = plan_obj.create(cr, uid, {'name': status,
-                                                        'sale_team':sale_team_id,
-                                                        'date':date,
-                                                  'principal': principal,
-                                                  'main_group':main_group,
-                                                  'branch_id':branch,
-                                                  'active':True,
-                                                  'week':1,
-                                                  }, context=context)   
-                    #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
-                    for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                        partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                        sale_plan_day_line_obj.create(cr,uid,partner,context=context)
-                        self.create_sale_team_rel(cr, uid, plan_id, res_id.id, context=context)     
-                    for main_group_id in main_group:
-                        cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                                                           
-# Week2
-            if w2_mon == True:
-                if w2_mon == True:status = 'W2 Monday'            
-                setting_id = plan_obj.search(cr, uid, [('week', '=', 2), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
-                if setting_id:
-                    #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
-                    cr.execute("select partner_id from sale_plan_day_line where line_id=%s and partner_id=%s",(setting_id[0],partner_id,))
-                    rel_partner_id = cr.fetchone()
-                    if rel_partner_id:
-                        cr.execute("delete from sale_plan_day_line where partner_id=%s and line_id=%s", (rel_partner_id[0], setting_id[0]))
-                        #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))                    
-                    #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
-                    for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                        #partner = {'line_id':setting_id[0],'partner_id': partner_id.id,'outlet_type':partner_id.outlet_type.id,'township':partner_id.township.id,'address':partner_id.street,'delivery_team_id':partner_id.delivery_team_id.id,'branch_id':partner_id.branch_id.id}
-                        partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                        sale_plan_day_line_obj.create(cr,uid,partner,context=context)
-                        self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context)
-                else:                
-                    plan_id = plan_obj.create(cr, uid, {'name': status,
-                                                        'sale_team':sale_team_id,
-                                                        'date':date,
-                                                  'principal': principal,
-                                                  'main_group':main_group,
-                                                  'branch_id':branch,
-                                                  'active':True,
-                                                  'week':2,
-                                                  }, context=context)
-                    for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                        partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                        sale_plan_day_line_obj.create(cr,uid,partner,context=context) 
-                        self.create_sale_team_rel(cr, uid, plan_id, res_id.id, context=context)  
-                    #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
-                    for main_group_id in main_group:
-                        cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                                            
-            if w2_tue == True:
-                if w2_tue == True:status = 'W2 Tuesday'                     
-                setting_id = plan_obj.search(cr, uid, [('week', '=', 2), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
-                if setting_id:
-                    #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
-                    cr.execute("select partner_id from sale_plan_day_line where line_id=%s and partner_id=%s",(setting_id[0],partner_id,))
-                    rel_partner_id = cr.fetchone()
-                    if rel_partner_id:
-                        cr.execute("delete from sale_plan_day_line where partner_id=%s and line_id=%s", (rel_partner_id[0], setting_id[0]))
-                        #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))                    
-                    #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
-                    for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                        partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                        sale_plan_day_line_obj.create(cr,uid,partner,context=context)
-                        self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context) 
-                else:                
-                    plan_id = plan_obj.create(cr, uid, {'name': status,
-                                                        'sale_team':sale_team_id,
-                                                        'date':date,
-                                                 'principal': principal,
-                                                  'main_group':main_group,
-                                                  'branch_id':branch,
-                                                  'active':True,
-                                                  'week':2,
-                                                  }, context=context)   
-                    #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
-                    for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                        partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                        sale_plan_day_line_obj.create(cr,uid,partner,context=context)
-                        self.create_sale_team_rel(cr, uid, plan_id, res_id.id, context=context) 
-                    for main_group_id in main_group:
-                        cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                       
-            if w2_wed == True:
-                if w2_wed == True:status = 'W2 Wednesday'                     
-                setting_id = plan_obj.search(cr, uid, [('week', '=', 2), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
-                if setting_id:
-                    #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
-                    cr.execute("select partner_id from sale_plan_day_line where line_id=%s and partner_id=%s",(setting_id[0],partner_id,))
-                    rel_partner_id = cr.fetchone()
-                    if rel_partner_id:
-                        #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))
-                        cr.execute("delete from sale_plan_day_line where partner_id=%s and line_id=%s", (rel_partner_id[0], setting_id[0]))                    
-                    #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
-                    for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                        partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                        sale_plan_day_line_obj.create(cr,uid,partner,context=context)
-                        self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context) 
-                else:                
-                    plan_id = plan_obj.create(cr, uid, {'name': status,
-                                                        'sale_team':sale_team_id,
-                                                        'date':date,
-                                                  'principal': principal,
-                                                  'main_group':main_group,
-                                                  'branch_id':branch,
-                                                  'active':True,
-                                                  'week':2,
-                                                  }, context=context)
-                    for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                        partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                        sale_plan_day_line_obj.create(cr,uid,partner,context=context)
-                        self.create_sale_team_rel(cr, uid, plan_id, res_id.id, context=context)    
-                    #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,)) 
-                    for main_group_id in main_group:
-                        cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                        
-            if w2_thur == True:
-                if w2_thur == True:status = 'W2 Thursday'                        
-                setting_id = plan_obj.search(cr, uid, [('week', '=', 2), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
-                if setting_id:
-                    #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
-                    cr.execute("select partner_id from sale_plan_day_line where line_id=%s and partner_id=%s",(setting_id[0],partner_id,))
-                    rel_partner_id = cr.fetchone()
-                    if rel_partner_id:
-                        #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))
-                        cr.execute("delete from sale_plan_day_line where partner_id=%s and line_id=%s", (rel_partner_id[0], setting_id[0]))                    
-                    #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
-                    for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                        partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                        sale_plan_day_line_obj.create(cr,uid,partner,context=context)
-                        self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context) 
-                else:                
-                    plan_id = plan_obj.create(cr, uid, {'name': status,
-                                                        'sale_team':sale_team_id,
-                                                        'date':date,
-                                                 'principal': principal,
-                                                  'main_group':main_group,
-                                                  'branch_id':branch,
-                                                  'active':True,
-                                                  'week':2,
-                                                  }, context=context)
-                    for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                        partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                        sale_plan_day_line_obj.create(cr,uid,partner,context=context)
-                        self.create_sale_team_rel(cr, uid, plan_id, res_id.id, context=context)    
-                    #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
-                    for main_group_id in main_group:
-                        cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                        
-            if w2_fri == True:
-                if w2_fri == True:status = 'W2 Friday'              
-                setting_id = plan_obj.search(cr, uid, [('week', '=', 2), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
-                if setting_id:
-                    #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
-                    cr.execute("select partner_id from sale_plan_day_line where line_id=%s and partner_id=%s",(setting_id[0],partner_id,))
-                    rel_partner_id = cr.fetchone()
-                    if rel_partner_id:
-                        #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))
-                        cr.execute("delete from sale_plan_day_line where partner_id=%s and line_id=%s", (rel_partner_id[0], setting_id[0]))                    
-                    #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
-                    for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                        partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                        sale_plan_day_line_obj.create(cr,uid,partner,context=context)
-                        self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context)
-                else:                
-                    plan_id = plan_obj.create(cr, uid, {'name': status,
-                                                        'sale_team':sale_team_id,
-                                                        'date':date,
-                                                'principal': principal,
-                                                  'main_group':main_group,
-                                                  'branch_id':branch,
-                                                  'active':True,
-                                                  'week':2,
-                                                  }, context=context)
-                    for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                        partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                        sale_plan_day_line_obj.create(cr,uid,partner,context=context) 
-                        self.create_sale_team_rel(cr, uid, plan_id, res_id.id, context=context)  
-                    #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
-                    for main_group_id in main_group:
-                        cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                        
-
-            if w2_sat == True:
-                if w2_sat == True:status = 'W2 Saturday'    
-                setting_id = plan_obj.search(cr, uid, [('week', '=', 2), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
-                if setting_id:
-                    #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
-                    cr.execute("select partner_id from sale_plan_day_line where line_id=%s and partner_id=%s",(setting_id[0],partner_id,))
-                    rel_partner_id = cr.fetchone()
-                    if rel_partner_id:
-                        cr.execute("delete from sale_plan_day_line where partner_id=%s and line_id=%s", (rel_partner_id[0], setting_id[0]))
-                        #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))                    
-                    #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
-                    for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                        partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                        sale_plan_day_line_obj.create(cr,uid,partner,context=context)
-                        self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context)
-                else:                
-                    plan_id = plan_obj.create(cr, uid, {'name': status,
-                                                        'sale_team':sale_team_id,
-                                                        'date':date,
-                                                  'principal': principal,
-                                                  'main_group':main_group,
-                                                  'branch_id':branch,
-                                                  'active':True,
-                                                  'week':2,
-                                                  }, context=context)   
-                    #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
-                    for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                        partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                        sale_plan_day_line_obj.create(cr,uid,partner,context=context) 
-                        self.create_sale_team_rel(cr, uid, plan_id, res_id.id, context=context)
-                                   
-                    for main_group_id in main_group:
-                        cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,)) 
-                        
-#week3 
-            if w3_mon == True:
-                if w3_mon == True:status = 'W3 Monday'      
-                setting_id = plan_obj.search(cr, uid, [('week', '=', 3), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
-                if setting_id:
-                    #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
-                    cr.execute("select partner_id from sale_plan_day_line where line_id=%s and partner_id=%s",(setting_id[0],partner_id,))
-                    rel_partner_id = cr.fetchone()
-                    if rel_partner_id:
-                        cr.execute("delete from sale_plan_day_line where partner_id=%s and line_id=%s", (rel_partner_id[0], setting_id[0]))
-                        #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))                    
-                    #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
-                    for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                        partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                        sale_plan_day_line_obj.create(cr,uid,partner,context=context)
-                        self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context) 
-                else:                
-                    plan_id = plan_obj.create(cr, uid, {'name': status,
-                                                        'sale_team':sale_team_id,
-                                                        'date':date,
-                                                  'principal': principal,
-                                                  'main_group':main_group,
-                                                  'branch_id':branch,
-                                                  'active':True,
-                                                  'week':3,
-                                                  }, context=context)
-                    for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                        partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                        sale_plan_day_line_obj.create(cr,uid,partner,context=context)
-                        self.create_sale_team_rel(cr, uid, plan_id, res_id.id, context=context)    
-                    #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
-                    for main_group_id in main_group:
-                        cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                                            
-            if w3_tue == True:
-                if w3_tue == True:status = 'W3 Tuesday'       
-                setting_id = plan_obj.search(cr, uid, [('week', '=', 3), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
-                if setting_id:
-                    #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
-                    cr.execute("select partner_id from sale_plan_day_line where line_id=%s and partner_id=%s",(setting_id[0],partner_id,))
-                    rel_partner_id = cr.fetchone()
-                    if rel_partner_id:
-                        #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))
-                        cr.execute("delete from sale_plan_day_line where partner_id=%s and line_id=%s", (rel_partner_id[0], setting_id[0]))
-                    
-                    for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                        partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                        sale_plan_day_line_obj.create(cr,uid,partner,context=context)
-                        self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context)                         
-                    #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
-                else:                
-                    plan_id = plan_obj.create(cr, uid, {'name': status,
-                                                        'sale_team':sale_team_id,
-                                                        'date':date,
-                                                 'principal': principal,
-                                                  'main_group':main_group,
-                                                  'branch_id':branch,
-                                                  'active':True,
-                                                  'week':3,
-                                                  }, context=context)
-                    for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                        partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                        sale_plan_day_line_obj.create(cr,uid,partner,context=context) 
-                        self.create_sale_team_rel(cr, uid, plan_id, res_id.id, context=context)   
-                    #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
-                    for main_group_id in main_group:
-                        cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                       
-            if w3_wed == True:
-                if w3_wed == True:status = 'W3 Wednesday'                        
-                setting_id = plan_obj.search(cr, uid, [('week', '=', 3), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
-                if setting_id:
-                    #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
-                    cr.execute("select partner_id from sale_plan_day_line where line_id=%s and partner_id=%s",(setting_id[0],partner_id,))
-                    rel_partner_id = cr.fetchone()
-                    if rel_partner_id:
-                        #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))
-                        cr.execute("delete from sale_plan_day_line where partner_id=%s and line_id=%s", (rel_partner_id[0], setting_id[0]))                    
-                    #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
-                    for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                        partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                        sale_plan_day_line_obj.create(cr,uid,partner,context=context) 
-                        self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context)
-                else:                
-                    plan_id = plan_obj.create(cr, uid, {'name': status,
-                                                        'sale_team':sale_team_id,
-                                                        'date':date,
-                                                  'principal': principal,
-                                                  'main_group':main_group,
-                                                  'branch_id':branch,
-                                                  'active':True,
-                                                  'week':3,
-                                                  }, context=context)
-                    for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                        partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                        sale_plan_day_line_obj.create(cr,uid,partner,context=context) 
-                        self.create_sale_team_rel(cr, uid, plan_id, res_id.id, context=context)   
-                    #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,)) 
-                    for main_group_id in main_group:
-                        cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                        
-            if w3_thur == True:
-                if w3_thur == True:status = 'W3 Thursday'                  
-                setting_id = plan_obj.search(cr, uid, [('week', '=', 3), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
-                if setting_id:
-                    #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
-                    cr.execute("select partner_id from sale_plan_day_line where line_id=%s and partner_id=%s",(setting_id[0],partner_id,))
-                    rel_partner_id = cr.fetchone()
-                    if rel_partner_id:
-                        #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))
-                        cr.execute("delete from sale_plan_day_line where partner_id=%s and line_id=%s", (rel_partner_id[0], setting_id[0]))                    
-                    #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
-                    for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                        partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                        sale_plan_day_line_obj.create(cr,uid,partner,context=context)
-                        self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context) 
-                else:                
-                    plan_id = plan_obj.create(cr, uid, {'name': status,
-                                                        'sale_team':sale_team_id,
-                                                        'date':date,
-                                                 'principal': principal,
-                                                  'main_group':main_group,
-                                                  'branch_id':branch,
-                                                  'active':True,
-                                                  'week':3,
-                                                  }, context=context)   
-                    #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
-                    for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                        partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                        sale_plan_day_line_obj.create(cr,uid,partner,context=context) 
-                        self.create_sale_team_rel(cr, uid, plan_id, res_id.id, context=context)
-                        
-                    for main_group_id in main_group:
-                        cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                        
-            if w3_fri == True:
-                if w3_fri == True:status = 'W3 Friday'         
-                setting_id = plan_obj.search(cr, uid, [('week', '=', 3), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
-                if setting_id:
-                    #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
-                    cr.execute("select partner_id from sale_plan_day_line where line_id=%s and partner_id=%s",(setting_id[0],partner_id,))
-                    rel_partner_id = cr.fetchone()
-                    if rel_partner_id:
-                        #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))
-                        cr.execute("delete from sale_plan_day_line where partner_id=%s and line_id=%s", (rel_partner_id[0], setting_id[0]))                    
-                    #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
-                    for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                        partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                        sale_plan_day_line_obj.create(cr,uid,partner,context=context)
-                        self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context) 
-                else:                
-                    plan_id = plan_obj.create(cr, uid, {'name': status,
-                                                        'sale_team':sale_team_id,
-                                                        'date':date,
-                                                'principal': principal,
-                                                  'main_group':main_group,
-                                                  'branch_id':branch,
-                                                  'active':True,
-                                                  'week':3,
-                                                  }, context=context)   
-                    #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
-                    for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                        partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                        sale_plan_day_line_obj.create(cr,uid,partner,context=context)
-                        self.create_sale_team_rel(cr, uid, plan_id, res_id.id, context=context)
-                         
-                    for main_group_id in main_group:
-                        cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                        
-
-            if w3_sat == True:
-                if w3_sat == True:status = 'W3 Saturday'                     
-                setting_id = plan_obj.search(cr, uid, [('week', '=', 3), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
-                if setting_id:
-                    #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
-                    cr.execute("select partner_id from sale_plan_day_line where line_id=%s and partner_id=%s",(setting_id[0],partner_id,))
-                    rel_partner_id = cr.fetchone()
-                    if rel_partner_id:
-                        #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))
-                        cr.execute("delete from sale_plan_day_line where partner_id=%s and line_id=%s", (rel_partner_id[0], setting_id[0]))                    
-                    #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
-                    for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                        partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                        sale_plan_day_line_obj.create(cr,uid,partner,context=context)
-                        self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context)
-                         
-                else:                
-                    plan_id = plan_obj.create(cr, uid, {'name': status,
-                                                        'sale_team':sale_team_id,
-                                                        'date':date,
-                                                  'principal': principal,
-                                                  'main_group':main_group,
-                                                  'branch_id':branch,
-                                                  'active':True,
-                                                  'week':3,
-                                                  }, context=context)   
-                    #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
-                    for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                        partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                        sale_plan_day_line_obj.create(cr,uid,partner,context=context)
-                        self.create_sale_team_rel(cr, uid, plan_id, res_id.id, context=context)             
-                    for main_group_id in main_group:
-                        cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,)) 
-#Week4
-            if w4_mon == True:
-                if w4_mon == True:status = 'W4 Monday' 
-                setting_id = plan_obj.search(cr, uid, [('week', '=', 4), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
-                if setting_id:
-                    #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
-                    cr.execute("select partner_id from sale_plan_day_line where line_id=%s and partner_id=%s",(setting_id[0],partner_id,))
-                    rel_partner_id = cr.fetchone()
-                    if rel_partner_id:
-                        #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))
-                        cr.execute("delete from sale_plan_day_line where partner_id=%s and line_id=%s", (rel_partner_id[0], setting_id[0]))                    
-                    #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
-                    for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                        partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                        sale_plan_day_line_obj.create(cr,uid,partner,context=context)
-                        self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context) 
-                else:                
-                    plan_id = plan_obj.create(cr, uid, {'name': status,
-                                                        'sale_team':sale_team_id,
-                                                        'date':date,
-                                                  'principal': principal,
-                                                  'main_group':main_group,
-                                                  'branch_id':branch,
-                                                  'active':True,
-                                                  'week':4,
-                                                  }, context=context)   
-                    #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
-                    for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                        partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                        sale_plan_day_line_obj.create(cr,uid,partner,context=context)
-                        self.create_sale_team_rel(cr, uid, plan_id, res_id.id, context=context)
-                         
-                    for main_group_id in main_group:
-                        cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                                            
-            if w4_tue == True:
-                if w4_tue == True:status = 'W4 Tuesday'              
-                setting_id = plan_obj.search(cr, uid, [('week', '=', 4), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
-                if setting_id:
-                    #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
-                    cr.execute("select partner_id from sale_plan_day_line where line_id=%s and partner_id=%s",(setting_id[0],partner_id,))
-                    rel_partner_id = cr.fetchone()
-                    if rel_partner_id:
-                        #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))
-                        cr.execute("delete from sale_plan_day_line where partner_id=%s and line_id=%s", (rel_partner_id[0], setting_id[0]))                    
-                    #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
-                    for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                        partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                        sale_plan_day_line_obj.create(cr,uid,partner,context=context) 
-                        self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context)
-                else:                
-                    plan_id = plan_obj.create(cr, uid, {'name': status,
-                                                        'sale_team':sale_team_id,
-                                                        'date':date,
-                                                 'principal': principal,
-                                                  'main_group':main_group,
-                                                  'branch_id':branch,
-                                                  'active':True,
-                                                  'week':4,
-                                                  }, context=context)
-                    for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                        partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                        sale_plan_day_line_obj.create(cr,uid,partner,context=context)
-                        self.create_sale_team_rel(cr, uid, plan_id, res_id.id, context=context)    
-                    #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
-                    for main_group_id in main_group:
-                        cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                       
-            if w4_wed == True:
-                if w4_wed == True:status = 'W4 Wednesday'                      
-                setting_id = plan_obj.search(cr, uid, [('week', '=', 4), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
-                if setting_id:
-                    #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
-                    cr.execute("select partner_id from sale_plan_day_line where line_id=%s and partner_id=%s",(setting_id[0],partner_id,))
-                    rel_partner_id = cr.fetchone()
-                    if rel_partner_id:
-                        #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))
-                        cr.execute("delete from sale_plan_day_line where partner_id=%s and line_id=%s", (rel_partner_id[0], setting_id[0]))                    
-                    #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
-                    for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                        partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                        sale_plan_day_line_obj.create(cr,uid,partner,context=context)
-                        self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context) 
-                else:                
-                    plan_id = plan_obj.create(cr, uid, {'name': status,
-                                                        'sale_team':sale_team_id,
-                                                        'date':date,
-                                                  'principal': principal,
-                                                  'main_group':main_group,
-                                                  'branch_id':branch,
-                                                  'active':True,
-                                                  'week':4,
-                                                  }, context=context)
-                    for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                        partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                        sale_plan_day_line_obj.create(cr,uid,partner,context=context)
-                        self.create_sale_team_rel(cr, uid, plan_id, res_id.id, context=context)    
-                    #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,)) 
-                    for main_group_id in main_group:
-                        cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                        
-            if w4_thur == True:
-                if w4_thur == True:status = 'W4 Thursday'                        
-                setting_id = plan_obj.search(cr, uid, [('week', '=', 4), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
-                if setting_id:
-                    #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
-                    cr.execute("select partner_id from sale_plan_day_line where line_id=%s and partner_id=%s",(setting_id[0],partner_id,))
-                    rel_partner_id = cr.fetchone()
-                    if rel_partner_id:
-                        #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))
-                        cr.execute("delete from sale_plan_day_line where partner_id=%s and line_id=%s", (rel_partner_id[0], setting_id[0]))                    
-                    #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
-                    for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                        partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                        sale_plan_day_line_obj.create(cr,uid,partner,context=context)
-                        self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context) 
-                else:                
-                    plan_id = plan_obj.create(cr, uid, {'name': status,
-                                                        'sale_team':sale_team_id,
-                                                        'date':date,
-                                                 'principal': principal,
-                                                  'main_group':main_group,
-                                                  'branch_id':branch,
-                                                  'active':True,
-                                                  'week':4,
-                                                  }, context=context)
-                    for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                        partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                        sale_plan_day_line_obj.create(cr,uid,partner,context=context)
-                        self.create_sale_team_rel(cr, uid, plan_id, res_id.id, context=context)    
-                    #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
-                    for main_group_id in main_group:
-                        cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                        
-            if w4_fri == True:
-                if w4_fri == True:status = 'W4 Friday'                     
-                setting_id = plan_obj.search(cr, uid, [('week', '=', 4), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
-                if setting_id:
-                    #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
-                    cr.execute("select partner_id from sale_plan_day_line where line_id=%s and partner_id=%s",(setting_id[0],partner_id,))
-                    rel_partner_id = cr.fetchone()
-                    if rel_partner_id:
-                        #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))
-                        cr.execute("delete from sale_plan_day_line where partner_id=%s and line_id=%s", (rel_partner_id[0], setting_id[0]))                    
-                    #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
-                    for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                        partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                        sale_plan_day_line_obj.create(cr,uid,partner,context=context)
-                        self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context) 
-                else:                
-                    plan_id = plan_obj.create(cr, uid, {'name': status,
-                                                        'sale_team':sale_team_id,
-                                                        'date':date,
-                                                'principal': principal,
-                                                  'main_group':main_group,
-                                                  'branch_id':branch,
-                                                  'active':True,
-                                                  'week':4,
-                                                  }, context=context) 
-                    for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                        partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                        sale_plan_day_line_obj.create(cr,uid,partner,context=context)
-                        self.create_sale_team_rel(cr, uid, plan_id, res_id.id, context=context)   
-                    #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
-                    for main_group_id in main_group:
-                        cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                        
-
-            if w4_sat == True:
-                if w4_sat == True:status = 'W4 Saturday'                     
-                setting_id = plan_obj.search(cr, uid, [('week', '=', 4), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
-                if setting_id:
-                    #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
-                    cr.execute("select partner_id from sale_plan_day_line where line_id=%s and partner_id=%s",(setting_id[0],partner_id,))
-                    rel_partner_id = cr.fetchone()
-                    if rel_partner_id:
-                        cr.execute("delete from sale_plan_day_line where partner_id=%s and line_id=%s", (rel_partner_id[0], setting_id[0]))
-                        #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))                    
-                    #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
-                    for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                        partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                        sale_plan_day_line_obj.create(cr,uid,partner,context=context)
-                        self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context) 
-                else:                
-                    plan_id = plan_obj.create(cr, uid, {'name': status,
-                                                        'sale_team':sale_team_id,
-                                                        'date':date,
-                                                  'principal': principal,
-                                                  'main_group':main_group,
-                                                  'branch_id':branch,
-                                                  'active':True,
-                                                  'week':4,
-                                                  }, context=context)
-                    for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                        partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                        sale_plan_day_line_obj.create(cr,uid,partner,context=context)
-                        self.create_sale_team_rel(cr, uid, plan_id, res_id.id, context=context)    
-                    #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))            
-                    for main_group_id in main_group:
-                        cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                                                                                                  
-        return self.write(cr, uid, ids, {'state': 'confirm' })      
+                        for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
+                            partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context)                         
+                        #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
+                    else:                
+                        plan_id = plan_obj.create(cr, uid, {'name': status,
+                                                            'sale_team':sale_team_id,
+                                                            'date':date,
+                                                      'principal': principal,
+                                                      'main_group':main_group,
+                                                      'branch_id':branch,
+                                                      'active':True,
+                                                      'week':1,
+                                                      }, context=context)
+                        for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
+                            partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            self.create_sale_team_rel(cr, uid, plan_id, res_id.id, context=context)    
+                        #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
+                        for main_group_id in main_group:
+                            cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                        
+                if w1_fri == True:
+                    if w1_fri == True:status = 'W1 Friday'                   
+                    setting_id = plan_obj.search(cr, uid, [('week', '=', 1), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
+                    if setting_id:
+                        #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
+                        cr.execute("select partner_id from sale_plan_day_line where line_id=%s and partner_id=%s",(setting_id[0],partner_id,))
+                        rel_partner_id = cr.fetchone()
+                        if rel_partner_id:
+                            cr.execute("delete from sale_plan_day_line where partner_id=%s and line_id=%s", (rel_partner_id[0], setting_id[0]))
+                            #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))                    
+                        #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
+                        for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
+                            partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context) 
+                    else:                
+                        plan_id = plan_obj.create(cr, uid, {'name': status,
+                                                            'sale_team':sale_team_id,
+                                                            'date':date,
+                                                      'principal': principal,
+                                                      'main_group':main_group,
+                                                      'branch_id':branch,
+                                                      'active':True,
+                                                      'week':1,
+                                                      }, context=context)   
+                        #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
+                        for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
+                            partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context) 
+                            self.create_sale_team_rel(cr, uid, plan_id, res_id.id, context=context)
+                        for main_group_id in main_group:
+                            cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))    
+                if w1_sat == True:
+                    if w1_sat == True:status = 'W1 Saturday'              
+                    setting_id = plan_obj.search(cr, uid, [('week', '=', 1), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
+                    if setting_id:
+                        #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
+                        cr.execute("select partner_id from sale_plan_day_line where line_id=%s and partner_id=%s",(setting_id[0],partner_id,))
+                        rel_partner_id = cr.fetchone()
+                        if rel_partner_id:
+                            #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))
+                            cr.execute("delete from sale_plan_day_line where partner_id=%s and line_id=%s", (rel_partner_id[0], setting_id[0]))                    
+                        #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
+                        for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
+                            partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context) 
+                    else:                
+                        plan_id = plan_obj.create(cr, uid, {'name': status,
+                                                            'sale_team':sale_team_id,
+                                                            'date':date,
+                                                      'principal': principal,
+                                                      'main_group':main_group,
+                                                      'branch_id':branch,
+                                                      'active':True,
+                                                      'week':1,
+                                                      }, context=context)   
+                        #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
+                        for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
+                            partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            self.create_sale_team_rel(cr, uid, plan_id, res_id.id, context=context)     
+                        for main_group_id in main_group:
+                            cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                                                           
+    # Week2
+                if w2_mon == True:
+                    if w2_mon == True:status = 'W2 Monday'            
+                    setting_id = plan_obj.search(cr, uid, [('week', '=', 2), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
+                    if setting_id:
+                        #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
+                        cr.execute("select partner_id from sale_plan_day_line where line_id=%s and partner_id=%s",(setting_id[0],partner_id,))
+                        rel_partner_id = cr.fetchone()
+                        if rel_partner_id:
+                            cr.execute("delete from sale_plan_day_line where partner_id=%s and line_id=%s", (rel_partner_id[0], setting_id[0]))
+                            #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))                    
+                        #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
+                        for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
+                            #partner = {'line_id':setting_id[0],'partner_id': partner_id.id,'outlet_type':partner_id.outlet_type.id,'township':partner_id.township.id,'address':partner_id.street,'delivery_team_id':partner_id.delivery_team_id.id,'branch_id':partner_id.branch_id.id}
+                            partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context)
+                    else:                
+                        plan_id = plan_obj.create(cr, uid, {'name': status,
+                                                            'sale_team':sale_team_id,
+                                                            'date':date,
+                                                      'principal': principal,
+                                                      'main_group':main_group,
+                                                      'branch_id':branch,
+                                                      'active':True,
+                                                      'week':2,
+                                                      }, context=context)
+                        for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
+                            partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context) 
+                            self.create_sale_team_rel(cr, uid, plan_id, res_id.id, context=context)  
+                        #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
+                        for main_group_id in main_group:
+                            cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                                            
+                if w2_tue == True:
+                    if w2_tue == True:status = 'W2 Tuesday'                     
+                    setting_id = plan_obj.search(cr, uid, [('week', '=', 2), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
+                    if setting_id:
+                        #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
+                        cr.execute("select partner_id from sale_plan_day_line where line_id=%s and partner_id=%s",(setting_id[0],partner_id,))
+                        rel_partner_id = cr.fetchone()
+                        if rel_partner_id:
+                            cr.execute("delete from sale_plan_day_line where partner_id=%s and line_id=%s", (rel_partner_id[0], setting_id[0]))
+                            #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))                    
+                        #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
+                        for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
+                            partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context) 
+                    else:                
+                        plan_id = plan_obj.create(cr, uid, {'name': status,
+                                                            'sale_team':sale_team_id,
+                                                            'date':date,
+                                                     'principal': principal,
+                                                      'main_group':main_group,
+                                                      'branch_id':branch,
+                                                      'active':True,
+                                                      'week':2,
+                                                      }, context=context)   
+                        #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
+                        for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
+                            partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            self.create_sale_team_rel(cr, uid, plan_id, res_id.id, context=context) 
+                        for main_group_id in main_group:
+                            cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                       
+                if w2_wed == True:
+                    if w2_wed == True:status = 'W2 Wednesday'                     
+                    setting_id = plan_obj.search(cr, uid, [('week', '=', 2), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
+                    if setting_id:
+                        #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
+                        cr.execute("select partner_id from sale_plan_day_line where line_id=%s and partner_id=%s",(setting_id[0],partner_id,))
+                        rel_partner_id = cr.fetchone()
+                        if rel_partner_id:
+                            #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))
+                            cr.execute("delete from sale_plan_day_line where partner_id=%s and line_id=%s", (rel_partner_id[0], setting_id[0]))                    
+                        #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
+                        for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
+                            partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context) 
+                    else:                
+                        plan_id = plan_obj.create(cr, uid, {'name': status,
+                                                            'sale_team':sale_team_id,
+                                                            'date':date,
+                                                      'principal': principal,
+                                                      'main_group':main_group,
+                                                      'branch_id':branch,
+                                                      'active':True,
+                                                      'week':2,
+                                                      }, context=context)
+                        for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
+                            partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            self.create_sale_team_rel(cr, uid, plan_id, res_id.id, context=context)    
+                        #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,)) 
+                        for main_group_id in main_group:
+                            cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                        
+                if w2_thur == True:
+                    if w2_thur == True:status = 'W2 Thursday'                        
+                    setting_id = plan_obj.search(cr, uid, [('week', '=', 2), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
+                    if setting_id:
+                        #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
+                        cr.execute("select partner_id from sale_plan_day_line where line_id=%s and partner_id=%s",(setting_id[0],partner_id,))
+                        rel_partner_id = cr.fetchone()
+                        if rel_partner_id:
+                            #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))
+                            cr.execute("delete from sale_plan_day_line where partner_id=%s and line_id=%s", (rel_partner_id[0], setting_id[0]))                    
+                        #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
+                        for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
+                            partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context) 
+                    else:                
+                        plan_id = plan_obj.create(cr, uid, {'name': status,
+                                                            'sale_team':sale_team_id,
+                                                            'date':date,
+                                                     'principal': principal,
+                                                      'main_group':main_group,
+                                                      'branch_id':branch,
+                                                      'active':True,
+                                                      'week':2,
+                                                      }, context=context)
+                        for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
+                            partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            self.create_sale_team_rel(cr, uid, plan_id, res_id.id, context=context)    
+                        #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
+                        for main_group_id in main_group:
+                            cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                        
+                if w2_fri == True:
+                    if w2_fri == True:status = 'W2 Friday'              
+                    setting_id = plan_obj.search(cr, uid, [('week', '=', 2), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
+                    if setting_id:
+                        #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
+                        cr.execute("select partner_id from sale_plan_day_line where line_id=%s and partner_id=%s",(setting_id[0],partner_id,))
+                        rel_partner_id = cr.fetchone()
+                        if rel_partner_id:
+                            #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))
+                            cr.execute("delete from sale_plan_day_line where partner_id=%s and line_id=%s", (rel_partner_id[0], setting_id[0]))                    
+                        #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
+                        for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
+                            partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context)
+                    else:                
+                        plan_id = plan_obj.create(cr, uid, {'name': status,
+                                                            'sale_team':sale_team_id,
+                                                            'date':date,
+                                                    'principal': principal,
+                                                      'main_group':main_group,
+                                                      'branch_id':branch,
+                                                      'active':True,
+                                                      'week':2,
+                                                      }, context=context)
+                        for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
+                            partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context) 
+                            self.create_sale_team_rel(cr, uid, plan_id, res_id.id, context=context)  
+                        #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
+                        for main_group_id in main_group:
+                            cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                        
     
+                if w2_sat == True:
+                    if w2_sat == True:status = 'W2 Saturday'    
+                    setting_id = plan_obj.search(cr, uid, [('week', '=', 2), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
+                    if setting_id:
+                        #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
+                        cr.execute("select partner_id from sale_plan_day_line where line_id=%s and partner_id=%s",(setting_id[0],partner_id,))
+                        rel_partner_id = cr.fetchone()
+                        if rel_partner_id:
+                            cr.execute("delete from sale_plan_day_line where partner_id=%s and line_id=%s", (rel_partner_id[0], setting_id[0]))
+                            #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))                    
+                        #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
+                        for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
+                            partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context)
+                    else:                
+                        plan_id = plan_obj.create(cr, uid, {'name': status,
+                                                            'sale_team':sale_team_id,
+                                                            'date':date,
+                                                      'principal': principal,
+                                                      'main_group':main_group,
+                                                      'branch_id':branch,
+                                                      'active':True,
+                                                      'week':2,
+                                                      }, context=context)   
+                        #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
+                        for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
+                            partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context) 
+                            self.create_sale_team_rel(cr, uid, plan_id, res_id.id, context=context)
+                                       
+                        for main_group_id in main_group:
+                            cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,)) 
+                            
+    #week3 
+                if w3_mon == True:
+                    if w3_mon == True:status = 'W3 Monday'      
+                    setting_id = plan_obj.search(cr, uid, [('week', '=', 3), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
+                    if setting_id:
+                        #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
+                        cr.execute("select partner_id from sale_plan_day_line where line_id=%s and partner_id=%s",(setting_id[0],partner_id,))
+                        rel_partner_id = cr.fetchone()
+                        if rel_partner_id:
+                            cr.execute("delete from sale_plan_day_line where partner_id=%s and line_id=%s", (rel_partner_id[0], setting_id[0]))
+                            #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))                    
+                        #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
+                        for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
+                            partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context) 
+                    else:                
+                        plan_id = plan_obj.create(cr, uid, {'name': status,
+                                                            'sale_team':sale_team_id,
+                                                            'date':date,
+                                                      'principal': principal,
+                                                      'main_group':main_group,
+                                                      'branch_id':branch,
+                                                      'active':True,
+                                                      'week':3,
+                                                      }, context=context)
+                        for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
+                            partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            self.create_sale_team_rel(cr, uid, plan_id, res_id.id, context=context)    
+                        #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
+                        for main_group_id in main_group:
+                            cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                                            
+                if w3_tue == True:
+                    if w3_tue == True:status = 'W3 Tuesday'       
+                    setting_id = plan_obj.search(cr, uid, [('week', '=', 3), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
+                    if setting_id:
+                        #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
+                        cr.execute("select partner_id from sale_plan_day_line where line_id=%s and partner_id=%s",(setting_id[0],partner_id,))
+                        rel_partner_id = cr.fetchone()
+                        if rel_partner_id:
+                            #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))
+                            cr.execute("delete from sale_plan_day_line where partner_id=%s and line_id=%s", (rel_partner_id[0], setting_id[0]))
+                        
+                        for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
+                            partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context)                         
+                        #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
+                    else:                
+                        plan_id = plan_obj.create(cr, uid, {'name': status,
+                                                            'sale_team':sale_team_id,
+                                                            'date':date,
+                                                     'principal': principal,
+                                                      'main_group':main_group,
+                                                      'branch_id':branch,
+                                                      'active':True,
+                                                      'week':3,
+                                                      }, context=context)
+                        for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
+                            partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context) 
+                            self.create_sale_team_rel(cr, uid, plan_id, res_id.id, context=context)   
+                        #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
+                        for main_group_id in main_group:
+                            cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                       
+                if w3_wed == True:
+                    if w3_wed == True:status = 'W3 Wednesday'                        
+                    setting_id = plan_obj.search(cr, uid, [('week', '=', 3), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
+                    if setting_id:
+                        #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
+                        cr.execute("select partner_id from sale_plan_day_line where line_id=%s and partner_id=%s",(setting_id[0],partner_id,))
+                        rel_partner_id = cr.fetchone()
+                        if rel_partner_id:
+                            #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))
+                            cr.execute("delete from sale_plan_day_line where partner_id=%s and line_id=%s", (rel_partner_id[0], setting_id[0]))                    
+                        #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
+                        for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
+                            partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context) 
+                            self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context)
+                    else:                
+                        plan_id = plan_obj.create(cr, uid, {'name': status,
+                                                            'sale_team':sale_team_id,
+                                                            'date':date,
+                                                      'principal': principal,
+                                                      'main_group':main_group,
+                                                      'branch_id':branch,
+                                                      'active':True,
+                                                      'week':3,
+                                                      }, context=context)
+                        for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
+                            partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context) 
+                            self.create_sale_team_rel(cr, uid, plan_id, res_id.id, context=context)   
+                        #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,)) 
+                        for main_group_id in main_group:
+                            cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                        
+                if w3_thur == True:
+                    if w3_thur == True:status = 'W3 Thursday'                  
+                    setting_id = plan_obj.search(cr, uid, [('week', '=', 3), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
+                    if setting_id:
+                        #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
+                        cr.execute("select partner_id from sale_plan_day_line where line_id=%s and partner_id=%s",(setting_id[0],partner_id,))
+                        rel_partner_id = cr.fetchone()
+                        if rel_partner_id:
+                            #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))
+                            cr.execute("delete from sale_plan_day_line where partner_id=%s and line_id=%s", (rel_partner_id[0], setting_id[0]))                    
+                        #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
+                        for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
+                            partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context) 
+                    else:                
+                        plan_id = plan_obj.create(cr, uid, {'name': status,
+                                                            'sale_team':sale_team_id,
+                                                            'date':date,
+                                                     'principal': principal,
+                                                      'main_group':main_group,
+                                                      'branch_id':branch,
+                                                      'active':True,
+                                                      'week':3,
+                                                      }, context=context)   
+                        #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
+                        for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
+                            partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context) 
+                            self.create_sale_team_rel(cr, uid, plan_id, res_id.id, context=context)
+                            
+                        for main_group_id in main_group:
+                            cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                        
+                if w3_fri == True:
+                    if w3_fri == True:status = 'W3 Friday'         
+                    setting_id = plan_obj.search(cr, uid, [('week', '=', 3), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
+                    if setting_id:
+                        #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
+                        cr.execute("select partner_id from sale_plan_day_line where line_id=%s and partner_id=%s",(setting_id[0],partner_id,))
+                        rel_partner_id = cr.fetchone()
+                        if rel_partner_id:
+                            #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))
+                            cr.execute("delete from sale_plan_day_line where partner_id=%s and line_id=%s", (rel_partner_id[0], setting_id[0]))                    
+                        #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
+                        for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
+                            partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context) 
+                    else:                
+                        plan_id = plan_obj.create(cr, uid, {'name': status,
+                                                            'sale_team':sale_team_id,
+                                                            'date':date,
+                                                    'principal': principal,
+                                                      'main_group':main_group,
+                                                      'branch_id':branch,
+                                                      'active':True,
+                                                      'week':3,
+                                                      }, context=context)   
+                        #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
+                        for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
+                            partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            self.create_sale_team_rel(cr, uid, plan_id, res_id.id, context=context)
+                             
+                        for main_group_id in main_group:
+                            cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                        
+    
+                if w3_sat == True:
+                    if w3_sat == True:status = 'W3 Saturday'                     
+                    setting_id = plan_obj.search(cr, uid, [('week', '=', 3), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
+                    if setting_id:
+                        #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
+                        cr.execute("select partner_id from sale_plan_day_line where line_id=%s and partner_id=%s",(setting_id[0],partner_id,))
+                        rel_partner_id = cr.fetchone()
+                        if rel_partner_id:
+                            #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))
+                            cr.execute("delete from sale_plan_day_line where partner_id=%s and line_id=%s", (rel_partner_id[0], setting_id[0]))                    
+                        #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
+                        for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
+                            partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context)
+                             
+                    else:                
+                        plan_id = plan_obj.create(cr, uid, {'name': status,
+                                                            'sale_team':sale_team_id,
+                                                            'date':date,
+                                                      'principal': principal,
+                                                      'main_group':main_group,
+                                                      'branch_id':branch,
+                                                      'active':True,
+                                                      'week':3,
+                                                      }, context=context)   
+                        #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
+                        for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
+                            partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            self.create_sale_team_rel(cr, uid, plan_id, res_id.id, context=context)             
+                        for main_group_id in main_group:
+                            cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,)) 
+    #Week4
+                if w4_mon == True:
+                    if w4_mon == True:status = 'W4 Monday' 
+                    setting_id = plan_obj.search(cr, uid, [('week', '=', 4), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
+                    if setting_id:
+                        #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
+                        cr.execute("select partner_id from sale_plan_day_line where line_id=%s and partner_id=%s",(setting_id[0],partner_id,))
+                        rel_partner_id = cr.fetchone()
+                        if rel_partner_id:
+                            #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))
+                            cr.execute("delete from sale_plan_day_line where partner_id=%s and line_id=%s", (rel_partner_id[0], setting_id[0]))                    
+                        #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
+                        for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
+                            partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context) 
+                    else:                
+                        plan_id = plan_obj.create(cr, uid, {'name': status,
+                                                            'sale_team':sale_team_id,
+                                                            'date':date,
+                                                      'principal': principal,
+                                                      'main_group':main_group,
+                                                      'branch_id':branch,
+                                                      'active':True,
+                                                      'week':4,
+                                                      }, context=context)   
+                        #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
+                        for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
+                            partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            self.create_sale_team_rel(cr, uid, plan_id, res_id.id, context=context)
+                             
+                        for main_group_id in main_group:
+                            cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                                            
+                if w4_tue == True:
+                    if w4_tue == True:status = 'W4 Tuesday'              
+                    setting_id = plan_obj.search(cr, uid, [('week', '=', 4), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
+                    if setting_id:
+                        #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
+                        cr.execute("select partner_id from sale_plan_day_line where line_id=%s and partner_id=%s",(setting_id[0],partner_id,))
+                        rel_partner_id = cr.fetchone()
+                        if rel_partner_id:
+                            #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))
+                            cr.execute("delete from sale_plan_day_line where partner_id=%s and line_id=%s", (rel_partner_id[0], setting_id[0]))                    
+                        #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
+                        for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
+                            partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context) 
+                            self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context)
+                    else:                
+                        plan_id = plan_obj.create(cr, uid, {'name': status,
+                                                            'sale_team':sale_team_id,
+                                                            'date':date,
+                                                     'principal': principal,
+                                                      'main_group':main_group,
+                                                      'branch_id':branch,
+                                                      'active':True,
+                                                      'week':4,
+                                                      }, context=context)
+                        for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
+                            partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            self.create_sale_team_rel(cr, uid, plan_id, res_id.id, context=context)    
+                        #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
+                        for main_group_id in main_group:
+                            cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                       
+                if w4_wed == True:
+                    if w4_wed == True:status = 'W4 Wednesday'                      
+                    setting_id = plan_obj.search(cr, uid, [('week', '=', 4), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
+                    if setting_id:
+                        #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
+                        cr.execute("select partner_id from sale_plan_day_line where line_id=%s and partner_id=%s",(setting_id[0],partner_id,))
+                        rel_partner_id = cr.fetchone()
+                        if rel_partner_id:
+                            #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))
+                            cr.execute("delete from sale_plan_day_line where partner_id=%s and line_id=%s", (rel_partner_id[0], setting_id[0]))                    
+                        #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
+                        for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
+                            partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context) 
+                    else:                
+                        plan_id = plan_obj.create(cr, uid, {'name': status,
+                                                            'sale_team':sale_team_id,
+                                                            'date':date,
+                                                      'principal': principal,
+                                                      'main_group':main_group,
+                                                      'branch_id':branch,
+                                                      'active':True,
+                                                      'week':4,
+                                                      }, context=context)
+                        for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
+                            partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            self.create_sale_team_rel(cr, uid, plan_id, res_id.id, context=context)    
+                        #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,)) 
+                        for main_group_id in main_group:
+                            cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                        
+                if w4_thur == True:
+                    if w4_thur == True:status = 'W4 Thursday'                        
+                    setting_id = plan_obj.search(cr, uid, [('week', '=', 4), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
+                    if setting_id:
+                        #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
+                        cr.execute("select partner_id from sale_plan_day_line where line_id=%s and partner_id=%s",(setting_id[0],partner_id,))
+                        rel_partner_id = cr.fetchone()
+                        if rel_partner_id:
+                            #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))
+                            cr.execute("delete from sale_plan_day_line where partner_id=%s and line_id=%s", (rel_partner_id[0], setting_id[0]))                    
+                        #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
+                        for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
+                            partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context) 
+                    else:                
+                        plan_id = plan_obj.create(cr, uid, {'name': status,
+                                                            'sale_team':sale_team_id,
+                                                            'date':date,
+                                                     'principal': principal,
+                                                      'main_group':main_group,
+                                                      'branch_id':branch,
+                                                      'active':True,
+                                                      'week':4,
+                                                      }, context=context)
+                        for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
+                            partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            self.create_sale_team_rel(cr, uid, plan_id, res_id.id, context=context)    
+                        #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
+                        for main_group_id in main_group:
+                            cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                        
+                if w4_fri == True:
+                    if w4_fri == True:status = 'W4 Friday'                     
+                    setting_id = plan_obj.search(cr, uid, [('week', '=', 4), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
+                    if setting_id:
+                        #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
+                        cr.execute("select partner_id from sale_plan_day_line where line_id=%s and partner_id=%s",(setting_id[0],partner_id,))
+                        rel_partner_id = cr.fetchone()
+                        if rel_partner_id:
+                            #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))
+                            cr.execute("delete from sale_plan_day_line where partner_id=%s and line_id=%s", (rel_partner_id[0], setting_id[0]))                    
+                        #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
+                        for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
+                            partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context) 
+                    else:                
+                        plan_id = plan_obj.create(cr, uid, {'name': status,
+                                                            'sale_team':sale_team_id,
+                                                            'date':date,
+                                                    'principal': principal,
+                                                      'main_group':main_group,
+                                                      'branch_id':branch,
+                                                      'active':True,
+                                                      'week':4,
+                                                      }, context=context) 
+                        for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
+                            partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            self.create_sale_team_rel(cr, uid, plan_id, res_id.id, context=context)   
+                        #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
+                        for main_group_id in main_group:
+                            cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                        
+    
+                if w4_sat == True:
+                    if w4_sat == True:status = 'W4 Saturday'                     
+                    setting_id = plan_obj.search(cr, uid, [('week', '=', 4), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
+                    if setting_id:
+                        #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
+                        cr.execute("select partner_id from sale_plan_day_line where line_id=%s and partner_id=%s",(setting_id[0],partner_id,))
+                        rel_partner_id = cr.fetchone()
+                        if rel_partner_id:
+                            cr.execute("delete from sale_plan_day_line where partner_id=%s and line_id=%s", (rel_partner_id[0], setting_id[0]))
+                            #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))                    
+                        #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
+                        for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
+                            partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context) 
+                    else:                
+                        plan_id = plan_obj.create(cr, uid, {'name': status,
+                                                            'sale_team':sale_team_id,
+                                                            'date':date,
+                                                      'principal': principal,
+                                                      'main_group':main_group,
+                                                      'branch_id':branch,
+                                                      'active':True,
+                                                      'week':4,
+                                                      }, context=context)
+                        for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
+                            partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            self.create_sale_team_rel(cr, uid, plan_id, res_id.id, context=context)    
+                        #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))            
+                        for main_group_id in main_group:
+                            cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                                                                                                  
+        return self.write(cr, uid, ids, {'state': 'confirm' })      
+
+    def retrieve_data(self, cr, uid, ids, context=None):
+        data_line=[]
+        res=[]
+        customer_obj=self.pool.get('res.partner')
+        sale_plan_obj=self.pool.get('sale.plan.day.setting')       
+        plan_obj=self.pool.get('sale.plan.day.setting.line')
+        plan = self.browse(cr, uid, ids, context=context)
+        sale_team_obj = self.pool.get('crm.case.section') 
+        partner_count=plan.partner_count
+        sale_team_ids =plan.sale_team_id 
+        cr.execute("delete from sale_plan_day_setting_line where line_id=%s",(plan.id,))       
+        for sale_team in sale_team_ids:
+            print 'sale_team',sale_team
+            team_data=sale_team_obj.browse(cr, uid, sale_team.id, context=context)
+            main_group=team_data.main_group_id
+            branch_id=team_data.branch_id.id
+            plan_line=plan.plan_line
+            for plan_line_id in plan_line:
+                partner_id=plan_line_id.partner_id.id
+                partner_code= plan_line_id.partner_id.customer_code
+                cr.execute("update sale_plan_day_setting_line set code =%s where partner_id=%s and id = %s",(partner_code,partner_id,plan_line_id.id,))
+                data_line.append(partner_id)
+            partner_ids = customer_obj.search(cr, uid, [('section_id', '=', sale_team.id),('id','not in',data_line),('mobile_customer','!=',True),('active','=',True)], context=context)
+            if  partner_ids:                
+                for partner_id in partner_ids:
+                    partner = customer_obj.browse(cr, uid, partner_id, context=context)
+                    cr.execute("select date_order::date from sale_order  where partner_id =%s order by id desc", (partner_id,))
+                    last_order = cr.fetchone()
+                    if last_order:
+                        last_order_date = last_order[0]
+                    else:
+                        last_order_date = False
+                    plan_obj.create(cr, uid, {
+                                        'code':partner.customer_code,
+                                         'class':partner.class_id.id,
+                                         'frequency':partner.frequency_id.id,
+                                         'purchase_date':last_order_date,
+                                        'partner_id': partner_id,
+                                        'line_id':plan.id,
+                                                  }, context=context)    
+        return True   
+               
+                        
     def refresh_customer(self, cr, uid, ids, context=None):
         data_line=[]
         res=[]
@@ -1210,33 +1254,35 @@ class sale_plan_for_day_setting(osv.osv):
         plan = self.browse(cr, uid, ids, context=context)
         partner_count=plan.partner_count
         plan_line=plan.plan_line
-        for plan_line_id in plan_line:
-            partner_id=plan_line_id.partner_id.id
-            partner_code= plan_line_id.partner_id.customer_code
-            cr.execute("update sale_plan_day_setting_line set code =%s where partner_id=%s and id = %s",(partner_code,partner_id,plan_line_id.id,))
-            data_line.append(partner_id)
-        sale_team_id=plan.sale_team_id.id
-        partner_ids = customer_obj.search(cr, uid, [('section_id', '=', sale_team_id),('id','not in',data_line),('mobile_customer','!=',True),('active','=',True)], context=context)
-        if  partner_ids:
-                count=len(partner_ids)                
-                for line in partner_ids:
-                    print ' line',line,ids
-                    partner = customer_obj.browse(cr, uid, line, context=context)
-                    cr.execute("select date_order::date from sale_order  where partner_id =%s order by id desc", (partner.id,))
-                    last_order = cr.fetchone()
-                    if last_order:
-                        last_order_date = last_order[0]
-                    else:
-                        last_order_date = False                 
-                    plan_id = plan_obj.create(cr, uid, {
-                                        'code':partner.customer_code,
-                                         'class':partner.class_id.id,
-                                         'frequency':partner.frequency_id.id,
-                                         'purchase_date':last_order_date,
-                                        'partner_id': line,
-                                        'line_id':plan.id,
-                                                  }, context=context)   
-                    sale_plan_obj.write(cr, uid, ids, {'partner_count':  partner_count+count})  
+        sale_team_ids =plan.sale_team_id        
+        for sale_team_id in sale_team_ids:
+            plan_line=plan.plan_line
+            for plan_line_id in plan_line:
+                partner_id=plan_line_id.partner_id.id
+                partner_code= plan_line_id.partner_id.customer_code
+                cr.execute("update sale_plan_day_setting_line set code =%s where partner_id=%s and id = %s",(partner_code,partner_id,plan_line_id.id,))
+                data_line.append(partner_id)
+            partner_ids = customer_obj.search(cr, uid, [('section_id', '=', sale_team_id.id),('id','not in',data_line),('mobile_customer','!=',True),('active','=',True)], context=context)
+            if  partner_ids:
+                    count=len(partner_ids)                
+                    for line in partner_ids:
+                        print ' line',line,ids
+                        partner = customer_obj.browse(cr, uid, line, context=context)
+                        cr.execute("select date_order::date from sale_order  where partner_id =%s order by id desc", (partner.id,))
+                        last_order = cr.fetchone()
+                        if last_order:
+                            last_order_date = last_order[0]
+                        else:
+                            last_order_date = False                 
+                        plan_id = plan_obj.create(cr, uid, {
+                                            'code':partner.customer_code,
+                                             'class':partner.class_id.id,
+                                             'frequency':partner.frequency_id.id,
+                                             'purchase_date':last_order_date,
+                                            'partner_id': line,
+                                            'line_id':plan.id,
+                                                      }, context=context)   
+                        sale_plan_obj.write(cr, uid, ids, {'partner_count':  partner_count+count})  
         cr.execute("delete from sale_plan_day_setting_line where partner_id in (select id from res_partner where active=False)")
         cr.execute("delete from sale_plan_day_line where partner_id in (select id from res_partner where active=False)")
         return True   
