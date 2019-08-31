@@ -9,6 +9,53 @@ from openerp.addons.connector.session import ConnectorSession
 from openerp.addons.connector.exception import FailedJobError
 from openerp.addons.connector.jobrunner.runner import ConnectorRunner
 
+@job(default_channel='root.deliverytransfer')
+def automatic_pending_delivery_stock_transfer(session,order_ids,delivery_date):
+    context = session.context.copy()
+    cr = session.cr
+    uid = session.uid
+    date=delivery_date
+    context = {'lang': 'en_US', 'params': {'action': 458}, 'tz': 'Asia/Rangoon', 'uid': 1}    
+    soObj = session.pool.get('sale.order')
+    for order_data in soObj.browse(cr, uid, order_ids, context=context):
+        So_id = order_data.id
+        shipped=order_data.shipped
+        if shipped!=True:
+            stockPickingObj = session.pool.get('stock.picking')        
+            stockDetailObj = session.pool.get('stock.transfer_details')
+            stockViewResult = soObj.action_view_delivery(cr, uid, So_id, context=context)
+            if stockViewResult:
+                # stockViewResult is form result
+                # stocking id =>stockViewResult['res_id']
+                # click force_assign
+                stockPickingObj.force_assign(cr, uid, stockViewResult['res_id'], context=context)
+                # transfer
+                # call the transfer wizard
+                # change list
+                pickList = []
+                pickList.append(stockViewResult['res_id'])
+                wizResult = stockPickingObj.do_enter_transfer_details(cr, uid, pickList, context=context)
+                # pop up wizard form => wizResult
+                detailObj = stockDetailObj.browse(cr, uid, wizResult['res_id'], context=context)
+                if detailObj:
+                    detailObj.do_detailed_transfer()
+                cr.execute('update stock_picking set date_done =%s where origin=%s', (date, order_data.name,))
+                cr.execute('update stock_move set date = %s where origin =%s', (date, order_data.name,))
+                picking_id = stockViewResult['res_id']
+                print 'picking_id', picking_id
+                pick_date = stockPickingObj.browse(cr, uid, picking_id, context=context)
+                cr.execute(
+                    "update account_move_line set date= %s from account_move move where move.id=account_move_line.move_id and move.ref= %s",
+                    (date, pick_date.name,))
+                cr.execute('''update account_move set period_id=p.id,date=%s
+                            from (
+                            select id,date_start,date_stop
+                            from account_period
+                            where date_start != date_stop
+                            ) p
+                            where p.date_start <= %s and  %s <= p.date_stop
+                            and account_move.ref=%s''', (date, date, date, pick_date.name,))    
+    return True
 
 class pendingdelivery(osv.osv):
     _name = 'pending.delivery'
@@ -52,7 +99,8 @@ class pendingdelivery(osv.osv):
                         cr.execute("update pre_sale_order set void_flag = 'voided' where name=%s", (ref_no,))
                     else:
                         So_id=pending_id.order_id.id
-                        solist = pending_id.order_id.id      
+                        solist = pending_id.order_id.id   
+                        delivery_date=pending_id.delivery_date   
                         cr.execute('select branch_id,section_id,delivery_remark,payment_type,payment_term from sale_order where id=%s', (pending_id.order_id.id,))
                         data = cr.fetchone()
                         if data:
@@ -68,24 +116,24 @@ class pendingdelivery(osv.osv):
                         else:
                             delivery_team_id = None
                         # For DO
-                        stockViewResult = soObj.action_view_delivery(cr, uid, So_id, context=context)    
-                        if stockViewResult:
-                            # stockViewResult is form result
-                            # stocking id =>stockViewResult['res_id']
-                            # click force_assign
-                            stockPickingObj.force_assign(cr, uid, stockViewResult['res_id'], context=context)
-                            # transfer
-                            # call the transfer wizard
-                            # change list
-                            pickList = []
-                            pickList.append(stockViewResult['res_id'])
-                            wizResult = stockPickingObj.do_enter_transfer_details(cr, uid, pickList, context=context)
-                            # pop up wizard form => wizResult
-                            detailObj = stockDetailObj.browse(cr, uid, wizResult['res_id'], context=context)
-                            if detailObj:
-                                detailObj.do_detailed_transfer()    
+#                         stockViewResult = soObj.action_view_delivery(cr, uid, So_id, context=context)    
+#                         if stockViewResult:
+#                             # stockViewResult is form result
+#                             # stocking id =>stockViewResult['res_id']
+#                             # click force_assign
+#                             stockPickingObj.force_assign(cr, uid, stockViewResult['res_id'], context=context)
+#                             # transfer
+#                             # call the transfer wizard
+#                             # change list
+#                             pickList = []
+#                             pickList.append(stockViewResult['res_id'])
+#                             wizResult = stockPickingObj.do_enter_transfer_details(cr, uid, pickList, context=context)
+#                             # pop up wizard form => wizResult
+#                             detailObj = stockDetailObj.browse(cr, uid, wizResult['res_id'], context=context)
+#                             if detailObj:
+#                                 detailObj.do_detailed_transfer()    
                         invoice_id = mobile_obj.create_invoices(cr, uid, [solist], context=context)
-                        cr.execute('update account_invoice set date_invoice = now()::date , branch_id =%s ,payment_type=%s,delivery_remark =%s ,section_id=%s,user_id=%s, payment_term = %s where id =%s', (branch_id,payment_type, delivery_remark, delivery_team_id, uid,payment_term, invoice_id,))                                                
+                        cr.execute('update account_invoice set date_invoice = %s, branch_id =%s ,payment_type=%s,delivery_remark =%s ,section_id=%s,user_id=%s, payment_term = %s where id =%s', (delivery_date,branch_id,payment_type, delivery_remark, delivery_team_id, uid,payment_term, invoice_id,))                                                
                                                      
                         invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                         if invoice_id:
@@ -93,7 +141,11 @@ class pendingdelivery(osv.osv):
                             # pre_order =True
                             invoiceObj.write(cr, uid, invoice_id, {'pre_order':True}, context)      
                             if payment_type=='credit':
-                                invoiceObj.credit_approve(cr, uid, [invoice_id], context=context)                                     
+                                invoiceObj.credit_approve(cr, uid, [invoice_id], context=context)  
+                            session = ConnectorSession(cr, uid, context)
+                            jobid = automatic_pending_delivery_stock_transfer.delay(session, [solist], delivery_date, priority=20)
+                            runner = ConnectorRunner()
+                            runner.run_jobs()                                                                 
             self.write(cr, uid, ids[0], {'state':'done'}, context=context)                        
         return True
             

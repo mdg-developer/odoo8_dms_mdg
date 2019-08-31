@@ -72,18 +72,13 @@ class stock_return_from_mobile(osv.osv):
                     cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (small_uom_id,))
                     bigger_qty = cr.fetchone()[0]
                     receive_qty = (small_issue_quantity * bigger_qty)
-                cr.execute('''
-                    select coalesce(sum(closing_stock_qty),0) from stock_return_line where line_id in (select id from stock_return where sale_team_id =%s and to_return_date < %s order by to_return_date desc limit 1
-                    ) and status='Stock Return' and product_id =%s
-                    ''',(sale_team_id,return_date,product_id,))  
-                closing_qty=cr.fetchone()[0]
                 return_ids = stock_return_obj.search(cr, uid, [('product_id', '=', product_id),('line_id','=',ids[0])], context=context) 
                 if return_ids:
-                    cr.execute("update stock_return_mobile_line set return_quantity=return_quantity+%s where product_id=%s and line_id =%s",(closing_qty+receive_qty,product_id,ids[0],)) 
+                    cr.execute("update stock_return_mobile_line set return_quantity=return_quantity+%s where product_id=%s and line_id =%s",(receive_qty,product_id,ids[0],)) 
                 else:
                     stock_return_obj.create(cr, uid, {'line_id': ids[0],
                                   'product_id': product_id,
-                                  'return_quantity':closing_qty+receive_qty,
+                                  'return_quantity':receive_qty,
                                   'sale_quantity':0,
                                   'foc_quantity':0,
                                   'product_uom':  product.product_tmpl_id.uom_id.id ,
@@ -140,7 +135,19 @@ class stock_return_from_mobile(osv.osv):
                                   'sale_quantity':0,
                                   'foc_quantity':foc_qty,
                                   'product_uom':  product.product_tmpl_id.uom_id.id ,
-                            }, context=context)        
+                            }, context=context) 
+                            
+                for mobile_line_id in mobile_return_data.p_line:
+                    mobile_line_data =stock_return_obj.browse(cr, uid, mobile_line_id.id, context=context)
+                    mobile_product_id =mobile_line_data.product_id.id
+                    cr.execute('''
+                    select coalesce(sum(closing_stock_qty),0) from stock_return_line where line_id in (select id from stock_return where sale_team_id =%s and to_return_date < %s order by to_return_date desc limit 1
+                    ) and status='Stock Return' and product_id =%s
+                    ''',(sale_team_id,return_date,mobile_product_id,))  
+                    closing_qty=cr.fetchone()[0]
+                    if closing_qty>0:
+                        cr.execute('update stock_return_mobile_line set return_quantity = %s + return_quantity where id= %s and product_id =%s ',(closing_qty,mobile_line_id.id,mobile_product_id,))                        
+                    
         return True 
                
 class stock_return_from_mobile_line(osv.osv):

@@ -21,6 +21,7 @@
 import time
 from openerp.osv import fields, osv
 from datetime import datetime, timedelta
+from openerp.http import request
 from openerp.addons.connector.queue.job import job, related_action
 from openerp.addons.connector.session import ConnectorSession
 from openerp.addons.connector.exception import FailedJobError
@@ -43,7 +44,44 @@ def automatic_delivery_invoices(session, order_ids,date):
         in_progress=order_data.is_confirm
         invoiced=order_data.invoiced
         if shipped!=True and invoiced!=True and in_progress==True :
+        
             So_id = order_data.id
+            solist =order_data.id
+            branch_id = order_data.branch_id.id
+            delivery_remark = order_data.delivery_remark
+            payment_type = order_data.payment_type
+            invoice_id = mobile_obj.create_invoices(cr, uid, [solist], context=context)
+            cr.execute(
+                'update account_invoice set date_invoice=%s,payment_type=%s ,branch_id =%s,delivery_remark =%s where id =%s',
+                (date, payment_type, branch_id, delivery_remark, invoice_id,))
+            if invoice_id:
+                invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
+                invoiceObj.signal_workflow(cr, uid, [invoice_id], 'invoice_open')
+                if payment_type == 'credit':
+                    invoiceObj.credit_approve(cr, uid, [invoice_id], context=context)
+        session = ConnectorSession(cr, uid, context)
+        jobid = automatic_delivery_transfer.delay(session, order_ids, date, priority=30)
+        runner = ConnectorRunner()
+        runner.run_jobs()                    
+        soObj.write(cr, uid, order_data.id, {'is_confirm': False}, context)
+
+    return True
+
+@job(default_channel='root.deliverytransfer')
+def automatic_delivery_transfer(session,order_ids,date):
+    context = session.context.copy()
+    cr = session.cr
+    uid = session.uid
+    context = {'lang': 'en_US', 'params': {'action': 458}, 'tz': 'Asia/Rangoon', 'uid': 1}    
+    soObj = session.pool.get('sale.order')
+    for order_data in soObj.browse(cr, uid, order_ids, context=context):
+        shipped=order_data.shipped
+        in_progress=order_data.is_confirm
+        invoiced=order_data.invoiced
+        So_id = order_data.id
+        if shipped!=True:
+            stockPickingObj = session.pool.get('stock.picking')
+            stockDetailObj = session.pool.get('stock.transfer_details')
             stockViewResult = soObj.action_view_delivery(cr, uid, So_id, context=context)
             if stockViewResult:
                 # stockViewResult is form result
@@ -75,23 +113,8 @@ def automatic_delivery_invoices(session, order_ids,date):
                             where date_start != date_stop
                             ) p
                             where p.date_start <= %s and  %s <= p.date_stop
-                            and account_move.ref=%s''', (date, date, date, pick_date.name,))
-                branch_id = order_data.branch_id.id
-                delivery_remark = order_data.delivery_remark
-                payment_type = order_data.payment_type
-                invoice_id = mobile_obj.create_invoices(cr, uid, [solist], context=context)
-                cr.execute(
-                    'update account_invoice set date_invoice=%s,payment_type=%s ,branch_id =%s,delivery_remark =%s where id =%s',
-                    (date, payment_type, branch_id, delivery_remark, invoice_id,))
-                if invoice_id:
-                    invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
-                    invoiceObj.signal_workflow(cr, uid, [invoice_id], 'invoice_open')
-                    if payment_type == 'credit':
-                        invoiceObj.credit_approve(cr, uid, [invoice_id], context=context)
-        soObj.write(cr, uid, order_data.id, {'is_confirm': False}, context)
-
+                            and account_move.ref=%s''', (date, date, date, pick_date.name,))    
     return True
-
 
 class sale_order_invoice_delivery_transfer(osv.osv_memory):
     
