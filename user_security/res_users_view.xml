@@ -14,7 +14,7 @@
 					</xpath>
 					<xpath expr="//group[@string='Allowed Companies']" position="after">
 						<group string="Allowed Teams">
-							<field name="section_ids" nolabel="1" widget="many2many_tags" />
+							<field name="section_ids" nolabel="1"  />
 						</group>
 
 
