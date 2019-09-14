@@ -35,7 +35,7 @@ class res_partner(osv.osv):
         return {
             'type': 'ir.actions.act_url',
             'url': '/selected_partner_map?id=%s' % id[0],
-            'target': 'self',
+            'target': 'new',
         }
     
     def open_polygon_view(self, cr, uid, id, context=None):
@@ -43,7 +43,7 @@ class res_partner(osv.osv):
         return {
             'type': 'ir.actions.act_url',
             'url': '/polygon_map?id=%s' % id[0],
-            'target': 'self',
+            'target': 'new',
         }
 
 
