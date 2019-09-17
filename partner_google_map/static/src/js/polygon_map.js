@@ -62,6 +62,7 @@ function init_map() {
               (p.type ? '  <b>' + p.type + '</b>' : '')+
               '  <pre>' + p.outlet_type + '</pre>'+
               '  <pre>' + p.address + '</pre>'+
+              '  <pre>' + p.township + '</pre>'+              
               '</div>'
           );
         infoWindow.open(map, marker);

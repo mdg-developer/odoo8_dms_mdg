@@ -46,7 +46,7 @@ class crm_case_section(osv.osv):
         if context is None:
             context = {}
         for line in self.browse(cr, uid, ids, context=context):
-            cr.execute("select partner_count from sale_plan_day_setting where sale_team_id=%s  order by id desc" , (line.id,))
+            cr.execute("select setting.partner_count from sale_plan_day_setting setting,sale_plan_day_sale_team_rel rel where rel.sale_plan_day_id=setting.id and rel.sale_team_id=%s  order by id desc" , (line.id,))
             partner_count = cr.fetchone()
             if partner_count:
                 data = partner_count[0]

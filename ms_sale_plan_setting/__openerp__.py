@@ -25,7 +25,7 @@
  'license': 'AGPL-3',
  'website': 'http://www.7thcomputing.com',
  'depends': [
-     'base','crm','address_management_system','sale','product_product'
+     'base','crm','sale','product_product'
 #      'base'
  ],
  'init_xml': [],

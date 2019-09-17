@@ -46,7 +46,8 @@ class branch_good_issue_note(osv.osv):
             gin_data = self.browse(cr, uid, gin.id, context=context)
             if gin_data:
                 for line in gin_data.p_line:
-                    total_value = total_value + line.product_value
+                    if line.issue_quantity >0:
+                        total_value = total_value + line.product_value
             res[gin_data.id] = total_value            
         return res   
 

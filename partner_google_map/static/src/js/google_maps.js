@@ -25,20 +25,32 @@ function initialize_map() {
     var onMarkerClick = function() {
         var marker = this;
         var p = marker.partner;        
-        infoWindow.setContent(
+        /*infoWindow.setContent(
               '<div class="marker">'+
-              (partner_url.length ? '<a target="_top" href="'+partner_url+p.id+'"><b>'+p.name +'</b></a>' : '<b>'+p.name+'</b>' )+
-              (p.type ? '  <b>' + p.type + '</b>' : '')+
-              '  <pre>' + p.outlet_type.name + '</pre>'+
+              (partner_url.length ? '<a target="_top" href="'+partner_url+p.id+'"><b>'+p.name +'</b></a>' : '<b>'+p.name+'</b>' )+              
+              (p.type ? '  <b>' + p.type + '</b>' : '')+              
+              '  <pre>' + p.outlet_type + '</pre>'+
               '  <pre>' + p.address + '</pre>'+
+              '  <pre>' + p.township + '</pre>'+
               '</div>'
-          );
+          );*/
+        
+        infoWindow.setContent(
+                '<div class="marker">'+
+                (partner_url.length ? '<a target="_top" href="'+partner_url+p.id+'"><b>'+p.name +'</b></a>' : '<b>'+p.name+'</b>' )+
+                (p.type ? '  <b>' + p.type + '</b>' : '')+
+                '  <pre>' + p.outlet_type + '</pre>'+
+                '  <pre>' + p.address + '</pre>'+
+                '  <pre>' + p.township + '</pre>'+              
+                '</div>'
+            );
         infoWindow.open(map, marker);
     };
 
     // Create a bubble for a partner
     var set_marker = function(partner) {
-    	console.log(partner);
+    	//console.log(partner);
+    	
         // If no lat & long, geocode adress
         // TODO: a server cronjob that will store these coordinates in database instead of resolving them on-the-fly
         if (!partner.latitude && !partner.longitude) {

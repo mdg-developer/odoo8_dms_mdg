@@ -7,7 +7,6 @@ import time
 import urllib
 from openerp import netsvc
 import pytz
-
 DEFAULT_SERVER_DATE_FORMAT = "%Y-%m-%d"
 from openerp.http import request
 from openerp.addons.connector.queue.job import job, related_action
@@ -22,7 +21,7 @@ def automation_pending_delivery(session, delivery_mobile):
     cr = session.cr
     uid = session.uid
     for mobile in delivery_mobile: 
-        delivery_obj.action_convert_pending_delivery(cr, uid, [mobile], context=context)    
+        delivery_obj.action_convert_pending_delivery(cr, uid, [mobile], context=context)         
     return True    
     
 @job(default_channel='root.directpending')
@@ -36,6 +35,54 @@ def automation_direct_order(session, list_mobile):
         mobile_obj.action_convert_so(cr, uid, [mobile], context=context)    
     return True
 
+@job(default_channel='root.deliverytransfer')
+def automatic_direct_sale_transfer(session,order_ids,de_date):
+    context = session.context.copy()
+    cr = session.cr
+    uid = session.uid
+    context = {'lang': 'en_US', 'params': {'action': 458}, 'tz': 'Asia/Rangoon', 'uid': 1}    
+    soObj = session.pool.get('sale.order')
+    date_change = datetime.strptime(de_date, '%Y-%m-%d %H:%M:%S')
+    date = date_change.date()        
+    for order_data in soObj.browse(cr, uid, order_ids, context=context):
+        So_id = order_data.id
+        shipped=order_data.shipped
+        if shipped!=True:
+            stockPickingObj = session.pool.get('stock.picking')
+            stockDetailObj = session.pool.get('stock.transfer_details')
+            stockViewResult = soObj.action_view_delivery(cr, uid, So_id, context=context)
+            if stockViewResult:
+                # stockViewResult is form result
+                # stocking id =>stockViewResult['res_id']
+                # click force_assign
+                stockPickingObj.force_assign(cr, uid, stockViewResult['res_id'], context=context)
+                # transfer
+                # call the transfer wizard
+                # change list
+                pickList = []
+                pickList.append(stockViewResult['res_id'])
+                wizResult = stockPickingObj.do_enter_transfer_details(cr, uid, pickList, context=context)
+                # pop up wizard form => wizResult
+                detailObj = stockDetailObj.browse(cr, uid, wizResult['res_id'], context=context)
+                if detailObj:
+                    detailObj.do_detailed_transfer()
+                cr.execute('update stock_picking set date_done =%s where origin=%s', (date, order_data.name,))
+                cr.execute('update stock_move set date = %s where origin =%s', (date, order_data.name,))
+                picking_id = stockViewResult['res_id']
+                print 'picking_id', picking_id
+                pick_date = stockPickingObj.browse(cr, uid, picking_id, context=context)
+                cr.execute(
+                    "update account_move_line set date= %s from account_move move where move.id=account_move_line.move_id and move.ref= %s",
+                    (date, pick_date.name,))
+                cr.execute('''update account_move set period_id=p.id,date=%s
+                            from (
+                            select id,date_start,date_stop
+                            from account_period
+                            where date_start != date_stop
+                            ) p
+                            where p.date_start <= %s and  %s <= p.date_stop
+                            and account_move.ref=%s''', (date, date, date, pick_date.name,))    
+    return True
 class customer_payment(osv.osv):
     _name = "customer.payment"
     _columns = {               
@@ -838,13 +885,6 @@ class mobile_sale_order(osv.osv):
                             # Create Invoice
                             invoice_id = self.create_invoices(cr, uid, solist, context=context)
                           
-                            # id update partner form (temporay)
-#                             partner_data = invoiceObj.browse(cr, uid, invoice_id, context=context)
-#                             partner_id=partner_data.partner_id.id
-#                             partner_obj.write(cr,uid,partner_id,{'property_account_receivable':629}, context)
-#                             partner = partner_obj.browse(cr, uid, partner_id, context=context)
-#                             account_id=partner.property_account_receivable.id
-#                             invoiceObj.write(cr,uid,invoice_id,{'account_id':account_id}, context)                            
                             cr.execute('update account_invoice set payment_type=%s ,branch_id =%s,delivery_remark =%s,date_invoice=%s where id =%s', ('cash', ms_ids.branch_id.id, ms_ids.delivery_remark, de_date, invoice_id,))                            
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                             if invoice_id and ms_ids.paid == True:
@@ -906,25 +946,28 @@ class mobile_sale_order(osv.osv):
 #                                     # invoice paid status is true
 #                                     invFlag = True
                             # clicking the delivery order view button
-                            stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)
-                            
-                            if stockViewResult:
-                                # cr.execute('update stock_move set location_id=%s where picking_id=%s',(ms_ids.location_id.id,stockViewResult['res_id'],))
-                                # stockViewResult is form result
-                                # stocking id =>stockViewResult['res_id']
-                                # click force_assign
-                                stockPickingObj.force_assign(cr, uid, stockViewResult['res_id'], context=context)
-                                # transfer
-                                # call the transfer wizard
-                                # change list
-                                pickList = []
-                                pickList.append(stockViewResult['res_id'])
-                                wizResult = stockPickingObj.do_enter_transfer_details(cr, uid, pickList, context=context)
-                                # pop up wizard form => wizResult
-                                detailObj = stockDetailObj.browse(cr, uid, wizResult['res_id'], context=context)
-                                if detailObj:
-                                    detailObj.do_detailed_transfer()
-                                    
+#                             stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)
+#                              
+#                             if stockViewResult:
+#                                 # cr.execute('update stock_move set location_id=%s where picking_id=%s',(ms_ids.location_id.id,stockViewResult['res_id'],))
+#                                 # stockViewResult is form result
+#                                 # stocking id =>stockViewResult['res_id']
+#                                 # click force_assign
+#                                 stockPickingObj.force_assign(cr, uid, stockViewResult['res_id'], context=context)
+#                                 # transfer
+#                                 # call the transfer wizard
+#                                 # change list
+#                                 pickList = []
+#                                 pickList.append(stockViewResult['res_id'])
+#                                 wizResult = stockPickingObj.do_enter_transfer_details(cr, uid, pickList, context=context)
+#                                 # pop up wizard form => wizResult
+#                                 detailObj = stockDetailObj.browse(cr, uid, wizResult['res_id'], context=context)
+#                                 if detailObj:
+#                                     detailObj.do_detailed_transfer()
+                                new_session = ConnectorSession(cr, uid, context)
+                                jobid = automatic_direct_sale_transfer.delay(new_session, solist, ms_ids.date, priority=10)
+                                runner = ConnectorRunner()
+                                runner.run_jobs()                                       
                         if ms_ids.type == 'cash' and ms_ids.delivery_remark == 'none':  # Payment Type=>Cash and Delivery Remark=>None
                             # SO Confirm 
                             soObj.action_button_confirm(cr, uid, solist, context=context)
@@ -1093,26 +1136,29 @@ class mobile_sale_order(osv.osv):
 #                             invObj.invoice_validate()
                             self.pool['account.invoice'].signal_workflow(cr, uid, [invoice_id], 'invoice_open')
                             self.pool['account.invoice'].credit_approve(cr, uid, [invoice_id], context=context)                                 
-
+                            new_session_name = ConnectorSession(cr, uid, context)
+                            jobid = automatic_direct_sale_transfer.delay(new_session_name, solist, ms_ids.date, priority=10)
+                            runner = ConnectorRunner()
+                            runner.run_jobs() 
                             # clicking the delivery order view button
-                            stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)
-                            if stockViewResult:
-                                # cr.execute('update stock_move set location_id=%s where picking_id=%s',(ms_ids.location_id.id,stockViewResult['res_id'],))
-
-                                # stockViewResult is form result
-                                # stocking id =>stockViewResult['res_id']
-                                # click force_assign
-                                stockPickingObj.force_assign(cr, uid, stockViewResult['res_id'], context=context)
-                                # transfer
-                                # call the transfer wizard
-                                # change list
-                                pickList = []
-                                pickList.append(stockViewResult['res_id'])
-                                wizResult = stockPickingObj.do_enter_transfer_details(cr, uid, pickList, context=context)
-                                # pop up wizard form => wizResult
-                                detailObj = stockDetailObj.browse(cr, uid, wizResult['res_id'], context=context)
-                                if detailObj:
-                                    detailObj.do_detailed_transfer()
+#                             stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)
+#                             if stockViewResult:
+#                                 # cr.execute('update stock_move set location_id=%s where picking_id=%s',(ms_ids.location_id.id,stockViewResult['res_id'],))
+#  
+#                                 # stockViewResult is form result
+#                                 # stocking id =>stockViewResult['res_id']
+#                                 # click force_assign
+#                                 stockPickingObj.force_assign(cr, uid, stockViewResult['res_id'], context=context)
+#                                 # transfer
+#                                 # call the transfer wizard
+#                                 # change list
+#                                 pickList = []
+#                                 pickList.append(stockViewResult['res_id'])
+#                                 wizResult = stockPickingObj.do_enter_transfer_details(cr, uid, pickList, context=context)
+#                                 # pop up wizard form => wizResult
+#                                 detailObj = stockDetailObj.browse(cr, uid, wizResult['res_id'], context=context)
+#                                 if detailObj:
+#                                     detailObj.do_detailed_transfer()
 
                         if ms_ids.type == 'credit' and ms_ids.delivery_remark == 'none':  # Payment Type=>Credit and Delivery Remark=>None
                             # so Confirm
@@ -2183,14 +2229,29 @@ class mobile_sale_order(osv.osv):
                 customer_photo.append(r)
             if customer_photo:
                 for vs in customer_photo:
+                    customer_id =False
                     code = vs['customer_code']                                
-                    
+                    cursor.execute('''select id from res_partner where id =%s''',(vs['customer_id'],))
+                    customer_data=cursor.fetchone() 
+                    if customer_data:
+                        customer_id =customer_data[0]
+                    else:
+                        cursor.execute('''select id from res_partner where customer_code =%s''',(vs['customer_code'],))
+                        customer_code_data=cursor.fetchone()      
+                        if customer_code_data:
+                            customer_id=customer_code_data[0]
+                    latitude=0
+                    longitude=0
+                    if vs['latitude']!='null':
+                        latitude=vs['latitude']
+                    if vs['longitude'] !='null':
+                        longitude= vs['longitude']          
                     result = {
                         'customer_code':vs['customer_code'],
-                        'customer_id':vs['customer_id'],
+                        'customer_id':customer_id,
                         'comment':vs['comment'],
-                        'partner_latitude':vs['latitude'],
-                        'partner_longitude':vs['longitude'],
+                        'partner_latitude':latitude,
+                        'partner_longitude':longitude,
                         'image_one':vs['image_one'].replace('\\', ""),
                         'image_two':vs['image_two'].replace('\\', ""),
                         'image_three':vs['image_three'].replace('\\', ""),
@@ -2250,9 +2311,13 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()        
         return datas    
     
-    def get_sale_team_channel(self, cr, uid, sale_team_id , context=None, **kwargs):    
-        cr.execute("""select sale_team_id,sale_channel_id from sale_team_channel_rel
-                        where sale_team_id = %s """, (sale_team_id,))                
+#     def get_sale_team_channel(self, cr, uid, sale_team_id , context=None, **kwargs):    
+#         cr.execute("""select sale_team_id,sale_channel_id from sale_team_channel_rel
+#                         where sale_team_id = %s """, (sale_team_id,))                
+#         datas = cr.fetchall()
+#         return datas
+    def get_sale_team_channel(self, cr, uid, sale_team_id , context=None, **kwargs):
+        cr.execute("""select sale_team_id,sale_channel_id from sale_team_channel_rel rel,sale_channel c where rel.sale_team_id =%s  and c.id =rel.sale_channel_id order by c.name asc """, (sale_team_id,))
         datas = cr.fetchall()
         return datas
     

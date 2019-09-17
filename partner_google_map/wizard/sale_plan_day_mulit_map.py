@@ -57,13 +57,13 @@ class sale_plan_day_multi_map(osv.osv_memory):
                 return {
                     'type': 'ir.actions.act_url',
                     'url': '/selected_partner_map?id=%s' % partner_ids,
-                    'target': 'self',
+                    'target': 'new',
                 }
             else:    
                 return {
                     'type': 'ir.actions.act_url',
                     'url': '/partners_polygon_map?id=%s' % partner_ids,
-                    'target': 'self',
+                    'target': 'new',
                 }
                 
     def open_map(self, cr, uid, ids, context=None):
@@ -80,7 +80,7 @@ class sale_plan_day_multi_map(osv.osv_memory):
         return {
             'type': 'ir.actions.act_url',
             'url': '/selected_partner_map?id=%s' % partner_ids,
-            'target': 'self',
+            'target': 'new',
         }
     
     def open_polygon(self, cr, uid, ids, context=None):
@@ -97,7 +97,7 @@ class sale_plan_day_multi_map(osv.osv_memory):
         return {
             'type': 'ir.actions.act_url',
             'url': '/partners_polygon_map?id=%s' % partner_ids,
-            'target': 'self',
+            'target': 'new',
         }
   
                

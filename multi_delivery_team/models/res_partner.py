@@ -51,7 +51,7 @@ class unassign_customer_tag(osv.osv_memory):
          }
 
     _defaults = {
-         'confirm': True,       
+        'confirm': False,       
         'data': False,         
            
     }

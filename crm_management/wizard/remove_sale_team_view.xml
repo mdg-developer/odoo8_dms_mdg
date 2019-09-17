@@ -9,7 +9,7 @@
 				<form string="Unassign Sales Team">
 					<group>
 					    <field name="data" invisible="1"/>
-						<field name="confirm"  attrs="{'readonly': [('data','=',True)]}"/>
+						<field name="confirm"   invisible="1" attrs="{'readonly': [('data','=',True)]}"/>
 						<field name="section_id"  attrs="{'readonly': [('confirm','=',True)]}" on_change="onchange_section_id(section_id)" class="oe_inline"/>
 					</group>
 					<footer>
