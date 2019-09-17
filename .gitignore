@@ -364,3 +364,4 @@ connector_clear_message/models/inherit_connector.pyc
 connector_job_subscribe/__init__.pyc
 connector_job_subscribe/models/res_users.pyc
 web_sheet_full_width/__openerp__.pyc
+*.pyc 
