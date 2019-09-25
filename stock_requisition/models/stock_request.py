@@ -54,7 +54,7 @@ class stock_requisition(osv.osv):
             vehicle_id = sale_team.vehicle_id
             product_line = sale_team.product_ids
             to_location_id = sale_team.issue_location_id
-            order_ids = sale_order_obj.search(cr, uid, [('delivery_id', '=', sale_team_id), ('shipped', '=', False), ('is_generate', '=', False), ('invoiced', '=', False), ('state', 'not in', ['done', 'cancel'])], context=context) 
+            order_ids = sale_order_obj.search(cr, uid, [('delivery_id', '=', sale_team_id), ('shipped', '=', False), ('is_generate', '=', False), ('invoiced', '=', False), ('state', 'not in', ['done', 'cancel', 'reversed'])], context=context) 
             for line in product_line:                
                 product = self.pool.get('product.product').browse(cr, uid, line.id, context=context)   
                 cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (to_location_id.id, product.id,))
