@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.6.0.v201606072122</property>
     <list-property name="propertyBindings">
         <structure>
             <property name="name">queryText</property>
@@ -455,6 +455,7 @@ left join crm_case_section css on css.id=rel.sale_team_id
 left join res_partner_res_partner_category_rel rpcl on rpcl.partner_id=rp.id
 left join res_partner_category rpc on rpc.id=rpcl.category_id
 where rp.mobile_customer='true'
+and rp.active= True
 --$branch_id$
 --$sales_team$
 order by township,rp.name]]></xml-property>
