@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.4.1.v201408290142 Build &lt;4.4.1.v20140916-1320></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
     <property name="units">in</property>
     <method name="initialize"><![CDATA[branchList = params["branch_id"].value.join(",");]]></method>
     <property name="iconFile">/templates/blank_report.gif</property>
@@ -526,8 +526,10 @@ left join product_template pt on pp.product_tmpl_id=pt.id
 left join stock_picking sp on h.picking_id = sp.id
 left join res_branch b on h.branch_id=b.id
 left join account_invoice i on h.debit_note= i.id
-where h.date between ? and ?
+where  h.state <> 'cancel' and
+h.date between ? and ?
 and h.principle_id =?
+
 --$branch_id$]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
