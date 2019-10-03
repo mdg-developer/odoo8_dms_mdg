@@ -11,7 +11,7 @@
 						<filter string="Branch" context="{'group_by':'branch_id'}" />
 						<filter string="Sale Team" context="{'group_by':'team_id'}" />
 						<filter string="Return Day" context="{'group_by': 'date:day'}" />	
-						<filter string="Township" context="{'group_by':'team_id'}" />
+						<filter string="Township" context="{'group_by':'township_id'}" />
 					</group>
 				</search>
 			</field>

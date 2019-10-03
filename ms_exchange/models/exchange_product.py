@@ -28,7 +28,11 @@ class exchange_product(osv.osv):
                 'longitude':fields.float('Geo Longitude',  digits=(16, 5), readonly=True),
                 'distance_status':fields.char('Distance Status', readonly=True),
                 'geo_point':fields.char('Geo Point'),
-                'township_id':fields.many2one('res.township', 'Township'),
+                'township_id': fields.related(
+                    'customer_id', 'township',
+                    type='many2one',
+                    relation='res.township',
+                    string="Township",store=True)                
     }
     
     _defaults = {        
