@@ -95,6 +95,8 @@
 							context="{'group_by':'user_id'}" />
 						<filter string="Branch" icon="terp-partner" domain="[]"
 							context="{'group_by':'branch_id'}" />
+						<filter string="Check Date Day" context="{'group_by': 'date:day'}" />	
+						<filter string="Township" context="{'group_by':'township_id'}" />
 					</group>
 				</search>
 			</field>
