@@ -37,7 +37,11 @@ class customer_visit(osv.osv):
                                                       ('reject', 'Reject')], string='Status'),
      'branch_id': fields.many2one('res.branch', 'Branch',required=True),
     'distance_status':fields.char('Distance Status', readonly=True),
-                
+        'township_id': fields.related(
+                   'customer_id', 'township',
+                   type='many2one',
+                   relation='res.township',
+                   string="Township",store=True)          
     }
     _defaults = {        
         'm_status' : 'pending',
