@@ -59,6 +59,7 @@
 									<field name="transaction_id" />
 								</h5>
 								<field name="customer_id" required="1" on_change='onchange_customer_id(customer_id)' domain="[('customer', '=',True)]"/>
+								<field name="township_id" />
 								<field name="customer_code" />
 								<field name="team_id" on_change='onchange_team_id(team_id)' />
 								<field name="invoice_id" readonly="1"/>
