@@ -10,6 +10,8 @@
 					<xpath expr="//search/group/filter[@string='Status']"
 						position="after">
 						<filter string="Branch" context="{'group_by':'branch_id'}" />
+						<filter string="Invoice Day" context="{'group_by':'date_invoice:day'}" />
+						<filter string="Township" context="{'group_by':'township'}" />
 					</xpath>
 			</field>
 		</record>
