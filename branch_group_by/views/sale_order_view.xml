@@ -8,14 +8,12 @@
 			<field name="model">sale.order</field>
 			<field name="inherit_id" ref="sale.view_sales_order_filter" />
 			<field name="arch" type="xml">
-
 				<xpath expr="//search/group/filter[@string='Order Month']"
 					position="before">
-					<filter string="Branch" context="{'group_by': 'branch_id'}" />
-                        <filter string="Invoice Month" context="{'group_by':'date_invoice'}"/>
-                        <filter string="Invoice Day" domain="[ ]" context="{'group_by': 'date_invoice:day'}" />					
+					<filter string="Branch" context="{'group_by': 'branch_id'}" />                    
+                    <filter string="Order Day" context="{'group_by': 'date_order:day'}" />	
+                    <filter string="Township" context="{'group_by': 'township'}" />					
 				</xpath>
-
 			</field>
 		</record>
 	</data>
