@@ -519,6 +519,7 @@
 					<group>
 						<group>
 							<field name="partner_id" />
+							<field name="township_id" />
 							<field name="name" />
 							<field name="date" />
 							<field name="type" />
@@ -543,6 +544,8 @@
 					<group expand="0" string="Group By...">
 						<filter string="Customer" icon="terp-partner" domain="[]"
 							context="{'group_by':'partner_id'}" />
+						<filter string="Date Day" context="{'group_by': 'date:day'}" />	
+						<filter string="Township" context="{'group_by':'township_id'}" />
 					</group>
 				</search>
 			</field>
