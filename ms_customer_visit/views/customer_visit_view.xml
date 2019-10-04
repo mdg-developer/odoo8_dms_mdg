@@ -39,8 +39,12 @@
 							context="{'group_by':'date'}" />
 						<filter name="visit_reason" string="Reason" domain="[]"
 							context="{'group_by':'visit_reason'}" />
-						<filter string="Date Day" context="{'group_by': 'date:day'}" />	
-						<filter string="Township" context="{'group_by':'township_id'}" />
+						<filter name="date_day" string="Date Day" domain="[]"
+							context="{'group_by':'date:day'}" />
+						<filter name="township" string="Township" domain="[]"
+							context="{'group_by':'township_id'}" />
+						<filter name="branch" string="Branch" domain="[]"
+							context="{'group_by':'branch_id'}" />						
 					</group>
 				</search>
 			</field>
