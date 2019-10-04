@@ -22,6 +22,11 @@ class sync_log(osv.osv):
                      'latitude':fields.float('Geo Latitude', digits=(16, 5), readonly=True),
                     'longitude':fields.float('Geo Longitude', digits=(16, 5), readonly=True),
                     'distance_status':fields.char('Distance Status', readonly=True),
+                'township_id': fields.related(
+                    'customer_id', 'township',
+                    type='many2one',
+                    relation='res.township',
+                    string="Township",store=True)     
   }
     _defaults = {
         'm_status' : 'draft',

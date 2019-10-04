@@ -26,6 +26,7 @@
 								<field name="date" />
 								<field name="sale_team_id" class="oe_inline" />
 								<field name="customer_id" />
+								<field name="township_id" />
 								<field name="customer_code" />
 								<field name="feedback_type" />
 								<field name="maingroup_id" class="oe_inline" />
@@ -80,6 +81,10 @@
 							context="{'group_by':'assignby'}" />
 						<filter string="Assign To" icon="terp-partner" domain="[]"
 							context="{'group_by':'assignto'}" />
+						<filter string="Date Day" icon="terp-partner" domain="[]"
+							context="{'group_by':'date:day'}" />
+						<filter string="Township" icon="terp-partner" domain="[]"
+							context="{'group_by':'township_id'}" />
 					</group>
 				</search>
 			</field>
