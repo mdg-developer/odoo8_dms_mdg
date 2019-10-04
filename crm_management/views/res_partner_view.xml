@@ -546,6 +546,7 @@
 							context="{'group_by':'partner_id'}" />
 						<filter string="Date Day" context="{'group_by': 'date:day'}" />	
 						<filter string="Township" context="{'group_by':'township_id'}" />
+						<filter string="Branch" context="{'group_by':'branch_id'}" />
 					</group>
 				</search>
 			</field>
