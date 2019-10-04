@@ -27,6 +27,7 @@
 								<field name="sale_team_id" class="oe_inline" />
 								<field name="customer_id" />
 								<field name="township_id" />
+								<field name="branch_id" />
 								<field name="customer_code" />
 								<field name="feedback_type" />
 								<field name="maingroup_id" class="oe_inline" />
