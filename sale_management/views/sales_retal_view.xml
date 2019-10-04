@@ -145,6 +145,8 @@
 					<group expand="0" string="Group By...">
 						<filter string="Customer" icon="terp-partner" domain="[]"
 							context="{'group_by':'partner_id'}" />
+						<filter string="Txn Date Day" context="{'group_by': 'date:day'}" />	
+						<filter string="Township" context="{'group_by':'township'}" />
 					</group>
 				</search>
 			</field>
