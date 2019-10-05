@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.4.1.v201408290142 Build &lt;4.4.1.v20140916-1320></property>
     <property name="units">in</property>
     <method name="initialize"><![CDATA[branchList = params["branch_id"].value.join(",");
 teamList = params["sales_team_id"].value.join(",");]]></method>
@@ -241,14 +241,14 @@ this.queryText =this.queryText.replace("--$branch$", "and pso.branch_id in ("+ p
                     <property name="nativeDataType">2</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select pso.number as name ,rp.name as customer_name,cc.name as team,rp.customer_code,pso.date_invoice as date,res.login,pp.name_template,abs(psol.price_subtotal) total_amt
+            <xml-property name="queryText"><![CDATA[select pso.number as name ,rp.name as customer_name,cc.name as team,rp.customer_code,pso.date_invoice as date,res.login,pp.name_template,abs(price_subtotal) total_amt
 from account_invoice pso,account_invoice_line psol,res_partner rp,res_users res,product_product pp ,crm_case_section cc
 where pso.id=psol.invoice_id
 and pso.partner_id=rp.id
 and pso.user_id=res.id
 and pp.id=psol.product_id
 and cc.id=pso.section_id
-and psol.price_subtotal<0
+and price_subtotal<0
 and pso.pre_order=True
 and pso.date_invoice between ? and ?
 --$branch$

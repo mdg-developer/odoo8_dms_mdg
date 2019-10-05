@@ -425,8 +425,8 @@ where 1=1
                     </structure>
                 </list-property>
             </structure>
-            <method name="beforeOpen"><![CDATA[this.queryText =this.queryText.replace("--$sales_team$", "and inv.section_id in ("+ params["sales_team_id"].value.join(",")+")")
-this.queryText =this.queryText.replace("--$branch_id$", "and inv.branch_id in ("+ params["branch_id"].value.join(",")+")")]]></method>
+            <method name="beforeOpen"><![CDATA[this.queryText =this.queryText.replace("--$sales_team$", "and so.section_id in ("+ params["sales_team_id"].value.join(",")+")")
+this.queryText =this.queryText.replace("--$branch_id$", "and so.branch_id in ("+ params["branch_id"].value.join(",")+")")]]></method>
             <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
                 <structure>
@@ -438,9 +438,9 @@ this.queryText =this.queryText.replace("--$branch_id$", "and inv.branch_id in ("
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select string_agg(distinct(ccs.name), ',')
-from account_invoice inv,crm_case_section ccs
-where inv.section_id=ccs.id
-and inv.date_invoice between ? and ?
+from sale_order so,crm_case_section ccs
+where so.section_id=ccs.id
+and date_order::date between ? and ?
 --$sales_team$
 --$branch_id$
 ]]></xml-property>

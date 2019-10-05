@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.4.1.v201408290142 Build &lt;4.4.1.v20140916-1320></property>
     <list-property name="userProperties">
         <structure>
             <property name="name">Data Cube.Data Set.x</property>
@@ -451,11 +451,22 @@ order by team.id]]></xml-property>
                 </ref-entry>
                 <ref-entry baseId="41" id="41"/>
                 <ref-entry baseId="42" id="42"/>
+                <ref-entry baseId="58" name="NewImage" id="58"/>
                 <ref-entry baseId="43" id="43"/>
                 <ref-entry baseId="59" name="NewData" id="59"/>
                 <ref-entry baseId="44" id="44"/>
                 <ref-entry baseId="45" id="45"/>
                 <ref-entry baseId="48" id="48"/>
+                <ref-entry baseId="136" name="NewGrid1" id="136"/>
+                <ref-entry baseId="137" id="137"/>
+                <ref-entry baseId="138" id="138"/>
+                <ref-entry baseId="139" id="139"/>
+                <ref-entry baseId="140" id="140"/>
+                <ref-entry baseId="142" name="NewText" id="142"/>
+                <ref-entry baseId="141" id="141"/>
+                <ref-entry baseId="143" name="NewText1" id="143">
+                    <property name="textAlign">center</property>
+                </ref-entry>
             </overridden-values>
         </simple-master-page>
     </page-setup>
@@ -948,7 +959,7 @@ order by team.id]]></xml-property>
                 </extended-item>
             </property>
             <property name="hideMeasureHeader">true</property>
-            <property name="width">16.4in</property>
+            <property name="width">14in</property>
             <list-property name="boundDataColumns">
                 <structure>
                     <property name="name">name</property>

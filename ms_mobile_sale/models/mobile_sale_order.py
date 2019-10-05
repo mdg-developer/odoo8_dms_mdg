@@ -2311,13 +2311,8 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()        
         return datas    
     
-#     def get_sale_team_channel(self, cr, uid, sale_team_id , context=None, **kwargs):    
-#         cr.execute("""select sale_team_id,sale_channel_id from sale_team_channel_rel
-#                         where sale_team_id = %s """, (sale_team_id,))                
-#         datas = cr.fetchall()
-#         return datas
-    def get_sale_team_channel(self, cr, uid, sale_team_id , context=None, **kwargs):
-        cr.execute("""select sale_team_id,sale_channel_id from sale_team_channel_rel rel,sale_channel c where rel.sale_team_id =%s  and c.id =rel.sale_channel_id order by c.name asc """, (sale_team_id,))
+    def get_sale_team_channel(self, cr, uid, sale_team_id , context=None, **kwargs):    
+        cr.execute("""select sale_team_id,sale_channel_id from sale_team_channel_rel rel,sale_channel c where rel.sale_team_id =%s  and c.id =rel.sale_channel_id order by c.name asc """, (sale_team_id,))                
         datas = cr.fetchall()
         return datas
     

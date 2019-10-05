@@ -77,8 +77,6 @@ class account_bank_statement_line(osv.osv):
             'income_amt': fields.float('Receive', digits_compute=dp.get_precision('Account')),
             'expense_amt': fields.float('Payment', digits_compute=dp.get_precision('Account')),
             'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account'),
-            'import_fname': fields.char('Filename', size=128),
-            'import_file':fields.binary('Invoice Attachment', required=False),
         }
 
     def create(self, cursor, user, vals, context=None):
@@ -503,6 +501,7 @@ class account_bank_statement(osv.osv):
            :param browse_record st_line: account.bank.statement.line record to
                   create the move from.
            :param int/long move_id: ID of the account.move to link the move line
+           :param float debit: debit amount of the move line
            :param float credit: credit amount of the move line
            :param int/long currency_id: ID of currency of the move line to create
            :param float amount_currency: amount of the debit/credit expressed in the currency_id

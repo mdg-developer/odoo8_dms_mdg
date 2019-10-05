@@ -213,9 +213,9 @@ class account_invoice_line(models.Model):
             if line.net_total < 0:
                 val1 = {'type': 'src',
                         'name': line.product_id.name_template,
-                        'price_unit':line.net_total,
+                        'price_unit':round(line.net_total,2),
                         'quantity': 1,
-                        'price':line.net_total,
+                        'price':round(line.net_total,2),
                         'account_id': discount_account_id,
                         'product_id':  line.product_id.id,
                         'is_discount':True,

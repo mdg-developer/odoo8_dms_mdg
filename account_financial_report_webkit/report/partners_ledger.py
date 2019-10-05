@@ -117,6 +117,7 @@ class PartnersLedgerWebkit(report_sxw.rml_parse,
             filter_type = ('payable',)
         if result_selection == 'all_account':
             filter_type = ('all',)
+        print 'filter_type>>>',filter_type
         accounts = self.get_all_accounts(new_ids, exclude_type=['view'],
                                          only_type=filter_type)
 

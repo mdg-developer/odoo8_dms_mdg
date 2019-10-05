@@ -29,7 +29,7 @@ class AccountPartnerBalanceWizard(models.TransientModel):
         'account.analytic.account', string='Filter on analytic accounts',
         help="Only selected analytic accounts will be printed. "
         "Leave empty to print all analytic accounts.")
-    branch_id = fields.Many2one('res.branch', 'Branch'),    
+    branch_id = fields.Many2one('res.branch', 'Branch')    
     branch_ids = fields.Many2many(
         'res.branch')          
         

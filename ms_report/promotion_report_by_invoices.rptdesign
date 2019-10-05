@@ -10,7 +10,7 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
     <property name="imageDPI">96</property>
     <list-property name="libraries">
         <structure>
-            <property name="fileName">ms_report/birt_report/report_library.rptlibrary</property>
+            <property name="fileName">birt_report/report_library.rptlibrary</property>
             <property name="namespace">report_library</property>
         </structure>
     </list-property>
@@ -1175,7 +1175,7 @@ order by name asc]]></xml-property>
                     <label id="884">
                         <property name="fontSize">12pt</property>
                         <property name="fontWeight">bold</property>
-                        <text-property name="text">Promotion Report</text-property>
+                        <text-property name="text">Promotion Status Summary</text-property>
                     </label>
                 </cell>
             </row>
@@ -1646,7 +1646,7 @@ order by name asc]]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="1146">
-                            <text-property name="text">Qty</text-property>
+                            <text-property name="text">FOC Qty</text-property>
                         </label>
                     </cell>
                     <cell id="1050">
@@ -1685,7 +1685,7 @@ order by name asc]]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="1144">
-                            <text-property name="text">Discount</text-property>
+                            <text-property name="text">Discount Amount</text-property>
                         </label>
                     </cell>
                 </row>

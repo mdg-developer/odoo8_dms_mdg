@@ -5,7 +5,7 @@ from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.tools import html_escape as escape
-from openerp.addons.website.models.website import slug, unslug
+
 
 class partner_map(http.Controller):
     '''
@@ -22,8 +22,8 @@ class partner_map(http.Controller):
 
     In order to resize the map, simply resize the ``iframe`` with CSS
     directives ``width`` and ``height``.
-    '''    
-    
+    '''
+
     @http.route(['/partner_map'], type='http', auth="public", website=True)
     def partner_map(self, *arg, **post):        
         cr, uid, context = request.cr, request.uid, request.context
@@ -59,7 +59,7 @@ class partner_map(http.Controller):
         "partners": []
         }
         
-        partner_details =  partner_obj.browse(cr, SUPERUSER_ID, clean_ids,context = {'show_address': True})
+        partner_details =  partner_obj.browse(cr, SUPERUSER_ID, clean_ids)
 #         print(partner_details);
         request.context.update({'show_address': True})
         for partner in partner_details:
@@ -67,9 +67,7 @@ class partner_map(http.Controller):
             partner_data["partners"].append({
                 'id': partner.id,
                 'name': escape(partner.name),
-                'outlet_type': escape(partner.outlet_type.name or ''),
                 'address': escape('\n'.join(partner.name_get()[0][1].split('\n')[1:])),
-                'township': escape(partner.township.name or ''),
                 'latitude': escape(str(partner.partner_latitude)),
                 'longitude': escape(str(partner.partner_longitude)),
                 })
@@ -131,18 +129,16 @@ class partner_map(http.Controller):
         "partners": []
         }
         
-        partner_details =  partner_obj.browse(cr, SUPERUSER_ID, clean_ids,context = {'show_address': True})
+        partner_details =  partner_obj.browse(cr, SUPERUSER_ID, clean_ids)
 #         print(partner_details);
         request.context.update({'show_address': True})
         for partner in partner_details:
 #             print(partner.name_get());
-            print 'outlet_type>>>>>>>>>>',partner.outlet_type.name
             partner_data["partners"].append({
                 'id': partner.id,
                 'name': escape(partner.name),
                 'outlet_type': escape(partner.outlet_type.name or ''),
                 'address': escape('\n'.join(partner.name_get()[0][1].split('\n')[1:])),
-                'township': escape(partner.township.name or ''),
                 'latitude': escape(str(partner.partner_latitude)),
                 'longitude': escape(str(partner.partner_longitude)),
                 })
@@ -216,7 +212,6 @@ class partner_map(http.Controller):
                 'name': escape(partner.name),
                 'outlet_type': escape(partner.outlet_type.name or ''),
                 'address': escape('\n'.join(partner.name_get()[0][1].split('\n')[1:])),
-                'township': escape(partner.township.name or ''),
                 'latitude': escape(str(partner.partner_latitude)),
                 'longitude': escape(str(partner.partner_longitude)),
                 })

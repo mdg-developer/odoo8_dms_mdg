@@ -20,7 +20,7 @@ class sale_plan_day(osv.osv):
             return {
                         'type': 'ir.actions.act_url',
                         'url': '/selected_partner_map?id=%s' % partner_ids,
-                        'target': 'new',
+                        'target': 'self',
                     }
     def open_polygon_map(self, cr, uid, ids, context=None):    
         partner_ids = []
@@ -39,5 +39,5 @@ class sale_plan_day(osv.osv):
             return {
                 'type': 'ir.actions.act_url',
                 'url': '/partners_polygon_map?id=%s' % partner_ids,
-                'target': 'new',
+                'target': 'self',
             }

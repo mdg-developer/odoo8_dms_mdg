@@ -239,8 +239,8 @@ class account_print_journal_xls(orm.TransientModel):
             action_id = self.pool.get('ir.actions.report.xml').search(cr,uid,[('name','ilike','nov.account.journal.print')],limit=1)
             
             if action_id:
-                for act_id in self.pool.get('ir.actions.report.xml').browse(cr,uid,action_id,context=None):
-                    print 'act_id>>>',act_id 
+               for act_id in self.pool.get('ir.actions.report.xml').browse(cr,uid,action_id,context=None):
+                   print 'act_id>>>',act_id 
             return {'type': 'ir.actions.report.xml',
                     'report_name': 'nov.account.journal.xls',
                     #'report_name': 'nov.account.journal.print',

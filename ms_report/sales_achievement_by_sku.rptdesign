@@ -206,7 +206,7 @@ this.queryText =this.queryText.replace("--$branch_id$", "and branch_id in ("+ pa
             </list-property>
             <xml-property name="queryText"><![CDATA[with sale_order as (
 	select name_template,section_id,pp.sequence as pseq,
-	case when ail.uos_id=pt.uom_id then quantity when ail.uos_id=pt.big_uom_id then quantity*(select floor(round(1/factor,2)) from product_uom where id=big_uom_id) end as quantity,
+	case when ail.uos_id=pt.uom_id then quantity when ail.uos_id!=pt.uom_id then quantity*(select floor(round(1/factor,2)) from product_uom where id=ail.uos_id) end as quantity,
 	(price_subtotal+discount_amt)::numeric as ach_amt,date_part('month',date_invoice)::int as month,date_part('year',date_invoice)::int as year,product_id,(date_invoice+ '6 hour'::interval + '30 minutes'::interval)::date as date_order,branch_id
 	from account_invoice ai,account_invoice_line ail,product_product pp,product_template pt
 	where ai.id=ail.invoice_id
@@ -618,7 +618,7 @@ and uid=?
                         <property name="fontSize">12pt</property>
                         <property name="fontWeight">bold</property>
                         <property name="textAlign">center</property>
-                        <text-property name="text">Sales Achievement by SKU Report</text-property>
+                        <text-property name="text">Report : Sales Achievement by SKU Report</text-property>
                     </label>
                 </cell>
             </row>
@@ -687,7 +687,7 @@ and uid=?
                                         <property name="fontSize">12pt</property>
                                         <property name="fontWeight">bold</property>
                                         <property name="textAlign">center</property>
-                                        <expression name="valueExpr">branchList;</expression>
+                                        <expression name="valueExpr">'Branch : ' + branchList;</expression>
                                         <property name="contentType">html</property>
                                     </text-data>
                                 </cell>
@@ -708,8 +708,9 @@ and uid=?
                             <structure>
                                 <property name="name">string_agg</property>
                                 <text-property name="displayName">string_agg</text-property>
-                                <expression name="expression" type="javascript">dataSetRow["string_agg"]</expression>
+                                <expression name="expression" type="javascript">'Team : ' + dataSetRow["string_agg"]</expression>
                                 <property name="dataType">string</property>
+                                <property name="allowExport">true</property>
                             </structure>
                         </list-property>
                         <property name="resultSetColumn">string_agg</property>

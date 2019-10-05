@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$USER_HOME$/PycharmProjects/odoo8.0/.idea/odoo8.0.iml" filepath="$USER_HOME$/PycharmProjects/odoo8.0/.idea/odoo8.0.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/odoo8_dms.iml" filepath="$PROJECT_DIR$/.idea/odoo8_dms.iml" />
+    </modules>
+  </component>
+</project>

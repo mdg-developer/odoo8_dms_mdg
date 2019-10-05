@@ -244,18 +244,18 @@ class sl_import(orm.TransientModel):
                                 stock_move_line_obj.write(cr, uid, exist, value)
                             res_id = 'product.template,'
                             res_id += str(product_template_id[0])
-                            if product_template_id:
-                                product_template_obj.write(cr, uid, product_template_id, {'list_price':public_price})
-                                if price:
-                                    standard_field_id = fields_obj.search(cr, uid, [('name', '=', 'standard_price')])
-                                    if standard_field_id:
-                                        # print 'standard_field',standard_field_id[0]
-                                        res = {'res_id':res_id,
-                                             'value_float':price,
-                                             'type':'float',
-                                             'company_id':company_id,
-                                             'fields_id':standard_field_id[0]}
-                                        property_obj.create(cr, uid, res, context)  
+#                             if product_template_id:
+#                                 product_template_obj.write(cr, uid, product_template_id, {'list_price':public_price})
+#                                 if price:
+#                                     standard_field_id = fields_obj.search(cr, uid, [('name', '=', 'standard_price')])
+#                                     if standard_field_id:
+#                                         # print 'standard_field',standard_field_id[0]
+#                                         res = {'res_id':res_id,
+#                                              'value_float':price,
+#                                              'type':'float',
+#                                              'company_id':company_id,
+#                                              'fields_id':standard_field_id[0]}
+#                                         property_obj.create(cr, uid, res, context)  
                 if default_code:
                     cr.execute("""select id from product_product where lower(default_code) like %s """, (default_code.lower(),))
                     data = cr.fetchall()
@@ -281,18 +281,18 @@ class sl_import(orm.TransientModel):
                                 stock_move_line_obj.write(cr, uid, exist, value)
                             res_id = 'product.template,'
                             res_id += str(product_template_id[0])
-                            if product_template_id:
-                                product_template_obj.write(cr, uid, product_template_id, {'list_price':public_price})
-                                if price:
-                                    standard_field_id = fields_obj.search(cr, uid, [('name', '=', 'standard_price')])
-                                    if standard_field_id:
-                                        # print 'standard_field',standard_field_id[0]
-                                        res = {'res_id':res_id,
-                                             'value_float':price,
-                                             'type':'float',
-                                             'company_id':company_id,
-                                             'fields_id':standard_field_id[0]}
-                                        property_obj.create(cr, uid, res, context)
+#                             if product_template_id:
+#                                 product_template_obj.write(cr, uid, product_template_id, {'list_price':public_price})
+#                                 if price:
+#                                     standard_field_id = fields_obj.search(cr, uid, [('name', '=', 'standard_price')])
+#                                     if standard_field_id:
+#                                         # print 'standard_field',standard_field_id[0]
+#                                         res = {'res_id':res_id,
+#                                              'value_float':price,
+#                                              'type':'float',
+#                                              'company_id':company_id,
+#                                              'fields_id':standard_field_id[0]}
+#                                         property_obj.create(cr, uid, res, context)
                                         # print 'this is product.template standard_price',price 
                         
                     

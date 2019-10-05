@@ -145,8 +145,7 @@ class stock_return_from_mobile(osv.osv):
                     ) and status='Stock Return' and product_id =%s
                     ''',(sale_team_id,return_date,mobile_product_id,))  
                     closing_qty=cr.fetchone()[0]
-                    if closing_qty>0:
-                        cr.execute('update stock_return_mobile_line set return_quantity = %s + return_quantity where id= %s and product_id =%s ',(closing_qty,mobile_line_id.id,mobile_product_id,))                        
+                    cr.execute('update stock_return_mobile_line set return_quantity = %s + return_quantity where id= %s and product_id =%s ',(closing_qty,mobile_line_id.id,mobile_product_id,))                        
                     
         return True 
                
