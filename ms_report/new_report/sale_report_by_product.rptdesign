@@ -626,6 +626,12 @@ and pp.id in (select product_product_id from crm_case_section_product_product_re
                     <text-property name="displayName">channel</text-property>
                     <text-property name="heading">channel</text-property>
                 </structure>
+                <structure>
+                    <property name="columnName">tag</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">tag</text-property>
+                    <text-property name="heading">tag</text-property>
+                </structure>
             </list-property>
             <list-property name="parameters">
                 <structure>
@@ -794,6 +800,11 @@ and pp.id in (select product_product_id from crm_case_section_product_product_re
                     <structure>
                         <property name="position">29</property>
                         <property name="name">channel</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">30</property>
+                        <property name="name">tag</property>
                         <property name="dataType">string</property>
                     </structure>
                 </list-property>
@@ -1006,17 +1017,31 @@ this.queryText =this.queryText.replace("--$product_id$", "and report.product_id 
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
+                <structure>
+                    <property name="position">30</property>
+                    <property name="name">tag</property>
+                    <property name="nativeName">tag</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select report.*,(select name from plan_frequency where id = rp.frequency_id )frequency ,township.name as township,outlet.name as outlet ,channel.name as channel
-from promotion_sale_temp_report report,res_partner rp,res_township township,outlettype_outlettype outlet,sale_channel channel
+            <xml-property name="queryText"><![CDATA[select report.*,(select name from plan_frequency where id = rp.frequency_id )frequency ,township.name as township,outlet.name as outlet ,channel.name as channel,STRING_AGG (rpc.name, ',') tag
+from promotion_sale_temp_report report,res_partner rp,res_township township,outlettype_outlettype outlet,sale_channel channel,res_partner_res_partner_category_rel rpcl,res_partner_category rpc
 where date_invoice between ? and ?
 and rp.customer_code =report.customer_id 
 and rp.township=township.id
 and outlet.id=rp.outlet_type
 and channel.id =rp.sales_channel
+and rpcl.partner_id=rp.id
+and rpc.id=rpcl.category_id
 --$sale_team_id$
 --$branch_id$
 --$product_id$
+group by report.account_name,report.account_desc,report.customer_id,report.customer,
+report.invoice_no,report.sale_team,report.default_code,report.product_id,report.product_desc,
+report.description_sale,report.qty,report.foc,report.discount_amt,report.uom,report.unit_price,
+report.net_total,report.discount,report.sub_total,report.promotion_des,report.promotion_id,report.branch_id,report.date_invoice,
+report.team_id,report.payment_type,report.promotion,rp.frequency_id ,township.name,outlet.name,channel.name
 order by date_invoice,sale_team,customer,township]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
@@ -2000,6 +2025,12 @@ order by date_invoice,sale_team,customer,township]]></xml-property>
                     <expression name="expression" type="javascript">dataSetRow["frequency"]</expression>
                     <property name="dataType">string</property>
                 </structure>
+                <structure>
+                    <property name="name">tag</property>
+                    <text-property name="displayName">tag</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["tag"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
             </list-property>
             <column id="1122">
                 <property name="width">0.8229166666666666in</property>
@@ -2023,6 +2054,9 @@ order by date_invoice,sale_team,customer,township]]></xml-property>
                 <property name="width">1.125in</property>
             </column>
             <column id="1195">
+                <property name="width">1.125in</property>
+            </column>
+            <column id="1218">
                 <property name="width">1.125in</property>
             </column>
             <column id="1191">
@@ -2182,6 +2216,20 @@ order by date_invoice,sale_team,customer,township]]></xml-property>
                         <label id="1201">
                             <property name="fontWeight">bold</property>
                             <text-property name="text">Outlet Type</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1215">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="1221">
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">Tags</text-property>
                         </label>
                     </cell>
                     <cell id="1188">
@@ -2516,6 +2564,23 @@ order by date_invoice,sale_team,customer,township]]></xml-property>
                             <property name="resultSetColumn">outlet</property>
                         </data>
                     </cell>
+                    <cell id="1216">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="1222">
+                            <property name="borderBottomStyle">none</property>
+                            <property name="borderLeftStyle">none</property>
+                            <property name="borderRightStyle">none</property>
+                            <property name="borderTopStyle">none</property>
+                            <property name="resultSetColumn">tag</property>
+                        </data>
+                    </cell>
                     <cell id="1189">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -2767,7 +2832,7 @@ order by date_invoice,sale_team,customer,township]]></xml-property>
             <footer>
                 <row id="1093">
                     <cell id="1121">
-                        <property name="colSpan">17</property>
+                        <property name="colSpan">18</property>
                         <property name="rowSpan">1</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
