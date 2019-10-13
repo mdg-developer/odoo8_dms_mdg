@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.6.0.v201606072122</property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
     <list-property name="userProperties">
         <structure>
             <property name="name">Data Cube.Data Set.x</property>
@@ -148,6 +148,29 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                 <property name="category">Unformatted</property>
             </structure>
         </scalar-parameter>
+        <scalar-parameter name="product_status" id="1060">
+            <text-property name="promptText">Product Status</text-property>
+            <property name="valueType">static</property>
+            <property name="dataType">string</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList">
+                <structure>
+                    <property name="value">active</property>
+                    <property name="label">Active</property>
+                </structure>
+                <structure>
+                    <property name="value">inactive</property>
+                    <property name="label">Inactive</property>
+                </structure>
+            </list-property>
+            <property name="paramType">simple</property>
+            <property name="controlType">list-box</property>
+            <property name="mustMatch">true</property>
+            <property name="fixedOrder">true</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
     </parameters>
     <data-sources>
         <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="1046"
@@ -163,24 +186,28 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     <property name="columnName">partner_tag</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">partner_tag</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">partner_tag</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">target_qty</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">target_qty</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">target_qty</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">type</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">type</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">type</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">product_id</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">product_id</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">product_id</text-property>
                 </structure>
                 <structure>
@@ -201,6 +228,7 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     <property name="columnName">customer_code</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">customer_code</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">customer_code</text-property>
                 </structure>
                 <structure>
@@ -277,6 +305,7 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     <property name="columnName">test</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">test</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">test</text-property>
                 </structure>
             </list-property>
@@ -594,6 +623,14 @@ if (params["outlettype_id"].value[0] == 'ALL')
 else
 {
 	this.queryText =this.queryText.replace("--$outlettype_id_inv$", "and oo.id in ('"+ params["outlettype_id"].value.join("','")+"')");
+}
+if (params["product_status"].value == 'active')
+{  
+	this.queryText =this.queryText.replace("--$product_status$", "and pp.active=true")
+}
+else
+{
+	this.queryText =this.queryText.replace("--$product_status$", "and pp.active=false")
 }]]></method>
             <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
@@ -735,10 +772,11 @@ else
 	inner join outlettype_outlettype oo on oo.id=rp.outlet_type
 	inner join res_township  rt on rt.id=rp.township
 	where pt.type !='service'
+	--$product_status$
 	--$sales_team_all_inv$
     --$branch_id_all_inv$
 	--$township_id_check$
-	--$outlettype_id_check$	
+	--$outlettype_id_check$		
 	order by seq),
 sale_qty as (
 	( select pp.id as product_id,rp.name,rp.customer_code as customer_code,oo.name as outlettype,oo.id as outlettype_id,rt.code as township,rt.id township_id,ccs.name sales_team,ai.section_id,ai.branch_id,name_template,'Sales Qty'::text as status,pp.sequence as seq,
@@ -753,7 +791,9 @@ sale_qty as (
 	and ai.section_id=ccs.id
 	and oo.id=rp.outlet_type
 	and date_invoice between ?  and  ? 
-	--$status$
+	and pt.type !='service'
+	--$status$	
+	--$product_status$
 	--$sales_team_inv$
 	--$branch_id_inv$
 	--$township_id_inv$
@@ -772,6 +812,7 @@ sale_qty as (
 	and ai.sale_team_id=ccs.id
 	and oo.id=rp.outlet_type
 	and ai.date between ?  and  ? 
+	and pt.type !='service'
 	--$sales_team_check$
 	--$branch_id_check$
 	--$township_id_check$
@@ -782,7 +823,7 @@ sale_qty as (
 	and ai.partner_id=rp.id
 	and date_invoice between ?  and  ? 
 	and oo.id=rp.outlet_type
-	--$status$
+	--$status$	
 	--$sales_team_inv$
 	--$branch_id_inv$
 	--$township_id_inv$
@@ -794,7 +835,7 @@ sale_qty as (
 	and oo.id=rp.outlet_type
 	and ai.partner_id=rp.id
 	and date_invoice between ?  and  ? 
-	--$status$
+	--$status$	
 	--$sales_team_inv$
 	--$branch_id_inv$
 	--$township_id_inv$
@@ -2674,6 +2715,32 @@ else
                         </extended-item>
                     </property>
                     <property name="views">
+                        <extended-item extensionName="DimensionView" id="896">
+                            <property name="dimension">Group4</property>
+                            <property name="levels">
+                                <extended-item extensionName="LevelView" name="NewLevel View4" id="897">
+                                    <property name="level">Group4/customer_code</property>
+                                    <property name="member">
+                                        <extended-item extensionName="CrosstabCell" id="898">
+                                            <property name="content">
+                                                <data name="customer_code" id="900">
+                                                    <property name="fontWeight">normal</property>
+                                                    <property name="resultSetColumn">customer_code</property>
+                                                </data>
+                                            </property>
+                                            <property name="borderTopStyle">solid</property>
+                                            <property name="borderTopWidth">thin</property>
+                                            <property name="borderLeftStyle">solid</property>
+                                            <property name="borderLeftWidth">thin</property>
+                                            <property name="borderBottomStyle">solid</property>
+                                            <property name="borderBottomWidth">thin</property>
+                                            <property name="borderRightStyle">solid</property>
+                                            <property name="borderRightWidth">thin</property>
+                                        </extended-item>
+                                    </property>
+                                </extended-item>
+                            </property>
+                        </extended-item>
                         <extended-item extensionName="DimensionView" id="857">
                             <property name="dimension">Group</property>
                             <property name="levels">
@@ -2696,32 +2763,6 @@ else
                                             <property name="borderRightStyle">solid</property>
                                             <property name="borderRightWidth">thin</property>
                                             <property name="width">193px</property>
-                                        </extended-item>
-                                    </property>
-                                </extended-item>
-                            </property>
-                        </extended-item>
-                        <extended-item extensionName="DimensionView" id="896">
-                            <property name="dimension">Group4</property>
-                            <property name="levels">
-                                <extended-item extensionName="LevelView" name="NewLevel View4" id="897">
-                                    <property name="level">Group4/customer_code</property>
-                                    <property name="member">
-                                        <extended-item extensionName="CrosstabCell" id="898">
-                                            <property name="content">
-                                                <data name="customer_code" id="900">
-                                                    <property name="fontWeight">normal</property>
-                                                    <property name="resultSetColumn">customer_code</property>
-                                                </data>
-                                            </property>
-                                            <property name="borderTopStyle">solid</property>
-                                            <property name="borderTopWidth">thin</property>
-                                            <property name="borderLeftStyle">solid</property>
-                                            <property name="borderLeftWidth">thin</property>
-                                            <property name="borderBottomStyle">solid</property>
-                                            <property name="borderBottomWidth">thin</property>
-                                            <property name="borderRightStyle">solid</property>
-                                            <property name="borderRightWidth">thin</property>
                                         </extended-item>
                                     </property>
                                 </extended-item>
@@ -2850,11 +2891,11 @@ else
                 </extended-item>
             </property>
             <property name="header">
-                <extended-item extensionName="CrosstabCell" id="855">
+                <extended-item extensionName="CrosstabCell" id="899">
                     <property name="content">
-                        <label id="861">
+                        <label id="901">
                             <property name="fontWeight">bold</property>
-                            <text-property name="text">Outlet Name</text-property>
+                            <text-property name="text">Outlet Code</text-property>
                         </label>
                     </property>
                     <property name="borderTopStyle">solid</property>
@@ -2866,11 +2907,11 @@ else
                     <property name="borderRightStyle">solid</property>
                     <property name="borderRightWidth">thin</property>
                 </extended-item>
-                <extended-item extensionName="CrosstabCell" id="899">
+                <extended-item extensionName="CrosstabCell" id="855">
                     <property name="content">
-                        <label id="901">
+                        <label id="861">
                             <property name="fontWeight">bold</property>
-                            <text-property name="text">Outlet Code</text-property>
+                            <text-property name="text">Outlet Name</text-property>
                         </label>
                     </property>
                     <property name="borderTopStyle">solid</property>
