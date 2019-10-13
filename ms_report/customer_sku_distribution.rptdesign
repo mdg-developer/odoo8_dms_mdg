@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.6.0.v201606072122</property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
     <list-property name="propertyBindings">
         <structure>
             <property name="name">queryText</property>
@@ -146,6 +146,29 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
             </structure>
         </scalar-parameter>
         <scalar-parameter name="user_id" id="832" extends="report_library.user_id"/>
+        <scalar-parameter name="product_status" id="1060">
+            <text-property name="promptText">Product Status</text-property>
+            <property name="valueType">static</property>
+            <property name="dataType">string</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList">
+                <structure>
+                    <property name="value">active</property>
+                    <property name="label">Active</property>
+                </structure>
+                <structure>
+                    <property name="value">inactive</property>
+                    <property name="label">Inactive</property>
+                </structure>
+            </list-property>
+            <property name="paramType">simple</property>
+            <property name="controlType">list-box</property>
+            <property name="mustMatch">true</property>
+            <property name="fixedOrder">true</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
     </parameters>
     <data-sources>
         <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="883"
@@ -733,6 +756,14 @@ if (params["outlettype_id"].value[0] == 'ALL')
 else
 {
 	this.queryText =this.queryText.replace("--$outlettype_id_inv$", "and oo.id in ('"+ params["outlettype_id"].value.join("','")+"')");
+}
+if (params["product_status"].value == 'active')
+{  
+	this.queryText =this.queryText.replace("--$product_status$", "and pp.active=true")
+}
+else
+{
+	this.queryText =this.queryText.replace("--$product_status$", "and pp.active=false")
 }]]></method>
             <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
@@ -866,7 +897,8 @@ else
 	inner join res_partner rp on rp.id =rel.partner_id
 	inner join outlettype_outlettype oo on oo.id=rp.outlet_type
 	inner join res_township  rt on rt.id=rp.township
-	where pt.type != 'service'
+	where pt.type != 'service'	
+	--$product_status$	
 	--$sales_team_all_inv$
     --$branch_id_all_inv$
 	--$township_id_check$
@@ -886,7 +918,9 @@ else
 	and ai.section_id=ccs.id
 	and oo.id=rp.outlet_type
 	and ai.date_invoice  between ? and  ?
-	--$status$
+	and pt.type != 'service'
+	--$status$	
+	--$product_status$	
 	--$sales_team_inv$
 	--$branch_id_inv$
 	--$township_id_inv$
@@ -915,7 +949,7 @@ else
 	and ai.partner_id=rp.id
 	and oo.id=rp.outlet_type	
 	and ai.date_invoice   between ? and  ?
-	--$status$
+	--$status$		
 	--$sales_team_inv$
 	--$branch_id_inv$
 	--$township_id_inv$
@@ -927,7 +961,7 @@ else
 	and oo.id=rp.outlet_type
 	and ai.partner_id=rp.id
 	and ai.date_invoice  between ? and  ?
-	--$status$
+	--$status$		
 	--$sales_team_inv$
 	--$branch_id_inv$
 	--$township_id_inv$
@@ -973,7 +1007,7 @@ total_amt as (
 	and ai.partner_id=rp.id
 	and oo.id=rp.outlet_type	
 	and ai.date_invoice between ? and  ?
-	--$status$
+	--$status$		
 	--$sales_team_inv$
 	--$branch_id_inv$
 	--$township_id_inv$
@@ -985,7 +1019,7 @@ total_amt as (
 	and oo.id=rp.outlet_type
 	and ai.partner_id=rp.id
 	and ai.date_invoice   between ? and  ?
-	--$status$
+	--$status$		
 	--$sales_team_inv$
 	--$branch_id_inv$
 	--$township_id_inv$
@@ -1031,7 +1065,7 @@ total_discount as (
 	and ai.partner_id=rp.id
 	and oo.id=rp.outlet_type	
 	and ai.date_invoice  between ? and  ?
-	--$status$
+	--$status$		
 	--$sales_team_inv$
 	--$branch_id_inv$
 	--$township_id_inv$
@@ -1089,7 +1123,7 @@ net_amt as (
 	and ai.partner_id=rp.id
 	and oo.id=rp.outlet_type	
 	and ai.date_invoice  between ? and  ?
-	--$status$
+	--$status$		
 	--$sales_team_inv$
 	--$branch_id_inv$
 	--$township_id_inv$
@@ -1101,7 +1135,7 @@ net_amt as (
 	and oo.id=rp.outlet_type
 	and ai.partner_id=rp.id
 	and ai.date_invoice  between ? and  ?
-	--$status$
+	--$status$		
 	--$sales_team_inv$
 	--$branch_id_inv$
 	--$township_id_inv$
@@ -1136,7 +1170,7 @@ where 1=1
 --$sales_team$
 --$branch_id$
 --$township_id$
---$outlettype_id$
+--$outlettype_id$	
 order by seq]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
@@ -2331,6 +2365,7 @@ else
                 </cell>
                 <cell id="876">
                     <data id="878">
+                        <property name="fontFamily">"Arial"</property>
                         <property name="fontWeight">bold</property>
                         <structure name="numberFormat">
                             <property name="category">Currency</property>
@@ -2526,17 +2561,6 @@ else
                             <property name="borderBottomStyle">solid</property>
                             <property name="borderBottomWidth">thin</property>
                             <property name="height">0.3229166666666667in</property>
-                            <property name="content">
-                                <data id="830">
-                                    <property name="fontWeight">bold</property>
-                                    <structure name="numberFormat">
-                                        <property name="category">Currency</property>
-                                        <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
-                                    </structure>
-                                    <property name="textAlign">right</property>
-                                    <property name="resultSetColumn">quantity_Group1/name_template</property>
-                                </data>
-                            </property>
                         </extended-item>
                     </property>
                     <property name="header">
@@ -2688,33 +2712,6 @@ else
                         </extended-item>
                     </property>
                     <property name="views">
-                        <extended-item extensionName="DimensionView" id="797">
-                            <property name="dimension">Group</property>
-                            <property name="levels">
-                                <extended-item extensionName="LevelView" name="NewLevel View4" id="798">
-                                    <property name="level">Group/name</property>
-                                    <property name="member">
-                                        <extended-item extensionName="CrosstabCell" id="799">
-                                            <property name="content">
-                                                <data name="name1" id="800">
-                                                    <property name="fontWeight">normal</property>
-                                                    <property name="resultSetColumn">name</property>
-                                                </data>
-                                            </property>
-                                            <property name="borderTopStyle">solid</property>
-                                            <property name="borderTopWidth">thin</property>
-                                            <property name="borderLeftStyle">solid</property>
-                                            <property name="borderLeftWidth">thin</property>
-                                            <property name="borderBottomStyle">solid</property>
-                                            <property name="borderBottomWidth">thin</property>
-                                            <property name="borderRightStyle">solid</property>
-                                            <property name="borderRightWidth">thin</property>
-                                            <property name="width">162px</property>
-                                        </extended-item>
-                                    </property>
-                                </extended-item>
-                            </property>
-                        </extended-item>
                         <extended-item extensionName="DimensionView" id="910">
                             <property name="dimension">Group4</property>
                             <property name="levels">
@@ -2737,6 +2734,33 @@ else
                                             <property name="borderRightStyle">solid</property>
                                             <property name="borderRightWidth">thin</property>
                                             <property name="width">1.0520833333333333in</property>
+                                        </extended-item>
+                                    </property>
+                                </extended-item>
+                            </property>
+                        </extended-item>
+                        <extended-item extensionName="DimensionView" id="797">
+                            <property name="dimension">Group</property>
+                            <property name="levels">
+                                <extended-item extensionName="LevelView" name="NewLevel View4" id="798">
+                                    <property name="level">Group/name</property>
+                                    <property name="member">
+                                        <extended-item extensionName="CrosstabCell" id="799">
+                                            <property name="content">
+                                                <data name="name1" id="800">
+                                                    <property name="fontWeight">normal</property>
+                                                    <property name="resultSetColumn">name</property>
+                                                </data>
+                                            </property>
+                                            <property name="borderTopStyle">solid</property>
+                                            <property name="borderTopWidth">thin</property>
+                                            <property name="borderLeftStyle">solid</property>
+                                            <property name="borderLeftWidth">thin</property>
+                                            <property name="borderBottomStyle">solid</property>
+                                            <property name="borderBottomWidth">thin</property>
+                                            <property name="borderRightStyle">solid</property>
+                                            <property name="borderRightWidth">thin</property>
+                                            <property name="width">162px</property>
                                         </extended-item>
                                     </property>
                                 </extended-item>
@@ -2865,11 +2889,11 @@ else
                 </extended-item>
             </property>
             <property name="header">
-                <extended-item extensionName="CrosstabCell" id="795">
+                <extended-item extensionName="CrosstabCell" id="913">
                     <property name="content">
-                        <label id="801">
+                        <label id="915">
                             <property name="fontWeight">bold</property>
-                            <text-property name="text">Outlet Name</text-property>
+                            <text-property name="text">Outlet Code</text-property>
                         </label>
                     </property>
                     <property name="borderTopStyle">solid</property>
@@ -2881,11 +2905,11 @@ else
                     <property name="borderRightStyle">solid</property>
                     <property name="borderRightWidth">thin</property>
                 </extended-item>
-                <extended-item extensionName="CrosstabCell" id="913">
+                <extended-item extensionName="CrosstabCell" id="795">
                     <property name="content">
-                        <label id="915">
+                        <label id="801">
                             <property name="fontWeight">bold</property>
-                            <text-property name="text">Outlet Code</text-property>
+                            <text-property name="text">Outlet Name</text-property>
                         </label>
                     </property>
                     <property name="borderTopStyle">solid</property>
@@ -3058,6 +3082,15 @@ else
                 </structure>
             </list-property>
         </extended-item>
+        <data id="830">
+            <property name="fontWeight">bold</property>
+            <structure name="numberFormat">
+                <property name="category">Currency</property>
+                <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
+            </structure>
+            <property name="textAlign">right</property>
+            <property name="resultSetColumn">quantity_Group1/name_template</property>
+        </data>
     </body>
     <list-property name="images">
         <structure>
