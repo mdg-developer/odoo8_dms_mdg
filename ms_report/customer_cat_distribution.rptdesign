@@ -318,6 +318,7 @@ else
 	left join res_partner_res_partner_category_rel rel on (rel.partner_id=rp.id)
 	left join res_partner_category categ on (rel.category_id=categ.id)
 	where customer=true
+	and rp.active=true
 	group by partner_id
 )
 
@@ -1467,10 +1468,5 @@ where date_invoice between ? and ?
                 </structure>
             </list-property>
         </extended-item>
-        <label id="123"/>
-        <label id="808">
-            <property name="fontWeight">bold</property>
-            <text-property name="text">Outlet Name</text-property>
-        </label>
     </body>
 </report>

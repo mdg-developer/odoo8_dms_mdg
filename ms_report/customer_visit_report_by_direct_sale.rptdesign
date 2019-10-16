@@ -31,7 +31,7 @@
     <method name="initialize"><![CDATA[branchList = params["branch_id"].value.join(",");
 teamList = params["sale_team_id"].value.join(",");]]></method>
     <property name="iconFile">/templates/blank_report.gif</property>
-    <property name="layoutPreference">auto layout</property>
+    <property name="layoutPreference">fixed layout</property>
     <property name="bidiLayoutOrientation">ltr</property>
     <property name="imageDPI">96</property>
     <list-property name="libraries">
@@ -94,7 +94,7 @@ teamList = params["sale_team_id"].value.join(",");]]></method>
             <text-property name="promptText">From Date</text-property>
             <property name="valueType">static</property>
             <property name="isRequired">true</property>
-            <property name="dataType">dateTime</property>
+            <property name="dataType">date</property>
             <property name="distinct">true</property>
             <list-property name="selectionList"/>
             <property name="paramType">simple</property>
@@ -108,7 +108,7 @@ teamList = params["sale_team_id"].value.join(",");]]></method>
             <text-property name="promptText">To Date</text-property>
             <property name="valueType">static</property>
             <property name="isRequired">true</property>
-            <property name="dataType">dateTime</property>
+            <property name="dataType">date</property>
             <property name="distinct">true</property>
             <list-property name="selectionList"/>
             <property name="paramType">simple</property>
@@ -180,6 +180,12 @@ teamList = params["sale_team_id"].value.join(",");]]></method>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">image</text-property>
                     <text-property name="heading">image</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">difference</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">difference</text-property>
+                    <text-property name="heading">difference</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">remark</property>
@@ -259,6 +265,11 @@ teamList = params["sale_team_id"].value.join(",");]]></method>
                     </structure>
                     <structure>
                         <property name="position">10</property>
+                        <property name="name">difference</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">11</property>
                         <property name="name">remark</property>
                         <property name="dataType">string</property>
                     </structure>
@@ -345,6 +356,12 @@ else
                 </structure>
                 <structure>
                     <property name="position">10</property>
+                    <property name="name">difference</property>
+                    <property name="nativeName">difference</property>
+                    <property name="nativeDataType">1111</property>
+                </structure>
+                <structure>
+                    <property name="position">11</property>
                     <property name="name">remark</property>
                     <property name="nativeName">remark</property>
                     <property name="dataType">string</property>
@@ -357,7 +374,7 @@ cast (cv.date::timestamp
 res.name,ccs.name sale_team,spd.name sale_plan_day,cv.visit_reason reason,rt.name township,
 case when cv.image is null then 'No'
 	 when cv.image is not null  then 'Yes'
-end as image,
+end as image,cv.date -LAG(cv.date)OVER (ORDER BY cv.date ) as difference,
 cv.other_reason remark
 from customer_visit cv
 left join res_partner res on res.id = cv.customer_id 
@@ -368,7 +385,8 @@ left join tablets_information ti on ti.id=cv.tablet_id
 left join res_township rt on rt.id=res.township
 where cv.date::date between ? and ?
 --$branch_id$
---$sales_team$]]></xml-property>
+--$sales_team$
+order by cv.date]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -1323,7 +1341,7 @@ from res_company
                     <property name="paramName">from_date</property>
                     <property name="nativeName"></property>
                     <property name="dataType">date</property>
-                    <property name="nativeDataType">93</property>
+                    <property name="nativeDataType">91</property>
                     <property name="position">1</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
@@ -1333,8 +1351,28 @@ from res_company
                     <property name="paramName">to_date</property>
                     <property name="nativeName"></property>
                     <property name="dataType">date</property>
-                    <property name="nativeDataType">93</property>
+                    <property name="nativeDataType">91</property>
                     <property name="position">2</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_3</property>
+                    <property name="paramName">from_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">3</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_4</property>
+                    <property name="paramName">to_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">4</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -1354,7 +1392,7 @@ from res_company
                     <structure>
                         <property name="position">3</property>
                         <property name="name">achi</property>
-                        <property name="dataType">decimal</property>
+                        <property name="dataType">float</property>
                     </structure>
                 </list-property>
             </structure>
@@ -1371,6 +1409,22 @@ if (params["sale_team_id"].value == null ){
 else
 {     
    this.queryText =this.queryText.replace("--$sales_team$", "and cv.sale_team_id in ("+params["sale_team_id"].value.join(",")+")")
+}
+
+
+if (params["branch_id"].value == null ){     
+   this.queryText =this.queryText.replace("--$branch_id_inv$", "")
+}
+else
+{     
+   this.queryText =this.queryText.replace("--$branch_id_inv$", "and ai.branch_id in ("+params["branch_id"].value.join(",")+")")
+}
+if (params["sale_team_id"].value == null ){     
+   this.queryText =this.queryText.replace("--$sales_team_inv$", "")
+}
+else
+{     
+   this.queryText =this.queryText.replace("--$sales_team_inv$", "and ai.section_id in ("+params["sale_team_id"].value.join(",")+")")
 }]]></method>
             <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
@@ -1392,20 +1446,23 @@ else
                     <property name="position">3</property>
                     <property name="name">achi</property>
                     <property name="nativeName">achi</property>
-                    <property name="dataType">decimal</property>
-                    <property name="nativeDataType">-5</property>
+                    <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[with total_effective as(
 	select count(*) total_effective from account_invoice ai 
 	where ai.state!='cancel'
+	and ai.date_invoice between ? and ?
+	--$sales_team_inv$
+	--$branch_id_inv$
 ),total_visit as(
 	select count(*) as total_visit from customer_visit cv where
-	(cv.date at time zone 'utc' )at time zone 'asia/rangoon' between ? and ?
+	((cv.date at time zone 'utc') at time zone 'asia/rangoon')::date between ? and ?
 	--$sales_team$
 	--$branch_id$
 )
-select *, case when total_visit > 0 then (total_effective/total_visit)*100 end as achi from total_effective te,total_visit tv]]></xml-property>
+select *, case when total_visit > 0 then (total_effective/total_visit::float)*100 end as achi from total_effective te,total_visit tv]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -1418,7 +1475,7 @@ select *, case when total_visit > 0 then (total_effective/total_visit)*100 end a
             <design:name></design:name>
             <design:position>1</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>93</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -1433,7 +1490,37 @@ select *, case when total_visit > 0 then (total_effective/total_visit)*100 end a
             <design:name></design:name>
             <design:position>2</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>93</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>3</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>4</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -1474,6 +1561,9 @@ select *, case when total_visit > 0 then (total_effective/total_visit)*100 end a
     </data-sets>
     <page-setup>
         <simple-master-page name="Simple MasterPage" id="2">
+            <property name="type">us-super-b</property>
+            <property name="orientation">landscape</property>
+            <property name="rightMargin">0in</property>
             <page-footer>
                 <text id="3">
                     <property name="contentType">html</property>
@@ -1629,15 +1719,18 @@ select *, case when total_visit > 0 then (total_effective/total_visit)*100 end a
         </table>
         <label id="1013"/>
         <grid id="1014">
-            <column id="1015"/>
+            <property name="width">14.395833333333334in</property>
+            <column id="1015">
+                <property name="width">10.34375in</property>
+            </column>
             <column id="1016">
-                <property name="width">1.2083333333333333in</property>
+                <property name="width">1.25in</property>
             </column>
             <column id="1017">
-                <property name="width">0.8645833333333334in</property>
+                <property name="width">1.2083333333333333in</property>
             </column>
             <column id="1018">
-                <property name="width">3.8958333333333335in</property>
+                <property name="width">1.59375in</property>
             </column>
             <row id="1019">
                 <cell id="1020">
@@ -1710,6 +1803,11 @@ select *, case when total_visit > 0 then (total_effective/total_visit)*100 end a
         </grid>
         <label id="1028"/>
         <grid id="1035">
+            <property name="borderBottomStyle">none</property>
+            <property name="borderLeftStyle">none</property>
+            <property name="borderRightStyle">none</property>
+            <property name="borderTopStyle">none</property>
+            <property name="width">14.520833333333334in</property>
             <column id="1036">
                 <property name="width">2.1041666666666665in</property>
             </column>
@@ -1720,13 +1818,16 @@ select *, case when total_visit > 0 then (total_effective/total_visit)*100 end a
                 <property name="width">1.40625in</property>
             </column>
             <column id="1039">
-                <property name="width">1.2604166666666667in</property>
+                <property name="width">1.375in</property>
             </column>
             <column id="1040">
-                <property name="width">0.75in</property>
+                <property name="width">1.0729166666666667in</property>
             </column>
             <column id="1041">
-                <property name="width">1.40625in</property>
+                <property name="width">0.5416666666666666in</property>
+            </column>
+            <column id="1072">
+                <property name="width">7in</property>
             </column>
             <row id="1042">
                 <cell id="1043">
@@ -1789,14 +1890,23 @@ select *, case when total_visit > 0 then (total_effective/total_visit)*100 end a
                 <cell id="1047">
                     <text id="1055">
                         <property name="fontWeight">bold</property>
+                        <property name="borderBottomStyle">none</property>
+                        <property name="borderLeftStyle">none</property>
+                        <property name="borderRightStyle">none</property>
+                        <property name="borderTopStyle">none</property>
                         <property name="textAlign">right</property>
                         <property name="contentType">auto</property>
                         <text-property name="content"><![CDATA[Archi :]]></text-property>
                     </text>
                 </cell>
                 <cell id="1048">
-                    <data id="1053">
+                    <data id="1087">
                         <property name="fontWeight">bold</property>
+                        <structure name="numberFormat">
+                            <property name="category">Currency</property>
+                            <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                        </structure>
+                        <property name="textAlign">left</property>
                         <property name="dataSet">count</property>
                         <list-property name="boundDataColumns">
                             <structure>
@@ -1809,11 +1919,24 @@ select *, case when total_visit > 0 then (total_effective/total_visit)*100 end a
                         <property name="resultSetColumn">achi</property>
                     </data>
                 </cell>
+                <cell id="1071">
+                    <text id="1073">
+                        <property name="fontWeight">bold</property>
+                        <property name="borderBottomStyle">none</property>
+                        <property name="borderLeftStyle">none</property>
+                        <property name="borderRightStyle">none</property>
+                        <property name="borderTopStyle">none</property>
+                        <property name="textAlign">left</property>
+                        <property name="contentType">auto</property>
+                        <text-property name="content"><![CDATA[%]]></text-property>
+                    </text>
+                </cell>
             </row>
         </grid>
         <label id="1056"/>
         <table id="20">
-            <property name="width">18.239583333333332in</property>
+            <property name="fontWeight">normal</property>
+            <property name="width">14.447916666666666in</property>
             <property name="dataSet">Data Set</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -1876,49 +1999,89 @@ select *, case when total_visit > 0 then (total_effective/total_visit)*100 end a
                     <expression name="expression" type="javascript">dataSetRow["remark"]</expression>
                     <property name="dataType">string</property>
                 </structure>
+                <structure>
+                    <property name="name">Aggregation</property>
+                    <property name="dataType">integer</property>
+                    <property name="aggregateFunction">RUNNINGCOUNT</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">difference</property>
+                    <text-property name="displayName">difference</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["difference"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
             </list-property>
+            <column id="1059">
+                <property name="width">0.4583333333333333in</property>
+            </column>
             <column id="84">
-                <property name="width">1.6354166666666667in</property>
+                <property name="width">1.1666666666666667in</property>
             </column>
             <column id="126">
-                <property name="width">2in</property>
+                <property name="width">1.3125in</property>
             </column>
             <column id="131">
-                <property name="width">0.90625in</property>
-            </column>
-            <column id="85">
-                <property name="width">0.8854166666666666in</property>
+                <property name="width">1.15625in</property>
             </column>
             <column id="86">
-                <property name="width">0.7083333333333334in</property>
+                <property name="width">1.1041666666666667in</property>
             </column>
             <column id="87">
-                <property name="width">0.8229166666666666in</property>
+                <property name="width">0.96875in</property>
             </column>
             <column id="88">
-                <property name="width">1in</property>
+                <property name="width">1.28125in</property>
             </column>
             <column id="89">
-                <property name="width">0.9479166666666666in</property>
+                <property name="width">1.125in</property>
             </column>
             <column id="90">
-                <property name="width">1.65625in</property>
+                <property name="width">0.9270833333333334in</property>
             </column>
             <column id="91">
-                <property name="width">2.03125in</property>
+                <property name="width">0.6354166666666666in</property>
             </column>
             <column id="92">
-                <property name="width">0.9479166666666666in</property>
+                <property name="width">1.21875in</property>
             </column>
             <column id="93">
-                <property name="width">1.6875in</property>
+                <property name="width">1.5416666666666667in</property>
             </column>
             <column id="94">
-                <property name="width">1.5729166666666667in</property>
+                <property name="width">1.375in</property>
             </column>
             <header>
                 <row id="21">
-                    <property name="height">0.4375in</property>
+                    <property name="height">0.6041666666666666in</property>
+                    <cell id="1057">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="1074">
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">No</text-property>
+                        </label>
+                        <text id="1088">
+                            <property name="fontWeight">bold</property>
+                            <property name="borderBottomStyle">none</property>
+                            <property name="borderLeftStyle">none</property>
+                            <property name="borderRightStyle">none</property>
+                            <property name="borderTopStyle">none</property>
+                            <property name="contentType">auto</property>
+                            <text-property name="content"><![CDATA[No]]></text-property>
+                        </text>
+                    </cell>
                     <cell id="22">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1928,6 +2091,10 @@ select *, case when total_visit > 0 then (total_effective/total_visit)*100 end a
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                        <label id="1075">
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">Date</text-property>
+                        </label>
                         <text id="104">
                             <property name="fontWeight">bold</property>
                             <property name="borderBottomStyle">none</property>
@@ -1947,6 +2114,10 @@ select *, case when total_visit > 0 then (total_effective/total_visit)*100 end a
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                        <label id="1076">
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">Time</text-property>
+                        </label>
                         <text id="127">
                             <property name="fontWeight">bold</property>
                             <property name="borderBottomStyle">none</property>
@@ -1966,6 +2137,10 @@ select *, case when total_visit > 0 then (total_effective/total_visit)*100 end a
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                        <label id="1077">
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">Customer</text-property>
+                        </label>
                         <text id="132">
                             <property name="fontWeight">bold</property>
                             <property name="borderBottomStyle">none</property>
@@ -1974,25 +2149,6 @@ select *, case when total_visit > 0 then (total_effective/total_visit)*100 end a
                             <property name="borderTopStyle">none</property>
                             <property name="contentType">auto</property>
                             <text-property name="content"><![CDATA[Customer]]></text-property>
-                        </text>
-                    </cell>
-                    <cell id="23">
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <text id="106">
-                            <property name="fontWeight">bold</property>
-                            <property name="borderBottomStyle">none</property>
-                            <property name="borderLeftStyle">none</property>
-                            <property name="borderRightStyle">none</property>
-                            <property name="borderTopStyle">none</property>
-                            <property name="contentType">auto</property>
-                            <text-property name="content"><![CDATA[Address]]></text-property>
                         </text>
                     </cell>
                     <cell id="24">
@@ -2004,6 +2160,10 @@ select *, case when total_visit > 0 then (total_effective/total_visit)*100 end a
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                        <label id="1078">
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">Township</text-property>
+                        </label>
                         <text id="107">
                             <property name="fontWeight">bold</property>
                             <property name="borderBottomStyle">none</property>
@@ -2023,6 +2183,10 @@ select *, case when total_visit > 0 then (total_effective/total_visit)*100 end a
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                        <label id="1079">
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">Sale  Team</text-property>
+                        </label>
                         <text id="108">
                             <property name="fontWeight">bold</property>
                             <property name="borderBottomStyle">none</property>
@@ -2042,6 +2206,10 @@ select *, case when total_visit > 0 then (total_effective/total_visit)*100 end a
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                        <label id="1080">
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">Sale Plan Day</text-property>
+                        </label>
                         <text id="109">
                             <property name="fontWeight">bold</property>
                             <property name="borderBottomStyle">none</property>
@@ -2061,6 +2229,10 @@ select *, case when total_visit > 0 then (total_effective/total_visit)*100 end a
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                        <label id="1081">
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">Tablet ID</text-property>
+                        </label>
                         <text id="110">
                             <property name="fontWeight">bold</property>
                             <property name="borderBottomStyle">none</property>
@@ -2080,6 +2252,10 @@ select *, case when total_visit > 0 then (total_effective/total_visit)*100 end a
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                        <label id="1082">
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">Reason</text-property>
+                        </label>
                         <text id="111">
                             <property name="fontWeight">bold</property>
                             <property name="borderBottomStyle">none</property>
@@ -2099,6 +2275,10 @@ select *, case when total_visit > 0 then (total_effective/total_visit)*100 end a
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                        <label id="1083">
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">Far</text-property>
+                        </label>
                         <text id="112">
                             <property name="fontWeight">bold</property>
                             <property name="borderBottomStyle">none</property>
@@ -2118,6 +2298,10 @@ select *, case when total_visit > 0 then (total_effective/total_visit)*100 end a
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                        <label id="1084">
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">Time Diff:</text-property>
+                        </label>
                         <text id="113">
                             <property name="fontWeight">bold</property>
                             <property name="borderBottomStyle">none</property>
@@ -2137,6 +2321,10 @@ select *, case when total_visit > 0 then (total_effective/total_visit)*100 end a
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                        <label id="1085">
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">Image</text-property>
+                        </label>
                         <text id="114">
                             <property name="fontWeight">bold</property>
                             <property name="borderBottomStyle">none</property>
@@ -2156,6 +2344,10 @@ select *, case when total_visit > 0 then (total_effective/total_visit)*100 end a
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                        <label id="1086">
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">Remark</text-property>
+                        </label>
                         <text id="115">
                             <property name="fontWeight">bold</property>
                             <property name="borderBottomStyle">none</property>
@@ -2171,6 +2363,20 @@ select *, case when total_visit > 0 then (total_effective/total_visit)*100 end a
             <detail>
                 <row id="42">
                     <property name="height">0.3541666666666667in</property>
+                    <cell id="1058">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="1062">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">Aggregation</property>
+                        </data>
+                    </cell>
                     <cell id="43">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -2187,6 +2393,7 @@ select *, case when total_visit > 0 then (total_effective/total_visit)*100 end a
                             <property name="borderTopStyle">none</property>
                             <structure name="dateTimeFormat">
                                 <property name="category">Custom</property>
+                                <property name="pattern">dd-MM-yyy</property>
                             </structure>
                             <property name="textAlign">center</property>
                             <property name="resultSetColumn">date</property>
@@ -2227,16 +2434,6 @@ select *, case when total_visit > 0 then (total_effective/total_visit)*100 end a
                             <property name="textAlign">center</property>
                             <property name="resultSetColumn">name</property>
                         </data>
-                    </cell>
-                    <cell id="44">
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                     </cell>
                     <cell id="45">
                         <property name="borderBottomStyle">solid</property>
@@ -2347,6 +2544,10 @@ select *, case when total_visit > 0 then (total_effective/total_visit)*100 end a
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                        <data id="1063">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">difference</property>
+                        </data>
                     </cell>
                     <cell id="52">
                         <property name="borderBottomStyle">solid</property>

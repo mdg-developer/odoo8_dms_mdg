@@ -184,102 +184,119 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     <property name="columnName">partner_tag</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">partner_tag</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">partner_tag</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">type</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">type</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">type</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">product_id</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">product_id</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">product_id</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">code</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">code</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">code</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">name</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">name</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">name</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">outlettype</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">outlettype</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">outlettype</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">outlettype_id</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">outlettype_id</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">outlettype_id</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">tspcode</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">tspcode</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">tspcode</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">tspid</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">tspid</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">tspid</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">sales_team</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">sales_team</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">sales_team</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">section_id</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">section_id</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">section_id</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">branch_id</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">branch_id</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">branch_id</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">name_template</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">name_template</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">name_template</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">status</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">status</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">status</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">seq</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">seq</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">seq</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">quantity</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">quantity</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">quantity</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">test</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">test</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">test</text-property>
                 </structure>
             </list-property>
@@ -894,10 +911,11 @@ else
 	inner join crm_case_section ccs on ccs.id=ccsppl.crm_case_section_id
         inner join product_template pt on pt.id=pp.product_tmpl_id
 	inner join sale_team_customer_rel rel on rel.sale_team_id =ccs.id
-	inner join res_partner rp on rp.id =rel.partner_id
+	inner join res_partner rp on rp.id =rel.partner_id 
 	inner join outlettype_outlettype oo on oo.id=rp.outlet_type
 	inner join res_township  rt on rt.id=rp.township
 	where pt.type != 'service'	
+	and rp.active = True
 	--$product_status$	
 	--$sales_team_all_inv$
     --$branch_id_all_inv$
@@ -917,6 +935,7 @@ else
 	and pp.product_tmpl_id=pt.id
 	and ai.section_id=ccs.id
 	and oo.id=rp.outlet_type
+	and rp.active=True
 	and ai.date_invoice  between ? and  ?
 	and pt.type != 'service'
 	--$status$	
@@ -1163,7 +1182,7 @@ result as (
 	order by seq
 )
 
-select    (select string_agg(cat.name,', ') from res_partner_category cat where cat.id in (select category_id from res_partner_res_partner_category_rel rel where rel.partner_id in (select id from res_partner where customer_code =code))) as  partner_tag,
+select  (select string_agg(cat.name,', ') from res_partner_category cat where cat.id in (select category_id from res_partner_res_partner_category_rel rel where rel.partner_id in (select id from res_partner where customer_code =code and active=True))) as  partner_tag,
 (select type from product_outlettype where outlettype_id=result.outlettype_id and product_id =result.product_id) as type,*,quantity::char(3) as test
 from result
 where 1=1

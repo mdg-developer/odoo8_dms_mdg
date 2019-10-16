@@ -457,7 +457,8 @@ this.queryText =this.queryText.replace("--$product_id3$", "and ail.product_id in
 	select rp.id customer,rp.customer_code,rp.name customer_name,rt.code township,outlet.name outlet,ai.section_id,ai.branch_id,product_id,ccs.name sales_team,
 	array_to_string(array_agg(distinct rpc.name),', ') AS tags,name_template,
     case when ail.uos_id=pt.uom_id then COALESCE(sum(round(quantity,0)),0) 
-	when ail.uos_id=pt.big_uom_id then COALESCE(sum(round(quantity*(select floor(round(1/factor,2)) from product_uom where id=big_uom_id),0)),0) end as product_quantity,
+	when ail.uos_id!=pt.uom_id then COALESCE(sum(round(quantity*(select floor(round(1/factor,2)) from product_uom where id=pt.uom_id),0)),0) end as product_quantity,
+
 	pp.sequence as seq
 	from account_invoice ai,res_partner rp,res_township rt,account_invoice_line ail,product_uom uom,product_product pp,product_template pt,crm_case_section ccs,outlettype_outlettype outlet,
 	res_partner_res_partner_category_rel crel,res_partner_category rpc																															   

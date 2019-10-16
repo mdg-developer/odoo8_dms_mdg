@@ -772,6 +772,7 @@ else
 	inner join outlettype_outlettype oo on oo.id=rp.outlet_type
 	inner join res_township  rt on rt.id=rp.township
 	where pt.type !='service'
+	and rp.active = True
 	--$product_status$
 	--$sales_team_all_inv$
     --$branch_id_all_inv$
