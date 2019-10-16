@@ -45,42 +45,38 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
         </scalar-parameter>
         <scalar-parameter name="branch_id" id="10" extends="report_library.branch_id"/>
         <scalar-parameter name="sales_team_id" id="11" extends="report_library.sales_team_id"/>
-        <scalar-parameter name="product_principle" id="1239">
-            <text-property name="promptText">Principle</text-property>
-            <property name="valueType">dynamic</property>
-            <property name="dataSetName">principle</property>
-            <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
-            <expression name="labelExpr" type="javascript">dataSetRow["name"]</expression>
-            <property name="dataType">integer</property>
-            <property name="distinct">true</property>
-            <list-property name="selectionList"/>
-            <property name="paramType">multi-value</property>
-            <property name="controlType">list-box</property>
-            <property name="mustMatch">true</property>
-            <property name="fixedOrder">true</property>
-            <structure name="format">
-                <property name="category">Unformatted</property>
-            </structure>
-        </scalar-parameter>
-        <scalar-parameter name="product_id" id="1041">
-            <text-property name="promptText">Product</text-property>
-            <property name="valueType">dynamic</property>
-            <property name="isRequired">true</property>
-            <property name="dataSetName">product_product</property>
-            <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
-            <expression name="labelExpr" type="javascript">dataSetRow["name_template"]</expression>
-            <property name="dataType">integer</property>
-            <property name="distinct">true</property>
-            <list-property name="selectionList"/>
-            <property name="paramType">multi-value</property>
-            <property name="controlType">list-box</property>
-            <property name="mustMatch">true</property>
-            <property name="fixedOrder">true</property>
-            <structure name="format">
-                <property name="category">Unformatted</property>
-            </structure>
-        </scalar-parameter>
         <scalar-parameter name="user_id" id="7" extends="report_library.user_id"/>
+        <cascading-parameter-group name="principle_product_group" id="1380">
+            <property name="dataSet">principle</property>
+            <property name="dataSetMode">multiple</property>
+            <parameters>
+                <scalar-parameter name="Principle" id="1381">
+                    <property name="valueType">dynamic</property>
+                    <property name="isRequired">false</property>
+                    <property name="dataSetName">principle</property>
+                    <expression name="valueExpr">row["id"]</expression>
+                    <expression name="labelExpr">row["name"]</expression>
+                    <property name="dataType">integer</property>
+                    <property name="paramType">simple</property>
+                    <property name="controlType">list-box</property>
+                    <property name="mustMatch">true</property>
+                    <property name="fixedOrder">true</property>
+                    <structure name="format"/>
+                </scalar-parameter>
+                <scalar-parameter name="Product" id="1382">
+                    <property name="valueType">dynamic</property>
+                    <property name="isRequired">true</property>
+                    <property name="dataSetName">product_product</property>
+                    <expression name="valueExpr">row["id"]</expression>
+                    <expression name="labelExpr">row["name_template"]</expression>
+                    <property name="dataType">integer</property>
+                    <property name="paramType">multi-value</property>
+                    <property name="controlType">list-box</property>
+                    <property name="fixedOrder">true</property>
+                    <structure name="format"/>
+                </scalar-parameter>
+            </parameters>
+        </cascading-parameter-group>
     </parameters>
     <data-sources>
         <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="954"
@@ -165,8 +161,7 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
             </structure>
             <method name="beforeOpen"><![CDATA[this.queryText =this.queryText.replace("--$sale_team_id$", "and ai.section_id in ("+ params["sales_team_id"].value.join(",")+")")       
 this.queryText =this.queryText.replace("--$branch_id$", "and ai.branch_id in ("+ params["branch_id"].value.join(",")+")")
-this.queryText =this.queryText.replace("--$principle$", "and pt.main_group in ("+ params["product_principle"].value.join(",")+")")
-this.queryText =this.queryText.replace("--$product$", "and pp.id in ("+ params["product_id"].value.join(",")+")")]]></method>
+this.queryText =this.queryText.replace("--$product$", "and pp.id in ("+ params["Product"].value.join(",")+")")]]></method>
             <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
                 <structure>
@@ -202,7 +197,6 @@ and pt.type='product'
 and date_invoice between ? and ?
 --$sale_team_id$
 --$branch_id$
---$principle$
 --$product$
 group by pp.name_template,date_invoice,pp.sequence
 order by pp.sequence,date_invoice]]></xml-property>
@@ -469,6 +463,13 @@ order by name]]></xml-property>
                     </structure>
                 </list-property>
             </structure>
+            <method name="beforeOpen"><![CDATA[if (params["Principle"].value == null ){     
+   this.queryText =this.queryText.replace("--$main_group$", "")
+}
+else
+{     
+   this.queryText =this.queryText.replace("--$main_group$", "and main_group = "+params["Principle"])
+}]]></method>
             <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
                 <structure>
@@ -493,7 +494,8 @@ and pp.product_tmpl_id =pt.id
 --and pt.type!='service'
 and pp.id in (select product_product_id from crm_case_section_product_product_rel
 --$sale_team_id$
-)]]></xml-property>
+)
+--$main_group$]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
