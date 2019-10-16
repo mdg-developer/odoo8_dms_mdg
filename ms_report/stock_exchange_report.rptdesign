@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.6.0.v201606072122</property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
     <property name="units">in</property>
     <method name="initialize"><![CDATA[branchList = params["branch_id"].value.join(",");
 teamList = params["sales_team_id"].value.join(",");]]></method>
@@ -178,6 +178,18 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     <text-property name="heading">name_template</text-property>
                 </structure>
                 <structure>
+                    <property name="columnName">customer_code</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">customer_code</text-property>
+                    <text-property name="heading">customer_code</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">uom</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">uom</text-property>
+                    <text-property name="heading">uom</text-property>
+                </structure>
+                <structure>
                     <property name="columnName">in_qty</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">in_qty</text-property>
@@ -305,21 +317,31 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     </structure>
                     <structure>
                         <property name="position">12</property>
+                        <property name="name">customer_code</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">13</property>
+                        <property name="name">uom</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">14</property>
                         <property name="name">in_qty</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">13</property>
+                        <property name="position">15</property>
                         <property name="name">out_qty</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">14</property>
+                        <property name="position">16</property>
                         <property name="name">exp_date</property>
                         <property name="dataType">date</property>
                     </structure>
                     <structure>
-                        <property name="position">15</property>
+                        <property name="position">17</property>
                         <property name="name">note</property>
                         <property name="dataType">string</property>
                     </structure>
@@ -410,42 +432,57 @@ this.queryText =this.queryText.replace("--$branch_id$", "and st.branch_id in ("+
                 </structure>
                 <structure>
                     <property name="position">12</property>
+                    <property name="name">customer_code</property>
+                    <property name="nativeName">customer_code</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">13</property>
+                    <property name="name">uom</property>
+                    <property name="nativeName">uom</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">14</property>
                     <property name="name">in_qty</property>
                     <property name="nativeName">in_qty</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">13</property>
+                    <property name="position">15</property>
                     <property name="name">out_qty</property>
                     <property name="nativeName">out_qty</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">14</property>
+                    <property name="position">16</property>
                     <property name="name">exp_date</property>
                     <property name="nativeName">exp_date</property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                 </structure>
                 <structure>
-                    <property name="position">15</property>
+                    <property name="position">17</property>
                     <property name="name">note</property>
                     <property name="nativeName">note</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select st.date as exchange_date,st.location_type,st.name as sen_no,st.exchange_type,line.batchno,ccs.code,ccs.name as  team,rb.name branch,rp.name as customer_name ,st.transaction_id as name,pp.name_template,
+            <xml-property name="queryText"><![CDATA[select st.date as exchange_date,st.location_type,st.name as sen_no,st.exchange_type,line.batchno,ccs.code,ccs.name as  team,rb.name branch,rp.name as customer_name ,st.transaction_id as name,pp.name_template,rp.customer_code customer_code,uom.name uom,
     case when trans_type = 'In' then  product_qty end as in_qty,
 	case when trans_type = 'Out' then  product_qty end as out_qty,line.exp_date,line.note
-	from product_transactions st,product_transactions_line line,product_product pp,crm_case_section ccs,res_branch rb,res_partner rp
+	from product_transactions st,product_transactions_line line,product_product pp,crm_case_section ccs,res_branch rb,res_partner rp,product_uom uom
 	where st.id=line.transaction_id
 	and st.customer_id=rp.id
 	and line.product_id=pp.id
 	and st.team_id=ccs.id
 	and st.branch_id=rb.id
+	and uom.id =line.uom_id
 	--and st.exchange_type ='Exchange'	
 	--and st.date between ? and ?	
 	and ((st.date at time zone 'utc')at time zone 'asia/rangoon')::date between ? and ?
@@ -1114,6 +1151,18 @@ from res_company
                     <expression name="expression" type="javascript">dataSetRow["team"]</expression>
                     <property name="dataType">string</property>
                 </structure>
+                <structure>
+                    <property name="name">customer_code</property>
+                    <text-property name="displayName">customer_code</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["customer_code"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">uom</property>
+                    <text-property name="displayName">uom</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["uom"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
             </list-property>
             <column id="993">
                 <property name="width">1.15625in</property>
@@ -1136,10 +1185,16 @@ from res_company
             <column id="979">
                 <property name="width">1.4375in</property>
             </column>
+            <column id="1135">
+                <property name="width">1.4375in</property>
+            </column>
             <column id="980">
                 <property name="width">1.6354166666666667in</property>
             </column>
             <column id="981">
+                <property name="width">1.1354166666666667in</property>
+            </column>
+            <column id="1143">
                 <property name="width">1.1354166666666667in</property>
             </column>
             <column id="982">
@@ -1264,6 +1319,25 @@ from res_company
                             <text-property name="text">Customer</text-property>
                         </label>
                     </cell>
+                    <cell id="1130">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <text id="1136">
+                            <property name="fontWeight">bold</property>
+                            <property name="borderBottomStyle">none</property>
+                            <property name="borderLeftStyle">none</property>
+                            <property name="borderRightStyle">none</property>
+                            <property name="borderTopStyle">none</property>
+                            <property name="contentType">auto</property>
+                            <text-property name="content"><![CDATA[Customer Code]]></text-property>
+                        </text>
+                    </cell>
                     <cell id="932">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1292,6 +1366,25 @@ from res_company
                             <property name="fontFamily">"Arial"</property>
                             <property name="fontWeight">bold</property>
                             <text-property name="text">Product</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1138">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="1144">
+                            <property name="fontFamily">"Arial"</property>
+                            <property name="fontWeight">bold</property>
+                            <property name="borderBottomStyle">none</property>
+                            <property name="borderLeftStyle">none</property>
+                            <property name="borderRightStyle">none</property>
+                            <property name="borderTopStyle">none</property>
+                            <text-property name="text">Uom</text-property>
                         </label>
                     </cell>
                     <cell id="936">
@@ -1381,7 +1474,7 @@ from res_company
                 <header>
                     <row id="999">
                         <cell id="1000">
-                            <property name="colSpan">14</property>
+                            <property name="colSpan">16</property>
                             <property name="rowSpan">1</property>
                             <property name="borderBottomStyle">solid</property>
                             <property name="borderBottomWidth">thin</property>
@@ -1423,8 +1516,10 @@ from res_company
                         <cell id="1103"/>
                         <cell id="1104"/>
                         <cell id="1105"/>
+                        <cell id="1132"/>
                         <cell id="1106"/>
                         <cell id="1107"/>
+                        <cell id="1140"/>
                         <cell id="1108"/>
                         <cell id="1109"/>
                         <cell id="1110"/>
@@ -1441,8 +1536,10 @@ from res_company
                         <cell id="1119"/>
                         <cell id="1120"/>
                         <cell id="1121"/>
+                        <cell id="1134"/>
                         <cell id="1122"/>
                         <cell id="1123"/>
+                        <cell id="1142"/>
                         <cell id="1124"/>
                         <cell id="1125"/>
                         <cell id="1126"/>
@@ -1560,6 +1657,23 @@ from res_company
                             <property name="resultSetColumn">customer_name</property>
                         </data>
                     </cell>
+                    <cell id="1133">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="1137">
+                            <property name="borderBottomStyle">none</property>
+                            <property name="borderLeftStyle">none</property>
+                            <property name="borderRightStyle">none</property>
+                            <property name="borderTopStyle">none</property>
+                            <property name="resultSetColumn">customer_code</property>
+                        </data>
+                    </cell>
                     <cell id="953">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1588,6 +1702,23 @@ from res_company
                             <property name="fontFamily">"Arial"</property>
                             <property name="textAlign">center</property>
                             <property name="resultSetColumn">name_template</property>
+                        </data>
+                    </cell>
+                    <cell id="1141">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="1145">
+                            <property name="borderBottomStyle">none</property>
+                            <property name="borderLeftStyle">none</property>
+                            <property name="borderRightStyle">none</property>
+                            <property name="borderTopStyle">none</property>
+                            <property name="resultSetColumn">uom</property>
                         </data>
                     </cell>
                     <cell id="957">
