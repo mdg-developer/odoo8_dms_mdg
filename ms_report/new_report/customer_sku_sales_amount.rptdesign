@@ -380,7 +380,8 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     </structure>
                 </list-property>
             </structure>
-            <method name="beforeOpen"><![CDATA[this.queryText =this.queryText.replace("--$sales_team$", "and section_id in ("+ params["sales_team_id"].value.join(",")+")")
+            <method name="beforeOpen"><![CDATA[this.queryText =this.queryText.replace("--$sales_team_all$", "and ccs.id in ("+ params["sales_team_id"].value.join(",")+")")
+this.queryText =this.queryText.replace("--$sales_team$", "and section_id in ("+ params["sales_team_id"].value.join(",")+")")
 this.queryText =this.queryText.replace("--$branch_id$", "and branch_id in ("+ params["branch_id"].value.join(",")+")")
 if (params["township_id"].value[0] == 'ALL')
 {  
@@ -512,10 +513,26 @@ if (params["status"].value == 'non_foc' )
 	and rp.active=true
 	group by partner_id
 ), 
+all_product as (
+	select rp.name,rp.customer_code,oo.name as outlettype,(select tag from partner_tag where partner_id=rp.id) partner_tag,
+	oo.id as outlettype_id,rt.code as township,rt.id township_id,
+	ccs.name sales_team,ccs.id as section_id,rp.branch_id,name_template,
+	'Sales Qty'::character varying status,sequence seq,COALESCE(0,0) quantity
+	from product_product pp left outer join crm_case_section_product_product_rel ccsppl on pp.id=ccsppl.product_product_id
+	inner join crm_case_section ccs on ccs.id=ccsppl.crm_case_section_id
+    inner join product_template pt on pt.id=pp.product_tmpl_id
+	inner join sale_team_customer_rel rel on rel.sale_team_id =ccs.id
+	inner join res_partner rp on rp.id =rel.partner_id
+	inner join outlettype_outlettype oo on oo.id=rp.outlet_type
+	inner join res_township  rt on rt.id=rp.township
+	where pt.type !='service'
+	and pp.active=true
+	--$sales_team_all$
+),
 sale_qty as (
 	select rp.name,customer_code,oo.name as outlettype,(select tag from partner_tag where partner_id=rp.id) partner_tag,
 	oo.id as outlettype_id,rt.code as township,rt.id township_id,ccs.name sales_team,ai.section_id,ai.branch_id,name_template,'Sales Qty'::text as status,pp.sequence as seq,
-	sum(ail.quantity * ( CASE WHEN ail.discount_amt > 0 THEN ail.discount_amt WHEN ail.price_unit < 0 THEN ail.price_unit * -1 ELSE ail.price_unit END)) as quantity
+	COALESCE(sum(ail.quantity * ( CASE WHEN ail.discount_amt > 0 THEN ail.discount_amt WHEN ail.price_unit < 0 THEN ail.price_unit * -1 ELSE ail.price_unit END)),0) as quantity
 	from account_invoice ai,res_partner rp,res_township rt,account_invoice_line ail,product_uom uom,product_product pp,product_template pt,crm_case_section ccs,outlettype_outlettype oo
 	where ai.partner_id=rp.id
 	and rp.township=rt.id
@@ -526,13 +543,14 @@ sale_qty as (
 	and ai.section_id=ccs.id
 	and oo.id=rp.outlet_type
 	and date_invoice between ? and ?
+	and pt.type !='service'
 	--$status$
 	group by rp.id,rp.name,customer_code,oo.name,oo.id,rt.code,rt.id,ccs.name,ai.section_id,ai.branch_id,name_template,pp.sequence,ail.uos_id,pt.uom_id,big_uom_id
 	order by seq),
 total_amt as (
 	select rp.name,customer_code,oo.name as outlettype,(select tag from partner_tag where partner_id=rp.id) partner_tag,
 	oo.id as outlettype_id,rt.code as township,rt.id township_id,ccs.name sales_team,ai.section_id,ai.branch_id,'Gross Net Amt.'::character varying name_template,''::text as status,90001::int as seq,
-	sum(ail.quantity * ( CASE WHEN ail.price_unit < 0 THEN 0 ELSE ail.price_unit END)) as quantity
+	COALESCE(sum(ail.quantity * ( CASE WHEN ail.price_unit < 0 THEN 0 ELSE ail.price_unit END)),0) as quantity
 	from account_invoice ai,res_partner rp,res_township rt,crm_case_section ccs,outlettype_outlettype oo,account_invoice_line ail
 	where ai.partner_id=rp.id	
 	and rp.township=rt.id
@@ -546,7 +564,7 @@ total_amt as (
 total_discount as (
 	select rp.name,customer_code,oo.name as outlettype,(select tag from partner_tag where partner_id=rp.id) partner_tag,
 	oo.id as outlettype_id,rt.code as township,rt.id township_id,ccs.name sales_team,ai.section_id,ai.branch_id,'Total Disc.'::character varying name_template,''::text as status,90002::int as seq,
-	sum( CASE WHEN ail.price_unit < 0 THEN -1 * ail.price_unit ELSE ail.discount_amt END) as quantity
+	COALESCE(sum( CASE WHEN ail.price_unit < 0 THEN -1 * ail.price_unit ELSE ail.discount_amt END),0) as quantity
 	from account_invoice ai,res_partner rp,res_township rt,crm_case_section ccs,outlettype_outlettype oo,account_invoice_line ail
 	where ai.partner_id=rp.id
 	and rp.township=rt.id	
@@ -560,7 +578,7 @@ total_discount as (
 net_amt as (
 	select rp.name,customer_code,oo.name as outlettype,(select tag from partner_tag where partner_id=rp.id) partner_tag,
 	oo.id as outlettype_id,rt.code as township,rt.id township_id,ccs.name sales_team,ai.section_id,ai.branch_id,'Net Amt.'::character varying name_template,''::text as status,90003::int as seq,
-	(sum(ail.quantity * ( CASE WHEN ail.price_unit < 0 THEN 0 ELSE ail.price_unit END)) - sum( CASE WHEN ail.price_unit < 0 THEN -1 * ail.price_unit ELSE ail.discount_amt END)) as quantity
+	COALESCE((sum(ail.quantity * ( CASE WHEN ail.price_unit < 0 THEN 0 ELSE ail.price_unit END)) - sum( CASE WHEN ail.price_unit < 0 THEN -1 * ail.price_unit ELSE ail.discount_amt END)),0) as quantity
 	from account_invoice ai,res_partner rp,res_township rt,crm_case_section ccs,outlettype_outlettype oo,account_invoice_line ail
 	where ai.partner_id=rp.id
 	and rp.township=rt.id	
@@ -572,6 +590,9 @@ net_amt as (
 	order by rp.name
 ),
 result as (
+	select *
+	from all_product
+	union
 	select *
 	from sale_qty
 	union
