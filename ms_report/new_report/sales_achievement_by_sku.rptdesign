@@ -236,9 +236,13 @@ this.queryText =this.queryText.replace("--$branch_id$", "and branch_id in ("+ pa
 	and (date_invoice+ '6 hour'::interval + '30 minutes'::interval)::date between ? and ?),
 
 ach_amt as (	
-	select COALESCE(sum(ach_amt),0) as ach_amt,product_id,name_template,pseq,sum(quantity) quantity
-	from sale_order
-	group by product_id,name_template,pseq),
+	select COALESCE(sum(ach_amt),0) as ach_amt,pp.id product_id,pp.name_template,pseq,COALESCE(sum(quantity),0) quantity
+	from product_product pp
+	left join sale_order so on (pp.id=so.product_id)
+	left join product_template pt on (pp.product_tmpl_id=pt.id)
+	where pp.active='true'
+	and type='product'
+	group by pp.id,pp.name_template,pseq),
 
 target as (
 	select product_uom_qty target_qty,price_unit*product_uom_qty as target_amt,sale_team_id,st.month::int,st.year::int,stl.product_id,st.branch_id,pp.name_template
