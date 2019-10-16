@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.4.1.v201408290142 Build &lt;4.4.1.v20140916-1320></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
     <property name="units">in</property>
     <method name="initialize"><![CDATA[branchList = params["branch_id"].value.join(",");
 teamList = params["sales_team_id"].value.join(",");]]></method>
@@ -122,14 +122,8 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
         </scalar-parameter>
     </parameters>
     <data-sources>
-        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="762"
- extends="report_library.Data Source">
-            <property name="odaDriverClass">org.postgresql.Driver</property>
-            <property name="odaURL">jdbc:postgresql://localhost:5432/mdg_testing_04-07-2018</property>
-            <property name="odaUser">odoo</property>
-            <encrypted-property name="odaPassword" encryptionID="base64">b3BlbnBncHdk</encrypted-property>
-            <property name="odaJndiName">java:comp/env/jdbc/ReportDB</property>
-        </oda-data-source>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="892"
+ extends="report_library.Data Source"/>
     </data-sources>
     <data-sets>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="company" id="12"
@@ -144,10 +138,22 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     <text-property name="heading">name</text-property>
                 </structure>
                 <structure>
+                    <property name="columnName">customer_code</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">customer_code</text-property>
+                    <text-property name="heading">customer_code</text-property>
+                </structure>
+                <structure>
                     <property name="columnName">outlettype</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">outlettype</text-property>
                     <text-property name="heading">outlettype</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">partner_tag</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">partner_tag</text-property>
+                    <text-property name="heading">partner_tag</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">outlettype_id</property>
@@ -309,56 +315,66 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     </structure>
                     <structure>
                         <property name="position">2</property>
-                        <property name="name">outlettype</property>
+                        <property name="name">customer_code</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">3</property>
-                        <property name="name">outlettype_id</property>
-                        <property name="dataType">integer</property>
+                        <property name="name">outlettype</property>
+                        <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">4</property>
-                        <property name="name">township</property>
+                        <property name="name">partner_tag</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">5</property>
-                        <property name="name">township_id</property>
+                        <property name="name">outlettype_id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
                         <property name="position">6</property>
-                        <property name="name">sales_team</property>
+                        <property name="name">township</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">7</property>
-                        <property name="name">section_id</property>
+                        <property name="name">township_id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
                         <property name="position">8</property>
+                        <property name="name">sales_team</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">section_id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
                         <property name="name">branch_id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">9</property>
+                        <property name="position">11</property>
                         <property name="name">name_template</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">10</property>
+                        <property name="position">12</property>
                         <property name="name">status</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">11</property>
+                        <property name="position">13</property>
                         <property name="name">seq</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">12</property>
+                        <property name="position">14</property>
                         <property name="name">quantity</property>
                         <property name="dataType">float</property>
                     </structure>
@@ -397,84 +413,108 @@ if (params["status"].value == 'non_foc' )
                 </structure>
                 <structure>
                     <property name="position">2</property>
+                    <property name="name">customer_code</property>
+                    <property name="nativeName">customer_code</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
                     <property name="name">outlettype</property>
                     <property name="nativeName">outlettype</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">3</property>
+                    <property name="position">4</property>
+                    <property name="name">partner_tag</property>
+                    <property name="nativeName">partner_tag</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
                     <property name="name">outlettype_id</property>
                     <property name="nativeName">outlettype_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">4</property>
+                    <property name="position">6</property>
                     <property name="name">township</property>
                     <property name="nativeName">township</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">5</property>
+                    <property name="position">7</property>
                     <property name="name">township_id</property>
                     <property name="nativeName">township_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">6</property>
+                    <property name="position">8</property>
                     <property name="name">sales_team</property>
                     <property name="nativeName">sales_team</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">7</property>
+                    <property name="position">9</property>
                     <property name="name">section_id</property>
                     <property name="nativeName">section_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">8</property>
+                    <property name="position">10</property>
                     <property name="name">branch_id</property>
                     <property name="nativeName">branch_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">9</property>
+                    <property name="position">11</property>
                     <property name="name">name_template</property>
                     <property name="nativeName">name_template</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">10</property>
+                    <property name="position">12</property>
                     <property name="name">status</property>
                     <property name="nativeName">status</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">11</property>
+                    <property name="position">13</property>
                     <property name="name">seq</property>
                     <property name="nativeName">seq</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">12</property>
+                    <property name="position">14</property>
                     <property name="name">quantity</property>
                     <property name="nativeName">quantity</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[with sale_qty as (
-	select rp.name,oo.name as outlettype,oo.id as outlettype_id,rt.code as township,rt.id township_id,ccs.name sales_team,ai.section_id,ai.branch_id,name_template,'Sales Qty'::text as status,pp.sequence as seq,
+            <xml-property name="queryText"><![CDATA[with partner_tag as (
+	select STRING_AGG(categ.name, ',') tag,partner_id
+	from res_partner rp
+	left join res_partner_res_partner_category_rel rel on (rp.id=rel.partner_id)
+	left join res_partner_category categ on (rel.category_id=categ.id)
+	where customer=true
+	and rp.active=true
+	group by partner_id
+), 
+sale_qty as (
+	select rp.name,customer_code,oo.name as outlettype,(select tag from partner_tag where partner_id=rp.id) partner_tag,
+	oo.id as outlettype_id,rt.code as township,rt.id township_id,ccs.name sales_team,ai.section_id,ai.branch_id,name_template,'Sales Qty'::text as status,pp.sequence as seq,
 	sum(ail.quantity * ( CASE WHEN ail.discount_amt > 0 THEN ail.discount_amt WHEN ail.price_unit < 0 THEN ail.price_unit * -1 ELSE ail.price_unit END)) as quantity
 	from account_invoice ai,res_partner rp,res_township rt,account_invoice_line ail,product_uom uom,product_product pp,product_template pt,crm_case_section ccs,outlettype_outlettype oo
 	where ai.partner_id=rp.id
@@ -487,10 +527,11 @@ if (params["status"].value == 'non_foc' )
 	and oo.id=rp.outlet_type
 	and date_invoice between ? and ?
 	--$status$
-	group by rp.name,oo.name,oo.id,rt.code,rt.id,ccs.name,ai.section_id,ai.branch_id,name_template,pp.sequence,ail.uos_id,pt.uom_id,big_uom_id
+	group by rp.id,rp.name,customer_code,oo.name,oo.id,rt.code,rt.id,ccs.name,ai.section_id,ai.branch_id,name_template,pp.sequence,ail.uos_id,pt.uom_id,big_uom_id
 	order by seq),
 total_amt as (
-	select rp.name,oo.name as outlettype,oo.id as outlettype_id,rt.code as township,rt.id township_id,ccs.name sales_team,ai.section_id,ai.branch_id,'Gross Net Amt.'::character varying name_template,''::text as status,90001::int as seq,
+	select rp.name,customer_code,oo.name as outlettype,(select tag from partner_tag where partner_id=rp.id) partner_tag,
+	oo.id as outlettype_id,rt.code as township,rt.id township_id,ccs.name sales_team,ai.section_id,ai.branch_id,'Gross Net Amt.'::character varying name_template,''::text as status,90001::int as seq,
 	sum(ail.quantity * ( CASE WHEN ail.price_unit < 0 THEN 0 ELSE ail.price_unit END)) as quantity
 	from account_invoice ai,res_partner rp,res_township rt,crm_case_section ccs,outlettype_outlettype oo,account_invoice_line ail
 	where ai.partner_id=rp.id	
@@ -499,11 +540,12 @@ total_amt as (
 	and ai.section_id=ccs.id
 	and ai.id=ail.invoice_id
 	and date_invoice between ? and ?
-	group by rp.name,oo.name,oo.id,rt.code,rt.id,ccs.name,ai.section_id,ai.branch_id
+	group by rp.id,rp.name,customer_code,oo.name,oo.id,rt.code,rt.id,ccs.name,ai.section_id,ai.branch_id
 	order by rp.name
 ),
 total_discount as (
-	select rp.name,oo.name as outlettype,oo.id as outlettype_id,rt.code as township,rt.id township_id,ccs.name sales_team,ai.section_id,ai.branch_id,'Total Disc.'::character varying name_template,''::text as status,90002::int as seq,
+	select rp.name,customer_code,oo.name as outlettype,(select tag from partner_tag where partner_id=rp.id) partner_tag,
+	oo.id as outlettype_id,rt.code as township,rt.id township_id,ccs.name sales_team,ai.section_id,ai.branch_id,'Total Disc.'::character varying name_template,''::text as status,90002::int as seq,
 	sum( CASE WHEN ail.price_unit < 0 THEN -1 * ail.price_unit ELSE ail.discount_amt END) as quantity
 	from account_invoice ai,res_partner rp,res_township rt,crm_case_section ccs,outlettype_outlettype oo,account_invoice_line ail
 	where ai.partner_id=rp.id
@@ -512,11 +554,12 @@ total_discount as (
 	and ai.section_id=ccs.id
 	and ai.id=ail.invoice_id
 	and date_invoice between ? and ?
-	group by rp.name,oo.name,oo.id,rt.code,rt.id,ccs.name,ai.section_id,ai.branch_id
+	group by rp.id,rp.name,customer_code,oo.name,oo.id,rt.code,rt.id,ccs.name,ai.section_id,ai.branch_id
 	order by rp.name
 ),
 net_amt as (
-	select rp.name,oo.name as outlettype,oo.id as outlettype_id,rt.code as township,rt.id township_id,ccs.name sales_team,ai.section_id,ai.branch_id,'Net Amt.'::character varying name_template,''::text as status,90003::int as seq,
+	select rp.name,customer_code,oo.name as outlettype,(select tag from partner_tag where partner_id=rp.id) partner_tag,
+	oo.id as outlettype_id,rt.code as township,rt.id township_id,ccs.name sales_team,ai.section_id,ai.branch_id,'Net Amt.'::character varying name_template,''::text as status,90003::int as seq,
 	(sum(ail.quantity * ( CASE WHEN ail.price_unit < 0 THEN 0 ELSE ail.price_unit END)) - sum( CASE WHEN ail.price_unit < 0 THEN -1 * ail.price_unit ELSE ail.discount_amt END)) as quantity
 	from account_invoice ai,res_partner rp,res_township rt,crm_case_section ccs,outlettype_outlettype oo,account_invoice_line ail
 	where ai.partner_id=rp.id
@@ -525,7 +568,7 @@ net_amt as (
 	and ai.section_id=ccs.id
 	and ai.id=ail.invoice_id
 	and date_invoice between ? and ?
-	group by rp.name,oo.name,oo.id,rt.code,rt.id,ccs.name,ai.section_id,ai.branch_id
+	group by rp.id,rp.name,customer_code,oo.name,oo.id,rt.code,rt.id,ccs.name,ai.section_id,ai.branch_id
 	order by rp.name
 ),
 result as (
@@ -1330,6 +1373,32 @@ order by code,name]]></xml-property>
                         </tabular-hierarchy>
                     </property>
                 </tabular-dimension>
+                <tabular-dimension name="Group4" id="893">
+                    <property name="defaultHierarchy">NewTabularHierarchy4</property>
+                    <property name="hierarchies">
+                        <tabular-hierarchy name="NewTabularHierarchy4" id="894">
+                            <property name="levels">
+                                <tabular-level name="customer_code" id="895">
+                                    <property name="dataType">string</property>
+                                    <property name="columnName">customer_code</property>
+                                </tabular-level>
+                            </property>
+                        </tabular-hierarchy>
+                    </property>
+                </tabular-dimension>
+                <tabular-dimension name="Group5" id="903">
+                    <property name="defaultHierarchy">NewTabularHierarchy5</property>
+                    <property name="hierarchies">
+                        <tabular-hierarchy name="NewTabularHierarchy5" id="904">
+                            <property name="levels">
+                                <tabular-level name="partner_tag" id="905">
+                                    <property name="dataType">string</property>
+                                    <property name="columnName">partner_tag</property>
+                                </tabular-level>
+                            </property>
+                        </tabular-hierarchy>
+                    </property>
+                </tabular-dimension>
             </property>
             <property name="measureGroups">
                 <tabular-measure-group name="Summary Field" id="849">
@@ -1604,6 +1673,12 @@ order by code,name]]></xml-property>
                             <property name="content">
                                 <data id="881">
                                     <property name="fontWeight">normal</property>
+                                    <property name="paddingRight">3pt</property>
+                                    <structure name="numberFormat">
+                                        <property name="category">Currency</property>
+                                        <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
+                                    </structure>
+                                    <property name="textAlign">right</property>
                                     <property name="resultSetColumn">quantity_Group3/township_Group1/name_template</property>
                                 </data>
                             </property>
@@ -1615,6 +1690,12 @@ order by code,name]]></xml-property>
                             <property name="content">
                                 <data id="890">
                                     <property name="fontWeight">bold</property>
+                                    <property name="paddingRight">3pt</property>
+                                    <structure name="numberFormat">
+                                        <property name="category">Currency</property>
+                                        <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
+                                    </structure>
+                                    <property name="textAlign">right</property>
                                     <property name="resultSetColumn">quantity_Group1/name_template</property>
                                 </data>
                             </property>
@@ -1645,6 +1726,24 @@ order by code,name]]></xml-property>
                         </extended-item>
                     </property>
                     <property name="views">
+                        <extended-item extensionName="DimensionView" id="896">
+                            <property name="dimension">Group4</property>
+                            <property name="levels">
+                                <extended-item extensionName="LevelView" name="NewLevel View4" id="897">
+                                    <property name="level">Group4/customer_code</property>
+                                    <property name="member">
+                                        <extended-item extensionName="CrosstabCell" id="898">
+                                            <property name="content">
+                                                <data name="customer_code" id="900">
+                                                    <property name="fontWeight">normal</property>
+                                                    <property name="resultSetColumn">customer_code</property>
+                                                </data>
+                                            </property>
+                                        </extended-item>
+                                    </property>
+                                </extended-item>
+                            </property>
+                        </extended-item>
                         <extended-item extensionName="DimensionView" id="857">
                             <property name="dimension">Group</property>
                             <property name="levels">
@@ -1678,6 +1777,24 @@ order by code,name]]></xml-property>
                                                 </data>
                                             </property>
                                             <property name="width">184px</property>
+                                        </extended-item>
+                                    </property>
+                                </extended-item>
+                            </property>
+                        </extended-item>
+                        <extended-item extensionName="DimensionView" id="906">
+                            <property name="dimension">Group5</property>
+                            <property name="levels">
+                                <extended-item extensionName="LevelView" name="NewLevel View5" id="907">
+                                    <property name="level">Group5/partner_tag</property>
+                                    <property name="member">
+                                        <extended-item extensionName="CrosstabCell" id="908">
+                                            <property name="content">
+                                                <data name="partner_tag" id="910">
+                                                    <property name="fontWeight">normal</property>
+                                                    <property name="resultSetColumn">partner_tag</property>
+                                                </data>
+                                            </property>
                                         </extended-item>
                                     </property>
                                 </extended-item>
@@ -1737,6 +1854,14 @@ order by code,name]]></xml-property>
                 </extended-item>
             </property>
             <property name="header">
+                <extended-item extensionName="CrosstabCell" id="899">
+                    <property name="content">
+                        <label id="902">
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">Outlet Code</text-property>
+                        </label>
+                    </property>
+                </extended-item>
                 <extended-item extensionName="CrosstabCell" id="855">
                     <property name="content">
                         <label id="861">
@@ -1750,6 +1875,14 @@ order by code,name]]></xml-property>
                         <label id="867">
                             <property name="fontWeight">bold</property>
                             <text-property name="text">Outlet Type</text-property>
+                        </label>
+                    </property>
+                </extended-item>
+                <extended-item extensionName="CrosstabCell" id="909">
+                    <property name="content">
+                        <label id="912">
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">Tags</text-property>
                         </label>
                     </property>
                 </extended-item>
@@ -1803,6 +1936,16 @@ order by code,name]]></xml-property>
                         <value>Group1/name_template</value>
                     </simple-property-list>
                     <property name="aggregateFunction">sum</property>
+                </structure>
+                <structure>
+                    <property name="name">customer_code</property>
+                    <expression name="expression">dimension["Group4"]["customer_code"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">partner_tag</property>
+                    <expression name="expression">dimension["Group5"]["partner_tag"]</expression>
+                    <property name="dataType">string</property>
                 </structure>
             </list-property>
         </extended-item>

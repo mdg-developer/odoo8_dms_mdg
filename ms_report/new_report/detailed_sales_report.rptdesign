@@ -80,9 +80,29 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                 <property name="category">Unformatted</property>
             </structure>
         </scalar-parameter>
+        <scalar-parameter name="partner_tag" id="884">
+            <text-property name="promptText">Tags</text-property>
+            <property name="valueType">dynamic</property>
+            <property name="isRequired">true</property>
+            <property name="dataSetName">partner_tag</property>
+            <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
+            <expression name="labelExpr" type="javascript">dataSetRow["name"]</expression>
+            <expression name="sortByColumn">dataSetRow["name"]</expression>
+            <property name="sortDirection">asc</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">multi-value</property>
+            <property name="controlType">list-box</property>
+            <property name="mustMatch">true</property>
+            <property name="fixedOrder">false</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
     </parameters>
     <data-sources>
-        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="881"
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="885"
  extends="report_library.Data Source"/>
     </data-sources>
     <data-sets>
@@ -167,6 +187,24 @@ order by payment_type]]></xml-property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">customer_name</text-property>
                     <text-property name="heading">customer_name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">customer_code</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">customer_code</text-property>
+                    <text-property name="heading">customer_code</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">outlet_type</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">outlet_type</text-property>
+                    <text-property name="heading">outlet_type</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">partner_tag</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">partner_tag</text-property>
+                    <text-property name="heading">partner_tag</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">township</property>
@@ -379,71 +417,86 @@ order by payment_type]]></xml-property>
                     </structure>
                     <structure>
                         <property name="position">3</property>
-                        <property name="name">township</property>
+                        <property name="name">customer_code</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">4</property>
-                        <property name="name">number</property>
+                        <property name="name">outlet_type</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">5</property>
-                        <property name="name">payment_type</property>
+                        <property name="name">partner_tag</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">6</property>
-                        <property name="name">date_invoice</property>
+                        <property name="name">township</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">7</property>
-                        <property name="name">section_id</property>
-                        <property name="dataType">integer</property>
+                        <property name="name">number</property>
+                        <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">8</property>
-                        <property name="name">sales_team</property>
+                        <property name="name">payment_type</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">9</property>
-                        <property name="name">branch_id</property>
-                        <property name="dataType">integer</property>
+                        <property name="name">date_invoice</property>
+                        <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">10</property>
-                        <property name="name">product_id</property>
+                        <property name="name">section_id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
                         <property name="position">11</property>
-                        <property name="name">name_template</property>
+                        <property name="name">sales_team</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">12</property>
-                        <property name="name">uos_id</property>
+                        <property name="name">branch_id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
                         <property name="position">13</property>
-                        <property name="name">uom_id</property>
+                        <property name="name">product_id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
                         <property name="position">14</property>
+                        <property name="name">name_template</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">15</property>
+                        <property name="name">uos_id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">16</property>
+                        <property name="name">uom_id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">17</property>
                         <property name="name">product_quantity</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">15</property>
+                        <property name="position">18</property>
                         <property name="name">status</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">16</property>
+                        <property name="position">19</property>
                         <property name="name">seq</property>
                         <property name="dataType">integer</property>
                     </structure>
@@ -469,6 +522,13 @@ if (params["payment_type"].value == null ){
 else
 {     
    this.queryText =this.queryText.replace("--$payment_type$", "and payment_type='"+params["payment_type"]+"'")
+}
+if (params["partner_tag"].value == null ){     
+   this.queryText =this.queryText.replace("--$partner_tag$", "")
+}
+else
+{     
+   this.queryText =this.queryText.replace("--$partner_tag$", "and categ.id in ("+params["partner_tag"].value.join(",")+")")
 }]]></method>
             <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
@@ -488,97 +548,118 @@ else
                 </structure>
                 <structure>
                     <property name="position">3</property>
+                    <property name="name">customer_code</property>
+                    <property name="nativeName">customer_code</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">outlet_type</property>
+                    <property name="nativeName">outlet_type</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">partner_tag</property>
+                    <property name="nativeName">partner_tag</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
                     <property name="name">township</property>
                     <property name="nativeName">township</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">4</property>
+                    <property name="position">7</property>
                     <property name="name">number</property>
                     <property name="nativeName">number</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">5</property>
+                    <property name="position">8</property>
                     <property name="name">payment_type</property>
                     <property name="nativeName">payment_type</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">6</property>
+                    <property name="position">9</property>
                     <property name="name">date_invoice</property>
                     <property name="nativeName">date_invoice</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">7</property>
+                    <property name="position">10</property>
                     <property name="name">section_id</property>
                     <property name="nativeName">section_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">8</property>
+                    <property name="position">11</property>
                     <property name="name">sales_team</property>
                     <property name="nativeName">sales_team</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">9</property>
+                    <property name="position">12</property>
                     <property name="name">branch_id</property>
                     <property name="nativeName">branch_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">10</property>
+                    <property name="position">13</property>
                     <property name="name">product_id</property>
                     <property name="nativeName">product_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">11</property>
+                    <property name="position">14</property>
                     <property name="name">name_template</property>
                     <property name="nativeName">name_template</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">12</property>
+                    <property name="position">15</property>
                     <property name="name">uos_id</property>
                     <property name="nativeName">uos_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">13</property>
+                    <property name="position">16</property>
                     <property name="name">uom_id</property>
                     <property name="nativeName">uom_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">14</property>
+                    <property name="position">17</property>
                     <property name="name">product_quantity</property>
                     <property name="nativeName">product_quantity</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">15</property>
+                    <property name="position">18</property>
                     <property name="name">status</property>
                     <property name="nativeName">status</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">16</property>
+                    <property name="position">19</property>
                     <property name="name">seq</property>
                     <property name="nativeName">seq</property>
                     <property name="dataType">integer</property>
@@ -587,67 +668,90 @@ else
             </list-property>
             <xml-property name="queryText"><![CDATA[
 with foc_qty as (
-	select rp.id customer_id,rp.name customer_name,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ccs.name sales_team,ai.branch_id,product_id,name_template,ail.uos_id,pt.uom_id,
+	select rp.id customer_id,rp.name customer_name,customer_code,oo.name outlet_type,STRING_AGG(categ.name, ',') partner_tag,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ccs.name sales_team,ai.branch_id,product_id,name_template,ail.uos_id,pt.uom_id,
 	case when ail.uos_id=pt.uom_id then sum(round(quantity,0)) when ail.uos_id!=pt.uom_id then sum(round(quantity*(select floor(round(1/factor,2)) from product_uom where id=ail.uos_id),0)) end as product_quantity,'Foc Qty'::text as status,pp.sequence as seq
-	from account_invoice ai,res_partner rp,res_township rt,account_invoice_line ail,product_uom uom,product_product pp,product_template pt,crm_case_section ccs
-	where ai.partner_id=rp.id
-	and rp.township=rt.id
-	and ai.id=ail.invoice_id
-	and ail.uos_id=uom.id
-	and pp.id=ail.product_id
-	and pp.product_tmpl_id=pt.id
-	and ai.section_id=ccs.id
-	and foc='true'
+	from account_invoice ai
+	left join res_partner rp on (ai.partner_id=rp.id)
+	left join res_township rt on (rp.township=rt.id)
+	left join account_invoice_line ail on (ai.id=ail.invoice_id)
+	left join product_uom uom on (ail.uos_id=uom.id)
+	left join product_product pp on (pp.id=ail.product_id)
+	left join product_template pt on (pp.product_tmpl_id=pt.id)
+	left join crm_case_section ccs on (ai.section_id=ccs.id)
+	left join outlettype_outlettype oo on (rp.outlet_type=oo.id)
+	left join res_partner_res_partner_category_rel rel on (rel.partner_id=rp.id)	
+	left join res_partner_category categ on (rel.category_id=categ.id)																															
+	where foc='true'
 	and date_invoice between ? and ?
-	group by rp.id,rp.name,rt.code,number,payment_type,date_invoice,ai.section_id,ccs.name,ai.branch_id,product_id,name_template,pp.sequence,ail.uos_id,pt.uom_id
+	--$partner_tag$
+	group by rp.id,rp.name,oo.name,rt.code,number,payment_type,date_invoice,ai.section_id,ccs.name,ai.branch_id,product_id,name_template,pp.sequence,ail.uos_id,pt.uom_id
 	order by seq),
 sale_qty as (
-	select rp.id customer,rp.name customer_name,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,
+	select rp.id customer,rp.name customer_name,customer_code,oo.name outlet_type,STRING_AGG(categ.name, ',') partner_tag,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,
         ccs.name sales_team,ai.branch_id,product_id,name_template,ail.uos_id,pt.uom_id,
         
         case when ail.uos_id=pt.uom_id then sum(round(quantity,0)) 
         when ail.uos_id!=pt.uom_id then sum(round(quantity*(select floor(round(1/factor,2)) from product_uom where id=ail.uos_id),0)) 
         end as product_quantity,'Sales Qty'::text as status,pp.sequence as seq
-	from account_invoice ai,res_partner rp,res_township rt,account_invoice_line ail,product_uom uom,product_product pp,product_template pt,crm_case_section ccs
-	where ai.partner_id=rp.id
-	and rp.township=rt.id
-	and ai.id=ail.invoice_id
-	and ail.uos_id=uom.id
-	and pp.id=ail.product_id
-	and pp.product_tmpl_id=pt.id
-	and ai.section_id=ccs.id			
-	and foc='false'
+	from account_invoice ai
+	left join res_partner rp on (ai.partner_id=rp.id)
+	left join res_township rt on (rp.township=rt.id)
+	left join account_invoice_line ail on (ai.id=ail.invoice_id)
+	left join product_uom uom on (ail.uos_id=uom.id)
+	left join product_product pp on (pp.id=ail.product_id)
+	left join product_template pt on (pp.product_tmpl_id=pt.id)
+	left join crm_case_section ccs on (ai.section_id=ccs.id)
+	left join outlettype_outlettype oo on (rp.outlet_type=oo.id)
+	left join res_partner_res_partner_category_rel rel on (rel.partner_id=rp.id)	
+	left join res_partner_category categ on (rel.category_id=categ.id)		
+	where foc='false'
 	and date_invoice between ? and ?
-        group by rp.id,rp.name,rt.code,number,payment_type,date_invoice,ai.section_id,ccs.name,ai.branch_id,product_id,name_template,pp.sequence,ail.uos_id,pt.uom_id
+	--$partner_tag$
+        group by rp.id,rp.name,oo.name,rt.code,number,payment_type,date_invoice,ai.section_id,ccs.name,ai.branch_id,product_id,name_template,pp.sequence,ail.uos_id,pt.uom_id
 	order by seq),
 total_amt as (
-	select rp.id customer,rp.name customer_name,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ccs.name sales_team,ai.branch_id,0,'Total Amt.'::character varying name_template,0,0,
+	select rp.id customer,rp.name customer_name,customer_code,oo.name outlet_type,STRING_AGG(categ.name, ',') partner_tag,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ccs.name sales_team,ai.branch_id,0,'Total Amt.'::character varying name_template,0,0,
 	round((amount_untaxed)+(amount_tax*1)+(discount_total*1),0) as product_quantity,''::text as status,90001::int as seq
-	from account_invoice ai,res_partner rp,res_township rt,crm_case_section ccs
-	where ai.partner_id=rp.id	
-	and rp.township=rt.id	
-	and ai.section_id=ccs.id
-	and date_invoice between ? and ?
+	from account_invoice ai
+	left join res_partner rp on (ai.partner_id=rp.id)
+	left join res_township rt on (rp.township=rt.id)
+	left join crm_case_section ccs on (ai.section_id=ccs.id)
+	left join outlettype_outlettype oo on (rp.outlet_type=oo.id)
+	left join res_partner_res_partner_category_rel rel on (rel.partner_id=rp.id)	
+	left join res_partner_category categ on (rel.category_id=categ.id)	
+	where date_invoice between ? and ?
+	--$partner_tag$
+	group by rp.id,oo.name,rt.code,ai.number,ai.payment_type,ai.date_invoice,ai.section_id,ccs.name,ai.branch_id,ai.amount_untaxed,amount_tax,discount_total
 	order by rp.name
 ),
 total_discount as (
-	select rp.id customer,rp.name customer_name,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ccs.name sales_team,ai.branch_id,0,'Total Disc.'::character varying name_template,0,0,
+	select rp.id customer,rp.name customer_name,customer_code,oo.name outlet_type,STRING_AGG(categ.name, ',') partner_tag,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ccs.name sales_team,ai.branch_id,0,'Total Disc.'::character varying name_template,0,0,
 	round(discount_total,0) as product_quantity,''::text as status,90002::int as seq
-	from account_invoice ai,res_partner rp,res_township rt,crm_case_section ccs
-	where ai.partner_id=rp.id
-	and rp.township=rt.id	
-	and ai.section_id=ccs.id
-	and date_invoice between ? and ?
+	from account_invoice ai
+	left join res_partner rp on (ai.partner_id=rp.id)
+	left join res_township rt on (rp.township=rt.id)
+	left join crm_case_section ccs on (ai.section_id=ccs.id)
+	left join outlettype_outlettype oo on (rp.outlet_type=oo.id)
+	left join res_partner_res_partner_category_rel rel on (rel.partner_id=rp.id)	
+	left join res_partner_category categ on (rel.category_id=categ.id)	
+	where date_invoice between ? and ?
+	--$partner_tag$
+	group by rp.id,oo.name,rt.code,ai.number,ai.payment_type,ai.date_invoice,ai.section_id,ccs.name,ai.branch_id,discount_total
 	order by rp.name
 ),
 net_amt as (
-	select rp.id customer,rp.name customer_name,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ccs.name sales_team,ai.branch_id,0,'Net Amt.'::character varying name_template,0,0,
+	select rp.id customer,rp.name customer_name,customer_code,oo.name outlet_type,STRING_AGG(categ.name, ',') partner_tag,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ccs.name sales_team,ai.branch_id,0,'Net Amt.'::character varying name_template,0,0,
 	round(amount_total,0) as product_quantity,''::text as status,90003::int as seq
-	from account_invoice ai,res_partner rp,res_township rt,crm_case_section ccs
-	where ai.partner_id=rp.id
-	and rp.township=rt.id	
-	and ai.section_id=ccs.id
-	and date_invoice between ? and ?
+	from account_invoice ai
+	left join res_partner rp on (ai.partner_id=rp.id)
+	left join res_township rt on (rp.township=rt.id)
+	left join crm_case_section ccs on (ai.section_id=ccs.id)
+	left join outlettype_outlettype oo on (rp.outlet_type=oo.id)
+	left join res_partner_res_partner_category_rel rel on (rel.partner_id=rp.id)	
+	left join res_partner_category categ on (rel.category_id=categ.id)
+	where date_invoice between ? and ?
+	--$partner_tag$
+	group by rp.id,rp.name,oo.name,rt.code,ai.number,payment_type,date_invoice,ai.section_id,ccs.name,ai.branch_id,amount_total
 	order by rp.name
 ),
 result as (
@@ -1546,6 +1650,109 @@ and date_invoice between ? and ?
   </design:ResultSets>
 </model:DesignValues>]]></xml-property>
         </oda-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="partner_tag" id="883">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">id</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">id</text-property>
+                    <text-property name="heading">id</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">name</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">name</text-property>
+                    <text-property name="heading">name</text-property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">id</property>
+                    <property name="nativeName">id</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">name</property>
+                    <property name="nativeName">name</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select id,name
+from res_partner_category
+order by name]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>id</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+            <design:precision>10</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>id</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>id</design:label>
+            <design:formattingHints>
+              <design:displaySize>11</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>name</design:name>
+              <design:position>2</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>2147483647</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>name</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>name</design:label>
+            <design:formattingHints>
+              <design:displaySize>2147483647</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
     </data-sets>
     <cubes>
         <tabular-cube name="Data Cube" id="334">
@@ -1654,6 +1861,45 @@ and date_invoice between ? and ?
                                 <tabular-level name="customer_name" id="728">
                                     <property name="dataType">string</property>
                                     <property name="columnName">customer_name</property>
+                                </tabular-level>
+                            </property>
+                        </tabular-hierarchy>
+                    </property>
+                </tabular-dimension>
+                <tabular-dimension name="Group7" id="886">
+                    <property name="defaultHierarchy">NewTabularHierarchy7</property>
+                    <property name="hierarchies">
+                        <tabular-hierarchy name="NewTabularHierarchy7" id="887">
+                            <property name="levels">
+                                <tabular-level name="customer_code" id="888">
+                                    <property name="dataType">string</property>
+                                    <property name="columnName">customer_code</property>
+                                </tabular-level>
+                            </property>
+                        </tabular-hierarchy>
+                    </property>
+                </tabular-dimension>
+                <tabular-dimension name="Group8" id="889">
+                    <property name="defaultHierarchy">NewTabularHierarchy8</property>
+                    <property name="hierarchies">
+                        <tabular-hierarchy name="NewTabularHierarchy8" id="890">
+                            <property name="levels">
+                                <tabular-level name="partner_tag" id="891">
+                                    <property name="dataType">string</property>
+                                    <property name="columnName">partner_tag</property>
+                                </tabular-level>
+                            </property>
+                        </tabular-hierarchy>
+                    </property>
+                </tabular-dimension>
+                <tabular-dimension name="Group9" id="892">
+                    <property name="defaultHierarchy">NewTabularHierarchy9</property>
+                    <property name="hierarchies">
+                        <tabular-hierarchy name="NewTabularHierarchy9" id="893">
+                            <property name="levels">
+                                <tabular-level name="outlet_type" id="894">
+                                    <property name="dataType">string</property>
+                                    <property name="columnName">outlet_type</property>
                                 </tabular-level>
                             </property>
                         </tabular-hierarchy>
@@ -1972,6 +2218,24 @@ else&#13;
                                 </extended-item>
                             </property>
                         </extended-item>
+                        <extended-item extensionName="DimensionView" id="895">
+                            <property name="dimension">Group7</property>
+                            <property name="levels">
+                                <extended-item extensionName="LevelView" name="NewLevel View8" id="896">
+                                    <property name="level">Group7/customer_code</property>
+                                    <property name="member">
+                                        <extended-item extensionName="CrosstabCell" id="897">
+                                            <property name="content">
+                                                <data name="customer_code" id="900">
+                                                    <property name="fontWeight">normal</property>
+                                                    <property name="resultSetColumn">customer_code</property>
+                                                </data>
+                                            </property>
+                                        </extended-item>
+                                    </property>
+                                </extended-item>
+                            </property>
+                        </extended-item>
                         <extended-item extensionName="DimensionView" id="793">
                             <property name="dimension">Group6</property>
                             <property name="levels">
@@ -1995,6 +2259,58 @@ else&#13;
                                             <property name="borderRightStyle">solid</property>
                                             <property name="borderRightWidth">thin</property>
                                             <property name="width">133px</property>
+                                        </extended-item>
+                                    </property>
+                                </extended-item>
+                            </property>
+                        </extended-item>
+                        <extended-item extensionName="DimensionView" id="902">
+                            <property name="dimension">Group9</property>
+                            <property name="levels">
+                                <extended-item extensionName="LevelView" name="NewLevel View9" id="903">
+                                    <property name="level">Group9/outlet_type</property>
+                                    <property name="member">
+                                        <extended-item extensionName="CrosstabCell" id="904">
+                                            <property name="content">
+                                                <data name="outlet_type" id="907">
+                                                    <property name="fontWeight">normal</property>
+                                                    <property name="resultSetColumn">outlet_type</property>
+                                                </data>
+                                            </property>
+                                            <property name="borderTopStyle">solid</property>
+                                            <property name="borderTopWidth">thin</property>
+                                            <property name="borderLeftStyle">solid</property>
+                                            <property name="borderLeftWidth">thin</property>
+                                            <property name="borderBottomStyle">solid</property>
+                                            <property name="borderBottomWidth">thin</property>
+                                            <property name="borderRightStyle">solid</property>
+                                            <property name="borderRightWidth">thin</property>
+                                        </extended-item>
+                                    </property>
+                                </extended-item>
+                            </property>
+                        </extended-item>
+                        <extended-item extensionName="DimensionView" id="909">
+                            <property name="dimension">Group8</property>
+                            <property name="levels">
+                                <extended-item extensionName="LevelView" name="NewLevel View10" id="910">
+                                    <property name="level">Group8/partner_tag</property>
+                                    <property name="member">
+                                        <extended-item extensionName="CrosstabCell" id="911">
+                                            <property name="content">
+                                                <data name="partner_tag" id="914">
+                                                    <property name="fontWeight">normal</property>
+                                                    <property name="resultSetColumn">partner_tag</property>
+                                                </data>
+                                            </property>
+                                            <property name="borderTopStyle">solid</property>
+                                            <property name="borderTopWidth">thin</property>
+                                            <property name="borderLeftStyle">solid</property>
+                                            <property name="borderLeftWidth">thin</property>
+                                            <property name="borderBottomStyle">solid</property>
+                                            <property name="borderBottomWidth">thin</property>
+                                            <property name="borderRightStyle">solid</property>
+                                            <property name="borderRightWidth">thin</property>
                                         </extended-item>
                                     </property>
                                 </extended-item>
@@ -2191,6 +2507,7 @@ else&#13;
             </property>
             <property name="header">
                 <extended-item extensionName="CrosstabCell" id="865"/>
+                <extended-item extensionName="CrosstabCell" id="899"/>
                 <extended-item extensionName="CrosstabCell" id="831">
                     <property name="content">
                         <label id="416">
@@ -2203,6 +2520,8 @@ else&#13;
                         </label>
                     </property>
                 </extended-item>
+                <extended-item extensionName="CrosstabCell" id="906"/>
+                <extended-item extensionName="CrosstabCell" id="913"/>
                 <extended-item extensionName="CrosstabCell" id="832">
                     <property name="content">
                         <data id="869">
@@ -2276,6 +2595,24 @@ else&#13;
                     <property name="borderRightStyle">solid</property>
                     <property name="borderRightWidth">thin</property>
                 </extended-item>
+                <extended-item extensionName="CrosstabCell" id="898">
+                    <property name="content">
+                        <label id="916">
+                            <property name="fontFamily">"Arial"</property>
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">center</property>
+                            <text-property name="text">Customer Code</text-property>
+                        </label>
+                    </property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                </extended-item>
                 <extended-item extensionName="CrosstabCell" id="791">
                     <property name="content">
                         <label id="868">
@@ -2283,6 +2620,42 @@ else&#13;
                             <property name="fontWeight">bold</property>
                             <property name="textAlign">center</property>
                             <text-property name="text">Customer</text-property>
+                        </label>
+                    </property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                </extended-item>
+                <extended-item extensionName="CrosstabCell" id="905">
+                    <property name="content">
+                        <label id="917">
+                            <property name="fontFamily">"Arial"</property>
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">center</property>
+                            <text-property name="text">Outlet Type</text-property>
+                        </label>
+                    </property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                </extended-item>
+                <extended-item extensionName="CrosstabCell" id="912">
+                    <property name="content">
+                        <label id="918">
+                            <property name="fontFamily">"Arial"</property>
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">center</property>
+                            <text-property name="text">Tags</text-property>
                         </label>
                     </property>
                     <property name="borderTopStyle">solid</property>
@@ -2465,6 +2838,21 @@ else&#13;
                         <value>Group4/status</value>
                     </simple-property-list>
                     <property name="aggregateFunction">sum</property>
+                </structure>
+                <structure>
+                    <property name="name">customer_code</property>
+                    <expression name="expression">dimension["Group7"]["customer_code"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">outlet_type</property>
+                    <expression name="expression">dimension["Group9"]["outlet_type"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">partner_tag</property>
+                    <expression name="expression">dimension["Group8"]["partner_tag"]</expression>
+                    <property name="dataType">string</property>
                 </structure>
             </list-property>
         </extended-item>
