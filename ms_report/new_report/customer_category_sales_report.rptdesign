@@ -143,6 +143,7 @@ teamList = params["sales_team_id"].value.join(",");
                     <property name="columnName">product_id</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">product_id</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">product_id</text-property>
                 </structure>
                 <structure>
@@ -160,11 +161,11 @@ teamList = params["sales_team_id"].value.join(",");
                     <text-property name="heading">tags</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">name_template</property>
+                    <property name="columnName">product_category</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">name_template</text-property>
+                    <text-property name="displayName">product_category</text-property>
                     <property name="onColumnLayout">false</property>
-                    <text-property name="heading">name_template</text-property>
+                    <text-property name="heading">product_category</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">product_quantity</property>
@@ -325,7 +326,7 @@ teamList = params["sales_team_id"].value.join(",");
                     </structure>
                     <structure>
                         <property name="position">11</property>
-                        <property name="name">name_template</property>
+                        <property name="name">product_category</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
@@ -433,8 +434,8 @@ this.queryText =this.queryText.replace("--$product_id3$", "and ail.product_id in
                 </structure>
                 <structure>
                     <property name="position">11</property>
-                    <property name="name">name_template</property>
-                    <property name="nativeName">name_template</property>
+                    <property name="name">product_category</property>
+                    <property name="nativeName">product_category</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
@@ -455,13 +456,13 @@ this.queryText =this.queryText.replace("--$product_id3$", "and ail.product_id in
             </list-property>
             <xml-property name="queryText"><![CDATA[with sale_qty as (
 	select rp.id customer,rp.customer_code,rp.name customer_name,rt.code township,outlet.name outlet,ai.section_id,ai.branch_id,product_id,ccs.name sales_team,
-	array_to_string(array_agg(distinct rpc.name),', ') AS tags,name_template,
+	array_to_string(array_agg(distinct rpc.name),', ') AS tags,p_categ.name product_category,
     case when ail.uos_id=pt.uom_id then COALESCE(sum(round(quantity,0)),0) 
 	when ail.uos_id!=pt.uom_id then COALESCE(sum(round(quantity*(select floor(round(1/factor,2)) from product_uom where id=pt.uom_id),0)),0) end as product_quantity,
 
-	pp.sequence as seq
+	1 as seq
 	from account_invoice ai,res_partner rp,res_township rt,account_invoice_line ail,product_uom uom,product_product pp,product_template pt,crm_case_section ccs,outlettype_outlettype outlet,
-	res_partner_res_partner_category_rel crel,res_partner_category rpc																															   
+	res_partner_res_partner_category_rel crel,res_partner_category rpc,product_category p_categ																															   
 	where ai.partner_id=rp.id
 	and rp.township=rt.id
 	and ai.id=ail.invoice_id
@@ -472,14 +473,15 @@ this.queryText =this.queryText.replace("--$product_id3$", "and ail.product_id in
 	and outlet.id=rp.outlet_type	
 	and rpc.id=crel.category_id
 	and rp.id=crel.partner_id
+	and pt.categ_id=p_categ.id 	
 	and foc='false'
 	and date_invoice between ?  and ?	
 	--$product_id$													
-    group by rp.id,rp.customer_code,rp.name,rt.code,ccs.name,name_template,pp.sequence,ail.uos_id,pt.uom_id,big_uom_id,outlet.name,ai.section_id,ai.branch_id,product_id
-	order by seq),
+    group by rp.id,rp.customer_code,rp.name,rt.code,p_categ.name,ccs.name,name_template,pp.sequence,ail.uos_id,pt.uom_id,big_uom_id,outlet.name,ai.section_id,ai.branch_id,product_id
+	order by p_categ.name),
 total_amt as (
 	select rp.id customer,rp.customer_code,rp.name customer_name,rt.code township,outlet.name outlet,ai.section_id,ai.branch_id,0,ccs.name sales_team,
-	array_to_string(array_agg(distinct rpc.name),', ') AS tags,'Total Amt.'::character varying name_template,
+	array_to_string(array_agg(distinct rpc.name),', ') AS tags,'Gross Net Amt.'::character varying product_category,
 	sum(round((amount_untaxed)+(amount_tax*1)+(discount_total*1),0)) as product_quantity,90001::int as seq
 	from account_invoice ai,account_invoice_line ail,res_partner rp,res_township rt,crm_case_section ccs,outlettype_outlettype outlet,
 	res_partner_res_partner_category_rel crel,res_partner_category rpc												
@@ -499,7 +501,7 @@ total_amt as (
 total_discount as (
 	select rp.id customer,rp.customer_code,rp.name customer_name,rt.code township,outlet.name outlet,ai.section_id,ai.branch_id,0,ccs.name sales_team,
 	array_to_string(array_agg(distinct rpc.name),', ') AS tags,
-	'Total Disc.'::character varying name_template,
+	'Total Disc.'::character varying product_category,
 	sum(round(discount_total,0)) as product_quantity,90002::int as seq
 	from account_invoice ai,account_invoice_line ail,res_partner rp,res_township rt,crm_case_section ccs,outlettype_outlettype outlet,
 	res_partner_res_partner_category_rel crel,res_partner_category rpc	
@@ -518,7 +520,7 @@ total_discount as (
 ),
 net_amt as (
 	select rp.id customer,rp.customer_code,rp.name customer_name,rt.code township,outlet.name outlet,ai.section_id,ai.branch_id,0,ccs.name sales_team,
-	array_to_string(array_agg(distinct rpc.name),', ') AS tags,'Total Net Amt.'::character varying name_template,
+	array_to_string(array_agg(distinct rpc.name),', ') AS tags,'Net Amt.'::character varying product_category,
 	sum(round(amount_total,0)) as product_quantity,90003::int as seq
 	from account_invoice ai,account_invoice_line ail,res_partner rp,res_township rt,crm_case_section ccs,outlettype_outlettype outlet,
 	res_partner_res_partner_category_rel crel,res_partner_category rpc	
@@ -1356,28 +1358,14 @@ and pp.id in (select product_product_id from crm_case_section_product_product_re
         </oda-data-set>
     </data-sets>
     <cubes>
-        <tabular-cube name="Data Cube" id="887">
+        <tabular-cube name="Data Cube" id="1413">
             <property name="dimensions">
-                <tabular-dimension name="Group" id="890">
-                    <property name="isTimeType">false</property>
+                <tabular-dimension name="Group" id="1414">
                     <property name="defaultHierarchy">NewTabularHierarchy</property>
                     <property name="hierarchies">
-                        <tabular-hierarchy name="NewTabularHierarchy" id="891">
+                        <tabular-hierarchy name="NewTabularHierarchy" id="1415">
                             <property name="levels">
-                                <tabular-level name="customer_name" id="901">
-                                    <property name="dataType">string</property>
-                                    <property name="columnName">customer_name</property>
-                                </tabular-level>
-                            </property>
-                        </tabular-hierarchy>
-                    </property>
-                </tabular-dimension>
-                <tabular-dimension name="Group1" id="898">
-                    <property name="defaultHierarchy">NewTabularHierarchy1</property>
-                    <property name="hierarchies">
-                        <tabular-hierarchy name="NewTabularHierarchy1" id="899">
-                            <property name="levels">
-                                <tabular-level name="customer_code" id="900">
+                                <tabular-level name="customer_code" id="1416">
                                     <property name="dataType">string</property>
                                     <property name="columnName">customer_code</property>
                                 </tabular-level>
@@ -1385,64 +1373,25 @@ and pp.id in (select product_product_id from crm_case_section_product_product_re
                         </tabular-hierarchy>
                     </property>
                 </tabular-dimension>
-                <tabular-dimension name="Group2" id="903">
+                <tabular-dimension name="Group1" id="1417">
+                    <property name="defaultHierarchy">NewTabularHierarchy1</property>
+                    <property name="hierarchies">
+                        <tabular-hierarchy name="NewTabularHierarchy1" id="1418">
+                            <property name="levels">
+                                <tabular-level name="customer_name" id="1419">
+                                    <property name="dataType">string</property>
+                                    <property name="columnName">customer_name</property>
+                                </tabular-level>
+                            </property>
+                        </tabular-hierarchy>
+                    </property>
+                </tabular-dimension>
+                <tabular-dimension name="Group2" id="1420">
                     <property name="defaultHierarchy">NewTabularHierarchy2</property>
                     <property name="hierarchies">
-                        <tabular-hierarchy name="NewTabularHierarchy2" id="904">
+                        <tabular-hierarchy name="NewTabularHierarchy2" id="1421">
                             <property name="levels">
-                                <tabular-level name="outlet" id="905">
-                                    <property name="dataType">string</property>
-                                    <property name="columnName">outlet</property>
-                                </tabular-level>
-                            </property>
-                        </tabular-hierarchy>
-                    </property>
-                </tabular-dimension>
-                <tabular-dimension name="Group3" id="906">
-                    <property name="defaultHierarchy">NewTabularHierarchy3</property>
-                    <property name="hierarchies">
-                        <tabular-hierarchy name="NewTabularHierarchy3" id="907">
-                            <property name="levels">
-                                <tabular-level name="tags" id="908">
-                                    <property name="dataType">string</property>
-                                    <property name="columnName">tags</property>
-                                </tabular-level>
-                            </property>
-                        </tabular-hierarchy>
-                    </property>
-                </tabular-dimension>
-                <tabular-dimension name="Group4" id="909">
-                    <property name="defaultHierarchy">NewTabularHierarchy4</property>
-                    <property name="hierarchies">
-                        <tabular-hierarchy name="NewTabularHierarchy4" id="910">
-                            <property name="levels">
-                                <tabular-level name="sales_team" id="911">
-                                    <property name="dataType">string</property>
-                                    <property name="columnName">sales_team</property>
-                                </tabular-level>
-                            </property>
-                        </tabular-hierarchy>
-                    </property>
-                </tabular-dimension>
-                <tabular-dimension name="Group5" id="912">
-                    <property name="defaultHierarchy">NewTabularHierarchy5</property>
-                    <property name="hierarchies">
-                        <tabular-hierarchy name="NewTabularHierarchy5" id="913">
-                            <property name="levels">
-                                <tabular-level name="township" id="914">
-                                    <property name="dataType">string</property>
-                                    <property name="columnName">township</property>
-                                </tabular-level>
-                            </property>
-                        </tabular-hierarchy>
-                    </property>
-                </tabular-dimension>
-                <tabular-dimension name="Group6" id="1032">
-                    <property name="defaultHierarchy">NewTabularHierarchy6</property>
-                    <property name="hierarchies">
-                        <tabular-hierarchy name="NewTabularHierarchy6" id="1033">
-                            <property name="levels">
-                                <tabular-level name="name_template" id="1034">
+                                <tabular-level name="product_category" id="1422">
                                     <property name="dataType">string</property>
                                     <property name="levelType">dynamic</property>
                                     <list-property name="attributes">
@@ -1451,7 +1400,59 @@ and pp.id in (select product_product_id from crm_case_section_product_product_re
                                             <property name="dataType">integer</property>
                                         </structure>
                                     </list-property>
-                                    <property name="columnName">name_template</property>
+                                    <property name="columnName">product_category</property>
+                                </tabular-level>
+                            </property>
+                        </tabular-hierarchy>
+                    </property>
+                </tabular-dimension>
+                <tabular-dimension name="Group3" id="1452">
+                    <property name="defaultHierarchy">NewTabularHierarchy3</property>
+                    <property name="hierarchies">
+                        <tabular-hierarchy name="NewTabularHierarchy3" id="1453">
+                            <property name="levels">
+                                <tabular-level name="outlet" id="1454">
+                                    <property name="dataType">string</property>
+                                    <property name="columnName">outlet</property>
+                                </tabular-level>
+                            </property>
+                        </tabular-hierarchy>
+                    </property>
+                </tabular-dimension>
+                <tabular-dimension name="Group4" id="1455">
+                    <property name="defaultHierarchy">NewTabularHierarchy4</property>
+                    <property name="hierarchies">
+                        <tabular-hierarchy name="NewTabularHierarchy4" id="1456">
+                            <property name="levels">
+                                <tabular-level name="tags" id="1457">
+                                    <property name="dataType">string</property>
+                                    <property name="columnName">tags</property>
+                                </tabular-level>
+                            </property>
+                        </tabular-hierarchy>
+                    </property>
+                </tabular-dimension>
+                <tabular-dimension name="Group5" id="1458">
+                    <property name="defaultHierarchy">NewTabularHierarchy5</property>
+                    <property name="hierarchies">
+                        <tabular-hierarchy name="NewTabularHierarchy5" id="1459">
+                            <property name="levels">
+                                <tabular-level name="sales_team" id="1460">
+                                    <property name="dataType">string</property>
+                                    <property name="columnName">sales_team</property>
+                                </tabular-level>
+                            </property>
+                        </tabular-hierarchy>
+                    </property>
+                </tabular-dimension>
+                <tabular-dimension name="Group6" id="1461">
+                    <property name="defaultHierarchy">NewTabularHierarchy6</property>
+                    <property name="hierarchies">
+                        <tabular-hierarchy name="NewTabularHierarchy6" id="1462">
+                            <property name="levels">
+                                <tabular-level name="township" id="1463">
+                                    <property name="dataType">string</property>
+                                    <property name="columnName">township</property>
                                 </tabular-level>
                             </property>
                         </tabular-hierarchy>
@@ -1459,9 +1460,9 @@ and pp.id in (select product_product_id from crm_case_section_product_product_re
                 </tabular-dimension>
             </property>
             <property name="measureGroups">
-                <tabular-measure-group name="Summary Field" id="1086">
+                <tabular-measure-group name="Summary Field" id="1423">
                     <property name="measures">
-                        <tabular-measure name="product_quantity" id="1087">
+                        <tabular-measure name="product_quantity" id="1424">
                             <expression name="measureExpression" type="javascript">dataSetRow["product_quantity"]</expression>
                             <property name="dataType">decimal</property>
                         </tabular-measure>
@@ -1672,68 +1673,67 @@ and pp.id in (select product_product_id from crm_case_section_product_product_re
                 </cell>
             </row>
         </grid>
-        <extended-item extensionName="Crosstab" extensionVersion="3.7.0" id="1238">
+        <extended-item extensionName="Crosstab" extensionVersion="3.7.0" id="1425">
             <property name="cube">Data Cube</property>
             <property name="measures">
-                <extended-item extensionName="MeasureView" id="1281">
+                <extended-item extensionName="MeasureView" id="1439">
                     <property name="measure">product_quantity</property>
                     <property name="detail">
-                        <extended-item extensionName="AggregationCell" id="1282">
-                            <property name="aggregationOnRow">Group5/township</property>
-                            <property name="aggregationOnColumn">Group6/name_template</property>
-                            <property name="borderTopStyle">none</property>
-                            <property name="borderLeftStyle">none</property>
+                        <extended-item extensionName="AggregationCell" id="1440">
+                            <property name="aggregationOnRow">Group6/township</property>
+                            <property name="aggregationOnColumn">Group2/product_category</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">thin</property>
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">thin</property>
                             <property name="borderBottomStyle">solid</property>
                             <property name="borderBottomWidth">thin</property>
                             <property name="borderRightStyle">solid</property>
                             <property name="borderRightWidth">thin</property>
                             <property name="content">
-                                <data id="1283">
+                                <data id="1441">
                                     <property name="fontFamily">"Arial"</property>
+                                    <property name="paddingRight">3pt</property>
                                     <structure name="numberFormat">
                                         <property name="category">Currency</property>
                                         <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
                                     </structure>
                                     <property name="textAlign">right</property>
-                                    <list-property name="visibility">
-                                        <structure>
-                                            <property name="format">all</property>
-                                            <expression name="valueExpr" type="javascript">data["product_quantity_Group5/township_Group6/name_template"]==0</expression>
-                                        </structure>
-                                    </list-property>
-                                    <property name="resultSetColumn">product_quantity_Group5/township_Group6/name_template</property>
+                                    <property name="resultSetColumn">product_quantity_Group6/township_Group2/product_category</property>
                                 </data>
                             </property>
                         </extended-item>
                     </property>
                     <property name="header">
-                        <extended-item extensionName="CrosstabCell" id="1284">
-                            <property name="borderBottomStyle">solid</property>
-                            <property name="borderBottomWidth">thin</property>
-                            <property name="borderRightStyle">solid</property>
-                            <property name="borderRightWidth">thin</property>
+                        <extended-item extensionName="CrosstabCell" id="1442">
+                            <property name="content">
+                                <label id="1443">
+                                    <text-property name="text">product_quantity</text-property>
+                                </label>
+                            </property>
                         </extended-item>
                     </property>
                 </extended-item>
             </property>
             <property name="rows">
-                <extended-item extensionName="CrosstabView" id="1240">
+                <extended-item extensionName="CrosstabView" id="1427">
                     <property name="views">
-                        <extended-item extensionName="DimensionView" id="1241">
+                        <extended-item extensionName="DimensionView" id="1428">
                             <property name="dimension">Group</property>
                             <property name="levels">
-                                <extended-item extensionName="LevelView" name="NewLevel View" id="1242">
-                                    <property name="level">Group/customer_name</property>
+                                <extended-item extensionName="LevelView" name="NewLevel View" id="1429">
+                                    <property name="level">Group/customer_code</property>
                                     <property name="member">
-                                        <extended-item extensionName="CrosstabCell" id="1243">
+                                        <extended-item extensionName="CrosstabCell" id="1430">
                                             <property name="content">
-                                                <data name="customer_name" id="1244">
+                                                <data name="customer_code" id="1431">
                                                     <property name="fontFamily">"Arial"</property>
-                                                    <property name="textAlign">left</property>
-                                                    <property name="resultSetColumn">customer_name</property>
+                                                    <property name="fontWeight">normal</property>
+                                                    <property name="resultSetColumn">customer_code</property>
                                                 </data>
                                             </property>
-                                            <property name="borderTopStyle">none</property>
+                                            <property name="borderTopStyle">solid</property>
+                                            <property name="borderTopWidth">thin</property>
                                             <property name="borderLeftStyle">solid</property>
                                             <property name="borderLeftWidth">thin</property>
                                             <property name="borderBottomStyle">solid</property>
@@ -1745,22 +1745,24 @@ and pp.id in (select product_product_id from crm_case_section_product_product_re
                                 </extended-item>
                             </property>
                         </extended-item>
-                        <extended-item extensionName="DimensionView" id="1246">
+                        <extended-item extensionName="DimensionView" id="1433">
                             <property name="dimension">Group1</property>
                             <property name="levels">
-                                <extended-item extensionName="LevelView" name="NewLevel View1" id="1247">
-                                    <property name="level">Group1/customer_code</property>
+                                <extended-item extensionName="LevelView" name="NewLevel View1" id="1434">
+                                    <property name="level">Group1/customer_name</property>
                                     <property name="member">
-                                        <extended-item extensionName="CrosstabCell" id="1248">
+                                        <extended-item extensionName="CrosstabCell" id="1435">
                                             <property name="content">
-                                                <data name="customer_code" id="1250">
+                                                <data name="customer_name" id="1437">
                                                     <property name="fontFamily">"Arial"</property>
-                                                    <property name="textAlign">left</property>
-                                                    <property name="resultSetColumn">customer_code</property>
+                                                    <property name="fontWeight">normal</property>
+                                                    <property name="resultSetColumn">customer_name</property>
                                                 </data>
                                             </property>
-                                            <property name="borderTopStyle">none</property>
-                                            <property name="borderLeftStyle">none</property>
+                                            <property name="borderTopStyle">solid</property>
+                                            <property name="borderTopWidth">thin</property>
+                                            <property name="borderLeftStyle">solid</property>
+                                            <property name="borderLeftWidth">thin</property>
                                             <property name="borderBottomStyle">solid</property>
                                             <property name="borderBottomWidth">thin</property>
                                             <property name="borderRightStyle">solid</property>
@@ -1770,22 +1772,24 @@ and pp.id in (select product_product_id from crm_case_section_product_product_re
                                 </extended-item>
                             </property>
                         </extended-item>
-                        <extended-item extensionName="DimensionView" id="1252">
-                            <property name="dimension">Group2</property>
+                        <extended-item extensionName="DimensionView" id="1464">
+                            <property name="dimension">Group3</property>
                             <property name="levels">
-                                <extended-item extensionName="LevelView" name="NewLevel View2" id="1253">
-                                    <property name="level">Group2/outlet</property>
+                                <extended-item extensionName="LevelView" name="NewLevel View3" id="1465">
+                                    <property name="level">Group3/outlet</property>
                                     <property name="member">
-                                        <extended-item extensionName="CrosstabCell" id="1254">
+                                        <extended-item extensionName="CrosstabCell" id="1466">
                                             <property name="content">
-                                                <data name="outlet" id="1256">
+                                                <data name="outlet" id="1468">
                                                     <property name="fontFamily">"Arial"</property>
-                                                    <property name="textAlign">left</property>
+                                                    <property name="fontWeight">normal</property>
                                                     <property name="resultSetColumn">outlet</property>
                                                 </data>
                                             </property>
-                                            <property name="borderTopStyle">none</property>
-                                            <property name="borderLeftStyle">none</property>
+                                            <property name="borderTopStyle">solid</property>
+                                            <property name="borderTopWidth">thin</property>
+                                            <property name="borderLeftStyle">solid</property>
+                                            <property name="borderLeftWidth">thin</property>
                                             <property name="borderBottomStyle">solid</property>
                                             <property name="borderBottomWidth">thin</property>
                                             <property name="borderRightStyle">solid</property>
@@ -1795,22 +1799,24 @@ and pp.id in (select product_product_id from crm_case_section_product_product_re
                                 </extended-item>
                             </property>
                         </extended-item>
-                        <extended-item extensionName="DimensionView" id="1258">
-                            <property name="dimension">Group3</property>
+                        <extended-item extensionName="DimensionView" id="1470">
+                            <property name="dimension">Group4</property>
                             <property name="levels">
-                                <extended-item extensionName="LevelView" name="NewLevel View3" id="1259">
-                                    <property name="level">Group3/tags</property>
+                                <extended-item extensionName="LevelView" name="NewLevel View4" id="1471">
+                                    <property name="level">Group4/tags</property>
                                     <property name="member">
-                                        <extended-item extensionName="CrosstabCell" id="1260">
+                                        <extended-item extensionName="CrosstabCell" id="1472">
                                             <property name="content">
-                                                <data name="tags" id="1262">
+                                                <data name="tags" id="1474">
                                                     <property name="fontFamily">"Arial"</property>
-                                                    <property name="textAlign">left</property>
+                                                    <property name="fontWeight">normal</property>
                                                     <property name="resultSetColumn">tags</property>
                                                 </data>
                                             </property>
-                                            <property name="borderTopStyle">none</property>
-                                            <property name="borderLeftStyle">none</property>
+                                            <property name="borderTopStyle">solid</property>
+                                            <property name="borderTopWidth">thin</property>
+                                            <property name="borderLeftStyle">solid</property>
+                                            <property name="borderLeftWidth">thin</property>
                                             <property name="borderBottomStyle">solid</property>
                                             <property name="borderBottomWidth">thin</property>
                                             <property name="borderRightStyle">solid</property>
@@ -1820,22 +1826,24 @@ and pp.id in (select product_product_id from crm_case_section_product_product_re
                                 </extended-item>
                             </property>
                         </extended-item>
-                        <extended-item extensionName="DimensionView" id="1264">
-                            <property name="dimension">Group4</property>
+                        <extended-item extensionName="DimensionView" id="1476">
+                            <property name="dimension">Group5</property>
                             <property name="levels">
-                                <extended-item extensionName="LevelView" name="NewLevel View4" id="1265">
-                                    <property name="level">Group4/sales_team</property>
+                                <extended-item extensionName="LevelView" name="NewLevel View5" id="1477">
+                                    <property name="level">Group5/sales_team</property>
                                     <property name="member">
-                                        <extended-item extensionName="CrosstabCell" id="1266">
+                                        <extended-item extensionName="CrosstabCell" id="1478">
                                             <property name="content">
-                                                <data name="sales_team" id="1268">
+                                                <data name="sales_team" id="1480">
                                                     <property name="fontFamily">"Arial"</property>
-                                                    <property name="textAlign">left</property>
+                                                    <property name="fontWeight">normal</property>
                                                     <property name="resultSetColumn">sales_team</property>
                                                 </data>
                                             </property>
-                                            <property name="borderTopStyle">none</property>
-                                            <property name="borderLeftStyle">none</property>
+                                            <property name="borderTopStyle">solid</property>
+                                            <property name="borderTopWidth">thin</property>
+                                            <property name="borderLeftStyle">solid</property>
+                                            <property name="borderLeftWidth">thin</property>
                                             <property name="borderBottomStyle">solid</property>
                                             <property name="borderBottomWidth">thin</property>
                                             <property name="borderRightStyle">solid</property>
@@ -1845,22 +1853,24 @@ and pp.id in (select product_product_id from crm_case_section_product_product_re
                                 </extended-item>
                             </property>
                         </extended-item>
-                        <extended-item extensionName="DimensionView" id="1270">
-                            <property name="dimension">Group5</property>
+                        <extended-item extensionName="DimensionView" id="1482">
+                            <property name="dimension">Group6</property>
                             <property name="levels">
-                                <extended-item extensionName="LevelView" name="NewLevel View5" id="1271">
-                                    <property name="level">Group5/township</property>
+                                <extended-item extensionName="LevelView" name="NewLevel View6" id="1483">
+                                    <property name="level">Group6/township</property>
                                     <property name="member">
-                                        <extended-item extensionName="CrosstabCell" id="1272">
+                                        <extended-item extensionName="CrosstabCell" id="1484">
                                             <property name="content">
-                                                <data name="township" id="1274">
+                                                <data name="township" id="1486">
                                                     <property name="fontFamily">"Arial"</property>
-                                                    <property name="textAlign">left</property>
+                                                    <property name="fontWeight">normal</property>
                                                     <property name="resultSetColumn">township</property>
                                                 </data>
                                             </property>
-                                            <property name="borderTopStyle">none</property>
-                                            <property name="borderLeftStyle">none</property>
+                                            <property name="borderTopStyle">solid</property>
+                                            <property name="borderTopWidth">thin</property>
+                                            <property name="borderLeftStyle">solid</property>
+                                            <property name="borderLeftWidth">thin</property>
                                             <property name="borderBottomStyle">solid</property>
                                             <property name="borderBottomWidth">thin</property>
                                             <property name="borderRightStyle">solid</property>
@@ -1874,27 +1884,36 @@ and pp.id in (select product_product_id from crm_case_section_product_product_re
                 </extended-item>
             </property>
             <property name="columns">
-                <extended-item extensionName="CrosstabView" id="1276">
+                <extended-item extensionName="CrosstabView" id="1444">
                     <property name="views">
-                        <extended-item extensionName="DimensionView" id="1277">
-                            <property name="dimension">Group6</property>
+                        <extended-item extensionName="DimensionView" id="1445">
+                            <property name="dimension">Group2</property>
                             <property name="levels">
-                                <extended-item extensionName="LevelView" name="NewLevel View6" id="1278">
-                                    <property name="level">Group6/name_template</property>
+                                <extended-item extensionName="LevelView" name="NewLevel View2" id="1446">
+                                    <property name="level">Group2/product_category</property>
+                                    <property name="sort">
+                                        <sort-element>
+                                            <expression name="key" type="javascript">dimension["Group2"]["product_category"]["seq"]</expression>
+                                            <property name="direction">asc</property>
+                                            <property name="strength">-1</property>
+                                        </sort-element>
+                                    </property>
                                     <property name="member">
-                                        <extended-item extensionName="CrosstabCell" id="1279">
+                                        <extended-item extensionName="CrosstabCell" id="1447">
                                             <property name="content">
-                                                <data name="name_template" id="1280">
+                                                <data name="product_category" id="1450">
                                                     <property name="fontFamily">"Arial"</property>
                                                     <property name="fontWeight">bold</property>
                                                     <property name="textAlign">center</property>
-                                                    <property name="resultSetColumn">name_template</property>
+                                                    <property name="resultSetColumn">product_category</property>
                                                 </data>
                                             </property>
                                             <property name="borderTopStyle">solid</property>
                                             <property name="borderTopWidth">thin</property>
-                                            <property name="borderLeftStyle">none</property>
-                                            <property name="borderBottomStyle">none</property>
+                                            <property name="borderLeftStyle">solid</property>
+                                            <property name="borderLeftWidth">thin</property>
+                                            <property name="borderBottomStyle">solid</property>
+                                            <property name="borderBottomWidth">thin</property>
                                             <property name="borderRightStyle">solid</property>
                                             <property name="borderRightWidth">thin</property>
                                         </extended-item>
@@ -1906,9 +1925,27 @@ and pp.id in (select product_product_id from crm_case_section_product_product_re
                 </extended-item>
             </property>
             <property name="header">
-                <extended-item extensionName="CrosstabCell" id="1286">
+                <extended-item extensionName="CrosstabCell" id="1426">
                     <property name="content">
-                        <label id="1245">
+                        <label id="1432">
+                            <property name="fontFamily">"Arial"</property>
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">center</property>
+                            <text-property name="text">Outlet Code</text-property>
+                        </label>
+                    </property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                </extended-item>
+                <extended-item extensionName="CrosstabCell" id="1436">
+                    <property name="content">
+                        <label id="1488">
                             <property name="fontFamily">"Arial"</property>
                             <property name="fontWeight">bold</property>
                             <property name="textAlign">center</property>
@@ -1919,45 +1956,32 @@ and pp.id in (select product_product_id from crm_case_section_product_product_re
                     <property name="borderTopWidth">thin</property>
                     <property name="borderLeftStyle">solid</property>
                     <property name="borderLeftWidth">thin</property>
-                    <property name="borderBottomStyle">none</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
                     <property name="borderRightStyle">solid</property>
                     <property name="borderRightWidth">thin</property>
                 </extended-item>
-                <extended-item extensionName="CrosstabCell" id="1287">
+                <extended-item extensionName="CrosstabCell" id="1467">
                     <property name="content">
-                        <label id="1251">
+                        <label id="1489">
                             <property name="fontFamily">"Arial"</property>
                             <property name="fontWeight">bold</property>
                             <property name="textAlign">center</property>
-                            <text-property name="text">Outlet Code</text-property>
+                            <text-property name="text">Outlet Type</text-property>
                         </label>
                     </property>
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">thin</property>
-                    <property name="borderLeftStyle">none</property>
-                    <property name="borderBottomStyle">none</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
                     <property name="borderRightStyle">solid</property>
                     <property name="borderRightWidth">thin</property>
                 </extended-item>
-                <extended-item extensionName="CrosstabCell" id="1288">
+                <extended-item extensionName="CrosstabCell" id="1473">
                     <property name="content">
-                        <label id="1257">
-                            <property name="fontFamily">"Arial"</property>
-                            <property name="fontWeight">bold</property>
-                            <property name="textAlign">center</property>
-                            <text-property name="text">Outlet</text-property>
-                        </label>
-                    </property>
-                    <property name="borderTopStyle">solid</property>
-                    <property name="borderTopWidth">thin</property>
-                    <property name="borderLeftStyle">none</property>
-                    <property name="borderBottomStyle">none</property>
-                    <property name="borderRightStyle">solid</property>
-                    <property name="borderRightWidth">thin</property>
-                </extended-item>
-                <extended-item extensionName="CrosstabCell" id="1289">
-                    <property name="content">
-                        <label id="1263">
+                        <label id="1490">
                             <property name="fontFamily">"Arial"</property>
                             <property name="fontWeight">bold</property>
                             <property name="textAlign">center</property>
@@ -1966,30 +1990,34 @@ and pp.id in (select product_product_id from crm_case_section_product_product_re
                     </property>
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">thin</property>
-                    <property name="borderLeftStyle">none</property>
-                    <property name="borderBottomStyle">none</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
                     <property name="borderRightStyle">solid</property>
                     <property name="borderRightWidth">thin</property>
                 </extended-item>
-                <extended-item extensionName="CrosstabCell" id="1290">
+                <extended-item extensionName="CrosstabCell" id="1479">
                     <property name="content">
-                        <label id="1269">
+                        <label id="1491">
                             <property name="fontFamily">"Arial"</property>
                             <property name="fontWeight">bold</property>
                             <property name="textAlign">center</property>
-                            <text-property name="text">Team</text-property>
+                            <text-property name="text">Sales Team</text-property>
                         </label>
                     </property>
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">thin</property>
-                    <property name="borderLeftStyle">none</property>
-                    <property name="borderBottomStyle">none</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
                     <property name="borderRightStyle">solid</property>
                     <property name="borderRightWidth">thin</property>
                 </extended-item>
-                <extended-item extensionName="CrosstabCell" id="1291">
+                <extended-item extensionName="CrosstabCell" id="1485">
                     <property name="content">
-                        <label id="1275">
+                        <label id="1492">
                             <property name="fontFamily">"Arial"</property>
                             <property name="fontWeight">bold</property>
                             <property name="textAlign">center</property>
@@ -1998,13 +2026,6 @@ and pp.id in (select product_product_id from crm_case_section_product_product_re
                     </property>
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">thin</property>
-                    <property name="borderLeftStyle">none</property>
-                    <property name="borderBottomStyle">none</property>
-                    <property name="borderRightStyle">solid</property>
-                    <property name="borderRightWidth">thin</property>
-                </extended-item>
-                <extended-item extensionName="CrosstabCell" id="1239">
-                    <property name="borderTopStyle">none</property>
                     <property name="borderLeftStyle">solid</property>
                     <property name="borderLeftWidth">thin</property>
                     <property name="borderBottomStyle">solid</property>
@@ -2012,90 +2033,100 @@ and pp.id in (select product_product_id from crm_case_section_product_product_re
                     <property name="borderRightStyle">solid</property>
                     <property name="borderRightWidth">thin</property>
                 </extended-item>
-                <extended-item extensionName="CrosstabCell" id="1249">
-                    <property name="borderTopStyle">none</property>
-                    <property name="borderLeftStyle">none</property>
-                    <property name="borderBottomStyle">solid</property>
-                    <property name="borderBottomWidth">thin</property>
-                    <property name="borderRightStyle">solid</property>
-                    <property name="borderRightWidth">thin</property>
-                </extended-item>
-                <extended-item extensionName="CrosstabCell" id="1255">
-                    <property name="borderTopStyle">none</property>
-                    <property name="borderLeftStyle">none</property>
-                    <property name="borderBottomStyle">solid</property>
-                    <property name="borderBottomWidth">thin</property>
-                    <property name="borderRightStyle">solid</property>
-                    <property name="borderRightWidth">thin</property>
-                </extended-item>
-                <extended-item extensionName="CrosstabCell" id="1261">
-                    <property name="borderTopStyle">none</property>
-                    <property name="borderLeftStyle">none</property>
-                    <property name="borderBottomStyle">solid</property>
-                    <property name="borderBottomWidth">thin</property>
-                    <property name="borderRightStyle">solid</property>
-                    <property name="borderRightWidth">thin</property>
-                </extended-item>
-                <extended-item extensionName="CrosstabCell" id="1267">
-                    <property name="borderTopStyle">none</property>
-                    <property name="borderLeftStyle">none</property>
-                    <property name="borderBottomStyle">solid</property>
-                    <property name="borderBottomWidth">thin</property>
-                    <property name="borderRightStyle">solid</property>
-                    <property name="borderRightWidth">thin</property>
-                </extended-item>
-                <extended-item extensionName="CrosstabCell" id="1273">
-                    <property name="borderTopStyle">none</property>
-                    <property name="borderLeftStyle">none</property>
-                    <property name="borderBottomStyle">solid</property>
-                    <property name="borderBottomWidth">thin</property>
-                    <property name="borderRightStyle">solid</property>
-                    <property name="borderRightWidth">thin</property>
-                </extended-item>
             </property>
+            <property name="hideMeasureHeader">true</property>
             <list-property name="boundDataColumns">
                 <structure>
-                    <property name="name">customer_name</property>
-                    <expression name="expression">dimension["Group"]["customer_name"]</expression>
-                    <property name="dataType">string</property>
-                </structure>
-                <structure>
                     <property name="name">customer_code</property>
-                    <expression name="expression">dimension["Group1"]["customer_code"]</expression>
+                    <expression name="expression">dimension["Group"]["customer_code"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="name">outlet</property>
-                    <expression name="expression">dimension["Group2"]["outlet"]</expression>
+                    <property name="name">customer_name</property>
+                    <expression name="expression">dimension["Group1"]["customer_name"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="name">tags</property>
-                    <expression name="expression">dimension["Group3"]["tags"]</expression>
-                    <property name="dataType">string</property>
-                </structure>
-                <structure>
-                    <property name="name">sales_team</property>
-                    <expression name="expression">dimension["Group4"]["sales_team"]</expression>
-                    <property name="dataType">string</property>
-                </structure>
-                <structure>
-                    <property name="name">township</property>
-                    <expression name="expression">dimension["Group5"]["township"]</expression>
-                    <property name="dataType">string</property>
-                </structure>
-                <structure>
-                    <property name="name">name_template</property>
-                    <expression name="expression">dimension["Group6"]["name_template"]</expression>
-                    <property name="dataType">string</property>
-                </structure>
-                <structure>
-                    <property name="name">product_quantity_Group5/township_Group6/name_template</property>
+                    <property name="name">product_quantity_Group1/customer_name</property>
                     <expression name="expression">measure["product_quantity"]</expression>
                     <property name="dataType">decimal</property>
                     <simple-property-list name="aggregateOn">
-                        <value>Group5/township</value>
-                        <value>Group6/name_template</value>
+                        <value>Group1/customer_name</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                </structure>
+                <structure>
+                    <property name="name">product_category</property>
+                    <expression name="expression">dimension["Group2"]["product_category"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">product_quantity_Group1/customer_name_Group2/product_category</property>
+                    <expression name="expression">measure["product_quantity"]</expression>
+                    <property name="dataType">decimal</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Group1/customer_name</value>
+                        <value>Group2/product_category</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                </structure>
+                <structure>
+                    <property name="name">outlet</property>
+                    <expression name="expression">dimension["Group3"]["outlet"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">product_quantity_Group3/outlet_Group2/product_category</property>
+                    <expression name="expression">measure["product_quantity"]</expression>
+                    <property name="dataType">decimal</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Group3/outlet</value>
+                        <value>Group2/product_category</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                </structure>
+                <structure>
+                    <property name="name">tags</property>
+                    <expression name="expression">dimension["Group4"]["tags"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">product_quantity_Group4/tags_Group2/product_category</property>
+                    <expression name="expression">measure["product_quantity"]</expression>
+                    <property name="dataType">decimal</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Group4/tags</value>
+                        <value>Group2/product_category</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                </structure>
+                <structure>
+                    <property name="name">sales_team</property>
+                    <expression name="expression">dimension["Group5"]["sales_team"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">product_quantity_Group5/sales_team_Group2/product_category</property>
+                    <expression name="expression">measure["product_quantity"]</expression>
+                    <property name="dataType">decimal</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Group5/sales_team</value>
+                        <value>Group2/product_category</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                </structure>
+                <structure>
+                    <property name="name">township</property>
+                    <expression name="expression">dimension["Group6"]["township"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">product_quantity_Group6/township_Group2/product_category</property>
+                    <expression name="expression">measure["product_quantity"]</expression>
+                    <property name="dataType">decimal</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Group6/township</value>
+                        <value>Group2/product_category</value>
                     </simple-property-list>
                     <property name="aggregateFunction">SUM</property>
                 </structure>
