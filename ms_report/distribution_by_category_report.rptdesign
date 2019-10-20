@@ -1,22 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
     <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
-    <list-property name="propertyBindings">
-        <structure>
-            <property name="name">queryText</property>
-            <property name="id">683</property>
-        </structure>
-        <structure>
-            <property name="name">queryTimeOut</property>
-            <property name="id">683</property>
-        </structure>
-        <structure>
-            <property name="name">rowFetchSize</property>
-            <property name="id">683</property>
-        </structure>
-    </list-property>
     <property name="units">in</property>
-    <method name="initialize"><![CDATA[branchList = params["branch_id"].value.join(",");]]></method>
+    <method name="initialize"><![CDATA[branchList = params["branch_id"].value.join(",");
+teamList = params["sales_team_id"].value.join(",");]]></method>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="layoutPreference">auto layout</property>
     <property name="bidiLayoutOrientation">ltr</property>
@@ -57,6 +44,7 @@
             </structure>
         </scalar-parameter>
         <scalar-parameter name="branch_id" id="129" extends="report_library.branch_id"/>
+        <scalar-parameter name="sales_team_id" id="766" extends="report_library.sales_team_id"/>
         <scalar-parameter name="product_category" id="754">
             <text-property name="promptText">Product Category</text-property>
             <property name="valueType">dynamic</property>
@@ -116,6 +104,7 @@
                     <property name="columnName">sales_team</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">sales_team</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">sales_team</text-property>
                 </structure>
                 <structure>
@@ -185,6 +174,50 @@
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
+                <structure>
+                    <property name="name">param_5</property>
+                    <property name="paramName">from_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">5</property>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_6</property>
+                    <property name="paramName">to_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">6</property>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_7</property>
+                    <property name="paramName">from_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">7</property>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_8</property>
+                    <property name="paramName">to_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">8</property>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
             </list-property>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
@@ -225,7 +258,10 @@
                     </structure>
                 </list-property>
             </structure>
-            <method name="beforeOpen"><![CDATA[this.queryText =this.queryText.replace("--$branch_id$", "and inv.branch_id  in ("+ params["branch_id"].value.join(",")+")")
+            <method name="beforeOpen"><![CDATA[this.queryText =this.queryText.replace("--$all_product_sales_team$", "and ccs.id in ("+ params["sales_team_id"].value.join(",")+")")
+this.queryText =this.queryText.replace("--$sales_team$", "and inv.section_id in ("+ params["sales_team_id"].value.join(",")+")")
+this.queryText =this.queryText.replace("--$sales_team_Target$", "and st.sale_team_id in ("+ params["sales_team_id"].value.join(",")+")")
+this.queryText =this.queryText.replace("--$branch_id$", "and inv.branch_id  in ("+ params["branch_id"].value.join(",")+")")
 this.queryText =this.queryText.replace("--$branch_id_Target$", "and st.branch_id  in ("+ params["branch_id"].value.join(",")+")")
 this.queryText =this.queryText.replace("--$product_category$", "and pc.id in ("+ params["product_category"].value.join(",")+")")
 ]]></method>
@@ -292,6 +328,7 @@ this.queryText =this.queryText.replace("--$product_category$", "and pc.id in ("+
 	and rel.crm_case_section_id=ccs.id
 	and (is_foc!='true' or is_foc is null)
 	and pp.active='t' and pt.type!='service'	
+	--$all_product_sales_team$
 	--$product_category$
 	order by pp.sequence
 ),
@@ -306,6 +343,7 @@ all_product_target as (
 	and rel.crm_case_section_id=ccs.id
 	and (is_foc!='true' or is_foc is null)
 	and pp.active='t' and pt.type!='service'	
+	--$all_product_sales_team$
 	--$product_category$
 	order by pp.sequence
 ),
@@ -320,6 +358,7 @@ all_product_percent_target as (
 	and rel.crm_case_section_id=ccs.id
 	and (is_foc!='true' or is_foc is null)
 	and pp.active='t' and pt.type!='service'	
+	--$all_product_sales_team$
 	--$product_category$
 	order by pp.sequence
 ),
@@ -336,6 +375,7 @@ achieve as (
 	and inv.state !='cancel'
 	and inv.origin like 'SO%'
 	and inv.date_invoice between ? and ?		
+	--$sales_team$
 	--$branch_id$
 	--$product_category$
 	group by product_id,name_template,ccs.name,pc.name
@@ -351,6 +391,7 @@ target as (
 	and st.sale_team_id=ccs.id
 	and pt.categ_id=pc.id
 	and st.date between ? and ?	
+	--$sales_team_Target$
 	--$branch_id_Target$
 	--$product_category$
 	group by product_id,name_template,ccs.name,pc.name
@@ -360,6 +401,46 @@ percent_target as (
 	a.product_id,a.name_template,a.sales_team,a.product_category,'% on Target'::character varying status,3 seq
 	from achieve a
 	left join target t on (a.product_id=t.product_id and a.sales_team=t.sales_team)
+),
+all_team_achieve as (
+	select COALESCE(count(distinct(inv.partner_id)),0) as ach,product_id,name_template,
+	'Total'::character varying sales_team,pc.name product_category,'Ach'::character varying status,1 seq
+	from account_invoice inv,account_invoice_line inv_line,product_product pp,
+	product_template pt,crm_case_section ccs,product_category pc
+	where inv.id=inv_line.invoice_id
+	and inv_line.product_id=pp.id
+	and pp.product_tmpl_id=pt.id
+	and inv.section_id=ccs.id   
+	and pt.categ_id=pc.id
+	and inv.state !='cancel'
+	and inv.origin like 'SO%'
+	and inv.date_invoice between ? and ?
+	--$sales_team$
+	--$branch_id$
+	--$product_category$
+	group by product_id,name_template,ccs.name,pc.name
+),
+all_team_target as (
+	select COALESCE(sum(distribution_price),0) target,stl.product_id,name_template,
+	'Total'::character varying sales_team,pc.name product_category,'Target'::character varying status,2 seq
+	from sales_target st, sales_target_line stl,product_product pp,
+	product_template pt,crm_case_section ccs,product_category pc
+	where st.id = stl.sale_ids 
+	and stl.product_id=pp.id
+	and pp.product_tmpl_id=pt.id
+	and st.sale_team_id=ccs.id
+	and pt.categ_id=pc.id
+	and st.date between ? and ?
+	--$sales_team_Target$
+	--$branch_id_Target$
+	--$product_category$
+	group by product_id,name_template,ccs.name,pc.name
+),
+all_team_percent_target as (	
+	select sum(pt.percent_target) percent_target,
+	pt.product_id,pt.name_template,'Total'::character varying sales_team,pt.product_category,'% on Target'::character varying status,3 seq
+	from percent_target pt
+	group by pt.product_id,pt.name_template,pt.product_category
 )	
 select *
 from all_product_achieve
@@ -371,13 +452,22 @@ select *
 from all_product_percent_target
 union
 select *
+from all_team_achieve				 
+union
+select *
+from all_team_target		
+union
+select *
+from all_team_percent_target	
+union
+select *
 from achieve				 
 union
 select *
 from target		
 union
 select *
-from percent_target			]]></xml-property>
+from percent_target		]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -434,6 +524,66 @@ from percent_target			]]></xml-property>
           <design:identifier>
             <design:name></design:name>
             <design:position>4</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>5</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>6</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>7</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>8</design:position>
           </design:identifier>
           <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
@@ -834,6 +984,73 @@ order by name]]></xml-property>
                 </row>
             </footer>
         </table>
+        <table id="924">
+            <property name="dataSet">Sale_Team</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">id</property>
+                    <text-property name="displayName">id</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["id"]</expression>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="name">name</property>
+                    <text-property name="displayName">name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["name"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <column id="934"/>
+            <column id="935"/>
+            <header>
+                <row id="946">
+                    <cell id="947">
+                        <data id="949">
+                            <property name="fontFamily">"Arial"</property>
+                            <property name="fontSize">12pt</property>
+                            <property name="fontWeight">bold</property>
+                            <list-property name="visibility">
+                                <structure>
+                                    <property name="format">all</property>
+                                    <expression name="valueExpr" type="javascript">true</expression>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">id</property>
+                        </data>
+                    </cell>
+                    <cell id="948">
+                        <data id="950">
+                            <property name="fontFamily">"Arial"</property>
+                            <property name="fontSize">12pt</property>
+                            <property name="fontWeight">bold</property>
+                            <list-property name="visibility">
+                                <structure>
+                                    <property name="format">all</property>
+                                    <expression name="valueExpr" type="javascript">true</expression>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">name</property>
+                        </data>
+                    </cell>
+                </row>
+            </header>
+            <footer>
+                <row id="931">
+                    <cell id="932">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
+                        <text-data id="951">
+                            <property name="fontFamily">"Arial"</property>
+                            <property name="fontSize">12pt</property>
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">center</property>
+                            <expression name="valueExpr">teamList;</expression>
+                            <property name="contentType">html</property>
+                        </text-data>
+                    </cell>
+                </row>
+            </footer>
+        </table>
         <data id="103">
             <property name="fontFamily">"Arial"</property>
             <property name="fontSize">12pt</property>
@@ -1110,6 +1327,15 @@ order by name]]></xml-property>
                         <value>Group2/status</value>
                     </simple-property-list>
                     <property name="aggregateFunction">SUM</property>
+                </structure>
+                <structure>
+                    <property name="name">ach_Group1/product_category_1</property>
+                    <expression name="expression">measure["ach"]</expression>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Group1/product_category</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">sum</property>
                 </structure>
             </list-property>
         </extended-item>
