@@ -291,6 +291,7 @@ and uid=?
 this.queryText =this.queryText.replace("--$branch_id$", "and ai.branch_id in ("+ params["branch_id"].value.join(",")+")")
 this.queryText =this.queryText.replace("--$sales_team_Target$", "and st.sale_team_id in ("+ params["sales_team_id"].value.join(",")+")")
 this.queryText =this.queryText.replace("--$branch_id_Target$", "and st.branch_id in ("+ params["branch_id"].value.join(",")+")")
+this.queryText =this.queryText.replace("--$sales_team_check$", "and sale_team_id in ("+ params["sales_team_id"].value.join(",")+")")
 ]]></method>
             <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
@@ -477,13 +478,28 @@ distribution_ach as (
 ),
 distribution_percent as (
 	select dt.name_template,section_id,dt.sales_team,
-	dt.quantity,	
+	case when dt.quantity >0 then round((CASE WHEN (da.quantity*100)/sum(dt.quantity)>120 THEN 120 ELSE (da.quantity*100)/sum(dt.quantity) END),0) else 0 end as quantity,		
 	dt.product_id,dt.branch_id,'Distribution'::character varying status,
 	'Billed Ach %'::character varying balance,8 seq
 	from distribution_target dt
-	left join distribution_ach da on (dt.product_id=da.product_id)
+	join distribution_ach da on (dt.product_id=da.product_id)
     group by dt.name_template,section_id,dt.sales_team,dt.quantity,
 	da.quantity,dt.product_id,dt.branch_id
+),
+ava_ach_qty as (
+	select name_template,sale_team_id,ccs.name sales_team,
+	count(ail.id) as quantity,product_id,ai.branch_id,
+	'Distribution'::character varying status,
+	'AVA Ach Qty'::character varying balance,9 seq 
+	from partner_stock_check ai,partner_stock_check_line ail,product_product pp,crm_case_section ccs
+	where ail.stock_check_ids=ai.id
+	and ail.product_id=pp.id
+	and ai.sale_team_id=ccs.id
+	and ail.available = True
+	--$sales_team_check$
+	--$branch_id$
+    and ai.date between '2019-05-01' and '2019-05-30'
+	group by name_template,sale_team_id,ccs.name,ail.product_id,ai.branch_id
 )		
 select *
 from target_qty
@@ -507,7 +523,10 @@ select *
 from distribution_ach
 union
 select *
-from distribution_percent]]></xml-property>
+from distribution_percent
+union
+select *
+from ava_ach_qty]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
