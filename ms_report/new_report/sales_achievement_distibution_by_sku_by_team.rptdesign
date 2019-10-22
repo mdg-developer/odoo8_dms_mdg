@@ -195,13 +195,6 @@ and uid=?
                     <text-property name="heading">sales_team</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">pseq</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">pseq</text-property>
-                    <property name="onColumnLayout">false</property>
-                    <text-property name="heading">pseq</text-property>
-                </structure>
-                <structure>
                     <property name="columnName">quantity</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">quantity</text-property>
@@ -209,39 +202,11 @@ and uid=?
                     <text-property name="heading">quantity</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">count</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">count</text-property>
-                    <property name="onColumnLayout">false</property>
-                    <text-property name="heading">count</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">month</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">month</text-property>
-                    <property name="onColumnLayout">false</property>
-                    <text-property name="heading">month</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">year</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">year</text-property>
-                    <property name="onColumnLayout">false</property>
-                    <text-property name="heading">year</text-property>
-                </structure>
-                <structure>
                     <property name="columnName">product_id</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">product_id</text-property>
                     <property name="onColumnLayout">false</property>
                     <text-property name="heading">product_id</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">date_order</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">date_order</text-property>
-                    <property name="onColumnLayout">false</property>
-                    <text-property name="heading">date_order</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">branch_id</property>
@@ -272,96 +237,7 @@ and uid=?
                     <text-property name="heading">seq</text-property>
                 </structure>
             </list-property>
-            <list-property name="parameters">
-                <structure>
-                    <property name="name">param_1</property>
-                    <property name="paramName">from_date</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                    <property name="position">1</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_2</property>
-                    <property name="paramName">to_date</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                    <property name="position">2</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_3</property>
-                    <property name="paramName">from_date</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                    <property name="position">3</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_4</property>
-                    <property name="paramName">to_date</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                    <property name="position">4</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_5</property>
-                    <property name="paramName">from_date</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                    <property name="position">5</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_6</property>
-                    <property name="paramName">to_date</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                    <property name="position">6</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_7</property>
-                    <property name="paramName">from_date</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                    <property name="position">7</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_8</property>
-                    <property name="paramName">to_date</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                    <property name="position">8</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-            </list-property>
+            <list-property name="parameters"/>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
                     <structure>
@@ -381,56 +257,31 @@ and uid=?
                     </structure>
                     <structure>
                         <property name="position">4</property>
-                        <property name="name">pseq</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                    <structure>
-                        <property name="position">5</property>
                         <property name="name">quantity</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">6</property>
-                        <property name="name">count</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                    <structure>
-                        <property name="position">7</property>
-                        <property name="name">month</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                    <structure>
-                        <property name="position">8</property>
-                        <property name="name">year</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                    <structure>
-                        <property name="position">9</property>
+                        <property name="position">5</property>
                         <property name="name">product_id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">10</property>
-                        <property name="name">date_order</property>
-                        <property name="dataType">date</property>
-                    </structure>
-                    <structure>
-                        <property name="position">11</property>
+                        <property name="position">6</property>
                         <property name="name">branch_id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">12</property>
+                        <property name="position">7</property>
                         <property name="name">status</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">13</property>
+                        <property name="position">8</property>
                         <property name="name">balance</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">14</property>
+                        <property name="position">9</property>
                         <property name="name">seq</property>
                         <property name="dataType">integer</property>
                     </structure>
@@ -466,76 +317,41 @@ this.queryText =this.queryText.replace("--$branch_id_Target$", "and st.branch_id
                 </structure>
                 <structure>
                     <property name="position">4</property>
-                    <property name="name">pseq</property>
-                    <property name="nativeName">pseq</property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                </structure>
-                <structure>
-                    <property name="position">5</property>
                     <property name="name">quantity</property>
                     <property name="nativeName">quantity</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">6</property>
-                    <property name="name">count</property>
-                    <property name="nativeName">count</property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                </structure>
-                <structure>
-                    <property name="position">7</property>
-                    <property name="name">month</property>
-                    <property name="nativeName">month</property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                </structure>
-                <structure>
-                    <property name="position">8</property>
-                    <property name="name">year</property>
-                    <property name="nativeName">year</property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                </structure>
-                <structure>
-                    <property name="position">9</property>
+                    <property name="position">5</property>
                     <property name="name">product_id</property>
                     <property name="nativeName">product_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">10</property>
-                    <property name="name">date_order</property>
-                    <property name="nativeName">date_order</property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                </structure>
-                <structure>
-                    <property name="position">11</property>
+                    <property name="position">6</property>
                     <property name="name">branch_id</property>
                     <property name="nativeName">branch_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">12</property>
+                    <property name="position">7</property>
                     <property name="name">status</property>
                     <property name="nativeName">status</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">13</property>
+                    <property name="position">8</property>
                     <property name="name">balance</property>
                     <property name="nativeName">balance</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">14</property>
+                    <property name="position">9</property>
                     <property name="name">seq</property>
                     <property name="nativeName">seq</property>
                     <property name="dataType">integer</property>
@@ -543,27 +359,23 @@ this.queryText =this.queryText.replace("--$branch_id_Target$", "and st.branch_id
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[with target_qty as (
-	select name_template,st.sale_team_id,ccs.name sales_team,pp.sequence as pseq,
+	select name_template,st.sale_team_id,ccs.name sales_team,
 	COALESCE(sum(product_uom_qty * (select floor(round(1/factor,2)) from product_uom where id=stl.product_uom)),0) as quantity,
-	0 count,	
-	date_part('month',st.date)::int as month,date_part('year',st.date)::int as year,
-	product_id,st.date as date_order,st.branch_id,'Sales'::character varying status,
+	product_id,st.branch_id,'Sales'::character varying status,
 	'Target Qty'::character varying balance,1 seq
 	from sales_target st,sales_target_line stl,product_product pp,crm_case_section ccs
 	where st.id=stl.sale_ids
 	and pp.id=stl.product_id
 	and st.sale_team_id=ccs.id
-	and st.date between ? and ?
+	and st.date between '2019-05-01' and '2019-05-30'
 	--$sales_team_Target$
 	--$branch_id_Target$
-	group by pp.name_template,sale_team_id,ccs.name,pp.sequence,st.date,product_id,st.branch_id
+	group by pp.name_template,sale_team_id,ccs.name,product_id,st.branch_id
 ),
 ach_qty as (
-	select pp.name_template,section_id,ccs.name sales_team,pp.sequence as pseq,
+	select pp.name_template,section_id,ccs.name sales_team,
 	case when ail.uos_id=pt.uom_id then COALESCE(sum(ail.quantity),0) when ail.uos_id!=pt.uom_id then COALESCE(sum(ail.quantity*(select floor(round(1/factor,2)) from product_uom where id=ail.uos_id)),0) end as quantity,
-	case when COALESCE((ail.quantity),0)>=1 then 1 else 0 end as count,	
-	date_part('month',date_invoice)::int as month,date_part('year',date_invoice)::int as year,
-	ail.product_id,date_invoice as date_order,ai.branch_id,'Sales'::character varying status,
+	ail.product_id,ai.branch_id,'Sales'::character varying status,
 	'Ach Qty'::character varying balance,2 seq
 	from account_invoice ai,account_invoice_line ail,product_product pp,product_template pt,
 	crm_case_section ccs
@@ -576,33 +388,28 @@ ach_qty as (
 	and (foc!='true' or foc is null)
 	--$sales_team$
 	--$branch_id$
-	and date_invoice between ? and ?
-	group by pp.name_template,ai.section_id,ccs.name,pp.sequence,ail.uos_id,
-	pt.uom_id,ail.quantity,ai.date_invoice,ail.product_id,ai.branch_id																		
+	and date_invoice between '2019-05-01' and '2019-05-30'
+	group by name_template,section_id,ccs.name,ail.uos_id,pt.uom_id,product_id,ai.branch_id,pp.sequence																		
 	order by pp.sequence
 ),
 target_amt as (
-	select name_template,st.sale_team_id,ccs.name sales_team,pp.sequence as pseq,
-	COALESCE(sum(product_uom_qty*price_unit),0) as quantity,
-	0 count,	
-	date_part('month',st.date)::int as month,date_part('year',st.date)::int as year,
-	product_id,st.date as date_order,st.branch_id,'Sales'::character varying status,
+	select name_template,st.sale_team_id,ccs.name sales_team,
+	COALESCE(sum(product_uom_qty*price_unit),0) as quantity,	
+	product_id,st.branch_id,'Sales'::character varying status,
 	'Target Amt'::character varying balance,3 seq
 	from sales_target st,sales_target_line stl,product_product pp,crm_case_section ccs
 	where st.id=stl.sale_ids
 	and pp.id=stl.product_id
 	and st.sale_team_id=ccs.id				   
-	and st.date between ? and ?
+	and st.date between '2019-05-01' and '2019-05-30'
 	--$sales_team_Target$
 	--$branch_id_Target$
-	group by pp.name_template,sale_team_id,ccs.name,pp.sequence,st.date,product_id,st.branch_id
+	group by name_template,st.sale_team_id,ccs.name,stl.product_id,st.branch_id
 ),
 ach_amt as (
-	select pp.name_template,section_id,ccs.name sales_team,pp.sequence as pseq,
-	COALESCE(round(sum(quantity*price_unit),0),0) quantity,
-	case when COALESCE((quantity),0)>=1 then 1 else 0 end as count,	
-	date_part('month',date_invoice)::int as month,date_part('year',date_invoice)::int as year,
-	ail.product_id,date_invoice as date_order,ai.branch_id,'Sales'::character varying status,
+	select pp.name_template,section_id,ccs.name sales_team,
+	COALESCE(round(sum(quantity*price_unit),0),0) quantity,	
+	ail.product_id,ai.branch_id,'Sales'::character varying status,
 	'Ach Amt'::character varying balance,4 seq
 	from account_invoice ai,account_invoice_line ail,product_product pp,product_template pt,
 	crm_case_section ccs
@@ -615,29 +422,26 @@ ach_amt as (
 	and (foc!='true' or foc is null)
 	--$sales_team$
 	--$branch_id$
-	and date_invoice between ? and ?
-	group by pp.name_template,section_id,sales_team,pseq,quantity,date_invoice,product_id,ai.branch_id
+	and date_invoice between '2019-05-01' and '2019-05-30'
+	group by pp.name_template,section_id,sales_team,product_id,ai.branch_id,pp.sequence
 	order by pp.sequence
 ),
 percent_target as (
-	select tq.name_template,sale_team_id,tq.sales_team,tq.pseq,
+	select tq.name_template,sale_team_id,tq.sales_team,
 	case when tq.quantity >0 then COALESCE(round((CASE WHEN (aq.quantity*100)/sum(tq.quantity)>120 THEN 120 ELSE (aq.quantity*100)/sum(tq.quantity) END),0),0)
-	else 0 end as percent_target,
-	0 as count,0 as month,0 as year,
-	tq.product_id,tq.date_order,tq.branch_id,'Sales'::character varying status,
+	else 0 end as percent_target,	
+	tq.product_id,tq.branch_id,'Sales'::character varying status,
 	'Ach %'::character varying balance,5 seq					   
 	from target_qty tq,ach_qty aq
 	where tq.product_id=aq.product_id
 	and tq.sale_team_id=aq.section_id
-	group by tq.name_template,tq.sale_team_id,tq.sales_team,tq.pseq,tq.quantity,
-	aq.quantity,tq.product_id,tq.date_order,tq.branch_id
+	group by tq.name_template,tq.sale_team_id,tq.sales_team,tq.quantity,aq.quantity,
+	tq.product_id,tq.branch_id
 ),
 distribution_target as (
-	select name_template,st.sale_team_id,ccs.name sales_team,pp.sequence as pseq,
+	select name_template,st.sale_team_id,ccs.name sales_team,
 	COALESCE(sum(distribution_price * (select floor(round(1/factor,2)) from product_uom where id=stl.product_uom)),0) as quantity,
-	0 count,	
-	date_part('month',st.date)::int as month,date_part('year',st.date)::int as year,
-	product_id,st.date as date_order,st.branch_id,'Distribution'::character varying status,
+	product_id,st.branch_id,'Distribution'::character varying status,
 	'Billed Target Qty'::character varying balance,6 seq
 	from sales_target st,sales_target_line stl,product_product pp,crm_case_section ccs
 	where st.id=stl.sale_ids
@@ -649,26 +453,22 @@ distribution_target as (
 	group by pp.name_template,sale_team_id,ccs.name,pp.sequence,st.date,product_id,st.branch_id
 ),
 distribution_ach as (
-	select aa.name_template,section_id,sales_team,pseq,
-	COALESCE(sum(aa.count),0) as quantity,
-	0 count,	
-	aa.month,aa.year,
-	product_id,date_order,branch_id,'Distribution'::character varying status,
+	select aa.name_template,section_id,sales_team,
+	aa.count as quantity,	
+	product_id,branch_id,'Distribution'::character varying status,
 	'Billed Ach Qty'::character varying balance,7 seq
 	from ach_amt aa
-	group by aa.name_template,section_id,sales_team,pseq,aa.month,aa.year,product_id,date_order,branch_id
+	group by aa.name_template,section_id,sales_team,product_id,branch_id
 ),
 distribution_percent as (
-	select dt.name_template,section_id,dt.sales_team,dt.pseq,
-	dt.quantity,
-	0 count,	
-	dt.month,dt.year,
-	dt.product_id,dt.date_order,dt.branch_id,'Distribution'::character varying status,
+	select dt.name_template,section_id,dt.sales_team,
+	dt.quantity,	
+	dt.product_id,dt.branch_id,'Distribution'::character varying status,
 	'Billed Ach %'::character varying balance,8 seq
 	from distribution_target dt
 	left join distribution_ach da on (dt.product_id=da.product_id)
-    group by dt.name_template,section_id,dt.sales_team,dt.pseq,dt.quantity,
-	da.quantity,dt.month,dt.year,dt.product_id,dt.date_order,dt.branch_id
+    group by dt.name_template,section_id,dt.sales_team,dt.quantity,
+	da.quantity,dt.product_id,dt.branch_id
 )		
 select *
 from target_qty
@@ -696,128 +496,6 @@ from distribution_percent]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
-  <DataSetParameters>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>1</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>2</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>3</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>4</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>5</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>6</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>7</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>8</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-  </DataSetParameters>
   <design:ResultSets derivedMetaData="true">
     <design:resultSetDefinitions>
       <design:resultSetColumns>
