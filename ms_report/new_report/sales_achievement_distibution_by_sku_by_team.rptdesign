@@ -453,12 +453,27 @@ distribution_target as (
 	group by pp.name_template,sale_team_id,ccs.name,pp.sequence,st.date,product_id,st.branch_id
 ),
 distribution_ach as (
-	select aa.name_template,section_id,sales_team,
-	aa.count as quantity,	
-	product_id,branch_id,'Distribution'::character varying status,
-	'Billed Ach Qty'::character varying balance,7 seq
-	from ach_amt aa
-	group by aa.name_template,section_id,sales_team,product_id,branch_id
+	select name_template,section_id,sales_team,sum(quantity) quantity,
+	product_id,branch_id,status,balance,seq
+	from (
+		select name_template,section_id,ccs.name sales_team,
+		case when COALESCE((quantity),0)>=1 then 1 else 0 end as quantity,
+		product_id,ai.branch_id,'Distribution'::character varying status,
+		'Billed Ach Qty'::character varying balance,7 seq
+		from account_invoice ai,account_invoice_line ail,product_product pp,product_template pt,
+		crm_case_section ccs
+		where ai.id=ail.invoice_id
+		and ail.product_id=pp.id
+		and pp.product_tmpl_id=pt.id
+		and ai.section_id=ccs.id
+		and ai.state!='cancel'
+		and pt.type !='service'
+		and (foc!='true' or foc is null)
+		--$sales_team$
+		--$branch_id$	
+		and date_invoice between '2019-05-01' and '2019-05-30'
+	)A
+	group by name_template,section_id,sales_team,product_id,branch_id,status,balance,seq
 ),
 distribution_percent as (
 	select dt.name_template,section_id,dt.sales_team,
