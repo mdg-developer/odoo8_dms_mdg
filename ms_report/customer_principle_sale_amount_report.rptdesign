@@ -469,164 +469,182 @@ ach_percent as (
 	where sr.partner_id=tr.partner_id
 	and sr.sale_team_id=tr.sale_team_id
 	and sr.branch_id=tr.branch_id
-)
----main group 1--
-select *,concat(main_group,' ','target') main_group_target,1 as seq
-from target_record
-where main_group_id in (select id from product_maingroup order by name offset 0 limit 1)
-union
-select *,main_group main_group_target,2 as seq
-from sale_record
-where main_group_id in (select id from product_maingroup order by name offset 0 limit 1)
-union
-select *,'Ach %'::character varying main_group_target,3 as seq
-from ach_percent
-where main_group_id in (select id from product_maingroup order by name offset 0 limit 1)
+),
+customer_principle_by_main_group as (
+	---main group 1--
+	select *,concat(main_group,' ','target') main_group_target,1 as seq
+	from target_record
+	where main_group_id in (select id from product_maingroup order by name offset 0 limit 1)
+	union
+	select *,main_group main_group_target,2 as seq
+	from sale_record
+	where main_group_id in (select id from product_maingroup order by name offset 0 limit 1)
+	union
+	select *,'Ach %'::character varying main_group_target,3 as seq
+	from ach_percent
+	where main_group_id in (select id from product_maingroup order by name offset 0 limit 1)
 
----main group 2--
-union
-select *,concat(main_group,' ','target') main_group_target,4 as seq
-from target_record
-where main_group_id in (select id from product_maingroup order by name offset 1 limit 1)
-union
-select *,main_group main_group_target,5 as seq
-from sale_record
-where main_group_id in (select id from product_maingroup order by name offset 1 limit 1)
-union
-select *,'Ach %'::character varying main_group_target,6 as seq
-from ach_percent
-where main_group_id in (select id from product_maingroup order by name offset 1 limit 1)
+	---main group 2--
+	union
+	select *,concat(main_group,' ','target') main_group_target,4 as seq
+	from target_record
+	where main_group_id in (select id from product_maingroup order by name offset 1 limit 1)
+	union
+	select *,main_group main_group_target,5 as seq
+	from sale_record
+	where main_group_id in (select id from product_maingroup order by name offset 1 limit 1)
+	union
+	select *,'Ach %'::character varying main_group_target,6 as seq
+	from ach_percent
+	where main_group_id in (select id from product_maingroup order by name offset 1 limit 1)
 
----main group 3--
-union
-select *,concat(main_group,' ','target') main_group_target,7 as seq
-from target_record
-where main_group_id in (select id from product_maingroup order by name offset 2 limit 1)
-union
-select *,main_group main_group_target,8 as seq
-from sale_record
-where main_group_id in (select id from product_maingroup order by name offset 2 limit 1)
-union
-select *,'Ach %'::character varying main_group_target,9 as seq
-from ach_percent
-where main_group_id in (select id from product_maingroup order by name offset 2 limit 1)
+	---main group 3--
+	union
+	select *,concat(main_group,' ','target') main_group_target,7 as seq
+	from target_record
+	where main_group_id in (select id from product_maingroup order by name offset 2 limit 1)
+	union
+	select *,main_group main_group_target,8 as seq
+	from sale_record
+	where main_group_id in (select id from product_maingroup order by name offset 2 limit 1)
+	union
+	select *,'Ach %'::character varying main_group_target,9 as seq
+	from ach_percent
+	where main_group_id in (select id from product_maingroup order by name offset 2 limit 1)
 
---main group 4--
-union
-select *,concat(main_group,' ','target') main_group_target,10 as seq
-from target_record
-where main_group_id in (select id from product_maingroup order by name offset 3 limit 1)
-union
-select *,main_group main_group_target,11 as seq
-from sale_record
-where main_group_id in (select id from product_maingroup order by name offset 3 limit 1)
-union
-select *,'Ach %'::character varying main_group_target,12 as seq
-from ach_percent
-where main_group_id in (select id from product_maingroup order by name offset 3 limit 1)
+	--main group 4--
+	union
+	select *,concat(main_group,' ','target') main_group_target,10 as seq
+	from target_record
+	where main_group_id in (select id from product_maingroup order by name offset 3 limit 1)
+	union
+	select *,main_group main_group_target,11 as seq
+	from sale_record
+	where main_group_id in (select id from product_maingroup order by name offset 3 limit 1)
+	union
+	select *,'Ach %'::character varying main_group_target,12 as seq
+	from ach_percent
+	where main_group_id in (select id from product_maingroup order by name offset 3 limit 1)
 
---main group 5--
-union
-select *,concat(main_group,' ','target') main_group_target,13 as seq
-from target_record
-where main_group_id in (select id from product_maingroup order by name offset 4 limit 1)
-union
-select *,main_group main_group_target,14 as seq
-from sale_record
-where main_group_id in (select id from product_maingroup order by name offset 4 limit 1)
-union
-select *,'Ach %'::character varying main_group_target,15 as seq
-from ach_percent
-where main_group_id in (select id from product_maingroup order by name offset 4 limit 1)
+	--main group 5--
+	union
+	select *,concat(main_group,' ','target') main_group_target,13 as seq
+	from target_record
+	where main_group_id in (select id from product_maingroup order by name offset 4 limit 1)
+	union
+	select *,main_group main_group_target,14 as seq
+	from sale_record
+	where main_group_id in (select id from product_maingroup order by name offset 4 limit 1)
+	union
+	select *,'Ach %'::character varying main_group_target,15 as seq
+	from ach_percent
+	where main_group_id in (select id from product_maingroup order by name offset 4 limit 1)
 
---main group 6--
-union
-select *,concat(main_group,' ','target') main_group_target,16 as seq
-from target_record
-where main_group_id in (select id from product_maingroup order by name offset 5 limit 1)
-union
-select *,main_group main_group_target,17 as seq
-from sale_record
-where main_group_id in (select id from product_maingroup order by name offset 5 limit 1)
-union
-select *,'Ach %'::character varying main_group_target,18 as seq
-from ach_percent
-where main_group_id in (select id from product_maingroup order by name offset 5 limit 1)
+	--main group 6--
+	union
+	select *,concat(main_group,' ','target') main_group_target,16 as seq
+	from target_record
+	where main_group_id in (select id from product_maingroup order by name offset 5 limit 1)
+	union
+	select *,main_group main_group_target,17 as seq
+	from sale_record
+	where main_group_id in (select id from product_maingroup order by name offset 5 limit 1)
+	union
+	select *,'Ach %'::character varying main_group_target,18 as seq
+	from ach_percent
+	where main_group_id in (select id from product_maingroup order by name offset 5 limit 1)
 
---main group 7--
-union
-select *,concat(main_group,' ','target') main_group_target,19 as seq
-from target_record
-where main_group_id in (select id from product_maingroup order by name offset 6 limit 1)
-union
-select *,main_group main_group_target,20 as seq
-from sale_record
-where main_group_id in (select id from product_maingroup order by name offset 6 limit 1)
-union
-select *,'Ach %'::character varying main_group_target,21 as seq
-from ach_percent
-where main_group_id in (select id from product_maingroup order by name offset 6 limit 1)
+	--main group 7--
+	union
+	select *,concat(main_group,' ','target') main_group_target,19 as seq
+	from target_record
+	where main_group_id in (select id from product_maingroup order by name offset 6 limit 1)
+	union
+	select *,main_group main_group_target,20 as seq
+	from sale_record
+	where main_group_id in (select id from product_maingroup order by name offset 6 limit 1)
+	union
+	select *,'Ach %'::character varying main_group_target,21 as seq
+	from ach_percent
+	where main_group_id in (select id from product_maingroup order by name offset 6 limit 1)
 
---main group 8--
-union
-select *,concat(main_group,' ','target') main_group_target,22 as seq
-from target_record
-where main_group_id in (select id from product_maingroup order by name offset 7 limit 1)
-union
-select *,main_group main_group_target,23 as seq
-from sale_record
-where main_group_id in (select id from product_maingroup order by name offset 7 limit 1)
-union
-select *,'Ach %'::character varying main_group_target,24 as seq
-from ach_percent
-where main_group_id in (select id from product_maingroup order by name offset 7 limit 1)
+	--main group 8--
+	union
+	select *,concat(main_group,' ','target') main_group_target,22 as seq
+	from target_record
+	where main_group_id in (select id from product_maingroup order by name offset 7 limit 1)
+	union
+	select *,main_group main_group_target,23 as seq
+	from sale_record
+	where main_group_id in (select id from product_maingroup order by name offset 7 limit 1)
+	union
+	select *,'Ach %'::character varying main_group_target,24 as seq
+	from ach_percent
+	where main_group_id in (select id from product_maingroup order by name offset 7 limit 1)
 
---main group 9--
-union
-select *,concat(main_group,' ','target') main_group_target,25 as seq
-from target_record
-where main_group_id in (select id from product_maingroup order by name offset 8 limit 1)
-union
-select *,main_group main_group_target,26 as seq
-from sale_record
-where main_group_id in (select id from product_maingroup order by name offset 8 limit 1)
-union
-select *,'Ach %'::character varying main_group_target,27 as seq
-from ach_percent
-where main_group_id in (select id from product_maingroup order by name offset 8 limit 1)
+	--main group 9--
+	union
+	select *,concat(main_group,' ','target') main_group_target,25 as seq
+	from target_record
+	where main_group_id in (select id from product_maingroup order by name offset 8 limit 1)
+	union
+	select *,main_group main_group_target,26 as seq
+	from sale_record
+	where main_group_id in (select id from product_maingroup order by name offset 8 limit 1)
+	union
+	select *,'Ach %'::character varying main_group_target,27 as seq
+	from ach_percent
+	where main_group_id in (select id from product_maingroup order by name offset 8 limit 1)
 
---main group 10--
-union
-select *,concat(main_group,' ','target') main_group_target,28 as seq
-from target_record
-where main_group_id in (select id from product_maingroup order by name offset 9 limit 1)
-union
-select *,main_group main_group_target,29 as seq
-from sale_record
-where main_group_id in (select id from product_maingroup order by name offset 9 limit 1)
-union
-select *,'Ach %'::character varying main_group_target,30 as seq
-from ach_percent
-where main_group_id in (select id from product_maingroup order by name offset 9 limit 1)
+	--main group 10--
+	union
+	select *,concat(main_group,' ','target') main_group_target,28 as seq
+	from target_record
+	where main_group_id in (select id from product_maingroup order by name offset 9 limit 1)
+	union
+	select *,main_group main_group_target,29 as seq
+	from sale_record
+	where main_group_id in (select id from product_maingroup order by name offset 9 limit 1)
+	union
+	select *,'Ach %'::character varying main_group_target,30 as seq
+	from ach_percent
+	where main_group_id in (select id from product_maingroup order by name offset 9 limit 1)
 
---main group 11--
-union
-select *,concat(main_group,' ','target') main_group_target,31 as seq
-from target_record
-where main_group_id in (select id from product_maingroup order by name offset 10 limit 1)
-union
-select *,main_group main_group_target,32 as seq
-from sale_record
-where main_group_id in (select id from product_maingroup order by name offset 10 limit 1)
-union
-select *,'Ach %'::character varying main_group_target,33 as seq
-from ach_percent
-where main_group_id in (select id from product_maingroup order by name offset 10 limit 1)
+	--main group 11--
+	union
+	select *,concat(main_group,' ','target') main_group_target,31 as seq
+	from target_record
+	where main_group_id in (select id from product_maingroup order by name offset 10 limit 1)
+	union
+	select *,main_group main_group_target,32 as seq
+	from sale_record
+	where main_group_id in (select id from product_maingroup order by name offset 10 limit 1)
+	union
+	select *,'Ach %'::character varying main_group_target,33 as seq
+	from ach_percent
+	where main_group_id in (select id from product_maingroup order by name offset 10 limit 1)
+)	
 
---total amount--
+select *
+from customer_principle_by_main_group
 union
-select *,'Total Amount'::character varying main_group_target,34 as seq
-from target_record]]></xml-property>
+
+select partner_id,customer_code,customer_name,outlet_type,partner_tag,sale_team_id,sales_team,
+branch_id,main_group,main_group_id,township,COALESCE(sum(amount),0) amount,
+'Total Amount'::character varying main_group_target,34 seq													 
+from customer_principle_by_main_group
+where main_group_target like '%target'
+group by partner_id,customer_code,customer_name,outlet_type,partner_tag,sale_team_id,sales_team,
+branch_id,main_group,main_group_id,township
+
+union
+select partner_id,customer_code,customer_name,outlet_type,partner_tag,sale_team_id,sales_team,
+branch_id,main_group,main_group_id,township,COALESCE(sum(amount),0) amount,
+'Net Amount'::character varying main_group_target,35 seq													 
+from customer_principle_by_main_group
+where main_group=main_group_target
+group by partner_id,customer_code,customer_name,outlet_type,partner_tag,sale_team_id,sales_team,
+branch_id,main_group,main_group_id,township]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
