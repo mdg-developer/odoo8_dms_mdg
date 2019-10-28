@@ -133,5 +133,45 @@
 				</data>
 			</field>
 		</record>
+		
+		
+		<record id="view_assign_first_image_form" model="ir.ui.view">
+			<field name="name">assign.first.image.form</field>
+			<field name="model">assign.first.image</field>
+			<field name="arch" type="xml">
+				<form string="Assign First Image">
+					<group>
+						<field name="confirm" />
+					</group>
+					<footer>
+						<button name="print_report" string="Confirm" type="object"
+							class="oe_highlight" />
+						or
+
+						<button string="Cancel" class="oe_link" special="cancel" />
+
+					</footer>
+				</form>
+			</field>
+		</record>
+
+		<record id="action_assign_first_image1" model="ir.actions.act_window">
+			<field name="name">Assign First Image</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">assign.first.image</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+
+
+		<record model="ir.values" id="action_assign_first_image">
+			<field name="name">Assign First Image</field>
+			<field name="key2">client_action_multi</field>
+			<field name="value"
+				eval="'ir.actions.act_window,' + str(ref('action_assign_first_image1'))" />
+			<field name="key">action</field>
+			<field name="model">res.partner</field>
+		</record>
 	</data>
 </openerp>
