@@ -2231,6 +2231,14 @@ else&#13;
                                                     <property name="resultSetColumn">customer_code</property>
                                                 </data>
                                             </property>
+                                            <property name="borderTopStyle">solid</property>
+                                            <property name="borderTopWidth">thin</property>
+                                            <property name="borderLeftStyle">solid</property>
+                                            <property name="borderLeftWidth">thin</property>
+                                            <property name="borderBottomStyle">solid</property>
+                                            <property name="borderBottomWidth">thin</property>
+                                            <property name="borderRightStyle">solid</property>
+                                            <property name="borderRightWidth">thin</property>
                                         </extended-item>
                                     </property>
                                 </extended-item>

@@ -1394,7 +1394,7 @@ and date_invoice between ? and ?]]></xml-property>
             <property name="fontSize">12pt</property>
             <property name="fontWeight">bold</property>
             <property name="textAlign">center</property>
-            <text-property name="text">Sales And Distribution By SKU Report</text-property>
+            <text-property name="text">Sales And Distribution By SKU Report By Team</text-property>
         </label>
         <table id="614">
             <property name="textAlign">center</property>
