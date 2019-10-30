@@ -1430,6 +1430,36 @@ and pp.id in (select product_product_id from crm_case_section_product_product_re
                             </property>
                         </extended-item>
                     </property>
+                    <property name="aggregations">
+                        <extended-item extensionName="AggregationCell" id="1397">
+                            <property name="aggregationOnColumn">Group6/main_group_target</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">thin</property>
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">thin</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">thin</property>
+                            <property name="content">
+                                <data id="1398">
+                                    <property name="fontFamily">"Arial"</property>
+                                    <property name="fontWeight">bold</property>
+                                    <property name="borderBottomStyle">none</property>
+                                    <property name="borderLeftStyle">none</property>
+                                    <property name="borderRightStyle">none</property>
+                                    <property name="borderTopStyle">none</property>
+                                    <property name="paddingRight">1pt</property>
+                                    <structure name="numberFormat">
+                                        <property name="category">Currency</property>
+                                        <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
+                                    </structure>
+                                    <property name="textAlign">center</property>
+                                    <property name="resultSetColumn">amount_Group6/main_group_target</property>
+                                </data>
+                            </property>
+                        </extended-item>
+                    </property>
                     <property name="header">
                         <extended-item extensionName="CrosstabCell" id="110">
                             <property name="content">
@@ -1443,6 +1473,26 @@ and pp.id in (select product_product_id from crm_case_section_product_product_re
             </property>
             <property name="rows">
                 <extended-item extensionName="CrosstabView" id="71">
+                    <property name="grandTotal">
+                        <extended-item extensionName="CrosstabCell" id="1396">
+                            <property name="content">
+                                <label id="1400">
+                                    <property name="fontFamily">"Arial"</property>
+                                    <property name="fontWeight">bold</property>
+                                    <property name="textAlign">center</property>
+                                    <text-property name="text">Total</text-property>
+                                </label>
+                            </property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">thin</property>
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">thin</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">thin</property>
+                        </extended-item>
+                    </property>
                     <property name="views">
                         <extended-item extensionName="DimensionView" id="72">
                             <property name="dimension">Group</property>
@@ -1814,6 +1864,15 @@ and pp.id in (select product_product_id from crm_case_section_product_product_re
                         <value>Group6/main_group_target</value>
                     </simple-property-list>
                     <property name="aggregateFunction">SUM</property>
+                </structure>
+                <structure>
+                    <property name="name">amount_Group6/main_group_target</property>
+                    <expression name="expression">measure["amount"]</expression>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Group6/main_group_target</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">sum</property>
                 </structure>
             </list-property>
         </extended-item>
