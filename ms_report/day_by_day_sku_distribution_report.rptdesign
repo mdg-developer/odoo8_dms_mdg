@@ -172,7 +172,9 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
             </structure>
             <method name="beforeOpen"><![CDATA[this.queryText =this.queryText.replace("--$sale_team_id$", "and ai.section_id in ("+ params["sales_team_id"].value.join(",")+")")       
 this.queryText =this.queryText.replace("--$branch_id$", "and ai.branch_id in ("+ params["branch_id"].value.join(",")+")")
-this.queryText =this.queryText.replace("--$product$", "and pp.id in ("+ params["Product"].value.join(",")+")")]]></method>
+this.queryText =this.queryText.replace("--$product$", "and pp.id in ("+ params["Product"].value.join(",")+")")
+this.queryText =this.queryText.replace("--$sale_team_invoice$", "and section_id in ("+ params["sales_team_id"].value.join(",")+")")       
+this.queryText =this.queryText.replace("--$branch_invoice$", "and branch_id in ("+ params["branch_id"].value.join(",")+")")]]></method>
             <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
                 <structure>
@@ -205,7 +207,16 @@ this.queryText =this.queryText.replace("--$product$", "and pp.id in ("+ params["
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select pp.name_template,COUNT(DISTINCT ai.partner_id) partner_count,
-TO_CHAR(date_invoice, 'DD-MM-YYYY') date_invoice,COALESCE(sum(amount_total),0) invoice_amount
+TO_CHAR(date_invoice, 'DD-MM-YYYY') date_invoice,
+	(
+		select COALESCE(sum(amount_total),0) invoice_amount
+		from account_invoice
+		where state not in ('draft','cancel')
+		and type='out_invoice'
+		and date_invoice=ai.date_invoice		
+		--$sale_team_invoice$
+		--$branch_invoice$
+	)
 from account_invoice ai,account_invoice_line ail,product_product pp,product_template pt
 where ai.id=ail.invoice_id
 and ail.product_id=pp.id
@@ -218,7 +229,7 @@ and date_invoice between ? and ?
 --$branch_id$
 --$product$
 group by pp.name_template,date_invoice,pp.sequence
-order by pp.sequence,date_invoice]]></xml-property>
+order by pp.sequence,ai.date_invoice]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -1215,7 +1226,7 @@ and pp.id in (select product_product_id from crm_case_section_product_product_re
                     <list-property name="arguments">
                         <structure>
                             <property name="name">Expression</property>
-                            <expression name="value" type="javascript">measure["invoice_amount"]</expression>
+                            <expression name="value" type="javascript">data["partner_count_Group1/date_invoice_1"]</expression>
                         </structure>
                     </list-property>
                 </structure>
@@ -1225,7 +1236,7 @@ and pp.id in (select product_product_id from crm_case_section_product_product_re
                     <simple-property-list name="aggregateOn">
                         <value>Group1/date_invoice</value>
                     </simple-property-list>
-                    <property name="aggregateFunction">SUM</property>
+                    <property name="aggregateFunction">FIRST</property>
                     <list-property name="arguments">
                         <structure>
                             <property name="name">Expression</property>
