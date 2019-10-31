@@ -41,6 +41,7 @@ Branch Inventory Transfer Module
         'views/transport_route_view.xml',
         'views/fleet_view.xml',
         'wizard/location_assign_view.xml',
+        'wizard/stock_transfer_view.xml',
         'views/branch_good_issue_note_view.xml',
         'views/branch_view.xml',
         'reports/qweb_view.xml',

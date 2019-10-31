@@ -254,8 +254,8 @@ class stock_transfer_details_items(osv.osv):
         'temp_qty': fields.float('Temp Qty', digits=dp.get_precision('temp_qty'), default = 0.0)
     }
 
-    def on_change_qty_change(self, cr, uid, ids, quantity, temp_qty, context=None):
-        if quantity:
-            if quantity > temp_qty:
-                raise osv.except_osv(('Warning'), ('Quantity should not be larger than available quantity!'))                          
+#     def on_change_qty_change(self, cr, uid, ids, quantity, temp_qty, context=None):
+#         if quantity:
+#             if quantity > temp_qty:
+#                 raise osv.except_osv(('Warning'), ('Quantity should not be larger than available quantity!'))                          
         
