@@ -356,9 +356,6 @@ else
    this.queryText =this.queryText.replace("--$branch$", "and branch_id in ("+params["branch_id"].value.join(",")+")")
 }
 this.queryText =this.queryText.replace("--$product_id$", "and ail.product_id in ("+ params["product_id"].value.join(",")+",0)")       
-this.queryText =this.queryText.replace("--$product_id1$", "and ail.product_id in ("+ params["product_id"].value.join(",")+",0)")       
-this.queryText =this.queryText.replace("--$product_id2$", "and ail.product_id in ("+ params["product_id"].value.join(",")+",0)")       
-this.queryText =this.queryText.replace("--$product_id3$", "and ail.product_id in ("+ params["product_id"].value.join(",")+",0)")       
 ]]></method>
             <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
@@ -458,7 +455,7 @@ this.queryText =this.queryText.replace("--$product_id3$", "and ail.product_id in
 	select rp.id customer,rp.customer_code,rp.name customer_name,rt.code township,outlet.name outlet,ai.section_id,ai.branch_id,product_id,ccs.name sales_team,
 	array_to_string(array_agg(distinct rpc.name),', ') AS tags,p_categ.name product_category,
     case when ail.uos_id=pt.uom_id then COALESCE(sum(round(quantity,0)),0) 
-	when ail.uos_id!=pt.uom_id then COALESCE(sum(round(quantity*(select floor(round(1/factor,2)) from product_uom where id=pt.uom_id),0)),0) end as product_quantity,
+	when ail.uos_id!=pt.uom_id then COALESCE(sum(round(quantity*(select floor(round(1/factor,2)) from product_uom where id=ail.uos_id),0)),0) end as product_quantity,
 
 	1 as seq
 	from account_invoice ai,res_partner rp,res_township rt,account_invoice_line ail,product_uom uom,product_product pp,product_template pt,crm_case_section ccs,outlettype_outlettype outlet,
@@ -483,19 +480,16 @@ total_amt as (
 	select rp.id customer,rp.customer_code,rp.name customer_name,rt.code township,outlet.name outlet,ai.section_id,ai.branch_id,0,ccs.name sales_team,
 	array_to_string(array_agg(distinct rpc.name),', ') AS tags,'Gross Net Amt.'::character varying product_category,
 	sum(round((amount_untaxed)+(amount_tax*1)+(discount_total*1),0)) as product_quantity,90001::int as seq
-	from account_invoice ai,account_invoice_line ail,res_partner rp,res_township rt,crm_case_section ccs,outlettype_outlettype outlet,
+	from account_invoice ai,res_partner rp,res_township rt,crm_case_section ccs,outlettype_outlettype outlet,
 	res_partner_res_partner_category_rel crel,res_partner_category rpc												
-	where ai.partner_id=rp.id	
-	and ai.id=ail.invoice_id												
+	where ai.partner_id=rp.id													
 	and rp.township=rt.id	
 	and ai.section_id=ccs.id
 	and outlet.id=rp.outlet_type
 	and rpc.id=crel.category_id
 	and rp.id=crel.partner_id												
 	and date_invoice between ?  and ?
-	and foc='false'
-	--$product_id1$
-	group by rp.id,rp.customer_code,rp.name,rt.code,outlet.name,ai.section_id,ai.branch_id,ccs.name,ai.discount_total												
+	group by rp.id,rp.customer_code,rp.name,rt.code,outlet.name,ai.section_id,ai.branch_id,ccs.name											
 	order by rp.name
 ),
 total_discount as (
@@ -503,18 +497,15 @@ total_discount as (
 	array_to_string(array_agg(distinct rpc.name),', ') AS tags,
 	'Total Disc.'::character varying product_category,
 	sum(round(discount_total,0)) as product_quantity,90002::int as seq
-	from account_invoice ai,account_invoice_line ail,res_partner rp,res_township rt,crm_case_section ccs,outlettype_outlettype outlet,
+	from account_invoice ai,res_partner rp,res_township rt,crm_case_section ccs,outlettype_outlettype outlet,
 	res_partner_res_partner_category_rel crel,res_partner_category rpc	
-	where ai.partner_id=rp.id
-	and ai.id=ail.invoice_id
+	where ai.partner_id=rp.id	
 	and rp.township=rt.id	
 	and ai.section_id=ccs.id
 	and outlet.id=rp.outlet_type
 	and rpc.id=crel.category_id
 	and rp.id=crel.partner_id
-	and date_invoice between ?  and ?
-	and foc='false'
-	--$product_id2$
+	and date_invoice between ?  and ?	
 	group by rp.id,rp.customer_code,rp.name,rt.code,outlet.name,ai.section_id,ai.branch_id,ccs.name
 	order by rp.name
 ),
@@ -522,18 +513,15 @@ net_amt as (
 	select rp.id customer,rp.customer_code,rp.name customer_name,rt.code township,outlet.name outlet,ai.section_id,ai.branch_id,0,ccs.name sales_team,
 	array_to_string(array_agg(distinct rpc.name),', ') AS tags,'Net Amt.'::character varying product_category,
 	sum(round(amount_total,0)) as product_quantity,90003::int as seq
-	from account_invoice ai,account_invoice_line ail,res_partner rp,res_township rt,crm_case_section ccs,outlettype_outlettype outlet,
+	from account_invoice ai,res_partner rp,res_township rt,crm_case_section ccs,outlettype_outlettype outlet,
 	res_partner_res_partner_category_rel crel,res_partner_category rpc	
-	where ai.partner_id=rp.id
-	and ai.id=ail.invoice_id
+	where ai.partner_id=rp.id	
 	and rp.township=rt.id	
 	and ai.section_id=ccs.id
 	and outlet.id=rp.outlet_type
 	and rpc.id=crel.category_id
 	and rp.id=crel.partner_id
 	and date_invoice between ?  and ?
-	and foc='false'
-	--$product_id3$
 	group by rp.id,rp.customer_code,rp.name,rt.code,outlet.name,ai.section_id,ai.branch_id,ccs.name
 	order by rp.name
 ),
@@ -1704,6 +1692,31 @@ and pp.id in (select product_product_id from crm_case_section_product_product_re
                             </property>
                         </extended-item>
                     </property>
+                    <property name="aggregations">
+                        <extended-item extensionName="AggregationCell" id="1494">
+                            <property name="aggregationOnColumn">Group2/product_category</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">thin</property>
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">thin</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">thin</property>
+                            <property name="content">
+                                <data id="1495">
+                                    <property name="fontFamily">"Arial"</property>
+                                    <property name="fontWeight">bold</property>
+                                    <structure name="numberFormat">
+                                        <property name="category">Currency</property>
+                                        <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
+                                    </structure>
+                                    <property name="textAlign">center</property>
+                                    <property name="resultSetColumn">product_quantity_Group2/product_category</property>
+                                </data>
+                            </property>
+                        </extended-item>
+                    </property>
                     <property name="header">
                         <extended-item extensionName="CrosstabCell" id="1442">
                             <property name="content">
@@ -1717,6 +1730,26 @@ and pp.id in (select product_product_id from crm_case_section_product_product_re
             </property>
             <property name="rows">
                 <extended-item extensionName="CrosstabView" id="1427">
+                    <property name="grandTotal">
+                        <extended-item extensionName="CrosstabCell" id="1493">
+                            <property name="content">
+                                <label id="1497">
+                                    <property name="fontFamily">"Arial"</property>
+                                    <property name="fontWeight">bold</property>
+                                    <property name="textAlign">center</property>
+                                    <text-property name="text">Total</text-property>
+                                </label>
+                            </property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">thin</property>
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">thin</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">thin</property>
+                        </extended-item>
+                    </property>
                     <property name="views">
                         <extended-item extensionName="DimensionView" id="1428">
                             <property name="dimension">Group</property>
@@ -2129,6 +2162,15 @@ and pp.id in (select product_product_id from crm_case_section_product_product_re
                         <value>Group2/product_category</value>
                     </simple-property-list>
                     <property name="aggregateFunction">SUM</property>
+                </structure>
+                <structure>
+                    <property name="name">product_quantity_Group2/product_category</property>
+                    <expression name="expression">measure["product_quantity"]</expression>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Group2/product_category</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">sum</property>
                 </structure>
             </list-property>
         </extended-item>

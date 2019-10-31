@@ -724,7 +724,7 @@ if (params["status"].value == 'unvoid' ){
 ),
 foc_qty as (
 	select rp.id customer_id,rp.name customer_name,rp.customer_code,p_day.name plan_day,
-	case when void_flag='none' then 'Unvoid' when void_flag='void' then 'Voided' end as void,
+	case when void_flag='none' then 'Unvoid' when void_flag='voided' then 'Voided' end as void,
 	oo.name outlet_type,(select partner_tag from all_partner_tag where partner_id=rp.id) partner_tag,
 	rt.code township,ps.name number,ps.type payment_type,to_char(((ps.date at time zone 'utc' )at time zone 'asia/rangoon')::date,'dd-mm-yyyy') date_invoice,
 	ps.sale_team,ccs.name sales_team,ps.branch_id,product_id,name_template,ps_line.uom_id,pt.uom_id,
@@ -750,7 +750,7 @@ foc_qty as (
 	order by seq),
 sale_qty as (
 	select rp.id customer,rp.name customer_name,rp.customer_code,p_day.name plan_day,
-	case when void_flag='none' then 'Unvoid' when void_flag='void' then 'Voided' end as void,
+	case when void_flag='none' then 'Unvoid' when void_flag='voided' then 'Voided' end as void,
 	oo.name outlet_type,(select partner_tag from all_partner_tag where partner_id=rp.id) partner_tag,
 	rt.code township,ps.name number,ps.type payment_type,to_char(((ps.date at time zone 'utc' )at time zone 'asia/rangoon')::date,'dd-mm-yyyy') date_invoice,
 	ps.sale_team,ccs.name sales_team,ps.branch_id,product_id,name_template,ps_line.uom_id,pt.uom_id,        
@@ -778,7 +778,7 @@ sale_qty as (
 	order by seq),
 total_amt as (
 	select rp.id customer,rp.name customer_name,rp.customer_code,p_day.name plan_day,
-	case when void_flag='none' then 'Unvoid' when void_flag='void' then 'Voided' end as void,
+	case when void_flag='none' then 'Unvoid' when void_flag='voided' then 'Voided' end as void,
 	oo.name outlet_type,(select partner_tag from all_partner_tag where partner_id=rp.id) partner_tag,
 	rt.code township,ps.name number,ps.type payment_type,to_char(((ps.date at time zone 'utc' )at time zone 'asia/rangoon')::date,'dd-mm-yyyy') date_invoice,
 	ps.sale_team,ccs.name sales_team,ps.branch_id,0,'Total Amt.'::character varying name_template,0,0,
@@ -802,7 +802,7 @@ total_amt as (
 ),
 total_discount as (
 	select rp.id customer,rp.name customer_name,rp.customer_code,p_day.name plan_day,
-	case when void_flag='none' then 'Unvoid' when void_flag='void' then 'Voided' end as void,
+	case when void_flag='none' then 'Unvoid' when void_flag='voided' then 'Voided' end as void,
 	oo.name outlet_type,(select partner_tag from all_partner_tag where partner_id=rp.id) partner_tag,
 	rt.code township,ps.name number,ps.type payment_type,to_char(((ps.date at time zone 'utc' )at time zone 'asia/rangoon')::date,'dd-mm-yyyy') date_invoice,
 	ps.sale_team,ccs.name sales_team,ps.branch_id,0,'Total Disc.'::character varying name_template,0,0,
@@ -826,7 +826,7 @@ total_discount as (
 ),
 net_amt as (
 	select rp.id customer,rp.name customer_name,rp.customer_code,p_day.name plan_day,
-	case when void_flag='none' then 'Unvoid' when void_flag='void' then 'Voided' end as void,
+	case when void_flag='none' then 'Unvoid' when void_flag='voided' then 'Voided' end as void,
 	oo.name outlet_type,(select partner_tag from all_partner_tag where partner_id=rp.id) partner_tag,
 	rt.code township,ps.name number,ps.type payment_type,to_char(((ps.date at time zone 'utc' )at time zone 'asia/rangoon')::date,'dd-mm-yyyy') date_invoice,
 	ps.sale_team,ccs.name sales_team,ps.branch_id,0,'Net Amt.'::character varying name_template,0,0,

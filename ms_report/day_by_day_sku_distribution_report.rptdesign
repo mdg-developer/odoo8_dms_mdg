@@ -117,6 +117,12 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     <property name="onColumnLayout">false</property>
                     <text-property name="heading">date_invoice</text-property>
                 </structure>
+                <structure>
+                    <property name="columnName">invoice_amount</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">invoice_amount</text-property>
+                    <text-property name="heading">invoice_amount</text-property>
+                </structure>
             </list-property>
             <list-property name="parameters">
                 <structure>
@@ -157,11 +163,18 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                         <property name="name">date_invoice</property>
                         <property name="dataType">string</property>
                     </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">invoice_amount</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
                 </list-property>
             </structure>
             <method name="beforeOpen"><![CDATA[this.queryText =this.queryText.replace("--$sale_team_id$", "and ai.section_id in ("+ params["sales_team_id"].value.join(",")+")")       
 this.queryText =this.queryText.replace("--$branch_id$", "and ai.branch_id in ("+ params["branch_id"].value.join(",")+")")
-this.queryText =this.queryText.replace("--$product$", "and pp.id in ("+ params["Product"].value.join(",")+")")]]></method>
+this.queryText =this.queryText.replace("--$product$", "and pp.id in ("+ params["Product"].value.join(",")+")")
+this.queryText =this.queryText.replace("--$sale_team_invoice$", "and section_id in ("+ params["sales_team_id"].value.join(",")+")")       
+this.queryText =this.queryText.replace("--$branch_invoice$", "and branch_id in ("+ params["branch_id"].value.join(",")+")")]]></method>
             <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
                 <structure>
@@ -185,8 +198,25 @@ this.queryText =this.queryText.replace("--$product$", "and pp.id in ("+ params["
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">invoice_amount</property>
+                    <property name="nativeName">invoice_amount</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
+                </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select pp.name_template,COUNT(DISTINCT ai.partner_id) partner_count,TO_CHAR(date_invoice, 'DD-MM-YYYY') date_invoice
+            <xml-property name="queryText"><![CDATA[select pp.name_template,COUNT(DISTINCT ai.partner_id) partner_count,
+TO_CHAR(date_invoice, 'DD-MM-YYYY') date_invoice,
+	(
+		select COALESCE(sum(amount_total),0) invoice_amount
+		from account_invoice
+		where state not in ('draft','cancel')
+		and type='out_invoice'
+		and date_invoice=ai.date_invoice		
+		--$sale_team_invoice$
+		--$branch_invoice$
+	)
 from account_invoice ai,account_invoice_line ail,product_product pp,product_template pt
 where ai.id=ail.invoice_id
 and ail.product_id=pp.id
@@ -199,7 +229,7 @@ and date_invoice between ? and ?
 --$branch_id$
 --$product$
 group by pp.name_template,date_invoice,pp.sequence
-order by pp.sequence,date_invoice]]></xml-property>
+order by pp.sequence,ai.date_invoice]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -590,6 +620,17 @@ and pp.id in (select product_product_id from crm_case_section_product_product_re
                         </tabular-measure>
                     </property>
                 </tabular-measure-group>
+                <tabular-measure-group name="Summary Field1" id="1383">
+                    <property name="measures">
+                        <tabular-measure name="invoice_amount" id="1384">
+                            <property name="function">sum</property>
+                            <property name="isCalculated">false</property>
+                            <expression name="measureExpression" type="javascript">dataSetRow["invoice_amount"]</expression>
+                            <property name="dataType">float</property>
+                            <property name="isVisible">false</property>
+                        </tabular-measure>
+                    </property>
+                </tabular-measure-group>
             </property>
             <property name="dataSet">Data Set</property>
         </tabular-cube>
@@ -797,8 +838,7 @@ and pp.id in (select product_product_id from crm_case_section_product_product_re
                             <property name="borderLeftWidth">thin</property>
                             <property name="borderBottomStyle">solid</property>
                             <property name="borderBottomWidth">thin</property>
-                            <property name="borderRightStyle">solid</property>
-                            <property name="borderRightWidth">thin</property>
+                            <property name="borderRightStyle">none</property>
                             <property name="content">
                                 <data id="1365">
                                     <property name="fontFamily">"Arial"</property>
@@ -827,6 +867,50 @@ and pp.id in (select product_product_id from crm_case_section_product_product_re
                                 </data>
                             </property>
                         </extended-item>
+                        <extended-item extensionName="AggregationCell" id="1401">
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">thin</property>
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">thin</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">thin</property>
+                            <property name="content">
+                                <data id="1402">
+                                    <property name="fontFamily">"Arial"</property>
+                                    <property name="fontWeight">bold</property>
+                                    <structure name="numberFormat">
+                                        <property name="category">Currency</property>
+                                        <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
+                                    </structure>
+                                    <property name="textAlign">center</property>
+                                    <property name="resultSetColumn">partner_count_1</property>
+                                </data>
+                            </property>
+                        </extended-item>
+                        <extended-item extensionName="AggregationCell" id="1403">
+                            <property name="aggregationOnColumn">Group1/date_invoice</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">thin</property>
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">thin</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="borderRightStyle">none</property>
+                            <property name="content">
+                                <data id="1404">
+                                    <property name="fontFamily">"Arial"</property>
+                                    <property name="fontWeight">bold</property>
+                                    <structure name="numberFormat">
+                                        <property name="category">Currency</property>
+                                        <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
+                                    </structure>
+                                    <property name="textAlign">center</property>
+                                    <property name="resultSetColumn">partner_count_Group1/date_invoice_1</property>
+                                </data>
+                            </property>
+                        </extended-item>
                     </property>
                     <property name="header">
                         <extended-item extensionName="CrosstabCell" id="1366">
@@ -845,9 +929,98 @@ and pp.id in (select product_product_id from crm_case_section_product_product_re
                         </extended-item>
                     </property>
                 </extended-item>
+                <extended-item extensionName="MeasureView" id="1385">
+                    <property name="measure">invoice_amount</property>
+                    <property name="detail">
+                        <extended-item extensionName="AggregationCell" id="1386">
+                            <property name="aggregationOnRow">Group/name_template</property>
+                            <property name="aggregationOnColumn">Group1/date_invoice</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">thin</property>
+                            <property name="borderLeftStyle">none</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">thin</property>
+                            <property name="content">
+                                <data id="1387">
+                                    <property name="fontFamily">"Arial"</property>
+                                    <property name="paddingRight">3pt</property>
+                                    <property name="textAlign">right</property>
+                                    <list-property name="visibility">
+                                        <structure>
+                                            <property name="format">all</property>
+                                            <expression name="valueExpr" type="javascript">true</expression>
+                                        </structure>
+                                    </list-property>
+                                    <property name="resultSetColumn">invoice_amount_Group/name_template_Group1/date_invoice_1</property>
+                                </data>
+                            </property>
+                        </extended-item>
+                    </property>
+                    <property name="aggregations">
+                        <extended-item extensionName="AggregationCell" id="1405">
+                            <property name="aggregationOnColumn">Group1/date_invoice</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">thin</property>
+                            <property name="borderLeftStyle">none</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">thin</property>
+                            <property name="content">
+                                <data id="1406">
+                                    <property name="fontFamily">"Arial"</property>
+                                    <property name="fontWeight">bold</property>
+                                    <structure name="numberFormat">
+                                        <property name="category">Currency</property>
+                                        <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
+                                    </structure>
+                                    <property name="textAlign">center</property>
+                                    <list-property name="visibility">
+                                        <structure>
+                                            <property name="format">all</property>
+                                            <expression name="valueExpr" type="javascript">true</expression>
+                                        </structure>
+                                    </list-property>
+                                    <property name="resultSetColumn">partner_count_Group1/date_invoice</property>
+                                </data>
+                            </property>
+                        </extended-item>
+                    </property>
+                    <property name="header">
+                        <extended-item extensionName="CrosstabCell" id="1388">
+                            <property name="content">
+                                <label id="1389">
+                                    <text-property name="text">invoice_amount</text-property>
+                                </label>
+                            </property>
+                        </extended-item>
+                    </property>
+                </extended-item>
             </property>
             <property name="rows">
                 <extended-item extensionName="CrosstabView" id="1352">
+                    <property name="grandTotal">
+                        <extended-item extensionName="CrosstabCell" id="1400">
+                            <property name="content">
+                                <label id="1408">
+                                    <property name="fontFamily">"Arial"</property>
+                                    <property name="fontWeight">bold</property>
+                                    <property name="textAlign">center</property>
+                                    <text-property name="text">Total Revenue</text-property>
+                                </label>
+                            </property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">thin</property>
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">thin</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">thin</property>
+                        </extended-item>
+                    </property>
                     <property name="views">
                         <extended-item extensionName="DimensionView" id="1353">
                             <property name="dimension">Group</property>
@@ -991,6 +1164,85 @@ and pp.id in (select product_product_id from crm_case_section_product_product_re
                         <value>Group/name_template</value>
                     </simple-property-list>
                     <property name="aggregateFunction">sum</property>
+                </structure>
+                <structure>
+                    <property name="name">invoice_amount_Group/name_template_Group1/date_invoice</property>
+                    <expression name="expression">measure["invoice_amount"]</expression>
+                    <property name="dataType">decimal</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Group/name_template</value>
+                        <value>Group1/date_invoice</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                </structure>
+                <structure>
+                    <property name="name">partner_count</property>
+                    <expression name="expression">measure["partner_count"]</expression>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                </structure>
+                <structure>
+                    <property name="name">partner_count_Group1/date_invoice</property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Group1/date_invoice</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">sum</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">measure["invoice_amount"]</expression>
+                        </structure>
+                    </list-property>
+                </structure>
+                <structure>
+                    <property name="name">invoice_amount_Group1/date_invoice</property>
+                    <expression name="expression">measure["invoice_amount"]</expression>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Group1/date_invoice</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">sum</property>
+                </structure>
+                <structure>
+                    <property name="name">invoice_amount_Group/name_template_Group1/date_invoice_1</property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Group/name_template</value>
+                        <value>Group1/date_invoice</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">measure["invoice_amount"]</expression>
+                        </structure>
+                    </list-property>
+                </structure>
+                <structure>
+                    <property name="name">partner_count_1</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">data["partner_count_Group1/date_invoice_1"]</expression>
+                        </structure>
+                    </list-property>
+                </structure>
+                <structure>
+                    <property name="name">partner_count_Group1/date_invoice_1</property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Group1/date_invoice</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">FIRST</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">measure["invoice_amount"]</expression>
+                        </structure>
+                    </list-property>
                 </structure>
             </list-property>
         </extended-item>

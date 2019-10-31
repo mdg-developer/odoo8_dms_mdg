@@ -83,4 +83,33 @@ class unassign_customer_tag(osv.osv_memory):
                 cr.execute('delete from res_partner_res_partner_category_rel where  partner_id=%s',(partner,))      
 
         return True
+    
+    
+class assign_first_image(osv.osv_memory):
+    _name = 'assign.first.image'
+    _description = 'Assign First Image'
+    _columns = {
+        'confirm':fields.boolean('Confirm' ,readonly=True),
+    }
+
+    _defaults = {
+         'confirm': True,                  
+    }
+
+    def print_report(self, cr, uid, ids, context=None):
+        data = self.read(cr, uid, ids, context=context)[0]
+        partner_obj = self.pool.get('res.partner')
+        datas = {
+             'ids': context.get('active_ids', []),
+             'model': 'res.partner',
+             'form': data
+            }
+        partner_id=datas['ids']
+        confirm=data['confirm']
+        for partner in partner_id: 
+            if (confirm==True):
+                partner_data=partner_obj.browse(cr, uid, partner, context=context)
+                if partner_data.image_one:
+                    cr.execute("update res_partner set image_small=%s, image =%s,image_medium=%s where id = %s" , (partner_data.image_one, partner_data.image_one, partner_data.image_one, partner,))
+        return True
                                                                                                      
