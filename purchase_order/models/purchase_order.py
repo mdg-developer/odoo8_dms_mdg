@@ -204,7 +204,7 @@ class purchase_order_line(osv.osv):
             product_agree_rate_obj = self.pool.get('product.agree.rate')
             cr.execute("select %s::date",(date_order,))
             po_date = cr.fetchone()[0]
-            agree_ids =product_agree_rate_obj.search(cr,uid,[('date','<=',po_date),('partner_id','=',partner_id),('currency','=',currency_id)],order=order,limit=1)
+            agree_ids =product_agree_rate_obj.search(cr,uid,[('from_date','<=',po_date),('date','>=',po_date),('partner_id','=',partner_id),('currency','=',currency_id)],order=order,limit=1)
             for product_agree in product_agree_rate_obj.browse(cr,uid,agree_ids,context=None):
                 for agree_line in product_agree.agress_lines:
                     if agree_line.product_id.id == product_id:

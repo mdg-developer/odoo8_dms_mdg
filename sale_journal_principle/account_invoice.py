@@ -392,6 +392,7 @@ class account_invoice(models.Model):
                         raise except_orm(_('Warning!'), _('Please define payable control account.'))
                     
                 if line['ref'][:2] == 'PO':
+                    
                     cr.execute("select avl.id from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s and avl.foc!=true", (origin, product.id,))
                     invoice_line_id = cr.fetchone()
                     if invoice_line_id:
@@ -1351,12 +1352,14 @@ class account_invoice(models.Model):
                 for line in self.invoice_line:
                     product_agree_rate_obj = self.env['product.agree.rate']
                     order = 'date desc'
-                    agree_id = product_agree_rate_obj.search([('date','<=',inv.date_invoice),('partner_id','=',inv.partner_id.id),('currency','=',inv.currency_id.id)],order=order,limit=1)
+                    agree_id = product_agree_rate_obj.search([('from_date','<=',inv.date_invoice),('date','>=',inv.date_invoice),('partner_id','=',inv.partner_id.id),('currency','=',inv.currency_id.id)],order=order,limit=1)
                     #for product_agree in product_agree_rate_obj.browse(agree_ids):
                     for agree_line in agree_id.agress_lines:
                         if line.product_id.id == agree_line.product_id.id:
                             rate = agree_id.rate    
                             return rate
+                        
+                return rate    
             else:
                 return rate                
     @api.multi
@@ -1427,7 +1430,7 @@ class account_invoice(models.Model):
             # create one move line for the total and possibly adjust the other lines amount
             #total, total_currency, iml = inv.with_context(ctx).compute_invoice_totals(company_currency, ref, iml)
             
-            rate = self.get_purchase_agree_rate()
+            rate = self.get_purchase_agree_rate() 
             if rate != 0:
                 total, total_currency, iml = inv.with_context(ctx).compute_invoice_totals_purchase(company_currency, ref, iml,rate)
             else:

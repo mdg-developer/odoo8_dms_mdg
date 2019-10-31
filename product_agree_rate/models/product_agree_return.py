@@ -16,7 +16,8 @@ class prodcut_agree_rate(osv.osv):
     _description="Product Agree Rate"
     _columns ={
         'name':fields.char("Description",required = True),
-        'date':fields.date("Date",required = True),
+        'from_date':fields.date("From Date",required = True),
+        'date':fields.date("To Date",required = True),
         'partner_id':fields.many2one("res.partner","Supplier"),
         'currency':fields.many2one('res.currency','Purchase Currency',required=True),
         'rate':fields.float("Rate",required = True),
