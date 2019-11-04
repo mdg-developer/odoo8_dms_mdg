@@ -281,12 +281,24 @@ class account_invoice(models.Model):
             if type == 'in_invoice':
                 amount_currency = price > 0 and abs(line.get('amount_currency', False)) or -abs(line.get('amount_currency', False))
                 if line['credit'] != 0:
-                   if amount_currency > 0:
-                      amount_currency = amount_currency * -1
-                      rate = self.get_purchase_agree_rate()
-                      ap_account =self.partner_id.property_account_payable.id
-                      if rate != 0 and ap_account == line['account_id']:
-                          amount_currency = self.amount_total * -1
+                    if amount_currency > 0:
+                        amount_currency = amount_currency * -1
+                        rate = self.get_purchase_agree_rate()
+                        ap_account =self.partner_id.property_account_payable.id
+                        if rate != 0 and ap_account == line['account_id']:
+                            amount_currency = self.amount_total * -1
+                    else:                         
+                        
+                        if line['account_id'] == self.partner_id.property_account_payable.id:
+                            self.button_reset_taxes()
+                            amount = self.amount_total
+                            agree_price = 0
+                            for inv_line in self.invoice_line:
+                                if inv_line.gross_margin < 0:
+                                    amount += (inv_line.gross_margin * -1)
+                                elif inv_line.gross_margin > 0:    
+                                    amount -= (inv_line.gross_margin)
+                            line['credit'] = amount #self.amount_total      
                 return {
                     'date_maturity': line.get('date_maturity', False),
                     'partner_id': part,
@@ -391,7 +403,7 @@ class account_invoice(models.Model):
                     if account_id is None:
                         raise except_orm(_('Warning!'), _('Please define payable control account.'))
                     
-                if line['ref'][:2] == 'PO':
+                if line['ref'][:2] == 'PO' and product:
                     
                     cr.execute("select avl.id from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s and avl.foc!=true", (origin, product.id,))
                     invoice_line_id = cr.fetchone()
@@ -1431,7 +1443,8 @@ class account_invoice(models.Model):
             #total, total_currency, iml = inv.with_context(ctx).compute_invoice_totals(company_currency, ref, iml)
             
             rate = self.get_purchase_agree_rate() 
-            if rate != 0:
+            #if rate != 0:
+            if inv.type in ('in_invoice'):    
                 total, total_currency, iml = inv.with_context(ctx).compute_invoice_totals_purchase(company_currency, ref, iml,rate)
             else:
                 total, total_currency, iml = inv.with_context(ctx).compute_invoice_totals(company_currency, ref, iml)    
@@ -1493,7 +1506,8 @@ class account_invoice(models.Model):
                 data.append(res)
             iml = data
             print 'imllllllllllllllllllll', iml
-            if rate > 0:
+            #if rate > 0:
+            if inv.type in ('in_invoice'):
                 line_cr = [self.line_get_convert_purchase_invoice_new(l, part.id, date) for l in iml]
             else:    
                 line_cr = [self.line_get_convert_new(l, part.id, date) for l in iml]
