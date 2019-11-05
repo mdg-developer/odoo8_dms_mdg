@@ -888,14 +888,11 @@ CASE
 END AS payment_type
 ,rp.customer_code as customer_id
 ,rp.name as customer,av.number as invoice_no ,cc.name as sale_team,pp.name_template as product_desc,pt.description_sale,
-avl.quantity as qty,uom.name as uom,(CASE WHEN avl.price_unit < 0 THEN 0 ELSE avl.price_unit END) as unit_price,avl.price_subtotal as net_total,avl.discount,
-(CASE WHEN avl.price_subtotal < 0 THEN -1 * avl.price_subtotal ELSE avl.discount_amt END) as discount_amt,rule.description  as promotion,
-
-
+avl.quantity as qty,uom.name as uom,avl.price_unit as unit_price,avl.price_subtotal as net_total,avl.discount,
+avl.discount_amt,rule.description  as promotion,
 CASE
   WHEN avl.price_subtotal < 0 THEN 0
-  ELSE avl.price_subtotal + (CASE WHEN avl.price_subtotal < 0 THEN -1 * avl.price_subtotal ELSE avl.discount_amt END) 
-  END as sub_total,
+  ELSE avl.price_subtotal + avl.discount_amt END as sub_total,
 CASE
   WHEN avl.foc = true THEN 'Y'::text
   ELSE 'N'::text

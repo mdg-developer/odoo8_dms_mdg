@@ -27,8 +27,6 @@
 						</group>
 						<label for="address" string="Address" />
 						<field name="address" colspan="4" nolabel="1" string='Address' />
-
-
 					</sheet>
 				</form>
 			</field>

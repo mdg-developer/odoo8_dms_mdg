@@ -480,7 +480,7 @@ class partner(osv.osv):
                         township_id = self.pool.get('res.township').create(cr, uid, {
                                                                                                 'code':township,  # get first three words
                                                                                                 'name':township,
-                                                                                                'city_id':city_id
+                                                                                                'city':city_id
                                                                                             }, context)
                         
                 if branch_code:  # no need to update

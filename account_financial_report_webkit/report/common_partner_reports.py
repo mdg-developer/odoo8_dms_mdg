@@ -196,6 +196,7 @@ class CommonPartnersReportHeaderWebkit(CommonReportHeaderWebkit):
                                                             in %(partner_ids)s"
         if analytic_account_ids:
             sql_where += "   AND account_move_line.analytic_account_id in %(analytic_account_ids)s"
+            print 'success'
             search_params.update({'analytic_account_ids': tuple(analytic_account_ids)})
             
         if target_move == 'posted':
@@ -205,6 +206,7 @@ class CommonPartnersReportHeaderWebkit(CommonReportHeaderWebkit):
             search_params.update({'target_move': target_move})
         if branch_id:
             sql_where += "   AND account_move_line.branch_id in %(branch_id)s"
+            print 'success'
             search_params.update({'branch_id': tuple(branch_id)})    
 #         if branch_id:
 #             sql_where += " AND account_move_line.branch_id = %(branch_id)s"
@@ -364,8 +366,11 @@ class CommonPartnersReportHeaderWebkit(CommonReportHeaderWebkit):
             sql += ("AND ml.analytic_account_id in %(analytic_account_ids)s")
             
         sql += "GROUP BY ml.account_id, ml.partner_id, a.currency_id, c.name"         
+        print 'sql',sql
+        print 'search_param',search_param
         self.cursor.execute(sql, search_param)
         res = self.cursor.dictfetchall()
+        print '_compute_partners_initial_balances',res
         return self._tree_move_line_ids(res)
 
     ############################################################

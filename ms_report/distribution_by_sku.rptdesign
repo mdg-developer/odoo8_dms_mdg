@@ -626,7 +626,7 @@ and inv.date_invoice between ? and ?
                         <property name="fontSize">12pt</property>
                         <property name="fontWeight">bold</property>
                         <property name="textAlign">center</property>
-                        <text-property name="text">Distribution by SKU Report</text-property>
+                        <text-property name="text">Report : Distribution by SKU Report</text-property>
                     </label>
                 </cell>
             </row>
@@ -695,7 +695,7 @@ and inv.date_invoice between ? and ?
                                         <property name="fontSize">12pt</property>
                                         <property name="fontWeight">bold</property>
                                         <property name="textAlign">center</property>
-                                        <expression name="valueExpr">branchList;</expression>
+                                        <expression name="valueExpr" type="javascript">'Branch : ' + branchList;</expression>
                                         <property name="contentType">html</property>
                                     </text-data>
                                 </cell>
@@ -716,8 +716,9 @@ and inv.date_invoice between ? and ?
                             <structure>
                                 <property name="name">string_agg</property>
                                 <text-property name="displayName">string_agg</text-property>
-                                <expression name="expression" type="javascript">dataSetRow["string_agg"]</expression>
+                                <expression name="expression" type="javascript">'Team : ' + dataSetRow["string_agg"]</expression>
                                 <property name="dataType">string</property>
+                                <property name="allowExport">true</property>
                             </structure>
                         </list-property>
                         <property name="resultSetColumn">string_agg</property>

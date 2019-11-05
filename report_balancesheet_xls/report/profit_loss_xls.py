@@ -40,6 +40,7 @@ class profit_loss_xls(report_xls):
         
         branch_obj = self.pool.get('res.branch')
         branch_name = '' 
+        print '_p>>>',_p  
         try:
             if _p.branch_id:
             

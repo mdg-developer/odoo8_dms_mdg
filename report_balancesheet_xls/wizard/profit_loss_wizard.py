@@ -36,6 +36,7 @@ class AccountProfitLossWizard(orm.TransientModel):
     }
     
     def _build_comparison_context(self, cr, uid, ids, data, context=None):
+        print 'pl com>>>>',data
         if context is None:
             context = {}
         result = {}
@@ -56,6 +57,7 @@ class AccountProfitLossWizard(orm.TransientModel):
         return result
     
     def _build_contexts(self, cr, uid, ids, data, context=None):
+        print 'inherit pl build context'
         if context is None:
             context = {}
         result = {}
@@ -76,6 +78,7 @@ class AccountProfitLossWizard(orm.TransientModel):
         return result
     
     def check_report(self, cr, uid, ids, context=None):
+        print 'inherit pl check_report'
         if context is None:
             context = {}
         data = {}

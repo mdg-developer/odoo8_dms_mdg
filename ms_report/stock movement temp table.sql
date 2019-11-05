@@ -1,4 +1,4 @@
--- drop FUNCTION stock_movement();
+﻿-- drop FUNCTION stock_movement();
 -- select * from stock_movement();
 CREATE OR REPLACE FUNCTION stock_movement() 
 RETURNS TABLE (

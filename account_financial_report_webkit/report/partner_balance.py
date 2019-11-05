@@ -94,6 +94,7 @@ class PartnerBalanceWebkit(report_sxw.rml_parse,
         res = defaultdict(dict)
 
         for acc_id in accounts_ids:
+            print 'analytic_account_ids',analytic_account_ids
             move_line_ids = self.get_partners_move_lines_ids(
                 acc_id, analytic_account_ids, main_filter, start, stop, target_move,branch_id,
                 exclude_reconcile=False, partner_filter=partner_filter)            
@@ -102,6 +103,7 @@ class PartnerBalanceWebkit(report_sxw.rml_parse,
             for partner_id in move_line_ids:
                 partner_line_ids = move_line_ids.get(partner_id, [])
                 lines = self._get_move_line_datas(list(set(partner_line_ids)))
+                print 'lines',lines
                 res[acc_id][partner_id] = lines
         return res
 
@@ -139,6 +141,7 @@ class PartnerBalanceWebkit(report_sxw.rml_parse,
             filter_type = ('payable',)
         if result_selection == 'all_account':
             filter_type = ('all',)
+        print 'filter_type>>>',filter_type
         accounts = self.get_all_accounts(new_ids, exclude_type=['view'],
                                          only_type=filter_type)
 
@@ -173,6 +176,7 @@ class PartnerBalanceWebkit(report_sxw.rml_parse,
         ledger_lines = self._compute_partner_ledger_lines(
             accounts, analytic_account_ids, main_filter, target_move,branch_id, start, stop,
             partner_filter=partner_ids)
+        print 'ledger_lines',ledger_lines
         objects = self.pool.get('account.account').browse(self.cursor,
                                                           self.uid,
                                                           accounts)

@@ -988,6 +988,14 @@ and inv.date_invoice between ? and ?
                 <ref-entry baseId="44" id="114"/>
                 <ref-entry baseId="45" id="115"/>
                 <ref-entry baseId="48" id="116"/>
+                <ref-entry baseId="136" name="NewGrid1" id="802"/>
+                <ref-entry baseId="137" id="137"/>
+                <ref-entry baseId="138" id="138"/>
+                <ref-entry baseId="139" id="139"/>
+                <ref-entry baseId="140" id="140"/>
+                <ref-entry baseId="142" name="NewText" id="142"/>
+                <ref-entry baseId="141" id="141"/>
+                <ref-entry baseId="143" name="NewText1" id="143"/>
             </overridden-values>
         </simple-master-page>
     </page-setup>
@@ -1001,7 +1009,7 @@ and inv.date_invoice between ? and ?
                         <property name="fontSize">12pt</property>
                         <property name="fontWeight">bold</property>
                         <property name="textAlign">center</property>
-                        <text-property name="text">Customer Purchases Report</text-property>
+                        <text-property name="text">Report : Customer Business Review</text-property>
                     </label>
                     <table id="614">
                         <property name="width">10.7in</property>
@@ -1066,7 +1074,7 @@ and inv.date_invoice between ? and ?
                                         <property name="fontSize">12pt</property>
                                         <property name="fontWeight">bold</property>
                                         <property name="textAlign">center</property>
-                                        <expression name="valueExpr">branchList;</expression>
+                                        <expression name="valueExpr" type="javascript">'Branch : '+branchList;</expression>
                                         <property name="contentType">html</property>
                                     </text-data>
                                 </cell>
@@ -1083,8 +1091,9 @@ and inv.date_invoice between ? and ?
                             <structure>
                                 <property name="name">string_agg</property>
                                 <text-property name="displayName">string_agg</text-property>
-                                <expression name="expression" type="javascript">dataSetRow["string_agg"]</expression>
+                                <expression name="expression" type="javascript">'Team : ' + dataSetRow["string_agg"]</expression>
                                 <property name="dataType">string</property>
+                                <property name="allowExport">true</property>
                             </structure>
                         </list-property>
                         <property name="resultSetColumn">string_agg</property>

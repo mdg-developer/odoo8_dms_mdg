@@ -231,6 +231,7 @@ class CommonReportHeaderWebkit(common_report_header):
                 sql_filters.update({'exclude_type': tuple(exclude_type)})
             if only_type:
                 if only_type == ('all',):
+                    print 'wheere>>>',sql_where
                     sql_where += " "
                 else:    
                     sql_where += " AND a.type IN %(only_type)s"
@@ -585,6 +586,7 @@ class CommonReportHeaderWebkit(common_report_header):
             return []
         search = [
             ('period_id', 'in', periods), ('account_id', '=', account_id)]
+        print 'new_analytic_account_ids',new_analytic_account_ids
         if new_analytic_account_ids:
             search = [
                       ('period_id', 'in', periods), ('account_id', '=', account_id),('analytic_account_id', 'in', new_analytic_account_ids)]
@@ -624,6 +626,7 @@ class CommonReportHeaderWebkit(common_report_header):
     def get_move_lines_ids(self, account_id, new_analytic_account_ids, main_filter, start, stop,
                            target_move,branch, mode='include_opening'):
         """Get account move lines base on form data"""
+        print 'get_move_lines_ids',new_analytic_account_ids
         if mode not in ('include_opening', 'exclude_opening'):
             raise osv.except_osv(
                 _('Invalid query mode'),

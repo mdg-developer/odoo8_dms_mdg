@@ -367,6 +367,7 @@ class nov_journal_print(report_sxw.rml_parse):
             select += " AND tax_code_id=%s" % tax_code_id
             
         if len(self.analytic_account_ids) > 0 and len(self.branch_ids) > 0:
+            print '!!!!>>>>',str(tuple(self.analytic_account_ids))
             if len(self.analytic_account_ids) == 1:
                 select += " AND l.analytic_account_id = %s " % self.analytic_account_ids[0]
             else:
@@ -381,6 +382,8 @@ class nov_journal_print(report_sxw.rml_parse):
             else:
                 select += " AND l.analytic_account_id in %s " % str(tuple(self.analytic_account_ids))
         elif len(self.branch_ids) > 0:
+            print 'total branch>>>',tuple(self.branch_ids)
+            print 'total branch1>>>',self.branch_ids[0]
             if len(self.branch_ids) == 1:
                 select += "AND l.branch_id = %s" % self.branch_ids[0]
             else:        

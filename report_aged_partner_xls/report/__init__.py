@@ -20,4 +20,5 @@
 #
 ###############################################################################
 from . import aged_partner_balance_xls
+from . import aged_partner_balance_xls_copy
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

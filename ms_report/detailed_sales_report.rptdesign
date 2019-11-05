@@ -637,7 +637,7 @@ sale_qty as (
 	order by seq),
 total_amt as (
 	select rp.id customer,rp.name customer_name,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ccs.name sales_team,ai.branch_id,0,'Total Amt.'::character varying name_template,0,0,0,
-	round((amount_untaxed)+(amount_tax*1)+(discount_total*1),0) as product_quantity,''::text as status,90001::int as seq
+	round((amount_untaxed)+(discount_total*1),0) as product_quantity,''::text as status,90001::int as seq
 	from account_invoice ai,res_partner rp,res_township rt,crm_case_section ccs
 	where ai.partner_id=rp.id	
 	and rp.township=rt.id	
@@ -657,7 +657,7 @@ total_discount as (
 ),
 net_amt as (
 	select rp.id customer,rp.name customer_name,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ccs.name sales_team,ai.branch_id,0,'Net Amt.'::character varying name_template,0,0,0,
-	round(amount_total,0) as product_quantity,''::text as status,90003::int as seq
+	round(amount_untaxed,0) as product_quantity,''::text as status,90003::int as seq
 	from account_invoice ai,res_partner rp,res_township rt,crm_case_section ccs
 	where ai.partner_id=rp.id
 	and rp.township=rt.id	

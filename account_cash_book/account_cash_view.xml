@@ -48,9 +48,7 @@
 									attrs="{'readonly' : [('journal_entry_id', '!=', False)] }" />
 								<field name="account_id"
 									domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" />
-								<field name="import_file" filename="import_fname" />
-							    <field name="import_fname" invisible="1" class="oe_inline oe_right" />	
-								<field name="analytic_account_id" string="Analytics Account" />
+								<field name="analytic_account_id" string="Analytic Account" />
 								<field name="date" invisible="1" />
 								<field name="name"
 									attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"
@@ -92,8 +90,6 @@
 									attrs="{'readonly' : [('journal_entry_id', '!=', False)] }" />
 								<field name="account_id"
 									domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" />
-								<field name="import_file" filename="import_fname" />
-							    <field name="import_fname" invisible="1" class="oe_inline oe_right" />	
 								<field name="analytic_account_id" string="Analytic Account" />
 								<field name="date" invisible="1" />
 								<field name="name"

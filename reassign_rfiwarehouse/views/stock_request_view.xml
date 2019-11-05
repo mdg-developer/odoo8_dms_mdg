@@ -14,7 +14,7 @@
 					<label for="to_location_id" />
 					<div>
 						<field name="to_location_id" />
-						<button name="reassign_warhouse" string="Reassign Warehouse"
+						<button name="reassign_warhouse" string="Reassign Warehouse" groups="base.group_no_one"
 							type="object" icon="terp-gtk-jump-to-ltr" attrs="{'invisible':[('state','!=','draft')]}"/>
 					</div>
 

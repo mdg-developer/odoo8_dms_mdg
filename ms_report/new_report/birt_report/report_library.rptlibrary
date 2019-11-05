@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <library xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.6.0.v201606072122</property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
     <property name="units">in</property>
     <property name="theme">defaultTheme</property>
     <parameters>
@@ -83,7 +83,7 @@
                 </ex-property>
             </list-property>
             <property name="odaDriverClass">org.postgresql.Driver</property>
-            <property name="odaURL">jdbc:postgresql://localhost:5432/mdg_testing</property>
+            <property name="odaURL">jdbc:postgresql://localhost:5432/mdg_uat</property>
             <property name="odaUser">odoo</property>
             <encrypted-property name="odaPassword" encryptionID="base64">b3BlbnBncHdk</encrypted-property>
             <property name="odaJndiName">java:comp/env/jdbc/ReportDB</property>

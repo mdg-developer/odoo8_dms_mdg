@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.4.1.v201408290142 Build &lt;4.4.1.v20140916-1320></property>
     <list-property name="userProperties">
         <structure>
             <property name="name">Data Cube.Data Set.x</property>
@@ -157,7 +157,7 @@ this.queryText =this.queryText.replace("--$branch_id$", "and g.branch_id in ("+ 
                     <property name="nativeDataType">2</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select cc.name as sale_team ,pp.name_template as product,(((select floor(round(1/factor,2)) as ratio  from product_uom where id =gl.product_uom)*issue_quantity) ) as total_qty 
+            <xml-property name="queryText"><![CDATA[select cc.name as sale_team ,pp.name_template as product,(((select floor(round(1/factor,2)) as ratio  from product_uom where id =gl.big_uom_id)*big_issue_quantity)+issue_quantity ) as total_qty 
 from good_issue_note g,good_issue_note_line gl,product_product pp,crm_case_section cc
 where g.id=gl.line_id
 and pp.id=gl.product_id
