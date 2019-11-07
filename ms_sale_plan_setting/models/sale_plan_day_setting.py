@@ -10,42 +10,42 @@ plan_frequency()
 class sale_plan_for_day_setting(osv.osv):
     _name = 'sale.plan.day.setting'
     
-    def on_change_sale_team_id(self, cr, uid, ids, sale_team_id,township_id, context=None):
-        customer_obj = self.pool.get('res.partner')
-        sale_team_obj = self.pool.get('crm.case.section')        
-        sale_team = sale_team_obj.search(cr, uid, [('id', '=', sale_team_id)], context=context)
-        team_data=sale_team_obj.browse(cr, uid, sale_team, context=context)
-        main_group=team_data.main_group_id
-        branch_id=team_data.branch_id.id
-        print 'dddddddddd',branch_id,main_group
-        values = {}
-        data_line = []
-        if sale_team_id and township_id:            
-            partner_ids = customer_obj.search(cr, uid, [('section_id', '=', sale_team_id),('township', '=', township_id),('mobile_customer','!=',True),('active','=',True)], context=context)
-            if  partner_ids:                
-                for line in partner_ids:
-                    print ' line', line
-                    cr.execute("select date_order::date from sale_order  where partner_id =%s order by id desc", (line,))
-                    last_order = cr.fetchone()
-                    if last_order:
-                        last_order_date = last_order[0]
-                    else:
-                        last_order_date = False
-                    partner = customer_obj.browse(cr, uid, line, context=context)
-                    print 'partner.class_id.id',partner.class_id.id
-                    data_line.append({
-                                        'code':partner.customer_code,
-                                         'class':partner.class_id.id,
-                                         'frequency':partner.frequency_id.id,
-                                         'purchase_date':last_order_date,
-                                        'partner_id': line,
-                                                  })
-            values = {
-                      'main_group':main_group,
-                      'branch_id':branch_id,
-                'plan_line': data_line,
-            }
-        return {'value': values}    
+#     def on_change_sale_team_id(self, cr, uid, ids, sale_team_id,township_id, context=None):
+#         customer_obj = self.pool.get('res.partner')
+#         sale_team_obj = self.pool.get('crm.case.section')        
+#         sale_team = sale_team_obj.search(cr, uid, [('id', '=', sale_team_id)], context=context)
+#         team_data=sale_team_obj.browse(cr, uid, sale_team, context=context)
+#         main_group=team_data.main_group_id
+#         branch_id=team_data.branch_id.id
+#         print 'dddddddddd',branch_id,main_group
+#         values = {}
+#         data_line = []
+#         if sale_team_id and township_id:            
+#             partner_ids = customer_obj.search(cr, uid, [('section_id', '=', sale_team_id),('township', '=', township_id),('mobile_customer','!=',True),('active','=',True)], context=context)
+#             if  partner_ids:                
+#                 for line in partner_ids:
+#                     print ' line', line
+#                     cr.execute("select date_order::date from sale_order  where partner_id =%s order by id desc", (line,))
+#                     last_order = cr.fetchone()
+#                     if last_order:
+#                         last_order_date = last_order[0]
+#                     else:
+#                         last_order_date = False
+#                     partner = customer_obj.browse(cr, uid, line, context=context)
+#                     print 'partner.class_id.id',partner.class_id.id
+#                     data_line.append({
+#                                         'code':partner.customer_code,
+#                                          'class':partner.class_id.id,
+#                                          'frequency':partner.frequency_id.id,
+#                                          'purchase_date':last_order_date,
+#                                         'partner_id': line,
+#                                                   })
+#             values = {
+#                       'main_group':main_group,
+#                       'branch_id':branch_id,
+#                 'plan_line': data_line,
+#             }
+#         return {'value': values}    
     
     def get_partner_count(self, cr, uid, ids, field, arg, context=None):
         
@@ -319,8 +319,8 @@ class sale_plan_for_day_setting(osv.osv):
     
     _columns = {
                 'name': fields.char('Description', required=True),
-                'sale_team_id':fields.many2one('crm.case.section', 'Sale Team', required=True),
-                'township_id':fields.many2one('res.township', 'Township', required=True),
+                'sale_team_id':fields.many2one('crm.case.section', 'Sale Team'),
+                'township_id':fields.many2one('res.township', 'Township'),
                  'date':fields.date('Apply Date', required=True),
                  'start_date':fields.date('W1 Monday'),
                 'state': fields.selection([
@@ -1216,9 +1216,9 @@ class sale_plan_for_day_setting(osv.osv):
             partner_code= plan_line_id.partner_id.customer_code
             cr.execute("update sale_plan_day_setting_line set code =%s where partner_id=%s and id = %s",(partner_code,partner_id,plan_line_id.id,))
             data_line.append(partner_id)
-        sale_team_id=plan.sale_team_id.id
+#         sale_team_id=plan.sale_team_id.id
         township_id=plan.township_id.id
-        partner_ids = customer_obj.search(cr, uid, [('section_id', '=', sale_team_id),('township', '=', township_id),('id','not in',data_line),('mobile_customer','!=',True),('active','=',True)], context=context)
+        partner_ids = customer_obj.search(cr, uid, [('township', '=', township_id),('id','not in',data_line),('mobile_customer','!=',True),('active','=',True)], context=context)
         if  partner_ids:
                 count=len(partner_ids)                
                 for line in partner_ids:
