@@ -642,7 +642,7 @@ class account_invoice(models.Model):
                 return res    
             
     def line_get_convert_dr(self, line, part, date, tax_value, tax_amount_currency):
-        account_id = property_account_payable = property_account_payable_clearing = None
+        account_id = property_account_payable = property_account_payable_clearing = payment_type = None
         cr = self._cr
         type = 'out_invoice' 
         discount_amt = 0
