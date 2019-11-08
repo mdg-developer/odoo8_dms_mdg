@@ -351,7 +351,7 @@ class account_invoice(models.Model):
                     'analytic_account_id': line.get('account_analytic_id', False),
                 }
     def line_get_convert_purchase_invoice_new(self, line, part, date):
-        account_id = property_account_payable = property_account_payable_clearing = None
+        account_id = property_account_payable = property_account_payable_clearing = payment_type = None
         cr = self._cr
         type = 'out_invoice' 
         print 'line_get_convert_newline_get_convert_new', line, part
