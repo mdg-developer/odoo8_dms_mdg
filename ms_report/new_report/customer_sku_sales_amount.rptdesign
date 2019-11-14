@@ -381,15 +381,15 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                 </list-property>
             </structure>
             <method name="beforeOpen"><![CDATA[this.queryText =this.queryText.replace("--$sales_team_all$", "and ccs.id in ("+ params["sales_team_id"].value.join(",")+")")
-this.queryText =this.queryText.replace("--$sales_team$", "and section_id in ("+ params["sales_team_id"].value.join(",")+")")
-this.queryText =this.queryText.replace("--$branch_id$", "and branch_id in ("+ params["branch_id"].value.join(",")+")")
+this.queryText =this.queryText.replace("--$sales_team$", "and ai.section_id in ("+ params["sales_team_id"].value.join(",")+")")
+this.queryText =this.queryText.replace("--$branch_id$", "and ai.branch_id in ("+ params["branch_id"].value.join(",")+")")
 if (params["township_id"].value[0] == 'ALL')
 {  
 	this.queryText =this.queryText.replace("--$township_id$", "")   
 }
 else
 {     
-   this.queryText =this.queryText.replace("--$township_id$", "and township_id in ("+ params["township_id"].value.join(",")+")")
+   this.queryText =this.queryText.replace("--$township_id$", "and rt.id in ("+ params["township_id"].value.join(",")+")")
 }
 if (params["outlettype_id"].value[0] == 'ALL')
 {  
@@ -397,7 +397,7 @@ if (params["outlettype_id"].value[0] == 'ALL')
 }
 else
 {
-	this.queryText =this.queryText.replace("--$outlettype_id$", "and outlettype_id in ('"+ params["outlettype_id"].value.join("','")+"')");
+	this.queryText =this.queryText.replace("--$outlettype_id$", "and oo.id in ('"+ params["outlettype_id"].value.join("','")+"')");
 }
 if (params["status"].value == 'non_foc' )
 {     
@@ -527,6 +527,8 @@ all_product as (
 	inner join res_township  rt on rt.id=rp.township
 	where pt.type !='service'
 	and pp.active=true
+	and rp.active=true
+	and rp.customer=true
 	--$sales_team_all$
 ),
 sale_qty as (
@@ -544,6 +546,12 @@ sale_qty as (
 	and oo.id=rp.outlet_type
 	and date_invoice between ? and ?
 	and pt.type !='service'
+	and customer=true
+	and rp.active=true
+	--$sales_team$
+	--$branch_id$
+	--$township_id$
+	--$outlettype_id$
 	--$status$
 	group by rp.id,rp.name,customer_code,oo.name,oo.id,rt.code,rt.id,ccs.name,ai.section_id,ai.branch_id,name_template,pp.sequence,ail.uos_id,pt.uom_id,big_uom_id
 	order by seq),
@@ -558,6 +566,12 @@ total_amt as (
 	and ai.section_id=ccs.id
 	and ai.id=ail.invoice_id
 	and date_invoice between ? and ?
+	and customer=true
+	and rp.active=true
+	--$sales_team$
+	--$branch_id$
+	--$township_id$
+	--$outlettype_id$
 	group by rp.id,rp.name,customer_code,oo.name,oo.id,rt.code,rt.id,ccs.name,ai.section_id,ai.branch_id
 	order by rp.name
 ),
@@ -572,6 +586,12 @@ total_discount as (
 	and ai.section_id=ccs.id
 	and ai.id=ail.invoice_id
 	and date_invoice between ? and ?
+	and customer=true
+	and rp.active=true
+	--$sales_team$
+	--$branch_id$
+	--$township_id$
+	--$outlettype_id$
 	group by rp.id,rp.name,customer_code,oo.name,oo.id,rt.code,rt.id,ccs.name,ai.section_id,ai.branch_id
 	order by rp.name
 ),
@@ -586,6 +606,12 @@ net_amt as (
 	and ai.section_id=ccs.id
 	and ai.id=ail.invoice_id
 	and date_invoice between ? and ?
+	and customer=true
+	and rp.active=true
+	--$sales_team$
+	--$branch_id$
+	--$township_id$
+	--$outlettype_id$
 	group by rp.id,rp.name,customer_code,oo.name,oo.id,rt.code,rt.id,ccs.name,ai.section_id,ai.branch_id
 	order by rp.name
 ),
@@ -610,10 +636,6 @@ result as (
 select *
 from result
 where 1=1
---$sales_team$
---$branch_id$
---$township_id$
---$outlettype_id$
 order by seq]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
