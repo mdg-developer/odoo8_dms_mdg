@@ -529,7 +529,7 @@ class PromotionsRules(osv.Model):
                         cat_value = cat_value1.strip() 
                         
                         if category_name == cat_value:
-                            totalValue += order_line.net_total
+                            totalValue = order_line.net_total
                 x=totalValue;
                 y=subtotal;
                 if comparator == '==':
@@ -1703,19 +1703,39 @@ class PromotionsRulesActions(osv.Model):
         order_obj = self.pool.get('sale.order')
         order_line_obj = self.pool.get('sale.order.line')
         discount_amt = 0.0
+        cursor.execute("select pt.uom_id from product_template pt,promos_rules pr where pt.main_group=pr.main_group and pt.type='service'")
+        uom_id = cursor.fetchone()
         for order_line in order.order_line:
             if order_line.product_id.default_code == eval(action.product_code):
                 orderline_ids.append(order_line.id)
                 # MMK I'm just fix a little missing codeI'm just fix a little missing code
                 discount_amt = float(eval(action.arguments)) * (float(order_line.price_unit * order_line.product_uom_qty)) / 100
-                order_line_obj.write(cursor,
-                                     user,
-                                    order_line.id,
-                                     {
-                                      'discount':eval(action.arguments), 'discount_amt':discount_amt
-                                      },
-                                     context
-                                     )
+                order_line_obj.create(cursor,
+                                  user,
+                                  {
+                      'order_id':order.id,
+                      'name':action.promotion.name,
+                      'price_unit':-(discount_amt),
+                      'price_subtotal':-(discount_amt),
+                      'net_total':-(discount_amt),
+                      'product_uom_qty':1,
+                      'promotion_line':True,
+                      'product_uom':uom_id,
+                      'promotion_id':action.promotion.id,
+                                  },
+                                  context
+                                  )
+                               
+#                 order_line_obj.write(cursor,
+#                                      user,
+#                                     order_line.id,
+#                                      {
+#                                       'discount':eval(action.arguments), 
+#                                       'discount_amt':discount_amt,
+#                                       },
+#                                      context
+#                                      )
+
         order_obj.button_dummy(cursor, user, [order.id], context)
         return True
     
@@ -1885,7 +1905,8 @@ class PromotionsRulesActions(osv.Model):
                                   'price_unit':0.00, 'promotion_line':True,
                                   'product_uom_qty':quantity,
                                   'sale_foc':True,
-                                  'product_uom':product_y.uom_id.id
+                                  'product_uom':product_y.uom_id.id,
+                                  'promotion_id':action.promotion.id
                                   }, context)
     
     def create_x_line(self, cursor, user, action,
@@ -1913,7 +1934,9 @@ class PromotionsRulesActions(osv.Model):
                               'price_unit':0.00, 'promotion_line':True,
                               'sale_foc':True,  # sale_foc_discount
                               'product_uom_qty':quantity,
-                              'product_uom':product_x.uom_id.id
+                              'product_uom':product_x.uom_id.id,
+                              'promotion_id':action.promotion.id
+                               
                               }, context)
      
     # MMK I'm just fix a little missing code
