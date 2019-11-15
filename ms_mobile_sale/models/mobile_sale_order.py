@@ -1,5 +1,6 @@
 from openerp.osv import fields, osv
 from openerp.osv import orm
+from openerp import api
 from datetime import datetime, timedelta
 from openerp.tools.translate import _
 import ast
@@ -65,7 +66,7 @@ class mobile_sale_order(osv.osv):
         'sale_plan_name':fields.char('Sale Plan Name'),
         'mso_latitude':fields.float('Geo Latitude'),
         'mso_longitude':fields.float('Geo Longitude'),
-        'amount_total':fields.float('Total Amount'),
+        'amount_total':fields.float('Total Amount',compute='_compute_paid_amount'),
         'type':fields.selection([
                 ('credit', 'Credit'),
                 ('cash', 'Cash'),
@@ -79,11 +80,11 @@ class mobile_sale_order(osv.osv):
             ], 'Deliver Remark'),
         'additional_discount':fields.float('Discount'),
         'deduction_amount':fields.float('Deduction Amount'),
-        'net_amount':fields.float('Net Amount'),
+        'net_amount':fields.float('Net Amount',compute='_compute_paid_amount'),
         'change_amount':fields.float('Change Amount'),
         'remaining_amount':fields.float('Remaining Amount'),
         'balance':fields.float('Balance'),
-        'paid_amount':fields.float('Paid Amount'),
+        'paid_amount':fields.float('Paid Amount',compute='_compute_paid_amount'),
         'paid':fields.boolean('Paid'),
         'void_flag':fields.selection([
                 ('voided', 'Voided'),
@@ -121,8 +122,18 @@ class mobile_sale_order(osv.osv):
         'm_status' : 'draft',
         'is_convert':False,
        
-    } 
+    }
     
+    @api.multi
+    @api.depends('order_line.sub_total') 
+    def _compute_paid_amount(self):
+        for record in self:
+            record.paid_amount = sum(line.sub_total for line in record.order_line)
+            record.amount_total = sum(line.sub_total for line in record.order_line)
+            record.net_amount = sum(line.sub_total for line in record.order_line)
+            
+            
+
     def create_massive(self, cursor, user, vals, context=None):
         print 'vals', vals
         sale_order_name_list = []
@@ -1197,12 +1208,14 @@ class mobile_sale_order(osv.osv):
         print 'Sale Order ID', ids  
         sale_obj = self.pool.get('sale.order')
         sale_ids = ids
+        print 'sale_ids',sale_ids
         if sale_ids:
             # create the final invoices of the active sales orders
             print 'YOOOOOOOOOOOOO', sale_ids
             try:
                 print 'Create Invoice Context', context
-                res = sale_obj.manual_invoice(cr, uid, sale_ids, context=context)          
+                res = sale_obj.manual_invoice(cr, uid, sale_ids, context=context)    
+                print 'res',res      
                 return res['res_id']
             except Exception, e:
                 return False
