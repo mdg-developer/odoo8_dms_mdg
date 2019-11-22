@@ -81,6 +81,26 @@ class pre_sale_order(osv.osv):
        
     }
     
+    def get_invoice_status(self, cr, uid , sale_order_id, context=None, **kwargs):
+        cr.execute('''
+                    select inv.state
+                    from sale_order so,account_invoice inv
+                    where so.name=inv.origin
+                    and so.id=%s
+            ''',(sale_order_id.id,))
+        datas = cr.fetchall()
+        return datas
+    
+    def get_delivery_status(self, cr, uid , sale_order_id, context=None, **kwargs):
+        cr.execute('''
+                    select sp.state
+                    from sale_order so,stock_picking sp
+                    where so.name=sp.origin
+                    and so.id=%s
+            ''',(sale_order_id.id,))
+        datas = cr.fetchall()
+        return datas
+    
     def create_presaleorder(self, cursor, user, vals, context=None):
         print 'vals', vals
 
