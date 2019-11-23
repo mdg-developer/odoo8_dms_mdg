@@ -79,27 +79,7 @@ class pre_sale_order(osv.osv):
         'm_status' : 'draft',
         'is_convert':False,
        
-    }
-    
-    def get_invoice_status(self, cr, uid , tb_ref_no, context=None, **kwargs):
-        cr.execute('''
-                    select inv.state
-                    from sale_order so,account_invoice inv
-                    where so.name=inv.origin
-                    and so.tb_ref_no=%s
-            ''',(tb_ref_no,))
-        datas = cr.fetchall()
-        return datas
-    
-    def get_delivery_status(self, cr, uid , tb_ref_no, context=None, **kwargs):
-        cr.execute('''
-                    select sp.state
-                    from sale_order so,stock_picking sp
-                    where so.name=sp.origin
-                    and so.tb_ref_no=%s
-            ''',(tb_ref_no,))
-        datas = cr.fetchall()
-        return datas
+    }        
     
     def create_presaleorder(self, cursor, user, vals, context=None):
         print 'vals', vals
