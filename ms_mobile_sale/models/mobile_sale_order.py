@@ -124,6 +124,19 @@ class mobile_sale_order(osv.osv):
        
     }
     
+    def get_saleorder_status(self, cr, uid, sale_team_id , context=None, **kwargs):
+        cr.execute('''
+                    select inv.state as invoice_status,sp.state as delivery_status,so.tb_ref_no as mobile_no
+                    from sale_order so,account_invoice inv,stock_picking sp
+                    where so.name=inv.origin
+                    and so.name=sp.origin
+                    and so.pre_order =True
+                    and so.state !='cancel'
+                    and so.section_id=%s
+                             ''', (sale_team_id,))
+        datas = cr.fetchall()
+        return datas
+    
     @api.multi
     @api.depends('order_line.sub_total') 
     def _compute_paid_amount(self):
