@@ -47,11 +47,11 @@ COMPARATORS = [
 ACTION_TYPES = [
     ('prod_disc_perc', _('Discount % on Product')),
     ('prod_disc_fix', _('Fixed amount on Product')),
-    
   #  ('cart_disc_perc', _('Discount % on Sub Total')),
     ('cart_disc_fix', _('Fixed amount on Sub Total')),
     ('qty_disc_fix', _('Fixed amount on Qty')),
     
+    ('any_product_qty_disc_fix', _('Fixed amount on Any Product Qty')),
     ('disc_perc_on_grand_total', _('Discount % on Grand Total')),
     ('fix_amt_on_grand_total', _('Fix Amount on Grand Total')),
     ('discount_on_categ', _('Discount % on Product Category')),
@@ -1609,6 +1609,13 @@ class PromotionsRulesActions(osv.Model):
                               'arguments':"0.00",
                               }
                    }    
+        if action_type in ['any_product_qty_disc_fix']:
+            return{
+                   'value' : {
+                              'product_code':"'product_code_x1':'product_code_x2':'product_code_x3'",
+                              'arguments':"0.00|0.00",
+                              }
+                   }             
             
         if action_type in ['foc_any_prod_fix', ] :
             return{

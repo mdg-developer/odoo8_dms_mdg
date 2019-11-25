@@ -180,6 +180,9 @@
 										<t t-if="l.foc==True">
 											(FOC)
 										</t>
+										<t t-if="l.promotion_id">
+										(<span t-field="l.promotion_id.description"/>)
+										</t>
 									</td>
 									<td style="border:1pt solid;border-color:black;" align="right">
 										<span t-field="l.quantity"/>

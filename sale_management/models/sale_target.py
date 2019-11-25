@@ -176,7 +176,7 @@ class sale_target_line(osv.osv):
                 'sequence':fields.integer('Sequence'),
                 'product_id':fields.many2one('product.product', 'Product SKU', required=True),
                 'product_uom':fields.many2one('product.uom', 'UoM', readonly=True),
-                'product_uom_qty':fields.integer('QTY', required=True),
+                'product_uom_qty':fields.float('QTY', required=True),
                  'price_unit': fields.float('Unit Price', required=True, readonly=True, digits_compute=dp.get_precision('Product Price')),
                 'price_subtotal': fields.function(_amount_line, string='Amount', digits_compute=dp.get_precision('Product Price'), type='float',),
                 'distribution_price': fields.integer('Distribution'),

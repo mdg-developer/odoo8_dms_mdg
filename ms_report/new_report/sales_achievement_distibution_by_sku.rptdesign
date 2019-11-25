@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.6.0.v201606072122</property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
     <property name="units">in</property>
     <method name="initialize"><![CDATA[branchList = params["branch_id"].value.join(",");
 teamList = params["sales_team_id"].value.join(",");]]></method>
@@ -75,6 +75,7 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     <property name="columnName">quantity</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">quantity</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">quantity</text-property>
                 </structure>
                 <structure>
@@ -88,24 +89,28 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     <property name="columnName">target_qty</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">target_qty</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">target_qty</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">avil_count</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">avil_count</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">avil_count</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">target_qty_count</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">target_qty_count</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">target_qty_count</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">dis_qty_count</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">dis_qty_count</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">dis_qty_count</text-property>
                 </structure>
                 <structure>
@@ -119,12 +124,14 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     <property name="columnName">distribution_target</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">distribution_target</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">distribution_target</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">dis_ach</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">dis_ach</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">dis_ach</text-property>
                 </structure>
                 <structure>
@@ -138,18 +145,21 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     <property name="columnName">dis_percent</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">dis_percent</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">dis_percent</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">date_rate</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">date_rate</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">date_rate</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">product_color</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">product_color</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">product_color</text-property>
                 </structure>
             </list-property>
@@ -442,10 +452,11 @@ target as (
 select * ,case when percent_target_value <= dis_percent_value then percent_target_value  else  dis_percent_value  end as product_color  from (
 select row_number() over (order by ach.pseq) as seq,ach.name_template,quantity,ach_amt as ach_amt,target.target_qty,target.avil_count,case when target_qty >0 then 1  else  0  end as target_qty_count,case when distribution_price >0 then 1  else  0  end as dis_qty_count,
 0 as target_amt,target.distribution_price as distribution_target,count::int as dis_ach,
-case when target_qty >0 then concat(round((  CASE WHEN (quantity*100)/sum(target_qty)>120 THEN 120 ELSE (quantity*100)/sum(target_qty) END),0),'%') else concat(0,'%') end as percent_target,
+case when target_qty >0 then concat(round(( CASE WHEN (quantity*100)/sum(target_qty)>120 THEN 120 ELSE (quantity*100)/sum(target_qty) END)::numeric,0),'%') else concat(0,'%') end as percent_target,
 case when distribution_price >0 then concat(round((CASE WHEN (count*100)/sum(target.distribution_price)>120 THEN 120 ELSE (count*100)/sum(target.distribution_price) END),0),'%') else concat(0,'%') end as dis_percent,
-case when target_qty >0 then round((  CASE WHEN (quantity*100)/sum(target_qty)>120 THEN 120 ELSE (quantity*100)/sum(target_qty) END),0) else 0 end as percent_target_value,
-case when distribution_price >0 then round((CASE WHEN (count*100)/sum(target.distribution_price)>120 THEN 120 ELSE (count*100)/sum(target.distribution_price) END),0) else 0 end as dis_percent_value,
+case when target_qty >0 then round((  CASE WHEN (quantity*100)/sum(target_qty)>120 THEN 120 ELSE (quantity*100)/sum(target_qty) END)::numeric,0) else 0 end as percent_target_value,
+case when distribution_price >0 then round((CASE WHEN (count*100)/sum(target.distribution_price)>120 THEN 120 ELSE (count*100)/sum(target.distribution_price) END),0) else 0 end as dis_percent_value
+,
 ((EXTRACT(DAY FROM TIMESTAMP --$date$
 )::float / (DATE_PART('days', DATE_TRUNC('month',TIMESTAMP --$date$
 ) + '1 MONTH'::INTERVAL - '1 DAY'::INTERVAL))::float)*100) as date_rate

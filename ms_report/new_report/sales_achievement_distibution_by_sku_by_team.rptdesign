@@ -399,7 +399,7 @@ and uid=?
                     <structure>
                         <property name="position">4</property>
                         <property name="name">quantity</property>
-                        <property name="dataType">decimal</property>
+                        <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">5</property>
@@ -461,8 +461,8 @@ this.queryText =this.queryText.replace("--$sales_team_check$", "and sale_team_id
                     <property name="position">4</property>
                     <property name="name">quantity</property>
                     <property name="nativeName">quantity</property>
-                    <property name="dataType">decimal</property>
-                    <property name="nativeDataType">2</property>
+                    <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">5</property>
@@ -570,7 +570,7 @@ ach_amt as (
 ),
 percent_target as (
 	select tq.name_template,sale_team_id,tq.sales_team,
-	case when tq.quantity >0 then COALESCE(round((CASE WHEN (aq.quantity*100)/sum(tq.quantity)>120 THEN 120 ELSE (aq.quantity*100)/sum(tq.quantity) END),0),0)
+	case when tq.quantity >0 then COALESCE(round((CASE WHEN (aq.quantity*100)/sum(tq.quantity)>120 THEN 120 ELSE (aq.quantity*100)/sum(tq.quantity) END)::numeric,0),0)
 	else 0 end as percent_target,	
 	tq.product_id,tq.branch_id,'Sales'::character varying status,
 	'Ach %'::character varying balance,5 seq					   
