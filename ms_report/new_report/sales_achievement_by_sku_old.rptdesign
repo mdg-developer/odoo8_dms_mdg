@@ -342,7 +342,8 @@ this.queryText =this.queryText.replace("--$branch_id$", "and branch_id in ("+ pa
             <xml-property name="queryText"><![CDATA[with sale_record as (
 	select name_template,section_id,pp.sequence as pseq,
 	case when ail.uos_id=pt.uom_id then quantity when ail.uos_id!=pt.uom_id then quantity*(select floor(round(1/factor,2)) from product_uom where id=ail.uos_id) end as quantity,
-	(price_subtotal+discount_amt)::numeric as ach_amt,date_part('month',date_invoice)::int as month,date_part('year',date_invoice)::int as year,product_id,branch_id
+	case when ail.uos_id=pt.uom_id then quantity*list_price when ail.uos_id!=pt.uom_id then quantity*(select floor(round(1/factor,2)) from product_uom where id=ail.uos_id)*list_price end as ach_amt,
+	date_part('month',date_invoice)::int as month,date_part('year',date_invoice)::int as year,product_id,branch_id
 	from account_invoice ai,account_invoice_line ail,product_product pp,product_template pt
 	where ai.id=ail.invoice_id
 	and ail.product_id=pp.id
