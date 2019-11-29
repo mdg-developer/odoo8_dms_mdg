@@ -117,6 +117,16 @@
 							<page string="Customers">
 								<field name="customer_ids" nolabel="1" />
 							</page>
+							<page string="Optional Promotion" name="optional_promotion">
+								<field name="promotion_ids" nolabel="1">
+									<tree editable="bottom" string="Promotions">
+										<field name="product_id"/>
+										<field name="condition"/>
+										<field name="amount"/>
+										<field name="quantity"/>
+									</tree>
+									</field>
+							</page>
 <!-- 							<page string="Description"> -->
 <!-- 								<group col="4" colspan="4"> -->
 <!-- 									<field name="description" colspan="4" nolabel="1" -->
