@@ -208,6 +208,8 @@ class branch_good_issue_note(osv.osv):
                         _('Please Check Your CBM and Viss Value.It is Over!')
                     )         
         return self.write(cr, uid, ids, {'state': 'approve', 'approve_by':uid})
+    def cancel(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state': 'cancel'})
        
     def update_status_to_rfi(self, cr, uid, ids, context=None):
         requisition_obj = self.pool.get('branch.stock.requisition')
