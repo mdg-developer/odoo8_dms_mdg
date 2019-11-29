@@ -51,7 +51,7 @@ ACTION_TYPES = [
     ('cart_disc_fix', _('Fixed amount on Sub Total')),
     ('qty_disc_fix', _('Fixed amount on Qty')),
     
-    ('any_product_qty_disc_fix', _('Fixed amount on Any Product Qty')),
+    ('any_product_qty_disc_fix', _('Multiple Fixed amount on Any Product Qty')),
     ('disc_perc_on_grand_total', _('Discount % on Grand Total')),
     ('fix_amt_on_grand_total', _('Fix Amount on Grand Total')),
     ('discount_on_categ', _('Discount % on Product Category')),

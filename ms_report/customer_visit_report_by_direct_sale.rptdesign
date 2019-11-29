@@ -41,6 +41,34 @@ teamList = params["sale_team_id"].value.join(",");]]></method>
         </structure>
     </list-property>
     <parameters>
+        <scalar-parameter name="from_date" id="954">
+            <text-property name="promptText">From Date</text-property>
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">date</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="to_date" id="955">
+            <text-property name="promptText">To Date</text-property>
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">date</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
         <scalar-parameter name="branch_id" id="8">
             <text-property name="promptText">Branch</text-property>
             <property name="valueType">dynamic</property>
@@ -81,34 +109,6 @@ teamList = params["sale_team_id"].value.join(",");]]></method>
             <property name="valueType">static</property>
             <property name="isRequired">true</property>
             <property name="dataType">integer</property>
-            <property name="distinct">true</property>
-            <list-property name="selectionList"/>
-            <property name="paramType">simple</property>
-            <property name="concealValue">false</property>
-            <property name="controlType">text-box</property>
-            <structure name="format">
-                <property name="category">Unformatted</property>
-            </structure>
-        </scalar-parameter>
-        <scalar-parameter name="from_date" id="954">
-            <text-property name="promptText">From Date</text-property>
-            <property name="valueType">static</property>
-            <property name="isRequired">true</property>
-            <property name="dataType">date</property>
-            <property name="distinct">true</property>
-            <list-property name="selectionList"/>
-            <property name="paramType">simple</property>
-            <property name="concealValue">false</property>
-            <property name="controlType">text-box</property>
-            <structure name="format">
-                <property name="category">Unformatted</property>
-            </structure>
-        </scalar-parameter>
-        <scalar-parameter name="to_date" id="955">
-            <text-property name="promptText">To Date</text-property>
-            <property name="valueType">static</property>
-            <property name="isRequired">true</property>
-            <property name="dataType">date</property>
             <property name="distinct">true</property>
             <list-property name="selectionList"/>
             <property name="paramType">simple</property>
@@ -1451,16 +1451,17 @@ else
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[with total_effective as(
-	select count(*) total_effective from account_invoice ai 
+	select count(distinct ai.partner_id) total_effective from account_invoice ai 
 	where ai.state!='cancel'
 	and ai.date_invoice between ? and ?
 	--$sales_team_inv$
 	--$branch_id_inv$
 ),total_visit as(
-	select count(*) as total_visit from customer_visit cv where
+	select count(distinct cv.customer_id) as total_visit from customer_visit cv where
 	((cv.date at time zone 'utc') at time zone 'asia/rangoon')::date between ? and ?
 	--$sales_team$
 	--$branch_id$
+	
 )
 select *, case when total_visit > 0 then (total_effective/total_visit::float)*100 end as achi from total_effective te,total_visit tv]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
@@ -2072,15 +2073,6 @@ select *, case when total_visit > 0 then (total_effective/total_visit::float)*10
                             <property name="fontWeight">bold</property>
                             <text-property name="text">No</text-property>
                         </label>
-                        <text id="1088">
-                            <property name="fontWeight">bold</property>
-                            <property name="borderBottomStyle">none</property>
-                            <property name="borderLeftStyle">none</property>
-                            <property name="borderRightStyle">none</property>
-                            <property name="borderTopStyle">none</property>
-                            <property name="contentType">auto</property>
-                            <text-property name="content"><![CDATA[No]]></text-property>
-                        </text>
                     </cell>
                     <cell id="22">
                         <property name="borderBottomStyle">solid</property>
@@ -2095,15 +2087,6 @@ select *, case when total_visit > 0 then (total_effective/total_visit::float)*10
                             <property name="fontWeight">bold</property>
                             <text-property name="text">Date</text-property>
                         </label>
-                        <text id="104">
-                            <property name="fontWeight">bold</property>
-                            <property name="borderBottomStyle">none</property>
-                            <property name="borderLeftStyle">none</property>
-                            <property name="borderRightStyle">none</property>
-                            <property name="borderTopStyle">none</property>
-                            <property name="contentType">auto</property>
-                            <text-property name="content"><![CDATA[Date]]></text-property>
-                        </text>
                     </cell>
                     <cell id="123">
                         <property name="borderBottomStyle">solid</property>
@@ -2118,15 +2101,6 @@ select *, case when total_visit > 0 then (total_effective/total_visit::float)*10
                             <property name="fontWeight">bold</property>
                             <text-property name="text">Time</text-property>
                         </label>
-                        <text id="127">
-                            <property name="fontWeight">bold</property>
-                            <property name="borderBottomStyle">none</property>
-                            <property name="borderLeftStyle">none</property>
-                            <property name="borderRightStyle">none</property>
-                            <property name="borderTopStyle">none</property>
-                            <property name="contentType">auto</property>
-                            <text-property name="content"><![CDATA[Time]]></text-property>
-                        </text>
                     </cell>
                     <cell id="128">
                         <property name="borderBottomStyle">solid</property>
@@ -2141,15 +2115,6 @@ select *, case when total_visit > 0 then (total_effective/total_visit::float)*10
                             <property name="fontWeight">bold</property>
                             <text-property name="text">Customer</text-property>
                         </label>
-                        <text id="132">
-                            <property name="fontWeight">bold</property>
-                            <property name="borderBottomStyle">none</property>
-                            <property name="borderLeftStyle">none</property>
-                            <property name="borderRightStyle">none</property>
-                            <property name="borderTopStyle">none</property>
-                            <property name="contentType">auto</property>
-                            <text-property name="content"><![CDATA[Customer]]></text-property>
-                        </text>
                     </cell>
                     <cell id="24">
                         <property name="borderBottomStyle">solid</property>
@@ -2164,15 +2129,6 @@ select *, case when total_visit > 0 then (total_effective/total_visit::float)*10
                             <property name="fontWeight">bold</property>
                             <text-property name="text">Township</text-property>
                         </label>
-                        <text id="107">
-                            <property name="fontWeight">bold</property>
-                            <property name="borderBottomStyle">none</property>
-                            <property name="borderLeftStyle">none</property>
-                            <property name="borderRightStyle">none</property>
-                            <property name="borderTopStyle">none</property>
-                            <property name="contentType">auto</property>
-                            <text-property name="content"><![CDATA[Township]]></text-property>
-                        </text>
                     </cell>
                     <cell id="25">
                         <property name="borderBottomStyle">solid</property>
@@ -2187,15 +2143,6 @@ select *, case when total_visit > 0 then (total_effective/total_visit::float)*10
                             <property name="fontWeight">bold</property>
                             <text-property name="text">Sale  Team</text-property>
                         </label>
-                        <text id="108">
-                            <property name="fontWeight">bold</property>
-                            <property name="borderBottomStyle">none</property>
-                            <property name="borderLeftStyle">none</property>
-                            <property name="borderRightStyle">none</property>
-                            <property name="borderTopStyle">none</property>
-                            <property name="contentType">auto</property>
-                            <text-property name="content"><![CDATA[Sale Team]]></text-property>
-                        </text>
                     </cell>
                     <cell id="26">
                         <property name="borderBottomStyle">solid</property>
@@ -2210,15 +2157,6 @@ select *, case when total_visit > 0 then (total_effective/total_visit::float)*10
                             <property name="fontWeight">bold</property>
                             <text-property name="text">Sale Plan Day</text-property>
                         </label>
-                        <text id="109">
-                            <property name="fontWeight">bold</property>
-                            <property name="borderBottomStyle">none</property>
-                            <property name="borderLeftStyle">none</property>
-                            <property name="borderRightStyle">none</property>
-                            <property name="borderTopStyle">none</property>
-                            <property name="contentType">auto</property>
-                            <text-property name="content"><![CDATA[Sale Plan Day]]></text-property>
-                        </text>
                     </cell>
                     <cell id="27">
                         <property name="borderBottomStyle">solid</property>
@@ -2233,15 +2171,6 @@ select *, case when total_visit > 0 then (total_effective/total_visit::float)*10
                             <property name="fontWeight">bold</property>
                             <text-property name="text">Tablet ID</text-property>
                         </label>
-                        <text id="110">
-                            <property name="fontWeight">bold</property>
-                            <property name="borderBottomStyle">none</property>
-                            <property name="borderLeftStyle">none</property>
-                            <property name="borderRightStyle">none</property>
-                            <property name="borderTopStyle">none</property>
-                            <property name="contentType">auto</property>
-                            <text-property name="content"><![CDATA[Tablet ID]]></text-property>
-                        </text>
                     </cell>
                     <cell id="28">
                         <property name="borderBottomStyle">solid</property>
@@ -2256,15 +2185,6 @@ select *, case when total_visit > 0 then (total_effective/total_visit::float)*10
                             <property name="fontWeight">bold</property>
                             <text-property name="text">Reason</text-property>
                         </label>
-                        <text id="111">
-                            <property name="fontWeight">bold</property>
-                            <property name="borderBottomStyle">none</property>
-                            <property name="borderLeftStyle">none</property>
-                            <property name="borderRightStyle">none</property>
-                            <property name="borderTopStyle">none</property>
-                            <property name="contentType">auto</property>
-                            <text-property name="content"><![CDATA[Reason]]></text-property>
-                        </text>
                     </cell>
                     <cell id="29">
                         <property name="borderBottomStyle">solid</property>
@@ -2279,15 +2199,6 @@ select *, case when total_visit > 0 then (total_effective/total_visit::float)*10
                             <property name="fontWeight">bold</property>
                             <text-property name="text">Far</text-property>
                         </label>
-                        <text id="112">
-                            <property name="fontWeight">bold</property>
-                            <property name="borderBottomStyle">none</property>
-                            <property name="borderLeftStyle">none</property>
-                            <property name="borderRightStyle">none</property>
-                            <property name="borderTopStyle">none</property>
-                            <property name="contentType">auto</property>
-                            <text-property name="content"><![CDATA[Far]]></text-property>
-                        </text>
                     </cell>
                     <cell id="30">
                         <property name="borderBottomStyle">solid</property>
@@ -2302,15 +2213,6 @@ select *, case when total_visit > 0 then (total_effective/total_visit::float)*10
                             <property name="fontWeight">bold</property>
                             <text-property name="text">Time Diff:</text-property>
                         </label>
-                        <text id="113">
-                            <property name="fontWeight">bold</property>
-                            <property name="borderBottomStyle">none</property>
-                            <property name="borderLeftStyle">none</property>
-                            <property name="borderRightStyle">none</property>
-                            <property name="borderTopStyle">none</property>
-                            <property name="contentType">auto</property>
-                            <text-property name="content"><![CDATA[Time Diff:]]></text-property>
-                        </text>
                     </cell>
                     <cell id="31">
                         <property name="borderBottomStyle">solid</property>
@@ -2325,15 +2227,6 @@ select *, case when total_visit > 0 then (total_effective/total_visit::float)*10
                             <property name="fontWeight">bold</property>
                             <text-property name="text">Image</text-property>
                         </label>
-                        <text id="114">
-                            <property name="fontWeight">bold</property>
-                            <property name="borderBottomStyle">none</property>
-                            <property name="borderLeftStyle">none</property>
-                            <property name="borderRightStyle">none</property>
-                            <property name="borderTopStyle">none</property>
-                            <property name="contentType">auto</property>
-                            <text-property name="content"><![CDATA[Image]]></text-property>
-                        </text>
                     </cell>
                     <cell id="32">
                         <property name="borderBottomStyle">solid</property>
@@ -2348,15 +2241,6 @@ select *, case when total_visit > 0 then (total_effective/total_visit::float)*10
                             <property name="fontWeight">bold</property>
                             <text-property name="text">Remark</text-property>
                         </label>
-                        <text id="115">
-                            <property name="fontWeight">bold</property>
-                            <property name="borderBottomStyle">none</property>
-                            <property name="borderLeftStyle">none</property>
-                            <property name="borderRightStyle">none</property>
-                            <property name="borderTopStyle">none</property>
-                            <property name="contentType">auto</property>
-                            <text-property name="content"><![CDATA[Remark]]></text-property>
-                        </text>
                     </cell>
                 </row>
             </header>

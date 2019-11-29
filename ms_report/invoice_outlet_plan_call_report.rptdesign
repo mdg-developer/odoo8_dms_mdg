@@ -220,12 +220,12 @@ this.queryText =this.queryText.replace("--$branch_id$", "and branch_id in ("+ pa
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[with customer_visit as (
-select cv.sale_team_id,cv.branch_id,count(cv.customer_id) visit_count from customer_visit cv
+select cv.sale_team_id,cv.branch_id,count(distinct cv.customer_id) visit_count from customer_visit cv
 where ((cv.date at time zone 'utc' ) at time zone 'asia/rangoon')::date between ? and ?
 group by cv.sale_team_id,cv.branch_id
 ),
 effective as (
-select inv.section_id,inv.branch_id,ccs.name team,count(inv.partner_id) eff_count from account_invoice inv,crm_case_section ccs
+select inv.section_id,inv.branch_id,ccs.name team,count(distinct inv.partner_id) eff_count from account_invoice inv,crm_case_section ccs
 where inv.section_id=ccs.id
 and date_invoice between ? and ?
 and inv.state not in ('cancel')
