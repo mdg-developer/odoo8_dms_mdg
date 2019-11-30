@@ -126,7 +126,8 @@ class mobile_sale_order(osv.osv):
     
     def get_saleorder_status(self, cr, uid, sale_team_id , context=None, **kwargs):
         cr.execute('''
-                    select inv.state as invoice_status,sp.state as delivery_status,so.tb_ref_no as mobile_no,sp.date_done as delivery_date
+                    select inv.state as invoice_status,sp.state as delivery_status,so.tb_ref_no as mobile_no,
+                    sp.date_done as delivery_date,date_invoice invoice_date
                     from sale_order so,account_invoice inv,stock_picking sp
                     where so.name=inv.origin
                     and so.name=sp.origin
