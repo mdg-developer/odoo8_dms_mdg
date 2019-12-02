@@ -83,9 +83,9 @@
                 </ex-property>
             </list-property>
             <property name="odaDriverClass">org.postgresql.Driver</property>
-            <property name="odaURL">jdbc:postgresql://localhost:5432/mdg_uat</property>
+            <property name="odaURL">jdbc:postgresql://192.168.60.207:5432/fairdeal</property>
             <property name="odaUser">odoo</property>
-            <encrypted-property name="odaPassword" encryptionID="base64">b3BlbnBncHdk</encrypted-property>
+            <encrypted-property name="odaPassword" encryptionID="base64">amFjazEyMyQ=</encrypted-property>
             <property name="odaJndiName">java:comp/env/jdbc/ReportDB</property>
         </oda-data-source>
     </data-sources>
