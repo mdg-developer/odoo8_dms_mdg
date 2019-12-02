@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.4.1.v201408290142 Build &lt;4.4.1.v20140916-1320></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
     <property name="units">in</property>
     <method name="initialize"><![CDATA[branchList = params["branch_id"].value.join(",");
 teamList = params["sales_team_id"].value.join(",");]]></method>
@@ -73,14 +73,8 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
         </scalar-parameter>
     </parameters>
     <data-sources>
-        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="676"
- extends="report_library.Data Source">
-            <property name="odaDriverClass">org.postgresql.Driver</property>
-            <property name="odaURL">jdbc:postgresql://localhost:5432/mdg_uat_05012918</property>
-            <property name="odaUser">odoo</property>
-            <encrypted-property name="odaPassword" encryptionID="base64">b3BlbnBncHdk</encrypted-property>
-            <property name="odaJndiName">java:comp/env/jdbc/ReportDB</property>
-        </oda-data-source>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="679"
+ extends="report_library.Data Source"/>
     </data-sources>
     <data-sets>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="company" id="44"
@@ -599,7 +593,7 @@ and inv.date_invoice between ? and ?
                 <ref-entry baseId="40" id="49"/>
                 <ref-entry baseId="41" id="50"/>
                 <ref-entry baseId="42" id="51"/>
-                <ref-entry baseId="58" name="NewImage" id="58"/>
+                <ref-entry baseId="144" name="NewImage" id="144"/>
                 <ref-entry baseId="43" id="59"/>
                 <ref-entry baseId="59" name="NewData" id="60"/>
                 <ref-entry baseId="44" id="61"/>
