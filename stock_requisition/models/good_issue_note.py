@@ -76,6 +76,7 @@ class good_issue_note(osv.osv):
                 'is_return':fields.boolean('Return'),
                 'issue_from_optional_location':fields.boolean('Issue from Optional Location',readonly=True),
                 'reverse_date':fields.date('Date for Reverse',required=False),
+                'reverse_user_id':fields.many2one('res.users', "Reverse User"),
 
 }
     _defaults = {
@@ -172,7 +173,7 @@ class good_issue_note(osv.osv):
             order_id = sale_order_obj.search(cr, uid, [('name', '=', so_name)], context=context) 
             sale_order_obj.write(cr, uid, order_id, {'is_generate':False})    
         req_obj.write(cr, uid, req_id, {'state':'reversed'})                                                              
-        return self.write(cr, uid, ids, {'state':'reversed'})    
+        return self.write(cr, uid, ids, {'state':'reversed','reverse_user_id':uid})    
     
 #     def unlink(self, cr, uid, ids, context=None):
 #         good_issue_notes = self.read(cr, uid, ids, ['state'], context=context)
