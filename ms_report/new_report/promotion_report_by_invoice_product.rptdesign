@@ -2395,7 +2395,7 @@ where 1=1
                 </structure>
             </list-property>
             <property name="repeatHeader">false</property>
-            <property name="pageBreakInterval">4000000</property>
+            <property name="pageBreakInterval">40000000</property>
             <column id="1122">
                 <property name="width">0.8229166666666666in</property>
             </column>
