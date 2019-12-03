@@ -17,6 +17,14 @@ import math
 from datetime import datetime, date, time
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as OE_DATETIMEFORMAT
 
+class sub_d_customer(osv.osv):  
+    _name = 'sub.d.customer'
+    _description = 'Sub-D Customer'
+    
+    _columns = {               
+        'name': fields.char('Name'),        
+    }
+    
 class stock_requisition(osv.osv):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _name = "stock.requisition"
@@ -33,6 +41,11 @@ class stock_requisition(osv.osv):
         if not company_id:
             raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
         return company_id     
+    
+    def _get_default_sub_d_customer(self, cr, uid, context=None):
+        sub_d_customer_id = self.pool.get('sub.d.customer').search(cr, uid, [('name', '=', 'None')], context=context)   
+        if sub_d_customer_id:    
+            return sub_d_customer_id[0]  
     
     def on_change_sale_team_id(self, cr, uid, ids, sale_team_id, pre_order, context=None):
         sale_order_obj = self.pool.get('sale.order')
@@ -128,7 +141,7 @@ class stock_requisition(osv.osv):
      'partner_id':fields.many2one('res.partner', string='Partner'),
     'good_issue_id':fields.many2one('good.issue.note', 'GIN No' ,readonly=True),
     'issue_from_optional_location':fields.boolean('Issue from Optional Location'),
-
+    'sub_d_customer_id':fields.many2one('sub.d.customer', 'Sub-D Customer'),
 }
     _defaults = {
         'state' : 'draft',
@@ -136,8 +149,8 @@ class stock_requisition(osv.osv):
          'request_date': fields.datetime.now,
          'issue_date':fields.datetime.now,
          's_issue_date':fields.datetime.now,
-         'request_by':lambda obj, cr, uid, context: uid
-         
+         'request_by':lambda obj, cr, uid, context: uid,
+         'sub_d_customer_id':_get_default_sub_d_customer,
     }     
     
     def create(self, cursor, user, vals, context=None):
@@ -267,6 +280,11 @@ class stock_requisition(osv.osv):
             branch_id = req_value.branch_id.id
             receiver = req_value.sale_team_id.receiver
             issue_from_optional_location=req_value.issue_from_optional_location
+            if req_value.sub_d_customer_id:
+                sub_d_customer_id = req_value.sub_d_customer_id.id
+            else:
+                sub_d_customer_id = None
+                
             for order in req_value.order_line:
                 so_name = order.name
                 order_id = sale_order_obj.search(cr, uid, [('name', '=', so_name)], context=context) 
@@ -281,6 +299,7 @@ class stock_requisition(osv.osv):
                                           'vehicle_id':vehicle_no,
                                           'receiver':receiver,
                                           'issue_from_optional_location':issue_from_optional_location,
+                                          'sub_d_customer_id':sub_d_customer_id,
                                           'branch_id':branch_id}, context=context)
             
             req_line_id = product_line_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context)
@@ -403,7 +422,7 @@ class stock_requisition(osv.osv):
                                                   'uom_ratio':uom_ratio,
                                                   'issue_quantity':quantity,
                                                   'qty_on_hand':qty_on_hand,
-                                                  'sequence':sequence,
+                                                  'sequence':sequence,                                                  
                                                   }, context=context)
         return self.write(cr, uid, ids, {'state':'approve' , 'approve_by':uid,'good_issue_id':good_id})    
     
@@ -523,3 +542,4 @@ class stock_requisition_order(osv.osv):  # #prod_pricelist_update_line
                but waiting for the scheduler to run on the order date.", select=True),
                 
     }
+    

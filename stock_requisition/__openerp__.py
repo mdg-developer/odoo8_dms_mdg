@@ -59,7 +59,7 @@ Request For Issue And Good Issue Note Module
         'views/stock_return_check_view.xml',
         'reports/stock_return_check.xml',
         'reports/report_stock_return_manual.xml',
-
+        'data/sub_d_customer_data.xml',
     ],
     'test': [
 
