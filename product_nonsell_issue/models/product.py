@@ -128,6 +128,7 @@ class product_nonsell_issue(osv.osv):
          'state': fields.selection([
             ('draft', 'Draft'),
             ('approve', 'Awaiting Claimed'),
+            ('inverse', 'Inverse'),
             ('cancel', 'Cancelled'),
             ('done', 'Done'),
             ], 'Status', readonly=True, copy=False, help="Gives the status of the quotation or sales order.\
@@ -270,7 +271,10 @@ class product_nonsell_issue(osv.osv):
         if picking_id:
             picking_obj.action_cancel(cr, uid, picking_id.id, context=context)
         return self.write(cr, uid, ids, {'state': 'cancel'})       
-            
+      
+    def inverse(self, cr, uid, ids, context=None):
+
+        return self.write(cr, uid, ids, {'state': 'inverse'})       
     def show_claim_price(self, cr, uid, ids, context=None):
         sell_data = self.browse(cr, uid, ids, context=context)
         principle_support = sell_data.principle_support

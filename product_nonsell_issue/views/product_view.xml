@@ -73,6 +73,9 @@
 						<button name="sumit" string="Submit Claim" class="oe_highlight"
 							type="object" states="approve"
 							groups="stock.group_stock_manager,stock.group_stock_user" />
+						<button name="inverse" string="Inverse" class="oe_highlight"
+							type="object" states="approve"
+							groups="stock.group_stock_manager,stock.group_stock_user" />						
 						<button name="cancel" string="Cancel" class="oe_highlight"
 							type="object" states="draft,approve"
 							groups="stock.group_stock_manager,stock.group_stock_user" />
