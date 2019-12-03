@@ -24,6 +24,7 @@ class report_good_issue_note(osv.osv):
         'issue_by':fields.char("Issuer"),
         'request_by':fields.many2one('res.users', "Requested By"),
         'approve_by':fields.many2one('res.users', "Approved By"),
+        'reverse_user_id':fields.many2one('res.users', "Reverse User", readonly=True),
     }
 
     def init(self, cr):
@@ -31,9 +32,9 @@ class report_good_issue_note(osv.osv):
         cr.execute("""
             create or replace view report_good_issue_note as (
                 select min(gin.id)as id,issue_date,sub_d_customer_id,state,request_id,to_location_id,
-                from_location_id,name,receiver,issue_by,request_by,approve_by
+                from_location_id,name,receiver,issue_by,request_by,approve_by,reverse_user_id
                 from good_issue_note gin                
                 group by issue_date,sub_d_customer_id,state,request_id,to_location_id,from_location_id,
-                name,receiver,issue_by,request_by,approve_by
+                name,receiver,issue_by,request_by,approve_by,reverse_user_id
                 order by id desc
             )""")

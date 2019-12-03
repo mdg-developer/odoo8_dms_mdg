@@ -17,7 +17,8 @@
 	                <field name="receiver" />	      
 	                <field name="issue_by" />
 	                <field name="request_by" />	
-	                <field name="approve_by" />		          
+	                <field name="approve_by" />		 
+	                <field name="reverse_user_id" />	         
 	           </tree>
 	        </field>
 	    </record>	    
@@ -37,7 +38,8 @@
 	                <field name="receiver" />	      
 	                <field name="issue_by" />
 	                <field name="request_by" />	
-	                <field name="approve_by" />	               
+	                <field name="approve_by" />	 
+	                <field name="reverse_user_id" />	               
 	                <group expand="1" string="Group By">
 	                    <filter string="Date for Issue" icon="terp-accessories-archiver" context="{'group_by':'issue_date'}" name='group_by_issue_date'/>
 	                    <filter string="Sub-D Customer" icon="terp-accessories-archiver" context="{'group_by':'sub_d_customer_id'}"/>
@@ -49,7 +51,8 @@
 	                    <filter string="Receiver" icon="terp-accessories-archiver" context="{'group_by':'receiver'}"/>	  
 	                    <filter string="Issuer" icon="terp-accessories-archiver" context="{'group_by':'issue_by'}"/>
 	                    <filter string="Requested by" icon="terp-accessories-archiver" context="{'group_by':'request_by'}"/>
-	                    <filter string="Approved by" icon="terp-accessories-archiver" context="{'group_by':'approve_by'}"/>                 
+	                    <filter string="Approved by" icon="terp-accessories-archiver" context="{'group_by':'approve_by'}"/>     
+	                    <filter string="Reverse User" icon="terp-accessories-archiver" context="{'group_by':'reverse_user_id'}"/>            
 	                </group>
 	            </search>
 	        </field>
