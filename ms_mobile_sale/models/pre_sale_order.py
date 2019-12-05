@@ -3,6 +3,7 @@ from openerp.osv import orm
 from openerp.tools.translate import _
 from datetime import datetime
 import ast
+from openerp import api
 from openerp.addons.connector.queue.job import job, related_action
 from openerp.addons.connector.session import ConnectorSession
 from openerp.addons.connector.exception import FailedJobError
@@ -34,7 +35,7 @@ class pre_sale_order(osv.osv):
         'user_id':fields.many2one('res.users', 'Salesman Name'),
         'mso_latitude':fields.float('Geo Latitude'),
         'mso_longitude':fields.float('Geo Longitude'),
-        'amount_total':fields.float('Total Amount'),
+        'amount_total':fields.float('Total Amount',compute='_compute_paid_amount'),
         'type':fields.selection([
                 ('credit', 'Credit'),
                 ('cash', 'Cash'),
@@ -80,7 +81,13 @@ class pre_sale_order(osv.osv):
         'm_status' : 'draft',
         'is_convert':False,
        
-    }        
+    }
+    @api.multi
+    @api.depends('order_line.sub_total') 
+    def _compute_paid_amount(self):
+        for record in self:
+            record.amount_total = sum(line.sub_total for line in record.order_line)
+            
     
     def create_presaleorder(self, cursor, user, vals, context=None):
         print 'vals', vals
@@ -158,6 +165,7 @@ class pre_sale_order(osv.osv):
                         'branch_id':branch_id,
                         'print_count':so['print_count'],
                         'rebate_later':rebate,
+                        'schedule_date':datetime.datetime.strptime('date_to_deliver', '%Y-%m-%d %H:%M:%S'),
                     }
                     s_order_id = mobile_sale_order_obj.create(cursor, user, mso_result, context=context)
                     so_ids.append(s_order_id)
