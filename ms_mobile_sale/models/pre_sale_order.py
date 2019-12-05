@@ -72,6 +72,7 @@ class pre_sale_order(osv.osv):
       'is_convert':fields.boolean('Is Convert',readonly=True),
       'print_count':fields.integer('RePrint Count'),
       'rebate_later':fields.boolean('Rebate Later'),
+      'schedule_date':fields.datetime('Scheduled Date'),
     }
     _order = 'id desc'
     _defaults = {
@@ -291,6 +292,7 @@ class pre_sale_order(osv.osv):
                                                         'section_id':preObj_ids.sale_team.id,
                                                         'deduct_amt':preObj_ids.deduction_amount,
                                                         'additional_discount':0,
+                                                        'schedule_date':preObj_ids.schedule_date,
 #                                                         'client_order_ref':preObj_ids.tablet_id.name,
                                                          'state':so_state,
                                                          'payment_type':preObj_ids.type,

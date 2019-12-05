@@ -111,6 +111,7 @@
 					<field name="ignore_credit_limit" />
 					<field name="reverse_date"
 						attrs="{'readonly':[('state','=','reversed')],'invisible': [('state','not in',('manual','progress'))]}" />
+					<field name="schedule_date" />
 				</field>
 				<field name="date_order" position="after">
 					<field name="credit_allow" invisible="1" />
