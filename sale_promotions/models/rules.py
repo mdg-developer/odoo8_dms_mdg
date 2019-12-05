@@ -219,7 +219,8 @@ class PromotionsRules(osv.Model):
 #         'promotion_id_b':fields.many2one('promos.rules' ,'Other Promotion B'),
 #         'promotion_id_c':fields.many2one('promos.rules' ,'Other Promotion C'),
         'manual':fields.boolean('Manual'),
-        
+        'bundle_promotion':fields.boolean('Bundle Promotion'),
+        'high_priority':fields.boolean('High Priority'),
     }
     _defaults = {
         'logic':lambda * a:'and',
