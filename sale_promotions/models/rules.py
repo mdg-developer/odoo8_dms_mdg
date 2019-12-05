@@ -583,7 +583,7 @@ class PromotionsRules(osv.Model):
                                 return True 
             # Check Multiproduct quantity combination                   
             elif attribute == 'prods_qty':
-                svalue = value.split("|")
+                svalue = value.split(":")
                 product_codes = svalue[0]
                 product_code = product_codes.split(";")               
                 product_qty = eval(svalue[1])
