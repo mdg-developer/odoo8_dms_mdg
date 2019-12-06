@@ -139,7 +139,7 @@ class pre_sale_order(osv.osv):
                     if so['rebate'] == 'T':
                         rebate = True
                     else:
-                        rebate = False
+                        rebate = False                    
                     mso_result = {
                         'customer_code':so['customer_code'],
                         'paid': True,
@@ -165,7 +165,7 @@ class pre_sale_order(osv.osv):
                         'branch_id':branch_id,
                         'print_count':so['print_count'],
                         'rebate_later':rebate,
-                        'schedule_date':datetime.datetime.strptime('date_to_deliver', '%Y-%m-%d %H:%M:%S'),
+                        'schedule_date':so['date_to_deliver'],
                     }
                     s_order_id = mobile_sale_order_obj.create(cursor, user, mso_result, context=context)
                     so_ids.append(s_order_id)
