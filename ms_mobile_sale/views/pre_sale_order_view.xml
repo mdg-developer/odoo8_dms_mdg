@@ -129,7 +129,7 @@
 
 							</page>
 
-							<page string="Promotion Lines">
+							<!-- <page string="Promotion Lines">
 								<field name="promos_line_ids" readonly="1">
 									<form string="Promotion Lines" version="7.0">
 
@@ -155,7 +155,7 @@
 									</tree>
 								</field>
 
-							</page>
+							</page> -->
 							<page string="Payments">
 								<field name="payment_line_ids" readonly="1">
 									<tree string="Payment Lines" editable="bottom" readonly="1">

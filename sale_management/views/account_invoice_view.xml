@@ -39,7 +39,7 @@
 
 				<xpath expr="/form/sheet/notebook/page[@string='Invoice Lines']"
 					position="after">
-					<page name='promo_lines' string="Promotion Lines"
+					<!-- <page name='promo_lines' string="Promotion Lines"
 						attrs="{'invisible':[('type','!=','out_invoice')]}">
 						<field name="promos_line_ids" attrs="{'readonly':[('state','!=','draft')]}">
 							<form string="Promotion Lines" version="7.0">
@@ -72,7 +72,7 @@
 
 							</tree>
 						</field>
-					</page>
+					</page> -->
 					<page name="credit_line_ids" string="Credit History"
 						attrs="{'invisible':[('type','!=','out_invoice')]}">
 						<field name="credit_line_ids" attrs="{'readonly':[('state','!=','draft')]}">
