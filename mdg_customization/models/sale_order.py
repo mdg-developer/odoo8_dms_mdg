@@ -164,8 +164,8 @@ class sale_order_line(osv.osv):
                        'title': _('Configuration Error!'),
                        'message' : warning_msgs
                     }
-        if price > 0 and qty > 0:
-            result.update({'price_subtotal': price * qty})
-            result.update({'net_total': price * qty})
+#         if price > 0 and qty > 0:
+#             result.update({'price_subtotal': price * qty})
+#             result.update({'net_total': price * qty})
             
         return {'value': result, 'domain': domain, 'warning': warning}

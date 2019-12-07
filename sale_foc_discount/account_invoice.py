@@ -107,6 +107,9 @@ class account_invoice_line(models.Model):
             price = self.price_unit * (1 - (self.discount or 0.0) / 100.0)
             taxes = self.invoice_line_tax_id.compute_all(price, self.quantity, product=self.product_id, partner=self.invoice_id.partner_id)
             self.price_subtotal = taxes['total']
+        
+        if self.price_unit<0:
+            self.price_subtotal = self.price_unit
 
         if self.invoice_id:
             self.price_subtotal = self.invoice_id.currency_id.round(self.price_subtotal)
