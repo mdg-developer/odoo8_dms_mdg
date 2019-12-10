@@ -1,1 +1,1 @@
-import good_issue_note_report
+from . import branch_good_issue_note_report

@@ -54,7 +54,7 @@
 			sequence="2" />
 		
 		<menuitem id="menu_good_issue_note1" parent="stock_requisition.menu_gin"
-			name="Good Issue Note View" action="stock_requisition.action_good_issue_note_report_tree"
+			name="Branch Good Issue Note" action="stock_requisition.action_branch_good_issue_note_report_tree"
 			sequence="1" groups="base.group_sale_rom,base.group_sale_manager"/>
 		
 		<record id="menu_direct_sale_order_menu1" model="ir.actions.act_window">
