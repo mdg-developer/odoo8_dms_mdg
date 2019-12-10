@@ -57,6 +57,7 @@
 									attrs="{'readonly':[('state','=','reversed')],'invisible': [('state','not in',('issue','reversed'))]}" />
 								<field name="change_gin" readonly="1" />
 								<field name="remark" />
+								<field name="internal_reference" />
 							</group>
 							<group>
 								<field name="request_id" readonly="1" />

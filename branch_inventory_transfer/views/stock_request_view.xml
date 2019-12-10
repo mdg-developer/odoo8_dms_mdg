@@ -37,6 +37,7 @@
 									invisible="1" />
 								<field name="good_issue_id" invisible="0" />
 								<field name="vehicle_id" attrs="{'readonly':[('state','!=','draft')]}" />
+								<field name="internal_reference" />
 							</group>
 							<group>
 								<field name="issue_to" attrs="{'readonly':[('state','!=','draft')]}" />

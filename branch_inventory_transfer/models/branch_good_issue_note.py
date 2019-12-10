@@ -180,6 +180,7 @@ class branch_good_issue_note(osv.osv):
     'remark': fields.text("Remark",copy=False),
     'change_gin': fields.char("Change GIN",copy=False),
     'reverse_date':fields.date('Date for Reverse',required=False),
+    'internal_reference' : fields.char('Internal Reference'),
         }
     
     _defaults = {

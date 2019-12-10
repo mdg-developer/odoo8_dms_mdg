@@ -217,7 +217,7 @@ class branch_stock_requisition(osv.osv):
    'pricelist_id': fields.many2one('product.pricelist', 'Price list', required=True , readonly=True),
    'good_issue_id': fields.many2one('branch.good.issue.note', 'GIN No', required=False , readonly=True),
    'good_issue_line': fields.one2many('branch.good.issue.note', 'request_id', 'Good Issue Note Lines', copy=False),
-   
+   'internal_reference' : fields.char('Internal Reference'),
 }
     _defaults = {
         'state' : 'draft',
@@ -329,6 +329,7 @@ class branch_stock_requisition(osv.osv):
                     tansit_location=branch.transit_location_id.id
             receiver = req_value.issue_to      
             pricelist_id = req_value.pricelist_id.id  
+            internal_reference = req_value.internal_reference 
             good_id = good_obj.create(cr, uid, {
                                           'issue_date': request_date,
                                           'pricelist_id':pricelist_id,
@@ -339,6 +340,7 @@ class branch_stock_requisition(osv.osv):
                                           'vehicle_id':vehicle_no,
                                           'receiver':receiver,
                                           'transit_location':tansit_location,
+                                          'internal_reference':internal_reference,
                                           'branch_id':branch_id}, context=context)         
             if good_id:       
                 for req_line_id in req_value.p_line:

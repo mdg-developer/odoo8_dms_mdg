@@ -48,8 +48,7 @@
 								</div>
 								<field name="request_by" />
 								<field name="approve_by"/>
-								<field name="issue_from_optional_location" attrs="{'readonly':[('state','=','approve')]}"/>
-								<field name="internal_reference"/>
+								<field name="issue_from_optional_location" attrs="{'readonly':[('state','=','approve')]}"/>								
 							</group>
 						</group>
 						<div class="oe_subtotal_footer_separator oe_inline" attrs="{'invisible':[('pre_order','=',False)]}"
