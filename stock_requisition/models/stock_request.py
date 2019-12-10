@@ -142,6 +142,7 @@ class stock_requisition(osv.osv):
     'good_issue_id':fields.many2one('good.issue.note', 'GIN No' ,readonly=True),
     'issue_from_optional_location':fields.boolean('Issue from Optional Location'),
     'sub_d_customer_id':fields.many2one('sub.d.customer', 'Sub-D Customer'),
+    'internal_reference' : fields.char('Internal Reference'),
 }
     _defaults = {
         'state' : 'draft',
@@ -284,6 +285,7 @@ class stock_requisition(osv.osv):
                 sub_d_customer_id = req_value.sub_d_customer_id.id
             else:
                 sub_d_customer_id = None
+            internal_reference=req_value.internal_reference
                 
             for order in req_value.order_line:
                 so_name = order.name
@@ -300,6 +302,7 @@ class stock_requisition(osv.osv):
                                           'receiver':receiver,
                                           'issue_from_optional_location':issue_from_optional_location,
                                           'sub_d_customer_id':sub_d_customer_id,
+                                          'internal_reference':internal_reference,
                                           'branch_id':branch_id}, context=context)
             
             req_line_id = product_line_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context)

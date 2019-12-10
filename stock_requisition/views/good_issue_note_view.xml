@@ -57,7 +57,7 @@
 									attrs="{'readonly':[('state','=','issue')],'required':[('state','=','approve')]}" />
 								<field name="company_id" attrs="{'readonly':[('state','=','issue')]}"
 									invisible="1" />
-								<field name="is_return" invisible="1" />
+								<field name="internal_reference"/>								
 							</group>
 						</group>
 						<group>

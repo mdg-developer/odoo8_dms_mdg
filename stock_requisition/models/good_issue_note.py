@@ -78,6 +78,7 @@ class good_issue_note(osv.osv):
                 'reverse_date':fields.date('Date for Reverse',required=False),
                 'reverse_user_id':fields.many2one('res.users', "Reverse User"),
                 'sub_d_customer_id':fields.many2one('sub.d.customer', 'Sub-D Customer'),
+                'internal_reference' : fields.char('Internal Reference'),
 }
     _defaults = {
         'state' : 'draft',
