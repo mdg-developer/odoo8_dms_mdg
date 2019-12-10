@@ -18,7 +18,7 @@
 						<button name="cancel" string="Cancel" class="oe_highlight"
 							type="object" states="draft" groups="stock.group_stock_manager" />
 						<button name="reversed" string="Reverse" class="oe_highlight"
-							type="object" states="received" groups="base.group_no_one" />
+							type="object" states="received" groups="stock.group_stock_manager" />
 						<button name="set_to_draft" string="Set To Draft" class="oe_highlight"
 							type="object" states="reversed" groups="base.group_no_one" />							
 						<field name="state" widget="statusbar" />

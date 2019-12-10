@@ -53,24 +53,6 @@
                 <property name="category">Unformatted</property>
             </structure>
         </scalar-parameter>
-        <scalar-parameter name="sales_team_id" id="680" extends="report_library.sales_team_id"/>
-        <scalar-parameter name="sub_d_customer" id="840">
-            <text-property name="promptText">Sub-D Customer</text-property>
-            <property name="valueType">dynamic</property>
-            <property name="dataSetName">SUBD</property>
-            <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
-            <expression name="labelExpr" type="javascript">dataSetRow["name"]</expression>
-            <property name="dataType">integer</property>
-            <property name="distinct">true</property>
-            <list-property name="selectionList"/>
-            <property name="paramType">multi-value</property>
-            <property name="controlType">list-box</property>
-            <property name="mustMatch">true</property>
-            <property name="fixedOrder">true</property>
-            <structure name="format">
-                <property name="category">Unformatted</property>
-            </structure>
-        </scalar-parameter>
         <scalar-parameter name="state" id="981">
             <text-property name="promptText">Status</text-property>
             <property name="valueType">dynamic</property>
@@ -131,20 +113,6 @@
                     <text-property name="heading">internal_ref</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">delivery_team</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">delivery_team</text-property>
-                    <property name="onColumnLayout">false</property>
-                    <text-property name="heading">delivery_team</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">sale_team_id</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">sale_team_id</text-property>
-                    <property name="onColumnLayout">false</property>
-                    <text-property name="heading">sale_team_id</text-property>
-                </structure>
-                <structure>
                     <property name="columnName">branch_id</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">branch_id</text-property>
@@ -157,13 +125,6 @@
                     <text-property name="displayName">branch_name</text-property>
                     <property name="onColumnLayout">false</property>
                     <text-property name="heading">branch_name</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">sub_d_customer</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">sub_d_customer</text-property>
-                    <property name="onColumnLayout">false</property>
-                    <text-property name="heading">sub_d_customer</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">issue_by</property>
@@ -315,109 +276,92 @@
                     </structure>
                     <structure>
                         <property name="position">5</property>
-                        <property name="name">delivery_team</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">6</property>
-                        <property name="name">sale_team_id</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                    <structure>
-                        <property name="position">7</property>
                         <property name="name">branch_id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">8</property>
+                        <property name="position">6</property>
                         <property name="name">branch_name</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">9</property>
-                        <property name="name">sub_d_customer</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">10</property>
+                        <property name="position">7</property>
                         <property name="name">issue_by</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">11</property>
+                        <property name="position">8</property>
                         <property name="name">receiver</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">12</property>
+                        <property name="position">9</property>
                         <property name="name">vehicle</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">13</property>
+                        <property name="position">10</property>
                         <property name="name">requesting_location</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">14</property>
+                        <property name="position">11</property>
                         <property name="name">request_warehouse</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">15</property>
+                        <property name="position">12</property>
                         <property name="name">reverse_user</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">16</property>
+                        <property name="position">13</property>
                         <property name="name">request_by</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">17</property>
+                        <property name="position">14</property>
                         <property name="name">approve_by</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">18</property>
+                        <property name="position">15</property>
                         <property name="name">issue_date</property>
                         <property name="dataType">date</property>
                     </structure>
                     <structure>
-                        <property name="position">19</property>
+                        <property name="position">16</property>
                         <property name="name">product</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">20</property>
+                        <property name="position">17</property>
                         <property name="name">issue_quantity</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">21</property>
+                        <property name="position">18</property>
                         <property name="name">product_uom</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">22</property>
+                        <property name="position">19</property>
                         <property name="name">sequence</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">23</property>
+                        <property name="position">20</property>
                         <property name="name">product_quantity</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">24</property>
+                        <property name="position">21</property>
                         <property name="name">base_uom</property>
                         <property name="dataType">string</property>
                     </structure>
                 </list-property>
             </structure>
             <method name="beforeOpen"><![CDATA[this.queryText =this.queryText.replace("--$branch_id$", "and gin.branch_id in ("+ params["branch_id"].value.join(",")+")")
-this.queryText =this.queryText.replace("--$sale_team_id$", "and gin.sale_team_id in ("+ params["sales_team_id"].value.join(",")+")")
-this.queryText =this.queryText.replace("--$sub_d_customer_id$", "and gin.sub_d_customer_id in ("+ params["sub_d_customer"].value.join(",")+")")
 if (params["state"].value == null ){     
    this.queryText =this.queryText.replace("--$state$",  "")
 }
@@ -459,165 +403,141 @@ else
                 </structure>
                 <structure>
                     <property name="position">5</property>
-                    <property name="name">delivery_team</property>
-                    <property name="nativeName">delivery_team</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                </structure>
-                <structure>
-                    <property name="position">6</property>
-                    <property name="name">sale_team_id</property>
-                    <property name="nativeName">sale_team_id</property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                </structure>
-                <structure>
-                    <property name="position">7</property>
                     <property name="name">branch_id</property>
                     <property name="nativeName">branch_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">8</property>
+                    <property name="position">6</property>
                     <property name="name">branch_name</property>
                     <property name="nativeName">branch_name</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">9</property>
-                    <property name="name">sub_d_customer</property>
-                    <property name="nativeName">sub_d_customer</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                </structure>
-                <structure>
-                    <property name="position">10</property>
+                    <property name="position">7</property>
                     <property name="name">issue_by</property>
                     <property name="nativeName">issue_by</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">11</property>
+                    <property name="position">8</property>
                     <property name="name">receiver</property>
                     <property name="nativeName">receiver</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">12</property>
+                    <property name="position">9</property>
                     <property name="name">vehicle</property>
                     <property name="nativeName">vehicle</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">13</property>
+                    <property name="position">10</property>
                     <property name="name">requesting_location</property>
                     <property name="nativeName">requesting_location</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">14</property>
+                    <property name="position">11</property>
                     <property name="name">request_warehouse</property>
                     <property name="nativeName">request_warehouse</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">15</property>
+                    <property name="position">12</property>
                     <property name="name">reverse_user</property>
                     <property name="nativeName">reverse_user</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">16</property>
+                    <property name="position">13</property>
                     <property name="name">request_by</property>
                     <property name="nativeName">request_by</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">17</property>
+                    <property name="position">14</property>
                     <property name="name">approve_by</property>
                     <property name="nativeName">approve_by</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">18</property>
+                    <property name="position">15</property>
                     <property name="name">issue_date</property>
                     <property name="nativeName">issue_date</property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                 </structure>
                 <structure>
-                    <property name="position">19</property>
+                    <property name="position">16</property>
                     <property name="name">product</property>
                     <property name="nativeName">product</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">20</property>
+                    <property name="position">17</property>
                     <property name="name">issue_quantity</property>
                     <property name="nativeName">issue_quantity</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">21</property>
+                    <property name="position">18</property>
                     <property name="name">product_uom</property>
                     <property name="nativeName">product_uom</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">22</property>
+                    <property name="position">19</property>
                     <property name="name">sequence</property>
                     <property name="nativeName">sequence</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">23</property>
+                    <property name="position">20</property>
                     <property name="name">product_quantity</property>
                     <property name="nativeName">product_quantity</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">24</property>
+                    <property name="position">21</property>
                     <property name="name">base_uom</property>
                     <property name="nativeName">base_uom</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[
-select gin.state,sq.name as rfi_no, gin.name as gin_no,gin.internal_ref,cc.name as delivery_team,cc.id as sale_team_id ,gin.branch_id ,rb.name as  branch_name,
-sub.name as sub_d_customer,issue_by ,gin.receiver,(select name from fleet_vehicle where id = gin.vehicle_id) as vehicle,
+            <xml-property name="queryText"><![CDATA[select gin.state,sq.name as rfi_no, gin.name as gin_no,gin.internal_reference as internal_ref ,gin.branch_id ,rb.name as  branch_name,
+issue_by ,gin.receiver,(select name from fleet_vehicle where id = gin.vehicle_id) as vehicle,
 (select name from stock_location where id =gin.to_location_id ) as requesting_location,(select name from stock_location where id =gin.from_location_id) as request_warehouse,
 (select name from res_partner where id in (select partner_id from res_users where id =gin.reverse_user_id)) as reverse_user,(select name from res_partner where id in (select partner_id from res_users where id =gin.request_by)) as request_by,(select name from res_partner where id in (select partner_id from res_users where id =gin.approve_by)) as approve_by,
 gin.issue_date,pp.name_template as product,issue_quantity,uom.name as product_uom,pp.sequence,
 round(issue_quantity*(select floor(round(1/factor,2)) from product_uom where id=ginl.product_uom),0)  as product_quantity,(select name from product_uom where id =pt.uom_id) as base_uom
-from good_issue_note gin,good_issue_note_line ginl,crm_case_section cc ,stock_requisition sq,res_branch rb,sub_d_customer sub,product_product pp,product_template pt,product_uom uom
+from branch_good_issue_note gin,branch_good_issue_note_line ginl ,branch_stock_requisition sq,res_branch rb,product_product pp,product_template pt,product_uom uom
 where gin.id =ginl.line_id
-and cc.id=gin.sale_team_id
 and sq.id =gin.request_id
 and rb.id =gin.branch_id
-and gin.sub_d_customer_id =sub.id
 and ginl.product_id =pp.id
 and ginl.product_uom =uom.id 
 and pt.id =pp.product_tmpl_id
+and ginl.issue_quantity>0
+
 and gin.issue_date between ? and ?
 --$branch_id$
---$sale_team_id$
---$sub_d_customer_id$
 --$state$
 order by gin.name,pp.sequence
 ]]></xml-property>
@@ -954,6 +874,7 @@ from sub_d_customer]]></xml-property>
                     <text-property name="heading">state</text-property>
                 </structure>
             </list-property>
+            <list-property name="parameters"/>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
                     <structure>
@@ -974,7 +895,7 @@ from sub_d_customer]]></xml-property>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select state 
-from good_issue_note
+from branch_good_issue_note
 group by state
 ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
@@ -1088,20 +1009,6 @@ group by state
             </list-property>
             <property name="resultSetColumn">branch_list</property>
         </data>
-        <data id="843">
-            <property name="fontWeight">bold</property>
-            <property name="textAlign">center</property>
-            <property name="dataSet">param_sales_team</property>
-            <list-property name="boundDataColumns">
-                <structure>
-                    <property name="name">string_agg</property>
-                    <text-property name="displayName">string_agg</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["string_agg"]</expression>
-                    <property name="dataType">string</property>
-                </structure>
-            </list-property>
-            <property name="resultSetColumn">string_agg</property>
-        </data>
         <table id="844">
             <property name="dataSet">report_ds</property>
             <list-property name="boundDataColumns">
@@ -1130,18 +1037,6 @@ group by state
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="name">delivery_team</property>
-                    <text-property name="displayName">delivery_team</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["delivery_team"]</expression>
-                    <property name="dataType">string</property>
-                </structure>
-                <structure>
-                    <property name="name">sale_team_id</property>
-                    <text-property name="displayName">sale_team_id</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["sale_team_id"]</expression>
-                    <property name="dataType">integer</property>
-                </structure>
-                <structure>
                     <property name="name">branch_id</property>
                     <text-property name="displayName">branch_id</text-property>
                     <expression name="expression" type="javascript">dataSetRow["branch_id"]</expression>
@@ -1151,12 +1046,6 @@ group by state
                     <property name="name">branch_name</property>
                     <text-property name="displayName">branch_name</text-property>
                     <expression name="expression" type="javascript">dataSetRow["branch_name"]</expression>
-                    <property name="dataType">string</property>
-                </structure>
-                <structure>
-                    <property name="name">sub_d_customer</property>
-                    <text-property name="displayName">sub_d_customer</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["sub_d_customer"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
@@ -1266,9 +1155,7 @@ group by state
             <column id="954"/>
             <column id="955"/>
             <column id="956"/>
-            <column id="957"/>
             <column id="960"/>
-            <column id="961"/>
             <column id="962"/>
             <column id="963"/>
             <column id="964"/>
@@ -1364,19 +1251,6 @@ group by state
                             <text-property name="text">Internal Ref</text-property>
                         </label>
                     </cell>
-                    <cell id="854">
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <label id="855">
-                            <text-property name="text">Delivery Team</text-property>
-                        </label>
-                    </cell>
                     <cell id="860">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1388,19 +1262,6 @@ group by state
                         <property name="borderTopWidth">thin</property>
                         <label id="861">
                             <text-property name="text">Branch</text-property>
-                        </label>
-                    </cell>
-                    <cell id="862">
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <label id="863">
-                            <text-property name="text">Customer Name</text-property>
                         </label>
                     </cell>
                     <cell id="864">
@@ -1655,19 +1516,6 @@ group by state
                             <property name="resultSetColumn">internal_ref</property>
                         </data>
                     </cell>
-                    <cell id="897">
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <data id="898">
-                            <property name="resultSetColumn">delivery_team</property>
-                        </data>
-                    </cell>
                     <cell id="903">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1679,19 +1527,6 @@ group by state
                         <property name="borderTopWidth">thin</property>
                         <data id="904">
                             <property name="resultSetColumn">branch_name</property>
-                        </data>
-                    </cell>
-                    <cell id="905">
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <data id="906">
-                            <property name="resultSetColumn">sub_d_customer</property>
                         </data>
                     </cell>
                     <cell id="907">
@@ -1876,6 +1711,7 @@ group by state
                                 <property name="category">Currency</property>
                                 <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
                             </structure>
+                            <property name="textAlign">right</property>
                             <property name="resultSetColumn">product_quantity</property>
                         </data>
                     </cell>
@@ -1889,6 +1725,7 @@ group by state
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="1006">
+                            <property name="textAlign">center</property>
                             <property name="resultSetColumn">base_uom</property>
                         </data>
                     </cell>
@@ -1901,9 +1738,7 @@ group by state
                     <cell id="933"/>
                     <cell id="934"/>
                     <cell id="935"/>
-                    <cell id="936"/>
                     <cell id="939"/>
-                    <cell id="940"/>
                     <cell id="941"/>
                     <cell id="942"/>
                     <cell id="943"/>
@@ -1924,7 +1759,7 @@ group by state
     </body>
     <property name="pageVariables">
         <variable-element name="NewVariableElement">
-            <expression name="value" type="javascript">'GIN Summary Report ' + ' From Date ' + params["from_date"].value + ' To Date ' + params["to_date"].value</expression>
+            <expression name="value" type="javascript">'BGIN Summary ' + ' From Date ' + params["from_date"].value + ' To Date ' + params["to_date"].value</expression>
             <property name="type">report</property>
         </variable-element>
     </property>

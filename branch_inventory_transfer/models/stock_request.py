@@ -217,7 +217,7 @@ class branch_stock_requisition(osv.osv):
    'pricelist_id': fields.many2one('product.pricelist', 'Price list', required=True , readonly=True),
    'good_issue_id': fields.many2one('branch.good.issue.note', 'GIN No', required=False , readonly=True),
    'good_issue_line': fields.one2many('branch.good.issue.note', 'request_id', 'Good Issue Note Lines', copy=False),
-   'internal_reference' : fields.char('Internal Reference'),
+   'internal_reference' : fields.char('Internal Reference', required=True ),
 }
     _defaults = {
         'state' : 'draft',
@@ -408,7 +408,12 @@ class branch_stock_requisition(osv.osv):
                     qty_on_hand = 0 
                 print 'productname', product.name_template
                 cr.execute("select new_price from product_pricelist_item where price_version_id in ( select id from product_pricelist_version where pricelist_id=%s) and product_id=%s and product_uom_id=%s", (pricelist_id, product.id, product.report_uom_id.id,))
-                product_price = cr.fetchone()[0]                
+                product_price = cr.fetchone()
+                if  product_price:
+                    product_price=product_price[0]
+                else:
+                    raise osv.except_osv(_('Warning'),
+                                        _('Please Check Price List For (%s)') % (product.name_template,))      
                 branch_req_line_obj.create(cr, uid, {'line_id': ids[0],
                                'sequence':product.sequence,
                               'product_id': product_id,

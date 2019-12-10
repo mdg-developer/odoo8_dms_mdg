@@ -180,7 +180,9 @@ class branch_good_issue_note(osv.osv):
     'remark': fields.text("Remark",copy=False),
     'change_gin': fields.char("Change GIN",copy=False),
     'reverse_date':fields.date('Date for Reverse',required=False),
-    'internal_reference' : fields.char('Internal Reference'),
+    'internal_reference' : fields.char('Internal Reference', required=True ),
+    'reverse_user_id':fields.many2one('res.users', "Reverse User",readpnly=True),
+
         }
     
     _defaults = {
@@ -302,7 +304,7 @@ class branch_good_issue_note(osv.osv):
             cr.execute("update stock_move set date=%s where origin=%s", (reverse_date, 'Reverse ' +move.origin,))
 
                                                                       
-        return self.write(cr, uid, ids, {'state':'reversed'}) 
+        return self.write(cr, uid, ids, {'state':'reversed','reverse_user_id':uid}) 
     
     def issue(self, cr, uid, ids, context=None):
         product_line_obj = self.pool.get('branch.good.issue.note.line')

@@ -21,7 +21,7 @@
 							type="object" states="draft,approve"
 							groups="stock.group_stock_manager,stock.group_stock_user" />
 						<button name="reversed" string="Reversed" class="oe_highlight"
-							type="object" states="issue" groups="base.group_no_one" />
+							type="object" states="issue" groups="stock.group_stock_manager" />
 						<field name="state" widget="statusbar" />
 					</header>
 					<sheet>

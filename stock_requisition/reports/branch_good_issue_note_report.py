@@ -24,7 +24,10 @@ class report_branch_good_issue_note(osv.osv):
         'receiver':fields.char("Receiver"),
         'issue_by':fields.char("Issuer"),
         'request_by':fields.many2one('res.users', "Requested By"),
-        'approve_by':fields.many2one('res.users', "Approved By"),        
+        'approve_by':fields.many2one('res.users', "Approved By"),  
+        'reverse_user_id':fields.many2one('res.users', "Reverse User"),     
+         'branch_id':fields.many2one('res.users', "Reverse User"),      
+ 
     }
 
     def init(self, cr):
@@ -32,9 +35,9 @@ class report_branch_good_issue_note(osv.osv):
         cr.execute("""
             create or replace view report_branch_good_issue_note as (
                 select min(bgin.id)as id,issue_date,state,request_id,to_location_id,
-                from_location_id,name,receiver,issue_by,request_by,approve_by
+                from_location_id,name,receiver,issue_by,request_by,approve_by,reverse_user_id,branch_id
                 from branch_good_issue_note bgin                
                 group by issue_date,state,request_id,to_location_id,from_location_id,
-                name,receiver,issue_by,request_by,approve_by
+                name,receiver,issue_by,request_by,approve_by,reverse_user_id,branch_id
                 order by id desc
             )""")

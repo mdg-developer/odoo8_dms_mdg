@@ -1,56 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data>      
+	<data>
 
-	    <record id="view_branch_good_issue_note_report_tree" model="ir.ui.view">
-	        <field name="name">Branch Good Issue Note Report</field>
-	        <field name="model">report.branch.good.issue.note</field>
-	        <field name="arch" type="xml">
-	            <tree string="Branch Good Issue Note Report" create="0" delete="0">
-	                <field name="issue_date" />	                      
-	                <field name="state" />	  
-	                <field name="request_id" />	     
-	                <field name="to_location_id" />	    
-	                <field name="from_location_id" />	    
-	                <field name="name" />	       
-	                <field name="receiver" />	      
-	                <field name="issue_by" />
-	                <field name="request_by" />	
-	                <field name="approve_by" />	
-	           </tree>
-	        </field>
-	    </record>	    
-    
-	    <record id="view_branch_good_issue_note_report_search" model="ir.ui.view">
-	        <field name="name">branch.good.issue.note.report.search</field>
-	        <field name="model">report.branch.good.issue.note</field>
-	        <field name="arch" type="xml">
-	            <search string="Branch Good Issue Note Report">
-	                <field name="issue_date"/>	                 
-	                <field name="state" />	  
-	                <field name="request_id" />	     
-	                <field name="to_location_id" />	    
-	                <field name="from_location_id" />	    
-	                <field name="name" />	       
-	                <field name="receiver" />	      
-	                <field name="issue_by" />
-	                <field name="request_by" />	
-	                <field name="approve_by" />	 	                            
-	                <group expand="1" string="Group By">
-	                    <filter string="Date for Issue" icon="terp-accessories-archiver" context="{'group_by':'issue_date'}" name='group_by_issue_date'/>	                    
-	                    <filter string="State" icon="terp-accessories-archiver" context="{'group_by':'state'}"/>
-	                    <filter string="RFI Ref" icon="terp-accessories-archiver" context="{'group_by':'request_id'}"/>
-	                    <filter string="Requesting Location" icon="terp-accessories-archiver" context="{'group_by':'to_location_id'}"/>
-	                    <filter string="Request Warehouse" icon="terp-accessories-archiver" context="{'group_by':'from_location_id'}"/>
-	                    <filter string="GIN Ref" icon="terp-accessories-archiver" context="{'group_by':'name'}"/>
-	                    <filter string="Receiver" icon="terp-accessories-archiver" context="{'group_by':'receiver'}"/>	  
-	                    <filter string="Issuer" icon="terp-accessories-archiver" context="{'group_by':'issue_by'}"/>
-	                    <filter string="Requested by" icon="terp-accessories-archiver" context="{'group_by':'request_by'}"/>
-	                    <filter string="Approved by" icon="terp-accessories-archiver" context="{'group_by':'approve_by'}"/>    
-	                </group>
-	            </search>
-	        </field>
-	    </record>
+		<record id="view_branch_good_issue_note_report_tree" model="ir.ui.view">
+			<field name="name">Branch Good Issue Note Report</field>
+			<field name="model">report.branch.good.issue.note</field>
+			<field name="arch" type="xml">
+				<tree string="Branch Good Issue Note Report" create="0" delete="0">
+					<field name="issue_date" />
+					<field name="state" />
+					<field name="branch_id" />
+					<field name="request_id" />
+					<field name="to_location_id" />
+					<field name="from_location_id" />
+					<field name="name" />
+					<field name="receiver" />
+					<field name="issue_by" />
+					<field name="request_by" />
+					<field name="approve_by" />
+					<field name="reverse_user_id" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="view_branch_good_issue_note_report_search" model="ir.ui.view">
+			<field name="name">branch.good.issue.note.report.search</field>
+			<field name="model">report.branch.good.issue.note</field>
+			<field name="arch" type="xml">
+				<search string="Branch Good Issue Note Report">
+					<field name="issue_date" />
+					<field name="state" />
+					<field name="branch_id" />
+					<field name="request_id" />
+					<field name="to_location_id" />
+					<field name="from_location_id" />
+					<field name="name" />
+					<field name="receiver" />
+					<field name="issue_by" />
+					<field name="request_by" />
+					<field name="approve_by" />
+					<field name="reverse_user_id" />
+					<group expand="1" string="Group By">
+						<filter string="Date for Issue" icon="terp-accessories-archiver"
+							context="{'group_by':'issue_date'}" name='group_by_issue_date' />
+						<filter string="State" icon="terp-accessories-archiver"
+							context="{'group_by':'state'}" />
+						<filter string="Branch" icon="terp-accessories-archiver"
+							context="{'group_by':'branch_id'}" />
+						<filter string="RFI Ref" icon="terp-accessories-archiver"
+							context="{'group_by':'request_id'}" />
+						<filter string="Requesting Location" icon="terp-accessories-archiver"
+							context="{'group_by':'to_location_id'}" />
+						<filter string="Request Warehouse" icon="terp-accessories-archiver"
+							context="{'group_by':'from_location_id'}" />
+						<filter string="GIN Ref" icon="terp-accessories-archiver"
+							context="{'group_by':'name'}" />
+						<filter string="Receiver" icon="terp-accessories-archiver"
+							context="{'group_by':'receiver'}" />
+						<filter string="Issuer" icon="terp-accessories-archiver"
+							context="{'group_by':'issue_by'}" />
+						<filter string="Requested by" icon="terp-accessories-archiver"
+							context="{'group_by':'request_by'}" />
+						<filter string="Approved by" icon="terp-accessories-archiver"
+							context="{'group_by':'approve_by'}" />
+						<filter string="Reverse User" icon="terp-accessories-archiver"
+							context="{'group_by':'reverse_user_id'}" />
+					</group>
+				</search>
+			</field>
+		</record>
 
 		<record id="action_branch_good_issue_note_report_tree" model="ir.actions.act_window">
 			<field name="name">Branch Good Issue Note Report</field>
@@ -60,6 +78,6 @@
 			<field name="view_mode">tree</field>
 		</record>
 
-    </data>
+	</data>
 </openerp>
 

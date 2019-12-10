@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.6.0.v201606072122</property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
     <property name="units">in</property>
     <method name="initialize"><![CDATA[branchList = params["branch_id"].value.join(",");]]></method>
     <property name="iconFile">/templates/blank_report.gif</property>
@@ -1281,22 +1281,8 @@ group by state
             <column id="970"/>
             <column id="971"/>
             <column id="972"/>
-            <column id="998">
-                <list-property name="visibility">
-                    <structure>
-                        <property name="format">all</property>
-                        <expression name="valueExpr" type="javascript">true</expression>
-                    </structure>
-                </list-property>
-            </column>
-            <column id="1002">
-                <list-property name="visibility">
-                    <structure>
-                        <property name="format">all</property>
-                        <expression name="valueExpr" type="javascript">true</expression>
-                    </structure>
-                </list-property>
-            </column>
+            <column id="998"/>
+            <column id="1002"/>
             <header>
                 <row id="845">
                     <cell id="974">
@@ -1876,6 +1862,7 @@ group by state
                                 <property name="category">Currency</property>
                                 <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
                             </structure>
+                            <property name="textAlign">right</property>
                             <property name="resultSetColumn">product_quantity</property>
                         </data>
                     </cell>
@@ -1889,6 +1876,7 @@ group by state
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="1006">
+                            <property name="textAlign">center</property>
                             <property name="resultSetColumn">base_uom</property>
                         </data>
                     </cell>
@@ -1924,7 +1912,7 @@ group by state
     </body>
     <property name="pageVariables">
         <variable-element name="NewVariableElement">
-            <expression name="value" type="javascript">'GIN Summary Report ' + ' From Date ' + params["from_date"].value + ' To Date ' + params["to_date"].value</expression>
+            <expression name="value" type="javascript">'GIN Summary By Small Qty Report ' + ' From Date ' + params["from_date"].value + ' To Date ' + params["to_date"].value</expression>
             <property name="type">report</property>
         </variable-element>
     </property>

@@ -28,8 +28,10 @@
 							<label string="GIN Ref" />
 							<field name="name" class="oe_inline" readonly="1" />
 						</h1>
-						<h1 attrs="{'invisible': [('state','not in',('receive','partial_receive'))]}">
-							<label string="GRN Ref" attrs="{'invisible': [('state','not in',('receive','partial_receive'))]}"/>
+						<h1
+							attrs="{'invisible': [('state','not in',('receive','partial_receive'))]}">
+							<label string="GRN Ref"
+								attrs="{'invisible': [('state','not in',('receive','partial_receive'))]}" />
 							<field name="grn_no" class="oe_inline" readonly="1"
 								attrs="{'invisible': [('state','not in',('receive','partial_receive'))]}" />
 						</h1>
@@ -55,6 +57,9 @@
 								<field name="transit_location" readonly="1" />
 								<field name="reverse_date"
 									attrs="{'readonly':[('state','=','reversed')],'invisible': [('state','not in',('issue','reversed'))]}" />
+
+								<field name="reverse_user_id" />
+
 								<field name="change_gin" readonly="1" />
 								<field name="remark" />
 								<field name="internal_reference" />
