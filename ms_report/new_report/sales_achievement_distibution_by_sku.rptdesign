@@ -429,7 +429,7 @@ ach_amt as (
 
 target as (
     select * from 
-	(select stl.product_uom,price_unit*product_uom_qty as target_amt,(distribution_price * (select floor(round(1/factor,2)) from product_uom where id=stl.product_uom)) as distribution_price,product_uom_qty * (select floor(round(1/factor,2)) from product_uom where id=stl.product_uom) as target_qty,sale_team_id,st.month::int,st.year::int,stl.product_id,st.branch_id,pp.name_template,sum(so.count) as count
+	(select stl.product_uom,price_unit*product_uom_qty as target_amt,distribution_price,product_uom_qty * (select floor(round(1/factor,2)) from product_uom where id=stl.product_uom) as target_qty,sale_team_id,st.month::int,st.year::int,stl.product_id,st.branch_id,pp.name_template,sum(so.count) as count
 	from sales_target st,sales_target_line stl,sale_order so,product_product pp
 	where st.id=stl.sale_ids
 	and pp.id=stl.product_id
