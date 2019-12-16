@@ -138,6 +138,13 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()
         return datas
     
+    
+    def get_additional_promos(self, cr, uid , context=None):
+        cr.execute('''select id,product_id,amount,rule_id,condition,quantity from sale_optional_promotion''')
+        datas = cr.fetchall()
+        return datas
+    
+    
     @api.multi
     @api.depends('order_line.sub_total') 
     def _compute_paid_amount(self):
