@@ -67,6 +67,16 @@
 			<field name="model">customer.feedback</field>
 			<field name="arch" type="xml">
 				<search string="Search Customer Feedback">
+					<field name="sale_team_id" />
+					<field name="customer_id" />
+					<field name="customer_code" />
+					<field name="feedback_type" />
+					<field name="maingroup_id" />
+					<field name="contents" />
+					<field name="assignby" />
+					<field name="assignto" />
+					<field name="solution" />
+					<field name="distance_status" />
 					<filter string="Open" domain="[ ('m_status', '=', 'open')]"
 						name="state" />
 					<group expand="0" string="Group By...">

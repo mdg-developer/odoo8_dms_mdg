@@ -179,8 +179,6 @@
 							context="{'group_by':'main_group'}" />
 						<filter string="Promotion Month" context="{'group_by':'to_date:month'}"
 							help="date of the promotion" />
-
-
 					</group>
 				</search>
 			</field>

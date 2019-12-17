@@ -56,6 +56,10 @@
 			<field name="model">pending.delivery</field>
 			<field name="arch" type="xml">
 				<search string="Search Stock Delivery ">
+					<field name="order_id" />
+					<field name="delivery_team_id" />
+					<field name="state" />
+					<field name="distance_status" />
 					<group expand="0" string="Group By...">
 						<filter string="State" icon="terp-partner" domain="[]"
 							context="{'group_by':'state'}" />

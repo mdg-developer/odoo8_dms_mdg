@@ -540,6 +540,12 @@
 			<field name="model">res.partner.asset</field>
 			<field name="arch" type="xml">
 				<search string="Search Customer Asset">
+				<field name="partner_id" />
+				<field name="name" />
+				<field name="type" />
+				<field name="note" />
+				<field name="asset_type" />
+				<field name="qty" />
 					<group expand="0" string="Group By...">
 						<filter string="Customer" icon="terp-partner" domain="[]"
 							context="{'group_by':'partner_id'}" />

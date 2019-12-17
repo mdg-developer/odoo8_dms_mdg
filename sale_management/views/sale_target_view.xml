@@ -79,6 +79,13 @@
 			<field name="model">sales.target</field>
 			<field name="arch" type="xml">
 				<search string="Search Sales Target">
+					<field name="pricelist_id" />
+					<field name="sale_team_id" />
+					<field name="branch_id" />
+					<field name="company_id" />
+					<field name="name" />
+					<field name="month" />
+					<field name="year" />
 					<group expand="0" string="Group By...">
 						<filter string="Sale Team" icon="terp-partner" domain="[]"
 							context="{'group_by':'sale_team_id'}" />

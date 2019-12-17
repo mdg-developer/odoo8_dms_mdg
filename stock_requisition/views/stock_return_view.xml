@@ -138,6 +138,13 @@
 			<field name="model">stock.return</field>
 			<field name="arch" type="xml">
 				<search string="Search Stock Return">
+					<field name="name" />
+					<field name="sale_team_id" />
+					<field name="from_location" />
+					<field name="to_location" />
+					<field name="returner" />
+					<field name="wh_receiver" />
+					<field name="vehicle_id" />
 					<group expand="0" string="Group By...">
 						<filter string="Sales Team" icon="terp-partner" domain="[]"
 							context="{'group_by':'sale_team_id'}" />

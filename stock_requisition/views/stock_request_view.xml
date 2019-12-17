@@ -134,6 +134,14 @@
 			<field name="arch" type="xml">
 				<search string="Search Stock Request">
 					<field name="pre_order" />
+					<field name="sale_team_id" />
+					<field name="from_location_id" />
+					<field name="good_issue_id" />
+					<field name="vehicle_id" />
+					<field name="issue_to" />
+					<field name="to_location_id" />
+					<field name="request_by" />
+					<field name="approve_by" />
 					<group expand="0" string="Group By...">
 						<filter string="Delivery Team" icon="terp-partner" domain="[]"
 							context="{'group_by':'sale_team_id'}" />

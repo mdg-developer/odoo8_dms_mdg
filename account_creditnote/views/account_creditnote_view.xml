@@ -52,6 +52,23 @@
 				</tree>
 			</field>
 		</record>
+		
+		<record id="credit_note_search" model="ir.ui.view">
+            <field name="name">Credit Note - Search</field>
+            <field name="model">account.creditnote</field>
+            <field name="arch" type="xml">
+                <search string="Credit Note Search">
+					<field name="name" />
+					<field name="customer_id" />
+					<field name="user_id" />
+					<field name="sale_team_id" />
+					<field name="m_status" />
+                    <group expand="0" string="Group By...">
+                        <filter string="Customer" domain="[]" context="{'group_by':'name'}"/>                        
+                    </group>
+                </search>
+            </field>
+        </record>
 
 		<record id="action_creditnote" model="ir.actions.act_window">
 			<field name="name">Credit Note</field>
@@ -64,6 +81,7 @@
 					Click to create new Credit Note .
 				</p>
 			</field>
+			<field name="search_view_id" ref="credit_note_search" />
 		</record>
 		
 		<menuitem action="action_creditnote" id="menu_creditnote"

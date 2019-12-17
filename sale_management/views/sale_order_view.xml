@@ -57,6 +57,7 @@
 					<filter name="pending_invoice" string="Pending Invoice"
 						domain="[('state','=','manual')]" />
 					<filter name="is_entry" string="Is Entry Data" domain="[('is_entry','=',True)]" />
+					<field name="payment_type" />
 				</xpath>
 				<xpath expr="//search/group/filter[@string='Order Month']"
 					position="before">

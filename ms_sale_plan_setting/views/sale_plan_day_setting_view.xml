@@ -200,10 +200,14 @@
 		</record>
 
 		<record id="view_plan_setting_filter" model="ir.ui.view">
-			<field name="name">Plan Setting Filterr</field>
+			<field name="name">Plan Setting Filter</field>
 			<field name="model">sale.plan.day.setting</field>
 			<field name="arch" type="xml">
 				<search string="Search Plan Setting">
+					<field name="name" />
+					<field name="sale_team_id" />
+					<field name="branch_id" />
+					<field name="township_id" />
 					<group expand="0" string="Group By...">
 						<filter string="Sale Team" icon="terp-partner" domain="[]"
 							context="{'group_by':'sale_team_id'}" />

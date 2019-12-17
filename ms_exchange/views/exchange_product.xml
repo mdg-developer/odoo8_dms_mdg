@@ -120,6 +120,31 @@
 			</field>
 		</record>
 
+		<record id="exchange_product_search" model="ir.ui.view">
+            <field name="name">Exchange Product - Search</field>
+            <field name="model">product.transactions</field>
+            <field name="arch" type="xml">
+                <search string="Exchange Product Search">                    
+                    <field name="name"/> 
+                    <field name="transaction_id" />
+                    <field name="customer_id" />
+                    <field name="customer_code" />
+                    <field name="team_id" />
+                    <field name="invoice_id" />
+                    <field name="note" />
+                    <field name="distance_status" />
+                    <field name="geo_point" />
+                    <field name="exchange_type" /> 
+                    <field name="location_type" />
+                    <field name="void_flag" />
+                    <field name="location_id" />               
+                    <group expand="0" string="Group By...">
+                        <filter string="SEN No" domain="[]" context="{'group_by':'name'}"/>                        
+                    </group>
+                </search>
+            </field>
+        </record>
+        
 		<!-- action form -->
 		<record id="action_exchange_product" model="ir.actions.act_window">
 			<field name="name">Exchange Product</field>
@@ -127,7 +152,7 @@
 			<field name="res_model">product.transactions</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
-			<field name="view_id" ref="view_exchange_product_tree" />
+			<field name="view_id" ref="exchange_product_search" />
 			<field name="domain">['|',('exchange_type','=','Exchange'),('exchange_type','=','Color
 				Change')]
 			</field>

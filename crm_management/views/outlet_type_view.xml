@@ -54,7 +54,7 @@
 
 			</field>
 		</record>
-
+		
 		<record model="ir.actions.act_window" id="action_outlettype_outlettype_form">
 			<field name="name">Outlet Type</field>
 			<field name="type">ir.actions.act_window</field>

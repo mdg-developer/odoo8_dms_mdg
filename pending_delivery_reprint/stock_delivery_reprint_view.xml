@@ -47,6 +47,13 @@
 			<field name="model">stock.delivery.reprint</field>
 			<field name="arch" type="xml">
 				<search string="Search Stock Delivery Reprint Count">
+					<field name="section_id" />
+					<field name="branch_id" />
+					<field name="presaleorder_id" />
+					<field name="partner_id" />
+					<field name="customer_code" />
+					<field name="void_flag" />
+					<field name="reprint_count" />					
 					<group expand="0" string="Group By...">
 						<filter string="Sales Team" icon="terp-partner" domain="[]"
 							context="{'group_by':'section_id'}" />
