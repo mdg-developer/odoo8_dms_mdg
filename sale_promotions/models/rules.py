@@ -219,7 +219,7 @@ class PromotionsRules(osv.Model):
 #         'promotion_id_b':fields.many2one('promos.rules' ,'Other Promotion B'),
 #         'promotion_id_c':fields.many2one('promos.rules' ,'Other Promotion C'),
         'manual':fields.boolean('Manual'),
-        'promotion_ids': fields.one2many('sale.optional.promotion', 'rule_id', 'Promotions'),
+        'promotion_ids': fields.one2many('sale.optional.promotion', 'rule_id', 'Promotions', copy=True),
         
     }
     _defaults = {
