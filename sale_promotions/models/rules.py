@@ -112,7 +112,27 @@ class PromotionsRules(osv.Model):
                     self.write(cr, uid, ids, {'code':code}, context=context)
 
             return True
-
+    
+    def import_lines(self, cr, uid, ids, context=None):
+        mod_obj = self.pool.get('ir.model.data')
+        wiz_view = mod_obj.get_object_reference(cr, uid, 'sale_promotions', 'optional_promotion_import_view')
+        for version in self.browse(cr, uid, ids, context=context):
+            ctx = {
+                                
+                'rule_id': version.id,
+            }
+            act_import = {
+                'name': _('Import File'),
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'optional.promotion.import',
+                'view_id': [wiz_view[1]],
+                'nodestroy': True,
+                'target': 'new',
+                'type': 'ir.actions.act_window',
+                'context': ctx,
+            }
+            return act_import    
     
     def _check_positive_number(self, cr, uid, ids, context=None):
         record = self.browse(cr, uid, ids, context=context)

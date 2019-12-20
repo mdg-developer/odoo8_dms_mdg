@@ -118,7 +118,9 @@
 								<field name="customer_ids" nolabel="1" />
 							</page>
 							<page string="Optional Promotion" name="optional_promotion">
+								<button name="import_lines" string="Import" type="object" class="oe_highlight" />
 								<field name="promotion_ids" nolabel="1">
+								
 									<tree editable="bottom" string="Promotions">
 										<field name="product_id" />
 										<field name="condition" />

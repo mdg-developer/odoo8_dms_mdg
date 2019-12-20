@@ -40,6 +40,7 @@
         'views/rule_view.xml',
 # 	 'views/sale_view.xml',
      'wizard/foc_any_product_view.xml',
+     'wizard/optional_promotion_import.xml',     
      'views/code_setting_view.xml',
      'views/res_users_view.xml',
      'views/account_invoice_view.xml',
