@@ -44,13 +44,10 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
         </scalar-parameter>
         <scalar-parameter name="branch_id" id="119" extends="report_library.branch_id"/>
         <scalar-parameter name="sales_team_id" id="120" extends="report_library.sales_team_id"/>
-        <scalar-parameter name="user_id" id="121" extends="report_library.user_id">
-            <property name="isRequired">true</property>
-            <property name="dataType">integer</property>
-        </scalar-parameter>
+        <scalar-parameter name="user_id" id="1125" extends="report_library.user_id"/>
     </parameters>
     <data-sources>
-        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="984"
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="1127"
  extends="report_library.Data Source"/>
     </data-sources>
     <data-sets>
@@ -91,13 +88,6 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     <text-property name="displayName">target_qty</text-property>
                     <property name="onColumnLayout">false</property>
                     <text-property name="heading">target_qty</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">avil_count</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">avil_count</text-property>
-                    <property name="onColumnLayout">false</property>
-                    <text-property name="heading">avil_count</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">target_qty_count</property>
@@ -149,6 +139,20 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     <text-property name="heading">dis_percent</text-property>
                 </structure>
                 <structure>
+                    <property name="columnName">percent_target_value</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">percent_target_value</text-property>
+                    <property name="onColumnLayout">false</property>
+                    <text-property name="heading">percent_target_value</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">dis_percent_value</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">dis_percent_value</text-property>
+                    <property name="onColumnLayout">false</property>
+                    <text-property name="heading">dis_percent_value</text-property>
+                </structure>
+                <structure>
                     <property name="columnName">date_rate</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">date_rate</text-property>
@@ -161,6 +165,13 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     <text-property name="displayName">product_color</text-property>
                     <property name="onColumnLayout">false</property>
                     <text-property name="heading">product_color</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">avil_count</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">avil_count</text-property>
+                    <property name="onColumnLayout">false</property>
+                    <text-property name="heading">avil_count</text-property>
                 </structure>
             </list-property>
             <list-property name="parameters">
@@ -230,57 +241,67 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     <structure>
                         <property name="position">5</property>
                         <property name="name">target_qty</property>
-                        <property name="dataType">integer</property>
+                        <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">6</property>
-                        <property name="name">avil_count</property>
-                        <property name="dataType">decimal</property>
-                    </structure>
-                    <structure>
-                        <property name="position">7</property>
                         <property name="name">target_qty_count</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">8</property>
+                        <property name="position">7</property>
                         <property name="name">dis_qty_count</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">9</property>
+                        <property name="position">8</property>
                         <property name="name">target_amt</property>
-                        <property name="dataType">integer</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">distribution_target</property>
+                        <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">10</property>
-                        <property name="name">distribution_target</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                    <structure>
-                        <property name="position">11</property>
                         <property name="name">dis_ach</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">12</property>
+                        <property name="position">11</property>
                         <property name="name">percent_target</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">13</property>
+                        <property name="position">12</property>
                         <property name="name">dis_percent</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
+                        <property name="position">13</property>
+                        <property name="name">percent_target_value</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
                         <property name="position">14</property>
+                        <property name="name">dis_percent_value</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">15</property>
                         <property name="name">date_rate</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">15</property>
+                        <property name="position">16</property>
                         <property name="name">product_color</property>
-                        <property name="dataType">string</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">17</property>
+                        <property name="name">avil_count</property>
+                        <property name="dataType">decimal</property>
                     </structure>
                 </list-property>
             </structure>
@@ -330,78 +351,92 @@ else
                     <property name="position">5</property>
                     <property name="name">target_qty</property>
                     <property name="nativeName">target_qty</property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
+                    <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">6</property>
-                    <property name="name">avil_count</property>
-                    <property name="nativeName">avil_count</property>
-                    <property name="dataType">decimal</property>
-                    <property name="nativeDataType">-5</property>
-                </structure>
-                <structure>
-                    <property name="position">7</property>
                     <property name="name">target_qty_count</property>
                     <property name="nativeName">target_qty_count</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">8</property>
+                    <property name="position">7</property>
                     <property name="name">dis_qty_count</property>
                     <property name="nativeName">dis_qty_count</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">9</property>
+                    <property name="position">8</property>
                     <property name="name">target_amt</property>
                     <property name="nativeName">target_amt</property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
+                    <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
+                    <property name="name">distribution_target</property>
+                    <property name="nativeName">distribution_target</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">-5</property>
                 </structure>
                 <structure>
                     <property name="position">10</property>
-                    <property name="name">distribution_target</property>
-                    <property name="nativeName">distribution_target</property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                </structure>
-                <structure>
-                    <property name="position">11</property>
                     <property name="name">dis_ach</property>
                     <property name="nativeName">dis_ach</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">12</property>
+                    <property name="position">11</property>
                     <property name="name">percent_target</property>
                     <property name="nativeName">percent_target</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">13</property>
+                    <property name="position">12</property>
                     <property name="name">dis_percent</property>
                     <property name="nativeName">dis_percent</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
+                    <property name="position">13</property>
+                    <property name="name">percent_target_value</property>
+                    <property name="nativeName">percent_target_value</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
+                </structure>
+                <structure>
                     <property name="position">14</property>
+                    <property name="name">dis_percent_value</property>
+                    <property name="nativeName">dis_percent_value</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
+                </structure>
+                <structure>
+                    <property name="position">15</property>
                     <property name="name">date_rate</property>
                     <property name="nativeName">date_rate</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">15</property>
+                    <property name="position">16</property>
                     <property name="name">product_color</property>
                     <property name="nativeName">product_color</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
+                </structure>
+                <structure>
+                    <property name="position">17</property>
+                    <property name="name">avil_count</property>
+                    <property name="nativeName">avil_count</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[with sale_order as (
@@ -417,7 +452,7 @@ else
 	and pt.type !='service'
 	and (foc!='true' or foc is null)
 	--$sales_team$
-	--$branch_id$
+	--$branch_id$	
 	and date_invoice between ? and ?
 
 	 ),
@@ -429,7 +464,7 @@ ach_amt as (
 
 target as (
     select * from 
-	(select stl.product_uom,price_unit*product_uom_qty as target_amt,distribution_price,product_uom_qty * (select floor(round(1/factor,2)) from product_uom where id=stl.product_uom) as target_qty,sale_team_id,st.month::int,st.year::int,stl.product_id,st.branch_id,pp.name_template,sum(so.count) as count
+	(select stl.product_uom,price_unit*product_uom_qty as target_amt,distribution_price,product_uom_qty * (select floor(round(1/factor,2)) from product_uom where id=stl.product_uom) as target_qty,sale_team_id,st.month::int,st.year::int,stl.product_id,st.branch_id,pp.name_template,sum(so.count) as target_count
 	from sales_target st,sales_target_line stl,sale_order so,product_product pp
 	where st.id=stl.sale_ids
 	and pp.id=stl.product_id
@@ -448,24 +483,34 @@ target as (
 	group by product_id
 	)b
 	on a.product_Id =b.pid
-	)
-select * ,case when percent_target_value <= dis_percent_value then percent_target_value  else  dis_percent_value  end as product_color  from (
-select row_number() over (order by ach.pseq) as seq,ach.name_template,quantity,ach_amt as ach_amt,target.target_qty,target.avil_count,case when target_qty >0 then 1  else  0  end as target_qty_count,case when distribution_price >0 then 1  else  0  end as dis_qty_count,
-0 as target_amt,target.distribution_price as distribution_target,count::int as dis_ach,
-case when target_qty >0 then concat(round(( CASE WHEN (quantity*100)/sum(target_qty)>120 THEN 120 ELSE (quantity*100)/sum(target_qty) END)::numeric,0),'%') else concat(0,'%') end as percent_target,
-case when distribution_price >0 then concat(round((CASE WHEN (count*100)/sum(target.distribution_price)>120 THEN 120 ELSE (count*100)/sum(target.distribution_price) END),0),'%') else concat(0,'%') end as dis_percent,
-case when target_qty >0 then round((  CASE WHEN (quantity*100)/sum(target_qty)>120 THEN 120 ELSE (quantity*100)/sum(target_qty) END)::numeric,0) else 0 end as percent_target_value,
-case when distribution_price >0 then round((CASE WHEN (count*100)/sum(target.distribution_price)>120 THEN 120 ELSE (count*100)/sum(target.distribution_price) END),0) else 0 end as dis_percent_value
-,
-((EXTRACT(DAY FROM TIMESTAMP --$date$
-)::float / (DATE_PART('days', DATE_TRUNC('month',TIMESTAMP --$date$
-) + '1 MONTH'::INTERVAL - '1 DAY'::INTERVAL))::float)*100) as date_rate
-from ach_amt ach
-left join target target on (ach.product_id=target.product_id)
-group by ach.product_id,ach.name_template,ach_amt,quantity,ach.pseq,target.target_qty,target.distribution_price,count,target.avil_count
-order by pseq
-)a
-]]></xml-property>
+	),
+	
+target_amount as (
+	select COALESCE(sum(target_qty),0) target_qty,COALESCE(sum(target_amt),0) target_amt,
+	COALESCE(sum(distribution_price),0) distribution_price,sum(target_count) as target_count,
+	product_id,name_template
+	from target
+	group by product_id,name_template
+)
+
+select * ,case when percent_target_value <= dis_percent_value then percent_target_value else dis_percent_value end as product_color,
+round((percent_target_value+dis_percent_value)/2,2) avil_count
+from (
+	select row_number() over (order by ach.pseq) as seq,ach.name_template,quantity,ach_amt,
+	target_qty,case when target_qty >0 then 1  else  0  end as target_qty_count,
+	case when distribution_price >0 then 1  else  0  end as dis_qty_count,target_amt,
+	target.distribution_price as distribution_target,target_count::int as dis_ach,
+	case when target_qty >0 then concat(round(( CASE WHEN (quantity*100)/target_qty>120 THEN 120 ELSE (quantity*100)/target_qty END)::numeric,0),'%') else concat(0,'%') end as percent_target,
+	case when distribution_price >0 then concat(round((CASE WHEN (target_count*100)/target.distribution_price>120 THEN 120 ELSE (target_count*100)/target.distribution_price END),0),'%') else concat(0,'%') end as dis_percent,
+	case when target_qty >0 then round((  CASE WHEN (quantity*100)/target_qty>120 THEN 120 ELSE (quantity*100)/target_qty END)::numeric,0) else 0 end as percent_target_value,
+	case when distribution_price >0 then round((CASE WHEN (target_count*100)/target.distribution_price>120 THEN 120 ELSE (target_count*100)/target.distribution_price END),0) else 0 end as dis_percent_value,
+	((EXTRACT(DAY FROM TIMESTAMP --$date$
+	)::float / (DATE_PART('days', DATE_TRUNC('month',TIMESTAMP --$date$
+	) + '1 MONTH'::INTERVAL - '1 DAY'::INTERVAL))::float)*100) as date_rate
+	from ach_amt ach
+	left join target_amount target on (ach.product_id=target.product_id)
+	order by pseq
+)A]]></xml-property>
         </oda-data-set>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="company" id="88"
  extends="report_library.company"/>
@@ -876,6 +921,78 @@ else
   </design:ResultSets>
 </model:DesignValues>]]></xml-property>
         </oda-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="param_branch" id="1126">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">branch</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">branch</text-property>
+                    <text-property name="heading">branch</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters"/>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">branch</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <method name="beforeOpen"><![CDATA[if (params["branch_id"].value == null ){     
+   this.queryText =this.queryText.replace("--$branch$", "")
+}
+else
+{     
+   this.queryText =this.queryText.replace("--$branch$", "where id in ("+params["branch_id"].value.join(",")+")")
+}]]></method>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">branch</property>
+                    <property name="nativeName">branch</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select string_agg(distinct(name), ',') branch
+from res_branch
+--$branch$]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>string_agg</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>2147483647</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>string_agg</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>string_agg</design:label>
+            <design:formattingHints>
+              <design:displaySize>2147483647</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
     </data-sets>
     <styles>
         <style name="report" id="4">
@@ -959,80 +1076,22 @@ else
             </row>
             <row id="98">
                 <cell id="99">
-                    <table id="614">
-                        <property name="width">11.1875in</property>
-                        <property name="dataSet">branch</property>
+                    <data id="1128">
+                        <property name="fontFamily">"Arial"</property>
+                        <property name="fontSize">12pt</property>
+                        <property name="fontWeight">bold</property>
+                        <property name="textAlign">center</property>
+                        <property name="dataSet">param_branch</property>
                         <list-property name="boundDataColumns">
                             <structure>
-                                <property name="name">id</property>
-                                <text-property name="displayName">id</text-property>
-                                <expression name="expression" type="javascript">dataSetRow["id"]</expression>
-                                <property name="dataType">integer</property>
-                            </structure>
-                            <structure>
-                                <property name="name">name</property>
-                                <text-property name="displayName">name</text-property>
-                                <expression name="expression" type="javascript">dataSetRow["name"]</expression>
+                                <property name="name">branch</property>
+                                <text-property name="displayName">branch</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["branch"]</expression>
                                 <property name="dataType">string</property>
                             </structure>
                         </list-property>
-                        <column id="624">
-                            <property name="width">4in</property>
-                        </column>
-                        <column id="625">
-                            <property name="width">7.1875in</property>
-                        </column>
-                        <detail>
-                            <row id="618">
-                                <cell id="619">
-                                    <property name="fontFamily">"Arial"</property>
-                                    <property name="fontSize">11pt</property>
-                                    <data id="627">
-                                        <property name="fontWeight">bold</property>
-                                        <property name="textAlign">center</property>
-                                        <list-property name="visibility">
-                                            <structure>
-                                                <property name="format">all</property>
-                                                <expression name="valueExpr" type="javascript">true</expression>
-                                            </structure>
-                                        </list-property>
-                                        <property name="resultSetColumn">id</property>
-                                    </data>
-                                </cell>
-                                <cell id="620">
-                                    <data id="629">
-                                        <property name="fontFamily">"Arial"</property>
-                                        <property name="fontSize">11pt</property>
-                                        <property name="fontWeight">bold</property>
-                                        <property name="textAlign">center</property>
-                                        <list-property name="visibility">
-                                            <structure>
-                                                <property name="format">all</property>
-                                                <expression name="valueExpr" type="javascript">true</expression>
-                                            </structure>
-                                        </list-property>
-                                        <property name="resultSetColumn">name</property>
-                                    </data>
-                                </cell>
-                            </row>
-                        </detail>
-                        <footer>
-                            <row id="621">
-                                <cell id="622">
-                                    <property name="colSpan">2</property>
-                                    <property name="rowSpan">1</property>
-                                    <text-data id="646">
-                                        <property name="fontFamily">"Arial"</property>
-                                        <property name="fontSize">12pt</property>
-                                        <property name="fontWeight">bold</property>
-                                        <property name="textAlign">center</property>
-                                        <expression name="valueExpr">branchList;</expression>
-                                        <property name="contentType">html</property>
-                                    </text-data>
-                                </cell>
-                            </row>
-                        </footer>
-                    </table>
+                        <property name="resultSetColumn">branch</property>
+                    </data>
                 </cell>
             </row>
             <row id="107">
@@ -1488,6 +1547,24 @@ else
                     <expression name="expression" type="javascript">dataSetRow["product_color"]</expression>
                     <property name="dataType">string</property>
                 </structure>
+                <structure>
+                    <property name="name">target_amt_1</property>
+                    <text-property name="displayName">target_amt</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["target_amt"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="name">Aggregation_19</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["target_amt"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
             </list-property>
             <column id="33">
                 <property name="width">0.5277777777777778in</property>
@@ -1517,6 +1594,9 @@ else
                 <property name="width">0.9479166666666666in</property>
             </column>
             <column id="113">
+                <property name="width">1.0208333333333333in</property>
+            </column>
+            <column id="1121">
                 <property name="width">1.0208333333333333in</property>
             </column>
             <column id="35">
@@ -1610,7 +1690,7 @@ else
                         </label>
                     </cell>
                     <cell id="892">
-                        <property name="colSpan">4</property>
+                        <property name="colSpan">5</property>
                         <property name="rowSpan">1</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1673,6 +1753,21 @@ else
                             <property name="fontWeight">bold</property>
                             <property name="textAlign">center</property>
                             <text-property name="text">Ach Qty</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1117">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="1122">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">center</property>
+                            <text-property name="text">Target Amt</text-property>
                         </label>
                     </cell>
                     <cell id="18">
@@ -1908,6 +2003,25 @@ else
                             </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">quantity</property>
+                        </data>
+                    </cell>
+                    <cell id="1118">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="1123">
+                            <property name="paddingLeft">3pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">target_amt</property>
                         </data>
                     </cell>
                     <cell id="24">
@@ -2165,13 +2279,35 @@ else
                         <property name="borderTopWidth">thin</property>
                         <data id="683">
                             <property name="fontWeight">bold</property>
-                            <property name="paddingLeft">3pt</property>
+                            <property name="paddingLeft">1pt</property>
+                            <property name="paddingRight">3pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
                                 <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">Aggregation</property>
+                        </data>
+                    </cell>
+                    <cell id="1119">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="1124">
+                            <property name="fontWeight">bold</property>
+                            <property name="paddingLeft">1pt</property>
+                            <property name="paddingRight">3pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">Aggregation_19</property>
                         </data>
                     </cell>
                     <cell id="679">
@@ -2420,6 +2556,13 @@ else
                             <property name="textAlign">left</property>
                             <text-property name="text">%</text-property>
                         </label>
+                    </cell>
+                    <cell id="1120">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">none</property>
+                        <property name="borderRightStyle">none</property>
+                        <property name="borderTopStyle">none</property>
                     </cell>
                     <cell id="1001">
                         <property name="colSpan">6</property>
