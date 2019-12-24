@@ -380,6 +380,13 @@ class manual_cashier_approval(osv.osv):
     def set_to_draft(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'draft'}, context=context)
         return True 
+    
+    def set_to_date(self, cr, uid, ids, context=None):
+        paymentObj = self.pool.get('manual.cashier.customer.payment')
+        cashier_data=self.browse(cr, uid, ids, context=context)
+        for payment_id  in cashier_data.cashier_customer_payment_line:
+            paymentObj.write(cr, uid, payment_id.id, {'date_invoice':cashier_data.to_date}, context=context)
+        return True 
     def generate_report(self, cr, uid, ids, context=None):
         url = "http://localhost:8080/birt/frameset?__report=daily_sale_report.rptdesign"
         # url = "http://10.0.1.30:8080/birt/frameset?__report=daily_sale_report.rptdesign"

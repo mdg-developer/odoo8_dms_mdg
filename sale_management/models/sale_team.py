@@ -193,7 +193,8 @@ class crm_case_section(osv.osv):
     _columns = {
                 'region': fields.char('Region'),
                 'channel_ids':fields.many2many('sale.channel'),
-                'code': fields.char('Code', required=True),
+                'code': fields.char('Code', size=15, required=True),
+
                 'product_ids':fields.many2many('product.product'),
                 'warehouse_id': fields.many2one('stock.warehouse', 'Car Warehouse', required=True),
                 'location_id': fields.many2one('stock.location', ' Car Location', required=True),

@@ -41,6 +41,9 @@
 									<field name="confirm_date" readonly="1" />
 									<field name="approve_by" readonly="1" />
 									<field name="approve_date" readonly="1" />
+									<button name="set_to_date" string="Set to Date" type="object"
+										class="oe_highlight" attrs="{'invisible':[('state','in',('done'))]}"
+										 />
 								</group>
 							</group>
 							<group>
