@@ -30,6 +30,9 @@ class res_users(osv.osv):
         'allow_stock_check':fields.boolean('Allow Stock Check',default=True),
         'allow_rental':fields.boolean('Allow Customer Rental',default=True),
         'allow_feedback':fields.boolean('Allow Customer Feedback',default=True),
+        'allow_customer_create':fields.boolean('Allow Customer Create',default=True),
+
+
     }
     
     def automation_cashier_approval(self, cr, uid,context=None):

@@ -35,7 +35,7 @@
 									<field name="allow_pending_delivery" />
 									<field name="allow_stock_check" />
 									<field name="allow_feedback" />
-
+									<field name="allow_customer_create" />
 								</group>
 								<group>
 									<field name="allow_credit_collection" />
