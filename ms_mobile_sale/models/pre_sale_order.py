@@ -278,12 +278,12 @@ class pre_sale_order(osv.osv):
                         cr.execute('select company_id from res_users where id=%s', (preObj_ids.user_id.id,))
                         company_id = cr.fetchone()[0]
                         if preObj_ids.void_flag == 'voided':  # they work while payment type not 'cash' and 'credit'
-                            so_state = 'cancel'
+#                             so_state = 'cancel'
                             cancel_user_id = preObj_ids.user_id.id
                         elif preObj_ids.void_flag == 'none':
-                            so_state = 'manual'
+#                             so_state = 'manual'
                             cancel_user_id = None
-                        print 'so_ssssssssssssstae',so_state
+                        
                         saleOrderResult = {'partner_id':preObj_ids.partner_id.id,
                                                         'customer_code':preObj_ids.customer_code,
                                                         'sale_plan_name':preObj_ids.sale_plan_name,
@@ -302,7 +302,7 @@ class pre_sale_order(osv.osv):
                                                         'additional_discount':0,
                                                         'schedule_date':preObj_ids.schedule_date,
 #                                                         'client_order_ref':preObj_ids.tablet_id.name,
-                                                         'state':so_state,
+                                                         'state':'draft',
                                                          'payment_type':preObj_ids.type,
                                                         'pricelist_id':preObj_ids.pricelist_id.id,
                                                         'pre_order':True,
@@ -363,10 +363,10 @@ class pre_sale_order(osv.osv):
                                               'manual':pre_promo_data.manual,
                                                           }
                             saleOrderPromoLineObj.create(cr, uid, so_promo_line_result, context=context)                                   
-                    if so_id and  so_state != 'cancel':
-                        saleOrderObj.button_dummy(cr, uid, [so_id], context=context)
+#                     if so_id and  so_state != 'cancel':
+#                         saleOrderObj.button_dummy(cr, uid, [so_id], context=context)
                         # Do Open
-                        saleOrderObj.action_button_confirm(cr, uid, [so_id], context=context)
+#                         saleOrderObj.action_button_confirm(cr, uid, [so_id], context=context)
                         
             except Exception, e:
                 raise orm.except_orm(_('Error :'), _("Error Occured while Convert Mobile Sale Order! \n [ %s ]") % (e))
