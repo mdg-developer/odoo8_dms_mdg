@@ -28,8 +28,7 @@ ATTRIBUTES = [
     ('cat_total', 'Product Category Sale Total'),
     ('fix_prods_qty', 'Fix Quantity Total combination'),
     ('fix_categ_qty', 'Fix Category Quantity And Subtotal'),
-
-
+    ('prod_qty_optional', 'Product Quantity combination(Optional)'),
 ]
 
 COMPARATORS = [
