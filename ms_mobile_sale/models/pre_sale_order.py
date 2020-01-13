@@ -74,6 +74,7 @@ class pre_sale_order(osv.osv):
       'print_count':fields.integer('RePrint Count'),
       'rebate_later':fields.boolean('Rebate Later'),
       'schedule_date':fields.datetime('Scheduled Date'),
+      'customer_sign':fields.binary('Customer Sign'),
     }
     _order = 'id desc'
     _defaults = {
@@ -166,6 +167,7 @@ class pre_sale_order(osv.osv):
                         'print_count':so['print_count'],
                         'rebate_later':rebate,
                         'schedule_date':so['date_to_deliver'],
+                        'customer_sign':so['customerSign']
                     }
                     s_order_id = mobile_sale_order_obj.create(cursor, user, mso_result, context=context)
                     so_ids.append(s_order_id)
