@@ -6,6 +6,7 @@ from dateutil.relativedelta import relativedelta
 from datetime import datetime
 import datetime
 from openerp.exceptions import except_orm, Warning, RedirectWarning
+from openerp.tools.translate import _
 
 class sale_target(osv.osv):
     
@@ -25,7 +26,12 @@ class sale_target(osv.osv):
                 print 'product_name', line.name_template
                 if product.product_tmpl_id.type!='service' and product.is_foc !=True:
                     cr.execute("select new_price from product_pricelist_item where price_version_id in ( select id from product_pricelist_version where pricelist_id=%s and active=True) and product_id=%s and product_uom_id=%s", (pricelist_id, product.id, product.product_tmpl_id.report_uom_id.id,))
-                    product_price = cr.fetchone()[0]    
+                    product_price = cr.fetchone()
+                    if product_price:
+                        product_price=product_price[0]
+                    else:
+                        raise osv.except_osv(_('Warning'),
+                                            _('Please Check Price List For (%s)') % (product.name_template,))                          
                                      
                     sequence=product.sequence
                     data_line.append({'product_id':line.id,
