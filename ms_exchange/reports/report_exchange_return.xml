@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<template id="report_exchange_document">
+			<div class="page">
+				<div class="row">
+					<div class="col-xs-3">
+						<img t-if="o.create_uid.company_id.logo"
+							t-att-src="'data:image/png;base64,%s' % o.create_uid.company_id.logo"
+							style="max-height: 45px;" />
+					</div>
+					<div class="col-xs-9 text-right" style="margin-top:20px;"
+						t-field="o.create_uid.company_id.rml_header1" />
+				</div>
+				<div class="row zero_min_height">
+					<div class="col-xs-12">
+						<div style="border-bottom: 1px solid black;" />
+					</div>
+				</div>
+				<div>
+					<span t-field="o.create_uid.company_id.partner_id" />
+				</div>
+				<div>
+					<span t-field="o.create_uid.company_id.street" />
+					,
+					<span t-field="o.create_uid.company_id.state_id.name" />
+					,
+					<span t-field="o.create_uid.company_id.city.name" />
+					,
+					<span t-field="o.create_uid.company_id.country_id.name" />
+					.
+				</div>
+
+				<h4>
+					<strong>
+						Stock Exchange/Return
+					</strong>
+				</h4>
+
+				<table class="table table-condensed">
+					<tr>
+						<td style="border:0pt;font-size:10pt;">
+							<strong>ID:</strong>
+						</td>
+						<td style="border:0pt;font-size:10pt;">
+							<strong t-field="o.transaction_id"></strong>
+						</td>
+						<td style="border:0pt;font-size:10pt;">
+							<strong>Date:</strong>
+						</td>
+						<td style="border:0pt;font-size:10pt;">
+							<strong t-field="o.date"></strong>
+						</td>
+					</tr>
+
+					<tr>
+
+						<td style="border:0pt;font-size:10pt;">
+							<strong>Customer Name:</strong>
+						</td>
+						<td style="border:0pt;font-size:10pt;">
+							<strong t-field="o.customer_id" />
+						</td>
+
+						<td style="border:0pt;font-size:10pt;">
+							<strong>Exchange Type:</strong>
+						</td>
+						<td style="border:0pt;font-size:10pt;">
+							<span t-field="o.exchange_type" />
+						</td>
+					</tr>
+
+					<tr>
+						<td style="border:0pt;font-size:10pt;">
+							<strong>Customer Code:</strong>
+						</td>
+						<td style="border:0pt;font-size:10pt;">
+
+							<span t-field="o.customer_code" />
+						</td>
+
+						<td style="border:0pt;font-size:10pt;">
+							<strong>Location Type:</strong>
+						</td>
+<!-- 						<td style="border:0pt;font-size:10pt;"> -->
+<!-- 							<span t-field="o.location_type" /> -->
+<!-- 						</td> -->
+					</tr>
+
+					<tr>
+						<td style="border:0pt;font-size:10pt;">
+							<strong>Sale Team:</strong>
+						</td>
+						<td style="border:0pt;font-size:10pt;">
+							<span t-field="o.team_id.name" />
+						</td>
+
+						<td style="border:0pt;font-size:10pt;">
+							<strong>Void Status:</strong>
+						</td>
+						<td style="border:0pt;font-size:10pt;">
+							<span t-field="o.void_flag" />
+						</td>
+					</tr>
+
+					<tr>
+						<td style="border:0pt;font-size:10pt;">
+							<strong>Note:</strong>
+						</td>
+						<td style="border:0pt;font-size:10pt;">
+							<span t-field="o.note" />
+						</td>
+
+						<td style="border:0pt;font-size:10pt;">
+							<strong>Location:</strong>
+						</td>
+						<td style="border:0pt;font-size:10pt;">
+							<span t-field="o.location_id" />
+						</td>
+					</tr>
+					<tr>
+						<td style="border:0pt;font-size:10pt;">
+							<strong>Branch:</strong>
+						</td>
+						<td style="border:0pt;font-size:10pt;">
+							<span t-field="o.branch_id" />
+						</td>
+					</tr>
+					
+				</table>
+
+				<table class="table table-condensed">
+					<thead>
+						<tr>
+							<th>Product</th>
+                            <th class="text-center">UOM</th>
+                            <th class="text-center">Qty</th>
+							<th>Batch No</th>
+							<th>Expiry</th>
+							<th>Type</th>
+							<th>Note</th>
+						</tr>
+					</thead>
+					<tbody class="invoice_tbody">
+						<tr t-foreach="o.item_line" t-as="l">
+							<td>
+								<span t-field="l.product_id" />
+							</td>
+							<td align="center">
+								<span t-field="l.uom_id.name" />
+							</td>							
+							<td align="center">
+								<span t-field="l.product_qty" />
+							</td>
+							<td>
+								<span t-field="l.batchno" />
+							</td>
+							<td>
+								<span t-field="l.exp_date" />
+							</td>
+							<td >
+								<span t-field="l.trans_type" />
+							</td>
+							<td>
+								<span t-field="l.note" />
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+				
+			</div>
+		</template>
+
+		<template id="exchange_return_report">
+			<t t-call="report.html_container">
+				<t t-foreach="doc_ids" t-as="doc_id">
+					<t
+						t-raw="translate_doc(doc_id, doc_model, 'partner_id.lang', 'ms_exchange.report_exchange_document')" />
+				</t>
+			</t>
+		</template>
+	</data>
+</openerp>

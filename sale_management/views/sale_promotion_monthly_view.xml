@@ -200,7 +200,7 @@
 		</record>
 
 		<record id="action_sale_monthly_promotion_view" model="ir.actions.act_window">
-			<field name="name">Monthly Promotion</field>
+			<field name="name">Special Promotions</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">sale.monthly.promotion</field>
 			<field name="view_type">form</field>

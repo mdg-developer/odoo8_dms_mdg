@@ -42,9 +42,16 @@
 					<field name="location_id" />
 				</field>
 				<field name="location_id" position="after">
-					<field name="issue_warehouse_id"  widget="many2many_tags"/>
+					<field name="issue_warehouse_id" />
 					<field name="issue_location_id" />
-					<field name="receiver"/>
+					<field name="optional_issue_location_id" />
+					<field name="temp_location_id" />
+                    <field name="normal_return_location_id" />
+                    <field name="exp_location_id" />
+                    <field name="near_exp_location_id" />
+                    <field name="damage_location_id" />
+                    <field name="fresh_stock_not_good_location_id" />										
+					<field name="receiver" />
 					<field name="analytic_account_id" />
 					<field name="van_id" invisible="1" />
 					<field name="vehicle_id" />
@@ -64,11 +71,16 @@
 					<field name="product_invoice" invisible="1" />
 					<field name="credit_sale" invisible="1" />
 				</field>
+				<field name="active" position="after">
+					<field name="allow_foc" />
+					<field name="allow_tax" />
+					<field name="default_division" />
+					<field name="is_supervisor" />
+					<field name="supervisor_team" domain="[('is_supervisor','=',True)]"/>
+				</field>
 				<page string="Team Members" position="after">
 					<page string="Products">
 						<separator string="Products" />
-						<button name="delete_products" string="Delete" class="oe_highlight"
-							type="object" />
 						<field name="product_ids" widget="many2many_list">
 							<kanban quick_create="false" create="true">
 								<field name="name" />
@@ -125,9 +137,6 @@
 								</templates>
 							</kanban>
 						</field>
-					</page>
-					<page string="Promotion">
-						<field name="promotion_id" nolabel="1" />
 					</page>
 					<!-- Add Product Main Group -->
 					<!-- <page string="Product Main Group"> -->
@@ -317,15 +326,15 @@
 			</field>
 		</record>
 
-<!-- 		<record model="ir.ui.view" id="sales_team_form_view_in_crm_inherit"> -->
-<!-- 			<field name="name">crm.case.section.form</field> -->
-<!-- 			<field name="model">crm.case.section</field> -->
-<!-- 			<field name="inherit_id" ref="crm.sales_team_form_view_in_crm" /> -->
-<!-- 			<field name="arch" type="xml"> -->
-<!-- 				<page string="Stages" position="replace"> -->
-<!-- 				</page> -->
-<!-- 			</field> -->
-<!-- 		</record> -->
+		<record model="ir.ui.view" id="sales_team_form_view_in_crm_inherit">
+			<field name="name">crm.case.section.form</field>
+			<field name="model">crm.case.section</field>
+			<field name="inherit_id" ref="crm.sales_team_form_view_in_crm" />
+			<field name="arch" type="xml">
+				<page string="Stages" position="replace">
+				</page>
+			</field>
+		</record>
 		<!-- <menuitem id="sales_team.menu_sales_team_act" action="open_view_date_form" 
 			name ="Sales Teams" -->
 		<!-- sequence="1" parent="base.menu_sales" groups="base.group_multi_salesteams" 

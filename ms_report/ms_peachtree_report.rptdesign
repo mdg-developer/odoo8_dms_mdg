@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.4.2.v201410272105 Build &lt;4.4.2.v20150217-1805></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.4.1.v201408290142 Build &lt;4.4.1.v20140916-1320></property>
+    <list-property name="propertyBindings">
+        <structure>
+            <property name="name">queryText</property>
+            <property name="id">675</property>
+        </structure>
+        <structure>
+            <property name="name">queryTimeOut</property>
+            <property name="id">675</property>
+        </structure>
+        <structure>
+            <property name="name">rowFetchSize</property>
+            <property name="id">675</property>
+        </structure>
+    </list-property>
     <property name="units">in</property>
+    <method name="initialize"><![CDATA[branchList = params["branch_id"].value.join(",");
+teamList = params["sales_team_id"].value.join(",");]]></method>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="layoutPreference">auto layout</property>
     <property name="bidiLayoutOrientation">ltr</property>
     <property name="imageDPI">120</property>
+    <list-property name="libraries">
+        <structure>
+            <property name="fileName">birt_report/report_library.rptlibrary</property>
+            <property name="namespace">report_library</property>
+        </structure>
+    </list-property>
     <parameters>
         <scalar-parameter name="From Date" id="734">
             <property name="valueType">static</property>
@@ -35,30 +57,13 @@
                 <property name="pattern">yyyy/mm/dd</property>
             </structure>
         </scalar-parameter>
+        <scalar-parameter name="branch_id" id="3021" extends="report_library.branch_id"/>
+        <scalar-parameter name="sales_team_id" id="3022" extends="report_library.sales_team_id"/>
+        <scalar-parameter name="user_id" id="3023" extends="report_library.user_id"/>
     </parameters>
     <data-sources>
-        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="2535">
-            <list-property name="privateDriverProperties">
-                <ex-property>
-                    <name>metadataBidiFormatStr</name>
-                    <value>ILYNN</value>
-                </ex-property>
-                <ex-property>
-                    <name>disabledMetadataBidiFormatStr</name>
-                </ex-property>
-                <ex-property>
-                    <name>contentBidiFormatStr</name>
-                    <value>ILYNN</value>
-                </ex-property>
-                <ex-property>
-                    <name>disabledContentBidiFormatStr</name>
-                </ex-property>
-            </list-property>
-            <property name="odaDriverClass">org.postgresql.Driver</property>
-            <property name="odaURL">jdbc:postgresql://localhost:5432/MDG_UAT</property>
-            <property name="odaUser">openerp</property>
-            <encrypted-property name="odaPassword" encryptionID="base64">b3BlbnBncHdk</encrypted-property>
-        </oda-data-source>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="3014"
+ extends="report_library.Data Source"/>
     </data-sources>
     <data-sets>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="Company_Infos" id="732">
@@ -110,7 +115,7 @@
             </list-property>
             <xml-property name="queryText"><![CDATA[select logo_web,name
 from res_company
-where id=1]]></xml-property>
+]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -277,16 +282,22 @@ where id=1]]></xml-property>
                 <structure>
                     <property name="name">from_date</property>
                     <property name="paramName">From Date</property>
+                    <property name="nativeName"></property>
                     <property name="dataType">date</property>
+                    <property name="nativeDataType">0</property>
                     <property name="position">1</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
                     <property name="name">to_date</property>
                     <property name="paramName">To Date</property>
+                    <property name="nativeName"></property>
                     <property name="dataType">date</property>
+                    <property name="nativeDataType">0</property>
                     <property name="position">2</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -295,349 +306,491 @@ where id=1]]></xml-property>
                 <list-property name="resultSet">
                     <structure>
                         <property name="position">1</property>
-                        <property name="name">ms_id</property>
+                        <property name="name">section_id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
                         <property name="position">2</property>
-                        <property name="name">msl_id</property>
+                        <property name="name">branch_id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
                         <property name="position">3</property>
+                        <property name="name">ms_id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">msl_id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
                         <property name="name">name</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">4</property>
+                        <property name="position">6</property>
                         <property name="name">customer_code</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">5</property>
+                        <property name="position">7</property>
                         <property name="name">date</property>
                         <property name="dataType">date</property>
                     </structure>
                     <structure>
-                        <property name="position">6</property>
+                        <property name="position">8</property>
                         <property name="name">due_date</property>
                         <property name="dataType">date</property>
                     </structure>
                     <structure>
-                        <property name="position">7</property>
-                        <property name="name">discount</property>
-                        <property name="dataType">float</property>
-                    </structure>
-                    <structure>
-                        <property name="position">8</property>
-                        <property name="name">product_uos_qty</property>
-                        <property name="dataType">float</property>
-                    </structure>
-                    <structure>
                         <property name="position">9</property>
+                        <property name="name">discount</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
+                        <property name="name">product_uos_qty</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">11</property>
                         <property name="name">product_name</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">10</property>
+                        <property name="position">12</property>
                         <property name="name">payment_term</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">11</property>
+                        <property name="position">13</property>
                         <property name="name">price_unit</property>
-                        <property name="dataType">float</property>
+                        <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">12</property>
+                        <property name="position">14</property>
                         <property name="name">uom</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">13</property>
+                        <property name="position">15</property>
                         <property name="name">description</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">14</property>
+                        <property name="position">16</property>
                         <property name="name">internal_note</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">15</property>
+                        <property name="position">17</property>
                         <property name="name">invoice</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">16</property>
+                        <property name="position">18</property>
                         <property name="name">receivable_account</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">17</property>
-                        <property name="name">stocking_qty</property>
-                        <property name="dataType">float</property>
-                    </structure>
-                    <structure>
-                        <property name="position">18</property>
-                        <property name="name">stocking_unit_price</property>
-                        <property name="dataType">float</property>
-                    </structure>
-                    <structure>
                         <property name="position">19</property>
-                        <property name="name">partner_id</property>
+                        <property name="name">stocking_qty</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
                         <property name="position">20</property>
+                        <property name="name">stocking_unit_price</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">21</property>
+                        <property name="name">sub_total</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">22</property>
+                        <property name="name">partner_id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">23</property>
                         <property name="name">ship_to_name</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">21</property>
+                        <property name="position">24</property>
                         <property name="name">ship_address</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">22</property>
+                        <property name="position">25</property>
                         <property name="name">ship_via</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">23</property>
+                        <property name="position">26</property>
                         <property name="name">gl_account</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">24</property>
+                        <property name="position">27</property>
                         <property name="name">tax_type</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">25</property>
+                        <property name="position">28</property>
                         <property name="name">id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">26</property>
+                        <property name="position">29</property>
                         <property name="name">saleman_name</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">27</property>
+                        <property name="position">30</property>
                         <property name="name">no_of_distribution</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">28</property>
+                        <property name="position">31</property>
                         <property name="name">amount</property>
-                        <property name="dataType">float</property>
+                        <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">29</property>
+                        <property name="position">32</property>
                         <property name="name">so_propo_dis</property>
                         <property name="dataType">integer</property>
                     </structure>
                 </list-property>
             </structure>
+            <method name="beforeOpen"><![CDATA[if (params["branch_id"].value == null ){     
+   this.queryText =this.queryText.replace("--$branch_id$", "")
+}
+else
+{     
+   this.queryText =this.queryText.replace("--$branch_id$", "and  branch_id in ("+params["branch_id"].value.join(",")+")")
+}
+if (params["sales_team_id"].value == null ){     
+   this.queryText =this.queryText.replace("--$sales_team$", "")
+}
+else
+{     
+   this.queryText =this.queryText.replace("--$sales_team$", "and  A.section_id in ("+params["sales_team_id"].value.join(",")+")")
+}]]></method>
             <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
                 <structure>
                     <property name="position">1</property>
+                    <property name="name">section_id</property>
+                    <property name="nativeName">section_id</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">branch_id</property>
+                    <property name="nativeName">branch_id</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
                     <property name="name">ms_id</property>
                     <property name="nativeName">ms_id</property>
                     <property name="dataType">integer</property>
                 </structure>
                 <structure>
-                    <property name="position">2</property>
+                    <property name="position">4</property>
                     <property name="name">msl_id</property>
                     <property name="nativeName">msl_id</property>
                     <property name="dataType">integer</property>
                 </structure>
                 <structure>
-                    <property name="position">3</property>
+                    <property name="position">5</property>
                     <property name="name">name</property>
                     <property name="nativeName">name</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">4</property>
+                    <property name="position">6</property>
                     <property name="name">customer_code</property>
                     <property name="nativeName">customer_code</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">5</property>
+                    <property name="position">7</property>
                     <property name="name">date</property>
                     <property name="nativeName">date</property>
                     <property name="dataType">date</property>
                 </structure>
                 <structure>
-                    <property name="position">6</property>
+                    <property name="position">8</property>
                     <property name="name">due_date</property>
                     <property name="nativeName">due_date</property>
                     <property name="dataType">date</property>
                 </structure>
                 <structure>
-                    <property name="position">7</property>
+                    <property name="position">9</property>
                     <property name="name">discount</property>
                     <property name="nativeName">discount</property>
-                    <property name="dataType">float</property>
+                    <property name="dataType">decimal</property>
                 </structure>
                 <structure>
-                    <property name="position">8</property>
+                    <property name="position">10</property>
                     <property name="name">product_uos_qty</property>
                     <property name="nativeName">product_uos_qty</property>
-                    <property name="dataType">float</property>
+                    <property name="dataType">integer</property>
                 </structure>
                 <structure>
-                    <property name="position">9</property>
+                    <property name="position">11</property>
                     <property name="name">product_name</property>
                     <property name="nativeName">product_name</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">10</property>
+                    <property name="position">12</property>
                     <property name="name">payment_term</property>
                     <property name="nativeName">payment_term</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">11</property>
+                    <property name="position">13</property>
                     <property name="name">price_unit</property>
                     <property name="nativeName">price_unit</property>
-                    <property name="dataType">float</property>
+                    <property name="dataType">decimal</property>
                 </structure>
                 <structure>
-                    <property name="position">12</property>
+                    <property name="position">14</property>
                     <property name="name">uom</property>
                     <property name="nativeName">uom</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">13</property>
+                    <property name="position">15</property>
                     <property name="name">description</property>
                     <property name="nativeName">description</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">14</property>
+                    <property name="position">16</property>
                     <property name="name">internal_note</property>
                     <property name="nativeName">internal_note</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">15</property>
+                    <property name="position">17</property>
                     <property name="name">invoice</property>
                     <property name="nativeName">invoice</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">16</property>
+                    <property name="position">18</property>
                     <property name="name">receivable_account</property>
                     <property name="nativeName">receivable_account</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">17</property>
+                    <property name="position">19</property>
                     <property name="name">stocking_qty</property>
                     <property name="nativeName">stocking_qty</property>
-                    <property name="dataType">float</property>
+                    <property name="dataType">integer</property>
                 </structure>
                 <structure>
-                    <property name="position">18</property>
+                    <property name="position">20</property>
                     <property name="name">stocking_unit_price</property>
                     <property name="nativeName">stocking_unit_price</property>
-                    <property name="dataType">float</property>
+                    <property name="dataType">decimal</property>
                 </structure>
                 <structure>
-                    <property name="position">19</property>
+                    <property name="position">21</property>
+                    <property name="name">sub_total</property>
+                    <property name="nativeName">sub_total</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">22</property>
                     <property name="name">partner_id</property>
                     <property name="nativeName">partner_id</property>
                     <property name="dataType">integer</property>
                 </structure>
                 <structure>
-                    <property name="position">20</property>
+                    <property name="position">23</property>
                     <property name="name">ship_to_name</property>
                     <property name="nativeName">ship_to_name</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">21</property>
+                    <property name="position">24</property>
                     <property name="name">ship_address</property>
                     <property name="nativeName">ship_address</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">22</property>
+                    <property name="position">25</property>
                     <property name="name">ship_via</property>
                     <property name="nativeName">ship_via</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">23</property>
+                    <property name="position">26</property>
                     <property name="name">gl_account</property>
                     <property name="nativeName">gl_account</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">24</property>
+                    <property name="position">27</property>
                     <property name="name">tax_type</property>
                     <property name="nativeName">tax_type</property>
                     <property name="dataType">integer</property>
                 </structure>
                 <structure>
-                    <property name="position">25</property>
+                    <property name="position">28</property>
                     <property name="name">id</property>
                     <property name="nativeName">id</property>
                     <property name="dataType">integer</property>
                 </structure>
                 <structure>
-                    <property name="position">26</property>
+                    <property name="position">29</property>
                     <property name="name">saleman_name</property>
                     <property name="nativeName">saleman_name</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">27</property>
+                    <property name="position">30</property>
                     <property name="name">no_of_distribution</property>
                     <property name="nativeName">no_of_distribution</property>
                     <property name="dataType">decimal</property>
                 </structure>
                 <structure>
-                    <property name="position">28</property>
+                    <property name="position">31</property>
                     <property name="name">amount</property>
                     <property name="nativeName">amount</property>
-                    <property name="dataType">float</property>
+                    <property name="dataType">decimal</property>
                 </structure>
                 <structure>
-                    <property name="position">29</property>
+                    <property name="position">32</property>
                     <property name="name">so_propo_dis</property>
                     <property name="nativeName">so_propo_dis</property>
                     <property name="dataType">integer</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select *,(select count(msl.id) from mobile_sale_order_line msl where msl.order_id=ms_id) as no_of_distribution,(stocking_qty*stocking_unit_price)*-1 as amount,get_msol_seq(ms_id,msl_id) as so_propo_dis
-from (select ms.id as ms_id,msl.id as msl_id,ms.name,Cast(ms.customer_code || ' ' || rp.name as character varying ) as customer_code,ms.date::date,ms.due_date,msl.discount,msl.product_uos_qty,
-Cast(crm.name || '-' || pp.name_template as character varying) as product_name,term.name as payment_term,msl.price_unit,uom.name as uom,pt.description,rp.comment as internal_note,ms.name as invoice,'1518-YGN'::character varying as receivable_account,msl.product_uos_qty as stocking_qty,msl.price_unit as stocking_unit_price,
-res.partner_id as partner_id,rp.name as ship_to_name,Cast(address || ',' || rc.name || ',' || rcs.name || ',' || city.name || ',' || town.name as character varying ) as ship_address,'Vehicle'::character varying as ship_via,'1518-YGN'::character varying as gl_account,1 as tax_type
-from mobile_sale_order ms
-left join mobile_sale_order_line msl on ms.id=msl.order_id
-left join product_uom uom on uom.id=msl.uom_id
+            <xml-property name="queryText"><![CDATA[select *,(select count(msl.id) from mobile_sale_order_line msl where msl.order_id=ms_id) as no_of_distribution,(sub_total)*-1 as amount,
+get_invl_seq(ms_id,msl_id) as so_propo_dis
+from (select ms.section_id as section_id,ms.branch_id as branch_id,ms.id as ms_id,msl.id as msl_id,ms.name,so.customer_code,ms.date_invoice as date,ms.date_due as due_date,msl.discount,get_smaller_qty(msl.uos_id,msl.quantity,msl.product_id) product_uos_qty,
+Cast((select case when substr(name,0,2) ~ '^([0-9]+\.?[0-9]*|\.[0-9]+)$' then substr(name,4) else name end as name from crm_case_section where id=crm.id) || '-' || pp.name_template as character varying) as product_name,term.name as payment_term,pt.list_price as price_unit,uom.name as uom,pt.description_sale description,
+rp.comment as internal_note,ms.name as invoice,'1518-YGN'::character varying as receivable_account,get_smaller_qty(msl.uos_id,msl.quantity,msl.product_id) stocking_qty,
+       CASE WHEN msl.price_unit=0 THEN 0
+            ELSE pt.list_price
+       END
+        stocking_unit_price, msl.price_subtotal as sub_total,
+res.partner_id as partner_id,rp.name as ship_to_name,Cast(address || ',' || rc.name || ',' || rcs.name || ',' || city.name || ',' || town.name as character varying ) as ship_address,'Vehicle'::character varying as ship_via,
+CASE WHEN msl.price_unit=0 THEN (select aa.code receivable_account from product_product pp left join product_template pt on (pp.product_tmpl_id=pt.id) left join product_maingroup pg on (pt.main_group=pg.id) left join account_account aa 
+on (aa.id=pg.property_account_foc) where pp.id=product_id)
+            ELSE (select code gl_account
+from account_account
+where id in (
+select substring(value_reference,17)::int from ir_property ip,ir_model_fields im where im.id=ip.fields_id and model='product.category' and im.name='property_account_income_categ' and res_id='product.category,'|| (
+select id from product_category where id=cat.id)
+)
+)       END
+        gl_account,
+1 as tax_type
+from sale_order so 
+inner join account_invoice ms on (ms.origin=so.name) 
+inner join account_invoice_line msl on (ms.id=msl.invoice_id)
 left join account_payment_term term on ms.payment_term=term.id
-left join crm_case_section crm on ms.sale_team=crm.id
+left join crm_case_section crm on ms.section_id=crm.id
 left join product_product pp on msl.product_id=pp.id
 left join product_template pt on pp.product_tmpl_id=pt.id
+left join product_uom uom on uom.id=pt.uom_id
+left join product_category cat on (pt.categ_id=cat.id)
 left join res_partner rp on ms.partner_id=rp.id
 left join res_country rc on rc.id=rp.country_id
 left join res_country_state rcs on rcs.id=rp.state_id
 left join res_city city on city.id=rp.city
 left join res_township town on town.id=rp.township
-left join res_users res on ms.user_id=res.id)A join (select id,name as saleman_name from res_partner)B on A.partner_id = B.id
+left join res_users res on ms.user_id=res.id where so.tb_ref_no is not null)A join (select id,name as saleman_name from res_partner)B on A.partner_id = B.id
 and A.date::date between ? and ?
-order by A.name,A.msl_id,A.date
-
-]]></xml-property>
+--$branch_id$
+--$sales_team$
+order by A.name,A.msl_id,A.date]]></xml-property>
+        </oda-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="branch" id="3018"
+ extends="report_library.branch"/>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="Sale_Team" id="3019"
+ extends="report_library.Sale_Team"/>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="users" id="3020"
+ extends="report_library.users"/>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="param_sales_team" id="675">
+            <property name="nullsOrdering">nulls lowest</property>
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">string_agg</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">string_agg</text-property>
+                    <text-property name="heading">string_agg</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters"/>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">string_agg</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <method name="beforeOpen"><![CDATA[this.queryText =this.queryText.replace("--$sales_team$", "and section_id in ("+ params["sales_team_id"].value.join(",")+")")
+this.queryText =this.queryText.replace("--$branch_id$", "and branch_id in ("+ params["branch_id"].value.join(",")+")")]]></method>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">string_agg</property>
+                    <property name="nativeName">string_agg</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select string_agg(distinct(ccs.name), ',')
+from crm_case_section ccs,section_users_rel rel
+where ccs.id=rel.section_id
+--$sales_team$
+--$branch_id$]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>string_agg</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>2147483647</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>string_agg</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>string_agg</design:label>
+            <design:formattingHints>
+              <design:displaySize>2147483647</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
         </oda-data-set>
     </data-sets>
     <styles>
@@ -678,10 +831,26 @@ order by A.name,A.msl_id,A.date
         <simple-master-page name="Simple MasterPage" id="2">
             <property name="orientation">landscape</property>
             <page-footer>
-                <text id="3">
-                    <property name="contentType">html</property>
-                    <text-property name="content"><![CDATA[<value-of>new Date()</value-of>]]></text-property>
-                </text>
+                <grid id="3024">
+                    <column id="3025"/>
+                    <column id="3026"/>
+                    <row id="3027">
+                        <cell id="3028">
+                            <text id="3030">
+                                <property name="textAlign">left</property>
+                                <property name="contentType">html</property>
+                                <text-property name="content"><![CDATA[<value-of>new Date()</value-of>]]></text-property>
+                            </text>
+                        </cell>
+                        <cell id="3029">
+                            <text id="3031">
+                                <property name="textAlign">right</property>
+                                <property name="contentType">html</property>
+                                <text-property name="content"><![CDATA[<B> Page - <VALUE-OF>pageNumber</VALUE-OF> of <VALUE-OF>totalPage</VALUE-OF></B>]]></text-property>
+                            </text>
+                        </cell>
+                    </row>
+                </grid>
             </page-footer>
         </simple-master-page>
     </page-setup>
@@ -721,70 +890,113 @@ order by A.name,A.msl_id,A.date
             </row>
             <row id="2541">
                 <cell id="2542">
-                    <grid id="2967">
-                        <column id="2968"/>
-                        <column id="2969"/>
-                        <row id="2970">
-                            <cell id="2971">
-                                <label id="2976">
-                                    <property name="fontSize">12pt</property>
-                                    <property name="fontWeight">normal</property>
-                                    <property name="textAlign">right</property>
-                                    <text-property name="text">From Date:</text-property>
-                                </label>
-                            </cell>
-                            <cell id="2972">
-                                <data id="2978">
-                                    <property name="fontSize">12pt</property>
-                                    <structure name="dateTimeFormat">
-                                        <property name="category">Custom</property>
-                                        <property name="pattern">dd/MM/yyyy</property>
-                                    </structure>
-                                    <list-property name="boundDataColumns">
-                                        <structure>
-                                            <property name="name">From Date</property>
-                                            <expression name="expression" type="javascript">params["From Date"]</expression>
-                                            <property name="dataType">date</property>
-                                        </structure>
-                                    </list-property>
-                                    <property name="resultSetColumn">From Date</property>
-                                </data>
-                            </cell>
-                        </row>
-                        <row id="2973">
-                            <cell id="2974">
-                                <label id="2977">
-                                    <property name="fontSize">12pt</property>
-                                    <property name="textAlign">right</property>
-                                    <text-property name="text">To Date:</text-property>
-                                </label>
-                            </cell>
-                            <cell id="2975">
-                                <data id="2979">
-                                    <property name="fontSize">12pt</property>
-                                    <structure name="dateTimeFormat">
-                                        <property name="category">Custom</property>
-                                        <property name="pattern">dd/MM/yyyy</property>
-                                    </structure>
-                                    <list-property name="boundDataColumns">
-                                        <structure>
-                                            <property name="name">To Date</property>
-                                            <expression name="expression" type="javascript">params["To Date"]</expression>
-                                            <property name="dataType">date</property>
-                                        </structure>
-                                    </list-property>
-                                    <property name="resultSetColumn">To Date</property>
-                                </data>
-                            </cell>
-                        </row>
-                    </grid>
+                    <table id="614">
+                        <property name="dataSet">branch</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">id</property>
+                                <text-property name="displayName">id</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["id"]</expression>
+                                <property name="dataType">integer</property>
+                            </structure>
+                            <structure>
+                                <property name="name">name</property>
+                                <text-property name="displayName">name</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["name"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                        </list-property>
+                        <column id="624"/>
+                        <column id="625"/>
+                        <detail>
+                            <row id="618">
+                                <cell id="619">
+                                    <property name="fontFamily">"Arial"</property>
+                                    <property name="fontSize">11pt</property>
+                                    <data id="627">
+                                        <property name="fontWeight">bold</property>
+                                        <property name="textAlign">center</property>
+                                        <list-property name="visibility">
+                                            <structure>
+                                                <property name="format">all</property>
+                                                <expression name="valueExpr" type="javascript">true</expression>
+                                            </structure>
+                                        </list-property>
+                                        <property name="resultSetColumn">id</property>
+                                    </data>
+                                </cell>
+                                <cell id="620">
+                                    <data id="629">
+                                        <property name="fontFamily">"Arial"</property>
+                                        <property name="fontSize">11pt</property>
+                                        <property name="fontWeight">bold</property>
+                                        <property name="textAlign">center</property>
+                                        <list-property name="visibility">
+                                            <structure>
+                                                <property name="format">all</property>
+                                                <expression name="valueExpr" type="javascript">true</expression>
+                                            </structure>
+                                        </list-property>
+                                        <property name="resultSetColumn">name</property>
+                                    </data>
+                                </cell>
+                            </row>
+                        </detail>
+                        <footer>
+                            <row id="621">
+                                <cell id="622">
+                                    <property name="colSpan">2</property>
+                                    <property name="rowSpan">1</property>
+                                    <text-data id="646">
+                                        <property name="fontFamily">"Arial"</property>
+                                        <property name="fontSize">12pt</property>
+                                        <property name="fontWeight">bold</property>
+                                        <property name="textAlign">center</property>
+                                        <expression name="valueExpr">branchList;</expression>
+                                        <property name="contentType">html</property>
+                                    </text-data>
+                                </cell>
+                            </row>
+                        </footer>
+                    </table>
                 </cell>
             </row>
             <row id="2547">
-                <cell id="2548"/>
+                <cell id="2548">
+                    <data id="3032">
+                        <property name="fontSize">12pt</property>
+                        <property name="fontWeight">bold</property>
+                        <property name="textAlign">center</property>
+                        <property name="dataSet">param_sales_team</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">string_agg</property>
+                                <text-property name="displayName">string_agg</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["string_agg"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">string_agg</property>
+                    </data>
+                </cell>
             </row>
             <row id="2549">
-                <cell id="2550"/>
+                <cell id="2550">
+                    <data id="103">
+                        <property name="fontSize">12pt</property>
+                        <property name="fontWeight">bold</property>
+                        <property name="textAlign">right</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">from_date</property>
+                                <expression name="expression" type="javascript">"From Date - "+Formatter.format(params["From Date"],'dd-MM-yy')+"			To Date - "+Formatter.format(params["To Date"],'dd-MM-yy')</expression>
+                                <property name="dataType">string</property>
+                                <property name="allowExport">true</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">from_date</property>
+                    </data>
+                </cell>
             </row>
         </grid>
         <table id="2569">
@@ -1721,7 +1933,7 @@ order by A.name,A.msl_id,A.date
                         <data id="2611">
                             <structure name="dateTimeFormat">
                                 <property name="category">Custom</property>
-                                <property name="pattern">dd/MM/yyyy</property>
+                                <property name="pattern">MM/dd/yyyy</property>
                             </structure>
                             <property name="resultSetColumn">date</property>
                         </data>
@@ -1738,7 +1950,7 @@ order by A.name,A.msl_id,A.date
                         <data id="2988">
                             <structure name="dateTimeFormat">
                                 <property name="category">Custom</property>
-                                <property name="pattern">dd/MM/yyyy</property>
+                                <property name="pattern">MM/dd/yyyy</property>
                             </structure>
                             <property name="resultSetColumn">date</property>
                         </data>

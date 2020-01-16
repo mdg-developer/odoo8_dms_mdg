@@ -16,15 +16,15 @@ class product_template(osv.osv):
                 "outgoing_qty": sum([p.outgoing_qty for p in product.product_variant_ids]),
             }
         return res
+    
     def _search_product_quantity(self, cr, uid, obj, name, domain, context):
         prod = self.pool.get("product.product")
         res = []
         for field, operator, value in domain:
             # to prevent sql injections
             assert field in ('qty_available', 'virtual_available', 'incoming_qty', 'outgoing_qty'), 'Invalid domain left operand'
-            assert operator in ('<', '>', '=', '<=', '>='), 'Invalid domain operator'
+            assert operator in ('<', '>', '=', '!=', '<=', '>='), 'Invalid domain operator'
             assert isinstance(value, (float, int)), 'Invalid domain right operand'
-
             if operator == '=':
                 operator = '=='
 
@@ -41,15 +41,17 @@ class product_template(osv.osv):
     
     _columns = {
                 # copy from product.py of odoo9
-                # 'default_code': fields.char('Product Code'),
+                'default_code': fields.related('product_variant_ids', 'default_code', type='char', string='Internal Reference'),
                 # new column add
                 'product_principal_ids':fields.many2one('product.principal', 'Product Principal'),
+                
                 #################
                            
                  
                  # copy from panasonic_producty.py of "panansonic_modulue"
                 
                 'uom_lines':fields.many2many('product.uom'),
+                'uom_price_lines': fields.one2many('product.uom.price', 'product_id', 'Uom Price Lines',),
                 'barcode_no':fields.char('Barcode'),
                 'division':fields.many2one('product.division', 'Division'),
                 'main_group':fields.many2one('product.maingroup', 'Main Group'),
@@ -68,7 +70,9 @@ class product_template(osv.osv):
                  "or any of its children.\n"
                  "Otherwise, this includes goods stored in any Stock Location "
                  "with 'internal' type."),
-                'uom_ratio':fields.char('UOM Ratio')
+                'uom_ratio':fields.char('Packing Size'),
+        'categ_id': fields.many2one('product.category','Product Category', required=True, change_default=True, domain="[('type','=','normal')]" ,help="Select category for the current product"),
+         'sequence': fields.related('product_variant_ids', 'sequence', type='integer', string='Sequence', required=True),
                 }
      
     _defaults = {
@@ -79,3 +83,67 @@ class product_template(osv.osv):
                     ]
      
 product_template()
+class product_uom_price(osv.osv):
+    _name = 'product.uom.price'
+    
+    def _factor_inv(self, cursor, user, ids, name, arg, context=None):
+        res = {}
+        for uom in self.browse(cursor, user, ids, context=context):
+            res[uom.id] = self._compute_factor_inv(uom.factor)
+        return res
+
+    def _factor_inv_write(self, cursor, user, id, name, value, arg, context=None):
+        return self.write(cursor, user, id, {'factor': self._compute_factor_inv(value)}, context=context)
+    
+    
+    def onchange_product_uom(self, cr, uid, ids, product_uom,context=None):
+        value = {'name': [],'category_id':[],'price': 0.0, 'factor': 1.0}
+        if product_uom:
+            prod = self.pool.get('product.uom').browse(cr, uid, product_uom, context=context)
+            cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (prod.id,))
+            factor = cr.fetchone()[0]
+            value = {'category_id':prod.category_id, 'price': 0.0, 'factor': factor}
+        return {'value': value}
+    
+    
+    _columns = {
+        'uom_ratio':fields.char('Packing Size'),
+        'product_id': fields.many2one('product.template', 'Product'),
+        'name': fields.many2one('product.uom', 'Unit of Measure', required=True),
+        'category_id': fields.many2one('product.uom.categ', 'UoM Category', required=True, ondelete='cascade',
+            help="Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios."),
+        'factor': fields.float('Ratio', required=True,readonly=True, digits=0, # force NUMERIC with unlimited precision
+            help='How much bigger or smaller this unit is compared to the reference Unit of Measure for this category:\n'\
+                    '1 * (reference unit) = ratio * (this unit)'),
+        'factor_inv': fields.function(_factor_inv, digits=0, # force NUMERIC with unlimited precision
+            fnct_inv=_factor_inv_write,
+            string='Bigger Ratio',
+            help='How many times this Unit of Measure is bigger than the reference Unit of Measure in this category:\n'\
+                    '1 * (this unit) = ratio * (reference unit)', required=True),
+        'rounding': fields.float('Rounding Precision', digits=0, required=True,
+            help="The computed quantity will be a multiple of this value. "\
+                 "Use 1.0 for a Unit of Measure that cannot be further split, such as a piece."),
+        'active': fields.boolean('Active', help="By unchecking the active field you can disable a unit of measure without deleting it."),
+        'uom_type': fields.selection([('bigger','Bigger than the reference Unit of Measure'),
+                                      ('reference','Reference Unit of Measure for this category'),
+                                      ('smaller','Smaller than the reference Unit of Measure')],'Type', required=1),
+        'price': fields.float('Price', digits=0, required=True),
+        'weight': fields.float('Weight(Viss)', required=True),
+        'length': fields.float('Length', required=True),
+        'width': fields.float('Width', required=True),
+        'height': fields.float('Height', required=True),
+        'per_pallet':fields.char('Per Pallet', required=False, readonly=False),
+    }
+
+    _defaults = {
+        'active': 1,
+        'rounding': 0.01,
+        'factor': 1,
+        'uom_type': 'reference',
+        'factor': 1.0,
+        'price': 0.0,
+    }
+    
+
+    
+product_uom_price()

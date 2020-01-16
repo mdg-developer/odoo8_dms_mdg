@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data noupdate="0">
+
+		<record id="base.group_cashier_create" model="res.groups">
+			<field name="name">Cashier Create</field>
+			<field name="category_id" ref="base.module_category_accounting_and_finance" />
+		</record>
+
+		<record id="base.group_cashier_confirm" model="res.groups">
+			<field name="name">Cashier Confirm Validate</field>
+			<field name="category_id" ref="base.module_category_accounting_and_finance" />
+			<field name="implied_ids" eval="[(4, ref('base.group_cashier_create'))]" />
+		</record>
+
+		<record id="base.group_account_entry" model="res.groups">
+			<field name="name">Account Entry Staff</field>
+			<field name="category_id" ref="base.module_category_accounting_and_finance" />
+			<field name="implied_ids" eval="[(4, ref('base.group_cashier_confirm'))]" />
+		</record>
+		<record id="base.group_allow_active" model="res.groups">
+			<field name="name">Allow To Active</field>
+			<field name="category_id" ref="base.module_category_sales_management" />
+			<field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+		</record>
+		<record id="base.group_allow_credit_note" model="res.groups">
+			<field name="name">Allow To Credit Notes</field>
+			<field name="category_id" ref="base.module_category_accounting_and_finance" />
+		</record>
+		<record id="base.group_allow_debit_note" model="res.groups">
+			<field name="name">Allow To Debit Note</field>
+			<field name="category_id" ref="base.module_category_accounting_and_finance" />
+
+		</record>
+	</data>
+</openerp>

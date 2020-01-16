@@ -86,7 +86,7 @@
 				<data>
 					<xpath expr="//field[@name='section_id']" position="replace">
 						
-                       <field name="section_id" attrs="{'invisible':[('supplier','!=',False)]}" completion="1" groups="base.group_multi_salesteams"/>
+                       <field name="section_id" attrs="{'invisible':[('supplier','=',True)]}" completion="1" groups="base.group_multi_salesteams"/>
                         
 					</xpath>					
 				</data>						

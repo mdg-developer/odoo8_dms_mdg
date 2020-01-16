@@ -39,6 +39,12 @@
 							context="{'group_by':'date'}" />
 						<filter name="visit_reason" string="Reason" domain="[]"
 							context="{'group_by':'visit_reason'}" />
+						<filter name="date_day" string="Date Day" domain="[]"
+							context="{'group_by':'date:day'}" />
+						<filter name="township" string="Township" domain="[]"
+							context="{'group_by':'township_id'}" />
+						<filter name="branch" string="Branch" domain="[]"
+							context="{'group_by':'branch_id'}" />						
 					</group>
 				</search>
 			</field>
@@ -67,10 +73,13 @@
 							<group>
 								<group>
 									<field name="customer_id" />
+									<field name="township_id" />
 									<field name="customer_code" />
 									<field name="tablet_id" />
 									<field name="latitude" />
 									<field name="longitude" />
+									<field name="distance_status"/>
+									<field name="branch_id"/>
 								</group>
 								<group>
 									<field name="date" />

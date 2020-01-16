@@ -27,6 +27,8 @@
 						</group>
 						<label for="address" string="Address" />
 						<field name="address" colspan="4" nolabel="1" string='Address' />
+
+
 					</sheet>
 				</form>
 			</field>
@@ -37,11 +39,11 @@
 			<field name="model">res.branch</field>
 			<field name="arch" type="xml">
 				<tree string="Branch">
-					<field name="branch_code" invisible="0"/>
-					<field name="name" invisible="0"/>
-					<field name="res_company_id" invisible="0"/>
-					<field name="address" invisible="0"/>
-					<field name="active" invisible="0"/>
+					<field name="branch_code" />
+					<field name="name" />
+					<field name="res_company_id" />
+					<field name="address" />
+					<field name="active" />
 				</tree>
 			</field>
 		</record>

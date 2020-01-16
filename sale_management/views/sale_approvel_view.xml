@@ -136,7 +136,7 @@
 			<field name="res_model">sales.approval</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
-			<field name="domain">[('state','=','draft')]</field>
+			<field name="domain">[('state','in',('sumit','draft'))]</field>
 			<!-- <field name="context">{'search_default_draft':1}</field> -->
 			<field name="view_id" eval="view_sales_approval_tree" />
 			<field name="search_view_id" ref="view_sales_approval_filter" />
@@ -164,8 +164,8 @@
 				</p>
 			</field>
 		</record>
-		<menuitem id="sales_approval" parent="base.menu_sales" name="Sales Approval"
-			sequence="12" />
+		<menuitem id="sales_approval" parent="base.menu_base_partner" name="Sales Approval"
+			sequence="14" />
 		<menuitem id="sales_approval_menu1" action="action_sales_approval_view"
 			parent="sales_approval" sequence="1" />
 		<menuitem id="sales_approval_menu2" action="action_sales_approval_view1"

@@ -42,10 +42,15 @@ This module manages:
     'category': 'Mobile Sale',
     'sequence': 4,
     'website' : 'http://www.7thcomputing.com',
-    'depends' : ['account'],
+    'depends' : ['account','stock'],
     'demo' : [],
     'data' : [
         'views/report_view.xml',
+        'views/warehouse_report_view.xml',
+        'views/all_report_url_view.xml',
+        'views/account_report_url_view.xml',
+        'views/audit_report_url_view.xml',
+        'views/business_report_url_view.xml',
     ],
     'test' : [
     ],

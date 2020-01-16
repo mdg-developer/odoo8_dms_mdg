@@ -9,17 +9,26 @@
 			<field name="model">product.pricelist</field>
 			<field name="inherit_id" ref="product.product_pricelist_view" />
 			<field name="arch" type="xml">
+				<xpath expr="//form/label" position="before">
+					<header>
+						<button name="approve" string="Approve" class="oe_highlight"
+							type="object" states="draft" groups="base.group_sale_manager" />
+						<button name="publish" string="Publish" class="oe_highlight"
+							type="object" states="approve" groups="base.group_sale_manager" />
+						<field name="state" widget="statusbar" />
+					</header>
+				</xpath>
 				<xpath expr="//form/h1" position="after">
 					<group>
 						<group>
-							<field name="main_group_id" string="Main Group"/>
+							<field name="branch_id" string="Branch"  widget="many2many_tags"/>
 						</group>
 					</group>
 				</xpath>
 			</field>
 		</record>
 
-		<record id="product_pricelist_maingroup_view_tree" model="ir.ui.view">
+	<!--	<record id="product_pricelist_maingroup_view_tree" model="ir.ui.view">
 			<field name="name">product.pricelist.tree.maingroup</field>
 			<field name="model">product.pricelist</field>
 			<field name="inherit_id" ref="product.product_pricelist_view_tree" />
@@ -28,6 +37,6 @@
 					<field name="main_group_id" />
 				</xpath>
 			</field>
-		</record>
+		</record> -->
 	</data>
 </openerp>

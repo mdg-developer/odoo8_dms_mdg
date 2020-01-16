@@ -25,6 +25,7 @@ from xlrd import open_workbook
 from openerp.tools.translate import _
 from datetime import datetime
 import base64
+from openerp.exceptions import Warning
 import logging
 _logger = logging.getLogger(__name__)
 header_fields = ['default_code', 'product_name', 'public_price', 'uom', 'balance_qty', 'cost_price']
@@ -218,6 +219,43 @@ class sl_import(orm.TransientModel):
                     else:
                         uom_ids = uom_id[0]
                         # print uom_ids
+                if  product_name:    
+                    cr.execute("""select id from product_product where name_template= %s """, (product_name,))
+                    data = cr.fetchall()
+                    if data:
+                        product_id = data[0][0]
+                    else:
+                        raise Warning(_('This Product %s  is not present in the system') % product_name)       
+                    if product_id:
+                        cr.execute('select product_tmpl_id from product_product where id = %s', (product_id,))
+                        product_template_id = cr.fetchone()
+                        if uom_ids and product_id:
+                            print 'inventory_id', move_id
+                        if move_id:
+                            cr.execute('select id from stock_inventory_line where inventory_id = %s and product_id = %s', (move_id, product_id,))
+                            
+                            exist = cr.fetchone()
+                            # print 'exist ',exist
+                            if not exist:
+                                value = {'inventory_id':move_id, 'product_uom_id':uom_ids, 'product_id':product_id, 'location_id':location_id, 'product_qty':product_qty, 'product_name':product_name}
+                                stock_move_line_obj.create(cr, uid, value, context=context)
+                            else:
+                                value = {'product_qty':product_qty}
+                                stock_move_line_obj.write(cr, uid, exist, value)
+                            res_id = 'product.template,'
+                            res_id += str(product_template_id[0])
+                            if product_template_id:
+                                product_template_obj.write(cr, uid, product_template_id, {'list_price':public_price})
+                                if price:
+                                    standard_field_id = fields_obj.search(cr, uid, [('name', '=', 'standard_price')])
+                                    if standard_field_id:
+                                        # print 'standard_field',standard_field_id[0]
+                                        res = {'res_id':res_id,
+                                             'value_float':price,
+                                             'type':'float',
+                                             'company_id':company_id,
+                                             'fields_id':standard_field_id[0]}
+                                        property_obj.create(cr, uid, res, context)  
                 if default_code:
                     cr.execute("""select id from product_product where lower(default_code) like %s """, (default_code.lower(),))
                     data = cr.fetchall()

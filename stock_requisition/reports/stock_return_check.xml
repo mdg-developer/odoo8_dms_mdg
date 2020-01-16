@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<template id="stock_return_check_note_document">
+			<div class="page">
+				<div class="row">
+					<div class="col-xs-3">
+						<img t-if="o.create_uid.company_id.logo"
+							t-att-src="'data:image/png;base64,%s' % o.create_uid.company_id.logo"
+							style="max-height: 45px;" />
+					</div>
+					<div class="col-xs-9 text-right" style="margin-top:20px;"
+						t-field="o.create_uid.company_id.rml_header1" />
+				</div>
+				<div class="row zero_min_height">
+					<div class="col-xs-12">
+						<div style="border-bottom: 1px solid black;" />
+					</div>
+				</div>
+				<div>
+					<span t-field="o.create_uid.company_id.partner_id" />
+				</div>
+				<div>
+					<span t-field="o.create_uid.company_id.street" />
+					,
+					<span t-field="o.create_uid.company_id.state_id.name" />
+					,
+					<span t-field="o.create_uid.company_id.city.name" />
+					,
+					<span t-field="o.create_uid.company_id.country_id.name" />
+					.
+				</div>
+				<h4>
+					<strong>
+						Stock Return Check
+					</strong>
+				</h4>
+
+				<table class="table table-condensed">
+					<tr>
+						<td style="border:0pt;font-size:10pt;">
+							<strong>SRN Ref:</strong>
+						</td>
+						<td style="border:0pt;font-size:10pt;">
+							<strong t-field="o.name"></strong>
+						</td>
+
+						<td style="border:0pt;font-size:10pt;">
+							<strong>Date of Return:</strong>
+						</td>
+						<td style="border:0pt;font-size:10pt;">
+							<span t-field="o.return_date" />
+						</td>
+<!-- 						<td style="border:0pt;font-size:10pt;"> -->
+<!-- 							<strong>Approved By:</strong> -->
+<!-- 						</td> -->
+<!-- 						<td style="border:0pt;font-size:10pt;"> -->
+<!-- 							<span t-field="o.approve_by" /> -->
+<!-- 						</td> -->
+					</tr>
+
+					<tr>
+						<td style="border:0pt;font-size:10pt;">
+							<strong>Sales Team:</strong>
+						</td>
+						<td style="border:0pt;font-size:10pt;">
+							<span t-field="o.sale_team_id.name" />
+						</td>
+						<td style="border:0pt;font-size:10pt;">
+							<strong>Branch:</strong>
+						</td>
+						<td style="border:0pt;font-size:10pt;">
+							<span t-field="o.branch_id" />
+						</td>
+						<td style="border:0pt;font-size:10pt;">
+							<strong>Received By:</strong>
+						</td>
+						<td style="border:0pt;font-size:10pt;">
+							<span t-field="o.receive_by" />
+						</td>
+					</tr>
+					<tr>
+						<td style="border:0pt;font-size:10pt;">
+							<strong>Last Updated on:</strong>
+						</td>
+						<td style="border:0pt;font-size:10pt;">
+							<span t-field="o.write_date" />
+						</td>
+					</tr>
+				</table>
+
+				<table class="table table-condensed">
+					<thead>
+						<tr>
+							<th>Product</th>
+							<th class="text-right">Current Location</th>
+							<th class="text-right">Current Qty</th>
+							<th class="text-right">UOM</th>
+							<th class="text-right">To Location</th>
+							<th class="text-right">Qty</th>
+							<th class="text-right">UOM</th>
+						</tr>
+					</thead>
+					<tbody class="invoice_tbody">
+						<tr t-foreach="o.s_line.sorted(key=lambda b: b.sequence)" t-as="l">
+							<td>
+								<span t-field="l.product_id" />
+							</td>
+							<td class="text-right">
+								<span t-field="l.current_location" />
+							</td>
+							<td class="text-right">
+								<span t-field="l.current_qty" />
+							</td>
+							<td class="text-right">
+								<span t-field="l.current_product_uom" />
+							</td>
+							<td class="text-right">
+								<span t-field="l.to_location" />
+							</td>
+							<td class="text-right">
+								<span t-field="l.to_qty" />
+							</td>
+							<td class="text-right">
+								<span t-field="l.to_product_uom" />
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<table class="table table-condensed">
+					<thead>
+						<tr>
+							<th></th>
+							<th>Returned By</th>
+							<th>Checked By</th>
+							<th>Received By</th>
+
+						</tr>
+					</thead>
+					<tbody class="invoice_tbody">
+						<tr t-foreach="o" t-as="l">
+							<td>Name</td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>Position</td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>Signature</td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>Date</td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</template>
+
+		<template id="stock_return_check_note">
+			<t t-call="report.html_container">
+				<t t-foreach="doc_ids" t-as="doc_id">
+					<t
+						t-raw="translate_doc(doc_id, doc_model, 'partner_id.lang', 'stock_requisition.stock_return_check_note_document')" />
+				</t>
+			</t>
+		</template>
+	</data>
+</openerp>

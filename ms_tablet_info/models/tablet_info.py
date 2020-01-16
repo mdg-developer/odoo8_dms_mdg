@@ -16,21 +16,34 @@ class tablet_information(osv.osv):
                 'storage_day': fields.integer('Data Storage', size=4, required=True, help="Help"),
                 'hotline': fields.char('Hotline'),
                 'device_id': fields.char('Device ID'),
+                'is_testing': fields.boolean('Is Testing'),
+                'branch_id':fields.many2one('res.branch', 'Branch'),
     }
     _defaults = {
-               
+               'is_testing' : False,
     }  
     
-    def check_device_id(self, cr, uid, device_id , context=None, **kwargs):    
+    def check_device_id(self, cr, uid, device_id , tablet_name, context=None, **kwargs):    
         try:
-            cr.execute('''
-            select name,device_id from tablets_information where device_id = %s
-            ''', (str(device_id),))
-            datas = cr.fetchall()            
-            return datas
+           cr.execute('''
+           select device_id from tablets_information where name = %s
+           ''', (tablet_name,))
+           datas = cr.fetchall()
+           if datas:
+               try:
+                   device_imei = datas[0][0]
+               except Exception, e:
+                   device_imei = datas[0]
+               if device_imei:
+                   if long(device_imei) == device_id:
+                       return True
+                   else:
+                       return False
+               else:
+                   return True                          
         except Exception, e:
-            print 'False check device Id Error >>>>',e
-            return False
+           print 'False check device Id Error >>>>', e
+           return False
             
     def name_get(self, cr, user, ids, context=None):
         if context is None:

@@ -25,11 +25,14 @@
  'license': 'AGPL-3',
  'website': 'http://www.7thcomputing.com',
  'depends': [
-     'base','crm','address_management_system','sale','product_product'
+     'base','crm','sale','product_product'
 #      'base'
  ],
  'init_xml': [],
  'data': [
+          'wizard/add_customer_view.xml',
+          'views/sale_plan_day_setting_view.xml',
+          'views/sale_plan_trip_setting_view.xml',
         'views/sale_plan_day_view.xml',
         'views/sale_plan_trip_view.xml',
  ],

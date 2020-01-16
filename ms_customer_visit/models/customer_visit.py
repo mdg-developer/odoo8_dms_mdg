@@ -20,8 +20,8 @@ class customer_visit(osv.osv):
         'sale_plan_day_id':fields.many2one('sale.plan.day', 'Sale Plan Day'),
         'sale_plan_trip_id':fields.many2one('sale.plan.trip', 'Sale Plan Trip'),
         'tablet_id':fields.many2one('tablets.information', 'Tablet ID'),
-        'latitude':fields.float('Geo Latitude'),
-        'longitude':fields.float('Geo Longitude'),
+        'latitude':fields.float('Geo Latitude', digits=(16, 5), readonly=True),
+        'longitude':fields.float('Geo Longitude', digits=(16, 5), readonly=True),
        'sale_team_id':fields.many2one('crm.case.section', 'Sale Team'),
        'date':fields.datetime('Date'),
         'visit_reason':fields.selection([
@@ -29,11 +29,19 @@ class customer_visit(osv.osv):
                 ('no_authorized_person', 'No Authorized Person'),
                 ('products_already_existed', 'Products Already Existed'),
                  ('sold_other_people_products', 'Sold Other People Products'),
-                 ('other_reason', 'Other Reasons')
+                 ('other_reason', 'Other Reasons'),
+                 ('Sold', 'Sold')
             ], 'Reason'),
                 'other_reason':fields.text('Remark'),
         'm_status':fields.selection([('pending', 'Pending'), ('approved', 'Approved'),
                                                       ('reject', 'Reject')], string='Status'),
+     'branch_id': fields.many2one('res.branch', 'Branch',required=True),
+    'distance_status':fields.char('Distance Status', readonly=True),
+        'township_id': fields.related(
+                   'customer_id', 'township',
+                   type='many2one',
+                   relation='res.township',
+                   string="Township",store=True)          
     }
     _defaults = {        
         'm_status' : 'pending',

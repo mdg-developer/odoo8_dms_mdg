@@ -23,11 +23,11 @@
 {
     'name': 'Sale Cashier Approval',
     'version': '1.0',
-    'category': 'Sale',
+    'category': 'Account',
     'sequence': 30,
-    'summary': 'Sale',
+    'summary': 'Account',
     'description': """
-Sale Management
+Sale Cashier Approval
 
 """,
     'author': 'Seventh Computing Developer Group',
@@ -37,11 +37,16 @@ Sale Management
     'data': [
 
        # 'views/product_product_view.xml',
-       
+       'views/code_sequence.xml',
          'views/cashier_approval_view.xml',
         'views/qweb_view.xml',
         'views/report_cashier_approval.xml',
-
+        'views/custom_layout.xml',
+        'views/manual_cashier_approval_view.xml',
+        'views/advanced_payment_view.xml',
+        'reports/qweb_view.xml',
+        'reports/report_denomination.xml',
+        'reports/custom_layout.xml',        
     ],
     'installable': True,
     'auto_install': False,

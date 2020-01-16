@@ -22,7 +22,6 @@ mobile_sale_display()
 
 class sale_display_line(osv.osv):
     
-    
     _name = 'sales.display.line'
     _columns = {
                 'display_ids': fields.many2one('sales.display', 'Sales Display'),

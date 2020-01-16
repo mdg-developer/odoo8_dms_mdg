@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
 	<data>
-		
+
 		<!-- =============== AR Collection Form ============ -->
 
 		<record id="view_mobile_ar_collection_form" model="ir.ui.view">
@@ -13,22 +13,46 @@
 					<sheet>
 						<group>
 							<group>
-								<field name="ref_no" />
-								<!-- <field name="name" /> -->
-								<field name="partner_id"/>
-								<field name="so_ref" />
+								<field name="ref_no" invisible="1" />
+								<field name="name" />
+								<field name="partner_id" />
+								<field name="invoice_id" on_change="on_change_invoice_id(invoice_id)" />
+								<field name="invoice_date" />
+								<field name="so_ref" invisible="1" />
+								<field name="payment_term" />
 								<field name="sale_team_id" />
-								<field name="user_id"/>
-								<field name="tablet_id" />								
+								<field name="user_id" />
+								<field name="tablet_id" />
 							</group>
 							<group>
+								<field name="due_date" />
 								<field name="date" />
 								<field name="so_amount" />
+								<field name="payment_amount"
+									on_change="on_change_payment_amount(so_amount,payment_amount)" />
 								<field name="balance" />
-								<field name="payment_amount" />
 								<field name="credit_limit" />
-							</group>							
+								<field name="state" invisible="1" />
+								<field name="latitude" />
+								<field name="longitude" />
+								<field name="distance_status" />
+							</group>
 						</group>
+						<notebook>
+							<page string="Payments">
+								<field name="payment_line_ids">
+									<tree string="Payment Lines" editable="bottom">
+										<field name="date" />
+										<field name="journal_id" widget="selection"
+											on_change="on_change_journal_id(journal_id,parent.ref_no)" />
+										<field name="payment_code" invisible="1" />
+										<field name="cheque_no" />
+										<field name="amount" sum="Price" />
+										<field name="notes" />
+									</tree>
+								</field>
+							</page>
+						</notebook>
 					</sheet>
 				</form>
 			</field>
@@ -38,21 +62,22 @@
 			<field name="name">Mobile AR Collection Tree</field>
 			<field name="model">mobile.ar.collection</field>
 			<field name="arch" type="xml">
-				<tree string="AR Collection Tree">
-					<field name="ref_no" />
-					<!-- <field name="name" /> -->
-					<field name="partner_id"/>
-					<field name="so_ref" />
+				<tree string="AR Collection Tree" default_order="name desc">
+					<field name="name" />
+					<field name="invoice_id" />
+					<field name="partner_id" />
 					<field name="sale_team_id" />
-					<field name="tablet_id" />
+					<field name="due_date" />
 					<field name="date" />
+					<field name="so_amount" string="Invoice Amount" />
 					<field name="payment_amount" />
 					<field name="balance" />
 					<field name="void_flag" />
+					<field name="state" invisible="1" />
 				</tree>
 			</field>
 		</record>
-		
+
 		<!-- stock delivery filter -->
 		<record id="view_mobile_ar_collection_filter" model="ir.ui.view">
 			<field name="name">Mobile AR Collection Filter</field>
@@ -87,12 +112,12 @@
 				</p>
 			</field>
 		</record>
-		
-		<menuitem name="Payment" id="ar_collection_menu"
-			parent="base.menu_mobile_sale" sequence="2"/>
-			
+
+		<menuitem name="Payment" id="ar_collection_menu" parent="base.menu_mobile_sale"
+			sequence="2" />
+
 		<menuitem action="action_mobile_ar_collection" id="menu_mobile_ar_collection"
-			parent="ar_collection_menu" sequence="1"/>
-			
+			parent="ar_collection_menu" sequence="1" />
+
 	</data>
 </openerp>

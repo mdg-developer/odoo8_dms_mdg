@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record id="inherit_view_account_invoice_filter2" model="ir.ui.view">
+			<field name="name">account.invoice.select</field>
+			<field name="model">account.invoice</field>
+			<field name="inherit_id" ref="account.view_account_invoice_filter" />
+			<field name="arch" type="xml">
+					<xpath expr="//search/group/filter[@name='group_by_partner_id']"
+						position="after">
+						<filter string="Branch" context="{'group_by':'branch_id'}" />
+						<filter string="Invoice Day" context="{'group_by':'date_invoice:day'}" />
+						<filter string="Township" context="{'group_by':'township'}" />
+						<filter string="Open" domain="[('state','=','open')]"
+							name="open" />
+						<filter string="Paid" domain="[('state','=','paid')]"
+							name="paid" />
+					</xpath>
+			</field>
+		</record>
+		
+
+	</data>
+</openerp>

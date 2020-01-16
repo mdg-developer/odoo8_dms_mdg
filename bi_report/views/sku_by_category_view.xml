@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record id="view_sku_category_report_graph" model="ir.ui.view">
+			<field name="name">sale.category.sku.graph</field>
+			<field name="model">category.sku.report</field>
+			<field name="arch" type="xml">
+				<graph string="Category SKU Analysis" type="pivot" stacked="True">
+					<field name="categ_count" type="col" />
+				</graph>
+			</field>
+		</record>
+
+		<record id="filter_sku_category_report" model="ir.filters">
+			<field name="name">By Customer</field>
+			<field name="model_id">category.sku.report</field>
+			<field name="domain">[]</field>
+			<field name="user_id" eval="False" />
+			<field name="context">{'group_by': ['partner_id']}</field>
+		</record>
+
+
+		<record id="view_sku_category_report_search" model="ir.ui.view">
+			<field name="name">category.sku.report.search</field>
+			<field name="model">category.sku.report</field>
+			<field name="arch" type="xml">
+				<search string="Category Analysis">
+					<field name="partner_id" />
+					<field name="categ_id" />
+					<field name="section_id" />
+					<group expand="0" string="Extended Filters">
+						<field name="categ_id" />
+					</group>
+					<group expand="1" string="Group By">
+						<filter string="Customer" icon="terp-personal" name="User"
+							context="{'group_by':'partner_id'}" />
+						<filter string="Category" icon="terp-accessories-archiver"
+							context="{'group_by':'categ_id','set_visible':True}" />
+						<filter string="Sale Team" icon="terp-stock_symbol-selection"
+							name="saleteam" context="{'group_by':'section_id'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<record id="action_sku_category_report_all" model="ir.actions.act_window">
+			<field name="name">By Customer CAT Distribution</field>
+			<field name="res_model">category.sku.report</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">graph</field>
+			<field name="search_view_id" ref="view_sku_category_report_search" />
+			<field name="view_id" ref="view_sku_category_report_graph" />
+			<field name="context">{}</field>
+			<field name="help">This report performs analysis on your quotations
+				and sales orders. Analysis check your sales revenues and sort it by
+				different group criteria (salesman, partner, product, etc.) Use this
+				report to perform analysis on sales not having invoiced yet.
+			</field>
+		</record>
+
+		<menuitem action="action_sku_category_report_all" id="menu_sku_category_report"
+			parent="base.next_id_64" sequence="16" />
+	</data>
+</openerp>

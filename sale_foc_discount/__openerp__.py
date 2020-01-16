@@ -31,15 +31,13 @@ With this module for discount making.
     """,
     'author': '7thcomputing developers',
     'website': 'https://www.odoo.com/page/crm',
-    'depends': ['account','sale','account_configuration'],
+    'depends': ['account', 'sale', 'account_configuration', 'sale_management'],
     'category': 'Sale , Account',
     'data' : [
         'sale_discount_view.xml',
         'account_invoice_view.xml',
        # 'res_config_view.xml',
-        'stock_view.xml',
-      #  'views/report_saleorder.xml',
-     #   'views/report_invoice.xml'
+        'stock_view.xml'
     ],
     'demo': [],
     'installable': True,

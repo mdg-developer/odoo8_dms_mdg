@@ -32,6 +32,7 @@ from openerp import workflow
 from openerp.exceptions import except_orm, Warning, RedirectWarning
 from openerp.tools import float_compare
 import openerp.addons.decimal_precision as dp
+#from celery.worker.strategy import default
 class sale_order_line(osv.osv):
 
     _inherit='sale.order.line'
@@ -66,14 +67,19 @@ class sale_order_line(osv.osv):
                     cur = line.order_id.pricelist_id.currency_id
                     res[line.id] = cur_obj.round(cr, uid, cur, taxes['total']-line.discount_amt) 
             else:
-                price = line.price_unit
-                taxes = tax_obj.compute_all(cr, uid, line.tax_id, price, line.product_uom_qty, line.product_id, line.order_id.partner_id)
-                cur = line.order_id.pricelist_id.currency_id
-                res[line.id] = cur_obj.round(cr, uid, cur,taxes['total'] )              
+                if line.sale_foc !=True:
+
+                    price = line.price_unit
+                    taxes = tax_obj.compute_all(cr, uid, line.tax_id, price, line.product_uom_qty, line.product_id, line.order_id.partner_id)
+                    cur = line.order_id.pricelist_id.currency_id
+                    res[line.id] = cur_obj.round(cr, uid, cur,taxes['total'] )              
+
+                else:
+                    res[line.id] = 0             
+
+                    
         return res
         
-        
-
 ## customize_model       
     def _amount_line1(self, cr, uid, ids, field_name, arg, context=None):
         tax_obj = self.pool.get('account.tax')
@@ -82,13 +88,19 @@ class sale_order_line(osv.osv):
         if context is None:
             context = {}
         for line in self.browse(cr, uid, ids, context=context):
-            
-            price = line.price_unit
-            qty=line.product_uom_qty
-            amount=price*qty
-            taxes = tax_obj.compute_all(cr, uid, line.tax_id, price, line.product_uom_qty, line.product_id, line.order_id.partner_id)
-            cur = line.order_id.pricelist_id.currency_id
-            res[line.id] = cur_obj.round(cr, uid, cur, amount)
+            if line.sale_foc !=True:
+                price = line.price_unit
+                qty=line.product_uom_qty
+                amount=price*qty
+                taxes = tax_obj.compute_all(cr, uid, line.tax_id, price, line.product_uom_qty, line.product_id, line.order_id.partner_id)
+                cur = line.order_id.pricelist_id.currency_id
+                res[line.id] = cur_obj.round(cr, uid, cur, amount)
+
+            else:
+                cr.execute("update sale_order_line set price_unit=0 where id =%s",(line.id,))
+                amount=0
+                res[line.id] = 0
+                
         return res
 		
     def _get_price_reduce(self, cr, uid, ids, field_name, arg, context=None):
@@ -109,6 +121,9 @@ class sale_order_line(osv.osv):
         if price_unit:
             discount_amt =float(discount) *(float(price_unit*product_uom_qty)) / 100
             val['discount_amt'] = discount_amt
+            val['price_subtotal'] = (price_unit*product_uom_qty) - discount_amt
+            val['net_total'] = (price_unit*product_uom_qty) - discount_amt
+            
         return {'value': val}     
     def foc_change(self, cr, uid, ids, product, qty=0, context=None):
         product_obj = self.pool.get('product.product')
@@ -124,17 +139,21 @@ class sale_order_line(osv.osv):
             result['name'] = 'FOC'
             result['price_unit'] = 0
             result['price_subtotal'] = 0
+            result['net_total'] = 0
             result['discount'] = 0.0
             result['discount_amt'] = 0.0
 
         return {'value': result, 'domain': domain}
                
     _columns= { 
-               'price_subtotal': fields.function(_amount_line1, string='Subtotal'),
-               'net_total':fields.function(_amount_line, string='Total', digits_compute= dp.get_precision('Account')),
-               'discount':fields.float('Discount (%)',store=True),
-               'discount_amt':fields.float('Discount (amt)',store=True),
-               'sale_foc':fields.boolean('FOC')
+         'price_unit': fields.float('Unit Price', required=True, digits_compute=dp.get_precision('Product Price'), readonly=False),
+        #'tax_id': fields.many2many('account.tax', 'sale_order_tax', 'order_line_id', 'tax_id', 'Taxes', readonly=True, domain=['|', ('active', '=', False), ('active', '=', True)]),          
+               'price_subtotal': fields.function(_amount_line1, string='Total(incl.tax)'),
+               'net_total':fields.function(_amount_line, string='Total(excl.tax)', digits_compute= dp.get_precision('Account')),
+               'service_product' : fields.boolean('Service Product',default=False),
+               'discount':fields.float('Discount (%)',store=True,readonly=True),
+               'discount_amt':fields.float('Discount (amt)',store=True, readonly=True),
+               'sale_foc':fields.boolean('FOC', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
               # 'show_amt':fields.function(_amount_line2,string='Total Discount(-)',readonly=True)
                
                }
@@ -158,17 +177,37 @@ class sale_order_line(osv.osv):
                (this is used for returning products including service)
            :return: dict of values to create() the invoice line
         """
+        sale_obj = self.pool.get('sale.order')        
         res = {}
         if not line.invoiced:
+            sale_data=sale_obj.browse(cr,uid,line.order_id.id,context)
+            payment_type =sale_data.payment_type
+
             if not account_id:
                 if line.product_id:
                     account_id = line.product_id.property_account_income.id
+                    if payment_type == 'cash':
+                        account_id = line.product_id.property_account_income.id
+                    if payment_type == 'credit':
+                        account_id = line.product_id.property_account_credit_income.id                        
                     if not account_id:
                         account_id = line.product_id.categ_id.property_account_income_categ.id
+                        if payment_type == 'cash':
+                            account_id = line.product_id.categ_id.property_account_income_categ.id
+                        if payment_type == 'credit':
+                            account_id = line.product_id.categ_id.property_sale_credit_account_id.id                           
                     if not account_id:
                         raise osv.except_osv(_('Error!'),
                                 _('Please define income account for this product: "%s" (id:%d).') % \
-                                    (line.product_id.name, line.product_id.id,))
+                                    (line.product_id.name, line.product_id.id,))             
+#                 if line.product_id:
+#                     account_id = line.product_id.property_account_income.id
+#                     if not account_id:
+#                         account_id = line.product_id.categ_id.property_account_income_categ.id
+#                     if not account_id:
+#                         raise osv.except_osv(_('Error!'),
+#                                 _('Please define income account for this product: "%s" (id:%d).') % \
+#                                     (line.product_id.name, line.product_id.id,))
                 else:
                     prop = self.pool.get('ir.property').get(cr, uid,
                             'property_account_income_categ', 'product.category',
@@ -199,8 +238,9 @@ class sale_order_line(osv.osv):
                 'product_id': line.product_id.id or False,
                 'invoice_line_tax_id': [(6, 0, [x.id for x in line.tax_id])],
                 'account_analytic_id': line.order_id.project_id and line.order_id.project_id.id or False,
+                'promotion_id':line.promotion_id and line.promotion_id.id or False,
+
             }
-            print 'res1111111111111',res
 
         return res
 
@@ -235,16 +275,18 @@ class sale_order(osv.osv):
                 'amount_total': 0.0,
             }
             
-            val = val1 = 0.0
+            val = val1 =subtotal= 0.0
             cur = order.pricelist_id.currency_id
             for line in order.order_line:
                 print 'line.net_total',line.net_total
                 val1 += line.net_total
+                subtotal += line.price_subtotal
                 val += self._amount_line_tax(cr, uid, line, context=context)
             res[order.id]['amount_tax'] = cur_obj.round(cr, uid, cur, val)
             res[order.id]['amount_untaxed'] = cur_obj.round(cr, uid, cur, val1)
+            res[order.id]['grand_total'] = cur_obj.round(cr, uid, cur, subtotal)
             res[order.id]['amount_total'] = res[order.id]['amount_untaxed'] + res[order.id]['amount_tax']
-            
+            cr.execute("update sale_order set grand_total=%s where id =%s",(cur_obj.round(cr, uid, cur, subtotal),ids[0],))
         return res
 
     def _get_order(self, cr, uid, ids, context=None):
@@ -282,7 +324,10 @@ class sale_order(osv.osv):
         return None
 ## customize_model
     _columns={
-              'deduct_amt':fields.float('Deduction Amount',store=True),
+              
+              'is_add_discount':fields.boolean('Allow Discount',default=False),
+              'deduct_amt':fields.float('Discount Amount',store=True),
+              'additional_discount':fields.float('Additional Discount',store=True),
               'total_dis':fields.function(_amount_all_wrapper, digits_compute=dp.get_precision('Account'), string='Total Discount',
             store={
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
@@ -295,12 +340,14 @@ class sale_order(osv.osv):
                 'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
             },
             multi='sums', help="The tax amount."),
-        'amount_total': fields.function(_amount_all_wrapper, digits_compute=dp.get_precision('Account'), string='Total',
+        'amount_total': fields.function(_amount_all_wrapper, digits_compute=dp.get_precision('Account'), string='Net Amount',
             store={
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
                 'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
             },
             multi='sums', help="The total amount."),
+        'grand_total': fields.function(_amount_all_wrapper, digits_compute=dp.get_precision('Account'), string='Grand Total',
+            multi='sums', help="The amount without tax.", track_visibility='always',store=True),      
         'amount_untaxed': fields.function(_amount_all_wrapper, digits_compute=dp.get_precision('Account'), string='Untaxed Amount',
             store={
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
@@ -311,7 +358,6 @@ class sale_order(osv.osv):
               'amount_untaxed':0.0,
               'amount_tax':0.0,
               'amount_total':0.0
-              
               }
 
     def _prepare_order_line_procurement(self, cr, uid, order, line, group_id=False, context=None):
@@ -328,33 +374,43 @@ class sale_order(osv.osv):
             if (type(ids)==int):
                 cr.execute('select sum(discount_amt) from sale_order_line where order_id=%s',(ids,))
                 total_dis_amt=cr.fetchall()[0]
-                cr.execute('select deduct_amt,amount_untaxed,amount_tax from sale_order where id=%s',(ids,))
+                cr.execute('select  COALESCE(sum(price_unit),0.0) from sale_order_line where price_unit <0 and order_id=%s',(ids,))
+                product_dis_amt=cr.fetchall()[0]
+                total_dis_amt =total_dis_amt - product_dis_amt               
+                cr.execute('select deduct_amt,amount_untaxed,amount_tax,additional_discount from sale_order where id=%s',(ids,))
                 result=cr.fetchall()[0]
                 deduct=result[0]
                 untax=result[1]
                 amount_tax=result[2]
+                additional_discount=result[3]
                 print result,'result and deduction',deduct,total_dis_amt
                 if deduct is None:
                     deduct=0.0
                 if amount_tax is None:
                     amount_tax=0.0           
-                total=untax+amount_tax-deduct
-                cr.execute('update sale_order so set amount_total=%s,total_dis=%s,deduct_amt=%s where so.id=%s',(total,total_dis_amt,deduct,ids))
+                total=untax+amount_tax-deduct-(untax*(additional_discount/100))
+                cr.execute('update sale_order so set amount_total=%s,total_dis=%s,deduct_amt=%s,additional_discount=%s where so.id=%s',(total,total_dis_amt,deduct,additional_discount,ids))
             else:
-                cr.execute('select sum(discount_amt) from sale_order_line where order_id=%s',(ids[0],))
-                total_dis_amt=cr.fetchall()[0]
-                cr.execute('select deduct_amt,amount_untaxed,amount_tax from sale_order where id=%s',(ids[0],))
+                cr.execute('select COALESCE(sum(discount_amt),0.0) from sale_order_line where order_id=%s',(ids[0],))
+                total_dis_amt=cr.fetchone()[0]
+                cr.execute('select  COALESCE(sum(price_unit),0.0) from sale_order_line where price_unit <0 and order_id=%s',(ids[0],))
+                product_dis_amt=cr.fetchone()[0]
+                total_dis_amt =total_dis_amt - product_dis_amt                 
+                cr.execute('select deduct_amt,amount_untaxed,amount_tax,additional_discount from sale_order where id=%s',(ids[0],))
                 result=cr.fetchall()[0]
                 deduct=result[0]
                 untax=result[1]
                 amount_tax=result[2]
-                print result,'result and deduction',deduct,total_dis_amt
+                additional_discount=result[3]
+                print result,'result and deduction',ids[0],deduct,total_dis_amt,additional_discount
                 if deduct is None:
                     deduct=0.0
                 if amount_tax is None:
                     amount_tax=0.0           
-                total=untax+amount_tax-deduct
-                cr.execute('update sale_order so set amount_total=%s,total_dis=%s,deduct_amt=%s where so.id=%s',(total,total_dis_amt,deduct,ids[0]))
+                print    '(untax*additional_discount)',untax,additional_discount,(additional_discount/100),amount_tax
+                total=untax+amount_tax-deduct-(untax*(additional_discount/100))
+                print 'total',total
+                cr.execute('update sale_order so set amount_total=%s,total_dis=%s,deduct_amt=%s,additional_discount=%s where so.id=%s',(total,total_dis_amt,deduct,additional_discount,ids[0]))
         return True
     ## customize_model
     def _prepare_invoice(self, cr, uid, order, lines, context=None):
@@ -370,13 +426,14 @@ class sale_order(osv.osv):
         """
         if context is None:
             context = {}
+        data_line=[]
         journal_ids = self.pool.get('account.journal').search(cr, uid,
             [('type', '=', 'sale'), ('company_id', '=', order.company_id.id)],
             limit=1)
         if not journal_ids:
             raise osv.except_osv(_('Error!'),
                 _('Please define sales journal for this company: "%s" (id:%d).') % (order.company_id.name, order.company_id.id))
-        print 'order.partner_id.property_account_receivable.id',order.partner_id.property_account_receivable.id
+        
         invoice_vals = {
             'name': order.client_order_ref or '',
             'origin': order.name,
@@ -388,6 +445,7 @@ class sale_order(osv.osv):
             'invoice_line': [(6, 0, lines)],
             'currency_id': order.pricelist_id.currency_id.id,
             'comment': order.note,
+            'payment_type': order.payment_type,
             'payment_term': order.payment_term and order.payment_term.id or False,
             'fiscal_position': order.fiscal_position.id or order.partner_id.property_account_position.id,
             'date_invoice': context.get('date_invoice', False),
@@ -395,7 +453,17 @@ class sale_order(osv.osv):
             'user_id': order.user_id and order.user_id.id or False,
             'section_id' : order.section_id.id,
             'deduct_amt':order.deduct_amt,
+            'additional_discount':order.additional_discount,
             'discount_total':order.total_dis,
+            'is_entry':order.is_entry,
+            'rebate_later':order.rebate_later,
+            'credit_allow':order.credit_allow,
+            'ignore_credit_limit':order.ignore_credit_limit,
+            'credit_invoice_balance' : order.credit_invoice_balance,
+            'credit_limit_amount' : order.credit_limit_amount,
+            'credit_balance' :   order.credit_balance,  
+            'latitude':order.so_latitude,
+            'longitude':order.so_longitude,
         }
 
         # Care for deprecated _inv_get() hook - FIXME: to be removed after 6.1

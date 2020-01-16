@@ -44,15 +44,17 @@ class sale_report(osv.osv):
      'discount': fields.float('Discount', readonly=True),
      'additional_discount': fields.float('Additional_discount', readonly=True),
      'deduction_amount': fields.float('Deduction_amount', readonly=True),
-     'sale_channel': fields.many2one('sale.channel','Channel'),
-     'main_group':fields.many2one('product.maingroup','Main Group',readonly=True),
-     'customer_code':fields.char('Customer Code')
+     'sale_channel': fields.many2one('sale.channel', 'Channel'),
+     'main_group':fields.many2one('product.maingroup', 'Product Principle', readonly=True),
+     'customer_code':fields.char('Customer Code'),
+               'branch_id':fields.many2one('res.branch', 'Branch'),
+     
     }
     _order = 'date desc'
 
     def _select(self):
         select_str = """
-              SELECT min(l.id) as id,sum(l.product_uos_qty) as product_uos_qty,sc.id as sale_channel,
+              SELECT min(l.id) as id,sum(l.product_uos_qty) as product_uos_qty,sc.id as sale_channel,s.branch_id,
                     sum(l.discount) as discount,
                     sum(s.additional_discount) as additional_discount,
                     l.product_id as product_id,
@@ -69,7 +71,6 @@ class sale_report(osv.osv):
                     s.name,
                     l.sub_total,
                     t.list_price as unit_price,
-                   
                     s.deduction_amount,
                     s.type,
                     s.location_id,
@@ -121,6 +122,7 @@ class sale_report(osv.osv):
                     t.main_group,
                     r.customer_code,
                     s.void_flag,
+                    s.branch_id,
                     s.sale_team
                     having  s.void_flag='none'
                     

@@ -20,11 +20,15 @@ ATTRIBUTES = [
     ('prod_qty', 'Product Quantity combination'),
     ('prods_qty', 'Multiple Product Quantity combination'),
     ('prods_multi_uom_qty', 'Multiple Product UOM Combination'),
+    ('multi_prod_sale_amt', 'Multiple Product SubTotal combination'),
     # ('prod_unit_price', 'Product UnitPrice combination'),
     ('prod_sub_total', 'Product SubTotal combination'),
     ('promo_already_exit', 'Promotion Already Applied'),
-    ('cat_qty', 'Product Category Quantity combination'),    
+    ('cat_qty', 'Product Category Quantity combination'),
+    ('cat_total', 'Product Category Sale Total'),
     ('fix_prods_qty', 'Fix Quantity Total combination'),
+    ('fix_categ_qty', 'Fix Category Quantity And Subtotal'),
+
 
 ]
 
@@ -43,9 +47,11 @@ COMPARATORS = [
 ACTION_TYPES = [
     ('prod_disc_perc', _('Discount % on Product')),
     ('prod_disc_fix', _('Fixed amount on Product')),
-    
   #  ('cart_disc_perc', _('Discount % on Sub Total')),
     ('cart_disc_fix', _('Fixed amount on Sub Total')),
+    ('qty_disc_fix', _('Fixed amount on Qty')),
+    
+    ('any_product_qty_disc_fix', _('Multiple Fixed amount on Any Product Qty')),
     ('disc_perc_on_grand_total', _('Discount % on Grand Total')),
     ('fix_amt_on_grand_total', _('Fix Amount on Grand Total')),
     ('discount_on_categ', _('Discount % on Product Category')),
@@ -55,10 +61,12 @@ ACTION_TYPES = [
     ('prod_x_get_y', _('Buy X get Y free')),
     ('buy_cat_get_x', _('Buy Category get X free')),
     ('buy_cat_get_x_cat', _('Buy Category get X Category free')),
-
     ('prod_x_get_x', _('Buy X get X free')),
     ('prod_multi_get_x', _('Buy Multi Products get X free')),
-     ('prod_multi_uom_get_x', _('Buy Multi UOM get X free')),
+    ('prod_categ_value_get_x', _('Buy Category Value get X free')),
+    ('prod_multi_get_x_conds', _('Buy Multi Products get X free by Condition')),
+    ('prod_multi_uom_get_x', _('Buy Multi UOM get X free')),
+    ('prod_multi_ratio_x', _('Buy Multi Product Ratio get X free')),
     ('fix_qty_on_product_code', _('FOC Products on Qty')),
     ('prod_foc_smallest_unitprice', _('FOC Products on smallest Unitprice')),
     ('foc_any_product', _('FOC Any Products by Ratio')),
@@ -66,6 +74,7 @@ ACTION_TYPES = [
     ('prod_dis_double', _('Double Discount % on SubTotal')),
     ('prod_multi_get_x_by_limit', _('Buy Multi Products get X free By Limit')),
     ('foc_any_prod_fix', _('FOC Any Product by Fix')),
+    ('discount_amount_by_product', _('Discount Amount By Product')),
 ]
 
 
@@ -77,7 +86,34 @@ class PromotionsRules(osv.Model):
     _name = "promos.rules"
     _description = __doc__
     _order = 'sequence'
+    _rec_name = 'description'    
 
+    def generate_code(self, cr, uid, ids, val, context=None):
+            codeObj = self.pool.get('res.promotion.code')
+            code = None
+            codeResult = {}
+            if ids:
+                for proVal in self.browse(cr, uid, ids, context=context):
+                    code = proVal.code
+                    if proVal and code is False:
+                        import datetime
+                        d = datetime.date.today()
+                        month = '%02d' % d.month
+                        year = d.year
+                        if month and year:
+                            codeId = codeObj.search(cr, uid, [('month', '=', month), ('year', '=', year)])
+                            if codeId:
+                                code = codeObj.generateCode(cr, uid, codeId[0], context=context)
+                            else:
+                                codeResult = {'month':month, 'year':year, 'nextnumber':1, 'padding':3}
+                                codeId = codeObj.create(cr, uid, codeResult, context=context)
+                                code = codeObj.generateCode(cr, uid, codeId, context=context)
+                if code:
+                    self.write(cr, uid, ids, {'code':code}, context=context)
+
+            return True
+
+    
     def _check_positive_number(self, cr, uid, ids, context=None):
         record = self.browse(cr, uid, ids, context=context)
         for data in record:
@@ -116,9 +152,10 @@ class PromotionsRules(osv.Model):
         return res
     
     _columns = {
-        
-        'name':fields.char('Promo Name', size=50, required=True),
-        'description':fields.text('Description'),
+                
+        'code':fields.char('Promo Code', readonly=True, copy=False),
+        'name':fields.char('Promo Name', required=True),
+        'description':fields.char('Description'),
         'active':fields.boolean('Active'),
         
         'special':fields.boolean('Special'),
@@ -158,12 +195,12 @@ class PromotionsRules(osv.Model):
   'expressions':fields.one2many(
                             'promos.rules.conditions.exps',
                             'promotion',
-                            string='Expressions/Conditions',copy=True
+                            string='Expressions/Conditions', copy=True
                             ),
         'actions':fields.one2many(
                     'promos.rules.actions',
                     'promotion',
-                    string="Actions",copy=True
+                    string="Actions", copy=True
                         ),
         'main_group':fields.many2one('product.maingroup', 'Main Group'),
         'state': fields.selection([
@@ -173,17 +210,26 @@ class PromotionsRules(osv.Model):
               \nThe exception status is automatically set when a cancel operation occurs \
               in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\nThe 'Waiting Schedule' status is set when the invoice is confirmed\
                but waiting for the scheduler to run on the order date.", select=True),
-        'outlettype_id':fields.many2many('outlettype.outlettype', 'promos_rules_outlettype_rel' , 'promos_rules_id' ,'outlettype_id' , string='Outlet Type'),
+        'outlettype_id':fields.many2many('outlettype.outlettype', 'promos_rules_outlettype_rel' , 'promos_rules_id' , 'outlettype_id' , string='Outlet Type'),
         'branch_id':fields.many2many('res.branch', string='Branch'),
         'customer_ids':fields.many2many('res.partner'),
-        'product_ids':fields.many2many('product.product', 'promos_rules_product_rel' , 'promos_rules_id' ,'product_id' , string='Product'),
-        
+        'product_ids':fields.many2many('product.product', 'promos_rules_product_rel' , 'promos_rules_id' , 'product_id' , string='Product'),
+        'join_promotion_ids':fields.many2many('promos.rules', 'promos_rules_join_rel' , 'promos_rules_id' , 'join_promotion_id' , string='Monthly Join Promotions'),
+#         'promotion_id_a':fields.many2one('promos.rules','Other Promotion A'),
+#         'promotion_id_b':fields.many2one('promos.rules' ,'Other Promotion B'),
+#         'promotion_id_c':fields.many2one('promos.rules' ,'Other Promotion C'),
+        'manual':fields.boolean('Manual'),
+        'bundle_promotion':fields.boolean('Bundle Promotion'),
+        'high_priority':fields.boolean('High Priority'),
     }
     _defaults = {
         'logic':lambda * a:'and',
         'expected_logic_result':lambda * a:'True',
         'coupon_used': '0',
         'state':'draft',
+        'monthly_promotion':False,
+        'manual':False,
+
     }
     _constraints = [(_check_positive_number, 'Coupon Use must be Positive', ['coupon_used'])]
 	
@@ -201,22 +247,22 @@ class PromotionsRules(osv.Model):
         #  body = data.body
         #  tag = data.reason
         result = {}
-        msg_title = "Promotion has be chage"
-        message = "Ready to update"
+        msg_title = "Promotion has been changed"
+        message = "Need To Pull"
         msg_tag = ""
         
         if ids:
             cr.execute("select id from crm_case_section ")
             team_id = cr.fetchall()
 
-            registration_ids=[]
+            registration_ids = []
             for data in team_id:
-                tablet_ids = tablet_obj.search(cr,uid,[('sale_team_id','in',data)])
+                tablet_ids = tablet_obj.search(cr, uid, [('sale_team_id', 'in', data)])
                 for tablet_id in tablet_ids:
-                    tablet_data = tablet_obj.browse(cr,uid,tablet_id,context)
+                    tablet_data = tablet_obj.browse(cr, uid, tablet_id, context)
                     if tablet_data.token:
                         registration_ids.append(tablet_data.token);                
-            result = push_service.notify_multiple_devices(registration_ids=registration_ids,  message_body=message, message_title= msg_title, tag=msg_tag)
+            result = push_service.notify_multiple_devices(registration_ids=registration_ids, message_body=message, message_title=msg_title, tag=msg_tag)
         return True        
     
     def promotion_date(self, str_date):
@@ -275,57 +321,57 @@ class PromotionsRules(osv.Model):
 #                           ('coupon_code', '=', promotion_rule.coupon_code),
 #                           ('state', '<>', 'cancel')
 #                           ], context=context)
-        print '10 Mile Causine10 Mile Causine10 Mile Causine',promotion_rule.name
-        is_branch=False
-        is_outlet=False
-        is_channel=False
-        is_customer=False
-        partner_id=order.partner_id.id
-        team_id=order.section_id.id
-        cursor.execute("select res_branch_id from promos_rules_res_branch_rel where promos_rules_id = %s",(promotion_rule.id,))
-        promo_branch_id=cursor.fetchall()
-        cursor.execute("select outlettype_id from promos_rules_outlettype_rel where promos_rules_id =%s",(promotion_rule.id,))
-        promo_outlet_type=cursor.fetchall()
-        cursor.execute("select sale_channel_id  from promo_sale_channel_rel  where promo_id=%s",(promotion_rule.id,))
-        promo_sale_channel_id=cursor.fetchall()
-        cursor.execute("select res_partner_id  from promos_rules_res_partner_rel where promos_rules_id = %s",(promotion_rule.id,))
-        promo_res_partner_id=cursor.fetchall()
+        print '10 Mile Causine10 Mile Causine10 Mile Causine', promotion_rule.name
+        is_branch = False
+        is_outlet = False
+        is_channel = False
+        is_customer = False
+        partner_id = order.partner_id.id
+        team_id = order.section_id.id
+        cursor.execute("select res_branch_id from promos_rules_res_branch_rel where promos_rules_id = %s", (promotion_rule.id,))
+        promo_branch_id = cursor.fetchall()
+        cursor.execute("select outlettype_id from promos_rules_outlettype_rel where promos_rules_id =%s", (promotion_rule.id,))
+        promo_outlet_type = cursor.fetchall()
+        cursor.execute("select sale_channel_id  from promo_sale_channel_rel  where promo_id=%s", (promotion_rule.id,))
+        promo_sale_channel_id = cursor.fetchall()
+        cursor.execute("select res_partner_id  from promos_rules_res_partner_rel where promos_rules_id = %s", (promotion_rule.id,))
+        promo_res_partner_id = cursor.fetchall()
         # Check date is valid date during promotion date
         if promo_branch_id:
-            cursor.execute("select branch_id from crm_case_section where id=%s and branch_id in %s",(team_id,tuple(promo_branch_id),))
-            team_branch_id=cursor.fetchone()
+            cursor.execute("select branch_id from crm_case_section where id=%s and branch_id in %s", (team_id, tuple(promo_branch_id),))
+            team_branch_id = cursor.fetchone()
             if team_branch_id:
-                is_branch=True
+                is_branch = True
         else:
-            is_branch=True
+            is_branch = True
             
         if promo_outlet_type:
-            cursor.execute("select outlet_type from res_partner where id=%s and outlet_type in %s",(partner_id,tuple(promo_outlet_type),))
-            team_outlet_type=cursor.fetchone()
+            cursor.execute("select outlet_type from res_partner where id=%s and outlet_type in %s", (partner_id, tuple(promo_outlet_type),))
+            team_outlet_type = cursor.fetchone()
             if team_outlet_type:
-                is_outlet=True
+                is_outlet = True
         else:
-            is_outlet=True  
+            is_outlet = True  
                  
         if promo_sale_channel_id:
-            cursor.execute("select sale_channel_id,sale_team_id from sale_team_channel_rel where sale_team_id =%s and sale_channel_id in %s",(team_id,tuple(promo_sale_channel_id),))
-            team_channel_id=cursor.fetchone()
+            cursor.execute("select sale_channel_id,sale_team_id from sale_team_channel_rel where sale_team_id =%s and sale_channel_id in %s", (team_id, tuple(promo_sale_channel_id),))
+            team_channel_id = cursor.fetchone()
             if team_channel_id:
-                is_channel=True
+                is_channel = True
         else:
-            is_channel=True      
+            is_channel = True      
             
         if promo_res_partner_id:
-            cursor.execute("select id from res_partner where id in %s and id =%s",(tuple(promo_res_partner_id),partner_id,))          
-            team_customer_id=cursor.fetchone()
+            cursor.execute("select id from res_partner where id in %s and id =%s", (tuple(promo_res_partner_id), partner_id,))          
+            team_customer_id = cursor.fetchone()
             if team_customer_id:
-                is_customer=True
+                is_customer = True
         else:
-                is_customer=True  
+                is_customer = True  
                           
-        print 'is_branchis_branchis_branchis_branch',is_branch,is_outlet,is_channel,is_customer
+        print 'is_branchis_branchis_branchis_branch', is_branch, is_outlet, is_channel, is_customer
                 
-        if is_branch==True and is_outlet ==True and is_channel==True and is_customer==True:
+        if is_branch == True and is_outlet == True and is_channel == True and is_customer == True:
             # for total amount for condition expression
             cursor.execute("select attribute,value,comparator from promos_rules_conditions_exps where id=%s", (expression.id,))
             datas = cursor.fetchone()
@@ -336,6 +382,7 @@ class PromotionsRules(osv.Model):
             # for checking product_product code
             # cursor.execute("select attribute,value,comparator from promos_rules_conditions_exps where promotion=%s",(promotion_rule.id,))
             
+            # Check attribute total amount
             # Check attribute total amount
             if attribute == 'amount_total':
                 svalue = eval(value)
@@ -383,7 +430,7 @@ class PromotionsRules(osv.Model):
             # MMK
             elif attribute == 'prod_qty':
                 svalue = value.split(":")
-                print 'svaluesvalue',svalue
+                print 'svaluesvalue', svalue
                 product_code = eval(svalue[0])
                 product_qty = eval(svalue[1])
                 LOGGER.info("Product Code : %s ", product_code)
@@ -391,7 +438,13 @@ class PromotionsRules(osv.Model):
                 con_qty = 0
                 for order_line in order.order_line:   
                     if order_line.product_id.default_code == product_code:
-                        con_qty += order_line.product_uom_qty
+                        if order_line.product_uom.id == order_line.product_id.product_tmpl_id.big_uom_id.id:                                                                          
+                            cursor.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (order_line.product_uom.id,))
+                            bigger_qty = cursor.fetchone()[0]
+                            bigger_qty = int(bigger_qty)
+                            con_qty += bigger_qty * order_line.product_uom_qty           
+                        else:             
+                            con_qty += order_line.product_uom_qty
                 LOGGER.info("Order Line qty : %s ", con_qty)
                 if comparator == '==':
                     if con_qty == product_qty:
@@ -434,7 +487,13 @@ class PromotionsRules(osv.Model):
                         cat_value = cat_value1.strip() 
                         
                         if category_name == cat_value:
-                            tota_qty += order_line.product_uom_qty
+                            if order_line.product_uom.id == order_line.product_id.product_tmpl_id.big_uom_id.id:                                                                          
+                                cursor.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (order_line.product_uom.id,))
+                                bigger_qty = cursor.fetchone()[0]
+                                bigger_qty = int(bigger_qty)
+                                tota_qty += bigger_qty * order_line.product_uom_qty
+                            else:         
+                                tota_qty += order_line.product_uom_qty
                 if comparator == '==':
                     if tota_qty == product_qty:
                         return True
@@ -452,14 +511,53 @@ class PromotionsRules(osv.Model):
                         return True
                 elif comparator == '<=':    
                     if tota_qty <= product_qty:
-                        return True                
+                        return True          
+                       
+            # Check attribute is product_product category subtotal  
+            elif attribute == 'cat_total':
+                tota_qty = 0.0
+                totalValue=0.0
+                svalue = value.split(":")
+                category_code = eval(svalue[0])
+                subtotal = eval(svalue[1])
+                
+                for order_line in order.order_line:  
+                        
+                        cat_name = order_line.product_id.categ_id.name
+                        category_name1 = str(cat_name)
+                        cat_value1 = str(category_code)
+                        category_name = category_name1.strip() 
+                        cat_value = cat_value1.strip() 
+                        
+                        if category_name == cat_value:
+                            totalValue += order_line.net_total
+                x=totalValue;
+                y=subtotal;
+                if comparator == '==':
+                    if x == y:
+                        return True
+                elif comparator == '!=':    
+                    if x != y:
+                        return True
+                elif comparator == '>':
+                    if x > y:
+                        return True
+                elif comparator == '<':    
+                    if x < y:
+                        return True
+                elif comparator == '>=':
+                    if x >= y:
+                        return True
+                elif comparator == '<=':    
+                    if x <= y:
+                        return True                         
                     
             # Check attribute is sub total amount                
             elif attribute == 'prod_sub_total':   
                 svalue = value.split(":")
                 product_code = eval(svalue[0])
                 sub_total = eval(svalue[1])
-                #big uom not change
+                # big uom not change
                 for order_line in order.order_line:   
                     if order_line.product_id.default_code == product_code:
                         order_subtotal = (order_line.product_uom_qty * order_line.price_unit)
@@ -487,16 +585,20 @@ class PromotionsRules(osv.Model):
             elif attribute == 'prods_qty':
                 svalue = value.split("|")
                 product_codes = svalue[0]
-                product_code = product_codes.split(";")
-                
-                
+                product_code = product_codes.split(";")               
                 product_qty = eval(svalue[1])
                 qtys = 0.0
                 for order_line in order.order_line:  
                     for p_code in product_code: 
                         
                         if order_line.product_id.default_code == eval(p_code):
-                            qtys += order_line.product_uom_qty
+                            if order_line.product_uom.id == order_line.product_id.product_tmpl_id.big_uom_id.id:                                                                          
+                                cursor.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (order_line.product_uom.id,))
+                                bigger_qty = cursor.fetchone()[0]
+                                bigger_qty = int(bigger_qty)
+                                qtys += bigger_qty * order_line.product_uom_qty
+                            else:                            
+                                qtys += order_line.product_uom_qty
  
                 if comparator == '==':
                     if qtys == product_qty:
@@ -527,7 +629,7 @@ class PromotionsRules(osv.Model):
                 product_code = product_codes.split(";")
                 uom_qty = uom_qtys.split(";")
                 qtys = 0.0
-                #big uom not change
+                # big uom not change
                 for order_line in order.order_line:  
                     for p_code in product_code: 
                         if order_line.product_id.default_code == eval(p_code):
@@ -556,85 +658,102 @@ class PromotionsRules(osv.Model):
                         return True       
                     
             elif attribute == 'fix_prods_qty':
-                print 'expression',expression,promotion_rule
+                print 'expression', expression, promotion_rule
                 svalue = value.split(":")
                 product_code = svalue[0] 
-                #product_code = product_code.split(" ")                
+                # product_code = product_code.split(" ")                
                 product_qty = eval(svalue[1])
-                con_product_qty=0
+                con_product_qty = 0
                 qtys = 0.0
-                ori_qtys=0.0
-                cursor.execute("select comparator,value from promos_rules_conditions_exps where promotion= %s and id!=%s and attribute='fix_prods_qty' ",(promotion_rule.id,expression.id))
-                data=cursor.fetchone()
+                ori_qtys = 0.0
+                cursor.execute("select comparator,value from promos_rules_conditions_exps where promotion= %s and id!=%s and attribute='fix_prods_qty' ", (promotion_rule.id, expression.id))
+                data = cursor.fetchone()
                 if data:
-                    data_comparator =data[0]
-                    value=data[1]
+                    data_comparator = data[0]
+                    value = data[1]
                     svalue = value.split(":")
                     con_product_codes = svalue[0]
                     con_product_qty = eval(svalue[1])
                     #   con_product_codes = con_product_codes.split("'")                
 
                     for order_line in order.order_line:  
-                            if order_line.product_id.default_code ==eval(con_product_codes):
-                                qtys += order_line.product_uom_qty
-                    result=False
-                    total_result= False
+                            if order_line.product_id.default_code == eval(con_product_codes):
+                                if order_line.product_uom.id == order_line.product_id.product_tmpl_id.big_uom_id.id:                                                                          
+                                    cursor.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (order_line.product_uom.id,))
+                                    bigger_qty = cursor.fetchone()[0]
+                                    bigger_qty = int(bigger_qty)
+                                    qtys += bigger_qty * order_line.product_uom_qty                                
+                                else:
+                                    qtys += order_line.product_uom_qty
+                    result = False
+                    total_result = False
                     if data_comparator == '==':
                         if qtys == con_product_qty:
-                            result= True
+                            result = True
                     elif data_comparator == '!=':    
                         if qtys != con_product_qty:
-                            result= True
+                            result = True
                     if data_comparator == '>':
                         if qtys > con_product_qty:
-                            result= True
+                            result = True
                     elif data_comparator == '<':    
                         if qtys < con_product_qty:
-                            result= True
+                            result = True
                     elif data_comparator == '>=':
                         if qtys >= con_product_qty:
-                            result =True
+                            result = True
                     elif data_comparator == '<=':    
                         if qtys <= con_product_qty:
-                            result =True 
+                            result = True 
 
-                total=product_qty + con_product_qty
-                default=con_product_codes + ','+product_code
-                default=eval(default)
-                if result==True:
-                    cursor.execute("select sum(sol.product_uom_qty),sol.product_id,sol.product_uom from sale_order_line sol,product_product pp where sol.product_id=pp.id and sol.order_id=%s and pp.default_code in %s",(order.id,default,))
-                    data=cursor.fetchone()
+                total = product_qty + con_product_qty
+                default = con_product_codes + ',' + product_code
+                default = eval(default)
+                if result == True:
+                    cursor.execute("select sum(sol.product_uom_qty),sol.product_id,sol.product_uom from sale_order_line sol,product_product pp where sol.product_id=pp.id and sol.order_id=%s and pp.default_code in %s", (order.id, default,))
+                    data = cursor.fetchone()
                     if data:
-                        prod_qty=data[0]
-                        product_id=data[1]
-                        product_uom=data[2]
+                        prod_qty = data[0]
+                        product_id = data[1]
+                        product_uom = data[2]
                         product = self.pool.get('product.product').browse(cursor, user, product_id, context=context)
-                                              
-                        toal_prod_qty=prod_qty
+                        if product_uom == product.product_tmpl_id.big_uom_id.id:                                                                          
+                            cursor.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (product.product_tmpl_id.big_uom_id.id,))
+                            bigger_qty = cursor.fetchone()[0]
+                            bigger_qty = int(bigger_qty)
+                            toal_prod_qty = bigger_qty * prod_qty
+                        else:                        
+                            toal_prod_qty = prod_qty
 
                     if comparator == '==':
                         if toal_prod_qty == total:
-                            total_result= True
+                            total_result = True
                     elif comparator == '!=':    
                         if toal_prod_qty != total:
-                            total_result= True
+                            total_result = True
                     if comparator == '>':
                         if toal_prod_qty > total:
-                            total_result= True
+                            total_result = True
                     elif comparator == '<':    
                         if toal_prod_qty < total:
-                            total_result= True
+                            total_result = True
                     elif comparator == '>=':
                         if toal_prod_qty >= total:
-                            total_result= True
+                            total_result = True
                     elif comparator == '<=':    
                         if toal_prod_qty <= total:
-                            total_result= True                
+                            total_result = True                
                             
-                if result ==True and total_result==True: 
+                if result == True and total_result == True: 
                     for order_line in order.order_line:  
-                            if order_line.product_id.default_code ==eval(product_code):
-                                ori_qtys += order_line.product_uom_qty          
+                            if order_line.product_id.default_code == eval(product_code):
+                                if order_line.product_uom.id == order_line.product_id.product_tmpl_id.big_uom_id.id:                                                                          
+                                    cursor.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (product.product_tmpl_id.big_uom_id.id,))
+                                    bigger_qty = cursor.fetchone()[0]
+                                    bigger_qty = int(bigger_qty)
+                                    ori_qtys += bigger_qty * order_line.product_uom_qty      
+                                else:                                 
+                                    ori_qtys += order_line.product_uom_qty          
                                     
                     if comparator == '==':
                         if ori_qtys == product_qty:
@@ -655,6 +774,7 @@ class PromotionsRules(osv.Model):
                         if ori_qtys <= product_qty:
                             return True                    
         return False
+       
        
     def evaluate(self, cursor, user, promotion_rule, order, context=None):
         """
@@ -753,12 +873,12 @@ class PromotionsRules(osv.Model):
         for action in promotion_rule.actions:
             # try:
             
-            data=action_obj.execute(cursor, user, action.id,
+            data = action_obj.execute(cursor, user, action.id,
                                    order, context=None)
-            if data!=True:
-                data=data
+            if data != True:
+                data = data
             else:
-                data=True
+                data = True
 
         return data
         
@@ -779,38 +899,38 @@ class PromotionsRules(osv.Model):
         # cursor.execute('update sale_order set promo_state=True where id = %s', (order_id,))
         order = self.pool.get('sale.order').browse(cursor, user,
                                                    order_id, context=context)
-        date_order=order.date_order
-        partner_id=order.partner_id
-        team_id=order.section_id
-        branch_id=order.section_id.branch_id.id
-        active_promos=[]
+        date_order = order.date_order
+        partner_id = order.partner_id
+        team_id = order.section_id
+        branch_id = order.section_id.branch_id.id
+        active_promos = []
 #         active_promos = self.search(cursor, user,
 #                                     [('active', '=', True),('from_date', '<=', date_order),('to_date', '>=', date_order)],
 #                                     context=context)
-        cursor.execute("select id from promos_rules where active=True and from_date <= %s and  to_date >=%s order by sequence asc",(date_order,date_order,))
-        active_data=cursor.fetchall()
+        cursor.execute("select id from promos_rules where active=True and from_date <= %s and  to_date >=%s order by sequence asc", (date_order, date_order,))
+        active_data = cursor.fetchall()
         print 'active_promos',
         for data_pro in active_data:
-            print ' data_pro',data_pro
+            print ' data_pro', data_pro
             active_promos.append(data_pro[0])
-        print 'active_promos',active_promos
+        print 'active_promos', active_promos
         for promotion_rule in self.browse(cursor, user,
                                           active_promos, context):
             result = self.evaluate(cursor, user,
                                    promotion_rule, order,
                                    context)
-            data=True
+            data = True
             
             # MMK I'm just fix a little missing codeI'm just fix a little missing code
             # Apply Promotions Here
             # And so yin result ka true phit ya mal
             # OR so yin result ka false phit ya mal   
             if result:
-                data=self.execute_actions(cursor, user,
+                data = self.execute_actions(cursor, user,
                                   promotion_rule, order_id,
                                   context)
                 
-            if  data!=True:
+            if  data != True:
                 return data
                 # If stop further is true
             if promotion_rule.stop_further:
@@ -881,7 +1001,7 @@ class PromotionsRulesConditionsExprs(osv.Model):
                          'prod_sub_total',
                          'prod_discount',
                          'prod_weight',
-                         'prod_net_price',                          
+                         'prod_net_price',
 
                          ]:
             return {
@@ -896,7 +1016,7 @@ class PromotionsRulesConditionsExprs(osv.Model):
                          ]:
             return {
                     'value':{
-                             'value':"'promo_name'"
+                             'value':"'promo_code'"
                              }
                     }
         # Case 5    
@@ -906,6 +1026,14 @@ class PromotionsRulesConditionsExprs(osv.Model):
                              'value':"'product_code1';'product_code2'|0.00"
                              }
                }
+            
+        if attribute in ['multi_prod_sale_amt']:
+            return{
+                    'value':{
+                             'value':"'product_code1';'product_code2'|0.00"
+                             }
+               }
+        
         # Case 6   
         if attribute in ['prods_multi_uom_qty']:
             return {
@@ -947,13 +1075,29 @@ class PromotionsRulesConditionsExprs(osv.Model):
                              }
                     }
             
+        if attribute in [
+                         'cat_total',
+                        
+                         ]:
+            return {
+                    'value':{
+                             'value':"'category_code':0.00"
+                             }
+                    }
+               
+            
         if attribute == 'fix_prods_qty':
             return {
                     'value':{
                              'value':"'product_code1';'product_code2':0.00|'product_code3':0.00"
                              }
                     }                  
-            
+        if attribute == 'fix_categ_qty':
+            return {
+                    'value':{
+                             'value':"'categ1';'categ2';'categ3':0.00|limit_amount"
+                             }
+                    }                       
         return {}
     _columns = {
         'sequence':fields.integer('Sequence'),
@@ -1004,6 +1148,7 @@ class PromotionsRulesConditionsExprs(osv.Model):
                          'comp_sub_total',
                          'comp_sub_total_x',
                          'fix_prods_qty',
+                         'fix_categ_qty',
                          ] and \
             not comparator in NUMERCIAL_COMPARATORS:
             
@@ -1052,6 +1197,7 @@ class PromotionsRulesConditionsExprs(osv.Model):
                          'prods_multi_uom_qty',
                         ]:
             try:
+
                 svalue = value.split(':')
                 codes = svalue[0]
                 quantity = svalue[1]
@@ -1325,7 +1471,15 @@ class PromotionsRulesActions(osv.Model):
                              'arguments':"0.00",
                              }
                     }
-        
+        if action_type in [
+                           'qty_disc_fix',
+                           ] :
+            return {
+                    'value':{
+                             'product_code':"'product_code'",
+                             'arguments':"0.00|LimitQty",
+                             }
+                    }        
         if action_type in [
                            'prod_x_get_y',
                            ] :
@@ -1364,13 +1518,30 @@ class PromotionsRulesActions(osv.Model):
                          'arguments':"1:1",
                              }
                     }
-        if action_type in ['prod_multi_get_x', ] :
+        if action_type in ['prod_multi_get_x', 'prod_multi_get_x_conds', ] :
             return{
                    'value' : {
                               'product_code':"'product_code_x1';'product_code_x2':'product_code_x'",
                               'arguments':"1:1",
                               }
                    }
+          
+        if action_type in ['prod_categ_value_get_x' ] :
+            return{
+                   'value' : {
+                              'product_code':"'category_code':'product_code_x'",
+                              'arguments':"1:1",
+                              }
+                   }          
+        if action_type in ['prod_multi_ratio_x' ] :
+            return{
+                   'value' : {
+                              'product_code':"'code_1';'code_2';'code_3';|3;3;1:'given_product_code'",
+                         'arguments':"1:1",
+                              }
+                   }
+            
+            
         if action_type in ['prod_multi_uom_get_x', ]:
             return{
                    'value' : {
@@ -1431,7 +1602,7 @@ class PromotionsRulesActions(osv.Model):
                               'arguments':"1:1;1",
                               }
                    }
-#kzo 
+# kzo 
         if action_type in ['foc_any_product', ] :
             return{
                    'value' : {
@@ -1439,6 +1610,13 @@ class PromotionsRulesActions(osv.Model):
                               'arguments':"0.00",
                               }
                    }    
+        if action_type in ['any_product_qty_disc_fix']:
+            return{
+                   'value' : {
+                              'product_code':"'product_code_x1':'product_code_x2':'product_code_x3'",
+                              'arguments':"0.00|0.00",
+                              }
+                   }             
             
         if action_type in ['foc_any_prod_fix', ] :
             return{
@@ -1447,8 +1625,17 @@ class PromotionsRulesActions(osv.Model):
                               'arguments':"0.00",
                               }
                    }            
+
+        if action_type in ['discount_amount_by_product', ] :
+            return{
+                   'value' : {
+                              'product_code':"'discount_product_code'",
+                              'arguments':"0.00",
+                              }
+                   }            
         # Finally if nothing works prod_dis_double
-        return {}
+        return {}    
+    
     
     _columns = {
         'sequence':fields.integer('Sequence', required=True),
@@ -1456,6 +1643,8 @@ class PromotionsRulesActions(osv.Model):
         'product_code':fields.char('Product Code'),
         'arguments':fields.char('Arguments', size=100),
         'promotion':fields.many2one('promos.rules', 'Promotion'),
+        'discount_product_code':fields.char('Discount Product Code', size=100),
+
     }
  
     def clear_existing_promotion_lines(self, cursor, user,
@@ -2198,26 +2387,26 @@ class PromotionsRulesActions(osv.Model):
         LOGGER.info("Action Product Codes : %s ", product_codes)
         qty = free_qty = 0
         final_code = product_codes[len(product_codes) - 1]
-        print ' final_code',final_code
+        print ' final_code', final_code
         product_x2_code_id = product_obj.search(cursor, user,
                                     [('default_code', '=', eval(final_code))], context=context)
 #         product_codes.remove(final_code)
         qty_column = self.tsplit(action.arguments, (':', ';'))
-        print ' qty_columnqty_columnqty_column',qty_column
-        qty_x=eval(qty_column[0])#24
-        qty_y =eval(qty_column[1])#1
-        limit=eval(qty_column[2])#240
-        LOGGER.info("Product Code : %s ", product_x2_code_id[0], qty_x, qty_y,limit )
+        print ' qty_columnqty_columnqty_column', qty_column
+        qty_x = eval(qty_column[0])  # 24
+        qty_y = eval(qty_column[1])  # 1
+        limit = eval(qty_column[2])  # 240
+        LOGGER.info("Product Code : %s ", product_x2_code_id[0], qty_x, qty_y, limit)
 #         existing_id = order_line_obj.search(cursor, user, [('order_id', '=', order.id), ('product_id', '=', product_x2_code_id[0]), ('price_unit', '=', 0), ('sale_foc', '=', True)], context)
 #         if existing_id:
 #             order_line_obj.unlink(cursor, user, existing_id, context)
         for order_line in order.order_line:        
             for product_code in product_codes:
-                print 'product_codeproduct_code',product_code
+                print 'product_codeproduct_code', product_code
                 if order_line.product_id.default_code == eval(product_code):    
                     qty += order_line.product_uom_qty
-        if  qty>limit:
-            qty=limit
+        if  qty > limit:
+            qty = limit
         if qty >= qty_x:
             free_qty = int((qty / qty_x) * qty_y)
             LOGGER.info("Free Quantity : %s ", free_qty)
@@ -2330,13 +2519,13 @@ class PromotionsRulesActions(osv.Model):
         temp_obj = self.pool.get('foc.any.product.temp')
         product_x_code, product_y_code = [eval(code) \
                                 for code in action.product_code.split(":")]
-        product_xy_code='NA'
+        product_xy_code = 'NA'
         
         product_x_code_id = product_obj.search(cursor, user,
                                     [('default_code', '=', product_x_code)], context=context)
         product_x2_code_id = product_obj.search(cursor, user,
                                     [('default_code', '=', product_y_code)], context=context)        
-        product_xy_code_id= product_obj.search(cursor, user,
+        product_xy_code_id = product_obj.search(cursor, user,
                                     [('default_code', '=', product_xy_code)], context=context)  
         qty_x = eval(action.arguments)              
         if product_codes_list:
