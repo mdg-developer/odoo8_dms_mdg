@@ -19,7 +19,7 @@
     <method name="initialize"><![CDATA[branchList = params["branch_id"].value.join(",");
 teamList = params["sales_team_id"].value.join(",");]]></method>
     <property name="iconFile">/templates/blank_report.gif</property>
-    <property name="layoutPreference">auto layout</property>
+    <property name="layoutPreference">fixed layout</property>
     <property name="bidiLayoutOrientation">ltr</property>
     <property name="imageDPI">96</property>
     <list-property name="libraries">
@@ -156,6 +156,24 @@ order by payment_type]]></xml-property>
             <property name="nullsOrdering">nulls lowest</property>
             <list-property name="columnHints">
                 <structure>
+                    <property name="columnName">price_unit</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">price_unit</text-property>
+                    <text-property name="heading">price_unit</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">name</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">name</text-property>
+                    <text-property name="heading">name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">date_due</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">date_due</text-property>
+                    <text-property name="heading">date_due</text-property>
+                </structure>
+                <structure>
                     <property name="columnName">customer</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">customer</text-property>
@@ -262,6 +280,18 @@ order by payment_type]]></xml-property>
                     <property name="onColumnLayout">false</property>
                     <text-property name="heading">seq</text-property>
                 </structure>
+                <structure>
+                    <property name="columnName">total_amount</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">total_amount</text-property>
+                    <text-property name="heading">total_amount</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">net_amount</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">net_amount</text-property>
+                    <text-property name="heading">net_amount</text-property>
+                </structure>
             </list-property>
             <list-property name="parameters">
                 <structure>
@@ -304,148 +334,113 @@ order by payment_type]]></xml-property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
-                <structure>
-                    <property name="name">from_date2</property>
-                    <property name="paramName">from_date</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                    <property name="position">5</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">to_date2</property>
-                    <property name="paramName">to_date</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                    <property name="position">6</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">from_date3</property>
-                    <property name="paramName">from_date</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                    <property name="position">7</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">to_date3</property>
-                    <property name="paramName">to_date</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                    <property name="position">8</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">from_date4</property>
-                    <property name="paramName">from_date</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                    <property name="position">9</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">to_date4</property>
-                    <property name="paramName">to_date</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                    <property name="position">10</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
             </list-property>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
                     <structure>
                         <property name="position">1</property>
-                        <property name="name">customer</property>
-                        <property name="dataType">integer</property>
+                        <property name="name">price_unit</property>
+                        <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">2</property>
-                        <property name="name">customer_name</property>
+                        <property name="name">name</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">3</property>
-                        <property name="name">township</property>
-                        <property name="dataType">string</property>
+                        <property name="name">date_due</property>
+                        <property name="dataType">date</property>
                     </structure>
                     <structure>
                         <property name="position">4</property>
-                        <property name="name">number</property>
-                        <property name="dataType">string</property>
+                        <property name="name">customer</property>
+                        <property name="dataType">integer</property>
                     </structure>
                     <structure>
                         <property name="position">5</property>
-                        <property name="name">payment_type</property>
+                        <property name="name">customer_name</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">6</property>
-                        <property name="name">date_invoice</property>
+                        <property name="name">township</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">7</property>
-                        <property name="name">section_id</property>
-                        <property name="dataType">integer</property>
+                        <property name="name">number</property>
+                        <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">8</property>
-                        <property name="name">sales_team</property>
+                        <property name="name">payment_type</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">9</property>
-                        <property name="name">branch_id</property>
-                        <property name="dataType">integer</property>
+                        <property name="name">date_invoice</property>
+                        <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">10</property>
-                        <property name="name">product_id</property>
+                        <property name="name">section_id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
                         <property name="position">11</property>
-                        <property name="name">name_template</property>
+                        <property name="name">sales_team</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">12</property>
-                        <property name="name">uos_id</property>
+                        <property name="name">branch_id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
                         <property name="position">13</property>
-                        <property name="name">uom_id</property>
+                        <property name="name">product_id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
                         <property name="position">14</property>
+                        <property name="name">name_template</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">15</property>
+                        <property name="name">uos_id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">16</property>
+                        <property name="name">uom_id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">17</property>
                         <property name="name">product_quantity</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">15</property>
+                        <property name="position">18</property>
                         <property name="name">status</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">16</property>
+                        <property name="position">19</property>
                         <property name="name">seq</property>
                         <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">20</property>
+                        <property name="name">total_amount</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">21</property>
+                        <property name="name">net_amount</property>
+                        <property name="dataType">decimal</property>
                     </structure>
                 </list-property>
             </structure>
@@ -474,121 +469,160 @@ else
             <list-property name="resultSet">
                 <structure>
                     <property name="position">1</property>
+                    <property name="name">price_unit</property>
+                    <property name="nativeName">price_unit</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">name</property>
+                    <property name="nativeName">name</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">date_due</property>
+                    <property name="nativeName">date_due</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
                     <property name="name">customer</property>
                     <property name="nativeName">customer</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">2</property>
+                    <property name="position">5</property>
                     <property name="name">customer_name</property>
                     <property name="nativeName">customer_name</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">3</property>
+                    <property name="position">6</property>
                     <property name="name">township</property>
                     <property name="nativeName">township</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">4</property>
+                    <property name="position">7</property>
                     <property name="name">number</property>
                     <property name="nativeName">number</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">5</property>
+                    <property name="position">8</property>
                     <property name="name">payment_type</property>
                     <property name="nativeName">payment_type</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">6</property>
+                    <property name="position">9</property>
                     <property name="name">date_invoice</property>
                     <property name="nativeName">date_invoice</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">7</property>
+                    <property name="position">10</property>
                     <property name="name">section_id</property>
                     <property name="nativeName">section_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">8</property>
+                    <property name="position">11</property>
                     <property name="name">sales_team</property>
                     <property name="nativeName">sales_team</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">9</property>
+                    <property name="position">12</property>
                     <property name="name">branch_id</property>
                     <property name="nativeName">branch_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">10</property>
+                    <property name="position">13</property>
                     <property name="name">product_id</property>
                     <property name="nativeName">product_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">11</property>
+                    <property name="position">14</property>
                     <property name="name">name_template</property>
                     <property name="nativeName">name_template</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">12</property>
+                    <property name="position">15</property>
                     <property name="name">uos_id</property>
                     <property name="nativeName">uos_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">13</property>
+                    <property name="position">16</property>
                     <property name="name">uom_id</property>
                     <property name="nativeName">uom_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">14</property>
+                    <property name="position">17</property>
                     <property name="name">product_quantity</property>
                     <property name="nativeName">product_quantity</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">15</property>
+                    <property name="position">18</property>
                     <property name="name">status</property>
                     <property name="nativeName">status</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">16</property>
+                    <property name="position">19</property>
                     <property name="name">seq</property>
                     <property name="nativeName">seq</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
+                <structure>
+                    <property name="position">20</property>
+                    <property name="name">total_amount</property>
+                    <property name="nativeName">total_amount</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
+                </structure>
+                <structure>
+                    <property name="position">21</property>
+                    <property name="name">net_amount</property>
+                    <property name="nativeName">net_amount</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
+                </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[
 with foc_qty as (
-	select rp.id customer_id,rp.name customer_name,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ccs.name sales_team,ai.branch_id,product_id,name_template,ail.uos_id,pt.uom_id,
-	case when ail.uos_id=pt.uom_id then sum(round(quantity,0)) when ail.uos_id!=pt.uom_id then sum(round(quantity*(select floor(round(1/factor,2)) from product_uom where id=ail.uos_id),0)) end as product_quantity,ai.state as status,pp.sequence as seq
+	select  
+	ail.price_unit,(select rp.name from res_users ru where ai.user_id=ru.id and ru.partner_id=rp.id ),ai.date_due,rp.id customer_id,rp.name customer_name,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ccs.name sales_team,ai.branch_id,product_id,name_template,ail.uos_id,pt.uom_id,
+	case when ail.uos_id=pt.uom_id then sum(round(quantity,0)) when ail.uos_id!=pt.uom_id then sum(round(quantity*(select floor(round(1/factor,2)) from product_uom where id=ail.uos_id),0)) end as product_quantity,ai.state as status,pp.sequence as seq,case when (ail.promotion_id is not null and ail.foc= true) or (ail.promotion_id is not null and ail.foc= false)  then 0 
+    when (ail.promotion_id is null) then ail.price_unit * ail.quantity	    	 
+	end as total_amount,
+	case when (ail.promotion_id is null) then ai.amount_total end as net_amount		
 	from account_invoice ai,res_partner rp,res_township rt,account_invoice_line ail,product_uom uom,product_product pp,product_template pt,crm_case_section ccs
 	where ai.partner_id=rp.id
 	and rp.township=rt.id
@@ -599,15 +633,18 @@ with foc_qty as (
 	and ai.section_id=ccs.id
 	and foc='true'
 	and date_invoice between ? and ?
-	group by rp.id,rp.name,rt.code,number,payment_type,date_invoice,ai.section_id,ccs.name,ai.branch_id,product_id,name_template,pp.sequence,ail.uos_id,pt.uom_id,ai.state
-	order by seq),
+	group by ai.amount_total,rp.id,rp.name,ail.quantity,rt.code,number,payment_type,date_invoice,ail.promotion_id,ail.foc,ai.section_id,ccs.name,ai.branch_id,product_id,name_template,pp.sequence,ail.uos_id,pt.uom_id,ai.state,ai.user_id,ai.date_due,ail.price_unit
+	order by name_template),
 sale_qty as (
-	select rp.id customer,rp.name customer_name,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,
+	select ail.price_unit,(select rp.name from res_users ru where ai.user_id=ru.id and ru.partner_id=rp.id ),ai.date_due,rp.id customer,rp.name customer_name,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,
         ccs.name sales_team,ai.branch_id,product_id,name_template,ail.uos_id,pt.uom_id,
-        
         case when ail.uos_id=pt.uom_id then sum(round(quantity,0)) 
         when ail.uos_id!=pt.uom_id then sum(round(quantity*(select floor(round(1/factor,2)) from product_uom where id=ail.uos_id),0)) 
-        end as product_quantity,ai.state as status,pp.sequence as seq
+        end as product_quantity,ai.state as status,pp.sequence as seq,
+		case when (ail.promotion_id is not null and ail.foc= true) or (ail.promotion_id is not null and ail.foc= false)  then 0 
+			 when (ail.promotion_id is null) then ail.price_unit * ail.quantity														 
+        	 end as total_amount,
+		case when (ail.promotion_id is null) then ai.amount_total end as net_amount																 
 	from account_invoice ai,res_partner rp,res_township rt,account_invoice_line ail,product_uom uom,product_product pp,product_template pt,crm_case_section ccs
 	where ai.partner_id=rp.id
 	and rp.township=rt.id
@@ -618,47 +655,14 @@ sale_qty as (
 	and ai.section_id=ccs.id			
 	and foc='false'
 	and date_invoice between ? and ?
-        group by rp.id,rp.name,rt.code,number,payment_type,date_invoice,ai.section_id,ccs.name,ai.branch_id,product_id,name_template,pp.sequence,ail.uos_id,pt.uom_id,ai.state
-	order by seq),
-total_amt as (
-	select rp.id customer,rp.name customer_name,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ccs.name sales_team,ai.branch_id,0,'Total Amt.'::character varying name_template,0,0,
-	round((amount_untaxed)+(amount_tax*1)+(discount_total*1),0) as product_quantity,ai.state as status,90001::int as seq
-	from account_invoice ai,res_partner rp,res_township rt,crm_case_section ccs
-	where ai.partner_id=rp.id	
-	and rp.township=rt.id	
-	and ai.section_id=ccs.id
-	and date_invoice between ? and ?
-	order by rp.name
-),
-total_discount as (
-	select rp.id customer,rp.name customer_name,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ccs.name sales_team,ai.branch_id,0,'Total Disc.'::character varying name_template,0,0,
-	round(discount_total,0) as product_quantity,ai.state as status,90002::int as seq
-	from account_invoice ai,res_partner rp,res_township rt,crm_case_section ccs
-	where ai.partner_id=rp.id
-	and rp.township=rt.id	
-	and ai.section_id=ccs.id
-	and date_invoice between ? and ?
-	order by rp.name
-),
-net_amt as (
-	select rp.id customer,rp.name customer_name,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ccs.name sales_team,ai.branch_id,0,'Net Amt.'::character varying name_template,0,0,
-	round(amount_total,0) as product_quantity,''::text as status,90003::int as seq
-	from account_invoice ai,res_partner rp,res_township rt,crm_case_section ccs
-	where ai.partner_id=rp.id
-	and rp.township=rt.id	
-	and ai.section_id=ccs.id
-	and date_invoice between ? and ?
-	order by rp.name
-),
+        group by ai.amount_total,ail.quantity,ail.price_unit,ail.promotion_id,ail.foc,rp.id,rp.name,rt.code,number,payment_type,date_invoice,ai.section_id,ccs.name,ai.branch_id,product_id,name_template,pp.sequence,ail.uos_id,pt.uom_id,ai.state,ai.user_id,ai.date_due
+	order by name_template),
 result as (
 	select *
 	from sale_qty
 	union
 	select *
 	from foc_qty
-	union 
-	select *
-	from total_amt
 )
 
 select *
@@ -724,96 +728,6 @@ order by number]]></xml-property>
           <design:identifier>
             <design:name></design:name>
             <design:position>4</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>5</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>6</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>7</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>8</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>9</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>10</design:position>
           </design:identifier>
           <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
@@ -1668,6 +1582,7 @@ and date_invoice between ? and ?
     </cubes>
     <page-setup>
         <simple-master-page name="Simple MasterPage" id="2">
+            <property name="type">us-ledger</property>
             <property name="orientation">auto</property>
             <page-footer>
                 <text id="3">
@@ -1680,7 +1595,7 @@ and date_invoice between ? and ?
     <body>
         <grid id="410">
             <property name="textAlign">center</property>
-            <property name="width">8.1in</property>
+            <property name="width">10.5in</property>
             <column id="411">
                 <property name="width">4.489583333333333in</property>
             </column>
@@ -1851,6 +1766,7 @@ else&#13;
         <label id="15"/>
         <label id="406"/>
         <table id="1133">
+            <property name="width">10.46875in</property>
             <property name="dataSet">Data Set</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -1902,21 +1818,75 @@ else&#13;
                     <property name="dataType">decimal</property>
                 </structure>
                 <structure>
-                    <property name="name">status</property>
-                    <text-property name="displayName">status</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["status"]</expression>
+                    <property name="name">name</property>
+                    <text-property name="displayName">name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["name"]</expression>
                     <property name="dataType">string</property>
                 </structure>
+                <structure>
+                    <property name="name">date_due</property>
+                    <text-property name="displayName">date_due</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["date_due"]</expression>
+                    <property name="dataType">date</property>
+                </structure>
+                <structure>
+                    <property name="name">price_unit</property>
+                    <text-property name="displayName">price_unit</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["price_unit"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">total_amount</property>
+                    <text-property name="displayName">total_amount</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["total_amount"]</expression>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="name">net_amount</property>
+                    <text-property name="displayName">net_amount</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["net_amount"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
             </list-property>
-            <column id="1182"/>
-            <column id="1183"/>
-            <column id="1184"/>
-            <column id="1185"/>
-            <column id="1186"/>
-            <column id="1187"/>
-            <column id="1188"/>
-            <column id="1189"/>
-            <column id="1190"/>
+            <column id="1182">
+                <property name="width">0.7708333333333334in</property>
+            </column>
+            <column id="1183">
+                <property name="width">0.78125in</property>
+            </column>
+            <column id="1240">
+                <property name="width">0.6770833333333334in</property>
+            </column>
+            <column id="1184">
+                <property name="width">0.59375in</property>
+            </column>
+            <column id="1185">
+                <property name="width">1.03125in</property>
+            </column>
+            <column id="1186">
+                <property name="width">0.875in</property>
+            </column>
+            <column id="1246">
+                <property name="width">0.8854166666666666in</property>
+            </column>
+            <column id="1275">
+                <property name="width">0.8645833333333334in</property>
+            </column>
+            <column id="1188">
+                <property name="width">0.9479166666666666in</property>
+            </column>
+            <column id="1190">
+                <property name="width">0.65625in</property>
+            </column>
+            <column id="1269">
+                <property name="width">0.7291666666666666in</property>
+            </column>
+            <column id="1253">
+                <property name="width">0.7291666666666666in</property>
+            </column>
+            <column id="1281">
+                <property name="width">0.9270833333333334in</property>
+            </column>
             <header>
                 <row id="1134">
                     <property name="borderBottomStyle">solid</property>
@@ -1961,6 +1931,24 @@ else&#13;
                             <property name="borderRightStyle">none</property>
                             <property name="borderTopStyle">none</property>
                             <text-property name="text">Customer</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1237">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="1241">
+                            <property name="fontWeight">bold</property>
+                            <property name="borderBottomStyle">none</property>
+                            <property name="borderLeftStyle">none</property>
+                            <property name="borderRightStyle">none</property>
+                            <property name="borderTopStyle">none</property>
+                            <text-property name="text">Sales Man</text-property>
                         </label>
                     </cell>
                     <cell id="1139">
@@ -2017,7 +2005,7 @@ else&#13;
                             <text-property name="text">Voc.Date</text-property>
                         </label>
                     </cell>
-                    <cell id="1145">
+                    <cell id="1243">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
@@ -2026,9 +2014,31 @@ else&#13;
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <label id="1146">
+                        <label id="1247">
                             <property name="fontWeight">bold</property>
-                            <text-property name="text">Sale Team</text-property>
+                            <property name="borderBottomStyle">none</property>
+                            <property name="borderLeftStyle">none</property>
+                            <property name="borderRightStyle">none</property>
+                            <property name="borderTopStyle">none</property>
+                            <text-property name="text">Due Date</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1272">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="1276">
+                            <property name="fontWeight">bold</property>
+                            <property name="borderBottomStyle">none</property>
+                            <property name="borderLeftStyle">none</property>
+                            <property name="borderRightStyle">none</property>
+                            <property name="borderTopStyle">none</property>
+                            <text-property name="text">Date To Delivery</text-property>
                         </label>
                     </cell>
                     <cell id="1147">
@@ -2045,24 +2055,6 @@ else&#13;
                             <text-property name="text">Product</text-property>
                         </label>
                     </cell>
-                    <cell id="1149">
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <label id="1192">
-                            <property name="fontWeight">bold</property>
-                            <property name="borderBottomStyle">none</property>
-                            <property name="borderLeftStyle">none</property>
-                            <property name="borderRightStyle">none</property>
-                            <property name="borderTopStyle">none</property>
-                            <text-property name="text">Status</text-property>
-                        </label>
-                    </cell>
                     <cell id="1151">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -2074,7 +2066,49 @@ else&#13;
                         <property name="borderTopWidth">thin</property>
                         <label id="1150">
                             <property name="fontWeight">bold</property>
-                            <text-property name="text">Product Qty</text-property>
+                            <text-property name="text">Sales Qty</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1266">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="1270">
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">Price</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1250">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="1254">
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">Total Amt.</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1278">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="1282">
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">Net Amount</text-property>
                         </label>
                     </cell>
                 </row>
@@ -2124,6 +2158,19 @@ else&#13;
                                 <property name="resultSetColumn">customer_name</property>
                             </data>
                         </cell>
+                        <cell id="1238">
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">thin</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">thin</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">thin</property>
+                            <data id="1242">
+                                <property name="resultSetColumn">name</property>
+                            </data>
+                        </cell>
                         <cell id="1230">
                             <property name="borderBottomStyle">solid</property>
                             <property name="borderBottomWidth">thin</property>
@@ -2166,7 +2213,7 @@ else&#13;
                                 <property name="resultSetColumn">date_invoice</property>
                             </data>
                         </cell>
-                        <cell id="1233">
+                        <cell id="1244">
                             <property name="borderBottomStyle">solid</property>
                             <property name="borderBottomWidth">thin</property>
                             <property name="borderLeftStyle">solid</property>
@@ -2175,14 +2222,36 @@ else&#13;
                             <property name="borderRightWidth">thin</property>
                             <property name="borderTopStyle">solid</property>
                             <property name="borderTopWidth">thin</property>
-                            <data id="1165">
+                            <data id="1248">
+                                <structure name="dateTimeFormat">
+                                    <property name="category">Custom</property>
+                                    <property name="pattern">dd-MM_yyyy</property>
+                                </structure>
                                 <property name="textAlign">center</property>
-                                <property name="resultSetColumn">sales_team</property>
+                                <property name="resultSetColumn">date_due</property>
                             </data>
                         </cell>
+                        <cell id="1273">
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">thin</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">thin</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">thin</property>
+                        </cell>
                         <cell id="1234"/>
-                        <cell id="1235"/>
                         <cell id="1236"/>
+                        <cell id="1267"/>
+                        <cell id="1251">
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">thin</property>
+                        </cell>
+                        <cell id="1279">
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">thin</property>
+                        </cell>
                     </row>
                 </header>
             </group>
@@ -2197,7 +2266,7 @@ else&#13;
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">thin</property>
                     <cell id="1154">
-                        <property name="colSpan">6</property>
+                        <property name="colSpan">8</property>
                         <property name="rowSpan">1</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -2222,7 +2291,7 @@ else&#13;
                             <property name="resultSetColumn">name_template</property>
                         </data>
                     </cell>
-                    <cell id="1168">
+                    <cell id="1170">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
@@ -2231,25 +2300,58 @@ else&#13;
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <data id="1193">
-                            <property name="borderBottomStyle">none</property>
-                            <property name="borderLeftStyle">none</property>
-                            <property name="borderRightStyle">none</property>
-                            <property name="borderTopStyle">none</property>
-                            <property name="textAlign">center</property>
-                            <property name="resultSetColumn">status</property>
-                        </data>
-                    </cell>
-                    <cell id="1170">
                         <data id="1191">
                             <property name="textAlign">center</property>
                             <property name="resultSetColumn">product_quantity</property>
+                        </data>
+                    </cell>
+                    <cell id="1268">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="1271">
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">price_unit</property>
+                        </data>
+                    </cell>
+                    <cell id="1252">
+                        <data id="1277">
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">total_amount</property>
+                        </data>
+                    </cell>
+                    <cell id="1280">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="1283">
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">net_amount</property>
                         </data>
                     </cell>
                 </row>
             </detail>
         </table>
         <label id="407"/>
+        <label id="1249"/>
         <grid id="283">
             <property name="height">1in</property>
             <column id="284"/>
