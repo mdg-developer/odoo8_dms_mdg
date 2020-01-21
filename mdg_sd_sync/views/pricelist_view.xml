@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<record model="ir.ui.view" id="view_product_pricelist_sd_sync_form">
+			<field name="name">Product Pricelist Form</field>
+			<field name="model">product.pricelist</field>
+			<field name="inherit_id" ref="product.product_pricelist_view" />
+			<field name="arch" type="xml">
+
+				<field name="type" position="after">
+					<field name="is_sync_sd" />
+					<button name="sync_to_sd" string="Sync To SD" class="oe_highlight"
+						type="object" states='draft,approve' groups="base.group_sale_manager" />
+				</field>
+			</field>
+		</record>
+
+
+	</data>
+</openerp>
