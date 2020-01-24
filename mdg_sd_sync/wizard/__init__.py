@@ -1,0 +1,1 @@
+import price_list_multi_sync
