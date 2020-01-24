@@ -46,6 +46,7 @@ class account_invoice(models.Model):
                     {'limit': 1})
                     
                     res = {
+                            'origin': inv.origin,
                             'move_type':'direct',
                             'invoice_state':'none',
                             'picking_type_id':picking_type_id[0],

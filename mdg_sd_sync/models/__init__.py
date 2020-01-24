@@ -1,2 +1,5 @@
 import pricelist
 import sale_promotion
+import account_invoice
+import res_partner
+import sd_connection

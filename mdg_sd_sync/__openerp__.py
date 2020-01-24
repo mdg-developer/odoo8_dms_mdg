@@ -31,11 +31,12 @@ MDG SYC TO SD
 """,
     'author': 'Seventh Computing',
     'website': 'http://www.7thcomputing.com',
-    'depends': ['base', 'product','sale','sale_promotions'],
+    'depends': ['base', 'product','sale','sale_promotions','crm_management','sale_journal_principle'],
     'data': [        
              'views/pricelist_view.xml',
              'views/sale_promotion_view.xml',
-
+             'views/res_partner_view.xml',
+             'views/sd_connection_view.xml',
     ],
     'installable': True,
     'auto_install': False,
