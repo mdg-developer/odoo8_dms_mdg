@@ -54,7 +54,9 @@ class account_invoice(models.Model):
                     
                 picking_id = models.execute_kw(db, sd_uid, password, 'stock.picking', 'create', [res])
                 for line in self.invoice_line:
-                    if line.product_id.type != 'service' and warehouse_id and loc_id and dest_loc_id and picking_type_id:
+                    if not warehouse_id and loc_id and dest_loc_id and picking_type_id:
+                        raise Warning(_("""Warehouse and Location doesn't exit in SD"""))
+                    if line.product_id.type != 'service' :
                         
                         move_val = {
                               'name':'Import',
@@ -76,8 +78,7 @@ class account_invoice(models.Model):
                               'state':'done'}
                         move_id = models.execute_kw(db, sd_uid, password, 'stock.move', 'create', [move_val])
                         move_ids.append(move_id)    
-                    else:
-                        raise Warning(_("""Warehouse and Location doesn't exit in SD"""))
+                    
                 for move in move_ids:
                     models.execute_kw(db, sd_uid, password, 'stock.move', 'action_done', [move])
         return result
