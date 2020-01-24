@@ -880,7 +880,7 @@ class mobile_sale_order(osv.osv):
                         # type > cash and delivery_remark > delivered
                         if ms_ids.type == 'cash' and ms_ids.delivery_remark == 'delivered':  # Payment Type=>Cash and Delivery Remark=>Delivered
                             # SO Confirm 
-                            # journal_id = ms_ids.journal_id.id
+                            #journal_id = ms_ids.journal_id.id
                             soObj.action_button_confirm(cr, uid, solist, context=context)
                             # Create Invoice
                             invoice_id = self.create_invoices(cr, uid, solist, context=context)
@@ -905,46 +905,52 @@ class mobile_sale_order(osv.osv):
                                 self.pool['account.invoice'].signal_workflow(cr, uid, [invoice_id], 'invoice_open')                                
                                 # register Payment
                                 # calling the register payment pop-up
-#                                 invoiceObj.invoice_pay_customer(cr, uid, invlist, context=context)
-#                                 if journal_id:
-#                                     cr.execute('select default_debit_account_id from account_journal where id=%s', (journal_id,))
-#                                     data = cr.fetchall()
-#                                     if data:
-#                                         accountId = data[0]
-#                                 else:
-#                                         raise osv.except_osv(_('Warning!'), _("Insert Journal for Cash Sale"))
-# #                                 cr.execute('select id from account_account where lower(name)=%s and active= %s', ('cash', True,))  # which account shall I choose. It is needed.
-# #                                 data = cr.fetchall()
-# #                                 if data:
-# #                                     accountId = data[0]
-#                                 if journal_id and accountId:  # cash journal and cash account. If there no journal id or no account id, account invoice is not make payment.
-#                                     accountVResult = {
-#                                                     'partner_id':invObj.partner_id.id,
-#                                                     'amount':invObj.amount_total,
-#                                                     'journal_id':journal_id,
-#                                                     'date':invObj.date_invoice,
-#                                                     'period_id':invObj.period_id.id,
-#                                                     'account_id':accountId,
-#                                                     'pre_line':True,
-#                                                     'type':'receipt'
-#                                                     }
-#                                     # create register payment voucher
-#                                     voucherId = voucherObj.create(cr, uid, accountVResult, context=context)
-#                                     
-#                                 if voucherId:
-#                                     vlist = []
-#                                     vlist.append(voucherId)
-#                                     # get the voucher lines
-#                                     vlresult = voucherObj.recompute_voucher_lines(cr, uid, vlist, invObj.partner_id.id, journal_id, invObj.amount_total, 120, 'receipt', invObj.date_invoice, context=None)
-#                                     if vlresult:
-#                                         result = vlresult['value']['line_cr_ids'][0]
-#                                         result['voucher_id'] = voucherId
-#                                         # create the voucher lines
-#                                         voucherLineObj.create(cr, uid, result, context=context)
-#                                     # invoice register payment done
-#                                     voucherObj.button_proforma_voucher(cr, uid, vlist , context=context)
-#                                     # invoice paid status is true
-#                                     invFlag = True
+                                inv_data=self.pool['account.invoice'].browse(cr, uid, invoice_id,context=None)
+                                invoiceObj.invoice_pay_customer(cr, uid, invlist, context=context)
+                                cr.execute('''select journal_id from customer_payment  where payment_id =%s limit 1''',(ms_ids.id,))
+                                journal_data=cr.fetchone()
+                                if journal_data:
+                                    journal_id=journal_data[0]
+                                    cr.execute('select default_debit_account_id from account_journal where id=%s', (journal_id,))
+                                    data = cr.fetchall()
+                                    if data:
+                                        accountId = data[0]
+                                else:
+                                        raise osv.except_osv(_('Warning!'), _("Insert Journal for Cash Sale"))
+#                                 cr.execute('select id from account_account where lower(name)=%s and active= %s', ('cash', True,))  # which account shall I choose. It is needed.
+#                                 data = cr.fetchall()
+#                                 if data:
+#                                     accountId = data[0]
+                                print 'invvvvvv',inv_data
+                                if journal_id and accountId:  # cash journal and cash account. If there no journal id or no account id, account invoice is not make payment.
+                                    accountVResult = {
+                                                    'partner_id':inv_data.partner_id.id,
+                                                    'amount':inv_data.amount_total,
+                                                    'journal_id':journal_id,
+                                                    'date':inv_data.date_invoice,
+                                                    'period_id':inv_data.period_id.id,
+                                                    'account_id':accountId,
+                                                    'pre_line':True,
+                                                    'type':'receipt',
+                                                    'company_id':3
+                                                    }
+                                    # create register payment voucher
+                                    voucherId = voucherObj.create(cr, uid, accountVResult, context=context)
+                                     
+                                if voucherId:
+                                    vlist = []
+                                    vlist.append(voucherId)
+                                    # get the voucher lines
+                                    vlresult = voucherObj.recompute_voucher_lines(cr, uid, vlist, inv_data.partner_id.id, journal_id, inv_data.amount_total, 120, 'receipt', inv_data.date_invoice, context=None)
+                                    if vlresult:
+                                        result = vlresult['value']['line_cr_ids'][0]
+                                        result['voucher_id'] = voucherId
+                                        # create the voucher lines
+                                        voucherLineObj.create(cr, uid, result, context=context)
+                                    # invoice register payment done
+                                    voucherObj.button_proforma_voucher(cr, uid, vlist , context=context)
+                                    # invoice paid status is true
+                                    invFlag = True
                             # clicking the delivery order view button
 #                             stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)
 #                              
@@ -2345,7 +2351,7 @@ class mobile_sale_order(osv.osv):
         
         sale_order_obj = self.pool.get('sale.order')
         list_val = None
-        list_val = sale_order_obj.search(cr, uid, [('pre_order', '=', True), ('is_generate', '=', True), ('delivery_id', '=', saleTeamId), ('shipped', '=', False), ('invoiced', '=', False) , ('tb_ref_no', 'not in', soList)], context=context)
+        list_val = sale_order_obj.search(cr, uid, [('pre_order', '=', True), ('delivery_id', '=', saleTeamId), ('shipped', '=', False), ('invoiced', '=', False) , ('tb_ref_no', 'not in', soList)], context=context)
         print 'list_val', list_val
         list = []
         try:
