@@ -84,6 +84,7 @@ ACTION_TYPES = [
 class PromotionsRules(osv.Model):
     "Promotion Rules"
     _name = "promos.rules"
+    _inherit = ['mail.thread']
     _description = __doc__
     _order = 'sequence'
     _rec_name = 'description'    
@@ -153,10 +154,10 @@ class PromotionsRules(osv.Model):
     
     _columns = {
                 
-        'code':fields.char('Promo Code', readonly=True, copy=False),
-        'name':fields.char('Promo Name', required=True),
+        'code':fields.char('Promo Code', readonly=True,track_visibility='always', copy=False),
+        'name':fields.char('Promo Name', required=True,track_visibility='always'),
         'description':fields.char('Description'),
-        'active':fields.boolean('Active'),
+        'active':fields.boolean('Active',track_visibility='always'),
         
         'special':fields.boolean('Special'),
         'special1':fields.boolean('Special 1'),
@@ -165,7 +166,7 @@ class PromotionsRules(osv.Model):
         'stop_further':fields.boolean('Stop Checks',
                               help="Stops further promotions being checked"),
         # 'main_group': fields.many2one('product_product.maingroup','Main Group'),
-        'monthly_promotion':fields.boolean('Monthly Promotion'),
+        'monthly_promotion':fields.boolean('Monthly Promotion',track_visibility='always'),
         'promotion_count':fields.integer('Number Of Promotion Count'),
         'category_ids': fields.many2many('res.partner.category', 'promotion_rule_category_rel', 'promotion_id', 'category_id', 'Customer Tags'),
         'partner_categories':fields.many2many(
@@ -180,18 +181,18 @@ class PromotionsRules(osv.Model):
         'uses_per_coupon':fields.integer('Uses per Coupon'),
         'uses_per_partner':fields.integer('Uses per Partner'),
         'coupon_used':fields.integer('Number of Coupon Uses', required=True),
-        'from_date':fields.datetime('From Date'),
-        'to_date':fields.datetime('To Date'),
+        'from_date':fields.datetime('From Date',track_visibility='always'),
+        'to_date':fields.datetime('To Date',track_visibility='always'),
         'sequence':fields.integer('Sequence'),
         'sale_channel_id':fields.many2many('sale.channel', 'promo_sale_channel_rel', 'promo_id', 'sale_channel_id', string='Sale Channel'),
         'logic':fields.selection([
                             ('and', 'All'),
                             ('or', 'Any'),
-                                  ], string="Logic", required=True),
+                                  ], string="Logic", required=True,track_visibility='always'),
         'expected_logic_result':fields.selection([
                             ('True', 'True'),
                             ('False', 'False')
-                                    ], string="Output", required=True),
+                                    ], string="Output", required=True,track_visibility='always'),
   'expressions':fields.one2many(
                             'promos.rules.conditions.exps',
                             'promotion',
@@ -202,11 +203,11 @@ class PromotionsRules(osv.Model):
                     'promotion',
                     string="Actions", copy=True
                         ),
-        'main_group':fields.many2one('product.maingroup', 'Main Group'),
+        'main_group':fields.many2one('product.maingroup', 'Main Group',track_visibility='always'),
         'state': fields.selection([
             ('draft', 'Draft'),
             ('approve', 'Approved'),
-            ], 'Status', readonly=True, copy=False, help="Gives the status of the quotation or sales order.\
+            ], 'Status', readonly=True,track_visibility='always', copy=False, help="Gives the status of the quotation or sales order.\
               \nThe exception status is automatically set when a cancel operation occurs \
               in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\nThe 'Waiting Schedule' status is set when the invoice is confirmed\
                but waiting for the scheduler to run on the order date.", select=True),
