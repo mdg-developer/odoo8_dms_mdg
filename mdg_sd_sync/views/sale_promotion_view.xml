@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 	<data>
+
 		<record model="ir.ui.view" id="view_promotion_rules_form_sd">
 			<field name="name">Promotion Rule SD Form</field>
 			<field name="model">promos.rules</field>
 			<field name="inherit_id" ref="sale_promotions.view_promotion_rules_form" />
-			<field name="arch" type="xml">		
-				
+			
+			<field name="arch" type="xml">
 				<xpath expr="//button[@name='publish']" position="after">
 					<button name="sync_to_sd" string="Sync To SD" class="oe_highlight"
 						type="object" states='draft,approve' groups="base.group_sale_manager" />
 				</xpath>
 				<field name="manual" position="after">
 					<field name="is_sync_sd" />
-
 				</field>
 			</field>
 		</record>
