@@ -12,8 +12,46 @@
 					<button name="sync_to_sd" string="Sync To SD" class="oe_highlight"
 						type="object" states='draft,approve' groups="base.group_sale_manager" />
 				</field>
+				
+				<field name="version_id" position="after">
+					<div class="oe_chatter">
+	                    <field name="message_follower_ids" widget="mail_followers"/>
+	                    <field name="message_ids" widget="mail_thread"/>
+	                </div>
+				</field>
 			</field>
 		</record>
+		
+		<record id="product_pricelist_view_color_tree" model="ir.ui.view">
+			<field name="name">product.pricelist.tree.maingroup</field>
+			<field name="model">product.pricelist</field>
+			<field name="inherit_id" ref="mdg_customization.product_pricelist_maingroup_view_tree" />
+			<field name="arch" type="xml">
+				
+				<xpath expr="//field[@name='name']" position="replace">
+					<field name="name" string="Name" bg_color="blue:is_sync_sd==True;"/>
+					
+				</xpath>
+				<xpath expr="//field[@name='branch_id']" position="replace">
+					<field name="branch_id"  bg_color="blue:is_sync_sd==True;"/>
+				</xpath>
+				<xpath expr="//field[@name='type']" position="replace">
+					<field name="type" string="Type" bg_color="blue:is_sync_sd==True;"/>
+				</xpath>
+				<xpath expr="//field[@name='currency_id']" position="replace">
+					
+					<field name="currency_id" bg_color="blue:is_sync_sd==True;"/>
+					<field name="is_sync_sd" bg_color="blue:is_sync_sd==True;"/>
+				</xpath>
+				
+				<xpath expr="//field[@name='active']" position="replace">
+					
+					<field name="active" bg_color="blue:is_sync_sd==True;"/>
+					
+				</xpath>
+			</field>
+		</record>
+		
 
 
 	</data>

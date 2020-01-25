@@ -1,14 +1,43 @@
 from openerp.osv import fields, osv
+from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 from openerp.osv.fields import _column
 import xmlrpclib
 
 class product_pricelist(osv.osv):
-    _inherit = 'product.pricelist'    
-    _columns = {
-        'is_sync_sd':fields.boolean('Is Sync SD'),
-             }
+    def _pricelist_type_get(self, cr, uid, context=None):
+        pricelist_type_obj = self.pool.get('product.pricelist.type')
+        pricelist_type_ids = pricelist_type_obj.search(cr, uid, [], order='name')
+        pricelist_types = pricelist_type_obj.read(cr, uid, pricelist_type_ids, ['key','name'], context=context)
+
+        res = []
+
+        for type in pricelist_types:
+            res.append((type['key'],type['name']))
+
+        return res
     
+    _name = "product.pricelist"
+    _inherit = ['product.pricelist','mail.thread']    
+    _columns = {
+        'name': fields.char('Pricelist Name', required=True,track_visibility='always', translate=True),
+        'active': fields.boolean('Active',track_visibility='always', help="If unchecked, it will allow you to hide the pricelist without removing it."),
+        'type': fields.selection(_pricelist_type_get, 'Pricelist Type', required=True,track_visibility='always'),
+        'version_id': fields.one2many('product.pricelist.version', 'pricelist_id', 'Pricelist Versions', copy=True),
+        'currency_id': fields.many2one('res.currency', 'Currency', required=True,track_visibility='always'),
+        'company_id': fields.many2one('res.company', 'Company'),
+        'state': fields.selection([
+            ('draft', 'Draft'),
+            ('approve', 'Approved'),
+            ], 'Status', readonly=True,track_visibility='always', copy=False, help="Gives the status of the quotation or sales order.\
+              \nThe exception status is automatically set when a cancel operation occurs \
+              in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\nThe 'Waiting Schedule' status is set when the invoice is confirmed\
+               but waiting for the scheduler to run on the order date.", select=True),        
+        'is_sync_sd':fields.boolean('Is Sync SD',track_visibility='always'),
+             }
+    _defaults = {
+        'state':'draft',
+    }
   
         
     def sync_to_sd(self, cr, uid, ids, context=None):
