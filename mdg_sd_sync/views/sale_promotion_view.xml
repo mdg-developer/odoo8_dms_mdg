@@ -7,7 +7,7 @@
 			<field name="inherit_id" ref="sale_promotions.view_promotion_rules_form" />
 			<field name="arch" type="xml">		
 				
-				<xpath expr="//button[@name='publish'" position="after">
+				<xpath expr="//button[@name='publish']" position="after">
 					<button name="sync_to_sd" string="Sync To SD" class="oe_highlight"
 						type="object" states='draft,approve' groups="base.group_sale_manager" />
 				</xpath>
@@ -17,18 +17,27 @@
 				</field>
 			</field>
 		</record>
-
-		<record model="ir.ui.view" id="view_promotion_rules_tree_sd">
-			<field name="name">Promotion Rule SD Tree</field>
+		
+		<record model="ir.ui.view" id="sale_promotions.view_promotion_rules_tree">
+			<field name="name">promos.rules.tree</field>
 			<field name="model">promos.rules</field>
-			<field name="inherit_id" ref="sale_promotions.view_promotion_rules_tree" />
+			<field name="type">tree</field>
 			<field name="arch" type="xml">
-
-				<field name="manual" position="after">
-					<field name="is_sync_sd" />
-				</field>
+				<tree string="Promotions">
+					<field name="code" bg_color="blue:is_sync_sd==True;"/>
+					<field name="name" bg_color="blue:is_sync_sd==True;"/>
+					<field name="active" bg_color="blue:is_sync_sd==True;"/>
+					<field name="manual" bg_color="blue:is_sync_sd==True;"/>
+					<field name="is_sync_sd" bg_color="blue:is_sync_sd==True;"/>
+					<field name="coupon_code" bg_color="blue:is_sync_sd==True;"/>
+					<field name="main_group" bg_color="blue:is_sync_sd==True;"/>
+					<field name="from_date" bg_color="blue:is_sync_sd==True;"/>
+					<field name="to_date" bg_color="blue:is_sync_sd==True;"/>
+				</tree>
 			</field>
 		</record>
+		
+		
 
 	</data>
 </openerp>
