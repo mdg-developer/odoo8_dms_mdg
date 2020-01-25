@@ -37,6 +37,7 @@ MDG SYC TO SD
              'views/sale_promotion_view.xml',
              'views/res_partner_view.xml',
              'views/sd_connection_view.xml',
+             'wizard/price_list_multi_sync_view.xml',
     ],
     'installable': True,
     'auto_install': False,
