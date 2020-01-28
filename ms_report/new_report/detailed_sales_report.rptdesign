@@ -19,7 +19,7 @@
     <method name="initialize"><![CDATA[branchList = params["branch_id"].value.join(",");
 teamList = params["sales_team_id"].value.join(",");]]></method>
     <property name="iconFile">/templates/blank_report.gif</property>
-    <property name="layoutPreference">auto layout</property>
+    <property name="layoutPreference">fixed layout</property>
     <property name="bidiLayoutOrientation">ltr</property>
     <property name="imageDPI">96</property>
     <list-property name="libraries">
@@ -156,6 +156,24 @@ order by payment_type]]></xml-property>
             <property name="nullsOrdering">nulls lowest</property>
             <list-property name="columnHints">
                 <structure>
+                    <property name="columnName">price_unit</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">price_unit</text-property>
+                    <text-property name="heading">price_unit</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">name</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">name</text-property>
+                    <text-property name="heading">name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">date_due</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">date_due</text-property>
+                    <text-property name="heading">date_due</text-property>
+                </structure>
+                <structure>
                     <property name="columnName">customer</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">customer</text-property>
@@ -262,6 +280,18 @@ order by payment_type]]></xml-property>
                     <property name="onColumnLayout">false</property>
                     <text-property name="heading">seq</text-property>
                 </structure>
+                <structure>
+                    <property name="columnName">total_amount</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">total_amount</text-property>
+                    <text-property name="heading">total_amount</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">net_amount</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">net_amount</text-property>
+                    <text-property name="heading">net_amount</text-property>
+                </structure>
             </list-property>
             <list-property name="parameters">
                 <structure>
@@ -304,148 +334,113 @@ order by payment_type]]></xml-property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
-                <structure>
-                    <property name="name">from_date2</property>
-                    <property name="paramName">from_date</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                    <property name="position">5</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">to_date2</property>
-                    <property name="paramName">to_date</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                    <property name="position">6</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">from_date3</property>
-                    <property name="paramName">from_date</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                    <property name="position">7</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">to_date3</property>
-                    <property name="paramName">to_date</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                    <property name="position">8</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">from_date4</property>
-                    <property name="paramName">from_date</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                    <property name="position">9</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">to_date4</property>
-                    <property name="paramName">to_date</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                    <property name="position">10</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
             </list-property>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
                     <structure>
                         <property name="position">1</property>
-                        <property name="name">customer</property>
-                        <property name="dataType">integer</property>
+                        <property name="name">price_unit</property>
+                        <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">2</property>
-                        <property name="name">customer_name</property>
+                        <property name="name">name</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">3</property>
-                        <property name="name">township</property>
-                        <property name="dataType">string</property>
+                        <property name="name">date_due</property>
+                        <property name="dataType">date</property>
                     </structure>
                     <structure>
                         <property name="position">4</property>
-                        <property name="name">number</property>
-                        <property name="dataType">string</property>
+                        <property name="name">customer</property>
+                        <property name="dataType">integer</property>
                     </structure>
                     <structure>
                         <property name="position">5</property>
-                        <property name="name">payment_type</property>
+                        <property name="name">customer_name</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">6</property>
-                        <property name="name">date_invoice</property>
+                        <property name="name">township</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">7</property>
-                        <property name="name">section_id</property>
-                        <property name="dataType">integer</property>
+                        <property name="name">number</property>
+                        <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">8</property>
-                        <property name="name">sales_team</property>
+                        <property name="name">payment_type</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">9</property>
-                        <property name="name">branch_id</property>
-                        <property name="dataType">integer</property>
+                        <property name="name">date_invoice</property>
+                        <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">10</property>
-                        <property name="name">product_id</property>
+                        <property name="name">section_id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
                         <property name="position">11</property>
-                        <property name="name">name_template</property>
+                        <property name="name">sales_team</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">12</property>
-                        <property name="name">uos_id</property>
+                        <property name="name">branch_id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
                         <property name="position">13</property>
-                        <property name="name">uom_id</property>
+                        <property name="name">product_id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
                         <property name="position">14</property>
+                        <property name="name">name_template</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">15</property>
+                        <property name="name">uos_id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">16</property>
+                        <property name="name">uom_id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">17</property>
                         <property name="name">product_quantity</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">15</property>
+                        <property name="position">18</property>
                         <property name="name">status</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">16</property>
+                        <property name="position">19</property>
                         <property name="name">seq</property>
                         <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">20</property>
+                        <property name="name">total_amount</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">21</property>
+                        <property name="name">net_amount</property>
+                        <property name="dataType">decimal</property>
                     </structure>
                 </list-property>
             </structure>
@@ -474,121 +469,160 @@ else
             <list-property name="resultSet">
                 <structure>
                     <property name="position">1</property>
+                    <property name="name">price_unit</property>
+                    <property name="nativeName">price_unit</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">name</property>
+                    <property name="nativeName">name</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">date_due</property>
+                    <property name="nativeName">date_due</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
                     <property name="name">customer</property>
                     <property name="nativeName">customer</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">2</property>
+                    <property name="position">5</property>
                     <property name="name">customer_name</property>
                     <property name="nativeName">customer_name</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">3</property>
+                    <property name="position">6</property>
                     <property name="name">township</property>
                     <property name="nativeName">township</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">4</property>
+                    <property name="position">7</property>
                     <property name="name">number</property>
                     <property name="nativeName">number</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">5</property>
+                    <property name="position">8</property>
                     <property name="name">payment_type</property>
                     <property name="nativeName">payment_type</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">6</property>
+                    <property name="position">9</property>
                     <property name="name">date_invoice</property>
                     <property name="nativeName">date_invoice</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">7</property>
+                    <property name="position">10</property>
                     <property name="name">section_id</property>
                     <property name="nativeName">section_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">8</property>
+                    <property name="position">11</property>
                     <property name="name">sales_team</property>
                     <property name="nativeName">sales_team</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">9</property>
+                    <property name="position">12</property>
                     <property name="name">branch_id</property>
                     <property name="nativeName">branch_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">10</property>
+                    <property name="position">13</property>
                     <property name="name">product_id</property>
                     <property name="nativeName">product_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">11</property>
+                    <property name="position">14</property>
                     <property name="name">name_template</property>
                     <property name="nativeName">name_template</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">12</property>
+                    <property name="position">15</property>
                     <property name="name">uos_id</property>
                     <property name="nativeName">uos_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">13</property>
+                    <property name="position">16</property>
                     <property name="name">uom_id</property>
                     <property name="nativeName">uom_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">14</property>
+                    <property name="position">17</property>
                     <property name="name">product_quantity</property>
                     <property name="nativeName">product_quantity</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">15</property>
+                    <property name="position">18</property>
                     <property name="name">status</property>
                     <property name="nativeName">status</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">16</property>
+                    <property name="position">19</property>
                     <property name="name">seq</property>
                     <property name="nativeName">seq</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
+                <structure>
+                    <property name="position">20</property>
+                    <property name="name">total_amount</property>
+                    <property name="nativeName">total_amount</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
+                </structure>
+                <structure>
+                    <property name="position">21</property>
+                    <property name="name">net_amount</property>
+                    <property name="nativeName">net_amount</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
+                </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[
 with foc_qty as (
-	select rp.id customer_id,rp.name customer_name,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ccs.name sales_team,ai.branch_id,product_id,name_template,ail.uos_id,pt.uom_id,
-	case when ail.uos_id=pt.uom_id then sum(round(quantity,0)) when ail.uos_id!=pt.uom_id then sum(round(quantity*(select floor(round(1/factor,2)) from product_uom where id=ail.uos_id),0)) end as product_quantity,'Foc Qty'::text as status,pp.sequence as seq
+	select  
+	ail.price_unit,(select rp.name from res_users ru where ai.user_id=ru.id and ru.partner_id=rp.id ),ai.date_due,rp.id customer_id,rp.name customer_name,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ccs.name sales_team,ai.branch_id,product_id,name_template,ail.uos_id,pt.uom_id,
+	case when ail.uos_id=pt.uom_id then sum(round(quantity,0)) when ail.uos_id!=pt.uom_id then sum(round(quantity*(select floor(round(1/factor,2)) from product_uom where id=ail.uos_id),0)) end as product_quantity,ai.state as status,pp.sequence as seq,case when (ail.promotion_id is not null and ail.foc= true) or (ail.promotion_id is not null and ail.foc= false)  then 0 
+    when (ail.promotion_id is null) then ail.price_unit * ail.quantity	    	 
+	end as total_amount,
+	case when (ail.promotion_id is null) then ai.amount_total end as net_amount		
 	from account_invoice ai,res_partner rp,res_township rt,account_invoice_line ail,product_uom uom,product_product pp,product_template pt,crm_case_section ccs
 	where ai.partner_id=rp.id
 	and rp.township=rt.id
@@ -599,15 +633,18 @@ with foc_qty as (
 	and ai.section_id=ccs.id
 	and foc='true'
 	and date_invoice between ? and ?
-	group by rp.id,rp.name,rt.code,number,payment_type,date_invoice,ai.section_id,ccs.name,ai.branch_id,product_id,name_template,pp.sequence,ail.uos_id,pt.uom_id
-	order by seq),
+	group by ai.amount_total,rp.id,rp.name,ail.quantity,rt.code,number,payment_type,date_invoice,ail.promotion_id,ail.foc,ai.section_id,ccs.name,ai.branch_id,product_id,name_template,pp.sequence,ail.uos_id,pt.uom_id,ai.state,ai.user_id,ai.date_due,ail.price_unit
+	order by name_template),
 sale_qty as (
-	select rp.id customer,rp.name customer_name,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,
+	select ail.price_unit,(select rp.name from res_users ru where ai.user_id=ru.id and ru.partner_id=rp.id ),ai.date_due,rp.id customer,rp.name customer_name,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,
         ccs.name sales_team,ai.branch_id,product_id,name_template,ail.uos_id,pt.uom_id,
-        
         case when ail.uos_id=pt.uom_id then sum(round(quantity,0)) 
         when ail.uos_id!=pt.uom_id then sum(round(quantity*(select floor(round(1/factor,2)) from product_uom where id=ail.uos_id),0)) 
-        end as product_quantity,'Sales Qty'::text as status,pp.sequence as seq
+        end as product_quantity,ai.state as status,pp.sequence as seq,
+		case when (ail.promotion_id is not null and ail.foc= true) or (ail.promotion_id is not null and ail.foc= false)  then 0 
+			 when (ail.promotion_id is null) then ail.price_unit * ail.quantity														 
+        	 end as total_amount,
+		case when (ail.promotion_id is null) then ai.amount_total end as net_amount																 
 	from account_invoice ai,res_partner rp,res_township rt,account_invoice_line ail,product_uom uom,product_product pp,product_template pt,crm_case_section ccs
 	where ai.partner_id=rp.id
 	and rp.township=rt.id
@@ -618,54 +655,14 @@ sale_qty as (
 	and ai.section_id=ccs.id			
 	and foc='false'
 	and date_invoice between ? and ?
-        group by rp.id,rp.name,rt.code,number,payment_type,date_invoice,ai.section_id,ccs.name,ai.branch_id,product_id,name_template,pp.sequence,ail.uos_id,pt.uom_id
-	order by seq),
-total_amt as (
-	select rp.id customer,rp.name customer_name,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ccs.name sales_team,ai.branch_id,0,'Total Amt.'::character varying name_template,0,0,
-	round((amount_untaxed)+(amount_tax*1)+(discount_total*1),0) as product_quantity,''::text as status,90001::int as seq
-	from account_invoice ai,res_partner rp,res_township rt,crm_case_section ccs
-	where ai.partner_id=rp.id	
-	and rp.township=rt.id	
-	and ai.section_id=ccs.id
-	and date_invoice between ? and ?
-	order by rp.name
-),
-total_discount as (
-	select rp.id customer,rp.name customer_name,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ccs.name sales_team,ai.branch_id,0,'Total Disc.'::character varying name_template,0,0,
-	round(discount_total,0) as product_quantity,''::text as status,90002::int as seq
-	from account_invoice ai,res_partner rp,res_township rt,crm_case_section ccs
-	where ai.partner_id=rp.id
-	and rp.township=rt.id	
-	and ai.section_id=ccs.id
-	and date_invoice between ? and ?
-	order by rp.name
-),
-net_amt as (
-	select rp.id customer,rp.name customer_name,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ccs.name sales_team,ai.branch_id,0,'Net Amt.'::character varying name_template,0,0,
-	round(amount_total,0) as product_quantity,''::text as status,90003::int as seq
-	from account_invoice ai,res_partner rp,res_township rt,crm_case_section ccs
-	where ai.partner_id=rp.id
-	and rp.township=rt.id	
-	and ai.section_id=ccs.id
-	and date_invoice between ? and ?
-	order by rp.name
-),
+        group by ai.amount_total,ail.quantity,ail.price_unit,ail.promotion_id,ail.foc,rp.id,rp.name,rt.code,number,payment_type,date_invoice,ai.section_id,ccs.name,ai.branch_id,product_id,name_template,pp.sequence,ail.uos_id,pt.uom_id,ai.state,ai.user_id,ai.date_due
+	order by name_template),
 result as (
 	select *
 	from sale_qty
 	union
 	select *
 	from foc_qty
-	union
-	select * 
-	from total_amt
-	union
-	select * 
-	from total_discount
-	union
-	select * 
-	from net_amt
-	order by seq
 )
 
 select *
@@ -731,96 +728,6 @@ order by number]]></xml-property>
           <design:identifier>
             <design:name></design:name>
             <design:position>4</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>5</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>6</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>7</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>8</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>9</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>10</design:position>
           </design:identifier>
           <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
@@ -1675,6 +1582,7 @@ and date_invoice between ? and ?
     </cubes>
     <page-setup>
         <simple-master-page name="Simple MasterPage" id="2">
+            <property name="type">us-ledger</property>
             <property name="orientation">auto</property>
             <page-footer>
                 <text id="3">
@@ -1687,7 +1595,7 @@ and date_invoice between ? and ?
     <body>
         <grid id="410">
             <property name="textAlign">center</property>
-            <property name="width">8.1in</property>
+            <property name="width">10.5in</property>
             <column id="411">
                 <property name="width">4.489583333333333in</property>
             </column>
@@ -1856,620 +1764,594 @@ else&#13;
             <property name="resultSetColumn">from_date</property>
         </data>
         <label id="15"/>
-        <extended-item extensionName="Crosstab" extensionVersion="3.7.0" id="790">
-            <property name="cube">Data Cube</property>
-            <property name="measures">
-                <extended-item extensionName="MeasureView" id="822">
-                    <property name="measure">product_quantity</property>
-                    <property name="detail">
-                        <extended-item extensionName="AggregationCell" id="823">
-                            <property name="aggregationOnRow">Group3/date_invoice</property>
-                            <property name="aggregationOnColumn">Group4/status</property>
-                            <property name="borderTopStyle">solid</property>
-                            <property name="borderTopWidth">thin</property>
-                            <property name="borderLeftStyle">solid</property>
-                            <property name="borderLeftWidth">thin</property>
-                            <property name="borderBottomStyle">solid</property>
-                            <property name="borderBottomWidth">thin</property>
-                            <property name="borderRightStyle">solid</property>
-                            <property name="borderRightWidth">thin</property>
-                            <property name="content">
-                                <data id="824">
-                                    <property name="fontFamily">"Arial"</property>
-                                    <property name="textAlign">center</property>
-                                    <property name="resultSetColumn">product_quantity_Group3/date_invoice_Group4/status</property>
-                                </data>
-                            </property>
-                        </extended-item>
-                    </property>
-                    <property name="aggregations">
-                        <extended-item extensionName="AggregationCell" id="877">
-                            <property name="aggregationOnColumn">Group4/status</property>
-                            <property name="borderTopStyle">solid</property>
-                            <property name="borderTopWidth">thin</property>
-                            <property name="borderLeftStyle">solid</property>
-                            <property name="borderLeftWidth">thin</property>
-                            <property name="borderBottomStyle">solid</property>
-                            <property name="borderBottomWidth">thin</property>
-                            <property name="borderRightStyle">solid</property>
-                            <property name="borderRightWidth">thin</property>
-                            <property name="content">
-                                <data id="878">
-                                    <property name="fontFamily">"Arial"</property>
-                                    <property name="fontSize">11pt</property>
-                                    <property name="fontWeight">bold</property>
-                                    <property name="textAlign">center</property>
-                                    <property name="resultSetColumn">product_quantity_Group4/status_1</property>
-                                </data>
-                            </property>
-                        </extended-item>
-                    </property>
-                    <property name="header">
-                        <extended-item extensionName="CrosstabCell" id="825">
-                            <property name="content">
-                                <label id="826">
-                                    <text-property name="text">product_quantity</text-property>
-                                </label>
-                            </property>
-                        </extended-item>
-                    </property>
-                </extended-item>
-            </property>
-            <property name="rows">
-                <extended-item extensionName="CrosstabView" id="792">
-                    <property name="grandTotal">
-                        <extended-item extensionName="CrosstabCell" id="876">
-                            <property name="content">
-                                <label id="879">
-                                    <property name="fontFamily">"Arial"</property>
-                                    <property name="fontSize">11pt</property>
-                                    <property name="fontWeight">bold</property>
-                                    <property name="textAlign">center</property>
-                                    <text-property name="text">Total</text-property>
-                                </label>
-                            </property>
-                            <property name="borderTopStyle">solid</property>
-                            <property name="borderTopWidth">thin</property>
-                            <property name="borderLeftStyle">solid</property>
-                            <property name="borderLeftWidth">thin</property>
-                            <property name="borderBottomStyle">solid</property>
-                            <property name="borderBottomWidth">thin</property>
-                            <property name="borderRightStyle">solid</property>
-                            <property name="borderRightWidth">thin</property>
-                        </extended-item>
-                    </property>
-                    <property name="views">
-                        <extended-item extensionName="DimensionView" id="861">
-                            <property name="dimension">Group</property>
-                            <property name="levels">
-                                <extended-item extensionName="LevelView" name="NewLevel View7" id="862">
-                                    <property name="level">Group/customer</property>
-                                    <property name="member">
-                                        <extended-item extensionName="CrosstabCell" id="863">
-                                            <property name="content">
-                                                <data name="customer" id="866">
-                                                    <property name="fontFamily">"Arial"</property>
-                                                    <list-property name="visibility">
-                                                        <structure>
-                                                            <property name="format">all</property>
-                                                            <expression name="valueExpr" type="javascript">true</expression>
-                                                        </structure>
-                                                    </list-property>
-                                                    <property name="resultSetColumn">customer</property>
-                                                </data>
-                                            </property>
-                                            <property name="borderTopStyle">solid</property>
-                                            <property name="borderTopWidth">thin</property>
-                                            <property name="borderLeftStyle">solid</property>
-                                            <property name="borderLeftWidth">thin</property>
-                                            <property name="borderBottomStyle">solid</property>
-                                            <property name="borderBottomWidth">thin</property>
-                                            <property name="borderRightStyle">solid</property>
-                                            <property name="borderRightWidth">thin</property>
-                                            <property name="width">0pt</property>
-                                        </extended-item>
-                                    </property>
-                                </extended-item>
-                            </property>
-                        </extended-item>
-                        <extended-item extensionName="DimensionView" id="793">
-                            <property name="dimension">Group6</property>
-                            <property name="levels">
-                                <extended-item extensionName="LevelView" name="NewLevel View" id="794">
-                                    <property name="level">Group6/customer_name</property>
-                                    <property name="member">
-                                        <extended-item extensionName="CrosstabCell" id="795">
-                                            <property name="content">
-                                                <data name="customer_name" id="796">
-                                                    <property name="fontFamily">"Arial"</property>
-                                                    <property name="fontWeight">normal</property>
-                                                    <property name="resultSetColumn">customer_name</property>
-                                                </data>
-                                            </property>
-                                            <property name="borderTopStyle">solid</property>
-                                            <property name="borderTopWidth">thin</property>
-                                            <property name="borderLeftStyle">solid</property>
-                                            <property name="borderLeftWidth">thin</property>
-                                            <property name="borderBottomStyle">solid</property>
-                                            <property name="borderBottomWidth">thin</property>
-                                            <property name="borderRightStyle">solid</property>
-                                            <property name="borderRightWidth">thin</property>
-                                            <property name="width">133px</property>
-                                        </extended-item>
-                                    </property>
-                                </extended-item>
-                            </property>
-                        </extended-item>
-                        <extended-item extensionName="DimensionView" id="798">
-                            <property name="dimension">Group5</property>
-                            <property name="levels">
-                                <extended-item extensionName="LevelView" name="NewLevel View1" id="799">
-                                    <property name="level">Group5/sales_team</property>
-                                    <property name="member">
-                                        <extended-item extensionName="CrosstabCell" id="800">
-                                            <property name="content">
-                                                <data name="sales_team" id="802">
-                                                    <property name="fontFamily">"Arial"</property>
-                                                    <property name="fontWeight">normal</property>
-                                                    <property name="resultSetColumn">sales_team</property>
-                                                </data>
-                                            </property>
-                                            <property name="borderTopStyle">solid</property>
-                                            <property name="borderTopWidth">thin</property>
-                                            <property name="borderLeftStyle">solid</property>
-                                            <property name="borderLeftWidth">thin</property>
-                                            <property name="borderBottomStyle">solid</property>
-                                            <property name="borderBottomWidth">thin</property>
-                                            <property name="borderRightStyle">solid</property>
-                                            <property name="borderRightWidth">thin</property>
-                                            <property name="width">95px</property>
-                                        </extended-item>
-                                    </property>
-                                </extended-item>
-                            </property>
-                        </extended-item>
-                        <extended-item extensionName="DimensionView" id="804">
-                            <property name="dimension">Group1</property>
-                            <property name="levels">
-                                <extended-item extensionName="LevelView" name="NewLevel View2" id="805">
-                                    <property name="level">Group1/township</property>
-                                    <property name="member">
-                                        <extended-item extensionName="CrosstabCell" id="806">
-                                            <property name="content">
-                                                <data name="township" id="808">
-                                                    <property name="fontFamily">"Arial"</property>
-                                                    <property name="fontWeight">normal</property>
-                                                    <property name="resultSetColumn">township</property>
-                                                </data>
-                                            </property>
-                                            <property name="borderTopStyle">solid</property>
-                                            <property name="borderTopWidth">thin</property>
-                                            <property name="borderLeftStyle">solid</property>
-                                            <property name="borderLeftWidth">thin</property>
-                                            <property name="borderBottomStyle">solid</property>
-                                            <property name="borderBottomWidth">thin</property>
-                                            <property name="borderRightStyle">solid</property>
-                                            <property name="borderRightWidth">thin</property>
-                                        </extended-item>
-                                    </property>
-                                </extended-item>
-                            </property>
-                        </extended-item>
-                        <extended-item extensionName="DimensionView" id="810">
-                            <property name="dimension">Group2</property>
-                            <property name="levels">
-                                <extended-item extensionName="LevelView" name="NewLevel View3" id="811">
-                                    <property name="level">Group2/number</property>
-                                    <property name="member">
-                                        <extended-item extensionName="CrosstabCell" id="812">
-                                            <property name="content">
-                                                <data name="number" id="814">
-                                                    <property name="fontFamily">"Arial"</property>
-                                                    <property name="fontWeight">normal</property>
-                                                    <property name="fontStyle">normal</property>
-                                                    <property name="resultSetColumn">number</property>
-                                                </data>
-                                            </property>
-                                            <property name="borderTopStyle">solid</property>
-                                            <property name="borderTopWidth">thin</property>
-                                            <property name="borderLeftStyle">solid</property>
-                                            <property name="borderLeftWidth">thin</property>
-                                            <property name="borderBottomStyle">solid</property>
-                                            <property name="borderBottomWidth">thin</property>
-                                            <property name="borderRightStyle">solid</property>
-                                            <property name="borderRightWidth">thin</property>
-                                        </extended-item>
-                                    </property>
-                                </extended-item>
-                            </property>
-                        </extended-item>
-                        <extended-item extensionName="DimensionView" id="816">
-                            <property name="dimension">Group3</property>
-                            <property name="levels">
-                                <extended-item extensionName="LevelView" name="NewLevel View4" id="817">
-                                    <property name="level">Group3/date_invoice</property>
-                                    <property name="member">
-                                        <extended-item extensionName="CrosstabCell" id="818">
-                                            <property name="content">
-                                                <data name="date_invoice" id="820">
-                                                    <property name="fontFamily">"Arial"</property>
-                                                    <property name="fontWeight">normal</property>
-                                                    <property name="resultSetColumn">date_invoice</property>
-                                                </data>
-                                            </property>
-                                            <property name="borderTopStyle">solid</property>
-                                            <property name="borderTopWidth">thin</property>
-                                            <property name="borderLeftStyle">solid</property>
-                                            <property name="borderLeftWidth">thin</property>
-                                            <property name="borderBottomStyle">solid</property>
-                                            <property name="borderBottomWidth">thin</property>
-                                            <property name="borderRightStyle">solid</property>
-                                            <property name="borderRightWidth">thin</property>
-                                        </extended-item>
-                                    </property>
-                                </extended-item>
-                            </property>
-                        </extended-item>
-                    </property>
-                </extended-item>
-            </property>
-            <property name="columns">
-                <extended-item extensionName="CrosstabView" id="827">
-                    <property name="views">
-                        <extended-item extensionName="DimensionView" id="828">
-                            <property name="dimension">Group4</property>
-                            <property name="levels">
-                                <extended-item extensionName="LevelView" name="NewLevel View5" id="829">
-                                    <property name="level">Group4/name_template</property>
-                                    <property name="sort">
-                                        <sort-element>
-                                            <expression name="key" type="javascript">dimension["Group4"]["name_template"]["seq"]</expression>
-                                            <property name="direction">asc</property>
-                                            <property name="strength">-1</property>
-                                        </sort-element>
-                                    </property>
-                                    <property name="member">
-                                        <extended-item extensionName="CrosstabCell" id="830">
-                                            <property name="content">
-                                                <data name="name_template" id="836">
-                                                    <property name="fontFamily">"Arial"</property>
-                                                    <property name="fontWeight">bold</property>
-                                                    <property name="textAlign">center</property>
-                                                    <list-property name="highlightRules">
-                                                        <structure>
-                                                            <property name="operator">not-in</property>
-                                                            <property name="backgroundColor">#FFFFFF</property>
-                                                            <expression name="testExpr" type="javascript">data["name_template"]</expression>
-                                                            <simple-property-list name="value1">
-                                                                <value type="javascript">'Total Amt.'</value>
-                                                                <value type="javascript">'Total Disc.'</value>
-                                                                <value type="javascript">'Net Amt.'</value>
-                                                            </simple-property-list>
-                                                        </structure>
-                                                    </list-property>
-                                                    <property name="resultSetColumn">name_template</property>
-                                                </data>
-                                            </property>
-                                            <property name="borderTopStyle">solid</property>
-                                            <property name="borderTopWidth">thin</property>
-                                            <property name="borderLeftStyle">solid</property>
-                                            <property name="borderLeftWidth">thin</property>
-                                            <property name="borderBottomStyle">solid</property>
-                                            <property name="borderBottomWidth">thin</property>
-                                            <property name="borderRightStyle">solid</property>
-                                            <property name="borderRightWidth">thin</property>
-                                        </extended-item>
-                                    </property>
-                                </extended-item>
-                                <extended-item extensionName="LevelView" name="NewLevel View6" id="838">
-                                    <property name="level">Group4/status</property>
-                                    <property name="member">
-                                        <extended-item extensionName="CrosstabCell" id="839">
-                                            <property name="content">
-                                                <data name="status" id="845">
-                                                    <property name="fontFamily">"Arial"</property>
-                                                    <property name="fontWeight">bold</property>
-                                                    <property name="textAlign">center</property>
-                                                    <property name="resultSetColumn">status</property>
-                                                </data>
-                                            </property>
-                                            <property name="borderTopStyle">solid</property>
-                                            <property name="borderTopWidth">thin</property>
-                                            <property name="borderLeftStyle">solid</property>
-                                            <property name="borderLeftWidth">thin</property>
-                                            <property name="borderBottomStyle">solid</property>
-                                            <property name="borderBottomWidth">thin</property>
-                                            <property name="borderRightStyle">solid</property>
-                                            <property name="borderRightWidth">thin</property>
-                                        </extended-item>
-                                    </property>
-                                </extended-item>
-                            </property>
-                        </extended-item>
-                    </property>
-                </extended-item>
-            </property>
-            <property name="header">
-                <extended-item extensionName="CrosstabCell" id="865"/>
-                <extended-item extensionName="CrosstabCell" id="831">
-                    <property name="content">
-                        <label id="416">
-                            <property name="fontFamily">"Arial"</property>
-                            <property name="fontSize">10pt</property>
-                            <property name="fontWeight">bold</property>
-                            <property name="paddingRight">3pt</property>
-                            <property name="textAlign">right</property>
-                            <text-property name="text">Customers:</text-property>
-                        </label>
-                    </property>
-                </extended-item>
-                <extended-item extensionName="CrosstabCell" id="832">
-                    <property name="content">
-                        <data id="869">
-                            <property name="fontFamily">"Arial"</property>
-                            <property name="fontWeight">bold</property>
-                            <property name="dataSet">customer_count</property>
-                            <list-property name="boundDataColumns">
-                                <structure>
-                                    <property name="name">count</property>
-                                    <text-property name="displayName">count</text-property>
-                                    <expression name="expression" type="javascript">dataSetRow["count"]</expression>
-                                    <property name="dataType">decimal</property>
-                                </structure>
-                            </list-property>
-                            <property name="resultSetColumn">count</property>
-                        </data>
-                    </property>
-                </extended-item>
-                <extended-item extensionName="CrosstabCell" id="833"/>
-                <extended-item extensionName="CrosstabCell" id="834">
-                    <property name="content">
-                        <label id="431">
-                            <property name="fontFamily">"Arial"</property>
-                            <property name="fontSize">10pt</property>
-                            <property name="fontWeight">bold</property>
-                            <property name="paddingRight">3pt</property>
-                            <property name="textAlign">right</property>
-                            <text-property name="text">Invoices:</text-property>
-                        </label>
-                    </property>
-                </extended-item>
-                <extended-item extensionName="CrosstabCell" id="835">
-                    <property name="content">
-                        <data id="870">
-                            <property name="fontFamily">"Arial"</property>
-                            <property name="fontWeight">bold</property>
-                            <property name="dataSet">invoice_count</property>
-                            <list-property name="boundDataColumns">
-                                <structure>
-                                    <property name="name">invoice</property>
-                                    <text-property name="displayName">invoice</text-property>
-                                    <expression name="expression" type="javascript">dataSetRow["invoice"]</expression>
-                                    <property name="dataType">decimal</property>
-                                </structure>
-                            </list-property>
-                            <property name="resultSetColumn">invoice</property>
-                        </data>
-                    </property>
-                </extended-item>
-                <extended-item extensionName="CrosstabCell" id="864">
-                    <property name="content">
-                        <label id="150">
-                            <property name="fontFamily">"Arial"</property>
-                            <property name="fontWeight">bold</property>
-                            <property name="textAlign">center</property>
-                            <list-property name="visibility">
-                                <structure>
-                                    <property name="format">all</property>
-                                    <expression name="valueExpr" type="javascript">true</expression>
-                                </structure>
-                            </list-property>
-                            <text-property name="text">Customer ID</text-property>
-                        </label>
-                    </property>
-                    <property name="borderTopStyle">solid</property>
-                    <property name="borderTopWidth">thin</property>
-                    <property name="borderLeftStyle">solid</property>
-                    <property name="borderLeftWidth">thin</property>
-                    <property name="borderBottomStyle">solid</property>
-                    <property name="borderBottomWidth">thin</property>
-                    <property name="borderRightStyle">solid</property>
-                    <property name="borderRightWidth">thin</property>
-                </extended-item>
-                <extended-item extensionName="CrosstabCell" id="791">
-                    <property name="content">
-                        <label id="868">
-                            <property name="fontFamily">"Arial"</property>
-                            <property name="fontWeight">bold</property>
-                            <property name="textAlign">center</property>
-                            <text-property name="text">Customer</text-property>
-                        </label>
-                    </property>
-                    <property name="borderTopStyle">solid</property>
-                    <property name="borderTopWidth">thin</property>
-                    <property name="borderLeftStyle">solid</property>
-                    <property name="borderLeftWidth">thin</property>
-                    <property name="borderBottomStyle">solid</property>
-                    <property name="borderBottomWidth">thin</property>
-                    <property name="borderRightStyle">solid</property>
-                    <property name="borderRightWidth">thin</property>
-                </extended-item>
-                <extended-item extensionName="CrosstabCell" id="801">
-                    <property name="content">
-                        <label id="446">
-                            <property name="fontFamily">"Arial"</property>
-                            <property name="fontWeight">bold</property>
-                            <property name="textAlign">center</property>
-                            <text-property name="text">Sales Team</text-property>
-                        </label>
-                    </property>
-                    <property name="borderTopStyle">solid</property>
-                    <property name="borderTopWidth">thin</property>
-                    <property name="borderLeftStyle">solid</property>
-                    <property name="borderLeftWidth">thin</property>
-                    <property name="borderBottomStyle">solid</property>
-                    <property name="borderBottomWidth">thin</property>
-                    <property name="borderRightStyle">solid</property>
-                    <property name="borderRightWidth">thin</property>
-                </extended-item>
-                <extended-item extensionName="CrosstabCell" id="807">
-                    <property name="content">
-                        <label id="183">
-                            <property name="fontFamily">"Arial"</property>
-                            <property name="fontWeight">bold</property>
-                            <property name="textAlign">center</property>
-                            <text-property name="text">Tsp</text-property>
-                        </label>
-                    </property>
-                    <property name="borderTopStyle">solid</property>
-                    <property name="borderTopWidth">thin</property>
-                    <property name="borderLeftStyle">solid</property>
-                    <property name="borderLeftWidth">thin</property>
-                    <property name="borderBottomStyle">solid</property>
-                    <property name="borderBottomWidth">thin</property>
-                    <property name="borderRightStyle">solid</property>
-                    <property name="borderRightWidth">thin</property>
-                </extended-item>
-                <extended-item extensionName="CrosstabCell" id="813">
-                    <property name="content">
-                        <label id="190">
-                            <property name="fontFamily">"Arial"</property>
-                            <property name="fontWeight">bold</property>
-                            <property name="textAlign">center</property>
-                            <text-property name="text">Voc. No</text-property>
-                        </label>
-                    </property>
-                    <property name="borderTopStyle">solid</property>
-                    <property name="borderTopWidth">thin</property>
-                    <property name="borderLeftStyle">solid</property>
-                    <property name="borderLeftWidth">thin</property>
-                    <property name="borderBottomStyle">solid</property>
-                    <property name="borderBottomWidth">thin</property>
-                    <property name="borderRightStyle">solid</property>
-                    <property name="borderRightWidth">thin</property>
-                </extended-item>
-                <extended-item extensionName="CrosstabCell" id="819">
-                    <property name="content">
-                        <label id="280">
-                            <property name="fontFamily">"Arial"</property>
-                            <property name="fontWeight">bold</property>
-                            <property name="textAlign">center</property>
-                            <text-property name="text">Voc. Date</text-property>
-                        </label>
-                    </property>
-                    <property name="borderTopStyle">solid</property>
-                    <property name="borderTopWidth">thin</property>
-                    <property name="borderLeftStyle">solid</property>
-                    <property name="borderLeftWidth">thin</property>
-                    <property name="borderBottomStyle">solid</property>
-                    <property name="borderBottomWidth">thin</property>
-                    <property name="borderRightStyle">solid</property>
-                    <property name="borderRightWidth">thin</property>
-                </extended-item>
-            </property>
-            <property name="hideMeasureHeader">true</property>
-            <list-property name="highlightRules">
-                <structure>
-                    <property name="operator">eq</property>
-                    <expression name="testExpr" type="javascript">data["status"]</expression>
-                    <simple-property-list name="value1">
-                        <value type="javascript">'Foc Qty'</value>
-                    </simple-property-list>
-                    <property name="backgroundColor">#FFFF97</property>
-                </structure>
-            </list-property>
+        <label id="406"/>
+        <table id="1133">
+            <property name="width">10.46875in</property>
+            <property name="dataSet">Data Set</property>
             <list-property name="boundDataColumns">
                 <structure>
-                    <property name="name">customer_name</property>
-                    <expression name="expression">dimension["Group6"]["customer_name"]</expression>
-                    <property name="dataType">string</property>
+                    <property name="name">customer</property>
+                    <text-property name="displayName">customer</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["customer"]</expression>
+                    <property name="dataType">integer</property>
                 </structure>
                 <structure>
-                    <property name="name">sales_team</property>
-                    <expression name="expression">dimension["Group5"]["sales_team"]</expression>
+                    <property name="name">customer_name</property>
+                    <text-property name="displayName">customer_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["customer_name"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
                     <property name="name">township</property>
-                    <expression name="expression">dimension["Group1"]["township"]</expression>
+                    <text-property name="displayName">township</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["township"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
                     <property name="name">number</property>
-                    <expression name="expression">dimension["Group2"]["number"]</expression>
+                    <text-property name="displayName">number</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["number"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
                     <property name="name">date_invoice</property>
-                    <expression name="expression">dimension["Group3"]["date_invoice"]</expression>
+                    <text-property name="displayName">date_invoice</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["date_invoice"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="name">product_quantity_Group3/date_invoice</property>
-                    <expression name="expression">measure["product_quantity"]</expression>
-                    <property name="dataType">decimal</property>
-                    <simple-property-list name="aggregateOn">
-                        <value>Group3/date_invoice</value>
-                    </simple-property-list>
-                    <property name="aggregateFunction">SUM</property>
+                    <property name="name">sales_team</property>
+                    <text-property name="displayName">sales_team</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["sales_team"]</expression>
+                    <property name="dataType">string</property>
                 </structure>
                 <structure>
                     <property name="name">name_template</property>
-                    <expression name="expression">dimension["Group4"]["name_template"]</expression>
+                    <text-property name="displayName">name_template</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["name_template"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="name">product_quantity_Group3/date_invoice_Group4/name_template</property>
-                    <expression name="expression">measure["product_quantity"]</expression>
+                    <property name="name">product_quantity</property>
+                    <text-property name="displayName">product_quantity</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["product_quantity"]</expression>
                     <property name="dataType">decimal</property>
-                    <simple-property-list name="aggregateOn">
-                        <value>Group3/date_invoice</value>
-                        <value>Group4/name_template</value>
-                    </simple-property-list>
-                    <property name="aggregateFunction">SUM</property>
                 </structure>
                 <structure>
-                    <property name="name">status</property>
-                    <expression name="expression">dimension["Group4"]["status"]</expression>
+                    <property name="name">name</property>
+                    <text-property name="displayName">name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["name"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="name">product_quantity_Group3/date_invoice_Group4/status</property>
-                    <expression name="expression">measure["product_quantity"]</expression>
+                    <property name="name">date_due</property>
+                    <text-property name="displayName">date_due</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["date_due"]</expression>
+                    <property name="dataType">date</property>
+                </structure>
+                <structure>
+                    <property name="name">price_unit</property>
+                    <text-property name="displayName">price_unit</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["price_unit"]</expression>
                     <property name="dataType">decimal</property>
-                    <simple-property-list name="aggregateOn">
-                        <value>Group3/date_invoice</value>
-                        <value>Group4/status</value>
-                    </simple-property-list>
-                    <property name="aggregateFunction">SUM</property>
                 </structure>
                 <structure>
-                    <property name="name">customer</property>
-                    <expression name="expression">dimension["Group"]["customer"]</expression>
-                    <property name="dataType">string</property>
+                    <property name="name">total_amount</property>
+                    <text-property name="displayName">total_amount</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["total_amount"]</expression>
+                    <property name="dataType">integer</property>
                 </structure>
                 <structure>
-                    <property name="name">product_quantity_Group4/status</property>
-                    <expression name="expression">measure["product_quantity"]</expression>
-                    <property name="dataType">float</property>
-                    <simple-property-list name="aggregateOn">
-                        <value>Group4/status</value>
-                    </simple-property-list>
-                    <property name="aggregateFunction">sum</property>
-                </structure>
-                <structure>
-                    <property name="name">product_quantity_Group4/status_1</property>
-                    <expression name="expression">measure["product_quantity"]</expression>
-                    <property name="dataType">float</property>
-                    <simple-property-list name="aggregateOn">
-                        <value>Group4/status</value>
-                    </simple-property-list>
-                    <property name="aggregateFunction">sum</property>
+                    <property name="name">net_amount</property>
+                    <text-property name="displayName">net_amount</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["net_amount"]</expression>
+                    <property name="dataType">decimal</property>
                 </structure>
             </list-property>
-        </extended-item>
-        <label id="406"/>
+            <column id="1182">
+                <property name="width">0.7708333333333334in</property>
+            </column>
+            <column id="1183">
+                <property name="width">0.78125in</property>
+            </column>
+            <column id="1240">
+                <property name="width">0.6770833333333334in</property>
+            </column>
+            <column id="1184">
+                <property name="width">0.59375in</property>
+            </column>
+            <column id="1185">
+                <property name="width">1.03125in</property>
+            </column>
+            <column id="1186">
+                <property name="width">0.875in</property>
+            </column>
+            <column id="1246">
+                <property name="width">0.8854166666666666in</property>
+            </column>
+            <column id="1275">
+                <property name="width">0.8645833333333334in</property>
+            </column>
+            <column id="1188">
+                <property name="width">0.9479166666666666in</property>
+            </column>
+            <column id="1190">
+                <property name="width">0.65625in</property>
+            </column>
+            <column id="1269">
+                <property name="width">0.7291666666666666in</property>
+            </column>
+            <column id="1253">
+                <property name="width">0.7291666666666666in</property>
+            </column>
+            <column id="1281">
+                <property name="width">0.9270833333333334in</property>
+            </column>
+            <header>
+                <row id="1134">
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <cell id="1135">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="1136">
+                            <property name="fontWeight">bold</property>
+                            <property name="borderBottomStyle">none</property>
+                            <property name="borderLeftStyle">none</property>
+                            <property name="borderRightStyle">none</property>
+                            <property name="borderTopStyle">none</property>
+                            <text-property name="text">Customer ID</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1137">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="1138">
+                            <property name="fontWeight">bold</property>
+                            <property name="borderBottomStyle">none</property>
+                            <property name="borderLeftStyle">none</property>
+                            <property name="borderRightStyle">none</property>
+                            <property name="borderTopStyle">none</property>
+                            <text-property name="text">Customer</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1237">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="1241">
+                            <property name="fontWeight">bold</property>
+                            <property name="borderBottomStyle">none</property>
+                            <property name="borderLeftStyle">none</property>
+                            <property name="borderRightStyle">none</property>
+                            <property name="borderTopStyle">none</property>
+                            <text-property name="text">Sales Man</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1139">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="1140">
+                            <property name="fontWeight">bold</property>
+                            <property name="borderBottomStyle">none</property>
+                            <property name="borderLeftStyle">none</property>
+                            <property name="borderRightStyle">none</property>
+                            <property name="borderTopStyle">none</property>
+                            <text-property name="text">Tsp</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1141">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="1142">
+                            <property name="fontWeight">bold</property>
+                            <property name="borderBottomStyle">none</property>
+                            <property name="borderLeftStyle">none</property>
+                            <property name="borderRightStyle">none</property>
+                            <property name="borderTopStyle">none</property>
+                            <text-property name="text">Voc.No</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1143">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="1144">
+                            <property name="fontWeight">bold</property>
+                            <property name="borderBottomStyle">none</property>
+                            <property name="borderLeftStyle">none</property>
+                            <property name="borderRightStyle">none</property>
+                            <property name="borderTopStyle">none</property>
+                            <text-property name="text">Voc.Date</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1243">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="1247">
+                            <property name="fontWeight">bold</property>
+                            <property name="borderBottomStyle">none</property>
+                            <property name="borderLeftStyle">none</property>
+                            <property name="borderRightStyle">none</property>
+                            <property name="borderTopStyle">none</property>
+                            <text-property name="text">Due Date</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1272">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="1276">
+                            <property name="fontWeight">bold</property>
+                            <property name="borderBottomStyle">none</property>
+                            <property name="borderLeftStyle">none</property>
+                            <property name="borderRightStyle">none</property>
+                            <property name="borderTopStyle">none</property>
+                            <text-property name="text">Date To Delivery</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1147">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="1148">
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">Product</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1151">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="1150">
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">Sales Qty</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1266">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="1270">
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">Price</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1250">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="1254">
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">Total Amt.</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1278">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="1282">
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">Net Amount</text-property>
+                        </label>
+                    </cell>
+                </row>
+            </header>
+            <group id="1226">
+                <property name="groupName">NewTableGroup1</property>
+                <expression name="keyExpr" type="javascript">row["number"]</expression>
+                <structure name="toc">
+                    <expression name="expressionValue" type="javascript">row["number"]</expression>
+                </structure>
+                <property name="hideDetail">false</property>
+                <header>
+                    <row id="1227">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <cell id="1228">
+                            <property name="borderBottomStyle">none</property>
+                            <property name="borderLeftStyle">none</property>
+                            <property name="borderRightStyle">none</property>
+                            <property name="borderTopStyle">none</property>
+                            <data id="1155">
+                                <property name="borderBottomStyle">none</property>
+                                <property name="borderLeftStyle">none</property>
+                                <property name="borderRightStyle">none</property>
+                                <property name="borderTopStyle">none</property>
+                                <property name="textAlign">center</property>
+                                <property name="resultSetColumn">customer</property>
+                            </data>
+                        </cell>
+                        <cell id="1229">
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">thin</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">thin</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">thin</property>
+                            <data id="1157">
+                                <property name="textAlign">center</property>
+                                <property name="resultSetColumn">customer_name</property>
+                            </data>
+                        </cell>
+                        <cell id="1238">
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">thin</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">thin</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">thin</property>
+                            <data id="1242">
+                                <property name="resultSetColumn">name</property>
+                            </data>
+                        </cell>
+                        <cell id="1230">
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">thin</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">thin</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">thin</property>
+                            <data id="1159">
+                                <property name="textAlign">center</property>
+                                <property name="resultSetColumn">township</property>
+                            </data>
+                        </cell>
+                        <cell id="1231">
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">thin</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">thin</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">thin</property>
+                            <data id="1161">
+                                <property name="textAlign">center</property>
+                                <property name="resultSetColumn">number</property>
+                            </data>
+                        </cell>
+                        <cell id="1232">
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">thin</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">thin</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">thin</property>
+                            <data id="1163">
+                                <property name="textAlign">center</property>
+                                <property name="resultSetColumn">date_invoice</property>
+                            </data>
+                        </cell>
+                        <cell id="1244">
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">thin</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">thin</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">thin</property>
+                            <data id="1248">
+                                <structure name="dateTimeFormat">
+                                    <property name="category">Custom</property>
+                                    <property name="pattern">dd-MM_yyyy</property>
+                                </structure>
+                                <property name="textAlign">center</property>
+                                <property name="resultSetColumn">date_due</property>
+                            </data>
+                        </cell>
+                        <cell id="1273">
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">thin</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">thin</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">thin</property>
+                        </cell>
+                        <cell id="1234"/>
+                        <cell id="1236"/>
+                        <cell id="1267"/>
+                        <cell id="1251">
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">thin</property>
+                        </cell>
+                        <cell id="1279">
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">thin</property>
+                        </cell>
+                    </row>
+                </header>
+            </group>
+            <detail>
+                <row id="1153">
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <cell id="1154">
+                        <property name="colSpan">8</property>
+                        <property name="rowSpan">1</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                    </cell>
+                    <cell id="1166">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="1167">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">name_template</property>
+                        </data>
+                    </cell>
+                    <cell id="1170">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="1191">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">product_quantity</property>
+                        </data>
+                    </cell>
+                    <cell id="1268">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="1271">
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">price_unit</property>
+                        </data>
+                    </cell>
+                    <cell id="1252">
+                        <data id="1277">
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">total_amount</property>
+                        </data>
+                    </cell>
+                    <cell id="1280">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="1283">
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">net_amount</property>
+                        </data>
+                    </cell>
+                </row>
+            </detail>
+        </table>
         <label id="407"/>
+        <label id="1249"/>
         <grid id="283">
             <property name="height">1in</property>
             <column id="284"/>

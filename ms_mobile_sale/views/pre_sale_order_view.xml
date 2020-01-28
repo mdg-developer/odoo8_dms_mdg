@@ -129,7 +129,7 @@
 
 							</page>
 
-							<page string="Promotion Lines">
+							<!-- <page string="Promotion Lines">
 								<field name="promos_line_ids" readonly="1">
 									<form string="Promotion Lines" version="7.0">
 
@@ -155,7 +155,7 @@
 									</tree>
 								</field>
 
-							</page>
+							</page> -->
 							<page string="Payments">
 								<field name="payment_line_ids" readonly="1">
 									<tree string="Payment Lines" editable="bottom" readonly="1">
@@ -193,6 +193,24 @@
 				<search string="Search Pre Sale Order Filters">
 					<filter string="Draft" domain="[ ('m_status', '=', 'draft')]"
 						name="state" />
+					<field name="name" />
+					<field name="partner_id" />
+					<field name="customer_code" />
+					<field name="sale_plan_name" />
+					<field name="user_id" />
+					<field name="sale_plan_day_id" />
+					<field name="sale_plan_trip_id" />
+					<field name="warehouse_id" />
+					<field name="sale_team" />
+					<field name="location_id" />
+					<field name="branch_id" />
+					<field name="type" />
+					<field name="tablet_id" />
+					<field name="delivery_remark" />
+					<field name="pricelist_id" />
+					<field name="void_flag" />
+					<field name="note" />
+					<field name="print_count" />
 					<group expand="0" string="Group By">
 						<filter name="tablet_id" string="Tablet Name" domain="[]"
 							context="{'group_by':'tablet_id'}" />

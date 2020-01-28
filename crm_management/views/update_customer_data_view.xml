@@ -51,6 +51,25 @@
 				</tree>
 			</field>
 		</record>
+		
+		<record id="customer_changes_search" model="ir.ui.view">
+            <field name="name">Customer Changes - Search</field>
+            <field name="model">partner.update.data</field>
+            <field name="arch" type="xml">
+                <search string="Customer Changes Search">
+					<field name="partner_id" />
+					<field name="outlet_type" />
+					<field name="sales_channel" />
+					<field name="class_id" />
+					<field name="name" />
+					<field name="demarcation_id" />
+					<field name="frequency_id" />
+                    <group expand="0" string="Group By...">
+                        <filter string="Customer" domain="[]" context="{'group_by':'partner_id'}"/>                        
+                    </group>
+                </search>
+            </field>
+        </record>
 
 		<record id="action_partner_update_data_view" model="ir.actions.act_window">
 			<field name="name">Customer Changes</field>
@@ -59,6 +78,7 @@
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field name="view_id" eval="view_partner_update_data_tree" />
+			<field name="search_view_id" ref="customer_changes_search" />
 		</record>
 
 		<menuitem id="config_partner_update_data" parent="base.menu_base_config"

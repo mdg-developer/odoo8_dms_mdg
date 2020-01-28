@@ -15,7 +15,7 @@ class sale_approval(osv.osv):
     
     def action_button_confirm(self, cr, uid, ids, context=None):
         
-        return self.write(cr, uid, ids, {'state': 'sumit'}, context=context)
+        return self.write(cr, uid, ids, {'state': 'submit'}, context=context)
 
     def action_button_sumit(self, cr, uid, ids, context=None):
         

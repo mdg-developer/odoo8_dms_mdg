@@ -47,6 +47,20 @@
 						<filter name="cashier_approve" string="Cashier Approved"
 							domain="[('state','=','open')]" />
 					</xpath> -->
+					<xpath expr="//search/field[@name='number']" position="after">
+						<field name="street" />
+						<field name="code" />
+						<field name="distance_status" />
+						<field name="section_id" />
+						<field name="branch_id" />
+						<field name="payment_type" />
+						<field name="payment_term" />
+						<field name="journal_id" />
+						<field name="cdnreference_id" />
+						<field name="pricelist_id" />
+						<field name="delivery_remark" />
+						<field name="credit_approve_by" />
+					</xpath>
 					<xpath expr="//search/group/filter[@string='Status']"
 						position="after">
 						<filter string="Payment Type" context="{'group_by':'payment_type'}" />

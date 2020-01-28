@@ -92,6 +92,9 @@
 			<field name="model">stock.delivery</field>
 			<field name="arch" type="xml">
 				<search string="Filters">
+					<field name="customer_id" />
+					<field name="so_ref_no" />
+					<field name="status" />
 					<group expand="0" string="Group By">
 						<filter name="date" string="Order Date" domain="[]"
 							context="{'group_by':'date'}" />

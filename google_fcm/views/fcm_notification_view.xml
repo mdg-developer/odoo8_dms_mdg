@@ -43,6 +43,21 @@
 				</tree>
 			</field>
 		</record>
+		
+		<record id="fcm_notification_search" model="ir.ui.view">
+            <field name="name">FCM Notification - Search</field>
+            <field name="model">fcm.notification</field>
+            <field name="arch" type="xml">
+                <search string="FCM Notification Search">
+					<field name="reason" />
+					<field name="title" />
+					<field name="body" />
+                    <group expand="0" string="Group By...">
+                        <filter string="Reason" domain="[]" context="{'group_by':'reason'}"/>                        
+                    </group>
+                </search>
+            </field>
+        </record>
 
 		<record id="action_fcm_notification" model="ir.actions.act_window">
 			<field name="name">Notification</field>
@@ -56,6 +71,7 @@
 					Click to create notification.
 				</p>
 			</field>
+			<field name="search_view_id" ref="fcm_notification_search" />
 		</record>
 		
 		<menuitem id="menu_fcm_notification" parent="base.menu_mobile_sale_menu"

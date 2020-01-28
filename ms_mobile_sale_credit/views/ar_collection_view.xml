@@ -84,6 +84,15 @@
 			<field name="model">mobile.ar.collection</field>
 			<field name="arch" type="xml">
 				<search string="AR Collection Filters">
+					<field name="name" />
+					<field name="invoice_id" />
+					<field name="partner_id" />
+					<field name="sale_team_id" />
+					<field name="void_flag" />
+					<field name="payment_term" />
+					<field name="user_id" />
+					<field name="tablet_id" />
+					<field name="distance_status" />
 					<group expand="0" string="Group By">
 						<filter name="date" string="Order Date" domain="[]"
 							context="{'group_by':'date'}" />

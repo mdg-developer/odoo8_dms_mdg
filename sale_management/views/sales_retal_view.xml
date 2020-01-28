@@ -142,6 +142,14 @@
 			<field name="model">sales.rental</field>
 			<field name="arch" type="xml">
 				<search string="Search Space Rental">
+					<field name="partner_id" />
+					<field name="name" />
+					<field name="code" />
+					<field name="street" />
+					<field name="note" />
+					<field name="distance_status" />
+					<field name="from_date" />
+					<field name="to_date" />
 					<group expand="0" string="Group By...">
 						<filter string="Customer" icon="terp-partner" domain="[]"
 							context="{'group_by':'partner_id'}" />

@@ -48,6 +48,11 @@
 			<field name="model">tablet.pdf.print</field>
 			<field name="arch" type="xml">
 				<search string="Search Tablet DSR PDF">
+					<field name="name" />
+					<field name="section_id" />
+					<field name="user_id" />
+					<field name="print_file" />
+					<field name="branch_id" />
 					<group expand="0" string="Group By...">
 						<filter string="Sales Team" icon="terp-partner" domain="[]"
 							context="{'group_by':'section_id'}" />

@@ -38,6 +38,9 @@
 			<field name="model">tablet.logout.time</field>
 			<field name="arch" type="xml">
 				<search string="Search Tablet Logout Time">
+					<field name="section_id" />
+					<field name="user_id" />
+					<field name="branch_id" />
 					<group expand="0" string="Group By...">
 						<filter string="Sales Team" icon="terp-partner" domain="[]"
 							context="{'group_by':'section_id'}" />

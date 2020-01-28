@@ -173,6 +173,25 @@
 				</xpath>
 			</field>
 		</record>
+		
+		<record id="product_pricelist_search" model="ir.ui.view">
+            <field name="name">Product Pricelist - Search</field>
+            <field name="model">product.pricelist.version</field>
+            <field name="arch" type="xml">
+                <search string="Product Pricelist Search">
+					<field name="name" />
+					<field name="pricelist_id" />
+					<field name="company_id" />
+					<field name="branch_id" />
+					<field name="date_start" />
+					<field name="date_end" />
+                    <group expand="0" string="Group By...">
+                        <filter string="Name" domain="[]" context="{'group_by':'name'}"/>                        
+                    </group>
+                </search>
+            </field>
+        </record>
+		
 		<record id="action_product_pricelist_item" model="ir.actions.act_window">
 			<field name="name">Product Pricelist Item</field>
 			<field name="type">ir.actions.act_window</field>
@@ -183,6 +202,7 @@
 			<field name="view_id" ref="product.product_pricelist_item_tree_view" />
 			<field name="domain">[]
 			</field>
+			<field name="search_view_id" ref="product_pricelist_search" />
 		</record>
 		<!-- <menuitem action='action_product_pricelist_item' id="menu_product_pricelist_item" -->
 		<!-- parent="product.menu_product_pricelist_main" sequence="3" -->

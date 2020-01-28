@@ -84,16 +84,16 @@ class pendingdelivery(osv.osv):
                             detailObj = stockDetailObj.browse(cr, uid, wizResult['res_id'], context=context)
                             if detailObj:
                                 detailObj.do_detailed_transfer()    
-                        invoice_id = mobile_obj.create_invoices(cr, uid, [solist], context=context)
-                        cr.execute('update account_invoice set date_invoice = now()::date , branch_id =%s ,payment_type=%s,delivery_remark =%s ,section_id=%s,user_id=%s, payment_term = %s where id =%s', (branch_id,payment_type, delivery_remark, delivery_team_id, uid,payment_term, invoice_id,))                                                
-                                                     
-                        invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
-                        if invoice_id:
-                            self.pool['account.invoice'].signal_workflow(cr, uid, [invoice_id], 'invoice_open')
-                            # pre_order =True
-                            invoiceObj.write(cr, uid, invoice_id, {'pre_order':True}, context)      
-                            if payment_type=='credit':
-                                invoiceObj.credit_approve(cr, uid, [invoice_id], context=context)                                     
+#                         invoice_id = mobile_obj.create_invoices(cr, uid, [solist], context=context)
+#                         cr.execute('update account_invoice set date_invoice = now()::date , branch_id =%s ,payment_type=%s,delivery_remark =%s ,section_id=%s,user_id=%s, payment_term = %s where id =%s', (branch_id,payment_type, delivery_remark, delivery_team_id, uid,payment_term, invoice_id,))                                                
+#                                                      
+#                         invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
+#                         if invoice_id:
+#                             self.pool['account.invoice'].signal_workflow(cr, uid, [invoice_id], 'invoice_open')
+#                             # pre_order =True
+#                             invoiceObj.write(cr, uid, invoice_id, {'pre_order':True}, context)      
+#                             if payment_type=='credit':
+#                                 invoiceObj.credit_approve(cr, uid, [invoice_id], context=context)                                     
             self.write(cr, uid, ids[0], {'state':'done'}, context=context)                        
         return True
             

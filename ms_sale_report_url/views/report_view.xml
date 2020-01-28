@@ -35,7 +35,9 @@
 			<field name="model">sale.report.url</field>
 			<field name="arch" type="xml">
 				<search string="Filters">
-
+					<field name="url_name" />
+					<field name='url_link'/>
+					<field name='local_cloud'/>
 					<group expand="0" string="Group By">
 						
 						<filter string="Local Server" name="local_cloud" domain="[('local_cloud','=','local')]" />

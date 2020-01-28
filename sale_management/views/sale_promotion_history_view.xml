@@ -25,6 +25,23 @@
 				</form>
 			</field>
 		</record>
+		
+		<record id="monthly_promotion_history_search" model="ir.ui.view">
+            <field name="name">Monthly Promotion History - Search</field>
+            <field name="model">sales.promotion.history</field>
+            <field name="arch" type="xml">
+                <search string="Monthly Promotion History Search">
+					<field name="section_id" />
+					<field name="promotion_id" />
+					<field name="partner_id" />
+					<field name="user_id" />
+					<field name="note" />
+                    <group expand="0" string="Group By...">
+                        <filter string="Customer" domain="[]" context="{'group_by':'partner_id'}"/>                        
+                    </group>
+                </search>
+            </field>
+        </record>
 
 		<record id="action_sales_promotion_history_view" model="ir.actions.act_window">
 			<field name="name">Monthly Promotion History</field>
@@ -38,6 +55,7 @@
 					Click to create new sale promotion history.
 				</p>
 			</field>
+			<field name="search_view_id" ref="monthly_promotion_history_search" />
 		</record>
 
 		<record id="view_sales_promotion_history_tree" model="ir.ui.view">

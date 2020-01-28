@@ -10,10 +10,10 @@ from openerp.tools.misc import DEFAULT_SERVER_DATE_FORMAT
 from openerp.tools.translate import _
 import time
 from openerp import netsvc
-# from openerp.exceptions import UserError
 import ast
 import openerp.addons.decimal_precision as dp
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
+from openerp.exceptions import Warning as UserError
 
 class sale_order(osv.osv):
     _inherit = "sale.order"
@@ -45,6 +45,7 @@ class sale_order(osv.osv):
             vals = dict(defaults, **vals)
 
         ctx = dict(context or {}, mail_create_nolog=True)
+        
         new_id = super(sale_order, self).create(cr, uid, vals, context=ctx)
         if new_id:
             sale_data=self.browse(cr, uid, new_id, context=context)   
@@ -224,6 +225,26 @@ class sale_order(osv.osv):
         'reverse_date':fields.date('Date for Reverse',required=False),
         'schedule_date':fields.datetime('Scheduled Date'),
                }
+    
+    def action_button_confirm(self, cr, uid, ids, context=None):
+        
+        warning = {}
+        title = False
+        message = False
+        for order in self.browse(cr, uid, ids, context=context):
+            for line in order.order_line:                
+                result = line.product_id_change_with_wh(line.order_id.pricelist_id.id, line.product_id.id, line.product_uom_qty,
+                line.product_uom.id, line.product_uom_qty, line.product_uom.id, '', line.order_id.partner_id.id,
+                False, True, line.order_id.date_order, False, 
+                False, False, line.order_id.warehouse_id.id)
+                
+                if result.get('warning',False):                    
+                    warning['title'] = title and title +' & '+result['warning']['title'] or result['warning']['title']
+                    warning['message'] = message and message +'\n\n'+result['warning']['message'] or result['warning']['message']
+                    raise UserError(_("%s" % warning['message']))               
+        
+        return super(sale_order, self).action_button_confirm(cr, uid, ids, context=context)
+        
     def action_reverse(self, cr, uid, ids, context=None):
         pick_obj = self.pool.get('stock.picking')
         invoice_obj = self.pool.get('account.invoice')

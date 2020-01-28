@@ -84,6 +84,26 @@
 				</form>
 			</field>
 		</record>
+		
+		<record id="monthly_allocation_request_search" model="ir.ui.view">
+            <field name="name">Monthly Allocation Request - Search</field>
+            <field name="model">sales.promotion</field>
+            <field name="arch" type="xml">
+                <search string="Monthly Allocation Request Search">
+					<field name="description" />
+					<field name="promotion" />
+					<field name="product_id" />
+					<field name="category_id" />
+					<field name="from_date" />
+					<field name="user_id" />
+					<field name="officer_id" />
+					<field name="to_date" />
+                    <group expand="0" string="Group By...">
+                        <filter string="Monthly Allocation Request" domain="[]" context="{'group_by':'description'}"/>                        
+                    </group>
+                </search>
+            </field>
+        </record>
 
 		<record id="action_sales_promotion_view" model="ir.actions.act_window">
 			<field name="name">Monthly Allocation Request</field>
@@ -100,6 +120,7 @@
 					Click to create new sale promotion monthly request.
 				</p>
 			</field>
+			<field name="search_view_id" ref="monthly_allocation_request_search" />
 		</record>
 
 		<record id="action_sales_promotion_view1" model="ir.actions.act_window">
@@ -198,6 +219,32 @@
 				</tree>
 			</field>
 		</record>
+		
+		<record id="special_promotion_search" model="ir.ui.view">
+            <field name="name">Special Promotion - Search</field>
+            <field name="model">sale.monthly.promotion</field>
+            <field name="arch" type="xml">
+                <search string="Special Promotion - Search">
+					<field name="name" />
+					<field name="product_id" />
+					<field name="product_categ_id" />
+					<field name="sale_channel_id" />
+					<field name="date" />
+					<field name="from_date" />
+					<field name="to_date" />
+					<field name="sale_qty" />
+					<field name="rebate_percentage" />
+					<field name="branch_id" />
+					<field name="product_uom_id" />
+					<field name="foc_qty" />
+					<field name="foc_product_id" />
+					<field name="rebate_amount" />
+                    <group expand="0" string="Group By...">
+                        <filter string="Special Promotion" domain="[]" context="{'group_by':'name'}"/>                        
+                    </group>
+                </search>
+            </field>
+        </record>
 
 		<record id="action_sale_monthly_promotion_view" model="ir.actions.act_window">
 			<field name="name">Special Promotions</field>
@@ -211,6 +258,7 @@
 					Click to create new Monthly Promotion.
 				</p>
 			</field>
+			<field name="search_view_id" ref="special_promotion_search" />
 		</record>
 
 		<menuitem id="monthly_promotion" parent="promotions"

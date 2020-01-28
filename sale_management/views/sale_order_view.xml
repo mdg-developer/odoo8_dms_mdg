@@ -57,6 +57,7 @@
 					<filter name="pending_invoice" string="Pending Invoice"
 						domain="[('state','=','manual')]" />
 					<filter name="is_entry" string="Is Entry Data" domain="[('is_entry','=',True)]" />
+					<field name="payment_type" />
 				</xpath>
 				<xpath expr="//search/group/filter[@string='Order Month']"
 					position="before">
@@ -186,7 +187,7 @@
 				</field>
 				<xpath expr="/form/sheet/notebook/page[@string='Order Lines']"
 					position="after">
-					<page name='promo_lines' string="Promotion Lines">
+					<!-- <page name='promo_lines' string="Promotion Lines">
 						<field name="promos_line_ids" attrs="{'readonly':[('state','!=','draft')]}">
 							<form string="Promotion Lines" version="7.0">
 								<group>
@@ -217,7 +218,7 @@
 								<field name="manual" />
 							</tree>
 						</field>
-					</page>
+					</page> -->
 					<page name="credit_history_ids" string="Credit History">
 						<field name="credit_history_ids">
 							<tree string="Credit Lines" editable="bottom">

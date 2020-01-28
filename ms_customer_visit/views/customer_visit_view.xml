@@ -14,6 +14,17 @@
 			<field name="model">customer.visit</field>
 			<field name="arch" type="xml">
 				<search string="Search Customer Visit">
+					<field name="customer_id" />
+					<field name="customer_code" />
+					<field name="tablet_id" />
+					<field name="distance_status" />
+					<field name="branch_id" />
+					<field name="user_id" />
+					<field name="sale_plan_day_id" />
+					<field name="sale_plan_trip_id" />
+					<field name="sale_team_id" />
+					<field name="visit_reason" />
+					<field name="other_reason" />
 					<filter string="Customer" name="customer_id" />
 					<filter string="Customer Code" name="customer_code" />
 					<filter string="Sale Plan Day" name="sale_plan_day_id" />

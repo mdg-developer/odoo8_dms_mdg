@@ -42,6 +42,12 @@
 			<field name="model">tablet.sync.log</field>
 			<field name="arch" type="xml">
 				<search string="Search Tablet DSR PDF">
+					<field name="section_id" />
+					<field name="user_id" />
+					<field name="tablet_id" />
+					<field name="sync_time" />
+					<field name="status" />
+					<field name="branch_id" />
 					<group expand="0" string="Group By...">
 						<filter string="Sales Team" icon="terp-partner" domain="[]"
 							context="{'group_by':'section_id'}" />

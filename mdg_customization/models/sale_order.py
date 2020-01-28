@@ -45,9 +45,9 @@ class sale_order_line(osv.osv):
         price = 0
         uom2 = False
         if product_obj.product_tmpl_id.type == 'service':
-            result.update({'service_product': True,'main_group':product_obj.product_tmpl_id.main_group})
+            result.update({'service_product': True,'main_group':product_obj.product_tmpl_id.main_group.id})
         else:
-            result.update({'service_product': False,'main_group':product_obj.product_tmpl_id.main_group})   
+            result.update({'service_product': False,'main_group':product_obj.product_tmpl_id.main_group.id})   
         if uom:
             uom2 = product_uom_obj.browse(cr, uid, uom)
             if product_obj.uom_id.category_id.id != uom2.category_id.id:
@@ -164,8 +164,8 @@ class sale_order_line(osv.osv):
                        'title': _('Configuration Error!'),
                        'message' : warning_msgs
                     }
-        if price > 0 and qty > 0:
-            result.update({'price_subtotal': price * qty})
-            result.update({'net_total': price * qty})
+#         if price > 0 and qty > 0:
+#             result.update({'price_subtotal': price * qty})
+#             result.update({'net_total': price * qty})
             
         return {'value': result, 'domain': domain, 'warning': warning}

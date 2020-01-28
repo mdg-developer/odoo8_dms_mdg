@@ -28,8 +28,7 @@ ATTRIBUTES = [
     ('cat_total', 'Product Category Sale Total'),
     ('fix_prods_qty', 'Fix Quantity Total combination'),
     ('fix_categ_qty', 'Fix Category Quantity And Subtotal'),
-
-
+    ('prod_qty_optional', 'Product Quantity combination(Optional)'),
 ]
 
 COMPARATORS = [
@@ -112,7 +111,27 @@ class PromotionsRules(osv.Model):
                     self.write(cr, uid, ids, {'code':code}, context=context)
 
             return True
-
+    
+    def import_lines(self, cr, uid, ids, context=None):
+        mod_obj = self.pool.get('ir.model.data')
+        wiz_view = mod_obj.get_object_reference(cr, uid, 'sale_promotions', 'optional_promotion_import_view')
+        for version in self.browse(cr, uid, ids, context=context):
+            ctx = {
+                                
+                'rule_id': version.id,
+            }
+            act_import = {
+                'name': _('Import File'),
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'optional.promotion.import',
+                'view_id': [wiz_view[1]],
+                'nodestroy': True,
+                'target': 'new',
+                'type': 'ir.actions.act_window',
+                'context': ctx,
+            }
+            return act_import    
     
     def _check_positive_number(self, cr, uid, ids, context=None):
         record = self.browse(cr, uid, ids, context=context)
@@ -219,7 +238,7 @@ class PromotionsRules(osv.Model):
 #         'promotion_id_b':fields.many2one('promos.rules' ,'Other Promotion B'),
 #         'promotion_id_c':fields.many2one('promos.rules' ,'Other Promotion C'),
         'manual':fields.boolean('Manual'),
-        'promotion_ids': fields.one2many('sale.optional.promotion', 'rule_id', 'Promotions'),
+        'promotion_ids': fields.one2many('sale.optional.promotion', 'rule_id', 'Promotions', copy=True),
         
     }
     _defaults = {

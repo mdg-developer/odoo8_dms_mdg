@@ -96,6 +96,14 @@
 			<field name="model">sales.approval</field>
 			<field name="arch" type="xml">
 				<search string="Search Sales Approval">
+					<field name="sale_team_id" />
+					<field name="user_id" />
+					<field name="partner_id" />
+					<field name="name" />
+					<field name="description" />
+					<field name="note" />
+					<field name="type" />
+					<field name="ref_no" />
 					<separator />
 					<filter domain="[('state','=','draft')]" string="To Confirm"
 						name="draft" />
