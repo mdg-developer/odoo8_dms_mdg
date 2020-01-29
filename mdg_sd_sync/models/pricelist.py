@@ -33,12 +33,18 @@ class product_pricelist(osv.osv):
               \nThe exception status is automatically set when a cancel operation occurs \
               in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\nThe 'Waiting Schedule' status is set when the invoice is confirmed\
                but waiting for the scheduler to run on the order date.", select=True),        
-        'is_sync_sd':fields.boolean('Is Sync SD',track_visibility='always'),
+        'is_sync_sd':fields.boolean('Is Sync SD',track_visibility='always'),        
              }
     _defaults = {
         'state':'draft',
     }
   
+    def write(self, cr, uid, ids, vals, context=None):  
+        data = self.browse(cr,uid,ids[0])
+        if data.is_sync_sd == True: 
+            vals['is_sync_sd']=False
+        res = super(product_pricelist, self).write(cr, uid, ids, vals, context=context)
+        return res
         
     def sync_to_sd(self, cr, uid, ids, context=None):
                     
@@ -52,8 +58,8 @@ class product_pricelist(osv.osv):
             pricelist_id = models.execute_kw(db, sd_uid, password,
                 'product.pricelist', 'search',
                 [[['name', '=', data.name]]],
-                {'limit': 1})
-            if pricelist_id:
+                {'limit': 1})  
+            if pricelist_id:                
                 #search sd company price list version and item
                 sd_version_ids = models.execute_kw(db, sd_uid, password,
                 'product.pricelist.version', 'search',
@@ -87,15 +93,15 @@ class product_pricelist(osv.osv):
                             for version_item in self.pool['product.pricelist.item'].search(cr,uid,[('price_version_id','=',version_id)],context=None):
                                 version_item_data =self.pool['product.pricelist.item'].copy_data(cr, uid, version_item, default={'price_version_id':version_record}, context=context)
                                 #create sd price list itme
-                                version_item_record = models.execute_kw(db, sd_uid, password, 'product.pricelist.item', 'create', [version_item_data])
-                
+                                version_item_record = models.execute_kw(db, sd_uid, password, 'product.pricelist.item', 'create', [version_item_data])                
                 
             else:   
-                sdid = models.execute_kw(db, sd_uid, password, 'product.pricelist', 'create', [ret]) 
+                sdid = models.execute_kw(db, sd_uid, password, 'product.pricelist', 'create', [ret])                
         #if sdid:
-        #    models.execute_kw(db, sd_uid, password, 'promos.rules', 'write', [sdid],{'branch_id':[(6, 0, [])],'sale_channel_id':[(6, 0, [])]}) 
-        self.write(cr, uid, ids, {'is_sync_sd': True}, context=context)        
-    
+        #    models.execute_kw(db, sd_uid, password, 'promos.rules', 'write', [sdid],{'branch_id':[(6, 0, [])],'sale_channel_id':[(6, 0, [])]})
+        if data.is_sync_sd != True:
+            self.write(cr, uid, ids, {'is_sync_sd': True}, context=context)
+        
 product_pricelist()   
 
 
