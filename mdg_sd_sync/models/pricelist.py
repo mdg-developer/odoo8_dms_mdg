@@ -104,4 +104,24 @@ class product_pricelist(osv.osv):
         
 product_pricelist()   
 
-
+class product_pricelist_version(osv.osv):
+    _inherit = "product.pricelist.version"
+    
+    _columns = {            
+                'is_sync_sd':fields.boolean('Is Sync SD',track_visibility='always'),        
+        } 
+    
+    def write(self, cr, uid, ids, vals, context=None):  
+        data = self.browse(cr,uid,ids[0])
+        if data.is_sync_sd == True: 
+            vals['is_sync_sd']=False
+        res = super(product_pricelist_version, self).write(cr, uid, ids, vals, context=context)
+        return res
+    
+    def sync_to_sd(self, cr, uid, ids, context=None):
+        
+        data = self.browse(cr,uid,ids[0])
+        data.pricelist_id.sync_to_sd()
+        if data.is_sync_sd != True:
+            self.write(cr, uid, ids, {'is_sync_sd': True}, context=context)
+        

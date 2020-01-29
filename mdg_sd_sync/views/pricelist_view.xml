@@ -52,7 +52,60 @@
 			</field>
 		</record>
 		
-
+		<record model="ir.ui.view" id="product_pricelist_version_form_view_inherit2">
+			<field name="name">Product Pricelist Version Form</field>
+			<field name="model">product.pricelist.version</field>
+			<field name="inherit_id" ref="product.product_pricelist_version_form_view" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='active']" position="after">
+					<field name="is_sync_sd" />					
+				</xpath>
+			</field>
+		</record>
+		
+		<record model="ir.ui.view" id="product_pricelist_version_form_view_inherit3">
+			<field name="name">Product Pricelist Version Form</field>
+			<field name="model">product.pricelist.version</field>
+			<field name="inherit_id" ref="mdg_customization.product_pricelist_version_form_view_inherit1" />
+			<field name="arch" type="xml">
+				<xpath expr="//button[@name='retrieve_data']" position="after">					
+					<button name="sync_to_sd" string="Sync To SD" class="oe_highlight"
+						type="object" groups="base.group_sale_manager" />
+				</xpath>
+			</field>
+		</record>
+		
+		<record id="inherit_product_pricelist_version_tree_view2" model="ir.ui.view">
+			<field name="name">product.pricelist.version.tree</field>
+			<field name="model">product.pricelist.version</field>
+			<field name="inherit_id" ref="mdg_customization.inherit_product_pricelist_version_tree_view" />
+			<field name="arch" type="xml">				
+				<xpath expr="//field[@name='name']" position="replace">
+				    <field name="name" string="Version Name" fg_color="blue:is_sync_sd==True;"/>										
+				</xpath>
+				<xpath expr="//field[@name='pricelist_id']" position="replace">
+				    <field name="pricelist_id" string="Main Pricelist" fg_color="blue:is_sync_sd==True;"/>					
+				</xpath>
+				<xpath expr="//field[@name='active']" position="replace">
+				    <field name="is_sync_sd" fg_color="blue:is_sync_sd==True;"/>
+				    <field name="active" fg_color="blue:is_sync_sd==True;"/>					
+				</xpath>				
+			</field>
+		</record>
+		
+		<record id="product_pricelist_version_tree_view_inherit2" model="ir.ui.view">
+			<field name="name">product.pricelist.version.tree</field>
+			<field name="model">product.pricelist.version</field>
+			<field name="inherit_id" ref="product.product_pricelist_version_tree_view" />
+			<field name="arch" type="xml">				
+				<xpath expr="//field[@name='date_start']" position="replace">
+				    <field name="date_start" fg_color="blue:is_sync_sd==True;"/>										
+				</xpath>
+				<xpath expr="//field[@name='date_end']" position="replace">
+				    <field name="date_end" fg_color="blue:is_sync_sd==True;"/>										
+				</xpath>			
+			</field>
+		</record>
 
 	</data>
 </openerp>
