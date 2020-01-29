@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        
+        <record id="view_product_template_multi_sync_form" model="ir.ui.view">
+            <field name="name">product_template_sync_form</field>
+            <field name="model">product.template.multi.sync</field>
+            <field name="arch"  type="xml">
+                <form string="Show Customer Map">
+                    <group col="4" colspan="6">
+                       <span class="o_form_label">All selected price list sync to SD</span>
+                    </group>
+                    <footer>
+                        <button name="product_template_sync_sd" string="Sync to SD" type="object" class="oe_highlight"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_product_template_multi_sync" model="ir.actions.act_window">
+            <field name="name">Product Template Multi Sync to SD</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.template.multi.sync</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            
+        </record>
+
+        
+
+        <record model="ir.values" id="product_template_multi_map_value">
+            <field name="name">Product Template Multi Sync to SD</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_product_template_multi_sync'))" />
+            <field name="key">action</field>
+            <field name="model">product.template</field>
+        </record>
+
+       
+
+    </data>
+</openerp>
