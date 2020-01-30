@@ -9,8 +9,8 @@
 
 				<field name="type" position="after">
 					<field name="is_sync_sd" />
-					<button name="sync_to_sd" string="Sync To SD" class="oe_highlight"
-						type="object" states='draft,approve' groups="base.group_sale_manager" />
+<!-- 					<button name="sync_to_sd" string="Sync To SD" class="oe_highlight" -->
+<!-- 						type="object" states='draft,approve' groups="base.group_sale_manager" /> -->
 				</field>
 				
 				<field name="version_id" position="after">
