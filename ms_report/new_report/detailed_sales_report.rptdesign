@@ -636,7 +636,7 @@ else
             <xml-property name="queryText"><![CDATA[
 with foc_qty as (
 	select  
-	ail.price_unit,(select rp.name from res_users ru where so.user_id=ru.id and ru.partner_id=rp.id ),so.schedule_date,ai.date_due,rp.id customer_id,rp.name customer_name,rt.code township,number,ai.payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ccs.name sales_team,ai.branch_id,product_id,name_template,ail.uos_id,pt.uom_id,
+	ail.price_unit,(select rp.name from sale_order,res_partner rp,res_users ru where sale_order.user_id=ru.id and ru.partner_id=rp.id and sale_order.id=so.id),so.schedule_date,ai.date_due,rp.id customer_id,rp.name customer_name,rt.code township,number,ai.payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ccs.name sales_team,ai.branch_id,product_id,name_template,ail.uos_id,pt.uom_id,
 	case when ail.uos_id=pt.uom_id then sum(round(quantity,0)) when ail.uos_id!=pt.uom_id then sum(round(quantity*(select floor(round(1/factor,2)) from product_uom where id=ail.uos_id),0)) end as product_quantity,ai.state as status,pp.sequence as seq,case when (ail.promotion_id is not null and ail.foc= true) or (ail.promotion_id is not null and ail.foc= false)  then 0 
     when (ail.promotion_id is null) then ail.price_unit * ail.quantity	    	 
 	end as total_amount,
@@ -652,10 +652,10 @@ with foc_qty as (
 	and ai.section_id=ccs.id
 	and foc='true'
 	and date_invoice between ? and ?
-	group by ai.amount_total,rp.id,rp.name,so.user_id,so.schedule_date,ail.quantity,rt.code,number,ai.payment_type,date_invoice,ail.promotion_id,ail.foc,ai.section_id,ccs.name,ai.branch_id,product_id,name_template,pp.sequence,ail.uos_id,pt.uom_id,ai.state,ai.date_due,ail.price_unit
+	group by ai.amount_total,so.id,rp.id,rp.name,so.user_id,so.schedule_date,ail.quantity,rt.code,number,ai.payment_type,date_invoice,ail.promotion_id,ail.foc,ai.section_id,ccs.name,ai.branch_id,product_id,name_template,pp.sequence,ail.uos_id,pt.uom_id,ai.state,ai.date_due,ail.price_unit
 	order by name_template),
 sale_qty as (
-	select ail.price_unit,(select rp.name from res_users ru where so.user_id=ru.id and ru.partner_id=rp.id ),so.schedule_date,ai.date_due,rp.id customer,rp.name customer_name,rt.code township,number,ai.payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,
+	select ail.price_unit,(select rp.name from sale_order,res_partner rp,res_users ru where sale_order.user_id=ru.id and ru.partner_id=rp.id and sale_order.id=so.id ),so.schedule_date,ai.date_due,rp.id customer,rp.name customer_name,rt.code township,number,ai.payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,
         ccs.name sales_team,ai.branch_id,product_id,name_template,ail.uos_id,pt.uom_id,
         case when ail.uos_id=pt.uom_id then sum(round(quantity,0)) 
         when ail.uos_id!=pt.uom_id then sum(round(quantity*(select floor(round(1/factor,2)) from product_uom where id=ail.uos_id),0)) 
@@ -675,7 +675,7 @@ sale_qty as (
 	and ai.section_id=ccs.id			
 	and foc='false'
 	and date_invoice between ? and ?
-        group by ai.amount_total,ail.quantity,ail.price_unit,so.schedule_date,so.user_id,ail.promotion_id,ail.foc,rp.id,rp.name,rt.code,number,ai.payment_type,date_invoice,ai.section_id,ccs.name,ai.branch_id,product_id,name_template,pp.sequence,ail.uos_id,pt.uom_id,ai.state,ai.date_due
+        group by ai.amount_total,so.id,ail.quantity,ail.price_unit,so.schedule_date,so.user_id,ail.promotion_id,ail.foc,rp.id,rp.name,rt.code,number,ai.payment_type,date_invoice,ai.section_id,ccs.name,ai.branch_id,product_id,name_template,pp.sequence,ail.uos_id,pt.uom_id,ai.state,ai.date_due
 	order by name_template),
 result as (
 	select *
@@ -1881,10 +1881,10 @@ else&#13;
                 <property name="width">0.78125in</property>
             </column>
             <column id="1240">
-                <property name="width">0.6770833333333334in</property>
+                <property name="width">0.75in</property>
             </column>
             <column id="1184">
-                <property name="width">0.59375in</property>
+                <property name="width">0.5208333333333334in</property>
             </column>
             <column id="1185">
                 <property name="width">1.03125in</property>
