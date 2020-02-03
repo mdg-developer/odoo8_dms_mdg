@@ -39,7 +39,7 @@ class sale_order(osv.osv):
                         
                         warehouse_id = models.execute_kw(db, sd_uid, password,
                         'stock.warehouse', 'search',
-                        [[['name', 'like', inv.section_id.issue_warehouse_id.name]]],
+                        [[['name', 'like', inv.section_id.warehouse_id.name]]],
                         {'limit': 1})
                         dest_loc_id = models.execute_kw(db, sd_uid, password,
                         'stock.location', 'search',
@@ -47,7 +47,7 @@ class sale_order(osv.osv):
                         {'limit': 1})
                         loc_id = models.execute_kw(db, sd_uid, password,
                         'stock.location', 'search',
-                        [[['name', 'like', inv.section_id.issue_location_id.name]]],
+                        [[['name', 'like', inv.section_id.location_id.name]]],
                         {'limit': 1})
                         
                         if warehouse_id:

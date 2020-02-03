@@ -11,7 +11,7 @@
                        <span class="o_form_label">All selected price list sync to SD</span>
                     </group>
                     <footer>
-                        <button name="price_list_sync_sd" string="Sync to SD" type="object" class="oe_highlight"/>
+                        <button name="price_list_sync_sd" string="Sync to SD" type="object" class="oe_highlight" groups="base.group_no_one"/>
                     </footer>
                 </form>
             </field>

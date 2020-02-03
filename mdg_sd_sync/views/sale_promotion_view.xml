@@ -10,7 +10,7 @@
 			<field name="arch" type="xml">
 				<xpath expr="//button[@name='publish']" position="after">
 					<button name="sync_to_sd" string="Sync To SD" class="oe_highlight"
-						type="object" states='draft,approve' groups="base.group_sale_manager" />
+						type="object" states="approve" groups="base.group_no_one" />
 				</xpath>
 				<field name="manual" position="after">
 					<field name="is_sync_sd" />
@@ -24,15 +24,15 @@
 			<field name="type">tree</field>
 			<field name="arch" type="xml">
 				<tree string="Promotions">
-					<field name="code" bg_color="blue:is_sync_sd==True;"/>
-					<field name="name" bg_color="blue:is_sync_sd==True;"/>
-					<field name="active" bg_color="blue:is_sync_sd==True;"/>
-					<field name="manual" bg_color="blue:is_sync_sd==True;"/>
-					<field name="is_sync_sd" bg_color="blue:is_sync_sd==True;"/>
-					<field name="coupon_code" bg_color="blue:is_sync_sd==True;"/>
-					<field name="main_group" bg_color="blue:is_sync_sd==True;"/>
-					<field name="from_date" bg_color="blue:is_sync_sd==True;"/>
-					<field name="to_date" bg_color="blue:is_sync_sd==True;"/>
+					<field name="code" fg_color="blue:is_sync_sd==True;"/>
+					<field name="name" fg_color="blue:is_sync_sd==True;"/>
+					<field name="active" fg_color="blue:is_sync_sd==True;"/>
+					<field name="manual" fg_color="blue:is_sync_sd==True;"/>
+					<field name="is_sync_sd" fg_color="blue:is_sync_sd==True;"/>
+					<field name="coupon_code" fg_color="blue:is_sync_sd==True;"/>
+					<field name="main_group" fg_color="blue:is_sync_sd==True;"/>
+					<field name="from_date" fg_color="blue:is_sync_sd==True;"/>
+					<field name="to_date" fg_color="blue:is_sync_sd==True;"/>
 				</tree>
 			</field>
 		</record>
