@@ -274,7 +274,7 @@ class stock_return(osv.osv):
                                         and date_trunc('day', s.date::date) <= %s                                        and  s.location_dest_id=%s
                                         and s.product_id =%s
                                         and s.origin NOT LIKE %s
-                                         and s.origin NOT LIKE  %s
+                                        and s.origin NOT LIKE  %s
                                         group by s.location_dest_id, s.product_id
                                         ) transfer_in on transfer_in.product_id=tmp.product_id and transfer_in.location_dest_id=tmp.location_id
                                         left join
