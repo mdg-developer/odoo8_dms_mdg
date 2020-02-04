@@ -8,6 +8,7 @@
 			<field name="arch" type="xml">
 				<tree string="Branch Good Issue Note Report" create="0" delete="0">
 					<field name="issue_date" />
+					<field name="eta_date" />
 					<field name="state" />
 					<field name="branch_id" />
 					<field name="request_id" />
