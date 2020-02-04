@@ -120,8 +120,8 @@
 			</field>
 		</record>
 
-		<menuitem id="menu_sales_target_branch" action="action_sales_target_view"
-			parent="base.menu_sales" name="Sales Target Setting " sequence="10" />
+		<menuitem id="menu_sales_target_branch" action="action_sales_target_branch_view"
+			parent="base.menu_sales" name="Sales Target Branch Setting " sequence="10" />
 
 	</data>
 </openerp>
