@@ -9,5 +9,4 @@ import sale_approval
 import account_invoice
 import sale_promotion_monthly
 import sale_target
-import sale_target_branch
 import sale_promotion_history

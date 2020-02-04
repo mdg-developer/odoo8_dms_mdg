@@ -14,7 +14,6 @@ class branch(osv.osv):
                                         'name': fields.char('Branch Name', required=True),
                     'address': fields.text('Address'),
                     'active': fields.boolean('Active')  ,
-                    'branch_region':fields.char('Branch Region'),
                     'res_company_id' : fields.many2one('res.company', 'Company'),
                
                 }
