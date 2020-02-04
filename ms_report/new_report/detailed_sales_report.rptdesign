@@ -309,7 +309,28 @@ order by payment_type]]></xml-property>
                     <text-property name="heading">net_amount</text-property>
                 </structure>
             </list-property>
-            <list-property name="parameters"/>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">param_1</property>
+                    <property name="paramName">from_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">93</property>
+                    <property name="position">1</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_2</property>
+                    <property name="paramName">to_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">93</property>
+                    <property name="position">2</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
                     <structure>
@@ -625,7 +646,7 @@ ai.payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,so.section_id,
 	and  so.section_id=ccs.id			
 	and sale_foc in('false','true')
 	and so.state not in ('draft','cancel')																							  
-	--and so.date_order between ? and ?
+	and so.date_order between ? and ?
 	--$payment_type$
 	--$branch$
 	--$sales_team$																			  
@@ -635,6 +656,38 @@ ai.payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,so.section_id,
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>93</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>2</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>93</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
   <design:ResultSets derivedMetaData="true">
     <design:resultSetDefinitions>
       <design:resultSetColumns>
@@ -1655,7 +1708,7 @@ else&#13;
             <list-property name="boundDataColumns">
                 <structure>
                     <property name="name">from_date</property>
-                    <expression name="expression" type="javascript">"From Date - "+Formatter.format(params["from_date"],'dd-MM-yy')+"			To Date - "+Formatter.format(params["to_date"],'dd-MM-yy')</expression>
+                    <expression name="expression" type="javascript">"From Date - "+Formatter.format(params["from_date"],'dd-MM-yyyy')+"			To Date - "+Formatter.format(params["to_date"],'dd-MM-yyyy')</expression>
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
                 </structure>
@@ -1748,15 +1801,15 @@ else&#13;
                     <property name="dataType">date-time</property>
                 </structure>
                 <structure>
-                    <property name="name">number</property>
-                    <text-property name="displayName">number</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["number"]</expression>
-                    <property name="dataType">string</property>
-                </structure>
-                <structure>
                     <property name="name">so_number</property>
                     <text-property name="displayName">so_number</text-property>
                     <expression name="expression" type="javascript">dataSetRow["so_number"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">number</property>
+                    <text-property name="displayName">number</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["number"]</expression>
                     <property name="dataType">string</property>
                 </structure>
             </list-property>
@@ -2048,9 +2101,9 @@ else&#13;
             </header>
             <group id="1226">
                 <property name="groupName">NewTableGroup1</property>
-                <expression name="keyExpr" type="javascript">row["number"]</expression>
+                <expression name="keyExpr" type="javascript">row["so_number"]</expression>
                 <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["number"]</expression>
+                    <expression name="expressionValue" type="javascript">row["so_number"]</expression>
                 </structure>
                 <property name="hideDetail">false</property>
                 <header>
@@ -2141,8 +2194,7 @@ else&#13;
                             <property name="borderRightWidth">thin</property>
                             <property name="borderTopStyle">solid</property>
                             <property name="borderTopWidth">thin</property>
-                            <data id="1285">
-                                <property name="textAlign">center</property>
+                            <data id="1292">
                                 <property name="resultSetColumn">number</property>
                             </data>
                         </cell>
