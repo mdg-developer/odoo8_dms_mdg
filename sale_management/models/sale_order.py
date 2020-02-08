@@ -367,7 +367,7 @@ class sale_order(osv.osv):
             payment_type = 'consignment'
         else:
             payment_type = 'cash'
-            payment_term = 1
+            payment_term = 3
         dedicated_salesman = part.user_id and part.user_id.id or uid
         if payment_type =='credit' and part:
             invoice_ids = invoice_obj.search(cr, uid, [('payment_type','=','credit'),('partner_id', '=', part.id),('state','=','open')], context=context)
