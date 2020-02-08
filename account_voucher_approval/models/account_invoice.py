@@ -106,7 +106,7 @@ class account_invoice(models.Model):
                 payment_type='consignment'
             else:
                 payment_type='cash'
-                payment_term_id = 1                
+                payment_term_id = 3              
             fiscal_position = p.property_account_position.id
             bank_id = p.bank_ids and p.bank_ids[0].id or False
             pricelist = p.property_product_pricelist and p.property_product_pricelist.id or False
