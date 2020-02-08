@@ -14,13 +14,16 @@ class product_template(osv.osv):
         
     def write(self, cr, uid, ids, vals, context=None):
         ''' Store the standard price change in order to be able to retrieve the cost of a product template for a given date'''
-        data = self.browse(cr,uid,ids[0])
-        if data.is_sync_sd == True: 
-            vals['is_sync_sd']=False
-            
-        res = super(product_template, self).write(cr, uid, ids, vals, context=context)
-        
+#         data = self.browse(cr,uid,ids[0])
+#         if data.is_sync_sd == True: 
+#             vals['is_sync_sd']=False
+                    
+        product = self.browse(cr,uid,ids,context)        
+        if product.is_sync_sd == True:             
+            vals.update({'is_sync_sd': False});   
+        res = super(product_template, self).write(cr, uid, ids, vals, context=context)       
         return res
+    
     def sync_to_sd(self, cr, uid, ids, context=None):
         
         sd_uid,url,db,password = self.pool['sd.connection'].get_connection_data(cr, uid, context=None)
