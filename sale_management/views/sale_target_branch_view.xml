@@ -78,8 +78,7 @@
 			<field name="arch" type="xml">
 				<search string="Search Sales Target">
 					<group expand="0" string="Group By...">
-						<filter string="Sale Team" icon="terp-partner" domain="[]"
-							context="{'group_by':'sale_team_id'}" />
+
 						<filter string="Month" icon="terp-partner" domain="[]"
 							context="{'group_by':'month'}" />
 						<filter string="Year" icon="terp-partner" domain="[]"
@@ -94,7 +93,6 @@
 			<field name="model">sales.target.branch</field>
 			<field name="arch" type="xml">
 				<tree string="Sales Target">
-					<field name="sale_team_id" />
 					<field name="branch_id" />
 					<field name="name" />
 					<field name="month" />

@@ -86,7 +86,7 @@ class sale_target(osv.osv):
             ('12', 'December'),
 
         ], 'Month', copy=False, select=True),
-        'target_line': fields.one2many('sales.target.line', 'sale_ids', string='Sale Target Line', copy=True),
+        'target_line': fields.one2many('sales.target.branch.line', 'sale_ids', string='Sale Target Line', copy=True),
         'description': fields.text('Description'),
         'date': fields.date('Target Date'),
         'year': fields.char('Year'),
@@ -134,7 +134,7 @@ class sale_target_line(osv.osv):
         #         data['product_uom_qty']=product_uom_qty
         #         data['sequence']=sequence
         if values.get('sale_ids') and values.get('product_id'):
-            order = self.pool['sales.target'].read(cr, uid, values['sale_ids'], ['pricelist_id'], context=context)
+            order = self.pool['sales.target.branch'].read(cr, uid, values['sale_ids'], ['pricelist_id'], context=context)
             defaults = self.on_change_product_id(cr, uid, [], values['product_id'], order['pricelist_id'][0],
                                                  context=dict(context or {}))['value']
             values = dict(defaults, **values)
@@ -185,7 +185,7 @@ class sale_target_line(osv.osv):
         return {'value': values}
 
     _columns = {
-        'sale_ids': fields.many2one('sales.target', 'Sales Target'),
+        'sale_ids': fields.many2one('sales.target.branch', 'Sales Target'),
         'sequence': fields.integer('Sequence'),
         'product_id': fields.many2one('product.product', 'Product SKU', required=True),
         'product_uom': fields.many2one('product.uom', 'UoM', readonly=True),
