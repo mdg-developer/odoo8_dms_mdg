@@ -50,7 +50,9 @@
 						<field name="old_code" />
 
 						<group>
-							<button name="generate_customercode" type="object" string="Generate Code" />
+							<button name="generate_customercode" type="object" 
+							    	attrs="{'invisible': [('customer_code', '!=', False)]}"
+							    	string="Generate Code" />
 						</group>
 						<!-- <group>
 
