@@ -47,7 +47,7 @@ class pre_sale_order(osv.osv):
                 ('delivered', 'Delivered'),
                 ('none', 'None')
             ], 'Deliver Remark'),
-        'date':fields.datetime('Date'),
+        'date':fields.datetime('Order Date'),
 		'due_date':fields.date('Due Date'),
         'note':fields.text('Note'),
         'order_line': fields.one2many('pre.sale.order.line', 'order_id', 'Order Lines', copy=True),
@@ -73,7 +73,7 @@ class pre_sale_order(osv.osv):
       'is_convert':fields.boolean('Is Convert',readonly=True),
       'print_count':fields.integer('RePrint Count'),
       'rebate_later':fields.boolean('Rebate Later'),
-      'schedule_date':fields.datetime('Scheduled Date'),
+      'schedule_date':fields.datetime('Date to deliver'),
       'customer_sign':fields.binary('Customer Sign'),
     }
     _order = 'id desc'
@@ -130,7 +130,7 @@ class pre_sale_order(osv.osv):
                     else:
                         saleManId = None						 
 
-                    cursor.execute('select id From res_partner where customer_code  = %s ', (so['customer_code'],))
+                    cursor.execute('select id From res_partner where old_code  = %s ', (so['customer_code'],))
                     data = cursor.fetchall()                
                     if data:
                         partner_id = data[0][0]
