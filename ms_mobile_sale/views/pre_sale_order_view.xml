@@ -228,6 +228,10 @@
 							context="{'group_by':'partner_id'}" />
 						<filter name="m_status" string="Status" domain="[]"
 							context="{'group_by':'m_status'}" />
+						<filter string="Date to deliver" domain="[]"
+							context="{'group_by':'schedule_date:day'}" />
+						<filter string="Order Date" domain="[]" 
+						    context="{'group_by':'date:day'}" />
 					</group>
 				</search>
 			</field>

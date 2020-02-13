@@ -74,7 +74,8 @@
 					<filter string="Salesman Name" domain="[]"
 						context="{'group_by':'user_id'}" />
 					<filter string="Status" domain="[]" context="{'group_by':'state'}" />
-
+					<filter string="Date to deliver" domain="[]" context="{'group_by':'schedule_date:day'}"/>
+                    <filter string="Order Date" domain="[]" context="{'group_by':'date_order:day'}"/>
 				</xpath>
 			</field>
 		</record>
