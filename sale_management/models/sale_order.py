@@ -223,7 +223,8 @@ class sale_order(osv.osv):
         'credit_limit_amount' :fields.float('Credit Limit'),   
         'credit_balance' :fields.float('Credit Balance'),   
         'reverse_date':fields.date('Date for Reverse',required=False),
-        'schedule_date':fields.datetime('Scheduled Date'),
+        'schedule_date':fields.datetime('Date to deliver '),
+        'date_order': fields.datetime('Order Date', required=True, readonly=True, select=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, copy=False),
                }
     
     def action_button_confirm(self, cr, uid, ids, context=None):

@@ -14,6 +14,7 @@
 
 				<xpath expr="//field[@name='name']" position="before">
 					<field name="date_order" string="Order.Date" />
+					<field name="schedule_date" string="Date to deliver " />
 				</xpath>
 				<xpath expr="//field[@name='user_id']" position="replace">
 				</xpath>
@@ -25,11 +26,37 @@
 				<xpath expr="//field[@name='amount_total']" position="replace">
 					<field name="amount_total" sum="Total Tax Included" string="Value" />
 				</xpath>
-				
-				
+
 			</field>
 		</record>
-
+		
+		<record id="inherit_view_sales_order_filter1" model="ir.ui.view">
+			<field name="name">sale.order</field>
+			<field name="model">sale.order</field>
+			<field name="inherit_id" ref="sale.view_sales_order_filter" />
+			<field name="arch" type="xml">
+				
+				<xpath expr="//filter[@string='Order Month']" position="after">
+					<filter string="Date to deliver" domain="[]"
+							context="{'group_by':'schedule_date:day'}" />
+						<filter string="Order Date" domain="[]" 
+						    context="{'group_by':'date_order:day'}" />
+				</xpath>
+			</field>
+		</record>
+		
+		<record id="inherit_view_quotation_tree" model="ir.ui.view">
+			<field name="name">sale.order.tree</field>
+			<field name="model">sale.order</field>
+			<field name="inherit_id" ref="sale.view_quotation_tree" />
+			<field name="arch" type="xml">
+				
+				<xpath expr="//field[@name='date_order']" position="after">
+					<field name="schedule_date"  />
+				</xpath>
+			</field>
+		</record>
+		
 	</data>
 </openerp>
 		

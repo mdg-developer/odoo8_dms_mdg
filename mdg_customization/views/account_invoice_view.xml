@@ -64,6 +64,7 @@
 					<field name="delivery_remark" attrs="{'readonly':[('state','!=','draft')],'invisible': [('type','not in',('out_invoice','in_invoice'))]}" />
 					<field name="rebate_later" attrs="{'invisible':['|',('is_nonsale','=',True),('type','!=','out_invoice')]}"
 						readonly="1" />
+					<field name="schedule_date" />
 
 					<!-- <field name="state" readonly="1"/> -->
 				</xpath>
@@ -161,6 +162,7 @@
 					<field name="residual" />
 					<field name="payment_type" />
 					<field name="branch_id" />
+				    <field name="schedule_date" />
 				</xpath>
 			</field>
 		</record>

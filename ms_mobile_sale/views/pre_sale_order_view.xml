@@ -214,8 +214,8 @@
 					<group expand="0" string="Group By">
 						<filter name="tablet_id" string="Tablet Name" domain="[]"
 							context="{'group_by':'tablet_id'}" />
-						<filter name="date" string="Order Date" domain="[]"
-							context="{'group_by':'date'}" />
+						<!-- <filter name="date" string="Order Date" domain="[]"
+							context="{'group_by':'date'}" /> -->
 						<filter name="user_id" string="Salesman" domain="[]"
 							context="{'group_by':'user_id'}" />
 						<filter name="sale_team" string="SaleTeam" domain="[]"
@@ -257,6 +257,7 @@
 					<!-- <field name="paid" /> -->
 					<field name="m_status" />
 					<field name="date" />
+					<field name="schedule_date" />
 					<field name="void_flag" />
 
 				</tree>
