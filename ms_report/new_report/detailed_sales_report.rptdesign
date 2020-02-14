@@ -1507,7 +1507,7 @@ else
 	and EXTRACT(hour FROM ai.date_order::timestamp at time zone 'UTC' at time zone 'asia/rangoon'):: character varying	between ? and ?
 	and EXTRACT(minute FROM ai.date_order::timestamp at time zone 'UTC' at time zone 'asia/rangoon'):: character varying	between ? and ?		
 	group by ai.amount_total,so.id,rp.id,rp.name,so.user_id,so.schedule_date,ail.quantity,rt.code,number,ai.payment_type,date_invoice,ail.promotion_id,ail.foc,ai.section_id,ccs.name,ai.branch_id,product_id,name_template,pp.sequence,ail.uos_id,pt.uom_id,ai.state,ai.date_due,ail.price_unit,promo.name,pp.default_code
-	order by name_template asc ),
+	order by name_template desc ),
 sale_qty as (
 	select ail.price_unit,(select rp.name from sale_order,res_partner rp,res_users ru where sale_order.user_id=ru.id and ru.partner_id=rp.id and sale_order.id=so.id ),so.schedule_date,ai.date_due,rp.id customer,rp.name customer_name,rt.code township,number,ai.payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,
         ccs.name sales_team,ai.branch_id,product_id,name_template,ail.uos_id,pt.uom_id,
@@ -1533,7 +1533,7 @@ sale_qty as (
 	and EXTRACT(hour FROM ai.date_order::timestamp at time zone 'UTC' at time zone 'asia/rangoon'):: character varying	between ? and ?
 	and EXTRACT(minute FROM ai.date_order::timestamp at time zone 'UTC' at time zone 'asia/rangoon'):: character varying	between ? and ?																	 
         group by ai.amount_total,so.id,ail.quantity,ail.price_unit,so.schedule_date,so.user_id,ail.promotion_id,ail.foc,rp.id,rp.name,rt.code,number,ai.payment_type,date_invoice,ai.section_id,ccs.name,ai.branch_id,product_id,name_template,pp.sequence,ail.uos_id,pt.uom_id,ai.state,ai.date_due,promo.name,pp.default_code
-	order by name_template asc ),
+	order by name_template desc ),
 result as (
 	select *
 	from sale_qty
@@ -1548,7 +1548,7 @@ where 1=1
 --$sales_team$
 --$branch$
 --$payment_type$
-order by name_template asc]]></xml-property>
+order by name_template desc]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
