@@ -55,7 +55,7 @@
 								<field name="print_count" />
 								<field name="rebate_later" />
 								<field name="schedule_date" />
-								<field name="payment_term_id" />
+<!-- 								<field name="payment_term_id" /> -->
 							</group>
 						</group>
 						<notebook>
