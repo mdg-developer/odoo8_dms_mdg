@@ -173,11 +173,11 @@ class product_pricelist_item(osv.osv):
             return {'value':{'new_price':new_price}}
         return {}
     
-class price_list_line(osv.osv):
-    _name = 'price.list.line'
-    _description = 'Price List Line'           
-    _columns = {                
-        'team_id':fields.many2one('crm.case.section', 'Line', ondelete='cascade', select=True),
-        'property_product_pricelist': fields.many2one('product.pricelist', string="Sale Pricelist", domain=[('type', '=', 'sale')]),
-        'is_default':fields.boolean('Default'),
-        }
+# class price_list_line(osv.osv):
+#     _name = 'price.list.line'
+#     _description = 'Price List Line'           
+#     _columns = {                
+#         'team_id':fields.many2one('crm.case.section', 'Line', ondelete='cascade', select=True),
+#         'property_product_pricelist': fields.many2one('product.pricelist', string="Sale Pricelist", domain=[('type', '=', 'sale')]),
+#         'is_default':fields.boolean('Default'),
+#         }

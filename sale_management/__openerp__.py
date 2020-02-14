@@ -33,7 +33,7 @@ Sale Management
     'author': 'Seventh Computing Developer Group',
     'website': 'http://www.7thcomputing.com',
     'depends': ['base', 'sale', 'crm_demarcation', 'account', 'account_accountant',
-                'stock', 'sale_stock', 'ms_sale_plan_setting',
+                'stock', 'sale_stock', 'ms_sale_plan_setting'
     ],
     'data': [
        # 'views/product_product_view.xml',
