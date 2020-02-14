@@ -169,7 +169,7 @@ class pre_sale_order(osv.osv):
                         'rebate_later':rebate,
                         'schedule_date':so['date_to_deliver'],
                         'customer_sign':so['customerSign'],
-                        'payment_term_id':so['paymentTermID']
+                        'payment_term_id':so.get('paymentTermID')
                     }
                     s_order_id = mobile_sale_order_obj.create(cursor, user, mso_result, context=context)
                     so_ids.append(s_order_id)
