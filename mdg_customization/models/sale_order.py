@@ -8,7 +8,9 @@ from openerp import SUPERUSER_ID
 class sale_order(osv.osv):
     _inherit = "sale.order"
     _columns = {
-         'delivery_id': fields.many2one('crm.case.section', 'Delivery Team'),       
+         'delivery_id': fields.many2one('crm.case.section', 'Delivery Team'),
+         'schedule_date':fields.datetime('Date to deliver '),
+         'date_order': fields.datetime('Order Date', required=True, readonly=True, select=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, copy=False),       
               }
 sale_order()
 
