@@ -65,6 +65,7 @@
 					<field name="rebate_later" attrs="{'invisible':['|',('is_nonsale','=',True),('type','!=','out_invoice')]}"
 						readonly="1" />
 					<field name="schedule_date" />
+					<field name="date_order" />
 
 					<!-- <field name="state" readonly="1"/> -->
 				</xpath>
@@ -97,9 +98,9 @@
 					<field name="user_id" groups="base.group_user" 
 						context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'account.group_account_invoice']}"
 						attrs="{'readonly':[('state','!=','draft')],'invisible':[('type','!=','out_invoice')]}" />
-					<field name="user_id" groups="base.group_user" string="Prepared By"
+					<!-- <field name="user_id" groups="base.group_user" string="Prepared By"
 						context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'account.group_account_invoice']}"
-						attrs="{'readonly':[('state','!=','draft')],'invisible':[('type','!=','out_refund')]}" />						
+						attrs="{'readonly':[('state','!=','draft')],'invisible':[('type','!=','out_refund')]}" /> -->						
 					<field name="section_id" groups="base.group_multi_salesteams"
 						attrs="{'readonly':[('state','!=','draft')],'required': [('type', '=', 'out_invoice')], 'invisible': [('type','!=','out_invoice')]}" />						
 				</field>
@@ -162,11 +163,39 @@
 					<field name="residual" />
 					<field name="payment_type" />
 					<field name="branch_id" />
+					<field name="date_order" />
 				    <field name="schedule_date" />
+				    
+				    
 				</xpath>
 			</field>
 		</record>
 
-
+		<record id="inherit_invoice_line1" model="ir.ui.view">
+			<field name="name">account.invoice</field>
+			<field name="model">account.invoice</field>
+			<field name="inherit_id" ref="account.invoice_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='invoice_line']/tree//field[@name='product_id']" position="before">
+					<field name="default_code" />
+				</xpath>
+			</field>
+		</record>
+		
+		<record id="inherit_account_invoice_filter" model="ir.ui.view">
+			<field name="name">account.invoice</field>
+			<field name="model">account.invoice</field>
+			<field name="inherit_id" ref="account.view_account_invoice_filter" />
+			<field name="arch" type="xml">
+				<xpath expr="//filter[@string='Due Month']" position="after">
+					<filter string="Date to deliver" domain="[]"
+							context="{'group_by':'schedule_date:day'}" />
+						<filter string="Order Date" domain="[]" 
+						    context="{'group_by':'date_order:day'}" />
+				</xpath>
+			</field>
+		</record>
+		
+		
 	</data>
 </openerp>
