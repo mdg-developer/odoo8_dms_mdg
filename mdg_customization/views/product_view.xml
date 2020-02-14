@@ -31,13 +31,13 @@
 				</field>
 
 				<field name="categ_id" position="after">
+				    <field name="default_code" />
 					<field name="uom_id" string="S.UOM" />
 					<field name="list_price" string="S.Price" />
                     <field name="big_uom_id" string="B.UOM"   invisible="1"/>
                     <field name="big_list_price" string="B.Price"   invisible="1"/>
 					<field name="uom_ratio" />
 					<field name="sequence" />
-
 				</field>
 				<field name="type" position="replace">
 					<field name="type" invisible="1" />
