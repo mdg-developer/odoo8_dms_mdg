@@ -124,6 +124,18 @@
 									<span t-field="o.date_due" />
 								</td>
 							</tr>
+							<tr>
+							    <td>
+									<b>Date To deliver</b>
+									<br />
+									<span t-field="o.schedule_date" />
+								</td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+							
 						</table>
 
 						<table class="table"
