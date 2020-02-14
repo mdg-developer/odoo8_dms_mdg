@@ -75,6 +75,7 @@ class pre_sale_order(osv.osv):
       'rebate_later':fields.boolean('Rebate Later'),
       'schedule_date':fields.datetime('Date to deliver'),
       'customer_sign':fields.binary('Customer Sign'),
+      'payment_term_id': fields.many2one('account.payment.term', 'Payment Term'),
     }
     _order = 'id desc'
     _defaults = {
@@ -167,7 +168,8 @@ class pre_sale_order(osv.osv):
                         'print_count':so['print_count'],
                         'rebate_later':rebate,
                         'schedule_date':so['date_to_deliver'],
-                        'customer_sign':so['customerSign']
+                        'customer_sign':so['customerSign'],
+                        'payment_term_id':so['paymentTermID']
                     }
                     s_order_id = mobile_sale_order_obj.create(cursor, user, mso_result, context=context)
                     so_ids.append(s_order_id)
@@ -316,7 +318,7 @@ class pre_sale_order(osv.osv):
                                                         'cancel_user_id':cancel_user_id,
                                                         'ignore_credit_limit':True,
                                                         'credit_history_ids':[],
-
+                                                        'payment_term':preObj_ids.payment_term_id.id,
                                                          }
                         so_id = saleOrderObj.create(cr, uid, saleOrderResult, context=context)
                     if so_id and preObj_ids.order_line:
