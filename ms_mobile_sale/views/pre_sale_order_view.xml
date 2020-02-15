@@ -26,7 +26,7 @@
 							<group>
 
 								<field name="name" readonly="1" />
-								<field name="partner_id" readonly="1" />
+								<field name="partner_id" readonly="0" />
 								<field name="customer_code" readonly="1" />
 								<field name="sale_plan_name" readonly="1" />
 								<field name="user_id" readonly="1" />
