@@ -164,8 +164,7 @@ class mobile_sale_order(osv.osv):
                                             and RP.township =RT.id
                                             and RP.city = RC.id
                                             and RP.active = true                                            
-                                            and RP.outlet_type = OT.id   
-                                            and RP.credit_allow =True                                         
+                                            and RP.outlet_type = OT.id                                                                                       
                                             and RP.branch_id=%s
                     )A 
                     where A.customer_code is not null
@@ -1357,6 +1356,48 @@ class mobile_sale_order(osv.osv):
                         where b.sale_team_id = %s
                         )
                         ''', (branch_id, status, team_id,))
+        datas = cr.fetchall()        
+        return datas
+    
+    def get_promos_datas_by_main_group(self, cr, uid , branch_id, state, team_id, main_group_id, context=None, **kwargs):
+        if state == 'approve':
+            status = 'approve'
+            cr.execute('''select id,sequence as seq,from_date ,to_date,active,name as p_name,
+                        logic ,expected_logic_result ,special, special1, special2, special3 ,description,
+                        pr.promotion_count, pr.monthly_promotion ,code as p_code,manual,main_group
+                        from promos_rules pr ,promos_rules_res_branch_rel pro_br_rel
+                        where pr.active = true                     
+                        and pr.id = pro_br_rel.promos_rules_id
+                        and pro_br_rel.res_branch_id = %s
+                        and pr.state = %s
+                        and pr.main_group = %s
+                        and  now()::date  between from_date::date and to_date::date
+                        and pr.id in (
+                        select a.promo_id from promo_sale_channel_rel a
+                        inner join sale_team_channel_rel b
+                        on a.sale_channel_id = b.sale_channel_id
+                        where b.sale_team_id = %s
+                        )
+                        ''', (branch_id, status, main_group_id, team_id,))
+        else:
+            status = 'draft'            
+            cr.execute('''select id,sequence as seq,from_date ,to_date,active,name as p_name,
+                        logic ,expected_logic_result ,special, special1, special2, special3 ,description,
+                        pr.promotion_count, pr.monthly_promotion,code as p_code,manual,main_group
+                        from promos_rules pr ,promos_rules_res_branch_rel pro_br_rel
+                        where pr.active = true                     
+                        and pr.id = pro_br_rel.promos_rules_id
+                        and pro_br_rel.res_branch_id = %s
+                        and pr.state  = %s
+                        and pr.main_group = %s
+                        and  now()::date  between from_date::date and to_date::date
+                        and pr.id in (
+                        select a.promo_id from promo_sale_channel_rel a
+                        inner join sale_team_channel_rel b
+                        on a.sale_channel_id = b.sale_channel_id
+                        where b.sale_team_id = %s
+                        )
+                        ''', (branch_id, status, main_group_id, team_id,))
         datas = cr.fetchall()        
         return datas
     

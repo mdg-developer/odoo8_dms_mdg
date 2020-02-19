@@ -140,7 +140,8 @@ class account_invoice(osv.osv):
         'latitude':fields.float('Geo Latitude',  digits=(16, 5), readonly=True),
         'longitude':fields.float('Geo Longitude',  digits=(16, 5), readonly=True),
         'distance_status':fields.char('Distance Status', readonly=True),
-        'schedule_date':fields.datetime('Date to deliver ',related = 'sale_order_id.schedule_date',store=True),
+        'schedule_date':fields.datetime('Date to deliver ',related = 'sale_order_id.schedule_date'),
+        'date_order':fields.datetime('Order Date ',related = 'sale_order_id.date_order'),
 
 }
         

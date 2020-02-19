@@ -74,8 +74,8 @@
 					<filter string="Salesman Name" domain="[]"
 						context="{'group_by':'user_id'}" />
 					<filter string="Status" domain="[]" context="{'group_by':'state'}" />
-					<filter string="Date to deliver" domain="[]" context="{'group_by':'schedule_date:day'}"/>
-                    <filter string="Order Date" domain="[]" context="{'group_by':'date_order:day'}"/>
+					<!-- <filter string="Date to deliver" domain="[]" context="{'group_by':'schedule_date:day'}"/> -->
+                    <!-- <filter string="Order Date" domain="[]" context="{'group_by':'date_order:day'}"/> -->
 				</xpath>
 			</field>
 		</record>
@@ -94,6 +94,8 @@
 				<xpath expr="//button[@name='action_cancel']" position="after">
 					<button name="action_reverse" states="manual,progress"
 						string="Reverse Order" type="object" groups="base.group_user" />
+					<button name="apply_promotions" type="object" states="draft"
+						string="Apply Promotions" />
 				</xpath>
 
 
@@ -113,7 +115,6 @@
 					<field name="ignore_credit_limit" />
 					<field name="reverse_date"
 						attrs="{'readonly':[('state','=','reversed')],'invisible': [('state','not in',('manual','progress'))]}" />
-					<field name="schedule_date" />
 				</field>
 				<field name="date_order" position="after">
 					<field name="credit_allow" invisible="1" />
