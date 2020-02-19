@@ -25,56 +25,57 @@ def automation_pre_order(session,list_mobile):
 class pre_sale_order(osv.osv):
     
     _name = "pre.sale.order"
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = "Pre Sales Order"
    
     _columns = {
         'name': fields.char('Order Reference', size=64),
-        'partner_id':fields.many2one('res.partner', 'Customer'),
-        'customer_code':fields.char('Customer Code'),
-        'sale_plan_name':fields.char('Sale Plan Name'),
-        'user_id':fields.many2one('res.users', 'Salesman Name'),
-        'mso_latitude':fields.float('Geo Latitude'),
-        'mso_longitude':fields.float('Geo Longitude'),
-        'amount_total':fields.float('Total Amount',compute='_compute_paid_amount'),
+        'partner_id':fields.many2one('res.partner', 'Customer',track_visibility='always'),
+        'customer_code':fields.char('Customer Code',track_visibility='always'),
+        'sale_plan_name':fields.char('Sale Plan Name',track_visibility='always'),
+        'user_id':fields.many2one('res.users', 'Salesman Name',track_visibility='always'),
+        'mso_latitude':fields.float('Geo Latitude',track_visibility='always'),
+        'mso_longitude':fields.float('Geo Longitude',track_visibility='always'),
+        'amount_total':fields.float('Total Amount',compute='_compute_paid_amount',track_visibility='always'),
         'type':fields.selection([
                 ('credit', 'Credit'),
                 ('cash', 'Cash'),
                 ('consignment', 'Consignment'),
                 ('advanced', 'Advanced')
-            ], 'Payment Type'),
+            ], 'Payment Type',track_visibility='always'),
         'delivery_remark':fields.selection([
                 ('partial', 'Partial'),
                 ('delivered', 'Delivered'),
                 ('none', 'None')
-            ], 'Deliver Remark'),
-        'date':fields.datetime('Order Date'),
-		'due_date':fields.date('Due Date'),
-        'note':fields.text('Note'),
-        'order_line': fields.one2many('pre.sale.order.line', 'order_id', 'Order Lines', copy=True),
-        'delivery_order_line': fields.one2many('pre.products.to.deliver', 'sale_order_id', 'Delivery Order Lines', copy=True),
-        'tablet_id':fields.many2one('tablets.information', 'Tablet ID'),
-        'sale_plan_day_id':fields.many2one('sale.plan.day', 'Sale Plan Day'),
-        'sale_plan_trip_id':fields.many2one('sale.plan.trip', 'Sale Plan Trip'),
-        'warehouse_id' : fields.many2one('stock.warehouse', 'Warehouse'),
-        'sale_team':fields.many2one('crm.case.section', 'Sale Team'),
-        'location_id'  : fields.many2one('stock.location', 'Location'),
-        'deduction_amount':fields.float('Deduction Amount'),
+            ], 'Deliver Remark',track_visibility='always'),
+        'date':fields.datetime('Order Date',track_visibility='always'),
+		'due_date':fields.date('Due Date',track_visibility='always'),
+        'note':fields.text('Note',track_visibility='always'),
+        'order_line': fields.one2many('pre.sale.order.line', 'order_id', 'Order Lines', copy=True,track_visibility='always'),
+        'delivery_order_line': fields.one2many('pre.products.to.deliver', 'sale_order_id', 'Delivery Order Lines', copy=True,track_visibility='always'),
+        'tablet_id':fields.many2one('tablets.information', 'Tablet ID',track_visibility='always'),
+        'sale_plan_day_id':fields.many2one('sale.plan.day', 'Sale Plan Day',track_visibility='always'),
+        'sale_plan_trip_id':fields.many2one('sale.plan.trip', 'Sale Plan Trip',track_visibility='always'),
+        'warehouse_id' : fields.many2one('stock.warehouse', 'Warehouse',track_visibility='always'),
+        'sale_team':fields.many2one('crm.case.section', 'Sale Team',track_visibility='always'),
+        'location_id'  : fields.many2one('stock.location', 'Location',track_visibility='always'),
+        'deduction_amount':fields.float('Deduction Amount',track_visibility='always'),
         'm_status':fields.selection([('draft', 'Draft'),
                                      
-                                                      ('done', 'Complete')], string='Status'),
-     'promos_line_ids':fields.one2many('pre.promotion.line', 'promo_line_id', 'Promotion Lines'),
-     'pricelist_id': fields.many2one('product.pricelist', 'Price List', select=True, ondelete='cascade'),
-       'payment_line_ids':fields.one2many('customer.payment', 'pre_order_id', 'Payment Lines'),
-      'branch_id': fields.many2one('res.branch', 'Branch', required=True),
+                                                      ('done', 'Complete')], string='Status',track_visibility='always'),
+     'promos_line_ids':fields.one2many('pre.promotion.line', 'promo_line_id', 'Promotion Lines',track_visibility='always'),
+     'pricelist_id': fields.many2one('product.pricelist', 'Price List', select=True, ondelete='cascade',track_visibility='always'),
+       'payment_line_ids':fields.one2many('customer.payment', 'pre_order_id', 'Payment Lines',track_visibility='always'),
+      'branch_id': fields.many2one('res.branch', 'Branch', required=True,track_visibility='always'),
              'void_flag':fields.selection([
                 ('voided', 'Voided'),
                 ('none', 'Unvoid')
-            ], 'Void'),
-      'is_convert':fields.boolean('Is Convert',readonly=True),
-      'print_count':fields.integer('RePrint Count'),
-      'rebate_later':fields.boolean('Rebate Later'),
-      'schedule_date':fields.datetime('Date to deliver'),
-      'customer_sign':fields.binary('Customer Sign'),
+            ], 'Void',track_visibility='always'),
+      'is_convert':fields.boolean('Is Convert',readonly=True,track_visibility='always'),
+      'print_count':fields.integer('RePrint Count',track_visibility='always'),
+      'rebate_later':fields.boolean('Rebate Later',track_visibility='always'),
+      'schedule_date':fields.datetime('Date to deliver',track_visibility='always'),
+      'customer_sign':fields.binary('Customer Sign',track_visibility='always'),
     }
     _order = 'id desc'
     _defaults = {
@@ -501,3 +502,53 @@ class pre_product_yet_to_deliver_line(osv.osv):
                 }
     
 pre_product_yet_to_deliver_line()
+
+class saleorderinherit(osv.osv):
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _inherit='sale.order'
+    
+    _columns = {
+        'name': fields.char('Order Reference', required=True, copy=False,
+            readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, select=True,track_visibility='always'),
+        'origin': fields.char('Source Document', help="Reference of the document that generated this sales order request.",track_visibility='always'),
+        'client_order_ref': fields.char('Reference/Description', copy=False,track_visibility='always'),
+        'state': fields.selection([
+            ('draft', 'Draft Quotation'),
+            ('sent', 'Quotation Sent'),
+            ('cancel', 'Cancelled'),
+            ('waiting_date', 'Waiting Schedule'),
+            ('progress', 'Sales Order'),
+            ('manual', 'Sale to Invoice'),
+            ('shipping_except', 'Shipping Exception'),
+            ('invoice_except', 'Invoice Exception'),
+            ('done', 'Done'),
+            ], 'Status', readonly=True, copy=False, help="Gives the status of the quotation or sales order.\
+              \nThe exception status is automatically set when a cancel operation occurs \
+              in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\nThe 'Waiting Schedule' status is set when the invoice is confirmed\
+               but waiting for the scheduler to run on the order date.", select=True,track_visibility='always'),
+        'date_order': fields.datetime('Date', required=True, readonly=True, select=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, copy=False,track_visibility='always'),
+        'create_date': fields.datetime('Creation Date', readonly=True, select=True, help="Date on which sales order is created.",track_visibility='always'),
+        'date_confirm': fields.date('Confirmation Date', readonly=True, select=True, help="Date on which sales order is confirmed.", copy=False,track_visibility='always'),
+        'user_id': fields.many2one('res.users', 'Salesperson', states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, select=True, track_visibility='onchange'),
+        'partner_id': fields.many2one('res.partner', 'Customer', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, required=True, change_default=True, select=True, track_visibility='always'),
+        'partner_invoice_id': fields.many2one('res.partner', 'Invoice Address', readonly=True, required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Invoice address for current sales order.",track_visibility='always'),
+        'partner_shipping_id': fields.many2one('res.partner', 'Delivery Address', readonly=True, required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Delivery address for current sales order.",track_visibility='always'),
+        'order_policy': fields.selection([
+                ('manual', 'On Demand'),
+            ], 'Create Invoice', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
+            help="""This field controls how invoice and delivery operations are synchronized.""",track_visibility='onchange'),
+        'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Pricelist for current sales order.",track_visibility='always'),
+        'currency_id': fields.related('pricelist_id', 'currency_id', type="many2one", relation="res.currency", string="Currency", readonly=True, required=True,track_visibility='always'),
+        'project_id': fields.many2one('account.analytic.account', 'Contract / Analytic', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="The analytic account related to a sales order.",track_visibility='always'),
+
+        'order_line': fields.one2many('sale.order.line', 'order_id', 'Order Lines', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, copy=True,track_visibility='always'),
+        'invoice_ids': fields.many2many('account.invoice', 'sale_order_invoice_rel', 'order_id', 'invoice_id', 'Invoices', readonly=True, copy=False, help="This is the list of invoices that have been generated for this sales order. The same sales order may have been invoiced in several times (by line for example).",track_visibility='always'),
+        'note': fields.text('Terms and conditions',track_visibility='always'),
+        'payment_term': fields.many2one('account.payment.term', 'Payment Term',track_visibility='always'),
+        'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position',track_visibility='always'),
+        'company_id': fields.many2one('res.company', 'Company',track_visibility='always'),
+        'section_id': fields.many2one('crm.case.section', 'Sales Team',track_visibility='always'),
+        'procurement_group_id': fields.many2one('procurement.group', 'Procurement group', copy=False,track_visibility='always'),
+        'product_id': fields.related('order_line', 'product_id', type='many2one', relation='product.product', string='Product',track_visibility='always'),
+    }
+        
