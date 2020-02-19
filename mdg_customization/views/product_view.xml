@@ -239,6 +239,49 @@
 				</field>
 			</field>
 		</record>
-
+		
+		<record id="product_pricelist_item_tree_view_no_create" model="ir.ui.view">
+            <field name="name">product.pricelist.item.tree</field>
+            <field name="model">product.pricelist.item</field>
+            <field name="arch" type="xml">
+                <tree string="Products Listprices Items">
+                	<field name="price_version_id"/>
+                    <field name="sequence"/>
+                    <field colspan="4" name="name"/>
+                    <field name="product_id"/>
+                    <field name="product_tmpl_id"/>
+                    <field name="categ_id"/>
+                    <field name="min_quantity"/>
+                    <field name="base"/>
+                </tree>
+            </field>
+        </record>
+		
+		<record id="view_product_pricelist_item_filter" model="ir.ui.view">
+            <field name="name">product.pricelist.item.select</field>
+            <field name="model">product.pricelist.item</field>
+            <field name="arch" type="xml">
+                <search string="Search Move">
+                    <field name="price_version_id" string="Price List Version"/>
+                   
+                    <group expand="0" string="Group By">
+                        <filter string="Price List Version" icon="terp-partner" domain="[]" context="{'group_by':'price_version_id'}"/>
+                        
+                    </group>
+                </search>
+            </field>
+        </record>
+		<record id="product_pricelist_item_action1" model="ir.actions.act_window">
+            <field name="name">Pricelist Item</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.pricelist.item</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="mdg_customization.product_pricelist_item_tree_view_no_create"/>
+            <field name="search_view_id" ref="view_product_pricelist_item_filter" />
+        </record>
+        
+        <menuitem action="product_pricelist_item_action1" id="menu_product_pricelist_item_action2"
+			parent="product.menu_product_pricelist_main" name="Pricelist Item"
+			sequence="3" groups="product.group_sale_pricelist" />
 	</data>
 </openerp>
