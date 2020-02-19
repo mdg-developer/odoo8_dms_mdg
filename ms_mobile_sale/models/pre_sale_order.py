@@ -25,57 +25,57 @@ def automation_pre_order(session,list_mobile):
 class pre_sale_order(osv.osv):
     
     _name = "pre.sale.order"
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = "Pre Sales Order"
    
     _columns = {
         'name': fields.char('Order Reference', size=64),
-        'partner_id':fields.many2one('res.partner', 'Customer'),
-        'customer_code':fields.char('Customer Code'),
-        'sale_plan_name':fields.char('Sale Plan Name'),
-        'user_id':fields.many2one('res.users', 'Salesman Name'),
-        'mso_latitude':fields.float('Geo Latitude'),
-        'mso_longitude':fields.float('Geo Longitude'),
-        'amount_total':fields.float('Total Amount',compute='_compute_paid_amount'),
+        'partner_id':fields.many2one('res.partner', 'Customer',track_visibility='always'),
+        'customer_code':fields.char('Customer Code',track_visibility='always'),
+        'sale_plan_name':fields.char('Sale Plan Name',track_visibility='always'),
+        'user_id':fields.many2one('res.users', 'Salesman Name',track_visibility='always'),
+        'mso_latitude':fields.float('Geo Latitude',track_visibility='always'),
+        'mso_longitude':fields.float('Geo Longitude',track_visibility='always'),
+        'amount_total':fields.float('Total Amount',compute='_compute_paid_amount',track_visibility='always'),
         'type':fields.selection([
                 ('credit', 'Credit'),
                 ('cash', 'Cash'),
                 ('consignment', 'Consignment'),
                 ('advanced', 'Advanced')
-            ], 'Payment Type'),
+            ], 'Payment Type',track_visibility='always'),
         'delivery_remark':fields.selection([
                 ('partial', 'Partial'),
                 ('delivered', 'Delivered'),
                 ('none', 'None')
-            ], 'Deliver Remark'),
-        'date':fields.datetime('Order Date'),
-		'due_date':fields.date('Due Date'),
-        'note':fields.text('Note'),
-        'order_line': fields.one2many('pre.sale.order.line', 'order_id', 'Order Lines', copy=True),
-        'delivery_order_line': fields.one2many('pre.products.to.deliver', 'sale_order_id', 'Delivery Order Lines', copy=True),
-        'tablet_id':fields.many2one('tablets.information', 'Tablet ID'),
-        'sale_plan_day_id':fields.many2one('sale.plan.day', 'Sale Plan Day'),
-        'sale_plan_trip_id':fields.many2one('sale.plan.trip', 'Sale Plan Trip'),
-        'warehouse_id' : fields.many2one('stock.warehouse', 'Warehouse'),
-        'sale_team':fields.many2one('crm.case.section', 'Sale Team'),
-        'location_id'  : fields.many2one('stock.location', 'Location'),
-        'deduction_amount':fields.float('Deduction Amount'),
+            ], 'Deliver Remark',track_visibility='always'),
+        'date':fields.datetime('Order Date',track_visibility='always'),
+		'due_date':fields.date('Due Date',track_visibility='always'),
+        'note':fields.text('Note',track_visibility='always'),
+        'order_line': fields.one2many('pre.sale.order.line', 'order_id', 'Order Lines', copy=True,track_visibility='always'),
+        'delivery_order_line': fields.one2many('pre.products.to.deliver', 'sale_order_id', 'Delivery Order Lines', copy=True,track_visibility='always'),
+        'tablet_id':fields.many2one('tablets.information', 'Tablet ID',track_visibility='always'),
+        'sale_plan_day_id':fields.many2one('sale.plan.day', 'Sale Plan Day',track_visibility='always'),
+        'sale_plan_trip_id':fields.many2one('sale.plan.trip', 'Sale Plan Trip',track_visibility='always'),
+        'warehouse_id' : fields.many2one('stock.warehouse', 'Warehouse',track_visibility='always'),
+        'sale_team':fields.many2one('crm.case.section', 'Sale Team',track_visibility='always'),
+        'location_id'  : fields.many2one('stock.location', 'Location',track_visibility='always'),
+        'deduction_amount':fields.float('Deduction Amount',track_visibility='always'),
         'm_status':fields.selection([('draft', 'Draft'),
                                      
-                                                      ('done', 'Complete')], string='Status'),
-     'promos_line_ids':fields.one2many('pre.promotion.line', 'promo_line_id', 'Promotion Lines'),
-     'pricelist_id': fields.many2one('product.pricelist', 'Price List', select=True, ondelete='cascade'),
-       'payment_line_ids':fields.one2many('customer.payment', 'pre_order_id', 'Payment Lines'),
-      'branch_id': fields.many2one('res.branch', 'Branch', required=True),
+                                                      ('done', 'Complete')], string='Status',track_visibility='always'),
+     'promos_line_ids':fields.one2many('pre.promotion.line', 'promo_line_id', 'Promotion Lines',track_visibility='always'),
+     'pricelist_id': fields.many2one('product.pricelist', 'Price List', select=True, ondelete='cascade',track_visibility='always'),
+       'payment_line_ids':fields.one2many('customer.payment', 'pre_order_id', 'Payment Lines',track_visibility='always'),
+      'branch_id': fields.many2one('res.branch', 'Branch', required=True,track_visibility='always'),
              'void_flag':fields.selection([
                 ('voided', 'Voided'),
                 ('none', 'Unvoid')
-            ], 'Void'),
-      'is_convert':fields.boolean('Is Convert',readonly=True),
-      'print_count':fields.integer('RePrint Count'),
-      'rebate_later':fields.boolean('Rebate Later'),
-      'schedule_date':fields.datetime('Date to deliver'),
-      'customer_sign':fields.binary('Customer Sign'),
-      'payment_term_id': fields.many2one('account.payment.term', 'Payment Term'),
+            ], 'Void',track_visibility='always'),
+      'is_convert':fields.boolean('Is Convert',readonly=True,track_visibility='always'),
+      'print_count':fields.integer('RePrint Count',track_visibility='always'),
+      'rebate_later':fields.boolean('Rebate Later',track_visibility='always'),
+      'schedule_date':fields.datetime('Date to deliver',track_visibility='always'),
+      'customer_sign':fields.binary('Customer Sign',track_visibility='always'),
     }
     _order = 'id desc'
     _defaults = {
@@ -131,7 +131,7 @@ class pre_sale_order(osv.osv):
                     else:
                         saleManId = None						 
 
-                    cursor.execute('select id From res_partner where customer_code  = %s ', (so['customer_code'],))
+                    cursor.execute('select id From res_partner where old_code  = %s ', (so['customer_code'],))
                     data = cursor.fetchall()                
                     if data:
                         partner_id = data[0][0]
@@ -168,8 +168,7 @@ class pre_sale_order(osv.osv):
                         'print_count':so['print_count'],
                         'rebate_later':rebate,
                         'schedule_date':so['date_to_deliver'],
-                        'customer_sign':so['customerSign'],
-                        'payment_term_id':so.get('paymentTermID')
+                        'customer_sign':so['customerSign']
                     }
                     s_order_id = mobile_sale_order_obj.create(cursor, user, mso_result, context=context)
                     so_ids.append(s_order_id)
@@ -235,150 +234,6 @@ class pre_sale_order(osv.osv):
             print e
             return False 
     
-    def create_presaleorder_by_old_code(self, cursor, user, vals, context=None):
-        print 'vals', vals
-
-        sale_order_name_list = []
-        try : 
-            saleManId = branch_id = promotion_id=None
-            mobile_sale_order_obj = self.pool.get('pre.sale.order')
-            mobile_sale_order_line_obj = self.pool.get('pre.sale.order.line')
-            str = "{" + vals + "}"
-            str = str.replace(":''", ":'")  # change Order_id
-            str = str.replace("'',", "',")  # null
-            str = str.replace(":',", ":'',")  # due to order_id
-            str = str.replace("}{", "}|{")
-            new_arr = str.split('|')
-            result = []
-            so_ids=[]
-            for data in new_arr:
-                x = ast.literal_eval(data)
-                result.append(x)
-            sale_order = []
-            sale_order_line = []
-            for r in result:
-                print "length", len(r)
-                if len(r) >= 17:
-                    sale_order.append(r)
-                else:
-                    sale_order_line.append(r)
-            
-            if sale_order:
-                for so in sale_order:
-                    print 'Sale Man Id', so['user_id']
-                    cursor.execute('select id,branch_id From res_users where id  = %s ', (so['user_id'],))
-                    data = cursor.fetchall()
-                    
-                    if data:
-                        saleManId = data[0][0]
-                        branch_id = data[0][1]
-                    else:
-                        saleManId = None                         
-
-                    cursor.execute('select id From res_partner where old_code  = %s ', (so['customer_code'],))
-                    data = cursor.fetchall()                
-                    if data:
-                        partner_id = data[0][0]
-                       
-                    else:
-                        partner_id = None
-                    if so['rebate'] == 'T':
-                        rebate = True
-                    else:
-                        rebate = False                    
-                    mso_result = {
-                        'customer_code':so['customer_code'],
-                        'paid': True,
-                        'warehouse_id':so['warehouse_id'],
-                        'tablet_id':so['tablet_id'],
-                        'delivery_remark':so['delivery_remark'],
-                        'location_id':so['location_id'],
-                        'user_id':so['user_id'],
-                        'name':so['name'],
-                        'type':so['type'],
-                        'note':so['note'],
-                        'partner_id':partner_id,
-                        'sale_plan_name':so['sale_plan_day_name'],
-                        'amount_total':so['amount_total'],
-                        'sale_team':so['sale_team'],
-                        'date':so['date'],
-                        'due_date':so['due_date'],
-                        'void_flag':so['void_flag'],
-                        'sale_plan_day_id':so['sale_plan_day_id'],
-                        'mso_longitude':so['mso_longitude'],
-                        'mso_latitude':so['mso_latitude'],
-                        'pricelist_id':so['pricelist_id'],
-                        'branch_id':branch_id,
-                        'print_count':so['print_count'],
-                        'rebate_later':rebate,
-                        'schedule_date':so['date_to_deliver'],
-                        'customer_sign':so['customerSign'],
-#                         'payment_term_id':so.get('paymentTermID')
-                    }
-                    s_order_id = mobile_sale_order_obj.create(cursor, user, mso_result, context=context)
-                    so_ids.append(s_order_id)
-                    print "Create Sale Order", so['name']
-                    for sol in sale_order_line:
-                        if sol['so_name'] == so['name']:
-                                cursor.execute('select id From product_product where id  = %s ', (sol['product_id'],))
-                                data = cursor.fetchall()
-                                if data:
-                                    productId = data[0][0]
-                                else:
-                                    productId = None
-                                if sol['price_unit'] == '0':
-                                    foc_val = True
-                                else:
-                                    foc_val = False                    
-                                if sol['manual_foc'] == 'T':
-                                    manual_foc = True
-                                else:
-                                    manual_foc = False       
-                                if sol['promotion_action'] and  sol['promotion_action']!='null':
-                                    cursor.execute("select promotion from promos_rules_actions where id =%s",(sol['promotion_action'],))
-                                    promotion_id = cursor.fetchone()[0]
-                                else:
-                                    promotion_id=False
-                                if sol['manual_promotion'] and sol['manual_promotion'] != 'null':
-                                    promotion_id = sol['manual_promotion']  
-                                price =sol['price_unit']
-#                                 if  float(price) < 0:
-#                                     product_price= 0
-#                                     discount_amt =-1 * float(price)
-#                                 else:
-                                product_price=sol['price_unit']
-                                discount_amt=sol['discount_amt']
-                                                                                  
-                                mso_line_res = {                                                            
-                                  'order_id':s_order_id,
-                                  'product_id':productId,
-                                  'price_unit':product_price,
-                                  'foc':foc_val,
-                                  'product_uos_qty':sol['product_uos_qty'],
-                                  'discount':sol['discount'],
-                                  'discount_amt':discount_amt,
-                                  'sub_total':sol['sub_total'],
-                                  'uom_id':sol['uom_id'],
-                                  'manual_foc':manual_foc,
-                                  'promotion_id':promotion_id,
-                                }
-                                mobile_sale_order_line_obj.create(cursor, user, mso_line_res, context=context) 
-                                print 'Create Order line', sol['so_name']                     
-                    sale_order_name_list.append(so['name'])
-            print 'True'
-            
-            session = ConnectorSession(cursor, user, context)
-            jobid=automation_pre_order.delay(session,so_ids, priority=10)
-            print "Job",jobid
-            runner = ConnectorRunner()
-            runner.run_jobs()
-            return True 
-                  
-        except Exception, e:
-            print 'False'
-            print e
-            return False 
-        
     def action_convert_presaleorder(self, cr, uid, ids, context=None):
         presaleorderObj = self.pool.get('pre.sale.order')
         saleOrderObj = self.pool.get('sale.order')
@@ -462,7 +317,7 @@ class pre_sale_order(osv.osv):
                                                         'cancel_user_id':cancel_user_id,
                                                         'ignore_credit_limit':True,
                                                         'credit_history_ids':[],
-                                                        'payment_term':preObj_ids.payment_term_id.id,
+
                                                          }
                         so_id = saleOrderObj.create(cr, uid, saleOrderResult, context=context)
                     if so_id and preObj_ids.order_line:
@@ -647,3 +502,53 @@ class pre_product_yet_to_deliver_line(osv.osv):
                 }
     
 pre_product_yet_to_deliver_line()
+
+class saleorderinherit(osv.osv):
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _inherit='sale.order'
+    
+    _columns = {
+        'name': fields.char('Order Reference', required=True, copy=False,
+            readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, select=True,track_visibility='always'),
+        'origin': fields.char('Source Document', help="Reference of the document that generated this sales order request.",track_visibility='always'),
+        'client_order_ref': fields.char('Reference/Description', copy=False,track_visibility='always'),
+        'state': fields.selection([
+            ('draft', 'Draft Quotation'),
+            ('sent', 'Quotation Sent'),
+            ('cancel', 'Cancelled'),
+            ('waiting_date', 'Waiting Schedule'),
+            ('progress', 'Sales Order'),
+            ('manual', 'Sale to Invoice'),
+            ('shipping_except', 'Shipping Exception'),
+            ('invoice_except', 'Invoice Exception'),
+            ('done', 'Done'),
+            ], 'Status', readonly=True, copy=False, help="Gives the status of the quotation or sales order.\
+              \nThe exception status is automatically set when a cancel operation occurs \
+              in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\nThe 'Waiting Schedule' status is set when the invoice is confirmed\
+               but waiting for the scheduler to run on the order date.", select=True,track_visibility='always'),
+        'date_order': fields.datetime('Date', required=True, readonly=True, select=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, copy=False,track_visibility='always'),
+        'create_date': fields.datetime('Creation Date', readonly=True, select=True, help="Date on which sales order is created.",track_visibility='always'),
+        'date_confirm': fields.date('Confirmation Date', readonly=True, select=True, help="Date on which sales order is confirmed.", copy=False,track_visibility='always'),
+        'user_id': fields.many2one('res.users', 'Salesperson', states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, select=True, track_visibility='onchange'),
+        'partner_id': fields.many2one('res.partner', 'Customer', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, required=True, change_default=True, select=True, track_visibility='always'),
+        'partner_invoice_id': fields.many2one('res.partner', 'Invoice Address', readonly=True, required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Invoice address for current sales order.",track_visibility='always'),
+        'partner_shipping_id': fields.many2one('res.partner', 'Delivery Address', readonly=True, required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Delivery address for current sales order.",track_visibility='always'),
+        'order_policy': fields.selection([
+                ('manual', 'On Demand'),
+            ], 'Create Invoice', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
+            help="""This field controls how invoice and delivery operations are synchronized.""",track_visibility='onchange'),
+        'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Pricelist for current sales order.",track_visibility='always'),
+        'currency_id': fields.related('pricelist_id', 'currency_id', type="many2one", relation="res.currency", string="Currency", readonly=True, required=True,track_visibility='always'),
+        'project_id': fields.many2one('account.analytic.account', 'Contract / Analytic', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="The analytic account related to a sales order.",track_visibility='always'),
+
+        'order_line': fields.one2many('sale.order.line', 'order_id', 'Order Lines', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, copy=True,track_visibility='always'),
+        'invoice_ids': fields.many2many('account.invoice', 'sale_order_invoice_rel', 'order_id', 'invoice_id', 'Invoices', readonly=True, copy=False, help="This is the list of invoices that have been generated for this sales order. The same sales order may have been invoiced in several times (by line for example).",track_visibility='always'),
+        'note': fields.text('Terms and conditions',track_visibility='always'),
+        'payment_term': fields.many2one('account.payment.term', 'Payment Term',track_visibility='always'),
+        'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position',track_visibility='always'),
+        'company_id': fields.many2one('res.company', 'Company',track_visibility='always'),
+        'section_id': fields.many2one('crm.case.section', 'Sales Team',track_visibility='always'),
+        'procurement_group_id': fields.many2one('procurement.group', 'Procurement group', copy=False,track_visibility='always'),
+        'product_id': fields.related('order_line', 'product_id', type='many2one', relation='product.product', string='Product',track_visibility='always'),
+    }
+        
