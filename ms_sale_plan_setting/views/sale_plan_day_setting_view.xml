@@ -21,60 +21,66 @@
 					<header>
 						<button name="confirm" string="Generate" class="oe_highlight"
 							type="object" />
-<!-- 						<button name="refresh" string="Refresh Customer" class="oe_highlight" -->
-<!-- 							type="object" states="draft,confirm" /> -->
+						<!-- <button name="refresh" string="Refresh Customer" class="oe_highlight" -->
+						<!-- type="object" states="draft,confirm" /> -->
 						<field name="state" widget="statusbar" />
 					</header>
 					<group>
 						<group>
 							<field name="name" />
 							<field name="sale_team_id" widget="many2many_tags" />
-							<field name="principal" string="Principal"   invisible="1"/>
-							<field name="main_group" string="Main Group" widget="many2many_tags"  invisible="1"/>
-							<field name="branch_id" string="Branch"  required="1"/>
+							<field name="principal" string="Principal" invisible="1" />
+							<field name="main_group" string="Main Group" widget="many2many_tags"
+								invisible="1" />
+							<field name="branch_id" string="Branch" required="1" />
 						</group>
 						<group>
 							<field name="date" />
 							<field name="start_date" />
 						</group>
 					</group>
-					    <button name="retrieve_data"  type="object"  string="Retrieve"  states="draft" class="oe_highlight"/>		    
-					
-					    <button name="refresh_customer"  type="object"  string="Refresh Customer" class="oe_highlight"/>		    
+					<button name="retrieve_data" type="object" string="Retrieve"
+						states="draft" class="oe_highlight" />
+
+					<button name="refresh_customer" type="object" string="Refresh Customer"
+						class="oe_highlight" />
 
 					<notebook>
 						<page string="Plan Setting">
 							<field name="plan_line">
-								<tree default_order="create_date desc" string="Plan Line" editable="bottom" >
+								<tree default_order="create_date desc" string="Plan Line"
+									editable="bottom">
 									<field name="code" />
 									<field name="partner_id" />
+									<field name="township_id" />
+
 									<field name="class" />
 									<field name="frequency" />
 									<field name="purchase_date" />
-									<field name="w1_mon" style="background-color: lightblue;"/>
-									<field name="w1_tue" style="background-color: lightblue;"/>
-									<field name="w1_wed" style="background-color: lightblue;"/>
-									<field name="w1_thur" style="background-color: lightblue;"/>
-									<field name="w1_fri" style="background-color: lightblue;"/>
-									<field name="w1_sat" style="background-color: lightblue;"/>
-									<field name="w2_mon" style="background-color: red"/>
-									<field name="w2_tue" style="background-color: red"/>
-									<field name="w2_wed" style="background-color: red"/>
-									<field name="w2_thur" style="background-color: red"/>
-									<field name="w2_fri"  style="background-color: red"/>
-									<field name="w2_sat"  style="background-color: red"/>
-									<field name="w3_mon" style="background-color: blue;"/>
-									<field name="w3_tue" style="background-color: blue;"/>
-									<field name="w3_wed" style="background-color: blue;"/>
-									<field name="w3_thur" style="background-color: blue;"/>
-									<field name="w3_fri" style="background-color: blue;"/>
-									<field name="w3_sat" style="background-color: blue;"/>
-									<field name="w4_mon" style="background-color: green;"/>
-									<field name="w4_tue" style="background-color: green;"/>
-									<field name="w4_wed" style="background-color: green;"/>
-									<field name="w4_thur" style="background-color: green;"/>
-									<field name="w4_fri" style="background-color: green;"/>
-									<field name="w4_sat" style="background-color: green;"/>
+									<field name="w1_mon" style="background-color: lightblue;" />
+									<field name="w1_tue" style="background-color: lightblue;" />
+									<field name="w1_wed" style="background-color: lightblue;" />
+									<field name="w1_thur" style="background-color: lightblue;" />
+									<field name="w1_fri" style="background-color: lightblue;" />
+									<field name="w1_sat" style="background-color: lightblue;" />
+									<field name="w2_mon" style="background-color: red" />
+									<field name="w2_tue" style="background-color: red" />
+									<field name="w2_wed" style="background-color: red" />
+									<field name="w2_thur" style="background-color: red" />
+									<field name="w2_fri" style="background-color: red" />
+									<field name="w2_sat" style="background-color: red" />
+									<field name="w3_mon" style="background-color: blue;" />
+									<field name="w3_tue" style="background-color: blue;" />
+									<field name="w3_wed" style="background-color: blue;" />
+									<field name="w3_thur" style="background-color: blue;" />
+									<field name="w3_fri" style="background-color: blue;" />
+									<field name="w3_sat" style="background-color: blue;" />
+									<field name="w4_mon" style="background-color: green;" />
+									<field name="w4_tue" style="background-color: green;" />
+									<field name="w4_wed" style="background-color: green;" />
+									<field name="w4_thur" style="background-color: green;" />
+									<field name="w4_fri" style="background-color: green;" />
+									<field name="w4_sat" style="background-color: green;" />
 								</tree>
 							</field>
 							<group col="28">
@@ -197,6 +203,7 @@
 					<field name="sale_team_id" />
 					<field name="date" />
 					<field name="start_date" />
+					<field name="partner_count"/>
 				</tree>
 			</field>
 		</record>

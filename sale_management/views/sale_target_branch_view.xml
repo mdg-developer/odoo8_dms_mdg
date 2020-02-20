@@ -13,7 +13,7 @@
 							<group>
 								<field name="pricelist_id" domain="[('type','=','sale')]" />
 								<field name="date" />
-								<field name="branch_id" />
+								<field name="branch_id" on_change="on_change_branch_id(branch_id,pricelist_id)"/>
 								<field name="company_id" />
 							</group>
 							<group>

@@ -9,17 +9,18 @@
 				<form string="Sale Plans Setting" version="7.0">
 					<header>
 						<button name="confirm" string="Generate" class="oe_highlight"
-							type="object"  />
-<!-- 						<button name="refresh" string="Refresh Customer" class="oe_highlight" -->
-<!-- 							type="object" states="draft,confirm" /> -->
+							type="object" />
+						<!-- <button name="refresh" string="Refresh Customer" class="oe_highlight" -->
+						<!-- type="object" states="draft,confirm" /> -->
 						<field name="state" widget="statusbar" />
 					</header>
 					<group>
 						<group>
 							<field name="name" />
 							<field name="sale_team_id" on_change="on_change_sale_team_id(sale_team_id)" />
-							<field name="main_group" string="Main Group" widget="many2many_tags"  invisible="1"/>
-							<field name="branch_id" string="Branch"  required="1"/>							
+							<field name="main_group" string="Main Group" widget="many2many_tags"
+								invisible="1" />
+							<field name="branch_id" string="Branch" required="1" />
 						</group>
 						<group>
 							<field name="date" />
@@ -27,13 +28,15 @@
 							<field name="to_date" />
 						</group>
 					</group>
-					    <button name="refresh_customer"  type="object"  string="Refresh Customer" class="oe_highlight"/>		    
+					<button name="refresh_customer" type="object" string="Refresh Customer"
+						class="oe_highlight" />
 					<notebook>
 						<page string="Plan Setting">
-							<field name="plan_line" attrs="{'readonly':[('state','=','confirm')]}" >
+							<field name="plan_line" attrs="{'readonly':[('state','=','confirm')]}">
 								<tree string="Plan Line" editable="bottom" default_order="id desc">
 									<field name="code" />
 									<field name="partner_id" />
+									<field name="township_id" />
 									<field name="class" />
 									<field name="frequency" />
 									<field name="purchase_date" />
@@ -55,8 +58,8 @@
 								</tree>
 							</field>
 							<group col="19">
-								<field name="partner_count" class="oe_inline"  style="font-size:13pt;" />
-								<label for="day_count_1" string="Count"  style="font-size:8pt;"/>
+								<field name="partner_count" class="oe_inline" style="font-size:13pt;" />
+								<label for="day_count_1" string="Count" style="font-size:8pt;" />
 								<div>
 								&#x20;&#x20;&#x20;
 								</div>								
@@ -122,6 +125,7 @@
 					<field name="date" />
 					<field name="from_date" />
 					<field name="to_date" />
+					<field name="partner_count"/>
 				</tree>
 			</field>
 		</record>

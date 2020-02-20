@@ -13,17 +13,15 @@ class sale_target(osv.osv):
     _name = "sales.target.branch"
     _description = "Sales Target Branch"
 
-    def on_change_sale_team_id(self, cr, uid, ids, sale_team_id, pricelist_id, context=None):
+    def on_change_branch_id(self, cr, uid, ids, branch_id, pricelist_id, context=None):
         values = {}
         data_line = []
-        if sale_team_id:
-            sale_team = self.pool.get('crm.case.section').browse(cr, uid, sale_team_id, context=context)
-            product_line = sale_team.product_ids
+        if branch_id:
+            cr.execute("select pp.id from product_product pp ,product_template pt  where pp.product_tmpl_id=pt.id and pt.is_foc!=True and pt.type != 'service' and pt.active=True and pt.sale_ok=True ")
+            product_line=cr.fetchall()
             print 'product_line ', product_line
             for line in product_line:
-                print 'product_line', line
-                product = self.pool.get('product.product').browse(cr, uid, line.id, context=context)
-                print 'product_name', line.name_template
+                product = self.pool.get('product.product').browse(cr, uid, line, context=context)
                 if product.product_tmpl_id.type != 'service' and product.is_foc != True:
                     cr.execute(
                         "select new_price from product_pricelist_item where price_version_id in ( select id from product_pricelist_version where pricelist_id=%s and active=True) and product_id=%s and product_uom_id=%s",
@@ -34,9 +32,8 @@ class sale_target(osv.osv):
                     else:
                         raise osv.except_osv(_('Warning'),
                                              _('Please Check Price List For (%s)') % (product.name_template,))
-
                     sequence = product.sequence
-                    data_line.append({'product_id': line.id,
+                    data_line.append({'product_id': line,
                                       'product_uom': product.product_tmpl_id.report_uom_id and product.product_tmpl_id.report_uom_id.id or False,
                                       'price_unit': product_price,
                                       'product_uom_qty': 0.0,
@@ -47,11 +44,11 @@ class sale_target(osv.osv):
             }
         return {'value': values}
 
-    def _get_default_branch(self, cr, uid, context=None):
-        branch_id = self.pool.get('res.users')._get_branch(cr, uid, context=context)
-        if not branch_id:
-            raise osv.except_osv(_('Error!'), _('There is no default branch for the current user!'))
-        return branch_id
+#     def _get_default_branch(self, cr, uid, context=None):
+#         branch_id = self.pool.get('res.users')._get_branch(cr, uid, context=context)
+#         if not branch_id:
+#             raise osv.except_osv(_('Error!'), _('There is no default branch for the current user!'))
+#         return branch_id
 
     def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
         res = dict.fromkeys(ids, 0.0)
@@ -97,7 +94,7 @@ class sale_target(osv.osv):
 
     }
     _defaults = {
-        'branch_id': _get_default_branch,
+        #'branch_id': _get_default_branch,
         'date': _default_date,
         'month': lambda *a: str(time.strftime('%m')),
         'year': lambda *a: str(time.strftime('%Y')),
