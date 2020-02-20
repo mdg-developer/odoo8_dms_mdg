@@ -76,6 +76,7 @@ class pre_sale_order(osv.osv):
       'rebate_later':fields.boolean('Rebate Later',track_visibility='always'),
       'schedule_date':fields.datetime('Date to deliver',track_visibility='always'),
       'customer_sign':fields.binary('Customer Sign',track_visibility='always'),
+      'payment_term_id': fields.many2one('account.payment.term', 'Payment Term',track_visibility='always'),
     }
     _order = 'id desc'
     _defaults = {
@@ -131,7 +132,7 @@ class pre_sale_order(osv.osv):
                     else:
                         saleManId = None						 
 
-                    cursor.execute('select id From res_partner where old_code  = %s ', (so['customer_code'],))
+                    cursor.execute('select id From res_partner where customer_code  = %s ', (so['customer_code'],))
                     data = cursor.fetchall()                
                     if data:
                         partner_id = data[0][0]
@@ -168,7 +169,8 @@ class pre_sale_order(osv.osv):
                         'print_count':so['print_count'],
                         'rebate_later':rebate,
                         'schedule_date':so['date_to_deliver'],
-                        'customer_sign':so['customerSign']
+                        'customer_sign':so['customerSign'],
+                        'payment_term_id':so.get('paymentTermID')
                     }
                     s_order_id = mobile_sale_order_obj.create(cursor, user, mso_result, context=context)
                     so_ids.append(s_order_id)
@@ -234,6 +236,150 @@ class pre_sale_order(osv.osv):
             print e
             return False 
     
+    def create_presaleorder_by_old_code(self, cursor, user, vals, context=None):
+        print 'vals', vals
+
+        sale_order_name_list = []
+        try : 
+            saleManId = branch_id = promotion_id=None
+            mobile_sale_order_obj = self.pool.get('pre.sale.order')
+            mobile_sale_order_line_obj = self.pool.get('pre.sale.order.line')
+            str = "{" + vals + "}"
+            str = str.replace(":''", ":'")  # change Order_id
+            str = str.replace("'',", "',")  # null
+            str = str.replace(":',", ":'',")  # due to order_id
+            str = str.replace("}{", "}|{")
+            new_arr = str.split('|')
+            result = []
+            so_ids=[]
+            for data in new_arr:
+                x = ast.literal_eval(data)
+                result.append(x)
+            sale_order = []
+            sale_order_line = []
+            for r in result:
+                print "length", len(r)
+                if len(r) >= 17:
+                    sale_order.append(r)
+                else:
+                    sale_order_line.append(r)
+            
+            if sale_order:
+                for so in sale_order:
+                    print 'Sale Man Id', so['user_id']
+                    cursor.execute('select id,branch_id From res_users where id  = %s ', (so['user_id'],))
+                    data = cursor.fetchall()
+                    
+                    if data:
+                        saleManId = data[0][0]
+                        branch_id = data[0][1]
+                    else:
+                        saleManId = None                         
+
+                    cursor.execute('select id From res_partner where old_code  = %s ', (so['customer_code'],))
+                    data = cursor.fetchall()                
+                    if data:
+                        partner_id = data[0][0]
+                       
+                    else:
+                        partner_id = None
+                    if so['rebate'] == 'T':
+                        rebate = True
+                    else:
+                        rebate = False                    
+                    mso_result = {
+                        'customer_code':so['customer_code'],
+                        'paid': True,
+                        'warehouse_id':so['warehouse_id'],
+                        'tablet_id':so['tablet_id'],
+                        'delivery_remark':so['delivery_remark'],
+                        'location_id':so['location_id'],
+                        'user_id':so['user_id'],
+                        'name':so['name'],
+                        'type':so['type'],
+                        'note':so['note'],
+                        'partner_id':partner_id,
+                        'sale_plan_name':so['sale_plan_day_name'],
+                        'amount_total':so['amount_total'],
+                        'sale_team':so['sale_team'],
+                        'date':so['date'],
+                        'due_date':so['due_date'],
+                        'void_flag':so['void_flag'],
+                        'sale_plan_day_id':so['sale_plan_day_id'],
+                        'mso_longitude':so['mso_longitude'],
+                        'mso_latitude':so['mso_latitude'],
+                        'pricelist_id':so['pricelist_id'],
+                        'branch_id':branch_id,
+                        'print_count':so['print_count'],
+                        'rebate_later':rebate,
+                        'schedule_date':so['date_to_deliver'],
+                        'customer_sign':so['customerSign'],
+                        'payment_term_id':so.get('paymentTermID')
+                    }
+                    s_order_id = mobile_sale_order_obj.create(cursor, user, mso_result, context=context)
+                    so_ids.append(s_order_id)
+                    print "Create Sale Order", so['name']
+                    for sol in sale_order_line:
+                        if sol['so_name'] == so['name']:
+                                cursor.execute('select id From product_product where id  = %s ', (sol['product_id'],))
+                                data = cursor.fetchall()
+                                if data:
+                                    productId = data[0][0]
+                                else:
+                                    productId = None
+                                if sol['price_unit'] == '0':
+                                    foc_val = True
+                                else:
+                                    foc_val = False                    
+                                if sol['manual_foc'] == 'T':
+                                    manual_foc = True
+                                else:
+                                    manual_foc = False       
+                                if sol['promotion_action'] and  sol['promotion_action']!='null':
+                                    cursor.execute("select promotion from promos_rules_actions where id =%s",(sol['promotion_action'],))
+                                    promotion_id = cursor.fetchone()[0]
+                                else:
+                                    promotion_id=False
+                                if sol['manual_promotion'] and sol['manual_promotion'] != 'null':
+                                    promotion_id = sol['manual_promotion']  
+                                price =sol['price_unit']
+#                                 if  float(price) < 0:
+#                                     product_price= 0
+#                                     discount_amt =-1 * float(price)
+#                                 else:
+                                product_price=sol['price_unit']
+                                discount_amt=sol['discount_amt']
+                                                                                  
+                                mso_line_res = {                                                            
+                                  'order_id':s_order_id,
+                                  'product_id':productId,
+                                  'price_unit':product_price,
+                                  'foc':foc_val,
+                                  'product_uos_qty':sol['product_uos_qty'],
+                                  'discount':sol['discount'],
+                                  'discount_amt':discount_amt,
+                                  'sub_total':sol['sub_total'],
+                                  'uom_id':sol['uom_id'],
+                                  'manual_foc':manual_foc,
+                                  'promotion_id':promotion_id,
+                                }
+                                mobile_sale_order_line_obj.create(cursor, user, mso_line_res, context=context) 
+                                print 'Create Order line', sol['so_name']                     
+                    sale_order_name_list.append(so['name'])
+            print 'True'
+            
+            session = ConnectorSession(cursor, user, context)
+            jobid=automation_pre_order.delay(session,so_ids, priority=10)
+            print "Job",jobid
+            runner = ConnectorRunner()
+            runner.run_jobs()
+            return True 
+                  
+        except Exception, e:
+            print 'False'
+            print e
+            return False 
+        
     def action_convert_presaleorder(self, cr, uid, ids, context=None):
         presaleorderObj = self.pool.get('pre.sale.order')
         saleOrderObj = self.pool.get('sale.order')
@@ -317,7 +463,7 @@ class pre_sale_order(osv.osv):
                                                         'cancel_user_id':cancel_user_id,
                                                         'ignore_credit_limit':True,
                                                         'credit_history_ids':[],
-
+                                                        'payment_term':preObj_ids.payment_term_id.id,
                                                          }
                         so_id = saleOrderObj.create(cr, uid, saleOrderResult, context=context)
                     if so_id and preObj_ids.order_line:
@@ -503,7 +649,7 @@ class pre_product_yet_to_deliver_line(osv.osv):
     
 pre_product_yet_to_deliver_line()
 
-class saleorderinherit(osv.osv):
+class sale_order(osv.osv):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _inherit='sale.order'
     

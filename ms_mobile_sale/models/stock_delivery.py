@@ -91,7 +91,7 @@ class stock_delivery_line(osv.osv):
     }  
 stock_delivery_line()
 
-class stockpickinginherit(osv.osv):
+class stock_picking(osv.osv):
     
     _inherit = 'stock.picking'
     
