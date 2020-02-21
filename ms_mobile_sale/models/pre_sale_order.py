@@ -150,7 +150,7 @@ class pre_sale_order(osv.osv):
                         'tablet_id':so['tablet_id'],
                         'delivery_remark':so['delivery_remark'],
                         'location_id':so['location_id'],
-                        'user_id':so['user_id'],
+                        'user_id':int(so['user_id']),
                         'name':so['name'],
                         'type':so['type'],
                         'note':so['note'],
