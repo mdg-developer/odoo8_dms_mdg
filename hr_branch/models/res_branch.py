@@ -5,6 +5,11 @@ Created on Jan 21, 2016
 '''
 from openerp.osv import fields, osv
 
+class branch_region(osv.osv):
+    _name = 'res.branch.region'
+    _columns = {
+                    'name': fields.char('Branch Name', required=True)
+    }
 
 class branch(osv.osv):
     _name = 'res.branch'
@@ -14,6 +19,7 @@ class branch(osv.osv):
                                         'name': fields.char('Branch Name', required=True),
                     'address': fields.text('Address'),
                     'active': fields.boolean('Active')  ,
+                    'branch_region_id':fields.many2one('res.branch.region','Branch Region'),
                     'res_company_id' : fields.many2one('res.company', 'Company'),
                
                 }

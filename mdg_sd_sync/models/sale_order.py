@@ -34,7 +34,7 @@ class sale_order(osv.osv):
                 move_ids = []
                 invoice_ids = self.pool['account.invoice'].search(cr, uid,[('origin','=',so_no),('state','=','open')],context=None)
                 for inv in self.pool['account.invoice'].browse(cr, uid,invoice_ids,context=None):
-                    if inv.type == 'out_invoice' and inv.partner_id.sd_customer == True and sd_uid:
+                    if inv.type == 'out_invoice' and inv.partner_id.sd_customer == True and sd_uid and inv.date_invoice >='2020-02-01':
                                    
                         
                         warehouse_id = models.execute_kw(db, sd_uid, password,

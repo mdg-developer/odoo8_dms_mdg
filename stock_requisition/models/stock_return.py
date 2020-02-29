@@ -274,6 +274,7 @@ class stock_return(osv.osv):
                                         and date_trunc('day', s.date::date) <= %s                                        and  s.location_dest_id=%s
                                         and s.product_id =%s
                                         and s.origin NOT LIKE %s
+                                        and s.origin NOT LIKE  %s
                                         group by s.location_dest_id, s.product_id
                                         ) transfer_in on transfer_in.product_id=tmp.product_id and transfer_in.location_dest_id=tmp.location_id
                                         left join
@@ -294,7 +295,7 @@ class stock_return(osv.osv):
                                         and s.origin NOT LIKE %s
                                         group by s.location_id, s.product_id
                                         ) transfer_out on transfer_out.product_id=tmp.product_id and transfer_out.location_id=tmp.location_id'''
-                          , (from_location_id, product_id, 'PD%', from_location_id, product_id, 'PD%', return_date, to_return_date, from_location_id, product_id, 'PD%', return_date, to_return_date, from_location_id, product_id, 'PD%', 'SO%',))                
+                          , (from_location_id, product_id, 'PD%', from_location_id, product_id, 'PD%', return_date, to_return_date, from_location_id, product_id, 'PD%', 'Reverse SO%',return_date, to_return_date, from_location_id, product_id, 'PD%', 'SO%',))                
                         # opening_data = cr.fetchone()                        
                         
                                     

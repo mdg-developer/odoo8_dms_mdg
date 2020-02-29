@@ -1228,6 +1228,7 @@ class sale_plan_setting_line(osv.osv):  # #prod_pricelist_update_line
         'class':fields.many2one('sale.class', 'Class', readonly=True),
         'frequency':fields.many2one('plan.frequency', 'Freq', readonly=True),
         'partner_id': fields.many2one('res.partner', 'Customer', readonly=True),
+        'township_id':fields.related('partner_id','township',type='many2one',relation='res.township', string='Township', readonly=True),
         'purchase_date':fields.date('Last Purchase Date', readonly=True),
         'w1_mon':fields.boolean('W1 MON'),
         'w1_tue':fields.boolean('W1 TUE'),

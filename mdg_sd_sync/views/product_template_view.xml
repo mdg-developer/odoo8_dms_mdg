@@ -13,7 +13,7 @@
 						</field>
 						<field name="product_variant_count" position="after">
 							<button name="sync_to_sd" string="Sync To SD" class="oe_highlight"
-								type="object" groups="base.group_sale_manager" />
+								type="object" groups="base.group_no_one" />
 		
 						</field>
 						

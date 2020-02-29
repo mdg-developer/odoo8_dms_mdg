@@ -23,7 +23,7 @@ class account_invoice(models.Model):
         models = xmlrpclib.ServerProxy('{}/xmlrpc/2/object'.format(url))
         move_ids = []
         for inv in self:
-            if inv.type == 'out_invoice' and inv.partner_id.sd_customer == True and sd_uid:
+            if inv.type == 'out_invoice' and inv.partner_id.sd_customer == True and sd_uid and inv.date_invoice >='2020-02-01':
                 context = dict(self.env.context)            
                 
                 warehouse_id = models.execute_kw(db, sd_uid, password,
