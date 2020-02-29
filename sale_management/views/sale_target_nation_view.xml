@@ -117,7 +117,7 @@
 		</record>
 
 		<menuitem id="menu_sales_target_nation" action="action_sales_target_nation_view"
-			parent="base.menu_sales" name="Sales Target Nation Setting " sequence="10" />
+			parent="base.menu_sales" name="Nation Sale Target" sequence="10" />
 
 	</data>
 </openerp>
