@@ -653,6 +653,9 @@
 		<menuitem id="sale_management.menu_sales_target_branch" action="sale_management.action_sales_target_branch_view"
 			parent="menu_sales_target_menu" name="Branch Target" sequence="3" />
 
+		<menuitem id="sale_management.menu_sales_target_nation" action="sale_management.action_sales_target_nation_view"
+			parent="menu_sales_target_menu" name="Nation Wide Target" sequence="4" />
+
 		<!-- Sales Reports -->
 		<menuitem id="menu_sales_report_menu" parent="base.menu_base_partner"
 			name="Sales Reports" sequence="7" />
