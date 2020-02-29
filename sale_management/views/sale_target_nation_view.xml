@@ -3,9 +3,9 @@
 	<data>
 		<!-- === Sales target Form === -->
 
-		<record id="view_sales_target_branch_form" model="ir.ui.view">
-			<field name="name">sales.target.branch.form</field>
-			<field name="model">sales.target.branch</field>
+		<record id="view_sales_target_nation_form" model="ir.ui.view">
+			<field name="name">sales.target.nation.form</field>
+			<field name="model">sales.target.nation</field>
 			<field name="arch" type="xml">
 				<form string="Sales Target" version="7.0">
 					<sheet>
@@ -13,7 +13,6 @@
 							<group>
 								<field name="pricelist_id" domain="[('type','=','sale')]" />
 								<field name="date" />
-								<field name="branch_id" on_change="on_change_branch_id(branch_id,pricelist_id)"/>
 								<field name="company_id" />
 							</group>
 							<group>
@@ -72,9 +71,9 @@
 		</record>
 
 		<!-- filter -->
-		<record id="view_sales_target_branch_filter" model="ir.ui.view">
+		<record id="view_sales_target_nation_filter" model="ir.ui.view">
 			<field name="name">Sale Target Branch Filter</field>
-			<field name="model">sales.target.branch</field>
+			<field name="model">sales.target.nation</field>
 			<field name="arch" type="xml">
 				<search string="Search Sales Target">
 					<group expand="0" string="Group By...">
@@ -88,12 +87,11 @@
 			</field>
 		</record>
 
-		<record model="ir.ui.view" id="view_sales_target_branch_tree">
-			<field name="name">sales.target.branch.tree</field>
-			<field name="model">sales.target.branch</field>
+		<record model="ir.ui.view" id="view_sales_target_nation_tree">
+			<field name="name">sales.target.nation.tree</field>
+			<field name="model">sales.target.nation</field>
 			<field name="arch" type="xml">
 				<tree string="Sales Target">
-					<field name="branch_id" />
 					<field name="name" />
 					<field name="month" />
 					<field name="year" />
@@ -103,14 +101,14 @@
 		</record>
 
 
-		<record id="action_sales_target_branch_view" model="ir.actions.act_window">
-			<field name="name">Sales Branch Target</field>
+		<record id="action_sales_target_nation_view" model="ir.actions.act_window">
+			<field name="name">Sales Nation Target</field>
 			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">sales.target.branch</field>
+			<field name="res_model">sales.target.nation</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
-			<field name="view_id" eval="view_sales_target_branch_tree" />
-			<field name="search_view_id" ref="view_sales_target_branch_filter" />
+			<field name="view_id" eval="view_sales_target_nation_tree" />
+			<field name="search_view_id" ref="view_sales_target_nation_filter" />
 			<field name="help" type="html">
 				<p class="oe_view_nocontent_create">
 					Click to create new sale target
@@ -118,8 +116,8 @@
 			</field>
 		</record>
 
-		<menuitem id="menu_sales_target_branch" action="action_sales_target_branch_view"
-			parent="base.menu_sales" name="Branch Sale Target" sequence="10" />
+		<menuitem id="menu_sales_target_nation" action="action_sales_target_nation_view"
+			parent="base.menu_sales" name="Nation Sale Target" sequence="10" />
 
 	</data>
 </openerp>

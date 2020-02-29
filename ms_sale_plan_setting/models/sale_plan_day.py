@@ -14,7 +14,8 @@ class sale_plan_for_day_setup(osv.osv):
                  'branch_id':fields.many2one('res.branch', 'Branch'),                
                  'active':fields.boolean('Active'),
                  'week':fields.integer('Week'),
-                 'day_line_ids':fields.one2many('sale.plan.day.line', 'line_id', 'Sale Plan Day Items'),                 
+                 'day_line_ids':fields.one2many('sale.plan.day.line', 'line_id', 'Sale Plan Day Items'),
+                 'week_day': fields.selection([('1', 'monday'), ('2', 'Tuesday'), ('3', 'Wednesday'),('4', 'Thursday'),('5','Friday'),('6','Saturday'),('0','Sunday')], 'Day')                 
                }
     _defaults = {
                'active':True,
