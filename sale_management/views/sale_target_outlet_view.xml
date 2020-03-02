@@ -3,16 +3,17 @@
 	<data>
 		<!-- === Sales target Form === -->
 
-		<record id="view_sales_target_nation_form" model="ir.ui.view">
-			<field name="name">sales.target.nation.form</field>
-			<field name="model">sales.target.nation</field>
+		<record id="view_sales_target_outlet_form" model="ir.ui.view">
+			<field name="name">sales.target.outlet.form</field>
+			<field name="model">sales.target.outlet</field>
 			<field name="arch" type="xml">
-				<form string="Sales Target" version="7.0">
+				<form string="Sales Target Outlet" version="7.0">
 					<sheet>
 						<group>
 							<group>
-								<field name="pricelist_id"  on_change="on_change_pricelist(pricelist_id)" domain="[('type','=','sale')]" />
+								<field name="pricelist_id" domain="[('type','=','sale')]" />
 								<field name="date" />
+								<field name="outlet_type" on_change="on_change_outlet_type(outlet_type,pricelist_id)"/>
 								<field name="company_id" />
 							</group>
 							<group>
@@ -71,9 +72,9 @@
 		</record>
 
 		<!-- filter -->
-		<record id="view_sales_target_nation_filter" model="ir.ui.view">
-			<field name="name">Sale Target Branch Filter</field>
-			<field name="model">sales.target.nation</field>
+		<record id="view_sales_target_outlet_filter" model="ir.ui.view">
+			<field name="name">Sale Target outlet Filter</field>
+			<field name="model">sales.target.outlet</field>
 			<field name="arch" type="xml">
 				<search string="Search Sales Target">
 					<group expand="0" string="Group By...">
@@ -87,11 +88,12 @@
 			</field>
 		</record>
 
-		<record model="ir.ui.view" id="view_sales_target_nation_tree">
-			<field name="name">sales.target.nation.tree</field>
-			<field name="model">sales.target.nation</field>
+		<record model="ir.ui.view" id="view_sales_target_outlet_tree">
+			<field name="name">sales.target.outlet.tree</field>
+			<field name="model">sales.target.outlet</field>
 			<field name="arch" type="xml">
 				<tree string="Sales Target">
+					<field name="outlet_type" />
 					<field name="name" />
 					<field name="month" />
 					<field name="year" />
@@ -101,14 +103,14 @@
 		</record>
 
 
-		<record id="action_sales_target_nation_view" model="ir.actions.act_window">
-			<field name="name">Sales Nation Target</field>
+		<record id="action_sales_target_outlet_view" model="ir.actions.act_window">
+			<field name="name">Sales Branch Target</field>
 			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">sales.target.nation</field>
+			<field name="res_model">sales.target.outlet</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
-			<field name="view_id" eval="view_sales_target_nation_tree" />
-			<field name="search_view_id" ref="view_sales_target_nation_filter" />
+			<field name="view_id" eval="view_sales_target_outlet_tree" />
+			<field name="search_view_id" ref="view_sales_target_outlet_filter" />
 			<field name="help" type="html">
 				<p class="oe_view_nocontent_create">
 					Click to create new sale target
@@ -116,8 +118,8 @@
 			</field>
 		</record>
 
-		<menuitem id="menu_sales_target_nation" action="action_sales_target_nation_view"
-			parent="base.menu_sales" name="Nation Sale Target" sequence="10" />
+		<menuitem id="menu_sales_target_outlet" action="action_sales_target_outlet_view"
+			parent="base.menu_sales" name="Outlet Sale Target" sequence="10" />
 
 	</data>
 </openerp>

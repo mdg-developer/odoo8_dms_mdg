@@ -12,6 +12,38 @@ from openerp.tools.translate import _
 class sale_target_nation(osv.osv):
     _name = "sales.target.nation"
     _description = "Sales Target Nation"
+
+    def on_change_pricelist(self, cr, uid, ids,  pricelist_id, context=None):
+        values = {}
+        data_line = []
+
+        cr.execute("select pp.id from product_product pp ,product_template pt  where pp.product_tmpl_id=pt.id and pt.is_foc!=True and pt.type != 'service' and pt.active=True and pt.sale_ok=True ")
+        product_line=cr.fetchall()
+        print 'product_line ', product_line
+        for line in product_line:
+            product = self.pool.get('product.product').browse(cr, uid, line, context=context)
+            if product.product_tmpl_id.type != 'service' and product.is_foc != True:
+                cr.execute(
+                    "select new_price from product_pricelist_item where price_version_id in ( select id from product_pricelist_version where pricelist_id=%s and active=True) and product_id=%s and product_uom_id=%s",
+                    (pricelist_id, product.id, product.product_tmpl_id.report_uom_id.id,))
+                product_price = cr.fetchone()
+                if product_price:
+                    product_price = product_price[0]
+                else:
+                    raise osv.except_osv(_('Warning'),
+                                         _('Please Check Price List For (%s)') % (product.name_template,))
+                sequence = product.sequence
+                data_line.append({'product_id': line,
+                                  'product_uom': product.product_tmpl_id.report_uom_id and product.product_tmpl_id.report_uom_id.id or False,
+                                  'price_unit': product_price,
+                                  'product_uom_qty': 0.0,
+                                  'sequence': sequence,
+                                  })
+        values = {
+            'target_line': data_line,
+        }
+        return {'value': values}
+
     def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
         res = dict.fromkeys(ids, 0.0)
         for order in self.browse(cr, uid, ids, context=context):
