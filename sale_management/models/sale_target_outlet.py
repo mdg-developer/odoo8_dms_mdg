@@ -131,7 +131,7 @@ class sale_target_outlet_line(osv.osv):
                                                  context=dict(context or {}))['value']
             values = dict(defaults, **values)
 
-        return super(sale_target_line, self).create(cr, uid, values, context=context)
+        return super(sale_target_outlet_line, self).create(cr, uid, values, context=context)
 
     def _amount_line(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
