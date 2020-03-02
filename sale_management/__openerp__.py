@@ -56,6 +56,7 @@ Sale Management
         'views/sale_promotion_monthly_view.xml',
         'views/sale_target_view.xml',
         'views/sale_target_branch_view.xml',
+        'views/sale_target_outlet_view.xml',
         'views/sale_target_nation_view.xml',
         'reports/qweb_view.xml',
         'reports/report_denomination.xml',
