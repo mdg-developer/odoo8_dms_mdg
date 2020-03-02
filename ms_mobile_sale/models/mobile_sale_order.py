@@ -170,6 +170,166 @@ class mobile_sale_order(osv.osv):
        
     } 
     
+    def res_partners_team_with_sync_date(self, cr, uid, section_id, late_date, context=None, **kwargs):
+        
+        lastdate = datetime.strptime(late_date, "%Y-%m-%d")
+        print 'DateTime', lastdate
+        
+        cr.execute('''                                
+        select A.id,A.name,A.image,A.is_company, A.image_small,replace(A.street,',',';') street,replace(A.street2,',',';') street2,A.city,A.website,
+                     replace(A.phone,',',';') phone,A.township,replace(A.mobile,',',';') mobile,A.email,A.company_id,A.customer, 
+                     A.customer_code,A.mobile_customer,A.shop_name ,
+                     A.address,
+                     A.zip,A.state_name,A.partner_latitude,A.partner_longitude,null,A.image_medium,A.credit_limit,
+                     A.credit_allow,A.sales_channel,A.branch_id,A.pricelist_id,A.payment_term_id,A.outlet_type ,
+                     A.city_id,A.township_id,A.country_id,A.state_id,A.unit,A.class_id,A.chiller,A.frequency_id,A.temp_customer,
+                     A.is_consignment,A.hamper,A.is_bank,A.is_cheque,A.old_code
+                     
+                     from (
+                     select RP.id,RP.name,'' as image,RP.is_company,null,
+                     '' as image_small,RP.street,RP.street2,RC.name as city,RP.website,
+                     RP.phone,RT.name as township,RP.mobile,RP.email,RP.company_id,RP.customer, 
+                     RP.customer_code,RP.mobile_customer,OT.name as shop_name,RP.address,RP.zip ,RP.partner_latitude,RP.partner_longitude,RS.name as state_name,
+                     substring(replace(cast(RP.image_medium as text),'/',''),1,5) as image_medium,RP.credit_limit,RP.credit_allow,
+                     RP.sales_channel,RP.branch_id,RP.pricelist_id,RP.payment_term_id,RP.outlet_type,RP.city as city_id,RP.township as township_id,
+                     RP.country_id,RP.state_id,RP.unit,RP.class_id,RP.chiller,RP.frequency_id,RP.temp_customer,RP.is_consignment,RP.hamper,
+                     RP.is_bank,RP.is_cheque,RP.old_code
+                     from outlettype_outlettype OT,
+                                             res_partner RP ,res_country_state RS, res_city RC,res_township RT
+                                            where RS.id = RP.state_id
+                                            and RP.township =RT.id
+                                            and RP.city = RC.id
+                                            and RP.active = true                                            
+                                            and RP.outlet_type = OT.id   
+                                            and RP.credit_allow =True                                         
+                                            and RP.collection_team=%s
+                                            and RP.write_date::date>=%s
+                        )A 
+                        where A.customer_code is not null
+            ''', (section_id ,late_date,))
+        datas = cr.fetchall()
+        return datas
+    
+    def res_partners_return_day_with_sync_date(self, cr, uid, section_id, day_id, pull_date  , context=None, **kwargs):
+        section = self.pool.get('crm.case.section')
+        sale_team_data = section.browse(cr, uid, section_id, context=context)
+        is_supervisor=sale_team_data.is_supervisor    
+        lastdate = datetime.strptime(pull_date, "%Y-%m-%d")
+        print 'DateTime', lastdate
+        if is_supervisor==True:
+            where ='and SPD.sale_team in (select id from crm_case_section where supervisor_team= %s)' % (section_id,)
+        else:
+            where ='and SPD.sale_team = %s' % (section_id,)
+        cr.execute('''                    
+                     select A.id,A.name,A.image,A.is_company, A.image_small,replace(A.street,',',';') street, replace(A.street2,',',';') street2,A.city,A.website,
+                     replace(A.phone,',',';') phone,A.township, replace(A.mobile,',',';') mobile,A.email,A.company_id,A.customer, 
+                     A.customer_code,A.mobile_customer,A.shop_name ,
+                     A.address,
+                     A.zip,A.state_name,A.partner_latitude,A.partner_longitude,A.sale_plan_day_id,A.image_medium,A.credit_limit,
+                     A.credit_allow,A.sales_channel,A.branch_id,A.pricelist_id,A.payment_term_id,A.outlet_type ,
+                     A.city_id,A.township_id,A.country_id,A.state_id,A.unit,A.class_id,A.chiller,A.frequency_id,A.temp_customer,
+                     A.is_consignment,A.hamper,A.is_bank,A.is_cheque,A.old_code
+                     from (
+                     select RP.id,RP.name,'' as image,RP.is_company,RPS.line_id as sale_plan_day_id,
+                     '' as image_small,RP.street,RP.street2,RC.name as city,RP.website,
+                     RP.phone,RT.name as township,RP.mobile,RP.email,RP.company_id,RP.customer, 
+                     RP.customer_code,RP.mobile_customer,OT.name as shop_name,RP.address,RP.zip ,RP.partner_latitude,RP.partner_longitude,RS.name as state_name,
+                     substring(replace(cast(RP.image_medium as text),'/',''),1,5) as image_medium,RP.credit_limit,RP.credit_allow,
+                     RP.sales_channel,RP.branch_id,RP.pricelist_id,RP.payment_term_id,RP.outlet_type,RP.city as city_id,RP.township as township_id,
+                     RP.country_id,RP.state_id,RP.unit,RP.class_id,RP.chiller,RP.frequency_id,RP.temp_customer,RP.is_consignment,RP.hamper,
+                     RP.is_bank,RP.is_cheque,RP.old_code
+                     from sale_plan_day SPD ,outlettype_outlettype OT,
+                                            sale_plan_day_line RPS , res_partner RP ,res_country_state RS, res_city RC,res_township RT
+                                            where SPD.id = RPS.line_id 
+                                            and  RS.id = RP.state_id
+                                            and RP.township =RT.id
+                                            and RP.city = RC.id
+                                            and RP.active = true
+                                            and RP.outlet_type = OT.id
+                                            and RPS.partner_id = RP.id 
+                                            %s
+                                            and RPS.line_id = %%s  
+                                            and RP.write_date::date >=  %%s     
+                                            order by  RPS.sequence asc                         
+                                                                                                                 
+                        )A 
+                        where A.customer_code is not null
+            '''%(where),(day_id,pull_date,))
+        datas = cr.fetchall()
+        return datas
+    
+    def get_promos_datas_with_sync_date(self, cr, uid , branch_id, state, team_id,sync_date, context=None, **kwargs):
+        if state == 'approve':
+            status = 'approve'
+            cr.execute('''select id,sequence as seq,from_date ,to_date,active,name as p_name,
+                        logic ,expected_logic_result ,special, special1, special2, special3 ,description,
+                        pr.promotion_count, pr.monthly_promotion ,code as p_code,manual,main_group
+                        from promos_rules pr ,promos_rules_res_branch_rel pro_br_rel
+                        where pr.active = true                     
+                        and pr.id = pro_br_rel.promos_rules_id
+                        and pro_br_rel.res_branch_id = %s
+                        and pr.state = %s
+                        and pr.write_date::date >= %s
+                        and  now()::date  between from_date::date and to_date::date
+                        and pr.id in (
+                        select a.promo_id from promo_sale_channel_rel a
+                        inner join sale_team_channel_rel b
+                        on a.sale_channel_id = b.sale_channel_id
+                        where b.sale_team_id = %s
+                        )
+                        ''', (branch_id, status, sync_date, team_id,))
+        else:
+            status = 'draft'            
+            cr.execute('''select id,sequence as seq,from_date ,to_date,active,name as p_name,
+                        logic ,expected_logic_result ,special, special1, special2, special3 ,description,
+                        pr.promotion_count, pr.monthly_promotion,code as p_code,manual,main_group
+                        from promos_rules pr ,promos_rules_res_branch_rel pro_br_rel
+                        where pr.active = true                     
+                        and pr.id = pro_br_rel.promos_rules_id
+                        and pro_br_rel.res_branch_id = %s
+                        and pr.state  = %s
+                        and pr.write_date::date >=%s
+                        and  now()::date  between from_date::date and to_date::date
+                        and pr.id in (
+                        select a.promo_id from promo_sale_channel_rel a
+                        inner join sale_team_channel_rel b
+                        on a.sale_channel_id = b.sale_channel_id
+                        where b.sale_team_id = %s
+                        )
+                        ''', (branch_id, status,sync_date, team_id,))
+        datas = cr.fetchall()        
+        return datas
+    
+    def get_promos_act_datas_with_sync_date(self, cr, uid , branch_id, promo_id, sync_date, context=None, **kwargs):
+        cr.execute('''select act.id,act.promotion,act.sequence as act_seq ,act.arguments,act.action_type,act.product_code,act.discount_product_code
+                            from promos_rules r ,promos_rules_actions act,promos_rules_res_branch_rel pro_br_rel
+                            where r.id = act.promotion
+                            and r.active = 't'                            
+                            and r.id = pro_br_rel.promos_rules_id
+                            and pro_br_rel.res_branch_id = %s
+                            and act.promotion = %s 
+                            and act.write_date::date >= %s                   
+                    ''', (branch_id, promo_id, sync_date))
+        datas = cr.fetchall()
+        cr.execute
+        return datas
+    
+    def get_promos_cond_datas_with_sync_date(self, cr, uid , branch_id, promo_id,sync_date, context=None, **kwargs):
+        cr.execute('''select cond.id,cond.promotion,cond.sequence as cond_seq,
+                            cond.attribute as cond_attr,cond.comparator as cond_comparator,
+                            cond.value as comp_value
+                            from promos_rules r ,promos_rules_conditions_exps cond,promos_rules_res_branch_rel pro_br_rel
+                            where r.id = cond.promotion
+                            and r.active = 't'                           
+                            and r.id = pro_br_rel.promos_rules_id
+                            and pro_br_rel.res_branch_id = %s
+                            and cond.promotion = %s  
+                            and cond.write_date::date >= %s    
+                    ''', (branch_id, promo_id,sync_date,))
+        datas = cr.fetchall()
+        cr.execute
+        return datas
+    
     def create_massive(self, cursor, user, vals, context=None):
         print 'vals', vals
         sale_order_name_list = []
