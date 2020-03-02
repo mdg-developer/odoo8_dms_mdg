@@ -191,7 +191,7 @@ class sale_target_outlet_line(osv.osv):
     }
 
 
-sale_target_line()
+sale_target_outlet_line()
 
 
 class sale_target_report(osv.osv):
