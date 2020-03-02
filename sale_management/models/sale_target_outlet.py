@@ -62,7 +62,7 @@ class sale_target_outlet(osv.osv):
 
     _columns = {
         'name': fields.char('Description'),
-        'outlet_type': fields.many2one('outlettype.outlettype', 'Outlet Type'),
+        'outlet_type': fields.many2one('outlettype.outlettype', 'Outlet Type',required=True),
         'month': fields.selection([
             ('01', 'January'),
             ('02', 'February'),

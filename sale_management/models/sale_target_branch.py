@@ -67,7 +67,7 @@ class sale_target(osv.osv):
 
     _columns = {
         'name': fields.char('Description'),
-        'branch_id': fields.many2one('res.branch', 'Branch'),
+        'branch_id': fields.many2one('res.branch', 'Branch',required=True),
         'month': fields.selection([
             ('01', 'January'),
             ('02', 'February'),
