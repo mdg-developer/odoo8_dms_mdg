@@ -78,7 +78,7 @@ class sale_target_outlet(osv.osv):
             ('12', 'December'),
 
         ], 'Month', copy=False, select=True),
-        'target_line': fields.one2many('sales.target.branch.line', 'sale_ids', string='Sale Target Line', copy=True),
+        'target_line': fields.one2many('sales.target.outlet.line', 'sale_ids', string='Sale Target Line', copy=True),
         'description': fields.text('Description'),
         'date': fields.date('Target Date'),
         'year': fields.char('Year'),
@@ -100,11 +100,11 @@ class sale_target_outlet(osv.osv):
     }
 
 
-sale_target()
+sale_target_outlet()
 
 
-class sale_target_line(osv.osv):
-    _name = 'sales.target.branch.line'
+class sale_target_outlet_line(osv.osv):
+    _name = 'sales.target.outlet.line'
 
     def create(self, cr, uid, values, context=None):
         #         target_obj= self.pool.get('sales.target')
