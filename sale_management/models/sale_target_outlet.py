@@ -126,7 +126,7 @@ class sale_target_outlet_line(osv.osv):
         #         data['product_uom_qty']=product_uom_qty
         #         data['sequence']=sequence
         if values.get('sale_ids') and values.get('product_id'):
-            order = self.pool['sales.target.branch'].read(cr, uid, values['sale_ids'], ['pricelist_id'], context=context)
+            order = self.pool['sales.target.outlet'].read(cr, uid, values['sale_ids'], ['pricelist_id'], context=context)
             defaults = self.on_change_product_id(cr, uid, [], values['product_id'], order['pricelist_id'][0],
                                                  context=dict(context or {}))['value']
             values = dict(defaults, **values)
@@ -177,7 +177,7 @@ class sale_target_outlet_line(osv.osv):
         return {'value': values}
 
     _columns = {
-        'sale_ids': fields.many2one('sales.target.branch', 'Sales Target'),
+        'sale_ids': fields.many2one('sales.target.outlet', 'Sales Target'),
         'sequence': fields.integer('Sequence'),
         'product_id': fields.many2one('product.product', 'Product SKU', required=True),
         'product_uom': fields.many2one('product.uom', 'UoM', readonly=True),
@@ -192,105 +192,6 @@ class sale_target_outlet_line(osv.osv):
 
 
 sale_target_outlet_line()
-
-
-class sale_target_report(osv.osv):
-    _name = "sale.target.report"
-    _description = "Sale Target Statistics"
-    _auto = False
-    _rec_name = 'date'
-
-    def _compute_price(self):
-        price = self.price_unit * (1 - (self.discount or 0.0) / 100.0)
-        taxes = self.invoice_line_tax_id.compute_all(price, self.quantity, product=self.product_id,
-                                                     partner=self.invoice_id.partner_id)
-        self.price_subtotal = taxes['total']
-        if self.invoice_id:
-            self.price_subtotal = self.invoice_id.currency_id.round(self.price_subtotal)
-
-    _columns = {
-        'branch_id': fields.many2one('res.branch', 'Branch'),
-        'month': fields.selection([
-            ('01', 'January'),
-            ('02', 'February'),
-            ('03', 'March'),
-            ('04', 'April'),
-            ('05', 'May'),
-            ('06', 'June'),
-            ('07', 'July'),
-            ('08', 'August'),
-            ('09', 'September'),
-            ('10', 'October'),
-            ('11', 'November'),
-            ('12', 'December'),
-
-        ], 'Month', copy=False, select=True),
-        'product_id': fields.many2one('product.product', 'Product SKU', required=True),
-        'sale_team_id': fields.many2one('crm.case.section', 'Sale Team'),
-        'target_line': fields.one2many('sales.target.line', 'sale_ids', string='Sale Target Line', copy=True),
-        'description': fields.text('Description'),
-        'date': fields.date('Target Date'),
-        'year': fields.integer('Year'),
-        'product_uom': fields.many2one('product.uom', 'UOM', required=True),
-        'product_uom_qty': fields.integer('QTY', required=True),
-        'price_unit': fields.float('Unit Price', digits_compute=dp.get_precision('Product Price')),
-        'amount_total': fields.float('Total Value', required=True, digits_compute=dp.get_precision('Product Price')),
-        #        'price_sub_total': fields.float('Subtotal', required=True, digits_compute=dp.get_precision('Product Price')),
-        'price_sub_total': fields.function(_compute_price, string='Subtotal',
-                                           digits_compute=dp.get_precision('Product Price'), type='float', store=True,
-                                           readonly=True),
-
-    }
-    _order = 'date desc'
-
-    def _select(self):
-        select_str = """
-            select min(stl.id) AS id,
-               st.sale_team_id,
-               st.branch_id,
-               stl.product_id,
-               u.id as product_uom,
-               stl.product_uom_qty,
-               st.amount_total,
-               stl.price_unit,
-               stl.product_uom_qty * stl.price_unit as price_sub_total,
-               st.date,
-               st.month,
-               st.year 
-        """
-        return select_str
-
-    def _from(self):
-        from_str = """
-                    sales_target st
-                   left join sales_target_line stl on (st.id=stl.sale_ids)
-                   left join product_uom u on (u.id= stl.product_uom)
-        """
-        return from_str
-
-    def _group_by(self):
-        group_by_str = """
-                GROUP BY   product_id,
-             sale_team_id,
-             month,
-             amount_total,
-             price_unit,
-             date,
-             year,branch_id,
-             u.id,product_uom_qty
-
-        """
-        return group_by_str
-
-    def init(self, cr):
-        # self._table = sale_report
-        tools.drop_view_if_exists(cr, self._table)
-        cr.execute("""CREATE or REPLACE VIEW %s as (
-            %s
-            FROM ( %s )
-            %s
-            )""" % (self._table, self._select(), self._from(), self._group_by()))
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
 

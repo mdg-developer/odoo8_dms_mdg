@@ -13,7 +13,7 @@
 							<group>
 								<field name="pricelist_id" domain="[('type','=','sale')]" />
 								<field name="date" />
-								<field name="outlet_type" on_change="on_change_outlet_type(outlet_type,pricelist_id)"/>
+								<field name="outlet_type" />
 								<field name="company_id" />
 							</group>
 							<group>
