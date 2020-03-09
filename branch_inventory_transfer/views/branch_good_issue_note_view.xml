@@ -9,16 +9,16 @@
 				<form string="Branch Good Issue Note">
 					<header>
 						<button name="approve" string="Approve" class="oe_highlight"
-							type="object" states="pending" />
+							type="object" states="pending" groups="stock.group_stock_manager"/>
 						<button name="cancel" string="Cancel" class="oe_highlight"
-							type="object" states="pending" />
+							type="object" states="pending" groups="stock.group_stock_manager"/>
 						<button name="change_location" string="Change Location"
-							class="oe_highlight" type="object"
+							class="oe_highlight" type="object" groups="stock.group_stock_manager"
 							attrs="{'invisible': ['|',('is_changed','=',True),('state','!=','partial_receive')]}" />
 						<button name="issue" string="Issue" class="oe_highlight"
-							type="object" states="approve" />
+							type="object" states="approve" groups="stock.group_stock_manager"/>
 						<button name="receive" string="Receive" class="oe_highlight"
-							type="object" states="issue" />
+							type="object" states="issue" groups="stock.group_stock_manager"/>
 						<button name="reversed" string="Reversed" class="oe_highlight"
 							type="object" states="issue" groups="base.group_no_one" />
 						<field name="state" widget="statusbar" />
@@ -148,6 +148,8 @@
 					<field name="from_location_id" />
 					<field name="issue_date" />
 					<field name="receive_date" />
+					<field name="loading_date" />
+					<field name="eta_date" />
 					<field name="vehicle_id" />
 					<field name="state" />
 				</tree>
@@ -196,6 +198,17 @@
 		<menuitem action='action_branch_good_issue_note' id="menu_branch_good_issue_note"
 			parent="branch_inventory_transfer.menu_branch_inventory_transfer"
 			sequence="3" />
-
+			
+		<record id="action_branch_good_issue_note_for_sale" model="ir.actions.act_window">
+			<field name="name">Branch Good Issue Note</field>
+			<field name="res_model">branch.good.issue.note</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field eval="False" name="view_id" />
+			<field name="domain">[('state', 'not in', ('pending', 'cancel', 'reversed'))]
+			</field>
+			<field name="search_view_id" ref="view_branch_good_issue_note_filter" />
+			<field name="view_id" ref="branch_good_issue_note_tree" />
+		</record>
 	</data>
 </openerp>

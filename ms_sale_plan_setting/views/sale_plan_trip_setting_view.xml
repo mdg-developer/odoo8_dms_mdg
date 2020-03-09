@@ -32,7 +32,7 @@
 						class="oe_highlight" />
 					<notebook>
 						<page string="Plan Setting">
-							<field name="plan_line" attrs="{'readonly':[('state','=','confirm')]}">
+							<field name="plan_line" >
 								<tree string="Plan Line" editable="bottom" default_order="id desc">
 									<field name="code" />
 									<field name="partner_id" />

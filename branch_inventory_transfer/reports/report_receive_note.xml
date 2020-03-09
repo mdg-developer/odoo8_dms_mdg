@@ -104,7 +104,7 @@
 
 						<tr>
 							<td style="border:0pt;font-size:10pt;">
-								<strong>Date for Issue:</strong>
+								<strong>Date Of Issue:</strong>
 							</td>
 							<td style="border:0pt;font-size:10pt;">
 								<span t-field="o.issue_date" />
@@ -118,20 +118,21 @@
 						</tr>
 
 						<tr>
+
 							<td style="border:0pt;font-size:10pt;">
-								<strong>Last Updated on:</strong>
-							</td>
-							<td style="border:0pt;font-size:10pt;">
-								<span t-field="o.write_date" />
-							</td>
-							<td style="border:0pt;font-size:10pt;">
-								<strong>Loading Date</strong>
+								<strong>Loading Date :</strong>
 							</td>
 							<td style="border:0pt;font-size:10pt;">
 								<span t-field="o.loading_date" />
 							</td>
 
-
+<td style="border:0pt;font-size:10pt;">
+							<strong>ETA Date :</strong>
+						</td>
+						<td style="border:0pt;font-size:10pt;">
+							<span t-field="o.eta_date" />
+						</td>
+						
 						</tr>
 						<tr>
 							<td style="border:0pt;font-size:10pt;">
@@ -176,14 +177,18 @@
 							</td>
 						</tr>
 						<tr>
-							<td style="border:0pt;font-size:10pt;"></td>
-							<td style="border:0pt;font-size:10pt;"></td>
-							<td style="border:0pt;font-size:10pt;">
-								<strong>Total Value :</strong>
-							</td>
-							<td style="border:0pt;font-size:10pt;">
-								<span t-field="o.total_value" />
-							</td>
+						<td style="border:0pt;font-size:10pt;">
+							<strong>Last Updated on:</strong>
+						</td>
+						<td style="border:0pt;font-size:10pt;">
+						<span t-field="o.write_date" />
+						</td>
+						<td style="border:0pt;font-size:10pt;">
+							<strong>Total Value :</strong>
+						</td>						
+						<td style="border:0pt;font-size:10pt;">
+							<span t-field="o.total_value" />
+						</td>
 						</tr>
 					</table>
 
