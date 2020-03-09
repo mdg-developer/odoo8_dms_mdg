@@ -37,9 +37,5 @@ Stock Location Extra
     'data': [
         'views/stock_location_view.xml',
     ],
-    'test': [
-
-    ],
-    
     'installable': True,
 }

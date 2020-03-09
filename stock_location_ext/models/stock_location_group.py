@@ -8,6 +8,7 @@ class stock_location_group(osv.osv):
     _columns = {
         'name': fields.char('Name'),
     }
+stock_location_group()
 
 class stock_location(osv.osv):
     _inherit = "stock.location"
