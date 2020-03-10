@@ -31,7 +31,7 @@ Stock Location Extra
 
     """,
     'website': 'https://www.odoo.com/page/warehouse',
-    'depends': ['stock'],
+    'depends': ['stock','branch_customization'],
     'category': 'stock',
     'sequence': 17,
     'data': [

@@ -26,5 +26,17 @@
 			</field>
 		</record>
 		
+        <record id="view_location_search_inherit" model="ir.ui.view">
+			<field name="name">stock.location.search.inherit</field>
+			<field name="model">stock.location</field>
+			<field name="inherit_id" ref="branch_customization.view_location_view_location_search_inherit" />
+			<field name="arch" type="xml">
+				<xpath expr="//filter[@string='Branch']" position="after">					
+					<filter string="Location Group" icon="terp-accessories-archiver"
+						domain="[]" context="{'group_by':'stock_location_group_id'}" />					
+				</xpath>
+			</field>
+		</record>
+		
     </data>
 </openerp>
