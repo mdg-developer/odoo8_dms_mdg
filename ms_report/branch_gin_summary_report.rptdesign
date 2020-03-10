@@ -229,6 +229,12 @@
                     <text-property name="displayName">base_uom</text-property>
                     <text-property name="heading">base_uom</text-property>
                 </structure>
+                <structure>
+                    <property name="columnName">remark</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">remark</text-property>
+                    <text-property name="heading">remark</text-property>
+                </structure>
             </list-property>
             <list-property name="parameters">
                 <structure>
@@ -357,6 +363,11 @@
                     <structure>
                         <property name="position">21</property>
                         <property name="name">base_uom</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">22</property>
+                        <property name="name">remark</property>
                         <property name="dataType">string</property>
                     </structure>
                 </list-property>
@@ -520,13 +531,20 @@ else
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
+                <structure>
+                    <property name="position">22</property>
+                    <property name="name">remark</property>
+                    <property name="nativeName">remark</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select gin.state,sq.name as rfi_no, gin.name as gin_no,gin.internal_reference as internal_ref ,gin.branch_id ,rb.name as  branch_name,
 issue_by ,gin.receiver,(select name from fleet_vehicle where id = gin.vehicle_id) as vehicle,
 (select name from stock_location where id =gin.to_location_id ) as requesting_location,(select name from stock_location where id =gin.from_location_id) as request_warehouse,
 (select name from res_partner where id in (select partner_id from res_users where id =gin.reverse_user_id)) as reverse_user,(select name from res_partner where id in (select partner_id from res_users where id =gin.request_by)) as request_by,(select name from res_partner where id in (select partner_id from res_users where id =gin.approve_by)) as approve_by,
 gin.issue_date,pp.name_template as product,issue_quantity,uom.name as product_uom,pp.sequence,
-round(issue_quantity*(select floor(round(1/factor,2)) from product_uom where id=ginl.product_uom),0)  as product_quantity,(select name from product_uom where id =pt.uom_id) as base_uom
+round(issue_quantity*(select floor(round(1/factor,2)) from product_uom where id=ginl.product_uom),0)  as product_quantity,(select name from product_uom where id =pt.uom_id) as base_uom, ginl.remark
 from branch_good_issue_note gin,branch_good_issue_note_line ginl ,branch_stock_requisition sq,res_branch rb,product_product pp,product_template pt,product_uom uom
 where gin.id =ginl.line_id
 and sq.id =gin.request_id
@@ -1149,6 +1167,12 @@ group by state
                     <expression name="expression" type="javascript">dataSetRow["base_uom"]</expression>
                     <property name="dataType">string</property>
                 </structure>
+                <structure>
+                    <property name="name">remark</property>
+                    <text-property name="displayName">remark</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["remark"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
             </list-property>
             <column id="977"/>
             <column id="953"/>
@@ -1184,6 +1208,7 @@ group by state
                     </structure>
                 </list-property>
             </column>
+            <column id="1010"/>
             <header>
                 <row id="845">
                     <cell id="974">
@@ -1444,6 +1469,19 @@ group by state
                         <property name="borderTopWidth">thin</property>
                         <label id="1004">
                             <text-property name="text">UOM(S)</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1007">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="1011">
+                            <text-property name="text">Remark</text-property>
                         </label>
                     </cell>
                 </row>
@@ -1729,6 +1767,19 @@ group by state
                             <property name="resultSetColumn">base_uom</property>
                         </data>
                     </cell>
+                    <cell id="1008">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="1012">
+                            <property name="resultSetColumn">remark</property>
+                        </data>
+                    </cell>
                 </row>
             </detail>
             <footer>
@@ -1753,6 +1804,7 @@ group by state
                     <cell id="951"/>
                     <cell id="997"/>
                     <cell id="1001"/>
+                    <cell id="1009"/>
                 </row>
             </footer>
         </table>
