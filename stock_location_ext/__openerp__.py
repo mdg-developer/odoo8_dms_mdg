@@ -31,10 +31,11 @@ Stock Location Extra
 
     """,
     'website': 'https://www.odoo.com/page/warehouse',
-    'depends': ['stock'],
+    'depends': ['stock','branch_customization'],
     'category': 'stock',
     'sequence': 17,
     'data': [
+        'views/stock_location_group_view.xml',
         'views/stock_location_view.xml',
     ],
     'installable': True,
