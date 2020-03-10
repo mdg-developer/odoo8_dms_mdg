@@ -3,11 +3,9 @@ from datetime import datetime
 import openerp.addons.decimal_precision as dp
 from openerp.tools.translate import _
 
-class stock_location_group(osv.osv):
-    _name = "stock.location.group"
+class stock_location(osv.osv):
+    _inherit = "stock.location"
     
     _columns = {
-        'name': fields.char('Name'),
+                'stock_location_group_id': fields.many2one('stock.location.group', 'Location Group'),
     }
-    
-stock_location_group()

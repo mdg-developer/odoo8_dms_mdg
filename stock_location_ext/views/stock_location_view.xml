@@ -8,7 +8,7 @@
             <field name="model">stock.location</field>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//field[@name='branch_id']" position="after">
+                    <xpath expr="//field[@name='active']" position="after">
                         <field name="stock_location_group_id"/>
                     </xpath>
                 </data>
@@ -25,5 +25,6 @@
 				</xpath>
 			</field>
 		</record>
+		
     </data>
 </openerp>

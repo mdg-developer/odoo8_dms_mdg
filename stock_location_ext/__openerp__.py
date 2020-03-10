@@ -35,6 +35,7 @@ Stock Location Extra
     'category': 'stock',
     'sequence': 17,
     'data': [
+        'views/stock_location_group_view.xml',
         'views/stock_location_view.xml',
     ],
     'installable': True,
