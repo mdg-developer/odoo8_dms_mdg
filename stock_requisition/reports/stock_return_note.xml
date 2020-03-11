@@ -176,14 +176,14 @@
 							<td align="text-right">
 								<span t-field="l.onground_quantity" />
 							</td>
-							<td align="text-right">
-								<span t-field="l.actual_return_quantity" />
+							<td align="center">
+								<span t-field="l.actual_return_quantity"/>
 							</td>
-							<td align="text-right">
-								<span t-field="l.closing_stock_qty" />
+							<td align="center">
+								<span t-field="l.closing_stock_qty"/>
 							</td>
-							<td align="text-right">
-								<span t-field="l.different_qty" />
+							<td align="center">
+								<span t-field="l.different_qty"/>
 							</td>
 							<td class="text-right">
 								<span t-field="l.expiry_date"/>
