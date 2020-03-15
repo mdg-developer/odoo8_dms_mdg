@@ -907,7 +907,7 @@ class mobile_sale_order(osv.osv):
                                 # calling the register payment pop-up
                                 inv_data=self.pool['account.invoice'].browse(cr, uid, invoice_id,context=None)
                                 invoiceObj.invoice_pay_customer(cr, uid, invlist, context=context)
-                                cr.execute('''select journal_id from customer_payment  where payment_id =%s limit 1''',(ms_ids.id,))
+                                cr.execute('''select id from account_journal  where name ='Cash' limit 1''')
                                 journal_data=cr.fetchone()
                                 if journal_data:
                                     journal_id=journal_data[0]
