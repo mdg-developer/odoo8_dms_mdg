@@ -25,7 +25,7 @@ if response.status_code == 200:
     print "header>>>",header
     sms_url = 'https://mytelapigw.mytel.com.mm/msg-service/v1.3/smsmt/sent'
     sms_payload = {
-	"source":"MytelTest1",
+	"source":"MYTELFTTH",
 	"dest":"+959697182277",
 	"content":"Hnin fighting"
     }
