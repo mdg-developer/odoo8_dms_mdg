@@ -213,18 +213,15 @@ class mobile_sale_order(osv.osv):
         return datas  
     
     def send_credit_invoice_sms(self, cr, uid, customer_id, invoice_number, grand_total, due_date, context=None):    
-                
-        customer_obj = self.pool.get('res.partner').browse(cr, uid, customer_id, context=context)
-        print ('customer_obj.sms',customer_obj.sms)
+         
+        message_body = None        
+        customer_obj = self.pool.get('res.partner').browse(cr, uid, customer_id, context=context)        
         if customer_obj.sms == True: 
-            try:
-                message_body = ('''Dear Respected %s, 
-                            Thank you for your business with MDG Co. Ltd.
-                            You have made a purchase for the following invoice No. %s:                            
-                            Your Grand Total is %s.
-                            This invoice is due on %s.                            
-                            If you did not make this purchase, please contact us immediately at our hotline 01-400533,01-400544 anytime between 9am to 5pm.
-                            Your current credit payment outstanding is %s.''') % (customer_obj.name,invoice_number,grand_total,due_date,customer_obj.credit,)
+            try:                                            
+                company_credit_invoice_msg = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.credit_invoice_msg
+                if company_credit_invoice_msg:
+                    message_body = (company_credit_invoice_msg) % (customer_obj.name,invoice_number, grand_total, due_date,)
+                  
                 token = self.pool.get('account.invoice').get_sms_token(cr, uid, context)                   
                 header = {'Content-Type': 'application/json',
                           'Authorization': 'Bearer {0}'.format(token)}
@@ -233,12 +230,9 @@ class mobile_sale_order(osv.osv):
                                 "source": "MYTELFTTH",
                                 "dest": customer_obj.phone,
                                 "content": message_body
-                            }
-                #time.sleep(1)
-                print "response post"
+                            }               
                 
-                response = requests.post(sms_url,  json = sms_payload, headers = header,verify=False)
-                print "response",response.text
+                response = requests.post(sms_url,  json = sms_payload, headers = header,verify=False)                
                 if response.status_code == 200:                        
                     print" sms send completed "
             except Exception as e:         
