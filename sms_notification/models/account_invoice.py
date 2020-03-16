@@ -46,37 +46,8 @@ class account_invoice(osv.osv):
             print ("Success")
             content = json.loads(response.content)
             token = content['access_token'] 
-            return token       
-            
-    def send_credit_invoice_sms(self, cr, uid, ids, invoice_id, partner_id, context=None):    
-        
-        invoice_obj = self.pool.get('account.invoice').browse(cr, uid, invoice_id, context=context)
-        customer_obj = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
-        if customer_obj.sms == True:
-            sms_template_objs = self.pool.get('sms.template').search(cr, uid, [('condition', '=', 'credit_invoice_create'),
-                                                                               ('globally_access','=',False)])
-            
-            for sms_template_obj in sms_template_objs:
-                token = self.get_sms_token(cr, uid, context)
-                if token and customer_obj.sms == True:                         
-                    template_data = self.pool.get('sms.template').browse(cr, uid, sms_template_obj, context=context)                   
-                    message_body =  template_data.get_body_data(invoice_obj)                        
-                    header = {'Content-Type': 'application/json',
-                              'Authorization': 'Bearer {0}'.format(token)}
-                    sms_url = 'https://mytelapigw.mytel.com.mm/msg-service/v1.3/smsmt/sent'
-                    sms_payload = {
-                                    "source": "MYTELFTTH",
-                                    "dest": customer_obj.phone,
-                                    "content": message_body
-                                }
-                    #time.sleep(1)
-                    print "response post"
-                    
-                    response = requests.post(sms_url,  json = sms_payload, headers = header,verify=False)
-                    print "response",response.text
-                    if response.status_code == 200:                        
-                        print" sms send completed "   
-                            
+            return token    
+               
     def send_collection_sms(self, cr, uid, ids, context=None):    
         print 'datetime.datetime.now()',datetime.datetime.now()
         current_date = datetime.datetime.now().date()

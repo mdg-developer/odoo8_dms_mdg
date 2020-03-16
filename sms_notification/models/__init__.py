@@ -22,3 +22,4 @@ import sms_report
 import messaging
 import account_invoice
 import res_partner
+import res_config_account
