@@ -7,6 +7,7 @@ import time
 from requests.auth import AuthBase
 import token
 from datetime import datetime, timedelta
+import datetime
 
 class account_invoice(osv.osv):
     _inherit = 'account.invoice'
@@ -64,7 +65,7 @@ class account_invoice(osv.osv):
                               'Authorization': 'Bearer {0}'.format(token)}
                     sms_url = 'https://mytelapigw.mytel.com.mm/msg-service/v1.3/smsmt/sent'
                     sms_payload = {
-                                    "source": "MytelTest1",
+                                    "source": "MYTELFTTH",
                                     "dest": customer_obj.phone,
                                     "content": message_body
                                 }
@@ -77,14 +78,16 @@ class account_invoice(osv.osv):
                         print" sms send completed "   
                             
     def send_collection_sms(self, cr, uid, ids, context=None):    
-        print 'send_collection_sms'
+        print 'datetime.datetime.now()',datetime.datetime.now()
+        current_date = datetime.datetime.now().date()
         invoice_obj = self.pool.get('account.invoice').search(cr, uid, [('type', '=', 'out_invoice'),
                                                                         ('state', '=', 'open'),
-                                                                        ('date_due', '=', fields.date.today())])
+                                                                        ('date_due', '=', current_date)])
 #         invoice_obj = self.pool.get('account.invoice').search(cr, uid, [('id', '=', 1253264)])
         invoice_data = self.browse(cr, uid, invoice_obj, context=context) 
+        print 'invoice_obj',invoice_obj
         for invoice in invoice_data:            
-            if not invoice.collection_noti:
+            if not invoice.collection_noti:            
                 data = self.browse(cr, uid, ids, context=context) 
                 sms_template_objs = self.pool.get('sms.template').search(cr, uid, [('condition', '=', 'collection_noti'),
                                                                                    ('globally_access','=',False)])
@@ -98,7 +101,7 @@ class account_invoice(osv.osv):
                                   'Authorization': 'Bearer {0}'.format(token)}
                         sms_url = 'https://mytelapigw.mytel.com.mm/msg-service/v1.3/smsmt/sent'
                         sms_payload = {
-                                        "source": "MytelTest1",
+                                        "source": "MYTELFTTH",
                                         "dest": invoice.partner_id.phone,
                                         "content": message_body
                                     }
@@ -108,7 +111,7 @@ class account_invoice(osv.osv):
                         response = requests.post(sms_url,  json = sms_payload, headers = header,verify=False)
                         print "response",response.text
                         if response.status_code == 200:
-                            invoice.write({'collection_noti':datetime.now().strftime("%Y-%m-%d %H:%M:%S")})
+                            invoice.write({'collection_noti':datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")})
                             print" sms send completed "                          
                 
     def send_overdue_sms(self, cr, uid, ids, context=None):    
@@ -134,7 +137,7 @@ class account_invoice(osv.osv):
                                   'Authorization': 'Bearer {0}'.format(token)}
                         sms_url = 'https://mytelapigw.mytel.com.mm/msg-service/v1.3/smsmt/sent'
                         sms_payload = {
-                                        "source": "MytelTest1",
+                                        "source": "MYTELFTTH",
                                         "dest": invoice.partner_id.phone,
                                         "content": message_body
                                     }
@@ -144,5 +147,5 @@ class account_invoice(osv.osv):
                         response = requests.post(sms_url,  json = sms_payload, headers = header,verify=False)
                         print "response",response.text
                         if response.status_code == 200:
-                            invoice.write({'overdue_noti':datetime.now().strftime("%Y-%m-%d %H:%M:%S")})
+                            invoice.write({'overdue_noti':datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")})
                             print" sms send completed "       
