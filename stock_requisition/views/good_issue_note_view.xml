@@ -59,7 +59,17 @@
 									invisible="1" />														
 							</group>
 						</group>
+						
+						<div class="oe_subtotal_footer_separator oe_inline" 
+							groups="base.group_sale_supervisor,base.group_sale_manager,base.group_sale_admin,base.group_no_one">
+							<label string="Update Qty On Hand" class="oe_edit_only" />
+							<button name="updateQtyOnHand" states="draft" string="(Update)"
+								type="object" class="oe_edit_only oe_link"
+								groups="base.group_sale_supervisor,base.group_sale_manager,base.group_sale_admin,base.group_no_one" />
+						</div>	
+							
 						<group>
+						
 							<notebook>
 								<page string="Stock List" attrs="{'readonly':[('state','=','issue')]}">
 									<field name="p_line" attrs="{'readonly':[('state','=','issue')]}">
