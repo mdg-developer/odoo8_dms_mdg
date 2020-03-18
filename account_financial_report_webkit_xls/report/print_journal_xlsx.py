@@ -159,7 +159,10 @@ class PrintJournalXlsx(ReportXlsx):
 
         for period in _p.period_obj:            
             for journal in _p.journals(data):
-                self.sheet.merge_range(self.row_pos, 0, self.row_pos, 8, journal.name + '-' + period.code or '', self.format_title)                
+                if _p.amount_currency(data):
+                    self.sheet.merge_range(self.row_pos, 0, self.row_pos, 10, journal.name + '-' + period.code or '', self.format_title)
+                else:
+                    self.sheet.merge_range(self.row_pos, 0, self.row_pos, 8, journal.name + '-' + period.code or '', self.format_title)                
                 self.row_pos += 1  
                 self.sheet.write_string(self.row_pos, 0, 'Date' , self.format_header_one)
                 self.sheet.set_column(0, 0, 30)
@@ -179,6 +182,11 @@ class PrintJournalXlsx(ReportXlsx):
                 self.sheet.set_column(7, 7, 30)
                 self.sheet.write_string(self.row_pos, 8, 'Credit' , self.format_header_one)
                 self.sheet.set_column(8, 8, 30)
+                if _p.amount_currency(data):
+                    self.sheet.write_string(self.row_pos, 9, 'Currency Balance' , self.format_header_one)
+                    self.sheet.set_column(9, 9, 30)
+                    self.sheet.write_string(self.row_pos, 10, 'Currency' , self.format_header_one)
+                    self.sheet.set_column(10, 10, 30)
                 self.row_pos += 1
                                 
                 move_ids = self.env['account.move.line'].search([('move_id', 'in', tuple(move_list)),
@@ -206,7 +214,12 @@ class PrintJournalXlsx(ReportXlsx):
                         self.sheet.write_number(self.row_pos, 7, move.debit or 0.00, self.format_header_number_right)
                         self.sheet.set_column(7, 7, 30)
                         self.sheet.write_number(self.row_pos, 8, move.credit or 0.00, self.format_header_number_right)
-                        self.sheet.set_column(8, 8, 30)                        
+                        self.sheet.set_column(8, 8, 30)   
+                        if _p.amount_currency(data):  
+                            self.sheet.write_number(self.row_pos, 9, move.amount_currency or 0.00, self.format_header_number_right)
+                            self.sheet.set_column(9, 9, 30) 
+                            self.sheet.write_string(self.row_pos, 10, move.currency_id.symbol or '', self.format_header_one)
+                            self.sheet.set_column(10, 10, 30)                    
                         self.row_pos += 1
                         total_debit = total_debit + move.debit
                         total_credit = total_credit + move.credit
