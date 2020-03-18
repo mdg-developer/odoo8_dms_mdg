@@ -106,12 +106,12 @@
 											<field name="exchange_qty" readonly="1" />
 											<field name="return_quantity" string="Return Qty"
 												readonly="1" />
-											<field name="onground_quantity" string="All Physical Stock Qty"/>
-											<field name="actual_return_quantity" string="Actual Return Qty"
+											<field name="onground_quantity" string="All Physical Stock Qty" style="background-color: yellow;"/>
+											<field name="actual_return_quantity" string="Actual Return Qty" style="background-color: lightblue;" 
 												on_change="on_change_return_quantity(closing_stock_qty,actual_return_quantity)" attrs="{'readonly':[('state','=','received')]}"/>
-											<field name="closing_stock_qty" string="Closing Stock Qty"
+											<field name="closing_stock_qty" string="Closing Stock Qty" style="background-color: green;"
 												on_change="on_change_ground_quantity(closing_stock_qty,actual_return_quantity)" attrs="{'readonly':[('state','=','received')]}"/>
-											<field name="different_qty" groups="base.group_no_one"/>
+											<field name="different_qty" groups="base.group_no_one" style="background-color: yellow;"/>
 											<field name="expiry_date" string="Expiry" attrs="{'readonly':[('state','=','received')]}"/>
 											<field name="remark" string="Remark" attrs="{'readonly':[('state','=','received')]}"/>
 											<field name="state" invisible="1"/>
