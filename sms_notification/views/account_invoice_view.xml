@@ -8,9 +8,10 @@
 			<field name="inherit_id" ref="account.invoice_form" />
 			<field name="priority" eval="20" />
 			<field name="arch" type="xml">
-				<field name="date_due" position="after">					
-					<field name="overdue_noti" readonly="1"/>
-					<field name="collection_noti" readonly="1"/>					
+				<field name="date_due" position="after">
+				    <field name="invoice_due_pre_reminder_noti" readonly="1"/>					
+					<field name="collection_noti" readonly="1"/>
+					<field name="overdue_noti" readonly="1"/>					
 				</field>
 			</field>
 		</record>

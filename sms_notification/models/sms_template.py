@@ -60,9 +60,9 @@ class SmsTemplate(models.Model):
                                   ('invoice_vaildate', 'Invoice Validate'),
                                   ('invoice_paid', 'Invoice Paid'),
                                   ('order_cancel', 'Order Cancelled'),
-                                  ('credit_invoice_create', 'Credit Invoice Created'),
-                                  ('collection_noti', 'Collection Notification'),
-                                  ('overdue_noti', 'Overdue Notification'),
+                                  ('before_invoice_is_due', 'Before invoice is due'),
+                                  ('collection_noti', 'Invoice Due Date'),
+                                  ('overdue_noti', 'After invoice is due'),
                                   ], string="Conditions", help="Condition on which the template has been applied.")
     model_id = fields.Many2one(
         'ir.model', 'Applies to', compute="onchange_condition", help="The kind of document with this template can be used. Note if not selected then it will consider normal(global) template.", store=True)
@@ -95,7 +95,7 @@ class SmsTemplate(models.Model):
                 model_id = self.env['ir.model'].search(
                     [('model', '=', 'account.invoice')])
                 self.model_id = model_id.id if model_id else False
-            elif self.condition in ['credit_invoice_create', 'collection_noti', 'overdue_noti']:
+            elif self.condition in ['before_invoice_is_due', 'collection_noti', 'overdue_noti']:
                 model_id = self.env['ir.model'].search(
                     [('model', '=', 'account.invoice')])
                 self.model_id = model_id.id if model_id else False

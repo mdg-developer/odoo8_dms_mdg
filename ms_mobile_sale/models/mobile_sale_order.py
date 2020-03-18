@@ -13,6 +13,8 @@ from openerp.addons.connector.queue.job import job, related_action
 from openerp.addons.connector.session import ConnectorSession
 from openerp.addons.connector.exception import FailedJobError
 from openerp.addons.connector.jobrunner.runner import ConnectorRunner
+import requests
+import logging
 
 @job(default_channel='root.directpending')
 def automation_pending_delivery(session, delivery_mobile):
@@ -208,8 +210,35 @@ class mobile_sale_order(osv.osv):
                         where A.customer_code is not null
             ''', (section_id ,late_date,))
         datas = cr.fetchall()
-        return datas
+        return datas  
     
+    def send_credit_invoice_sms(self, cr, uid, customer_id, invoice_number, grand_total, due_date, context=None):    
+         
+        message_body = None        
+        customer_obj = self.pool.get('res.partner').browse(cr, uid, customer_id, context=context)        
+        if customer_obj.sms == True: 
+            try:                                            
+                company_credit_invoice_msg = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.credit_invoice_msg
+                if company_credit_invoice_msg:
+                    message_body = (company_credit_invoice_msg) % (customer_obj.name,invoice_number, grand_total, due_date,)
+                  
+                token = self.pool.get('account.invoice').get_sms_token(cr, uid, context)                   
+                header = {'Content-Type': 'application/json',
+                          'Authorization': 'Bearer {0}'.format(token)}
+                sms_url = 'https://mytelapigw.mytel.com.mm/msg-service/v1.3/smsmt/sent'
+                sms_payload = {
+                                "source": "MYTELFTTH",
+                                "dest": customer_obj.phone,
+                                "content": message_body
+                            }               
+                
+                response = requests.post(sms_url,  json = sms_payload, headers = header,verify=False)                
+                if response.status_code == 200:                        
+                    print" sms send completed "
+            except Exception as e:         
+                error_msg = 'Error Message: %s' % (e) 
+                logging.error(error_msg)                                    
+                
     def res_partners_return_day_with_sync_date(self, cr, uid, section_id, day_id, pull_date  , context=None, **kwargs):
         section = self.pool.get('crm.case.section')
         sale_team_data = section.browse(cr, uid, section_id, context=context)
