@@ -116,6 +116,8 @@ class PrintJournalWebkit(report_sxw.rml_parse, CommonReportHeaderWebkit):
             domain = [
                 ('period_id', 'in', period_ids),
             ]
+            period_obj = account_period_obj.browse(self.cursor, self.uid, period_ids)
+            
         if target_move == 'posted':
             domain += [('state', '=', 'posted')]
         account_journal_period_obj = self.pool.get('account.journal.period')
@@ -152,7 +154,8 @@ class PrintJournalWebkit(report_sxw.rml_parse, CommonReportHeaderWebkit):
             'start_period': start_period,
             'stop_period': stop_period,
             'chart_account': chart_account,
-            'moves': moves,
+            'moves': moves,  
+            'period_obj': period_obj,                   
         })
 
         return super(PrintJournalWebkit, self).set_context(
