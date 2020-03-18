@@ -205,7 +205,7 @@ class sale_target_report(osv.osv):
             self.price_subtotal = self.invoice_id.currency_id.round(self.price_subtotal)
             
     _columns = {
-   'branch_id': fields.many2one('res.branch', 'Branch'),
+   'branch_id': fields.many2one('res.branch', 'Branch',required=True),
         'month': fields.selection([
                 ('01', 'January'),
                 ('02', 'February'),
