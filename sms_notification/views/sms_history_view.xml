@@ -29,7 +29,7 @@
             <field name="name">sms.history.tree</field>
             <field name="model">sms.history</field>            
             <field name="arch" type="xml">
-                <tree string="SMS History" colors="red:state=='fail';blue:state=='success';" create="false" edit="false">
+                <tree default_order='date desc' string="SMS History" colors="red:state=='fail';blue:state=='success';" create="false" edit="false">
                     <field name="partner_id" />
 					<field name="phone" />
 					<field name="date" />
@@ -51,7 +51,8 @@
                         <filter string="Status" context="{'group_by':'state'}"/>
                         <filter string="Customer" context="{'group_by':'partner_id'}"/>
                         <filter string="User" context="{'group_by':'user_id'}"/>
-                        <filter string="Reference" context="{'group_by':'reference'}"/>
+                        <filter string="Reference" context="{'group_by':'name'}"/>
+                        <filter string="Date Day" context="{'group_by': 'date:day'}" />	                        
                     </group>
                </search>
             </field>

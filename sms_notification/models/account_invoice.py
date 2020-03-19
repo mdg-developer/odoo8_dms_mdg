@@ -59,7 +59,7 @@ class account_invoice(osv.osv):
                     'state': status,
                     'error_log': error_log,
                     'user_id': user_id,          
-                    'reference': reference,       
+                    'name': reference,       
                     'date': datetime.datetime.now(),          
                 }
         sms_history = self.pool.get('sms.history').create(cr, uid, result, context=context)
@@ -95,11 +95,10 @@ class account_invoice(osv.osv):
                                 if response.status_code == 200:
                                     invoice.write({'invoice_due_pre_reminder_noti':datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")})
                                     self.create_sms_history(cr, uid, invoice.partner_id, invoice.partner_id.phone, message_body, 'success', 'success', uid, invoice.number, context)
-                            
+                                                                                            
                             except Exception as e:         
                                 error_msg = 'Error Message: %s' % (e) 
-                                logging.error(error_msg)                        
-                                self.create_sms_history(cr, uid, invoice.partner_id, invoice.partner_id.phone, message_body, 'success', e, uid, invoice.number, context)
+                                logging.error(error_msg) 
                                                         
     def send_collection_sms(self, cr, uid, ids, context=None):    
         
