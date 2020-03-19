@@ -574,7 +574,7 @@ class account_invoice(models.Model):
                     if payment_type == 'credit':
                         account_id = product.product_tmpl_id.main_group.property_account_receivable_control.id
                     else:
-                        account_id = product.product_tmpl_id.main_group.property_account_receivable.id      
+                        account_id = product.product_tmpl_id.main_group.property_account_receivable_clearing.id      
                     if is_nonsale ==True:
                         partner_data = self.env['res.partner'].browse(part)
                         account_id=partner_data.property_account_receivable.id                            
@@ -886,7 +886,7 @@ class account_invoice(models.Model):
                     if payment_type == 'credit':
                         account_id = product.product_tmpl_id.main_group.property_account_receivable_control.id
                     else:
-                        account_id = product.product_tmpl_id.main_group.property_account_receivable.id  
+                        account_id = product.product_tmpl_id.main_group.property_account_receivable_clearing.id  
                     if is_nonsale ==True:
                         partner_data = self.env['res.partner'].browse(part)
                         account_id=partner_data.property_account_receivable.id                      

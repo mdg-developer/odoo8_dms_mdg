@@ -367,6 +367,7 @@ class branch_stock_requisition(osv.osv):
                                           'product_loss':request_line_data.loss,
                                             'product_viss':request_line_data.viss_value,
                                             'product_cbm':request_line_data.cbm_value,
+                                            'remark':request_line_data.remark,
                                           }, context=context)                                    
         return self.write(cr, uid, ids, {'state':'approve' , 'approve_by':uid, 'good_issue_id':good_id})    
     

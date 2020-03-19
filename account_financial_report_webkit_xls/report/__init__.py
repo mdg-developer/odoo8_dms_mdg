@@ -26,3 +26,4 @@ from . import partners_balance_xls
 from . import partner_ledger_xls
 from . import open_invoices_xls
 from . import general_ledger_xlsx
+from . import print_journal_xlsx

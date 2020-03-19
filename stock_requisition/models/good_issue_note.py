@@ -186,6 +186,23 @@ class good_issue_note(osv.osv):
 # 
 #         return super(good_issue_notes, self).unlink(cr, uid, unlink_ids, context=context)
 
+    def updateQtyOnHand(self, cr, uid, ids, context=None):
+        product_line_obj = self.pool.get('good.issue.note.line')
+        if ids:
+            note_data = self.browse(cr, uid, ids[0], context=context)
+            location_id = note_data.to_location_id.id
+            req_line_id = product_line_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context)
+            for data in req_line_id:
+                note_line_value = product_line_obj.browse(cr, uid, data, context=context)
+                line_id= note_line_value.id
+                product_id = note_line_value.product_id.id
+                cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (location_id, product_id,))
+                qty_on_hand = cr.fetchone()
+                if qty_on_hand:
+                    qty_on_hand = qty_on_hand[0]
+                else:
+                    qty_on_hand = 0
+                cr.execute("update good_issue_note_line set qty_on_hand=%s where product_id=%s and id=%s", (qty_on_hand, product_id,line_id,))
             
     def issue(self, cr, uid, ids, context=None):
         product_line_obj = self.pool.get('good.issue.note.line')
@@ -194,7 +211,7 @@ class good_issue_note(osv.osv):
         move_obj = self.pool.get('stock.move')
         note_value = req_lines = {}
         if ids:
-            note_value = note_obj.browse(cr, uid, ids[0], context=context)
+            note_value= note_obj.browse(cr, uid, ids[0], context=context)
             issue_date = note_value.issue_date
             location_id = note_value.to_location_id.id
             from_location_id = note_value.from_location_id.id
@@ -211,7 +228,29 @@ class good_issue_note(osv.osv):
                                           'origin':origin,
                                           'picking_type_id':picking_type_id}, context=context)
             note_line_id = product_line_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context)
+                        
             if note_line_id and picking_id:
+                for id in note_line_id:
+                    quant_note_line_value = product_line_obj.browse(cr, uid, id, context=context)
+                    quant_product_id = quant_note_line_value.product_id.id
+                    cr.execute('''select a.qty_on_hand,sum(a.total_issue_qty) as total_issue_qty from (
+                      select (select COALESCE (sum(qty),0) from stock_quant where product_id =line.product_id and location_id = note.to_location_id)  as qty_on_hand,
+                      line.product_id,line.issue_quantity as issue_quantity,
+                      (line.issue_quantity*(select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=product_uom) )as total_issue_qty 
+                      from good_issue_note_line line,good_issue_note note
+                      where  line.line_id=note.id and line.product_id =%s 
+                      and note.id=%s
+                      )a
+                      group by product_id,qty_on_hand''',(quant_product_id,note_value.id,))
+                    note_data=cr.fetchone()
+                    if note_data:
+                        qty_on_hand=note_data[0]
+                        total_issue_qty=note_data[1]
+                    product_check_data = self.pool.get('product.product').browse(cr, uid, quant_product_id, context=context)   
+                    if qty_on_hand < total_issue_qty:
+                        raise osv.except_osv(_('Warning'),
+                                 _('Please Check Qty On Hand For (%s)') % (product_check_data.name_template,))
+
                 for id in note_line_id:
                     note_line_value = product_line_obj.browse(cr, uid, id, context=context)
                     product_id = note_line_value.product_id.id
@@ -222,6 +261,8 @@ class good_issue_note(osv.osv):
                     big_qty=note_line_value.big_issue_quantity
                     big_uom=note_line_value.big_uom_id.id
                     lot_id=note_line_value.batch_no.id
+
+                    
                     #comment by EMTW
 #                     bigger_qty=0
 #                     if big_uom:
