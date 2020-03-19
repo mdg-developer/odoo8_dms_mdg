@@ -235,6 +235,8 @@ class mobile_sale_order(osv.osv):
                 response = requests.post(sms_url,  json = sms_payload, headers = header,verify=False)                
                 if response.status_code == 200:                        
                     print" sms send completed "
+                    self.pool.get('sms.history').create_sms_history(cr, uid, customer_obj.id, customer_obj.phone, message_body, 'success', 'success', uid, invoice_number, context)
+                    
             except Exception as e:         
                 error_msg = 'Error Message: %s' % (e) 
                 logging.error(error_msg)                                    
