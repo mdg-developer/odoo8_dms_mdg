@@ -23,3 +23,4 @@ import messaging
 import account_invoice
 import res_partner
 import res_company
+import sms_history
