@@ -13,7 +13,7 @@
 							<group>
 								<field name="pricelist_id" domain="[('type','=','sale')]" />
 								<field name="date" />
-								<field name="outlet_type" />
+								<field name="outlet_type_ids" widget="many2many_tags"/>
 								<field name="company_id" />
 							</group>
 							<group>
@@ -37,7 +37,7 @@
 													on_change="on_change_product_uom_qty(product_id,product_uom_qty,parent.pricelist_id)" />
 												<field name="price_unit" />
 												<field name="price_subtotal" />
-												<field name="distribution_price" />
+												<field name="percentage_growth" />
 											</group>
 										</group>
 									</form>
@@ -51,7 +51,7 @@
 											on_change="on_change_product_uom_qty(product_id,product_uom_qty,parent.pricelist_id)" />
 										<field name="price_unit" />
 										<field name="price_subtotal" />
-										<field name="distribution_price" />
+										<field name="percentage_growth" />
 
 									</tree>
 								</field>
@@ -93,11 +93,11 @@
 			<field name="model">sales.target.outlet</field>
 			<field name="arch" type="xml">
 				<tree string="Sales Target">
-					<field name="outlet_type" />
 					<field name="name" />
 					<field name="month" />
 					<field name="year" />
 					<field name="amount_total" />
+					<field name="outlet_type_ids" />
 				</tree>
 			</field>
 		</record>
