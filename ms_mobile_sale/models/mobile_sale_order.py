@@ -216,30 +216,18 @@ class mobile_sale_order(osv.osv):
          
         message_body = None        
         customer_obj = self.pool.get('res.partner').browse(cr, uid, customer_id, context=context)        
-        if customer_obj.sms == True: 
-            try:                                            
-                company_credit_invoice_msg = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.credit_invoice_msg
-                if company_credit_invoice_msg:
-                    message_body = (company_credit_invoice_msg) % (customer_obj.name,invoice_number, grand_total, due_date,)
-                  
-                token = self.pool.get('account.invoice').get_sms_token(cr, uid, context)                   
-                header = {'Content-Type': 'application/json',
-                          'Authorization': 'Bearer {0}'.format(token)}
-                sms_url = 'https://mytelapigw.mytel.com.mm/msg-service/v1.3/smsmt/sent'
-                sms_payload = {
-                                "source": "MYTELFTTH",
-                                "dest": customer_obj.phone,
-                                "content": message_body
-                            }               
-                
-                response = requests.post(sms_url,  json = sms_payload, headers = header,verify=False)                
-                if response.status_code == 200:                        
-                    print" sms send completed "
-                    self.pool.get('sms.history').create_sms_history(cr, uid, customer_obj.id, customer_obj.phone, message_body, 'success', 'success', uid, invoice_number, context)
-                    
-            except Exception as e:         
-                error_msg = 'Error Message: %s' % (e) 
-                logging.error(error_msg)                                    
+        if customer_obj.sms == True:                                                     
+            company_credit_invoice_msg = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.credit_invoice_msg
+            if company_credit_invoice_msg:
+                message_body = (company_credit_invoice_msg) % (customer_obj.name,invoice_number, grand_total, due_date,)
+                vals={
+                        'phone':customer_obj.mobile,
+                        'message':message_body, 
+                        'partner_id':customer_obj.id,
+                        'name':invoice_number
+                    } 
+                message = self.pool.get('sms.message').create(cr,uid,vals);
+                self.pool.get('sms.message').browse(cr, uid, message, context=context)                                                    
                 
     def res_partners_return_day_with_sync_date(self, cr, uid, section_id, day_id, pull_date  , context=None, **kwargs):
         section = self.pool.get('crm.case.section')
