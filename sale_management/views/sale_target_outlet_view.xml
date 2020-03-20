@@ -97,7 +97,7 @@
 					<field name="month" />
 					<field name="year" />
 					<field name="amount_total" />
-					<field name="outlet_type_ids" />
+<!-- 					<field name="outlet_type_ids" /> -->
 				</tree>
 			</field>
 		</record>
