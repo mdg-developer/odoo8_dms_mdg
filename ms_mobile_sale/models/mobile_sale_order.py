@@ -2362,7 +2362,7 @@ class mobile_sale_order(osv.osv):
     
     def get_target_setting(self, cr, uid, sale_team_id , context=None, **kwargs):
         cr.execute('''            
-                  select tl.id ,target.partner_id,tl.product_id,1 as product_uom,tl.ach_qty,tl.target_qty,gap_qty as gap 
+                  select tl.id ,target.partner_id,tl.product_id,1 as product_uom,tl.ach_qty,tl.target_qty,gap_qty as gap,month1,month2,month3 
                     from customer_target target ,customer_target_line tl,crm_case_section_product_product_rel cr
                     where target.id= tl.line_id
                     and cr.product_product_id=tl.product_id
