@@ -36,6 +36,7 @@ Setting Branch
     ],
     'data': [
        'views/branch_view.xml',
+        'views/branch_region_view.xml',
        'views/res_company_veiw.xml',
        'views/res_user_view.xml',   
        'views/hr_employee.xml',   
