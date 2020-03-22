@@ -56,7 +56,7 @@ class customer_target(osv.osv):
   
     def create_customer_target_data(self, cr, uid, context=None):
           
-        month1_sale = month2_sale = month3_sale = percentage_growth = current_month_sale = 0  
+        month1_sale = month2_sale = month3_sale = percentage_growth = current_month_sale = target_amount = customer_ams = 0  
         cr.execute("""delete from customer_target""") 
         #('id', 'in', (19761,28575,28844))
         customer_val = self.pool.get('res.partner').search(cr, uid, [('active', '=', True), 
