@@ -107,7 +107,7 @@
         </record>
         
 	    <menuitem id="menu_customer_target" action="action_customer_target_view"
-			parent="base.menu_sales" name="Customer Target" sequence="13" />   
+			parent="menu_customization.menu_sales_target_menu" name="Customer Target" sequence="7" />   
 		
     </data>    
 </openerp>
