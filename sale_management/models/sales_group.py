@@ -16,5 +16,6 @@ class sales_group(osv.osv):
     _columns = {
         'name':fields.char('Name'),
         'branch_id': fields.many2one('res.branch', 'Branch', required=True),
-        'product_ids':fields.many2many('product.product', 'product_sale_group_rel', 'sale_group_id', 'product_id', string='Product'),        
-  }   
+        'product_ids':fields.many2many('product.product', 'product_sale_group_rel', 'sale_group_id', 'product_id', string='Products'),
+        'sales_team_line_ids':fields.one2many('crm.case.section', 'sale_group_id', string='Sales Teams'),        
+  }     
