@@ -375,8 +375,10 @@ class sale_plan_for_day_setting(osv.osv):
             cr.execute("""insert into sale_plan_day_team_rel select %s,sale_team_id from sale_team_customer_rel where partner_id=%s""",(plan_id,partner_id,))
         
     def confirm(self, cr, uid, ids, context=None):  
+        sequence = 1
         plan_obj = self.pool.get('sale.plan.day')
         sale_plan_day_line_obj = self.pool.get('sale.plan.day.line')
+        plan_seq_obj = self.pool.get('sale.plan.day.sequence')
         plan_setting = self.browse(cr, uid, ids, context=context)
         sale_team_ids = plan_setting.sale_team_id
         principal = plan_setting.principal.id
@@ -424,8 +426,14 @@ class sale_plan_for_day_setting(osv.osv):
                         #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
                         #
                         for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                            partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            plan_seq = plan_seq_obj.search(cr, uid, [('sale_plan_day_id', '=', setting_id[0]), 
+                                                                     ('partner_id', '=', res_id.id)], context=context)  
+                            if plan_seq:
+                                plan = plan_seq_obj.browse(cr,uid,plan_seq,context=context) 
+                                sequence = plan.sequence or 1    
+                            partner = {'line_id':setting_id[0],'sequence': sequence,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
                             sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            sequence = 1
 #                             self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context)                        
                         #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))                    
                     else:                
@@ -453,8 +461,14 @@ class sale_plan_for_day_setting(osv.osv):
                         #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
                         #
                         for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                            partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            plan_seq = plan_seq_obj.search(cr, uid, [('sale_plan_day_id', '=', setting_id[0]), 
+                                                                     ('partner_id', '=', res_id.id)], context=context)  
+                            if plan_seq:
+                                plan = plan_seq_obj.browse(cr,uid,plan_seq,context=context) 
+                                sequence = plan.sequence or 1 
+                            partner = {'line_id':setting_id[0],'sequence': sequence,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
                             sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            sequence = 1
                             #self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context)                        
                         #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
                     else:                
@@ -484,8 +498,14 @@ class sale_plan_for_day_setting(osv.osv):
                         #                    
                         #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
                         for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                            partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            plan_seq = plan_seq_obj.search(cr, uid, [('sale_plan_day_id', '=', setting_id[0]), 
+                                                                     ('partner_id', '=', res_id.id)], context=context)  
+                            if plan_seq:
+                                plan = plan_seq_obj.browse(cr,uid,plan_seq,context=context) 
+                                sequence = plan.sequence or 1 
+                            partner = {'line_id':setting_id[0],'sequence': sequence,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
                             sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            sequence = 1
                             #self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context) 
                     else:                
                         plan_id = plan_obj.create(cr, uid, {'name': status,
@@ -511,8 +531,14 @@ class sale_plan_for_day_setting(osv.osv):
                         #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
                         #
                         for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                            partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            plan_seq = plan_seq_obj.search(cr, uid, [('sale_plan_day_id', '=', setting_id[0]), 
+                                                                     ('partner_id', '=', res_id.id)], context=context)  
+                            if plan_seq:
+                                plan = plan_seq_obj.browse(cr,uid,plan_seq,context=context) 
+                                sequence = plan.sequence or 1 
+                            partner = {'line_id':setting_id[0],'sequence': sequence,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
                             sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            sequence = 1
                             #self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context)                         
                         #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
                     else:                
@@ -542,8 +568,14 @@ class sale_plan_for_day_setting(osv.osv):
                             #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))                    
                         #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
                         for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                            partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            plan_seq = plan_seq_obj.search(cr, uid, [('sale_plan_day_id', '=', setting_id[0]), 
+                                                                     ('partner_id', '=', res_id.id)], context=context)  
+                            if plan_seq:
+                                plan = plan_seq_obj.browse(cr,uid,plan_seq,context=context) 
+                                sequence = plan.sequence or 1 
+                            partner = {'line_id':setting_id[0],'sequence': sequence,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
                             sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            sequence = 1
                             #self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context) 
                     else:                
                         plan_id = plan_obj.create(cr, uid, {'name': status,
@@ -571,8 +603,14 @@ class sale_plan_for_day_setting(osv.osv):
                     
                         #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
                         for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                            partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            plan_seq = plan_seq_obj.search(cr, uid, [('sale_plan_day_id', '=', setting_id[0]), 
+                                                                     ('partner_id', '=', res_id.id)], context=context)  
+                            if plan_seq:
+                                plan = plan_seq_obj.browse(cr,uid,plan_seq,context=context) 
+                                sequence = plan.sequence or 1 
+                            partner = {'line_id':setting_id[0],'sequence': sequence,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
                             sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            sequence = 1
                             #self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context) 
                     else:                
                         plan_id = plan_obj.create(cr, uid, {'name': status,
@@ -602,9 +640,16 @@ class sale_plan_for_day_setting(osv.osv):
                             #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))                    
                         #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
                         for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                            #partner = {'line_id':setting_id[0],'partner_id': partner_id.id,'outlet_type':partner_id.outlet_type.id,'township':partner_id.township.id,'address':partner_id.street,'delivery_team_id':partner_id.delivery_team_id.id,'branch_id':partner_id.branch_id.id}
-                            partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            #partner = {'line_id':setting_id[0],'partner_id': partner_id.id,'outlet_type':partner_id.outlet_type.id,'township':partner_id.township.id,'address':partner_id.street,'delivery_team_id':partner_id.delivery_team_id.id,'branch_id':partner_id.branch_id.id}                            
+                            plan_seq = plan_seq_obj.search(cr, uid, [('sale_plan_day_id', '=', setting_id[0]), 
+                                                                     ('partner_id', '=', res_id.id)], context=context)  
+                            if plan_seq:
+                                plan = plan_seq_obj.browse(cr,uid,plan_seq,context=context) 
+                                sequence = plan.sequence or 1 
+
+                            partner = {'line_id':setting_id[0],'sequence': sequence,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
                             sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            sequence = 1
                             #self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context)
                     else:                
                         plan_id = plan_obj.create(cr, uid, {'name': status,
@@ -633,8 +678,14 @@ class sale_plan_for_day_setting(osv.osv):
                             #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))                    
                         #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
                         for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                            partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            plan_seq = plan_seq_obj.search(cr, uid, [('sale_plan_day_id', '=', setting_id[0]), 
+                                                                     ('partner_id', '=', res_id.id)], context=context)  
+                            if plan_seq:
+                                plan = plan_seq_obj.browse(cr,uid,plan_seq,context=context) 
+                                sequence = plan.sequence or 1 
+                            partner = {'line_id':setting_id[0],'sequence': sequence,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
                             sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            sequence = 1
                             #self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context) 
                     else:                
                         plan_id = plan_obj.create(cr, uid, {'name': status,
@@ -662,8 +713,14 @@ class sale_plan_for_day_setting(osv.osv):
                    
                         #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
                         for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                            partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            plan_seq = plan_seq_obj.search(cr, uid, [('sale_plan_day_id', '=', setting_id[0]), 
+                                                                     ('partner_id', '=', res_id.id)], context=context)  
+                            if plan_seq:
+                                plan = plan_seq_obj.browse(cr,uid,plan_seq,context=context) 
+                                sequence = plan.sequence or 1 
+                            partner = {'line_id':setting_id[0],'sequence': sequence,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
                             sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            sequence = 1
                             #self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context) 
                     else:                
                         plan_id = plan_obj.create(cr, uid, {'name': status,
@@ -691,8 +748,14 @@ class sale_plan_for_day_setting(osv.osv):
                    
                         #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
                         for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                            partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            plan_seq = plan_seq_obj.search(cr, uid, [('sale_plan_day_id', '=', setting_id[0]), 
+                                                                     ('partner_id', '=', res_id.id)], context=context)  
+                            if plan_seq:
+                                plan = plan_seq_obj.browse(cr,uid,plan_seq,context=context) 
+                                sequence = plan.sequence or 1 
+                            partner = {'line_id':setting_id[0],'sequence': sequence,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
                             sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            sequence = 1
                             #self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context) 
                     else:                
                         plan_id = plan_obj.create(cr, uid, {'name': status,
@@ -719,8 +782,14 @@ class sale_plan_for_day_setting(osv.osv):
                    
                         #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
                         for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                            partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            plan_seq = plan_seq_obj.search(cr, uid, [('sale_plan_day_id', '=', setting_id[0]), 
+                                                                     ('partner_id', '=', res_id.id)], context=context)  
+                            if plan_seq:
+                                plan = plan_seq_obj.browse(cr,uid,plan_seq,context=context) 
+                                sequence = plan.sequence or 1 
+                            partner = {'line_id':setting_id[0],'sequence': sequence,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
                             sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            sequence = 1
                             #self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context)
                     else:                
                         plan_id = plan_obj.create(cr, uid, {'name': status,
@@ -750,8 +819,14 @@ class sale_plan_for_day_setting(osv.osv):
                             #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))                    
                         #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
                         for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                            partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            plan_seq = plan_seq_obj.search(cr, uid, [('sale_plan_day_id', '=', setting_id[0]), 
+                                                                     ('partner_id', '=', res_id.id)], context=context)  
+                            if plan_seq:
+                                plan = plan_seq_obj.browse(cr,uid,plan_seq,context=context) 
+                                sequence = plan.sequence or 1 
+                            partner = {'line_id':setting_id[0],'sequence': sequence,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
                             sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            sequence = 1
                             #self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context)
                     else:                
                         plan_id = plan_obj.create(cr, uid, {'name': status,
@@ -783,8 +858,14 @@ class sale_plan_for_day_setting(osv.osv):
                             #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))                    
                         #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
                         for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                            partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            plan_seq = plan_seq_obj.search(cr, uid, [('sale_plan_day_id', '=', setting_id[0]), 
+                                                                     ('partner_id', '=', res_id.id)], context=context)  
+                            if plan_seq:
+                                plan = plan_seq_obj.browse(cr,uid,plan_seq,context=context) 
+                                sequence = plan.sequence or 1 
+                            partner = {'line_id':setting_id[0],'sequence': sequence,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
                             sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            sequence = 1
                             #self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context) 
                     else:                
                         plan_id = plan_obj.create(cr, uid, {'name': status,
@@ -812,8 +893,14 @@ class sale_plan_for_day_setting(osv.osv):
 
                         
                         for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                            partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            plan_seq = plan_seq_obj.search(cr, uid, [('sale_plan_day_id', '=', setting_id[0]), 
+                                                                     ('partner_id', '=', res_id.id)], context=context)  
+                            if plan_seq:
+                                plan = plan_seq_obj.browse(cr,uid,plan_seq,context=context) 
+                                sequence = plan.sequence or 1 
+                            partner = {'line_id':setting_id[0],'sequence': sequence,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
                             sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            sequence = 1
                             #self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context)                         
                         #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
                     else:                
@@ -842,8 +929,14 @@ class sale_plan_for_day_setting(osv.osv):
                     
                         #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
                         for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                            partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            plan_seq = plan_seq_obj.search(cr, uid, [('sale_plan_day_id', '=', setting_id[0]), 
+                                                                     ('partner_id', '=', res_id.id)], context=context)  
+                            if plan_seq:
+                                plan = plan_seq_obj.browse(cr,uid,plan_seq,context=context) 
+                                sequence = plan.sequence or 1 
+                            partner = {'line_id':setting_id[0],'sequence': sequence,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
                             sale_plan_day_line_obj.create(cr,uid,partner,context=context) 
+                            sequence = 1
                             #self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context)
                     else:                
                         plan_id = plan_obj.create(cr, uid, {'name': status,
@@ -871,8 +964,14 @@ class sale_plan_for_day_setting(osv.osv):
                    
                         #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
                         for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                            partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            plan_seq = plan_seq_obj.search(cr, uid, [('sale_plan_day_id', '=', setting_id[0]), 
+                                                                     ('partner_id', '=', res_id.id)], context=context)  
+                            if plan_seq:
+                                plan = plan_seq_obj.browse(cr,uid,plan_seq,context=context) 
+                                sequence = plan.sequence or 1 
+                            partner = {'line_id':setting_id[0],'sequence': sequence,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
                             sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            sequence = 1
                             #self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context) 
                     else:                
                         plan_id = plan_obj.create(cr, uid, {'name': status,
@@ -901,8 +1000,14 @@ class sale_plan_for_day_setting(osv.osv):
                     
                         #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
                         for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                            partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            plan_seq = plan_seq_obj.search(cr, uid, [('sale_plan_day_id', '=', setting_id[0]), 
+                                                                     ('partner_id', '=', res_id.id)], context=context)  
+                            if plan_seq:
+                                plan = plan_seq_obj.browse(cr,uid,plan_seq,context=context) 
+                                sequence = plan.sequence or 1 
+                            partner = {'line_id':setting_id[0],'sequence': sequence,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
                             sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            sequence = 1
                             #self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context) 
                     else:                
                         plan_id = plan_obj.create(cr, uid, {'name': status,
@@ -932,8 +1037,14 @@ class sale_plan_for_day_setting(osv.osv):
                    
                         #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
                         for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                            partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            plan_seq = plan_seq_obj.search(cr, uid, [('sale_plan_day_id', '=', setting_id[0]), 
+                                                                     ('partner_id', '=', res_id.id)], context=context)  
+                            if plan_seq:
+                                plan = plan_seq_obj.browse(cr,uid,plan_seq,context=context) 
+                                sequence = plan.sequence or 1 
+                            partner = {'line_id':setting_id[0],'sequence': sequence,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
                             sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            sequence = 1
                             #self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context)
                              
                     else:                
@@ -963,8 +1074,14 @@ class sale_plan_for_day_setting(osv.osv):
                     
                         #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
                         for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                            partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            plan_seq = plan_seq_obj.search(cr, uid, [('sale_plan_day_id', '=', setting_id[0]), 
+                                                                     ('partner_id', '=', res_id.id)], context=context)  
+                            if plan_seq:
+                                plan = plan_seq_obj.browse(cr,uid,plan_seq,context=context) 
+                                sequence = plan.sequence or 1 
+                            partner = {'line_id':setting_id[0],'sequence': sequence,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
                             sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            sequence = 1
                             #self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context) 
                     else:                
                         plan_id = plan_obj.create(cr, uid, {'name': status,
@@ -993,8 +1110,14 @@ class sale_plan_for_day_setting(osv.osv):
                    
                         #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
                         for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                            partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            plan_seq = plan_seq_obj.search(cr, uid, [('sale_plan_day_id', '=', setting_id[0]), 
+                                                                     ('partner_id', '=', res_id.id)], context=context)  
+                            if plan_seq:
+                                plan = plan_seq_obj.browse(cr,uid,plan_seq,context=context) 
+                                sequence = plan.sequence or 1 
+                            partner = {'line_id':setting_id[0],'sequence': sequence,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
                             sale_plan_day_line_obj.create(cr,uid,partner,context=context) 
+                            sequence = 1
                             #self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context)
                     else:                
                         plan_id = plan_obj.create(cr, uid, {'name': status,
@@ -1022,8 +1145,14 @@ class sale_plan_for_day_setting(osv.osv):
                     
                         #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
                         for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                            partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            plan_seq = plan_seq_obj.search(cr, uid, [('sale_plan_day_id', '=', setting_id[0]), 
+                                                                     ('partner_id', '=', res_id.id)], context=context)  
+                            if plan_seq:
+                                plan = plan_seq_obj.browse(cr,uid,plan_seq,context=context) 
+                                sequence = plan.sequence or 1 
+                            partner = {'line_id':setting_id[0],'sequence': sequence,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
                             sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            sequence = 1
                             #self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context) 
                     else:                
                         plan_id = plan_obj.create(cr, uid, {'name': status,
@@ -1051,8 +1180,14 @@ class sale_plan_for_day_setting(osv.osv):
                    
                         #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
                         for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                            partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            plan_seq = plan_seq_obj.search(cr, uid, [('sale_plan_day_id', '=', setting_id[0]), 
+                                                                     ('partner_id', '=', res_id.id)], context=context)  
+                            if plan_seq:
+                                plan = plan_seq_obj.browse(cr,uid,plan_seq,context=context) 
+                                sequence = plan.sequence or 1 
+                            partner = {'line_id':setting_id[0],'sequence': sequence,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
                             sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            sequence = 1
                             #self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context) 
                     else:                
                         plan_id = plan_obj.create(cr, uid, {'name': status,
@@ -1080,8 +1215,14 @@ class sale_plan_for_day_setting(osv.osv):
                     
                         #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
                         for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                            partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                            sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            plan_seq = plan_seq_obj.search(cr, uid, [('sale_plan_day_id', '=', setting_id[0]), 
+                                                                     ('partner_id', '=', res_id.id)], context=context)  
+                            if plan_seq:
+                                plan = plan_seq_obj.browse(cr,uid,plan_seq,context=context) 
+                                sequence = plan.sequence or 1 
+                            partner = {'line_id':setting_id[0],'sequence': sequence,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context)                            
+                            sequence = 1
                             #self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context) 
                     else:                
                         plan_id = plan_obj.create(cr, uid, {'name': status,
@@ -1110,8 +1251,14 @@ class sale_plan_for_day_setting(osv.osv):
                             #cr.execute("delete from res_partner_sale_plan_day_rel where partner_id=%s and sale_plan_day_id=%s", (rel_partner_id[0], setting_id[0]))                    
                         #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))
                         for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
-                            partner = {'line_id':setting_id[0],'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
-                            sale_plan_day_line_obj.create(cr,uid,partner,context=context)
+                            plan_seq = plan_seq_obj.search(cr, uid, [('sale_plan_day_id', '=', setting_id[0]), 
+                                                                     ('partner_id', '=', res_id.id)], context=context)  
+                            if plan_seq:
+                                plan = plan_seq_obj.browse(cr,uid,plan_seq,context=context) 
+                                sequence = plan.sequence or 1 
+                            partner = {'line_id':setting_id[0],'sequence': sequence,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
+                            sale_plan_day_line_obj.create(cr,uid,partner,context=context)                            
+                            sequence = 1
                             #self.create_sale_team_rel(cr, uid, setting_id[0], res_id.id, context=context) 
                     else:                
                         plan_id = plan_obj.create(cr, uid, {'name': status,
