@@ -20,8 +20,8 @@ class sale_plan_for_day_setup(osv.osv):
     _defaults = {
                'active':True,
                
-    }  
-     
+    }     
+
 sale_plan_for_day_setup()
 
 class sale_plan_day_line(osv.osv):
@@ -44,5 +44,37 @@ class sale_plan_day_line(osv.osv):
                 }
     _defaults = {
                'sequence':1,
-    }      
+    }   
+    
+    def write(self, cr, uid, ids, vals, context=None):
+        
+        plan_day_seq_obj = self.pool.get('sale.plan.day.sequence')
+        plan_setting = self.browse(cr, uid, ids, context=context)
+        if vals.get('sequence'):
+            plan_day = plan_day_seq_obj.search(cr, uid, [('sale_plan_day_id', '=', plan_setting.line_id.id), 
+                                                         ('partner_id', '=', plan_setting.partner_id.id)], context=context)
+            if plan_day:
+                plan_day_obj = plan_day_seq_obj.browse(cr,uid,plan_day,context=context)                
+                plan_day_obj.write({'sequence':vals.get('sequence')})
+            else:
+                result = {
+                            'sale_plan_day_id': plan_setting.line_id.id,
+                            'sequence': vals.get('sequence'),
+                            'partner_id': plan_setting.partner_id.id,
+                        }                                                     
+                plan_day_seq_obj.create(cr, uid, result, context=context)   
+        new_id = super(sale_plan_day_line, self).write(cr, uid, ids, vals, context=context)
+        return new_id  
+       
 sale_plan_day_line()
+
+class sale_plan_day_sequence(osv.osv):
+    _name = 'sale.plan.day.sequence'
+    
+    _columns = {
+                'sale_plan_day_id':fields.many2one('sale.plan.day', 'Sale Plan Day'),
+                'sequence':fields.float('Sequence'),
+                'partner_id':fields.many2one('res.partner', 'Customer'),
+            }  
+
+sale_plan_day_sequence()
