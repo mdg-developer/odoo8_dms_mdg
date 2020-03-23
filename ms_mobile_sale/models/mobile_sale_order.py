@@ -1317,6 +1317,7 @@ class mobile_sale_order(osv.osv):
                             self.pool['account.invoice'].credit_approve(cr, uid, [invoice_id], context=context)                                 
                             new_session_name = ConnectorSession(cr, uid, context)
                             jobid = automatic_direct_sale_transfer.delay(new_session_name, solist, ms_ids.date, priority=10)
+                            self.pool['queue.job'].write(cr, uid, jobid, {'is_credit_invoice':True}, context)   
                             runner = ConnectorRunner()
                             runner.run_jobs() 
                             # clicking the delivery order view button

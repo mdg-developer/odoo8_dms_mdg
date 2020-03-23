@@ -13,11 +13,7 @@
 							<group>
 								<field name="pricelist_id" domain="[('type','=','sale')]" />
 								<field name="date" />
-<<<<<<< HEAD
-								<field name="outlet_type" on_change="on_change_outlet_type(outlet_type,pricelist_id)"  />
-=======
 								<field name="outlet_type_ids" widget="many2many_tags"/>
->>>>>>> 5144ce30c165d69b074778e451b8b53acf35290f
 								<field name="company_id" />
 							</group>
 							<group>

@@ -90,6 +90,7 @@ class QueueJob(models.Model):
     forced_channel = fields.Char()
     is_credit_invoice = fields.Boolean(string='Is Credit Invoice',default=False)
 
+
     @api.multi
     @api.depends('forced_channel', 'job_function_id.channel_id')
     def _compute_channel(self):
