@@ -160,9 +160,9 @@ class PrintJournalXlsx(ReportXlsx):
         for period in _p.period_obj:            
             for journal in _p.journals(data):
                 if _p.amount_currency(data):
-                    self.sheet.merge_range(self.row_pos, 0, self.row_pos, 10, journal.name + '-' + period.code or '', self.format_title)
+                    self.sheet.merge_range(self.row_pos, 0, self.row_pos, 11, journal.name + '-' + period.code or '', self.format_title)
                 else:
-                    self.sheet.merge_range(self.row_pos, 0, self.row_pos, 8, journal.name + '-' + period.code or '', self.format_title)                
+                    self.sheet.merge_range(self.row_pos, 0, self.row_pos, 9, journal.name + '-' + period.code or '', self.format_title)                
                 self.row_pos += 1  
                 self.sheet.write_string(self.row_pos, 0, 'Date' , self.format_header_one)
                 self.sheet.set_column(0, 0, 30)
@@ -170,23 +170,25 @@ class PrintJournalXlsx(ReportXlsx):
                 self.sheet.set_column(1, 1, 30)
                 self.sheet.write_string(self.row_pos, 2, 'Account' , self.format_header_one)
                 self.sheet.set_column(2, 2, 30)
-                self.sheet.write_string(self.row_pos, 3, 'Due Date' , self.format_header_one)
+                self.sheet.write_string(self.row_pos, 3, 'Account Description' , self.format_header_one)
                 self.sheet.set_column(3, 3, 30)
-                self.sheet.write_string(self.row_pos, 4, 'Partner' , self.format_header_one)
+                self.sheet.write_string(self.row_pos, 4, 'Due Date' , self.format_header_one)
                 self.sheet.set_column(4, 4, 30)
-                self.sheet.write_string(self.row_pos, 5, 'Label' , self.format_header_one)
+                self.sheet.write_string(self.row_pos, 5, 'Partner' , self.format_header_one)
                 self.sheet.set_column(5, 5, 30)
-                self.sheet.write_string(self.row_pos, 6, 'Reference' , self.format_header_one)
+                self.sheet.write_string(self.row_pos, 6, 'Label' , self.format_header_one)
                 self.sheet.set_column(6, 6, 30)
-                self.sheet.write_string(self.row_pos, 7, 'Debit' , self.format_header_one)
+                self.sheet.write_string(self.row_pos, 7, 'Reference' , self.format_header_one)
                 self.sheet.set_column(7, 7, 30)
-                self.sheet.write_string(self.row_pos, 8, 'Credit' , self.format_header_one)
+                self.sheet.write_string(self.row_pos, 8, 'Debit' , self.format_header_one)
                 self.sheet.set_column(8, 8, 30)
+                self.sheet.write_string(self.row_pos, 9, 'Credit' , self.format_header_one)
+                self.sheet.set_column(9, 9, 30)
                 if _p.amount_currency(data):
-                    self.sheet.write_string(self.row_pos, 9, 'Currency Balance' , self.format_header_one)
-                    self.sheet.set_column(9, 9, 30)
-                    self.sheet.write_string(self.row_pos, 10, 'Currency' , self.format_header_one)
+                    self.sheet.write_string(self.row_pos, 10, 'Currency Balance' , self.format_header_one)
                     self.sheet.set_column(10, 10, 30)
+                    self.sheet.write_string(self.row_pos, 11, 'Currency' , self.format_header_one)
+                    self.sheet.set_column(11, 11, 30)
                 self.row_pos += 1
                                 
                 move_ids = self.env['account.move.line'].search([('move_id', 'in', tuple(move_list)),
@@ -203,31 +205,33 @@ class PrintJournalXlsx(ReportXlsx):
                         self.sheet.set_column(1, 1, 30)
                         self.sheet.write_string(self.row_pos, 2, move.account_id.code or '', self.format_header_one)
                         self.sheet.set_column(2, 2, 30)
-                        self.sheet.write_string(self.row_pos, 3, move.date_maturity or '', self.format_header_one)
+                        self.sheet.write_string(self.row_pos, 3, move.account_id.name or '', self.format_header_left)
                         self.sheet.set_column(3, 3, 30)
-                        self.sheet.write_string(self.row_pos, 4, move.partner_id.name or '', self.format_header_left)
+                        self.sheet.write_string(self.row_pos, 4, move.date_maturity or '', self.format_header_one)
                         self.sheet.set_column(4, 4, 30)
-                        self.sheet.write_string(self.row_pos, 5, move.name or '', self.format_header_left)
+                        self.sheet.write_string(self.row_pos, 5, move.partner_id.name or '', self.format_header_left)
                         self.sheet.set_column(5, 5, 30)
-                        self.sheet.write_string(self.row_pos, 6, move.move_id.ref or '', self.format_header_left)
+                        self.sheet.write_string(self.row_pos, 6, move.name or '', self.format_header_left)
                         self.sheet.set_column(6, 6, 30)
-                        self.sheet.write_number(self.row_pos, 7, move.debit or 0.00, self.format_header_number_right)
+                        self.sheet.write_string(self.row_pos, 7, move.move_id.ref or '', self.format_header_left)
                         self.sheet.set_column(7, 7, 30)
-                        self.sheet.write_number(self.row_pos, 8, move.credit or 0.00, self.format_header_number_right)
-                        self.sheet.set_column(8, 8, 30)   
+                        self.sheet.write_number(self.row_pos, 8, move.debit or 0.00, self.format_header_number_right)
+                        self.sheet.set_column(8, 8, 30)
+                        self.sheet.write_number(self.row_pos, 9, move.credit or 0.00, self.format_header_number_right)
+                        self.sheet.set_column(9, 9, 30)   
                         if _p.amount_currency(data):  
-                            self.sheet.write_number(self.row_pos, 9, move.amount_currency or 0.00, self.format_header_number_right)
-                            self.sheet.set_column(9, 9, 30) 
-                            self.sheet.write_string(self.row_pos, 10, move.currency_id.symbol or '', self.format_header_one)
-                            self.sheet.set_column(10, 10, 30)                    
+                            self.sheet.write_number(self.row_pos, 10, move.amount_currency or 0.00, self.format_header_number_right)
+                            self.sheet.set_column(10, 10, 30) 
+                            self.sheet.write_string(self.row_pos, 11, move.currency_id.symbol or '', self.format_header_one)
+                            self.sheet.set_column(11, 11, 30)                    
                         self.row_pos += 1
                         total_debit = total_debit + move.debit
                         total_credit = total_credit + move.credit
                         
-                    self.sheet.write_number(self.row_pos, 7, total_debit or 0.00, self.format_header_number_right)
-                    self.sheet.set_column(7, 7, 30)
-                    self.sheet.write_number(self.row_pos, 8, total_credit or 0.00, self.format_header_number_right)
+                    self.sheet.write_number(self.row_pos, 8, total_debit or 0.00, self.format_header_number_right)
                     self.sheet.set_column(8, 8, 30)
+                    self.sheet.write_number(self.row_pos, 9, total_credit or 0.00, self.format_header_number_right)
+                    self.sheet.set_column(9, 9, 30)
                     self.row_pos += 1
                         
                 self.row_pos += 1
