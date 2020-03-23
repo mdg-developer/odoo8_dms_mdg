@@ -64,7 +64,7 @@ the creation XLS reports in OpenERP.
 
 * XLS with multiple sheets
 
-  Download the ``account_journal_report_xls`` module from http://apps.openerp.com as example.
+  Download the ``account_journal_report_xls_bk`` module from http://apps.openerp.com as example.
 
 Development assistance
 ''''''''''''''''''''''

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        
+        <record id="view_customer_target_form" model="ir.ui.view">
+			<field name="name">customer.target.form</field>
+			<field name="model">customer.target</field>
+			<field name="arch" type="xml">
+				<form string="Customer Target Form">
+					<sheet>
+						<group>
+							<group>		
+								<field name="partner_id" />
+								<field name="outlet_type" />
+								<field name="township" />
+								<field name="address" />
+								<field name="date" />
+							</group>
+							<group>		
+								<field name="branch_id" />
+								<field name="section_ids" widget="many2many_tags" />
+								<field name="delivery_team_id" />
+								<field name="delivery" />
+							</group>
+							<group>		
+								<field name="updated_by" />
+								<field name="updated_time" />		
+							</group>
+						</group>
+						<notebook>
+							<page string="Product">
+								<field name="target_line_ids">		
+									<tree string="Product" editable="bottom">
+										<field name="product_id" on_change="onchange_product(product_id)" />
+										<field name="product_uom" />
+										<field name="price" />
+										<field name="month1" readonly="1" />
+										<field name="month2" readonly="1" />
+										<field name="month3" readonly="1" />
+										<field name="month4" readonly="1" />
+										<field name="month5" readonly="1" />
+										<field name="month6" readonly="1" />
+										<field name="6ams" readonly="1" />
+										<field name="target_qty" />
+										<field name="ach_qty" readonly="1" />
+										<field name="ach_percent" readonly="1" />
+										<field name="gap_qty" readonly="1" />
+									</tree>
+								</field>
+							</page>
+						</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		
+        <record model="ir.ui.view" id="view_customer_target_tree">
+			<field name="name">customer.target.tree</field>
+			<field name="model">customer.target</field>
+			<field name="arch" type="xml">
+				<tree string="Customer Target">
+					<field name="partner_id" />	
+					<field name="outlet_type" />	
+				</tree>
+			</field>
+		</record>
+	
+	    <record id="view_customer_target_filter" model="ir.ui.view">
+			<field name="name">customer.target.filter</field>
+			<field name="model">customer.target</field>
+			<field name="arch" type="xml">
+				<search string="Customer Target Filter">
+					<group expand="0" string="Group By...">						
+						<filter string="Customer" context="{'group_by': 'partner_id'}" />							
+					</group>
+				</search>
+			</field>
+		</record>
+		
+	    <record id="action_customer_target_view" model="ir.actions.act_window">
+			<field name="name">Customer Target</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">customer.target</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" eval="view_customer_target_tree" />
+			<field name="form_view_id" ref="view_customer_target_form"/>
+			<field name="search_view_id" ref="view_customer_target_filter" />
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to create new customer target.
+				</p>
+			</field>
+		</record>
+		
+	    <record id="action_customer_target_tree" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="action_customer_target_view"/>
+        </record>
+        
+        <record id="action_customr_target_form" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_customer_target_form"/>
+            <field name="act_window_id" ref="action_customer_target_view"/>
+        </record>
+        
+	    <menuitem id="menu_customer_target" action="action_customer_target_view"
+			parent="menu_customization.menu_sales_target_menu" name="Customer Target" sequence="7" />   
+		
+    </data>    
+</openerp>

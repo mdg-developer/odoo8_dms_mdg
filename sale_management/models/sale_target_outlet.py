@@ -62,7 +62,7 @@ class sale_target_outlet(osv.osv):
 
     _columns = {
         'name': fields.char('Description'),
-        'outlet_type': fields.many2one('outlettype.outlettype', 'Outlet Type',required=True),
+        'outlet_type_ids': fields.many2many('outlettype.outlettype','target_outlets_rel', 'target_id','outlet_id','Outlet Types',required=True),
         'month': fields.selection([
             ('01', 'January'),
             ('02', 'February'),
@@ -191,7 +191,7 @@ class sale_target_outlet_line(osv.osv):
                                    digits_compute=dp.get_precision('Product Price')),
         'price_subtotal': fields.function(_amount_line, string='Amount',
                                           digits_compute=dp.get_precision('Product Price'), type='float', ),
-        'distribution_price': fields.integer('Distribution'),
+        'percentage_growth': fields.integer('Percentage Growth'),
 
     }
 

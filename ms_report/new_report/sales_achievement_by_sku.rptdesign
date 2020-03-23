@@ -74,6 +74,7 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     <property name="columnName">quantity</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">quantity</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">quantity</text-property>
                 </structure>
                 <structure>
@@ -87,6 +88,7 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     <property name="columnName">target_qty</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">target_qty</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">target_qty</text-property>
                 </structure>
                 <structure>
@@ -112,6 +114,7 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">1</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -122,6 +125,7 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">2</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -151,12 +155,12 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     <structure>
                         <property name="position">5</property>
                         <property name="name">target_qty</property>
-                        <property name="dataType">decimal</property>
+                        <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">6</property>
                         <property name="name">target_amt</property>
-                        <property name="dataType">decimal</property>
+                        <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">7</property>
@@ -202,15 +206,15 @@ this.queryText =this.queryText.replace("--$branch_id$", "and branch_id in ("+ pa
                     <property name="position">5</property>
                     <property name="name">target_qty</property>
                     <property name="nativeName">target_qty</property>
-                    <property name="dataType">decimal</property>
-                    <property name="nativeDataType">-5</property>
+                    <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">6</property>
                     <property name="name">target_amt</property>
                     <property name="nativeName">target_amt</property>
-                    <property name="dataType">decimal</property>
-                    <property name="nativeDataType">2</property>
+                    <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">7</property>
@@ -258,7 +262,7 @@ target as (
 select row_number() over (order by ach.pseq) as seq,ach.name_template,quantity,ach_amt as ach_amt,
 case when sum(target_qty) is null then 0 else sum(target_qty) end as target_qty,		
 case when sum(target_amt) is null then 0 else sum(target_amt) end as target_amt,
-case when sum(target_amt) >0 then concat(round(((ach_amt*100)/sum(target_amt)),2),'%') else concat(0,'%') end as percent_target
+case when sum(target_amt) >0 then concat(round(((ach_amt*100)/sum(target_amt))::numeric,2),'%') else concat(0,'%') end as percent_target
 from ach_amt ach
 left join target target on (ach.product_id=target.product_id)
 group by ach.product_id,ach.name_template,ach_amt,quantity,ach.pseq

@@ -70,6 +70,7 @@
 					<field name="sku_invoice" invisible="1" />
 					<field name="product_invoice" invisible="1" />
 					<field name="credit_sale" invisible="1" />
+					<field name="sale_group_id" />
 				</field>
 				<field name="active" position="after">
 					<field name="allow_foc" />

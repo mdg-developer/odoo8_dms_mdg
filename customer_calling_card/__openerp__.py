@@ -40,6 +40,7 @@ Customer Calling Card
         
             'wizard/customer_target_wizard.xml',
             'wizard/res_partner_multi_view.xml',
+            'views/customer_target_view.xml',
     ],
     'installable': True,
     'auto_install': False,

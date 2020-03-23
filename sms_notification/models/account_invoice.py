@@ -8,6 +8,7 @@ from requests.auth import AuthBase
 import token
 from datetime import datetime, timedelta
 import datetime
+import logging
 
 class account_invoice(osv.osv):
     _inherit = 'account.invoice'
@@ -31,24 +32,7 @@ class account_invoice(osv.osv):
         'invoice_due_pre_reminder_noti': fields.datetime('Invoice Due Pre-Reminder Notification'),
         'due_days': fields.function(_calculate_due_days, string='Calculate due days', type='integer'),
     }         
-        
-    def get_sms_token(self, cr, uid, context=None): 
-        headers = {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}
-        print "Hello"
-        user= 'mdgtest'
-        password= '5329303b-4839-4c72-a1d0-fc72776755ca'
-        url='https://mpg-ids.mytel.com.mm/auth/realms/eis/protocol/openid-connect/token'
-        payload = {'grant_type': 'client_credentials'}
-        response = requests.post(url,headers=headers,auth=(user, password), data=payload, verify=False)
-        
-        print "hello step1"
-        
-        if response.status_code == 200:
-            print ("Success")
-            content = json.loads(response.content)
-            token = content['access_token'] 
-            return token    
-               
+                
     def send_invoice_due_pre_reminder_sms(self, cr, uid, ids, context=None):    
         
         cr.execute("select id from account_invoice where type='out_invoice' and state='open' and date_due=current_date+3")    
@@ -56,28 +40,24 @@ class account_invoice(osv.osv):
         if invoice_data:    
             for inv in invoice_data:
                 invoice = self.pool.get('account.invoice').browse(cr, uid, inv[0], context=context)
-                if not invoice.invoice_due_pre_reminder_noti:                     
+                if not invoice.invoice_due_pre_reminder_noti: 
                     sms_template_objs = self.pool.get('sms.template').search(cr, uid, [('condition', '=', 'before_invoice_is_due'),
                                                                                        ('globally_access','=',False)],limit=1)
-                    
                     for sms_template_obj in sms_template_objs:
-                        token = self.get_sms_token(cr, uid, context)
-                        if token and invoice.partner_id.sms == True:                         
+                        if invoice.partner_id.sms == True:                         
                             template_data = self.pool.get('sms.template').browse(cr, uid, sms_template_obj, context=context)                   
-                            message_body =  template_data.get_body_data(invoice)                        
-                            header = {'Content-Type': 'application/json',
-                                      'Authorization': 'Bearer {0}'.format(token)}
-                            sms_url = 'https://mytelapigw.mytel.com.mm/msg-service/v1.3/smsmt/sent'
-                            sms_payload = {
-                                            "source": "MYTELFTTH",
-                                            "dest": invoice.partner_id.phone,
-                                            "content": message_body
-                                        }                            
-                            
-                            response = requests.post(sms_url,  json = sms_payload, headers = header,verify=False)                            
-                            if response.status_code == 200:
-                                invoice.write({'invoice_due_pre_reminder_noti':datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")})
-                                                        
+                            message_body =  template_data.get_body_data(invoice)  
+                            vals = {
+                                      'phone':invoice.partner_id.mobile,
+                                      'message':message_body, 
+                                      'partner_id':invoice.partner_id.id,
+                                      'name':invoice.number
+                                }
+                            message = self.pool.get('sms.message').create(cr,uid,vals);
+                            message_obj = self.pool.get('sms.message').browse(cr, uid, message, context=context)
+                            if message_obj.status =='success':
+                                invoice.write({'invoice_due_pre_reminder_noti':datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")})                                                                                         
+                          
     def send_collection_sms(self, cr, uid, ids, context=None):    
         
         current_date = datetime.datetime.now().date()
@@ -92,25 +72,22 @@ class account_invoice(osv.osv):
                                                                                        ('globally_access','=',False)],limit=1)
                     
                     for sms_template_obj in sms_template_objs:
-                        token = self.get_sms_token(cr, uid, context)
-                        if token and invoice.partner_id.sms == True:                         
+                        if invoice.partner_id.sms == True:                         
                             template_data = self.pool.get('sms.template').browse(cr, uid, sms_template_obj, context=context)                   
-                            message_body =  template_data.get_body_data(invoice)                        
-                            header = {'Content-Type': 'application/json',
-                                      'Authorization': 'Bearer {0}'.format(token)}
-                            sms_url = 'https://mytelapigw.mytel.com.mm/msg-service/v1.3/smsmt/sent'
-                            sms_payload = {
-                                            "source": "MYTELFTTH",
-                                            "dest": invoice.partner_id.phone,
-                                            "content": message_body
-                                        }                            
-                            
-                            response = requests.post(sms_url,  json = sms_payload, headers = header,verify=False)                            
-                            if response.status_code == 200:
-                                invoice.write({'collection_noti':datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")})
+                            message_body =  template_data.get_body_data(invoice)   
+                            vals={
+                                    'phone':invoice.partner_id.mobile,
+                                    'message':message_body, 
+                                    'partner_id':invoice.partner_id.id,
+                                    'name':invoice.number
+                                }   
+                            message = self.pool.get('sms.message').create(cr,uid,vals);
+                            message_obj = self.pool.get('sms.message').browse(cr, uid, message, context=context)
+                            if message_obj.status == 'success':
+                                invoice.write({'collection_noti':datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")})                               
                                                              
-    def send_overdue_sms(self, cr, uid, ids, context=None):    
-        
+    def send_overdue_sms(self, cr, uid, ids, context=None):
+            
         cr.execute("select id from account_invoice where type='out_invoice' and state='open' and date_due=current_date-3")    
         invoice_data = cr.fetchall()   
         if invoice_data:    
@@ -120,20 +97,17 @@ class account_invoice(osv.osv):
                     sms_template_objs = self.pool.get('sms.template').search(cr, uid, [('condition', '=', 'overdue_noti'),
                                                                                        ('globally_access','=',False)],limit=1)
                     
-                    for sms_template_obj in sms_template_objs:
-                        token = self.get_sms_token(cr, uid, context)
-                        if token and invoice.partner_id.sms == True:                         
+                    for sms_template_obj in sms_template_objs:                        
+                        if invoice.partner_id.sms == True:                         
                             template_data = self.pool.get('sms.template').browse(cr, uid, sms_template_obj, context=context)                   
-                            message_body =  template_data.get_body_data(invoice)                        
-                            header = {'Content-Type': 'application/json',
-                                      'Authorization': 'Bearer {0}'.format(token)}
-                            sms_url = 'https://mytelapigw.mytel.com.mm/msg-service/v1.3/smsmt/sent'
-                            sms_payload = {
-                                            "source": "MYTELFTTH",
-                                            "dest": invoice.partner_id.phone,
-                                            "content": message_body
-                                        }                            
-                            
-                            response = requests.post(sms_url,  json = sms_payload, headers = header,verify=False)                            
-                            if response.status_code == 200:
-                                invoice.write({'overdue_noti':datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")})     
+                            message_body =  template_data.get_body_data(invoice) 
+                            vals={
+                                    'phone':invoice.partner_id.mobile,
+                                    'message':message_body, 
+                                    'partner_id':invoice.partner_id.id,
+                                    'name':invoice.number
+                                } 
+                            message = self.pool.get('sms.message').create(cr,uid,vals);
+                            message_obj = self.pool.get('sms.message').browse(cr, uid, message, context=context)
+                            if message_obj.status == 'success':
+                                invoice.write({'overdue_noti':datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")})                            

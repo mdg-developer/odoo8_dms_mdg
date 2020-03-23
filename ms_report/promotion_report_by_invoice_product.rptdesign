@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.6.0.v201606072122</property>
     <property name="units">in</property>
     <method name="initialize"><![CDATA[branchList = params["branch_id"].value.join(",");
 teamList = params["sales_team_id"].value.join(",");]]></method>
@@ -390,8 +390,8 @@ where active=True
             </list-property>
             <xml-property name="queryText"><![CDATA[ select pp.id,pp.name_template
 from product_product pp ,product_template pt
-where pp.active =True
-and pp.product_tmpl_id =pt.id
+--and pp.active =True
+where  pp.product_tmpl_id =pt.id
 --and pt.type!='service'
 and pp.id in (select product_product_id from crm_case_section_product_product_rel
 --$sale_team_id$

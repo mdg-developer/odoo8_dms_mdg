@@ -67,7 +67,7 @@ Sale Management
         'views/report_invoice_with_price.xml',
         'reports/report_credit_note.xml',
         'reports/report_debit_note.xml',
-        
+        'views/sales_group_view.xml',
     ],
     'installable': True,
     'auto_install': False,

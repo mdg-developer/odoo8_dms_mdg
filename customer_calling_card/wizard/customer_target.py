@@ -24,6 +24,7 @@ from openerp.osv import fields, osv
 from xlrd import open_workbook
 from openerp.tools.translate import _
 from datetime import datetime
+import datetime
 import base64
 import logging
 from math import floor
@@ -53,6 +54,164 @@ class customer_target(osv.osv):
        
     }
   
+    def create_customer_target_data(self, cr, uid, context=None):
+          
+        month1_sale = month2_sale = month3_sale = percentage_growth = current_month_sale = target_amount = customer_ams = 0  
+        cr.execute("""delete from customer_target""") 
+        #('id', 'in', (19761,28575,28844))
+        customer_val = self.pool.get('res.partner').search(cr, uid, [('active', '=', True), 
+                                                                     ('customer', '=', True),
+                                                                    ])
+        for customer in customer_val:
+            customer_obj = self.pool.get('res.partner').browse(cr, uid, customer, context=context)                                    
+            result = {
+                        'partner_id':customer_obj.id,
+                        'outlet_type':customer_obj.outlet_type.id,
+                        'township':customer_obj.township.id,
+                        'address':customer_obj.street,
+                        'date':datetime.datetime.now().date(),
+                        'branch_id':customer_obj.branch_id.id,
+                    }
+            target = self.pool.get('customer.target').create(cr, uid, result, context=context)   
+            #('id', 'in', (2,5,8))
+            product_product = self.pool.get('product.product').search(cr, uid, [('active', '=', True), 
+                                                                                ('sale_ok', '=', True),
+                                                                                ('is_foc', '!=', True)
+                                                                                ])
+            for product in product_product:
+                product_obj = self.pool.get('product.product').browse(cr, uid, product, context=context)
+                
+                #get month 1 sale
+                cr.execute("""select COALESCE(sum(product_quantity),0) product_quantity
+                            from 
+                            (    select 
+                                case when inv_line.uos_id=pt.uom_id then sum(round(quantity,0)) 
+                                     when inv_line.uos_id=pt.big_uom_id then sum(round(quantity*(select floor(round(1/factor,2)) from product_uom where id=big_uom_id),0)) end as product_quantity
+                                from account_invoice_line inv_line,account_invoice inv,product_product pp,product_template pt
+                                where inv_line.invoice_id=inv.id
+                                and inv_line.product_id=pp.id
+                                and pp.product_tmpl_id=pt.id
+                                and inv.type='out_invoice'
+                                and inv.state in ('open','paid')
+                                and foc!=true
+                                and inv.partner_id=%s
+                                and product_id=%s
+                                and date_invoice between (select date_trunc('month', current_date - interval '3' month)::date)
+                                and (select ((date_trunc('month', current_date - interval '3' month)+ INTERVAL '1 MONTH - 1 day'))::date)
+                                group by inv_line.uos_id,pt.uom_id,pt.big_uom_id
+                            )A""", (customer_obj.id,product_obj.id,))    
+                month1_data = cr.fetchall()
+                if month1_data:
+                    month1_sale = month1_data[0][0]
+                
+                #get month 2 sale
+                cr.execute("""select COALESCE(sum(product_quantity),0) product_quantity
+                            from 
+                            (    select 
+                                case when inv_line.uos_id=pt.uom_id then sum(round(quantity,0)) 
+                                     when inv_line.uos_id=pt.big_uom_id then sum(round(quantity*(select floor(round(1/factor,2)) from product_uom where id=big_uom_id),0)) end as product_quantity
+                                from account_invoice_line inv_line,account_invoice inv,product_product pp,product_template pt
+                                where inv_line.invoice_id=inv.id
+                                and inv_line.product_id=pp.id
+                                and pp.product_tmpl_id=pt.id
+                                and inv.type='out_invoice'
+                                and inv.state in ('open','paid')
+                                and foc!=true
+                                and inv.partner_id=%s
+                                and product_id=%s
+                                and date_invoice between (select date_trunc('month', current_date - interval '2' month)::date)
+                                and (select ((date_trunc('month', current_date - interval '2' month)+ INTERVAL '1 MONTH - 1 day'))::date)
+                                group by inv_line.uos_id,pt.uom_id,pt.big_uom_id
+                            )A""", (customer_obj.id,product_obj.id,))    
+                month2_data = cr.fetchall()
+                if month2_data:
+                    month2_sale = month2_data[0][0]
+                    
+                #get month 3 sale
+                cr.execute("""select COALESCE(sum(product_quantity),0) product_quantity
+                            from 
+                            (    select 
+                                case when inv_line.uos_id=pt.uom_id then sum(round(quantity,0)) 
+                                     when inv_line.uos_id=pt.big_uom_id then sum(round(quantity*(select floor(round(1/factor,2)) from product_uom where id=big_uom_id),0)) end as product_quantity
+                                from account_invoice_line inv_line,account_invoice inv,product_product pp,product_template pt
+                                where inv_line.invoice_id=inv.id
+                                and inv_line.product_id=pp.id
+                                and pp.product_tmpl_id=pt.id
+                                and inv.type='out_invoice'
+                                and inv.state in ('open','paid')
+                                and foc!=true
+                                and inv.partner_id=%s
+                                and product_id=%s
+                                and date_invoice between (select date_trunc('month', current_date - interval '1' month)::date)
+                                and (select ((date_trunc('month', current_date - interval '1' month)+ INTERVAL '1 MONTH - 1 day'))::date)
+                                group by inv_line.uos_id,pt.uom_id,pt.big_uom_id
+                            )A""", (customer_obj.id,product_obj.id,))    
+                month3_data = cr.fetchall()
+                if month3_data:
+                    month3_sale = month3_data[0][0]
+                
+                total_sale = month1_sale + month2_sale + month3_sale    
+                avg_sale = total_sale/3
+                    
+                #percentage growth and target amount
+                cr.execute("""select percentage_growth,product_uom_qty*price_unit
+                            from sales_target_outlet target
+                            left join sales_target_outlet_line line on (target.id=line.sale_ids)
+                            left join target_outlets_rel rel on (rel.target_id=target.id)
+                            where year=date_part('year',current_date)::character varying
+                            and month=to_char(now(),'MM')
+                            and outlet_id=%s
+                            and product_id=%s""", (customer_obj.outlet_type.id,product_obj.id,))    
+                percentage_growth_data = cr.fetchall()
+                if percentage_growth_data:
+                    percentage_growth = percentage_growth_data[0][0]
+                    target_amount = percentage_growth_data[0][1]
+                    
+                percentage_growth_amount = avg_sale * percentage_growth/100
+                final_ams = percentage_growth_amount+ avg_sale
+                
+                #Compare final_ams and target_amount.Take biggest one as customer_ams
+                if final_ams > target_amount:
+                    customer_ams = final_ams
+                
+                if target_amount > final_ams:
+                    customer_ams = target_amount
+                    
+                #get current month sale
+                cr.execute("""select COALESCE(sum(product_quantity),0) product_quantity
+                            from 
+                            (   select 
+                                case when inv_line.uos_id=pt.uom_id then sum(round(quantity,0)) 
+                                     when inv_line.uos_id=pt.big_uom_id then sum(round(quantity*(select floor(round(1/factor,2)) from product_uom where id=big_uom_id),0)) end as product_quantity
+                                from account_invoice_line inv_line,account_invoice inv,product_product pp,product_template pt
+                                where inv_line.invoice_id=inv.id
+                                and inv_line.product_id=pp.id
+                                and pp.product_tmpl_id=pt.id
+                                and inv.type='out_invoice'
+                                and inv.state in ('open','paid')
+                                and foc!=true
+                                and inv.partner_id=%s
+                                and product_id=%s
+                                and date_invoice between (select date_trunc('month', current_date)::date)
+                                and (select ((date_trunc('month', current_date)+ INTERVAL '1 MONTH - 1 day'))::date)
+                                group by inv_line.uos_id,pt.uom_id,pt.big_uom_id
+                            )A""", (customer_obj.id,product_obj.id,))    
+                current_month_data = cr.fetchall()
+                if current_month_data:
+                    current_month_sale = current_month_data[0][0]
+                    
+                line_result = {
+                            'product_id':product_obj.id,  
+                            'month1':month1_sale,
+                            'month2':month2_sale,
+                            'month3':month3_sale,
+                            'target_qty':customer_ams,
+                            'ach_qty':current_month_sale,
+                            'gap_qty':customer_ams-current_month_sale,
+                            'line_id':target,                             
+                        }
+                target_line = self.pool.get('customer.target.line').create(cr, uid, line_result, context=context) 
+                                           
     def _check_file_ext(self, cursor, user, ids):
         for import_file in self.browse(cursor, user, ids):
             if '.xls' in import_file.import_fname:return True
@@ -301,7 +460,7 @@ class customer_target_line(osv.osv):
     
     _columns = {
                 
-                'line_id':fields.many2one('customer.target', 'Target Items'),
+                'line_id':fields.many2one('customer.target', 'Target Items', ondelete='cascade'),
                
                 'product_id':fields.many2one('product.product', 'Product Name'),
                 #'product_uom':fields.many2one('product.uom', 'UOM',readonly=True,required=True),            
