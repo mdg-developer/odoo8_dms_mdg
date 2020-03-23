@@ -90,8 +90,9 @@ class sale_target_nation(osv.osv):
         'date': _default_date,
         'month': lambda *a: str(time.strftime('%m')),
         'year': lambda *a: str(time.strftime('%Y')),
+        'pricelist_id':1,  
         'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid,
-                                                                                                       'sales.target',
+                                                                                                     'sales.target',
                                                                                                        context=context),
     }
 

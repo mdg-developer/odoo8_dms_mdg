@@ -11,7 +11,7 @@
 					<sheet>
 						<group>
 							<group>
-								<field name="pricelist_id" domain="[('type','=','sale')]" />
+								<field name="pricelist_id" domain="[('type','=','sale')]"   on_change="on_change_pricelist(pricelist_id)"/>
 								<field name="date" />
 								<field name="company_id" />
 							</group>
