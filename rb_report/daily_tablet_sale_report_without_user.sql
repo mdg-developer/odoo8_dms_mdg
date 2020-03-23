@@ -55,7 +55,7 @@ CREATE OR REPLACE FUNCTION public.daily_sale_report_without_user(
     IN param_branch integer,
     IN param_team integer,
     IN usr_id integer)
-  RETURNS TABLE(date date, vr_no character varying, customer_code character varying, customerid integer, customer character varying, 
+  RETURNS TABLE(date date, po_no character varying, invoice_no character varying, salesman_name character varying,  payment_term character varying,vr_no character varying, customer_code character varying, customerid integer, customer character varying, 
 product character varying, product_uos_qty double precision, price_unit double precision,sub_total double precision, discount double precision,
 discount_amt double precision,net_total double precision,sale_group character varying, m_status character varying, type character varying, 
 township character varying, village character varying,city character varying, channel character varying, territory character varying, 
@@ -70,7 +70,9 @@ up_record record;
 Begin
   delete from daily_sale_temp;
 
-for data_record in  select (s.date+ '6 hour'::interval + '30 minutes'::interval)::date as date,s.name as vr_no,s.customer_code,r.id as customerid,r.name as customer , p.name_template as product,l.product_uos_qty,l.price_unit as sprice_unit,l.sub_total,
+for data_record in  select (s.date+ '6 hour'::interval + '30 minutes'::interval)::date as date,s.po_no,s.invoice_no,
+(select name from res_partner rp,res_users ru where rp.id=ru.partner_id and ru.id=s.user_id) salesman_name,term.name payment_term,
+s.name as vr_no,s.customer_code,r.id as customerid,r.name as customer , p.name_template as product,l.product_uos_qty,l.price_unit as sprice_unit,l.sub_total,
 l.discount,l.discount_amt,(l.price_unit *l.product_uos_qty) as net_total,c.name as sale_group ,s.m_status,s.type ,tp.name as township,r.village as village,ci.name as city,sc.name as channel, rs.name as state,s.delivery_remark ,s.additional_discount,
 s.void_flag,p.default_code as product_code,branch.name as branch,pm.name as main_group,pc.name as product_category
 from mobile_sale_order s
@@ -87,15 +89,16 @@ left join sale_channel sc on sc.id = r.sales_channel
 left join res_branch branch on branch.id=r.branch_id
 left join res_city ci on r.city = ci.id
 left join res_township  tp on  r.township = tp.id
+left join account_payment_term term on s.payment_term=term.id
 where (s.date+ '6 hour'::interval + '30 minutes'::interval)::date between from_date and to_date
 and t.main_group in (select mrel.main_group from res_main_group_rel mrel where mrel.user_id=usr_id)
 and c.id in(select trel.team_id from res_sale_teams_rel trel where trel.user_id=usr_id)	
 and branch.id in (select brel.bid from res_branch_users_rel brel where brel.user_id=usr_id)		
 loop
-insert into daily_sale_temp(date,vr_no,customer_code,customerid,customer,product,product_uos_qty,price_unit,sub_total,discount,
+insert into daily_sale_temp(date,po_no,invoice_no,salesman_name,payment_term,vr_no,customer_code,customerid,customer,product,product_uos_qty,price_unit,sub_total,discount,
 discount_amt,net_total,sale_group,m_status,type,township,village ,city,channel, state,delivery_remark,additional_discount,
 sale_plan_day_name ,sale_plan_trip_name,void,product_code,branch,main_group,product_category,seq)
-values(data_record.date,data_record.vr_no,data_record.customer_code,data_record.customerid,data_record.customer,
+values(data_record.date,data_record.po_no,data_record.invoice_no,data_record.salesman_name,data_record.payment_term,data_record.vr_no,data_record.customer_code,data_record.customerid,data_record.customer,
 data_record.product,data_record.product_uos_qty,data_record.sprice_unit,data_record.sub_total,data_record.discount,
 data_record.discount_amt,data_record.net_total,data_record.sale_group,data_record.m_status ,data_record.type,data_record.township ,
 data_record.village,data_record.city,data_record.channel,data_record.state,data_record.delivery_remark,data_record.additional_discount,
@@ -188,8 +191,6 @@ $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100
   ROWS 1000;
-ALTER FUNCTION public.daily_sale_report_without_user(date, date, integer, integer, integer, integer)
-  OWNER TO openerp;
 
 ------------ old -------------------------------------------
 -- Function: daily_sale_report_without_user(date, date, integer, integer)
