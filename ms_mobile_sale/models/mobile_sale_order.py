@@ -617,7 +617,7 @@ class mobile_sale_order(osv.osv):
                         sync_obj.create(cursor, user, print_result, context=context)
                 return True
         except Exception, e:
-                return False 				
+                return False                 
             
     def create_stock_delivery_reprint(self, cursor, user, vals, context=None):
              try :
@@ -657,7 +657,7 @@ class mobile_sale_order(osv.osv):
                 return True
              except Exception, e:
                 return False    
-            				
+                            
 # NZO
     def create_exchange_product(self, cursor, user, vals, context=None):
         print 'vals', vals
@@ -1456,7 +1456,7 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()
         cr.execute
         return datas
-		
+        
     def get_salePlanDays_by_sale_team(self, cr, uid, section_id , context=None, **kwargs):
         cr.execute('''select id,name,date,sale_team from sale_plan_day where sale_team=%s ''', (section_id,))
         datas = cr.fetchall()
@@ -1988,7 +1988,7 @@ class mobile_sale_order(osv.osv):
                 user_id = pt['user_id']      
                 pre_mobile_ids = []
                 total_mobile_ids = []
-                				
+                                
                 mobile_ids = []
                 mobile_sale_obj = self.pool.get('mobile.sale.order')        
                 mobile_sale_order_obj = self.pool.get('mobile.sale.order.line')
@@ -2090,7 +2090,7 @@ class mobile_sale_order(osv.osv):
                         if exit_data:
                             cursor.execute("update sales_denomination_product_line set product_uom_qty = product_uom_qty + %s , amount = amount + %s where denomination_product_ids = %s and product_id =%s", (pre_qty, data[2], deno_id, data[0],))
                         else:
-                            deno_product_obj.create(cursor, user, data_id, context=context)             							
+                            deno_product_obj.create(cursor, user, data_id, context=context)                                         
                 if  m_mobile_ids:
                     for data_mo in m_mobile_ids:
                         mobile_ids.append(data_mo[0])
@@ -2340,7 +2340,7 @@ class mobile_sale_order(osv.osv):
                         'partner_id':partner_id,
                         'from_date':from_date.date(),
                         'date':date,                       
-						'to_date':to_date.date(),
+                        'to_date':to_date.date(),
                         'image':ar['image1'],
                         'image1':ar['image2'],
                         'image2':ar['image3'],
@@ -3935,7 +3935,11 @@ class mobile_sale_order(osv.osv):
         cr.execute('''select * from promotion_rule_category_rel''')
         datas = cr.fetchall()        
         return datas
-    
+
+    def push_credit_job(self, cr, uid, user_id,date, context=None, **kwargs):
+        cr.execute('''update queue_job set is_credit_invoice=False where user_id=%s and create_date::date=%s''', (user_id,date,))
+        return True    
+        
     def get_partner_category_rel(self, cr, uid, section_id , context=None):        
         cr.execute('''(select a.* from res_partner_res_partner_category_rel a,
                  sale_plan_day_line b
