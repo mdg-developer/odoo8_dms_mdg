@@ -54,14 +54,19 @@ class customer_target(osv.osv):
        
     }
   
-    def create_customer_target_data(self, cr, uid, context=None):
-          
-        month1_sale = month2_sale = month3_sale = percentage_growth = current_month_sale = target_amount = customer_ams = 0  
-        cr.execute("""delete from customer_target""") 
-        #('id', 'in', (19761,28575,28844))
-        customer_val = self.pool.get('res.partner').search(cr, uid, [('active', '=', True), 
-                                                                     ('customer', '=', True),
-                                                                    ])
+    def create_customer_target_data(self, cr, uid, partner_id=None, context=None):         
+                
+        if partner_id:
+            cr.execute("""delete from customer_target where partner_id=%s""",(partner_id,)) 
+            customer_val = self.pool.get('res.partner').search(cr, uid, [('active', '=', True), 
+                                                                         ('customer', '=', True),
+                                                                         ('id', '=', partner_id)
+                                                                        ])
+        else:
+            cr.execute("""delete from customer_target""") 
+            customer_val = self.pool.get('res.partner').search(cr, uid, [('active', '=', True), 
+                                                                         ('customer', '=', True)
+                                                                        ])
         for customer in customer_val:
             customer_obj = self.pool.get('res.partner').browse(cr, uid, customer, context=context)                                    
             result = {
@@ -73,14 +78,15 @@ class customer_target(osv.osv):
                         'branch_id':customer_obj.branch_id.id,
                     }
             target = self.pool.get('customer.target').create(cr, uid, result, context=context)   
-            #('id', 'in', (2,5,8))
+            
             product_product = self.pool.get('product.product').search(cr, uid, [('active', '=', True), 
                                                                                 ('sale_ok', '=', True),
                                                                                 ('is_foc', '!=', True)
                                                                                 ])
             for product in product_product:
-                product_obj = self.pool.get('product.product').browse(cr, uid, product, context=context)
-                
+                product_obj = self.pool.get('product.product').browse(cr, uid, product, context=context)                
+                 
+                month1_sale = month2_sale = month3_sale = avg_sale = percentage_growth = current_month_sale = target_amount = customer_ams = 0                
                 #get month 1 sale
                 cr.execute("""select COALESCE(sum(product_quantity),0) product_quantity
                             from 
@@ -101,8 +107,9 @@ class customer_target(osv.osv):
                                 group by inv_line.uos_id,pt.uom_id,pt.big_uom_id
                             )A""", (customer_obj.id,product_obj.id,))    
                 month1_data = cr.fetchall()
+                
                 if month1_data:
-                    month1_sale = month1_data[0][0]
+                    month1_sale = month1_data[0][0]                
                 
                 #get month 2 sale
                 cr.execute("""select COALESCE(sum(product_quantity),0) product_quantity
@@ -124,8 +131,9 @@ class customer_target(osv.osv):
                                 group by inv_line.uos_id,pt.uom_id,pt.big_uom_id
                             )A""", (customer_obj.id,product_obj.id,))    
                 month2_data = cr.fetchall()
+                
                 if month2_data:
-                    month2_sale = month2_data[0][0]
+                    month2_sale = month2_data[0][0]                
                     
                 #get month 3 sale
                 cr.execute("""select COALESCE(sum(product_quantity),0) product_quantity
@@ -147,11 +155,12 @@ class customer_target(osv.osv):
                                 group by inv_line.uos_id,pt.uom_id,pt.big_uom_id
                             )A""", (customer_obj.id,product_obj.id,))    
                 month3_data = cr.fetchall()
-                if month3_data:
-                    month3_sale = month3_data[0][0]
                 
-                total_sale = month1_sale + month2_sale + month3_sale    
-                avg_sale = total_sale/3
+                if month3_data:
+                    month3_sale = month3_data[0][0]                              
+                
+                total_sale = month1_sale + month2_sale + month3_sale  
+                avg_sale = round(total_sale/3,2)
                     
                 #percentage growth and target amount
                 cr.execute("""select percentage_growth,product_uom_qty*price_unit
@@ -166,8 +175,11 @@ class customer_target(osv.osv):
                 if percentage_growth_data:
                     percentage_growth = percentage_growth_data[0][0]
                     target_amount = percentage_growth_data[0][1]
+                else:
+                    percentage_growth = 0
+                    target_amount = 0
                     
-                percentage_growth_amount = avg_sale * percentage_growth/100
+                percentage_growth_amount = avg_sale * round(percentage_growth/100,2)
                 final_ams = percentage_growth_amount+ avg_sale
                 
                 #Compare final_ams and target_amount.Take biggest one as customer_ams
@@ -199,7 +211,7 @@ class customer_target(osv.osv):
                 current_month_data = cr.fetchall()
                 if current_month_data:
                     current_month_sale = current_month_data[0][0]
-                    
+                   
                 line_result = {
                             'product_id':product_obj.id,  
                             'month1':month1_sale,

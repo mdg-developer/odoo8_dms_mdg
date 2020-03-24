@@ -361,7 +361,12 @@ class res_partner(osv.osv):
             uid2 = uid
         cr.execute("select id from res_country where name ='Myanmar'")
         country_id=cr.fetchone()[0]
-        return country_id       
+        return country_id   
+    
+    def update_customer_target(self, cr, uid, ids, context=None):        
+        customer_target_obj = self.pool.get('customer.target')
+        for partner in self.browse(cr, uid, ids, context=context):
+            customer_target_obj.create_customer_target_data(cr, uid, partner.id, context=context)            
 
     _columns = {  
                 'customer_code':fields.char('Code', required=False,copy=False),

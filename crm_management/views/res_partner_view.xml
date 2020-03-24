@@ -303,6 +303,11 @@
 							</div>
 						</div>
 					</notebook>
+					<xpath expr="//form//sheet" position="before">
+						<header>
+						    <button name="update_customer_target" string="Update Customer Target" type="object"/>
+						</header>
+			        </xpath>
 					<!-- </xpath> -->
 					<!-- <xpath expr="//field[@name='user_id']" position="replace"> -->
 					<!-- <field name="user_id" string="Salesman Name" -->
