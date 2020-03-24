@@ -1145,6 +1145,7 @@ class mobile_sale_order(osv.osv):
 #                                     detailObj.do_detailed_transfer()
                                 new_session = ConnectorSession(cr, uid, context)
                                 jobid = automatic_direct_sale_transfer.delay(new_session, solist, ms_ids.date, priority=10)
+                                
                                 runner = ConnectorRunner()
                                 runner.run_jobs()                                       
                         if ms_ids.type == 'cash' and ms_ids.delivery_remark == 'none':  # Payment Type=>Cash and Delivery Remark=>None
@@ -1317,7 +1318,8 @@ class mobile_sale_order(osv.osv):
                             self.pool['account.invoice'].credit_approve(cr, uid, [invoice_id], context=context)                                 
                             new_session_name = ConnectorSession(cr, uid, context)
                             jobid = automatic_direct_sale_transfer.delay(new_session_name, solist, ms_ids.date, priority=10)
-                            self.pool['queue.job'].write(cr, uid, jobid, {'is_credit_invoice':True}, context)   
+                            queue_id=self.pool['queue.job'].search(cr, uid, [('uuid', '=', jobid)], context=context)
+                            self.pool['queue.job'].write(cr, uid, queue_id, {'is_credit_invoice':True}, context)   
                             runner = ConnectorRunner()
                             runner.run_jobs() 
                             # clicking the delivery order view button
@@ -3936,8 +3938,8 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()        
         return datas
 
-    def push_credit_job(self, cr, uid, user_id,date, context=None, **kwargs):
-        cr.execute('''update queue_job set is_credit_invoice=False where user_id=%s and create_date::date=%s''', (user_id,date,))
+    def push_credit_job(self, cr, uid,date, context=None, **kwargs):
+        cr.execute('''update queue_job set is_credit_invoice=False where user_id=%s and date_created::date=%s''', (uid,date,))
         return True    
         
     def get_partner_category_rel(self, cr, uid, section_id , context=None):        

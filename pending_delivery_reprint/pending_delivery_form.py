@@ -147,7 +147,8 @@ class pendingdelivery(osv.osv):
                             session = ConnectorSession(cr, uid, context)
                             jobid = automatic_pending_delivery_stock_transfer.delay(session, [solist], delivery_date, priority=20)
                             if payment_type=='credit':
-                                jobObj.write(cr, uid, jobid, {'is_credit_invoice':True}, context)      
+                                queue_id=jobObj.search(cr, uid, [('uuid', '=', jobid)], context=context)
+                                jobObj.write(cr, uid, queue_id, {'is_credit_invoice':True}, context)      
                             runner = ConnectorRunner()
                             runner.run_jobs()                                                                 
             self.write(cr, uid, ids[0], {'state':'done'}, context=context)                        
