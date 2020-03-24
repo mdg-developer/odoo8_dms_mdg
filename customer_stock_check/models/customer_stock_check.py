@@ -39,7 +39,7 @@ class customer_stock_check(osv.osv):
             stock_check_data = self.browse(cr, uid, ids[0], context=context) 
             sale_team_id = stock_check_data.sale_team_id.id
             sale_team = self.pool.get('crm.case.section').browse(cr, uid, sale_team_id, context=context)           
-            product_line = sale_team.product_ids   
+            product_line = sale_team.sale_group_id.product_ids   
             for p_line in product_line:
                 if p_line:
                     stock_line_obj.create(cr, uid, {'stock_check_ids': ids[0],

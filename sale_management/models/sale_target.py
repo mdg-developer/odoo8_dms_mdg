@@ -18,7 +18,7 @@ class sale_target(osv.osv):
         data_line = []
         if sale_team_id:
             sale_team = self.pool.get('crm.case.section').browse(cr, uid, sale_team_id, context=context)
-            product_line = sale_team.product_ids
+            product_line = sale_team.sale_group_id.product_ids
             print 'product_line ', product_line
             for line in product_line:
                 print 'product_line', line

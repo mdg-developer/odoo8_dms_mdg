@@ -40,7 +40,7 @@ class stock_return_manual(osv.osv):
             if vehicle_id:
                 vehicle_id = sale_team.vehicle_id.id
             
-            product_line = sale_team.product_ids
+            product_line = sale_team.sale_group_id.product_ids
             for line in product_line:                
                 product = self.pool.get('product.product').browse(cr, uid, line.id, context=context)   
                 if product.product_tmpl_id.type == 'product':                                               
