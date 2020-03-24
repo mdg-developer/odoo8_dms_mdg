@@ -40,7 +40,7 @@ class account_invoice(osv.osv):
         if invoice_data:    
             for inv in invoice_data:
                 invoice = self.pool.get('account.invoice').browse(cr, uid, inv[0], context=context)
-                if not invoice.invoice_due_pre_reminder_noti: 
+                if not invoice.invoice_due_pre_reminder_noti and invoice.payment_type == 'credit': 
                     sms_template_objs = self.pool.get('sms.template').search(cr, uid, [('condition', '=', 'before_invoice_is_due'),
                                                                                        ('globally_access','=',False)],limit=1)
                     for sms_template_obj in sms_template_objs:
@@ -67,7 +67,7 @@ class account_invoice(osv.osv):
         if invoice_obj:
             invoice_data = self.browse(cr, uid, invoice_obj, context=context)         
             for invoice in invoice_data:            
-                if not invoice.collection_noti:           
+                if not invoice.collection_noti and invoice.payment_type == 'credit':           
                     sms_template_objs = self.pool.get('sms.template').search(cr, uid, [('condition', '=', 'collection_noti'),
                                                                                        ('globally_access','=',False)],limit=1)
                     
@@ -93,7 +93,7 @@ class account_invoice(osv.osv):
         if invoice_data:    
             for inv in invoice_data:
                 invoice = self.pool.get('account.invoice').browse(cr, uid, inv[0], context=context)
-                if not invoice.overdue_noti:                     
+                if not invoice.overdue_noti and invoice.payment_type == 'credit':                     
                     sms_template_objs = self.pool.get('sms.template').search(cr, uid, [('condition', '=', 'overdue_noti'),
                                                                                        ('globally_access','=',False)],limit=1)
                     

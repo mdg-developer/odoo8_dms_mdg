@@ -1663,16 +1663,17 @@ class mobile_sale_order(osv.osv):
 
     def get_product_uoms(self, cr, uid , saleteam_id, context=None, **kwargs):
         cr.execute('''
-                select distinct uom_id,uom_name,ratio,template_id,product_id from(
-                select  pu.id as uom_id,pu.name as uom_name ,floor(round(1/factor,2)) as ratio,
-                pur.product_template_id as template_id,pp.id as product_id
-                from product_uom pu , product_template_product_uom_rel pur ,
-                product_product pp,
-                crm_case_section_product_product_rel crm
-                where pp.product_tmpl_id = pur.product_template_id
-                and crm.product_product_id = pp.id
-                and pu.id = pur.product_uom_id
-                and crm.crm_case_section_id = %s            
+                    select distinct uom_id,uom_name,ratio,template_id,product_id from(
+                    select  pu.id as uom_id,pu.name as uom_name ,floor(round(1/factor,2)) as ratio,
+                    pur.product_template_id as template_id,pp.id as product_id
+                    from product_uom pu , product_template_product_uom_rel pur ,
+                    product_product pp,
+                    product_sale_group_rel rel,crm_case_section ccs
+                    where pp.product_tmpl_id = pur.product_template_id
+                    and rel.product_id = pp.id
+                    and pu.id = pur.product_uom_id
+                    and rel.sale_group_id=ccs.sale_group_id
+                    and ccs.id = %s        
                 )A''' , (saleteam_id,))
         datas = cr.fetchall()
         cr.execute
@@ -1695,10 +1696,10 @@ class mobile_sale_order(osv.osv):
         cr.execute
         return datas
     def sale_team_return(self, cr, uid, section_id , saleTeamId, context=None, **kwargs):
-        cr.execute('''select DISTINCT cr.id,cr.complete_name,cr.warehouse_id,cr.name,sm.member_id,cr.code,pr.product_product_id,cr.location_id,cr.allow_foc,cr.allow_tax,cr.branch_id,state.name
-                    from crm_case_section cr, sale_member_rel sm,crm_case_section_product_product_rel pr,res_country_state state
-                     where sm.section_id = cr.id and cr.id=pr.crm_case_section_id  
-                     and state.id =cr.default_division and sm.member_id =%s 
+        cr.execute('''select DISTINCT cr.id,cr.complete_name,cr.warehouse_id,cr.name,sm.member_id,cr.code,rel.product_id,cr.location_id,cr.allow_foc,cr.allow_tax,cr.branch_id,state.name
+                    from crm_case_section cr, sale_member_rel sm,product_sale_group_rel rel,res_country_state state
+                    where sm.section_id = cr.id and cr.sale_group_id=rel.sale_group_id  
+                    and state.id =cr.default_division and sm.member_id =%s
                     and cr.id = %s
             ''', (section_id, saleTeamId,))
         datas = cr.fetchall()
@@ -2381,11 +2382,12 @@ class mobile_sale_order(osv.osv):
     def get_target_setting(self, cr, uid, sale_team_id , context=None, **kwargs):
         cr.execute('''            
                   select tl.id ,target.partner_id,tl.product_id,1 as product_uom,tl.ach_qty,tl.target_qty,gap_qty as gap,month1,month2,month3 
-                    from customer_target target ,customer_target_line tl,crm_case_section_product_product_rel cr
+                    from customer_target target ,customer_target_line tl,product_sale_group_rel rel,crm_case_section ccs
                     where target.id= tl.line_id
-                    and cr.product_product_id=tl.product_id
-                   and cr.crm_case_section_id =%s
-                   and tl.target_qty > 0
+                    and rel.product_id=tl.product_id
+                    and rel.sale_group_id=ccs.sale_group_id
+                    and ccs.id =%s
+                    and tl.target_qty > 0
          ''', (sale_team_id,))                
         datas = cr.fetchall()
         return datas    
