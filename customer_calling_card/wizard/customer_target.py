@@ -81,7 +81,7 @@ class customer_target(osv.osv):
             
             product_product = self.pool.get('product.product').search(cr, uid, [('active', '=', True), 
                                                                                 ('sale_ok', '=', True),
-                                                                                ('is_foc', '!=', True)
+                                                                                ('is_foc', '!=', True)                                                                                
                                                                                 ])
             for product in product_product:
                 product_obj = self.pool.get('product.product').browse(cr, uid, product, context=context)                
@@ -163,7 +163,7 @@ class customer_target(osv.osv):
                 avg_sale = round(total_sale/3,2)
                     
                 #percentage growth and target amount
-                cr.execute("""select percentage_growth,product_uom_qty*price_unit
+                cr.execute("""select percentage_growth,product_uom_qty
                             from sales_target_outlet target
                             left join sales_target_outlet_line line on (target.id=line.sale_ids)
                             left join target_outlets_rel rel on (rel.target_id=target.id)
@@ -179,7 +179,7 @@ class customer_target(osv.osv):
                     percentage_growth = 0
                     target_amount = 0
                     
-                percentage_growth_amount = avg_sale * round(percentage_growth/100,2)
+                percentage_growth_amount = avg_sale * round(percentage_growth/100.00,2)
                 final_ams = percentage_growth_amount+ avg_sale
                 
                 #Compare final_ams and target_amount.Take biggest one as customer_ams
@@ -484,7 +484,7 @@ class customer_target_line(osv.osv):
                 'month4':fields.float('Month4'),
                 'month5':fields.float('Month5'),
                 'month6':fields.float('Month6'),
-                '6ams':fields.float('6 A.M.S'),                
+                '6ams':fields.float('A.M.S'),                
 #                 '6ams': fields.function(_amount_6ams, type='float', method=True, store=True,                                            
 #                                              string='6 A.M.S'),
                 'target_qty':fields.float('Target Qty'),
