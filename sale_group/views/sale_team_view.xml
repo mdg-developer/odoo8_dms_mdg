@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+		<record id="crm_case_section_view_form_sale_group" model="ir.ui.view">
+			<field name="name">crm.case.section.form.inherit</field>
+			<field name="model">crm.case.section</field>
+			<field name="inherit_id" ref="sales_team.crm_case_section_view_form" />
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//field[@name='parent_id']" position="after">
+					    <field name="sale_group_id" />
+					</xpath>		
+				</data>
+			</field>
+		</record>
+		
+		<record id="crm_case_section_view_tree_sale_group" model="ir.ui.view">
+			<field name="name">crm.case.section.tree.inherit</field>
+			<field name="model">crm.case.section</field>
+			<field name="inherit_id" ref="sales_team.crm_case_section_view_tree" />
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//field[@name='user_id']" position="after">
+					    <field name="sale_group_id" />
+					</xpath>		
+				</data>
+			</field>
+		</record>
+		
+	</data>
+</openerp>
+		

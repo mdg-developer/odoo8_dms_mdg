@@ -69,8 +69,7 @@
 					<field name="sale_work_day" invisible="1" />
 					<field name="sku_invoice" invisible="1" />
 					<field name="product_invoice" invisible="1" />
-					<field name="credit_sale" invisible="1" />
-					<field name="sale_group_id" />
+					<field name="credit_sale" invisible="1" />					
 				</field>
 				<field name="active" position="after">
 					<field name="allow_foc" />

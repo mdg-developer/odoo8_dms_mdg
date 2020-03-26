@@ -13,4 +13,3 @@ import sale_target_branch
 import sale_target_outlet
 import sale_target_nation
 import sale_promotion_history
-import sales_group

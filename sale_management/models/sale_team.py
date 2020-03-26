@@ -264,8 +264,7 @@ class crm_case_section(osv.osv):
                 'fresh_stock_not_good_location_id': fields.many2one('stock.location', 'Fresh stock minor damage location', required=True),
                 'optional_issue_location_id': fields.many2one('stock.location', 'Optional Issue Location'),
                 'is_supervisor':fields.boolean('Is Supervisor',default=False),
-                'supervisor_team': fields.many2one('crm.case.section', 'Supervisor Team'),
-                'sale_group_id': fields.many2one('sales.group', 'Sales Group'),
+                'supervisor_team': fields.many2one('crm.case.section', 'Supervisor Team'),                
         }
     _sql_constraints = [
         ('code_uniq', 'unique (code)', 'The code of the sales team must be unique !')
