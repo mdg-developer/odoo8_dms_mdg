@@ -14,7 +14,7 @@
 					</xpath>
 					<xpath expr="//group[@string='Allowed Companies']" position="after">
 						<group string="Allowed Teams">
-							<field name="section_ids" nolabel="1"  />
+							<field name="section_ids" nolabel="1" />
 						</group>
 
 
@@ -36,8 +36,7 @@
 									<field name="allow_stock_check" />
 									<field name="allow_feedback" />
 									<field name="allow_customer_create" />
-									<field name="allow_customer_edit" />
-									
+
 								</group>
 								<group>
 									<field name="allow_credit_collection" />
@@ -49,6 +48,11 @@
 									<field name="allow_assets" />
 									<field name="allow_customer_location_update" />
 									<field name="allow_rental" />
+									<field name="allow_visit_photo_taken" />
+									<field name="allow_customer_edit" />
+									
+
+
 								</group>
 							</group>
 						</page>
