@@ -90,9 +90,8 @@ class customer_target(osv.osv):
                 #get month 1 sale
                 cr.execute("""select COALESCE(sum(product_quantity),0) product_quantity
                             from 
-                            (    select 
-                                case when inv_line.uos_id=pt.uom_id then sum(round(quantity,0)) 
-                                     when inv_line.uos_id=pt.big_uom_id then sum(round(quantity*(select floor(round(1/factor,2)) from product_uom where id=big_uom_id),0)) end as product_quantity
+                            (   select 
+                                (quantity*(select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=inv_line.uos_id)) as product_quantity
                                 from account_invoice_line inv_line,account_invoice inv,product_product pp,product_template pt
                                 where inv_line.invoice_id=inv.id
                                 and inv_line.product_id=pp.id
@@ -104,7 +103,7 @@ class customer_target(osv.osv):
                                 and product_id=%s
                                 and date_invoice between (select date_trunc('month', current_date - interval '3' month)::date)
                                 and (select ((date_trunc('month', current_date - interval '3' month)+ INTERVAL '1 MONTH - 1 day'))::date)
-                                group by inv_line.uos_id,pt.uom_id,pt.big_uom_id
+                                group by inv_line.quantity,inv_line.uos_id,pt.uom_id,pt.big_uom_id
                             )A""", (customer_obj.id,product_obj.id,))    
                 month1_data = cr.fetchall()
                 
@@ -114,9 +113,8 @@ class customer_target(osv.osv):
                 #get month 2 sale
                 cr.execute("""select COALESCE(sum(product_quantity),0) product_quantity
                             from 
-                            (    select 
-                                case when inv_line.uos_id=pt.uom_id then sum(round(quantity,0)) 
-                                     when inv_line.uos_id=pt.big_uom_id then sum(round(quantity*(select floor(round(1/factor,2)) from product_uom where id=big_uom_id),0)) end as product_quantity
+                            (   select 
+                                (quantity*(select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=inv_line.uos_id)) as product_quantity
                                 from account_invoice_line inv_line,account_invoice inv,product_product pp,product_template pt
                                 where inv_line.invoice_id=inv.id
                                 and inv_line.product_id=pp.id
@@ -128,7 +126,7 @@ class customer_target(osv.osv):
                                 and product_id=%s
                                 and date_invoice between (select date_trunc('month', current_date - interval '2' month)::date)
                                 and (select ((date_trunc('month', current_date - interval '2' month)+ INTERVAL '1 MONTH - 1 day'))::date)
-                                group by inv_line.uos_id,pt.uom_id,pt.big_uom_id
+                                group by inv_line.quantity,inv_line.uos_id,pt.uom_id,pt.big_uom_id
                             )A""", (customer_obj.id,product_obj.id,))    
                 month2_data = cr.fetchall()
                 
@@ -138,9 +136,8 @@ class customer_target(osv.osv):
                 #get month 3 sale
                 cr.execute("""select COALESCE(sum(product_quantity),0) product_quantity
                             from 
-                            (    select 
-                                case when inv_line.uos_id=pt.uom_id then sum(round(quantity,0)) 
-                                     when inv_line.uos_id=pt.big_uom_id then sum(round(quantity*(select floor(round(1/factor,2)) from product_uom where id=big_uom_id),0)) end as product_quantity
+                            (   select 
+                                (quantity*(select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=inv_line.uos_id)) as product_quantity
                                 from account_invoice_line inv_line,account_invoice inv,product_product pp,product_template pt
                                 where inv_line.invoice_id=inv.id
                                 and inv_line.product_id=pp.id
@@ -152,7 +149,7 @@ class customer_target(osv.osv):
                                 and product_id=%s
                                 and date_invoice between (select date_trunc('month', current_date - interval '1' month)::date)
                                 and (select ((date_trunc('month', current_date - interval '1' month)+ INTERVAL '1 MONTH - 1 day'))::date)
-                                group by inv_line.uos_id,pt.uom_id,pt.big_uom_id
+                                group by inv_line.quantity,inv_line.uos_id,pt.uom_id,pt.big_uom_id
                             )A""", (customer_obj.id,product_obj.id,))    
                 month3_data = cr.fetchall()
                 
@@ -163,7 +160,8 @@ class customer_target(osv.osv):
                 avg_sale = round(total_sale/3,2)
                     
                 #percentage growth and target amount
-                cr.execute("""select percentage_growth,product_uom_qty
+                cr.execute("""select percentage_growth,
+                            product_uom_qty*(select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=product_uom) as product_uom_qty
                             from sales_target_outlet target
                             left join sales_target_outlet_line line on (target.id=line.sale_ids)
                             left join target_outlets_rel rel on (rel.target_id=target.id)
@@ -193,8 +191,7 @@ class customer_target(osv.osv):
                 cr.execute("""select COALESCE(sum(product_quantity),0) product_quantity
                             from 
                             (   select 
-                                case when inv_line.uos_id=pt.uom_id then sum(round(quantity,0)) 
-                                     when inv_line.uos_id=pt.big_uom_id then sum(round(quantity*(select floor(round(1/factor,2)) from product_uom where id=big_uom_id),0)) end as product_quantity
+                                quantity*(select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=inv_line.uos_id) as product_quantity
                                 from account_invoice_line inv_line,account_invoice inv,product_product pp,product_template pt
                                 where inv_line.invoice_id=inv.id
                                 and inv_line.product_id=pp.id
@@ -206,7 +203,7 @@ class customer_target(osv.osv):
                                 and product_id=%s
                                 and date_invoice between (select date_trunc('month', current_date)::date)
                                 and (select ((date_trunc('month', current_date)+ INTERVAL '1 MONTH - 1 day'))::date)
-                                group by inv_line.uos_id,pt.uom_id,pt.big_uom_id
+                                group by inv_line.quantity,inv_line.uos_id,pt.uom_id,pt.big_uom_id
                             )A""", (customer_obj.id,product_obj.id,))    
                 current_month_data = cr.fetchall()
                 if current_month_data:
@@ -217,6 +214,7 @@ class customer_target(osv.osv):
                             'month1':month1_sale,
                             'month2':month2_sale,
                             'month3':month3_sale,
+                            '6ams':percentage_growth_amount,
                             'target_qty':customer_ams,
                             'ach_qty':current_month_sale,
                             'gap_qty':customer_ams-current_month_sale,
