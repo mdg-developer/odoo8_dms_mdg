@@ -54,4 +54,13 @@ class res_users(osv.osv):
                   update account_invoice set state ='paid' where state='open' and type='out_invoice' and payment_type='credit' and residual =0 
                   ''')
         return True
+
+    def automation_run_credit_invoice_job(self, cr, uid,context=None):
+        cr.execute('''
+            select count(*) from queue_job where is_credit_invoice=True''')
+        credit_count=cr.fetchone()[0]
+        if credit_count>0:
+            cr.execute('''
+                  update queue_job set is_credit_invoice =False where is_credit_invoice=True''')
+        return True
 res_users()
