@@ -11,7 +11,7 @@
 					<sheet>
 						<group>
 							<group>
-								<field name="pricelist_id" domain="[('type','=','sale')]" />
+								<field name="pricelist_id" on_change="on_change_outlet_type(pricelist_id)" domain="[('type','=','sale')]" />
 								<field name="date" />
 								<field name="outlet_type_ids" widget="many2many_tags"/>
 								<field name="company_id" />
