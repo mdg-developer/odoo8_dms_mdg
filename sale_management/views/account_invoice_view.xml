@@ -26,8 +26,11 @@
 				</xpath>
 				<field name="origin" position="after">
 					<field name="sale_order_id" attrs="{'invisible':[('type','!=','out_invoice')]}" />
+					<field name="is_pd_invoice" />
 				</field>
 				<field name="journal_id" position="after">
+
+					<field name="tb_ref_no" attrs="{'invisible':[('type','!=','out_invoice')]}" />
 					<field name="ignore_credit_limit" attrs="{'invisible':[('type','!=','out_invoice')]}" />
 					<field name="principle_id"
 						attrs="{'readonly': [('state', '=', 'paid')],'invisible':[('type','in',('out_invoice','in_invoice'))]}" />
@@ -150,8 +153,9 @@
 							attrs="{'readonly': [('state', '=', 'paid')],'invisible':[('type','in',('out_invoice','in_invoice'))]}" />
 						<!-- <field name="cdnreference_no" attrs="{'readonly': [('state', '=', 
 							'paid')]}" /> -->
-						<field name="origin" required="1" attrs="{'invisible':[('type','!=','in_invoice')]}" />
-						<field name="origin" required="1"  string="Reference No"
+						<field name="origin" required="1"
+							attrs="{'invisible':[('type','!=','in_invoice')]}" />
+						<field name="origin" required="1" string="Reference No"
 							attrs="{'invisible':[('type','!=','in_refund')]}" />
 
 						<field name="subject" attrs="{'readonly': [('state', '=', 'paid')]}" />
@@ -186,6 +190,33 @@
 
 			</field>
 		</record>
+
+
+		<record id="inherit_invoice_tree_for_order_ref" model="ir.ui.view">
+			<field name="name">account.invoice.tree</field>
+			<field name="model">account.invoice</field>
+			<field name="inherit_id" ref="mdg_customization.inherit_invoice_tree" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='origin']" position="after">
+					<field name="tb_ref_no" />
+
+				</xpath>
+			</field>
+		</record>
+
+		<record id="inheirt_view_account_invoice_filter_order_ref"
+			model="ir.ui.view">
+			<field name="name">account.invoice.select</field>
+			<field name="model">account.invoice</field>
+			<field name="inherit_id" ref="account.view_account_invoice_filter" />
+			<field name="arch" type="xml">
+				<field name="number" position="after">
+					<field name="tb_ref_no" />
+				</field>
+			</field>
+
+		</record>
+
 
 	</data>
 </openerp>

@@ -135,7 +135,7 @@ class pendingdelivery(osv.osv):
 #                             if detailObj:
 #                                 detailObj.do_detailed_transfer()    
                         invoice_id = mobile_obj.create_invoices(cr, uid, [solist], context=context)
-                        cr.execute('update account_invoice set date_invoice = %s, branch_id =%s ,payment_type=%s,delivery_remark =%s ,section_id=%s,user_id=%s, payment_term = %s where id =%s', (delivery_date,branch_id,payment_type, delivery_remark, delivery_team_id, uid,payment_term, invoice_id,))                                                
+                        cr.execute('update account_invoice set is_pd_invoice=True,date_invoice = %s, branch_id =%s ,payment_type=%s,delivery_remark =%s ,section_id=%s,user_id=%s, payment_term = %s where id =%s', (delivery_date,branch_id,payment_type, delivery_remark, delivery_team_id, uid,payment_term, invoice_id,))                                                
                                                      
                         invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                         if invoice_id:

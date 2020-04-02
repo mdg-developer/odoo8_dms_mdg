@@ -176,7 +176,8 @@ class customer_target(osv.osv):
                 else:
                     percentage_growth = 0
                     target_amount = 0
-                    
+                if not percentage_growth:
+                    percentage_growth=0   
                 percentage_growth_amount = avg_sale * round(percentage_growth/100.00,2)
                 final_ams = percentage_growth_amount+ avg_sale
                 

@@ -79,6 +79,18 @@ class account_invoice(osv.osv):
             result[rec.id] = order_id
         return result   
     
+    def _get_corresponding_sale_order_ref(self, cr, uid, ids, field_name, arg, context=None):
+        result = {}
+        tb_ref_no = None
+        for rec in self.browse(cr, uid, ids, context=context):
+            print'rec >>> ', rec
+            cr.execute("""select tb_ref_no from sale_order where id in (select order_id from sale_order_invoice_rel where invoice_id=%s)""", (rec.id,))
+            data = cr.fetchone()
+            if data:
+                tb_ref_no = data[0]
+            print 'order_id >>> ', tb_ref_no
+            result[rec.id] = tb_ref_no
+        return result       
     def create_promotion_line(self, cursor, user, vals, context=None):
         try : 
             inv_promotion_line_obj = self.pool.get('account.invoice.promotion.line')
@@ -125,6 +137,7 @@ class account_invoice(osv.osv):
         
     _columns = {
               'sale_order_id':fields.function(_get_corresponding_sale_order, type='many2one', relation='sale.order', string='Sale Order'),
+              'tb_ref_no':fields.function(_get_corresponding_sale_order_ref, type='char', string='Order Reference',store=True),
                   'promos_line_ids':fields.one2many('account.invoice.promotion.line', 'promo_line_id', 'Promotion Lines'),
                   'credit_line_ids':fields.one2many('account.invoice.credit.history', 'invoice_id', 'Credit History', copy=True),
                     'ignore_credit_limit':fields.boolean('Ignore Credit Limitation', default=False, readonly=True, states={'draft': [('readonly', False)]}),
@@ -149,6 +162,8 @@ class account_invoice(osv.osv):
                                       ('mis_claim', 'Mis Claim'),
                                       ('gid_loss', 'Gid Loss/Damage'),
                                       ('expired', 'Expired/Damage')], 'Type'),
+                                        'is_pd_invoice':fields.boolean('Is Pending Delivery Invoice', default=False, readonly=True),
+
               }
 
     

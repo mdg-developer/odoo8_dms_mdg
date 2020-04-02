@@ -52,11 +52,12 @@
 		<menuitem id="ms_mobile_sale.menu_mobile_sale_order" parent="menu_direct_sale_order_menu"
 			name="Direct Sales Mobile" action="ms_mobile_sale.action_moble_sale_order"
 			sequence="2" />
-		
+
 		<menuitem id="menu_good_issue_note1" parent="stock_requisition.menu_gin"
-			name="Branch Good Issue Note" action="branch_inventory_transfer.action_branch_good_issue_note_for_sale"
+			name="Branch Good Issue Note"
+			action="branch_inventory_transfer.action_branch_good_issue_note_for_sale"
 			sequence="1" groups="base.group_sale_rom,base.group_sale_manager" />
-		
+
 		<record id="menu_direct_sale_order_menu1" model="ir.actions.act_window">
 			<field name="name">Direct Sales Mobile</field>
 			<field name="type">ir.actions.act_window</field>
@@ -141,6 +142,7 @@
 						domain="[ ('date_invoice', '=', context_today().strftime('%Y-%m-%d'))]"
 						name="today_date" />
 				</filter>
+
 
 			</field>
 		</record>
@@ -470,23 +472,24 @@
 
 		<!-- Sales Team Sequence -->
 		<record id="crm_case_section_salesteams_act_inherit" model="ir.actions.act_window">
-            <field name="name">Sales Teams</field>
-            <field name="res_model">crm.case.section</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,kanban</field>
-            <field name="context">{}</field>
-            <field name="inherit_id" ref="sales_team.crm_case_section_salesteams_act"/>
-            <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                    Click here to define a new sales team.
-                </p><p>
-                    Use sales team to organize your different salespersons or
-                    departments into separate teams. Each team will work in
-                    its own list of opportunities.
-                </p>
-            </field>
-        </record>
-		
+			<field name="name">Sales Teams</field>
+			<field name="res_model">crm.case.section</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form,kanban</field>
+			<field name="context">{}</field>
+			<field name="inherit_id" ref="sales_team.crm_case_section_salesteams_act" />
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click here to define a new sales team.
+				</p>
+				<p>
+					Use sales team to organize your different salespersons or
+					departments into separate teams. Each team will work in
+					its own list of opportunities.
+				</p>
+			</field>
+		</record>
+
 		<menuitem id="menu_sale_team_menu" parent="base.menu_base_partner"
 			name="Sales Teams" sequence="4" />
 		<menuitem id="sales_team.menu_sales_team_act" action="crm_case_section_salesteams_act_inherit"
@@ -650,12 +653,15 @@
 		<menuitem action="sale_management.action_sale_target_report"
 			id="sale_management.menu_sale_target_report" parent="menu_sales_target_menu"
 			sequence="2" name="Target Analysis" />
-		<menuitem id="sale_management.menu_sales_target_outlet" action="sale_management.action_sales_target_outlet_view"
-			parent="menu_sales_target_menu" name="Outlet Target" sequence="3" />
-		<menuitem id="sale_management.menu_sales_target_branch" action="sale_management.action_sales_target_branch_view"
-			parent="menu_sales_target_menu" name="Branch Target" sequence="4" />
-		<menuitem id="sale_management.menu_sales_target_nation" action="sale_management.action_sales_target_nation_view"
-			parent="menu_sales_target_menu" name="Nation Wide Target" sequence="5" />
+		<menuitem id="sale_management.menu_sales_target_outlet"
+			action="sale_management.action_sales_target_outlet_view" parent="menu_sales_target_menu"
+			name="Outlet Target" sequence="3" />
+		<menuitem id="sale_management.menu_sales_target_branch"
+			action="sale_management.action_sales_target_branch_view" parent="menu_sales_target_menu"
+			name="Branch Target" sequence="4" />
+		<menuitem id="sale_management.menu_sales_target_nation"
+			action="sale_management.action_sales_target_nation_view" parent="menu_sales_target_menu"
+			name="Nation Wide Target" sequence="5" />
 
 		<!-- Sales Reports -->
 		<menuitem id="menu_sales_report_menu" parent="base.menu_base_partner"
@@ -669,10 +675,9 @@
 		<menuitem id='ms_sale_report_url.action_business_report_url_id'
 			action="ms_sale_report_url.menu_business_report_action" parent="menu_sales_report_menu"
 			sequence="2" />
-		<!-- <menuitem id="ms_customer_visit.menu_visit_partner_form"
-			parent="menu_sales_report_menu" action="ms_customer_visit.action_visit_partner_form1"
-			sequence="3" /> -->
-		
+		<!-- <menuitem id="ms_customer_visit.menu_visit_partner_form" parent="menu_sales_report_menu" 
+			action="ms_customer_visit.action_visit_partner_form1" sequence="3" /> -->
+
 		<menuitem action="bi_report.action_mobile_order_report_all"
 			id="bi_report.menu_mobile_report_product_all_graph" groups="base.group_sale_salesman"
 			name="Mobile Sale Analysis" parent="menu_sales_report_menu" sequence="4" />
@@ -702,24 +707,24 @@
 		<!-- parent="menu_sales_assets_menu" action="crm_management.open_view_customer_asset_action" -->
 		<!-- name="Assets" sequence="1" /> -->
 		<!-- Space Rental -->
-		<!-- <menuitem id="menu_sales_rental_menu" parent="base.menu_base_partner"
+		<!-- <menuitem id="menu_sales_rental_menu" parent="base.menu_base_partner" 
 			name="Customer Assets/Rentals" sequence="12" /> -->
-		 <!-- <menuitem id="menu_sales_rental_menu" parent="base.menu_base_config"
+		<!-- <menuitem id="menu_sales_rental_menu" parent="base.menu_base_config" 
 			name="Other Menu" sequence="1" /> -->
-		 <menuitem id="menu_sales_rental_menu" parent="base.menu_base_partner"
+		<menuitem id="menu_sales_rental_menu" parent="base.menu_base_partner"
 			name="Other" sequence="12" />
-		 	
+
 		<menuitem id="crm_management.menu_customer_asset_form111"
 			parent="menu_sales_rental_menu" action="crm_management.open_view_customer_asset_action"
 			name="Customer Assets" sequence="1" />
 		<menuitem id="sale_management.sales_rental" action="sale_management.action_sales_rental_view"
 			parent="menu_sales_rental_menu" name="Space Rental" sequence="3" />
-		
+
 		<menuitem id="ms_customer_visit.menu_visit_partner_form"
 			parent="menu_sales_rental_menu" action="ms_customer_visit.action_visit_partner_form1"
 			sequence="2" />
-		
-		
+
+
 		<!-- Notification -->
 		<menuitem id="menu_sales_notification_menu" parent="base.menu_base_partner"
 			name="Notification" sequence="14" />
