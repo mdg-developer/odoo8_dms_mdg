@@ -41,9 +41,9 @@
 						<field name="month1" readonly="1"/>
 						<field name="month2" readonly="1"/>
 						<field name="month3" readonly="1"/>	
-						<field name="month4" readonly="1"/>
-						<field name="month5" readonly="1"/>
-						<field name="month6" readonly="1"/>
+<!-- 						<field name="month4" readonly="1"/> -->
+<!-- 						<field name="month5" readonly="1"/> -->
+<!-- 						<field name="month6" readonly="1"/> -->
 						<field name="6ams" readonly="1"/>
 						<field name="target_qty"/>
 						<field name="ach_qty" readonly="1"/>

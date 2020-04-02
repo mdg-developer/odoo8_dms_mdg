@@ -86,7 +86,7 @@ class customer_target(osv.osv):
             for product in product_product:
                 product_obj = self.pool.get('product.product').browse(cr, uid, product, context=context)                
                  
-                month1_sale = month2_sale = month3_sale = avg_sale = percentage_growth = current_month_sale = target_amount = customer_ams = 0                
+                month1_sale = month2_sale = month3_sale = avg_sale = percentage_growth = current_month_sale = target_amount = customer_ams = divisor = 0                
                 #get month 1 sale
                 cr.execute("""select COALESCE(sum(product_quantity),0) product_quantity
                             from 
@@ -108,7 +108,9 @@ class customer_target(osv.osv):
                 month1_data = cr.fetchall()
                 
                 if month1_data:
-                    month1_sale = month1_data[0][0]                
+                    month1_sale = month1_data[0][0]   
+                    if month1_sale > 0:
+                        divisor = divisor + 1             
                 
                 #get month 2 sale
                 cr.execute("""select COALESCE(sum(product_quantity),0) product_quantity
@@ -131,7 +133,9 @@ class customer_target(osv.osv):
                 month2_data = cr.fetchall()
                 
                 if month2_data:
-                    month2_sale = month2_data[0][0]                
+                    month2_sale = month2_data[0][0]
+                    if month2_sale > 0:
+                        divisor = divisor + 1                 
                     
                 #get month 3 sale
                 cr.execute("""select COALESCE(sum(product_quantity),0) product_quantity
@@ -154,10 +158,13 @@ class customer_target(osv.osv):
                 month3_data = cr.fetchall()
                 
                 if month3_data:
-                    month3_sale = month3_data[0][0]                              
+                    month3_sale = month3_data[0][0]
+                    if month3_sale > 0:
+                        divisor = divisor + 1                               
                 
-                total_sale = month1_sale + month2_sale + month3_sale  
-                avg_sale = round(total_sale/3,2)
+                total_sale = month1_sale + month2_sale + month3_sale
+                if divisor > 0:  
+                    avg_sale = round(total_sale/divisor,2)
                     
                 #percentage growth and target amount
                 cr.execute("""select percentage_growth,
@@ -215,7 +222,7 @@ class customer_target(osv.osv):
                             'month1':month1_sale,
                             'month2':month2_sale,
                             'month3':month3_sale,
-                            '6ams':percentage_growth_amount,
+                            '6ams':avg_sale,
                             'target_qty':customer_ams,
                             'ach_qty':current_month_sale,
                             'gap_qty':customer_ams-current_month_sale,
