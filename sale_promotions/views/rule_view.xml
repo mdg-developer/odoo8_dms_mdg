@@ -51,6 +51,8 @@
 							<field name="write_uid" readonly="1" />
 							<field name="bundle_promotion" />
 							<field name="high_priority" />
+							<field name="approved_datetime" />
+							<field name="approved_by" />
 						</group>
 
 						<group invisible="1">

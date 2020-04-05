@@ -4,7 +4,8 @@ from openerp.tools.translate import _
 from openerp import tools
 import logging
 from pyfcm import FCMNotification
- 
+import datetime
+
 ####
 # LOGGER = netsvc.Logger()
 LOGGER = logging.getLogger(__name__)
@@ -222,6 +223,8 @@ class PromotionsRules(osv.Model):
         'manual':fields.boolean('Manual'),
         'bundle_promotion':fields.boolean('Bundle Promotion'),
         'high_priority':fields.boolean('High Priority'),
+        'approved_datetime':fields.datetime('Approved Datetime',readonly=True),
+        'approved_by':fields.many2one('res.users', 'Approved By',readonly=True),
     }
     _defaults = {
         'logic':lambda * a:'and',
@@ -235,7 +238,7 @@ class PromotionsRules(osv.Model):
     _constraints = [(_check_positive_number, 'Coupon Use must be Positive', ['coupon_used'])]
 	
     def approve(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state':'approve'})
+        return self.write(cr, uid, ids, {'state':'approve','approved_datetime':datetime.datetime.now(),'approved_by':uid})
 
 
     def publish(self, cr, uid, ids, context=None):
