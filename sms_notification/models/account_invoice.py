@@ -26,11 +26,53 @@ class account_invoice(osv.osv):
                 res[invoice.id] = 0
         return res 
     
+    def _calculate_cash_collection_date(self, cr, uid, ids, field_name, arg, context=None):
+        
+        res = {}       
+        for invoice in self.browse(cr, uid, ids, context=context):  
+            cash_collection_date = invoice.date_due   
+            cr.execute("select min(date),max(date) from public_holidays_line")    
+            min_max_data = cr.fetchall()  
+            if min_max_data:
+                min_date = min_max_data[0][0]
+                max_date = min_max_data[0][1]     
+            cr.execute('''select date
+                        from public_holidays_line
+                        union
+                        SELECT 
+                            mydate::date
+                        FROM
+                            generate_series(timestamp %s, %s, '1 day') AS g(mydate)
+                        WHERE
+                            EXTRACT(DOW FROM mydate) = 0
+                        order by date asc''',(min_date,max_date,))    
+            holidays = cr.fetchall()           
+            for holiday in holidays:                
+                if cash_collection_date == holiday[0] and holiday[0] >= invoice.date_due:                                            
+                    cr.execute("select (%s::date+ interval '1' day)::date",(cash_collection_date,))    
+                    next_date = cr.fetchall()
+                    if next_date:
+                        cash_collection_date = next_date[0][0]                
+                    
+            cr.execute("select extract(dow from date %s);",(cash_collection_date,))    
+            sunday_data = cr.fetchall()
+            if sunday_data:
+                if sunday_data[0][0] == 0:
+                    cr.execute("select (%s::date+ interval '1' day)::date",(cash_collection_date,))    
+                    next_date = cr.fetchall()
+                    if next_date:
+                        cash_collection_date = next_date[0][0]
+                else:
+                    cash_collection_date = cash_collection_date
+            res[invoice.id] = cash_collection_date                
+        return res 
+    
     _columns = {        
         'overdue_noti': fields.datetime('Overdue Reminder Notification'),
         'collection_noti': fields.datetime('Collection Reminder Notification'),
         'invoice_due_pre_reminder_noti': fields.datetime('Invoice Due Pre-Reminder Notification'),
         'due_days': fields.function(_calculate_due_days, string='Calculate due days', type='integer'),
+        'cash_collection_date': fields.function(_calculate_cash_collection_date, string='Calculate cash collection date', type='date'),
     }         
                 
     def send_invoice_due_pre_reminder_sms(self, cr, uid, ids, context=None):    

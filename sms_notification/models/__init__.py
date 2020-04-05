@@ -24,3 +24,4 @@ import account_invoice
 import res_partner
 import res_company
 import sms_message
+import public_holidays
