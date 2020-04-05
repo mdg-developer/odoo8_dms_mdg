@@ -32,7 +32,9 @@ class exchange_product(osv.osv):
                     'customer_id', 'township',
                     type='many2one',
                     relation='res.township',
-                    string="Township",store=True)                
+                    string="Township",store=True)   ,   
+            'total_value':fields.float('Total Price'),
+          
     }
     
     _defaults = {        
@@ -289,6 +291,8 @@ class exchange_product_line_item(osv.osv):
                 'note':fields.char('Note'),
                 'exp_date':fields.date('Expired Date'),
                 'batchno':fields.char('Batch No'),
+                'total_price':fields.float('Total Price'),
+
                 }
 
     def onchange_product_id(self, cr, uid, ids, product_id, uom_id, context=None):
