@@ -33,8 +33,8 @@ class exchange_product(osv.osv):
                     type='many2one',
                     relation='res.township',
                     string="Township",store=True)   ,   
-            'total_value':fields.float('Total Price'),
-          
+            'total_value':fields.float('Value Of Out'),
+            'priceList_id':fields.many2one('product.pricelist', string='Pricelist'),
     }
     
     _defaults = {        
@@ -291,7 +291,7 @@ class exchange_product_line_item(osv.osv):
                 'note':fields.char('Note'),
                 'exp_date':fields.date('Expired Date'),
                 'batchno':fields.char('Batch No'),
-                'total_price':fields.float('Total Price'),
+                'total_price':fields.float('Value'),
 
                 }
 

@@ -69,6 +69,7 @@
 								<field name="longitude" />
 								<field name="distance_status" class="oe_inline" />
 								<field name="geo_point" class="oe_inline" />
+							    <field name="priceList_id" />
 								<field name="total_value" />
 							</group>
 							<group>
@@ -108,8 +109,8 @@
 										<field name="batchno" invisible="0" />
 										<field name="exp_date" />
 										<field name="trans_type" />
-										<field name="note" />
 										<field name="total_price" />
+										<field name="note" />										
 
 									</tree>
 								</field>
