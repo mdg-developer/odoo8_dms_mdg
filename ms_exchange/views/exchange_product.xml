@@ -69,7 +69,7 @@
 								<field name="longitude" />
 								<field name="distance_status" class="oe_inline" />
 								<field name="geo_point" class="oe_inline" />
-							    <field name="priceList_id" />
+							    <field name="pricelist_id" />
 								<field name="total_value" />
 							</group>
 							<group>

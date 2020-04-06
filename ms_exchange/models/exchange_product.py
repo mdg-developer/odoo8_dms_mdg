@@ -34,7 +34,7 @@ class exchange_product(osv.osv):
                     relation='res.township',
                     string="Township",store=True)   ,   
             'total_value':fields.float('Value Of Out'),
-            'priceList_id':fields.many2one('product.pricelist', string='Pricelist'),
+            'pricelist_id':fields.many2one('product.pricelist', string='Pricelist'),
     }
     
     _defaults = {        

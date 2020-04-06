@@ -681,7 +681,7 @@ class mobile_sale_order(osv.osv):
             product_trans_line = []
             for r in result:
                 print "length", len(r)
-                if len(r) >=13:
+                if len(r) >=15:
                     product_trans_line.append(r)                   
                 else:
                     product_trans.append(r)
@@ -714,7 +714,7 @@ class mobile_sale_order(osv.osv):
                         # check_date = date.date()                        
                     if pt['pricelist_id']:
                         price_list_name= pt['pricelist_id']
-                        cursor.execute("select id from product_pricelist where name=%",(price_list_name,))
+                        cursor.execute("select id from product_pricelist where name=%s",(price_list_name,))
                         pricelist_data=cursor.fetchone()
                         if pricelist_data:
                             pricelist_id =pricelist_data[0]
@@ -754,6 +754,7 @@ class mobile_sale_order(osv.osv):
                                 
                                 cursor.execute('select uom_id from product_product pp,product_template pt where pp.product_tmpl_id=pt.id and pp.id=%s', (ptl['product_id'],))
                                 uom_id = cursor.fetchone()[0]
+                                total_price =ptl['total_price']
                                 mso_line_res = {                                                            
                                   'transaction_id':s_order_id,
                                   'product_id':ptl['product_id'],
@@ -764,7 +765,7 @@ class mobile_sale_order(osv.osv):
                                   'transaction_name':ptl['transaction_name'],
                                   'note':ptl['note'],
                                   'exp_date':exp_date,
-                                  'total_price':ptl['total_price'],
+                                  'total_price':total_price,
                                   'batchno':ptl['batchno'],
                                 }
                                 product_trans_line_obj.create(cursor, user, mso_line_res, context=context)
