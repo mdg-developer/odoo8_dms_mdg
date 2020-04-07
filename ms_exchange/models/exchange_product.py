@@ -17,7 +17,7 @@ class exchange_product(osv.osv):
                 'date':fields.datetime('Date',required=True),
               'exchange_type':fields.selection([('Exchange', 'Exchange'), ('Sale Return', 'Sale Return'), ], 'Type',required=True),
                 'item_line': fields.one2many('product.transactions.line', 'transaction_id', 'Items Lines', copy=True),
-                'void_flag':fields.selection([('none', 'Unvoid'), ('voided', 'Voided')], 'Void Status'),
+                'void_flag':fields.selection([('none', 'Done'), ('voided', 'Cancel')], 'Void Status'),
                 'location_id': fields.many2one('stock.location', 'Location', required=True),
                 'e_status':fields.char('Status'),
                 'note':fields.text('Note'),
