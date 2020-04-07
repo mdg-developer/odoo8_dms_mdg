@@ -233,6 +233,7 @@ class pre_sale_order(osv.osv):
         priceUnit = 0.0
         saleOrderResult = {}
         detailResult = {}
+        delivery_id=None
         if ids:
             try:
                 # default price list need in sale order form
@@ -244,14 +245,16 @@ class pre_sale_order(osv.osv):
                     if preObj_ids:
                         print 'Sale Team', preObj_ids.sale_team
                         #for multi Sale Team
-                        cr.execute("select delivery_team_id from res_partner where id =%s",(preObj_ids.partner_id.id,))
-                        delivery_data=cr.fetchall()
-                        if delivery_data:
-                            delivery_id = delivery_data[0][0]
-                            if delivery_id is None:
-                                delivery_id =None
-                        else:
-                            delivery_id = None
+                        cr.execute("select is_customer_delivery_team from crm_case_section where id =%s",(preObj_ids.sale_team,))    
+                        is_customer_delivery_team=cr.fetchone()[0]
+                        if is_customer_delivery_team==True:
+                            cr.execute("select delivery_team_id from res_partner where id =%s",(preObj_ids.partner_id.id,))
+                            delivery_data=cr.fetchone()
+                            if delivery_data:
+                                delivery_id = delivery_data[0]
+                            else:
+                                delivery_id = None
+                    
                             
                         if delivery_id is None:                            
                             cr.execute('select delivery_team_id from crm_case_section where id = %s ', (preObj_ids.sale_team.id,))
