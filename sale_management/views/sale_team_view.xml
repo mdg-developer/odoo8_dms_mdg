@@ -14,6 +14,7 @@
 					<field name="parent_id" />
 					<field name="branch_id" />
 					<field name="sale_channel_id" />
+					<field name="is_customer_delivery_team" />
 				</field>
 			</field>
 		</record>
@@ -78,7 +79,7 @@
 					<field name="is_supervisor" />
 					<field name="supervisor_team" domain="[('is_supervisor','=',True)]" />
 					<field name="is_entry_team" />
-
+					<field name="is_customer_delivery_team" />
 				</field>
 				<page string="Team Members" position="after">
 					<page string="Products">
