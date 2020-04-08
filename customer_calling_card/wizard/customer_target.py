@@ -48,7 +48,7 @@ class customer_target(osv.osv):
         'updated_by': fields.many2one('res.users',string="Updated By"),
         'updated_time': fields.datetime(string='Updated Date Time'),
         #'target_id':fields.many2one('res.partner', 'Target Items'),                      
-        'target_line_ids':fields.one2many('customer.target.line', 'line_id', 'Target Items'),
+        'target_line_ids':fields.one2many('customer.target.line', 'line_id', 'Target Items',copy=True),
     }
     _defaults = {
        

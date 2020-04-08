@@ -86,7 +86,7 @@ class sale_target(osv.osv):
                 ('12', 'December'),
 
             ], 'Month', copy=False, select=True),
-        'sale_team_id':fields.many2one('crm.case.section', 'Sale Team'),
+        'sale_team_id':fields.many2one('crm.case.section', 'Sale Team', copy=True),
         'target_line':fields.one2many('sales.target.line', 'sale_ids', string='Sale Target Line', copy=True),
          'description':fields.text('Description'),
          'date':fields.date('Target Date'),
