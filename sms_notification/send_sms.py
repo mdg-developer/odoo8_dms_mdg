@@ -26,8 +26,8 @@ if response.status_code == 200:
     sms_url = 'https://mytelapigw.mytel.com.mm/msg-service/v1.3/smsmt/sent'
     sms_payload = {
 	"source":"MYTELFTTH",
-	"dest":"+959697182277",
-	"content":"Hnin fighting"
+	"dest":"+9595066408",
+	"content":"Testing SMS from Mytel API"
     }
     #time.sleep(1)
     print "response post"
