@@ -103,20 +103,23 @@ class pendingdelivery(osv.osv):
                         So_id=pending_id.order_id.id
                         solist = pending_id.order_id.id   
                         delivery_date=pending_id.delivery_date   
+                        delivery_team_id =pending_id.delivery_team_id.id
+                        delivery_team_id =pending_id.delivery_team_id.id
+                        user_id= pending_id.create_uid.id
+                        
                         cr.execute('select branch_id,section_id,delivery_remark,payment_type,payment_term from sale_order where id=%s', (pending_id.order_id.id,))
                         data = cr.fetchone()
                         if data:
                             branch_id = data[0]
-                            section_id = data[1]
                             delivery_remark = data[2]
                             payment_type= data[3]
                             payment_term=data[4]
-                        cr.execute('select delivery_team_id from crm_case_section where id=%s', (section_id,))
-                        delivery = cr.fetchone()
-                        if delivery:
-                            delivery_team_id = delivery[0]
-                        else:
-                            delivery_team_id = None
+#                         cr.execute('select delivery_team_id from crm_case_section where id=%s', (section_id,))
+#                         delivery = cr.fetchone()
+#                         if delivery:
+#                             delivery_team_id = delivery[0]
+#                         else:
+#                             delivery_team_id = None
                         # For DO
 #                         stockViewResult = soObj.action_view_delivery(cr, uid, So_id, context=context)    
 #                         if stockViewResult:
@@ -135,7 +138,7 @@ class pendingdelivery(osv.osv):
 #                             if detailObj:
 #                                 detailObj.do_detailed_transfer()    
                         invoice_id = mobile_obj.create_invoices(cr, uid, [solist], context=context)
-                        cr.execute('update account_invoice set is_pd_invoice=True,date_invoice = %s, branch_id =%s ,payment_type=%s,delivery_remark =%s ,section_id=%s,user_id=%s, payment_term = %s where id =%s', (delivery_date,branch_id,payment_type, delivery_remark, delivery_team_id, uid,payment_term, invoice_id,))                                                
+                        cr.execute('update account_invoice set is_pd_invoice=True,date_invoice = %s, branch_id =%s ,payment_type=%s,delivery_remark =%s ,section_id=%s,user_id=%s, payment_term = %s where id =%s', (delivery_date,branch_id,payment_type, delivery_remark, delivery_team_id, user_id,payment_term, invoice_id,))                                                
                                                      
                         invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                         if invoice_id:
