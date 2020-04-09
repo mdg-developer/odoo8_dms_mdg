@@ -245,7 +245,7 @@ class pre_sale_order(osv.osv):
                     if preObj_ids:
                         print 'Sale Team', preObj_ids.sale_team
                         #for multi Sale Team
-                        cr.execute("select is_customer_delivery_team from crm_case_section where id =%s",(preObj_ids.sale_team,))    
+                        cr.execute("select is_customer_delivery_team from crm_case_section where id =%s",(preObj_ids.sale_team.id,))    
                         is_customer_delivery_team=cr.fetchone()[0]
                         if is_customer_delivery_team==True:
                             cr.execute("select delivery_team_id from res_partner where id =%s",(preObj_ids.partner_id.id,))
