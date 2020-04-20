@@ -43,8 +43,8 @@ class SmsMessage(models.Model):
         
         try: 
             headers = {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}            
-            sms_user= 'mdgtest'
-            password= '5329303b-4839-4c72-a1d0-fc72776755ca'
+            sms_user= 'mdgpro'
+            password= 'fcdaa533-e23d-4f9e-8480-416454b2dfc2'
             url='https://mpg-ids.mytel.com.mm/auth/realms/eis/protocol/openid-connect/token'
             payload = {'grant_type': 'client_credentials'}
             response = requests.post(url,headers=headers,auth=(sms_user, password), data=payload, verify=False)
@@ -55,7 +55,7 @@ class SmsMessage(models.Model):
                           'Authorization': 'Bearer {0}'.format(token)}                    
                 sms_url = 'https://mytelapigw.mytel.com.mm/msg-service/v1.3/smsmt/sent'
                 sms_payload = {
-                               "source":"MYTELFTTH",
+                               "source":"MDG",
                                "dest":vals['phone'],
                                "content":vals['message']
                         }                 
