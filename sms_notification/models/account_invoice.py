@@ -36,23 +36,23 @@ class account_invoice(osv.osv):
             if min_max_data:
                 min_date = min_max_data[0][0]
                 max_date = min_max_data[0][1]     
-            cr.execute('''select date
-                        from public_holidays_line
-                        union
-                        SELECT 
-                            mydate::date
-                        FROM
-                            generate_series(timestamp %s, %s, '1 day') AS g(mydate)
-                        WHERE
-                            EXTRACT(DOW FROM mydate) = 0
-                        order by date asc''',(min_date,max_date,))    
-            holidays = cr.fetchall()           
-            for holiday in holidays:                
-                if cash_collection_date == holiday[0] and holiday[0] >= invoice.date_due:                                            
-                    cr.execute("select (%s::date+ interval '1' day)::date",(cash_collection_date,))    
-                    next_date = cr.fetchall()
-                    if next_date:
-                        cash_collection_date = next_date[0][0]                
+                cr.execute('''select date
+                            from public_holidays_line
+                            union
+                            SELECT 
+                                mydate::date
+                            FROM
+                                generate_series(timestamp %s, %s, '1 day') AS g(mydate)
+                            WHERE
+                                EXTRACT(DOW FROM mydate) = 0
+                            order by date asc''',(min_date,max_date,))    
+                holidays = cr.fetchall()           
+                for holiday in holidays:                
+                    if cash_collection_date == holiday[0] and holiday[0] >= invoice.date_due:                                            
+                        cr.execute("select (%s::date+ interval '1' day)::date",(cash_collection_date,))    
+                        next_date = cr.fetchall()
+                        if next_date:
+                            cash_collection_date = next_date[0][0]                
                     
             cr.execute("select extract(dow from date %s);",(cash_collection_date,))    
             sunday_data = cr.fetchall()
