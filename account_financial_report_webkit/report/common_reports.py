@@ -661,6 +661,7 @@ SELECT l.id AS id,
             j.code AS jcode ,
             aa.name AS analytic_account,
             aa.code as analytic_code,
+            rb.name as branch,
             j.name AS jname,
             j.type AS jtype,
             l.currency_id,
@@ -698,6 +699,7 @@ FROM account_move_line l
     JOIN account_journal j on (l.journal_id=j.id)
     LEFT JOIN account_analytic_account aa on (aa.id=l.analytic_account_id)
     LEFT JOIN account_account aaa on (aaa.id=l.account_id)
+    LEFT JOIN res_branch rb on (rb.id=m.branch_id)
     WHERE l.id in %s"""
         monster += (" ORDER BY %s" % (order,))
         try:
