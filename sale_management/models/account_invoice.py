@@ -137,7 +137,7 @@ class account_invoice(osv.osv):
         
     def update_invoice_paid_date_in_invoice(self, cr, uid,context=None):
         inv_obj = self.pool.get('account.invoice')
-        cr.execute("select id from account_invoice where state='paid' and paid_date is null") 
+        cr.execute("select id from account_invoice where state='paid' and paid_date is null and amount_total > 0 ") 
         invoice_data =cr.fetchall() 
         print 'invoice_data',invoice_data
 
