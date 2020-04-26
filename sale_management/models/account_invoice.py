@@ -135,6 +135,17 @@ class account_invoice(osv.osv):
         except Exception, e:
             return False         
         
+    def update_invoice_paid_date_in_invoice(self, cr, uid,context=None):
+        inv_obj = self.pool.get('account.invoice')
+        cr.execute("select id from account_invoice where state='paid' and paid_date is null") 
+        invoice_data =cr.fetchall() 
+        print 'invoice_data',invoice_data
+
+        for invoice_id in invoice_data:
+            invoice=inv_obj.browse(cr, uid, invoice_id[0], context=context)
+            cr.execute("select * from update_paid_date_in_invoice(%s)",(invoice.id,)) 
+        return True
+                              
     _columns = {
               'sale_order_id':fields.function(_get_corresponding_sale_order, type='many2one', relation='sale.order', string='Sale Order'),
               'tb_ref_no':fields.function(_get_corresponding_sale_order_ref, type='char', string='Order Reference',store=True),
@@ -163,6 +174,7 @@ class account_invoice(osv.osv):
                                       ('gid_loss', 'Gid Loss/Damage'),
                                       ('expired', 'Expired/Damage')], 'Type'),
                                         'is_pd_invoice':fields.boolean('Is Pending Delivery Invoice', default=False, readonly=True),
+                    'paid_date': fields.date(string='Paid Date'),
 
               }
 
