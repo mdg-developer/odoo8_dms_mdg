@@ -94,6 +94,9 @@
 
 				<xpath expr="//field[@name='default_code']" position="after">
 					<field name="sequence" />
+					<field name="is_price_diff_product" />
+					
+					
 					<field name="uom_ratio" />
 				</xpath>
 			</field>

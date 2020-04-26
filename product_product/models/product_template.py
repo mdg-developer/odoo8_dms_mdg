@@ -73,6 +73,8 @@ class product_template(osv.osv):
                 'uom_ratio':fields.char('Packing Size'),
         'categ_id': fields.many2one('product.category','Product Category', required=True, change_default=True, domain="[('type','=','normal')]" ,help="Select category for the current product"),
          'sequence': fields.related('product_variant_ids', 'sequence', type='integer', string='Sequence', required=True),
+         
+         'is_price_diff_product':fields.related(type='boolean', string='Is Price Diff Product'),
                 }
      
     _defaults = {

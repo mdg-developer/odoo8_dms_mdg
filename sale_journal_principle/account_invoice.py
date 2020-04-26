@@ -979,14 +979,20 @@ class account_invoice(models.Model):
                         account_id = product.product_tmpl_id.categ_id.property_account_discount_cash.id     
                     if line['ref'][:2] == 'PO':
                         cr.execute("select avl.id from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s and avl.foc!=true", (origin, product.id,))
-                        invoice_line_id = cr.fetchone()                    
+                        invoice_line_id = cr.fetchone()  
+                                          
                         if invoice_line_id:
                             invoice_line_data = self.env['account.invoice.line'].browse(invoice_line_id)                        
+                            net_total = invoice_line_data.net_total
+                            discount_amt = invoice_line_data.discount_amt
+                            price_sub_total = invoice_line_data.price_subtotal
+                            total_tax_amt = (net_total - discount_amt) - price_sub_total
                             gross_margin = invoice_line_data.gross_margin
                             different_id = invoice_line_data.product_id.product_tmpl_id.main_group.property_account_difference.id
                             account_id = invoice_line_data.product_id.product_tmpl_id.main_group.property_account_difference.id
                             line['name'] = 'Diff ACC ' + line['name']    
-                    line['price'] = -1 * line['price']
+
+                    line['price'] = -1 * line['price']+ total_tax_amt
                 else:
                     # account_id = product.product_tmpl_id.main_group.property_account_payable.id
                     account_id = property_account_payable

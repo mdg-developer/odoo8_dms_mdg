@@ -182,6 +182,9 @@ class account_invoice_line(models.Model):
             mres['ref'] = ref
             mres['is_discount'] = False
             product = self.env['product.product'].browse(mres.get('product_id', False))
+            if product.is_price_diff_product==True and line.price_unit>0:
+                break
+
             print 'mres', mres, ref, product.default_code
             if not mres:
                 continue
@@ -261,7 +264,9 @@ class account_invoice_line(models.Model):
             for i_line in inv.invoice_line:
                 gross_margin=i_line.gross_margin
                 different_id=line.product_id.product_tmpl_id.main_group.property_account_difference.id
-                if gross_margin < 0:
+                if gross_margin < 0 or i_line.product_id.is_price_diff_product==True and i_line.price_unit>0:
+                    if i_line.product_id.is_price_diff_product==True:
+                        gross_margin=-1*i_line.price_unit
                     margin = {'type': 'src',
                         'name': line.product_id.name_template,
                         'price_unit':gross_margin,

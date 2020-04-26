@@ -68,11 +68,16 @@ class purchase_order_line(osv.osv):
         agreed_price =0
         sale_price=0
         for line in self.browse(cr, uid, ids, context=context):
-            product_qty = line.product_qty
-            price_unit = line.price_unit
-            sale_price = price_unit * product_qty
-            agreed_price = product_qty * line.agreed_price
-            res[line.id] = agreed_price -sale_price
+            if line.product_id.product_tmpl_id.type!='service' :
+                product_qty = line.product_qty
+                price_unit = line.price_unit
+                sale_price = price_unit * product_qty
+                agreed_price = product_qty * line.agreed_price
+                res[line.id] = agreed_price -sale_price
+# 
+#             if line.product_id.product_tmpl_id.type=='service' and line.product_id.is_price_diff_product!=True:
+#                 res[line.id] = 0
+
         return res    
     
     _columns = {
@@ -222,13 +227,15 @@ class account_invoice_line(osv.osv):
         agreed_price =0
         sale_price=0
         for line in self.browse(cr, uid, ids, context=context):
-            if line.invoice_id.type=='in_invoice':
+            if line.invoice_id.type=='in_invoice' and line.product_id.product_tmpl_id.type!='service' :
 
                 product_qty = line.quantity
                 price_unit = line.price_unit
                 sale_price = price_unit * product_qty
                 agreed_price = product_qty * line.agreed_price
-            res[line.id] = agreed_price -sale_price
+                res[line.id] = agreed_price -sale_price
+#             if  line.product_id.product_tmpl_id.type=='service'and line.product_id..is_price_diff_product!=True:
+#                 res[line.id] =0
         return res    
         
     _columns = {

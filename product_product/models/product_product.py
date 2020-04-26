@@ -7,6 +7,7 @@ class product_product(osv.osv):
     _columns = {
         'sequence': fields.integer('Sequence', size=3, default=0),
         'default_code' : fields.char('Internal Reference', select=True),
+         'is_price_diff_product':fields.boolean('Is Price Diff Product'),
 
         }    
     _sql_constraints = [('default_code_uniq', 'unique(default_code)',
