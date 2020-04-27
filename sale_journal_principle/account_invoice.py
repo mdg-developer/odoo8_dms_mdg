@@ -388,7 +388,7 @@ class account_invoice(models.Model):
         
          
         if type == 'in_invoice' :
-            if line['price'] > 0:
+            if line['price'] > 0 or line['type']=='tax' :
                 product = self.env['product.product'].browse(line.get('product_id', False))
                 print 'product>>>', product.id
                 print 'line.get>>>', line.get('product_id', False)
@@ -409,6 +409,10 @@ class account_invoice(models.Model):
                     invoice_line_id = cr.fetchone()
                     if invoice_line_id:
                         invoice_line_data = self.env['account.invoice.line'].browse(invoice_line_id)                    
+                        net_total = invoice_line_data.net_total
+                        discount_amt = invoice_line_data.discount_amt
+                        price_sub_total = invoice_line_data.price_subtotal
+                        total_tax_amt = (net_total - discount_amt) - price_sub_total
                     gross_margin = invoice_line_data.gross_margin
                     different_id = invoice_line_data.product_id.product_tmpl_id.main_group.property_account_difference.id
                     if different_id != line['account_id']:
@@ -419,6 +423,15 @@ class account_invoice(models.Model):
                             line['price'] += gross_margin * rate
                     else:
                         line['name'] = 'Diff ACC ' + line['name']
+                product_id=line.get('product_id', False)
+                if line['type']=='tax':
+                    if line['tax_amount']<0:
+                        product_id=product.id
+                if line.get('product_id', False) != False:
+                    if product.is_price_diff_product==True and line['price'] > 0:
+                        line['price']=line['price'] - total_tax_amt
+
+                        
                 res = {
                     'date_maturity': line.get('date_maturity', False),
                     'partner_id': part,
@@ -435,7 +448,7 @@ class account_invoice(models.Model):
                     'tax_amount': line.get('tax_amount', False),
                     'ref': line.get('ref', False),
                     'quantity': line.get('quantity', 1.00),
-                    'product_id': line.get('product_id', False),
+                    'product_id': product_id,
                     'product_uom_id': line.get('uos_id', False),
                     'analytic_account_id': line.get('account_analytic_id', False),
                     'main_group': account_id,
