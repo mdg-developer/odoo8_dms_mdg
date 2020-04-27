@@ -1,0 +1,107 @@
+@charset "UTF-8";
+.openerp .oe_view_nocontent .oe_empty_woo_products {
+  background: transparent url(/woo_commerce_ept/static/src/img/woo_commerce_logo.png) no-repeat 0 0;
+  margin-top: -15px;
+  padding: 100px 0 0 137px;
+  min-height: 327px;
+  margin-left: -15px;
+}
+.openerp .oe_view_nocontent .oe_empty_woo_variants {
+  background: transparent url(/woo_commerce_ept/static/src/img/woo_commerce_logo.png) no-repeat 0 0;
+  margin-top: -15px;
+  padding: 100px 0 0 137px;
+  min-height: 327px;
+  margin-left: -15px;
+}
+.openerp .oe_view_nocontent .oe_empty_woo_sale_quotation {
+  background: transparent url(/woo_commerce_ept/static/src/img/woo_commerce_logo.png) no-repeat 0 0;
+  margin-top: -15px;
+  padding: 100px 0 0 137px;
+  min-height: 327px;
+  margin-left: -15px;
+}
+.openerp .oe_view_nocontent .oe_empty_woo_sale_order {
+  background: transparent url(/woo_commerce_ept/static/src/img/woo_commerce_logo.png) no-repeat 0 0;
+  margin-top: -15px;
+  padding: 100px 0 0 137px;
+  min-height: 327px;
+  margin-left: -15px;
+}
+.openerp .oe_view_nocontent .oe_empty_woo_sale_report {
+  background: transparent url(/woo_commerce_ept/static/src/img/woo_commerce_logo.png) no-repeat 0 0;
+  margin-top: -15px;
+  padding: 100px 0 0 137px;
+  min-height: 327px;
+  margin-left: -15px;
+}
+.openerp .oe_view_nocontent .oe_empty_woo_instance {
+  background: transparent url(/woo_commerce_ept/static/src/img/woo_commerce_logo.png) no-repeat 0 0;
+  margin-top: -15px;
+  padding: 100px 0 0 137px;
+  min-height: 327px;
+  margin-left: -15px;
+}
+.openerp .oe_view_nocontent .oe_empty_woo_custom_collection {
+  background: transparent url(/woo_commerce_ept/static/src/img/woo_commerce_logo.png) no-repeat 0 0;
+  margin-top: -15px;
+  padding: 100px 0 0 137px;
+  min-height: 327px;
+  margin-left: -15px;
+}
+.openerp .oe_view_nocontent .oe_empty_woo_smart_collection {
+  background: transparent url(/woo_commerce_ept/static/src/img/woo_commerce_logo.png) no-repeat 0 0;
+  margin-top: -15px;
+  padding: 100px 0 0 137px;
+  min-height: 327px;
+  margin-left: -15px;
+}
+.openerp .oe_view_nocontent .oe_empty_woo_delivery_order {
+  background: transparent url(/woo_commerce_ept/static/src/img/woo_commerce_logo.png) no-repeat 0 0;
+  margin-top: -15px;
+  padding: 100px 0 0 137px;
+  min-height: 327px;
+  margin-left: -15px;
+}
+.openerp .oe_view_nocontent .oe_empty_woo_mismatch_log {
+  background: transparent url(/woo_commerce_ept/static/src/img/woo_commerce_logo.png) no-repeat 0 0;
+  margin-top: -15px;
+  padding: 100px 0 0 137px;
+  min-height: 327px;
+  margin-left: -15px;
+}
+.openerp .oe_view_nocontent .oe_empty_woo_invoice {
+  background: transparent url(/woo_commerce_ept/static/src/img/woo_commerce_logo.png) no-repeat 0 0;	
+  margin-top: -15px;
+  padding: 100px 0 0 137px;
+  min-height: 327px;
+  margin-left: -15px;
+}
+.openerp .oe_view_nocontent .oe_empty_woo_customers {
+  background: transparent url(/woo_commerce_ept/static/src/img/woo_commerce_logo.png) no-repeat 0 0;	
+  margin-top: -15px;
+  padding: 100px 0 0 137px;
+  min-height: 327px;
+  margin-left: -15px;
+}
+
+
+.openerp .oe_kanban_view .oe_kanban_woo_operations_type {
+    width: 345px;
+    cursor: default;
+    min-height: 245px !important;
+}
+.openerp .oe_kanban_view .oe_kanban_image_emipro {
+  display: block;
+  vertical-align: middle;
+  width: 120px;
+  height: 120px;
+  margin : 0px auto;
+
+}
+
+.openerp .oe_ept_center {
+	padding-top:15px;
+	display : block;
+	width : 100%;
+	margin : 0px auto;
+}

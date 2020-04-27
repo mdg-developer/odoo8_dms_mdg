@@ -1,0 +1,116 @@
+<?xml version="1.0" ?>
+<openerp>
+  <data>
+	<record id="woo_instance_tree_view_ept" model="ir.ui.view">
+	    <field name="name">Woo Instance</field>
+	    <field name="model">woo.instance.ept</field>
+		<field name="arch" type="xml">
+            <tree string="Woo Instance" create="false">
+            	<field name="name"/>
+	            <field name="warehouse_id"></field>
+	            <field name="country_id"/>
+	            <field name="woo_version"/>
+	            <field name="verify_ssl"/>	            
+	            <field name="is_image_url"/>
+	            <field name="state"/>
+			</tree>
+		</field>
+	</record>
+	<record id="woo_instance_form_view_ept" model="ir.ui.view">
+		<field name="name">Woo Instance</field>
+		<field name="model">woo.instance.ept</field>
+		<field name="arch" type="xml">
+			<form string="Woo Instance">
+				<header>
+					<button name="test_woo_connection" string="Check Connection" class="oe_highlight" type="object" states="not_confirmed"/>
+					<button name="reset_to_confirm" string="Reset Confirmation" type="object" states="confirmed" groups="woo_commerce_ept.group_woo_manager_ept"/>
+					<button name="confirm" string="Confirm" type="object" states="not_confirmed" groups="woo_commerce_ept.group_woo_manager_ept"/>
+					<field name="state" widget="statusbar"/>
+				</header>
+				<sheet>
+					<div class="oe_right oe_button_box" style="width: 300px;" name="buttons">
+					</div>
+					<div class="oe_left" style="width: 500px;">
+	                    <div class="oe_title" style="width: 390px;">
+	                        <label class="oe_edit_only" for="name" string="Name"/>
+	                        <h1><field name="name" class="oe_inline" attrs="{'readonly':[('state','in','confirmed')]}"/></h1>
+	                    </div>
+	                </div>
+					<group string="ERP Configuration">
+						<group>
+							<field name="warehouse_id" required="1" readonly="1"/>	
+						</group>
+						<group>
+							<field name="country_id" readonly="1"/>
+							<field name="company_id"  widget="selection" readonly="1" groups="base.group_multi_company"/>
+							<field name="lang_id" required="1" attrs="{'readonly':[('state','in','confirmed')]}"/>
+						</group>
+					</group>			
+					<group string="Woo Site Info" groups="woo_commerce_ept.group_woo_manager_ept">
+						<group>
+							<field name="consumer_key" attrs="{'readonly':[('state','in','confirmed')]}"/>
+							<field name="consumer_secret" attrs="{'readonly':[('state','in','confirmed')]}"/>
+							<field name="woo_version" required="1" attrs="{'readonly':[('state','in','confirmed')]}"/>								
+						</group>
+						<group>						
+							<field name="host" attrs="{'readonly':[('state','in','confirmed')]}"/>
+							<field name="verify_ssl" attrs="{'readonly':[('state','in','confirmed')]}"/>
+							<field name="is_image_url" attrs="{'readonly':[('state','in','confirmed')]}"/>													
+						</group>											
+					</group>
+					<group string="Administrator Info" attrs="{'invisible':[('is_image_url','=',True)]}" groups="woo_commerce_ept.group_woo_manager_ept">
+						<group>
+							<group>
+								<field name="admin_username" attrs="{'invisible':[('is_image_url','=',True)],'required':[('is_image_url','=',False)],'readonly':[('state','in','confirmed')]}"/>
+							</group>
+							<group>
+								<field name="admin_password" password="1" attrs="{'invisible':[('is_image_url','=',True)],'required':[('is_image_url','=',False)],'readonly':[('state','in','confirmed')]}"/>
+							</group>	
+						</group>
+					</group>
+				</sheet>
+			</form>
+		</field>
+	</record>
+	<record id="woo_instance_search_view_ept" model="ir.ui.view">
+            <field name="name">Woo Instance Search View</field>
+            <field name="model">woo.instance.ept</field>
+			<field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Woo Instance">
+					<field name="name"/>
+					<group expand="0" string="Group By...">
+						 <filter string="Warehouse" icon="terp-personal"  context="{'group_by':'warehouse_id'}"/>
+						 <filter string="Country" icon="terp-personal" context="{'group_by':'country_id'}"/>
+						 <filter string="State" icon="terp-personal" context="{'group_by':'state'}"/>
+					</group>  					
+				</search>
+			</field>
+	</record>
+	<record id="action_woo_instance_ept" model="ir.actions.act_window">
+        <field name="name">WooCommerce Instance</field>
+		<field name="res_model">woo.instance.ept</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="woo_instance_tree_view_ept"/>
+        <field name="help" type="html">
+        <div>
+            <br/><br/><br/>
+            <p>
+              <b>There is no any WooCommerce Instance configured yet.</b>
+            </p><p>
+              To add your first Woo Instance, go to menu
+              <i>Settings >> Configuration >> WooCommerce</i> and create new Instance from there.
+            	At there you can define one or more WooCommerce Instances and configure extended options per Instance.
+            </p>
+            <p>
+            	You can't create new WooCommerce Instance from here. This menu is just to check &amp; 
+            	verify WooCommerce account credentials and sync history from ERP to WooCommerce.   
+            </p>
+        </div>
+     </field>
+   	</record>
+   	
+	<menuitem id="woo_commerce_main_menu" name="WooCommerce" sequence="20" groups="woo_commerce_ept.group_woo_ept"/>   	   	
+	
+  </data>
+</openerp>
