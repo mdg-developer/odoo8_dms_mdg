@@ -38,6 +38,7 @@ class stock_transfer_details(models.TransientModel):
                 'product_id': op.product_id.id,
                 'product_uom_id': op.product_uom_id.id,
                 'quantity': op.product_qty,
+                'temp_qty':op.product_qty,
                 'package_id': op.package_id.id,
                 'lot_id': op.lot_id.id,
                 'sourceloc_id': op.location_id.id,

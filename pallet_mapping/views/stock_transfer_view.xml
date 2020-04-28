@@ -15,15 +15,16 @@
 
 					</header>
 				</xpath>
-				<!-- <xpath expr="//field[@name='item_ids']/tree/field[@name='quantity']"
-					position="replace">
-					<field name="quantity" on_change="on_change_qty_change(quantity,temp_qty)" />
-				</xpath> -->
-
 				<xpath expr="//field[@name='item_ids']/tree/field[@name='quantity']"
 					position="after">
 					<field name="temp_qty" invisible="1" />
 				</xpath>
+				<xpath expr="//field[@name='item_ids']/tree/field[@name='quantity']"
+					position="replace">
+					<field name="quantity" on_change="on_change_qty_change(quantity,temp_qty)" />
+				</xpath>
+
+
 
 			</field>
 		</record>
