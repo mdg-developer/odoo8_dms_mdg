@@ -24,10 +24,10 @@ class stock_transfer_details_items(models.TransientModel):
                 if bigger_uom > 0:
                     bigger_qty = self.quantity / bigger_uom
                 if self.bigger_uom_id:
-                    self.bigger_uom_id = self.product_uom_id    
+                    self.bigger_uom_id = self.bigger_uom_id    
                      
         if self.bigger_uom_id:
-            self.bigger_uom_id = self.product_uom_id
+            self.bigger_uom_id = self.bigger_uom_id
                             
         self.bigger_qty = bigger_qty
          

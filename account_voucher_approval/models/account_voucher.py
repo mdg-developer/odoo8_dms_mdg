@@ -92,16 +92,18 @@ class account_voucher(osv.osv):
             account_type = self.pool['account.account'].browse(cr, uid, context['account_id'], context=context).type
         if ttype == 'payment':
             if not account_type:
-                account_type = 'payable','receivable'
+                account_type = 'payable'
             total_debit = price or 0.0
         else:
             total_credit = price or 0.0
             if not account_type:
-                account_type = 'receivable','payable'
+                account_type = 'receivable'
         print 'account_type',account_type
         if not context.get('move_line_ids', False):
             #ids = move_line_pool.search(cr, uid, [('state','=','valid'), ('account_id.type', 'in', (account_type)), ('reconcile_id', '=', False), ('partner_id', '=', partner_id)], context=context)
-            ids = move_line_pool.search(cr, uid, [('state','=','valid'), ('account_id.type', 'in', (account_type)), ('reconcile_id', '=', False), ('partner_id', 'in', partner_ids)], context=context)
+            #ids = move_line_pool.search(cr, uid, [('state','=','valid'), ('account_id.type', =, account_type), ('reconcile_id', '=', False), ('partner_id', '=', partner_ids)], context=context)
+            ids = move_line_pool.search(cr, uid, [('state','=','valid'), ('account_id.type', '=', account_type), ('reconcile_id', '=', False), ('partner_id', '=', partner_id)], context=context)
+        
         else:
             ids = context['move_line_ids']
         invoice_id = context.get('invoice_id', False)
