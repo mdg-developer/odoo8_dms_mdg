@@ -3957,22 +3957,43 @@ class mobile_sale_order(osv.osv):
         cr.execute('''update queue_job set is_credit_invoice=False where user_id=%s and date_created::date=%s''', (uid,date,))
         return True    
         
-    def get_partner_category_rel(self, cr, uid, section_id , context=None):        
-        cr.execute('''(select a.* from res_partner_res_partner_category_rel a,
-                 sale_plan_day_line b
-                 , sale_plan_day p
-                where a.partner_id = b.partner_id
-                and b.line_id = p.id
-                and p.sale_team = %s
-                order by b.sequence asc)
-                UNION ALL
-                (select a.* from res_partner_res_partner_category_rel a,sale_plan_trip p,
-                 res_partner_sale_plan_trip_rel b
-                where a.partner_id = b.partner_id
-                and b.sale_plan_trip_id = p.id
-                and p.sale_team = %s)
-                ''', (section_id, section_id,))
-        datas = cr.fetchall()        
+    def get_partner_category_rel(self, cr, uid, section_id , context=None):  
+        section = self.pool.get('crm.case.section')      
+        sale_team_data = section.browse(cr, uid, section_id, context=context)
+        is_supervisor=sale_team_data.is_supervisor    
+        if is_supervisor==True:
+
+            cr.execute('''(select a.* from res_partner_res_partner_category_rel a,
+                     sale_plan_day_line b
+                     , sale_plan_day p
+                    where a.partner_id = b.partner_id
+                    and b.line_id = p.id
+                    and p.sale_team in (select id from crm_case_section where supervisor_team= %s)
+                    order by b.sequence asc)
+                    UNION ALL
+                    (select a.* from res_partner_res_partner_category_rel a,sale_plan_trip p,
+                     res_partner_sale_plan_trip_rel b
+                    where a.partner_id = b.partner_id
+                    and b.sale_plan_trip_id = p.id
+                    and p.sale_team in (select id from crm_case_section where supervisor_team= %s))
+                    ''', (section_id, section_id,))
+            datas = cr.fetchall()     
+        else:
+            cr.execute('''(select a.* from res_partner_res_partner_category_rel a,
+             sale_plan_day_line b
+             , sale_plan_day p
+            where a.partner_id = b.partner_id
+            and b.line_id = p.id
+            and p.sale_team = %s
+            order by b.sequence asc)
+            UNION ALL
+            (select a.* from res_partner_res_partner_category_rel a,sale_plan_trip p,
+             res_partner_sale_plan_trip_rel b
+            where a.partner_id = b.partner_id
+            and b.sale_plan_trip_id = p.id
+            and p.sale_team = %s
+            ''', (section_id, section_id,))
+            datas = cr.fetchall()    
         return datas
     
 #     def get_monthly_promotion_history(self, cr, uid, section_id , context=None, **kwargs):
