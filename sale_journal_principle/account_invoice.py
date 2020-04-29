@@ -99,6 +99,12 @@ class account_invoice(models.Model):
             # Note that the corresponding move_lines and move_reconciles
             # will be automatically deleted too
             moves.unlink()
+            if inv.type=='in_invoice':
+                cr.execute ('''select mv.id as move_id from account_move mv,account_journal aj where mv.journal_id=aj.id and aj.code='GROSS' and (mv.ref =%s or mv.ref =%s)''',(inv.origin,inv.reference,))
+                move_ids=cr.fetchone()
+                if move_ids:
+                    cr.execute('''delete from account_move_line where move_id =%s''',(move_ids[0],))
+                    cr.execute('''delete from account_move where id =%s''',(move_ids[0],))            
         self._log_event(-1.0, 'Cancel Invoice')
         return True
     
