@@ -1,3 +1,4 @@
+
 try:
     import simplejson as json
 except ImportError:
@@ -545,6 +546,11 @@ class res_partner(osv.osv):
                 if code:
                     from datetime import datetime
                     cr.execute("update res_partner set customer_code=%s ,date_partnership=now()::date ,mobile_customer=False ,write_uid =%s ,write_date =now() where id=%s",(code,uid,ids[0], ))
+                    cr.execute("select a.category_id from res_partner_res_partner_category_rel a , res_partner_category b where a.category_id = b.id and partner_id =%s",(ids[0], ))
+                    category_data=cr.fetchone()
+                    if not category_data:
+                        cr.execute("INSERT INTO res_partner_res_partner_category_rel(category_id,partner_id) VALUES(%s,%s)",(2,ids[0],))
+
                     #self.write(cr, uid, ids, {'customer_code':code,'date_partnership':datetime.now().date(),'mobile_customer':False}, context=context)
             return True
 res_partner()
