@@ -591,7 +591,7 @@ class CommonReportHeaderWebkit(common_report_header):
         if target_move == 'posted':
             search += [('move_id.state', '=', 'posted')]
         if branch:
-            search +=[('branch_id', '=', branch[0])]
+            search +=[('branch_id', 'in', branch)]
         return move_line_obj.search(self.cursor, self.uid, search)
 
     def _get_move_ids_from_dates(self, account_id, new_analytic_account_ids, date_start, date_stop,
@@ -617,7 +617,7 @@ class CommonReportHeaderWebkit(common_report_header):
         if target_move == 'posted':
             search_period += [('move_id.state', '=', 'posted')]
         if branch:
-            search_period +=[('branch_id', '=', branch[0])]
+            search_period +=[('branch_id', 'in', branch)]
 
         return move_line_obj.search(self.cursor, self.uid, search_period)
 
