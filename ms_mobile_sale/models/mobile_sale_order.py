@@ -3992,6 +3992,7 @@ class mobile_sale_order(osv.osv):
             where a.partner_id = b.partner_id
             and b.sale_plan_trip_id = p.id
             and p.sale_team = %s
+            order by b.sequence asc)
             ''', (section_id, section_id,))
             datas = cr.fetchall()    
         return datas

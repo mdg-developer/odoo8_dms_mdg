@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.6.0.v201606072122</property>
     <property name="units">in</property>
     <method name="initialize"><![CDATA[branchList = params["branch_id"].value.join(",");]]></method>
     <property name="iconFile">/templates/blank_report.gif</property>
@@ -264,6 +264,12 @@ from res_partner where supplier='t']]></xml-property>
                     <text-property name="heading">issue_qty</text-property>
                 </structure>
                 <structure>
+                    <property name="columnName">uom</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">uom</text-property>
+                    <text-property name="heading">uom</text-property>
+                </structure>
+                <structure>
                     <property name="columnName">claim_price</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">claim_price</text-property>
@@ -373,16 +379,21 @@ from res_partner where supplier='t']]></xml-property>
                     </structure>
                     <structure>
                         <property name="position">14</property>
+                        <property name="name">uom</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">15</property>
                         <property name="name">claim_price</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">15</property>
+                        <property name="position">16</property>
                         <property name="name">claim_total</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">16</property>
+                        <property name="position">17</property>
                         <property name="name">remark</property>
                         <property name="dataType">string</property>
                     </structure>
@@ -487,20 +498,27 @@ this.queryText =this.queryText.replace("--$principal_id$", "and h.principle_id i
                 </structure>
                 <structure>
                     <property name="position">14</property>
+                    <property name="name">uom</property>
+                    <property name="nativeName">uom</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">15</property>
                     <property name="name">claim_price</property>
                     <property name="nativeName">claim_price</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">15</property>
+                    <property name="position">16</property>
                     <property name="name">claim_total</property>
                     <property name="nativeName">claim_total</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">16</property>
+                    <property name="position">17</property>
                     <property name="name">remark</property>
                     <property name="nativeName">remark</property>
                     <property name="dataType">string</property>
@@ -508,7 +526,7 @@ this.queryText =this.queryText.replace("--$principal_id$", "and h.principle_id i
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select h.name as Refid,h.issue_type as type,l.name as issue_location,p.name as receiver,h.date as requested_date,sp.date_done as issue_date,
-h.memo_refno,i.name as debit_note,h.claim_attachment,pr.name as principle,h.principle_support,pt.name as product,d.quantity as issue_qty,
+h.memo_refno,i.name as debit_note,h.claim_attachment,pr.name as principle,h.principle_support,pt.name as product,d.quantity as issue_qty,(select name from product_uom where id =d.uom_id) as uom,
 d.claim_price,d.claim_total,'' as remark
 from product_nonsell_issue h 
 left join product_nonsell_issue_line d on h.id=d.line_id
@@ -790,7 +808,7 @@ from res_branch rb
             <property name="resultSetColumn">principal_id</property>
         </data>
         <table id="25">
-            <property name="width">13.40625in</property>
+            <property name="width">13.427083333333334in</property>
             <property name="dataSet">report_ds</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -901,6 +919,12 @@ from res_branch rb
                     </list-property>
                     <property name="allowExport">true</property>
                 </structure>
+                <structure>
+                    <property name="name">uom</property>
+                    <text-property name="displayName">uom</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["uom"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
             </list-property>
             <column id="128">
                 <property name="width">0.2604166666666667in</property>
@@ -944,6 +968,9 @@ from res_branch rb
             <column id="121">
                 <property name="width">0.5833333333333334in</property>
             </column>
+            <column id="841">
+                <property name="width">0.5833333333333334in</property>
+            </column>
             <column id="122">
                 <property name="width">0.9479166666666666in</property>
             </column>
@@ -951,7 +978,7 @@ from res_branch rb
                 <property name="width">0.8333333333333334in</property>
             </column>
             <column id="124">
-                <property name="width">0.96875in</property>
+                <property name="width">0.40625in</property>
             </column>
             <header>
                 <row id="26">
@@ -1137,6 +1164,19 @@ from res_branch rb
                         <property name="borderTopWidth">thin</property>
                         <label id="52">
                             <text-property name="text">Iss Qty</text-property>
+                        </label>
+                    </cell>
+                    <cell id="838">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="842">
+                            <text-property name="text">UoM</text-property>
                         </label>
                     </cell>
                     <cell id="53">
@@ -1349,6 +1389,17 @@ from res_branch rb
                             <property name="resultSetColumn">issue_qty</property>
                         </data>
                     </cell>
+                    <cell id="839">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <data id="843">
+                            <property name="resultSetColumn">uom</property>
+                        </data>
+                    </cell>
                     <cell id="86">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1411,6 +1462,7 @@ from res_branch rb
                     <cell id="103"/>
                     <cell id="104"/>
                     <cell id="105"/>
+                    <cell id="840"/>
                     <cell id="106"/>
                     <cell id="107"/>
                     <cell id="108"/>
