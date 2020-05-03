@@ -67,7 +67,7 @@ class sale_order(models.Model):
     @api.multi
     def create_or_update_woo_customer(self,woo_cust_id,vals,is_company=False,parent_id=False,type=False,instance=False):
         country_obj=self.env['res.country']
-        state_obj=self.env['res.country.state']
+        state_obj=self.env['res.country.state']        
         partner_obj=self.env['res.partner']
         
         first_name=vals.get('first_name')
@@ -104,13 +104,31 @@ class sale_order(models.Model):
         if not country:
             state=state_obj.search([('name','=',state_name)],limit=1)            
         else:
-            state = state_obj.search(["|", ('code', '=', state_name), ('name', '=', state_name), ('country_id', '=', country.id)],limit=1)           
+            state = state_obj.search(["|", ('code', '=', state_name), ('name', '=', state_name), ('country_id', '=', country.id)],limit=1)
+          
+        if city:  
+            self.env.cr.execute("""select rc.id
+                                from res_township rt,res_city rc
+                                where rt.city=rc.id
+                                and lower(rt.name)=lower(%s)
+                                """, (city,))    
+            city_data = self.env.cr.fetchall()    
+            if city_data:
+                city = city_data[0][0]  
+        
+            self.env.cr.execute("""select id
+                                from res_township rt
+                                where lower(name)=lower(%s)
+                                """, (vals.get('city'),))    
+            township_data = self.env.cr.fetchall()    
+            if township_data:
+                township = township_data[0][0]    
                         
         partner=partner_obj.search([('woo_customer_id','=',woo_customer_id)]) if woo_customer_id else False
         if not partner:
-            partner=partner_obj.search([('name','=',name),('city','=',city),('street','=',address1),('street2','=',address2),('email','=',email),('phone','=',phone),('zip','=',zip),('country_id','=',country.id),('state_id','=',state.id)],limit=1)
+            partner=partner_obj.search([('name','=',name),('city','=',city),('township','=',township),('street','=',address1),('street2','=',address2),('email','=',email),('phone','=',phone),('zip','=',zip),('country_id','=',country.id),('state_id','=',state.id)],limit=1)
         if not partner:
-            partner=partner_obj.search([('name','=',name),('city','=',city),('street','=',address1),('street2','=',address2),('zip','=',zip),('country_id','=',country.id)],limit=1)
+            partner=partner_obj.search([('name','=',name),('city','=',city),('township','=',township),('street','=',address1),('street2','=',address2),('zip','=',zip),('country_id','=',country.id)],limit=1)
             
         if partner:
             partner.write({'state_id':state and state.id or False,'is_company':is_company,'woo_company_name_ept':company_name or partner.woo_company_name_ept,
@@ -121,7 +139,7 @@ class sale_order(models.Model):
                            'property_payment_term_id':instance.payment_term_id and instance.payment_term_id.id or False})            
         else:
             partner=partner_obj.create({'type':type,'parent_id':parent_id,'woo_customer_id':woo_customer_id or '',
-                                        'name':name,'state_id':state and state.id or False,'city':city,
+                                        'name':name,'state_id':state and state.id or False,'city':city,'township':township,
                                         'street':address1,'street2':address2,
                                         'phone':phone,'zip':zip,'email':email,
                                         'country_id':country and country.id or False,'is_company':is_company,
@@ -450,12 +468,12 @@ class sale_order(models.Model):
         woo_instance_obj=self.env['woo.instance.ept']
         ctx = dict(self._context) or {}
         woo_instance_id = ctx.get('woo_instance_id',False)
-        if woo_instance_id:
-            instance=woo_instance_obj.search([('id','=',woo_instance_id),('state','=','confirmed')])
-            if instance and instance.woo_version == 'old':
-                self.import_woo_orders(instance)
-            elif instance and instance.woo_version == 'new':
-                self.import_new_woo_orders(instance)
+        #if woo_instance_id:
+        instance=woo_instance_obj.search([('state','=','confirmed')],limit=1)
+        if instance and instance.woo_version == 'old':
+            self.import_woo_orders(instance)
+        elif instance and instance.woo_version == 'new':
+            self.import_new_woo_orders(instance)
         return True
 
     @api.model
