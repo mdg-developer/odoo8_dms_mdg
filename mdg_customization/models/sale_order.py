@@ -44,10 +44,17 @@ class sale_order_line(osv.osv):
         product_obj = product_obj.browse(cr, uid, product, context=context_partner)
         price = 0
         uom2 = False
+        delivery_product = False
         if product_obj.product_tmpl_id.type == 'service':
-            result.update({'service_product': True,'main_group':product_obj.product_tmpl_id.main_group})
+            delivery_obj = self.pool.get('delivery.carrier')
+            delivery = delivery_obj.search(cr, uid, [('product_id', '=', product_obj.id)], context=context)
+            if delivery:
+                delivery_data = delivery_obj.browse(cr,uid,delivery,context=context)
+                if product_obj.id == delivery_data.product_id.id:                    
+                    delivery_product = True
+            result.update({'service_product': True,'main_group':product_obj.product_tmpl_id.main_group.id,'delivery_product':delivery_product})
         else:
-            result.update({'service_product': False,'main_group':product_obj.product_tmpl_id.main_group})   
+            result.update({'service_product': False,'main_group':product_obj.product_tmpl_id.main_group.id})   
         if uom:
             uom2 = product_uom_obj.browse(cr, uid, uom)
             if product_obj.uom_id.category_id.id != uom2.category_id.id:
