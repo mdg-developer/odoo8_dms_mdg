@@ -7,14 +7,14 @@ class customer_stock_check(osv.osv):
     _columns = {      
                 'outlet_type': fields.many2one('outlettype.outlettype', 'Outlet Type'), 
                 'date': fields.date('Checked Date'),   
-                'stock_setting_line':fields.one2many('stock.check.setting.line', 'stock_setting_ids', string='Product'),
+                'stock_setting_line':fields.one2many('stock.check.setting.line', 'stock_setting_ids', string='Product',copy=True),
     }    
     
     def retrieve_stock(self, cr, uid, ids, context=None):  
         stock_line_obj = self.pool.get('stock.check.setting.line')
         if ids:
             cr.execute("""select pp.id,pp.sequence from product_product pp,product_template pt
-                where pp.product_tmpl_id = pt.id and pt.type!='service' and pt.active='True'
+                where pp.product_tmpl_id = pt.id and pt.type!='service' and pt.is_foc !=True and pt.active='True'
                 and pp.active='True' and pp.id not in (select product_id from stock_check_setting_line where stock_setting_ids =%s) order by pp.sequence asc""",(ids[0],))
             product_data = cr.fetchall()
             for p_line in product_data:
