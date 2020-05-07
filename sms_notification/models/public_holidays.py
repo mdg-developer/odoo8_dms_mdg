@@ -14,7 +14,7 @@ class public_holidays_line(osv.osv):
     _description = 'Public Holidays Lines'
 
     _columns = {        
-        'holidays_id': fields.many2one('public.holidays', 'Holiday'),                
+        'holidays_id': fields.many2one('public.holidays', 'Holiday', ondelete='cascade'),                
         'date': fields.date('Date', required=True),        
     }
     

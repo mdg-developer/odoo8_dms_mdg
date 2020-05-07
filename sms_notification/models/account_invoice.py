@@ -29,8 +29,14 @@ class account_invoice(osv.osv):
     def _calculate_cash_collection_date(self, cr, uid, ids, field_name, arg, context=None):
         
         res = {}       
-        for invoice in self.browse(cr, uid, ids, context=context):  
-            cash_collection_date = invoice.date_due   
+        for invoice in self.browse(cr, uid, ids, context=context):              
+            if invoice.date_due < fields.date.today():
+                cr.execute("select (%s::date + interval '3' day)::date;",(invoice.date_due,))    
+                next_three_days = cr.fetchall()
+                if next_three_days:
+                    cash_collection_date = next_three_days[0][0]                    
+            else:
+                cash_collection_date = invoice.date_due
             cr.execute("select min(date),max(date) from public_holidays_line")    
             min_max_data = cr.fetchall()  
             if min_max_data:
