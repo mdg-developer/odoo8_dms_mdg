@@ -47,7 +47,23 @@
 
 			</field>
 		</record>
-
+		
+		<!-- Supplier Payment -->
+		<record id="view_vendor_payment_form_inherit2" model="ir.ui.view">
+			<field name="name">account.voucher.payment.form</field>
+			<field name="model">account.voucher</field>
+			<field name="inherit_id" ref="account_voucher.view_vendor_payment_form" />
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//field[@name='line_dr_ids']/tree/field[@name='move_line_id']" position="after">
+						<field name="supplier_invoice_number" />
+					</xpath>
+					<xpath expr="//field[@name='line_cr_ids']/tree/field[@name='move_line_id']" position="after">
+						<field name="supplier_invoice_number" />
+					</xpath>
+				</data>
+			</field>
+		</record>
 
 	</data>
 </openerp>

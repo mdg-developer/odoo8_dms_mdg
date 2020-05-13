@@ -1,3 +1,4 @@
+import account_voucher_line
 import account_voucher
 import account_invoice
 import account_journal

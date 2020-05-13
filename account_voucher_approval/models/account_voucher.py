@@ -159,12 +159,19 @@ class account_voucher(osv.osv):
             line_currency_id = line.currency_id and line.currency_id.id or company_currency
             voucher_partner=None
             if line.partner_id:
-                voucher_partner=line.partner_id.id
+                voucher_partner=line.partner_id.id            
+            
+            if line.invoice:
+                supplier_invoice_number = line.invoice.supplier_invoice_number
+            else:
+                supplier_invoice_number = None
+                
             rs = {
                 'name':line.move_id.name,
                 'type': line.credit and 'dr' or 'cr',
                 'partner_id':voucher_partner,
                 'move_line_id':line.id,
+                'supplier_invoice_number':supplier_invoice_number,
                 'account_id':line.account_id.id,
                 'amount_original': amount_original,
                 'amount': (line.id in move_lines_found) and min(abs(remaining_amount), amount_unreconciled) or 0.0,
