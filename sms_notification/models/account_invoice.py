@@ -81,7 +81,7 @@ class account_invoice(osv.osv):
         'cash_collection_date': fields.function(_calculate_cash_collection_date, string='Calculate cash collection date', type='date'),
     }         
                 
-    def send_invoice_due_pre_reminder_sms(self, cr, uid, ids, context=None):    
+    def send_invoice_due_pre_reminder_sms(self, cr, uid, context=None):    
         
         cr.execute("select id from account_invoice where type='out_invoice' and state='open' and date_due=current_date+3")    
         invoice_data = cr.fetchall()   
@@ -106,7 +106,7 @@ class account_invoice(osv.osv):
                             if message_obj.status =='success':
                                 invoice.write({'invoice_due_pre_reminder_noti':datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")})                                                                                         
                           
-    def send_collection_sms(self, cr, uid, ids, context=None):    
+    def send_collection_sms(self, cr, uid, context=None):    
         
         current_date = datetime.datetime.now().date()
         invoice_obj = self.pool.get('account.invoice').search(cr, uid, [('type', '=', 'out_invoice'),
@@ -134,7 +134,7 @@ class account_invoice(osv.osv):
                             if message_obj.status == 'success':
                                 invoice.write({'collection_noti':datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")})                               
                                                              
-    def send_overdue_sms(self, cr, uid, ids, context=None):
+    def send_overdue_sms(self, cr, uid, context=None):
             
         cr.execute("select id from account_invoice where type='out_invoice' and state='open' and date_due=current_date-3")    
         invoice_data = cr.fetchall()   
