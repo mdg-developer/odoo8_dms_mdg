@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<record id="inherit_product_template_form_view_ecommerce" model="ir.ui.view">
+					<field name="name">product.template.product.tree</field>
+					<field name="model">product.template</field>
+					<field name="inherit_id" ref="product.product_template_form_view" />
+					<field name="arch" type="xml">
+						
+						<field name="active" position="after">
+							
+							<field name="is_sync_ecommerce"/>
+						</field>
+
+					</field>
+		</record>
+		
+		
+	</data>
+</openerp>
