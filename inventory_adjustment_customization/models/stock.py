@@ -162,15 +162,21 @@ class stock_quant(osv.osv):
                                           'ref': move.picking_id.name}, context=context)
             if move.picking_id.date_done:
                 cr.execute("update stock_move set date = %s where id=%s",( move.picking_id.date_done,move_id,))                
-            cr.execute("update account_move_line set date =%s where move_id =%s",(move.date,move_id,))            
-            cr.execute('''update account_move set period_id=p.id,date=%s
-            from (
-            select id,date_start,date_stop
-            from account_period
-            where date_start != date_stop
-            ) p
-            where p.date_start <= %s and  %s <= p.date_stop
-            and account_move.id=%s''',(move.date,move.date, move.date,move_id,))   
+                cr.execute('''select ((date_done at time zone 'utc' )at time zone 'asia/rangoon')::date as move_date
+                            from stock_picking
+                            where id=%s''',(move.picking_id.id,))
+                move_date_data = cr.fetchall()                
+                if move_date_data:
+                    account_move_date = move_date_data[0]                               
+                    cr.execute("update account_move_line set date =%s where move_id =%s",(account_move_date,move_id,))            
+                    cr.execute('''update account_move set period_id=p.id,date=%s
+                    from (
+                    select id,date_start,date_stop
+                    from account_period
+                    where date_start != date_stop
+                    ) p
+                    where p.date_start <= %s and  %s <= p.date_stop
+                    and account_move.id=%s''',(account_move_date,account_move_date,account_move_date,move_id,))   
             
                          
 class account_move_line(osv.osv):
