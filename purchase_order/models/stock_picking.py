@@ -57,6 +57,16 @@ class stock_picking(osv.osv):
                 model_obj = self.pool.get('ir.model.data')
                 model_obj._get_id(cr,uid,'stock', 'action_picking_tree_done')
                 
+    def _get_invoice_vals(self, cr, uid, key, inv_type, journal_id, move, context=None):
+        
+        invoice_vals = super(stock_picking,self)._get_invoice_vals(cr, uid, key, inv_type, journal_id, move, context=context)        
+        if invoice_vals:                 
+            if invoice_vals.get('type') == 'in_invoice':      
+                invoice_vals['origin'] = 'PO-' + invoice_vals.get('origin')
+            else:
+                invoice_vals['origin'] = invoice_vals['origin']
+        return invoice_vals
+                
 class stock_shipping(osv.osv):                 
     _inherit = "stock.invoice.onshipping"
     
