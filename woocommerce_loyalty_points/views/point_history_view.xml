@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>     
+        	      		
+        <record id="view_point_history_tree" model="ir.ui.view">
+            <field name="name">point.history.tree</field>
+            <field name="model">point.history</field>            
+            <field name="arch" type="xml">
+                <tree default_order='date desc' string="Point History" create="false" edit="false">
+                    <field name="partner_id" />
+					<field name="date" />
+					<field name="order_id" />
+					<field name="membership_id" />
+					<field name="redeem_point" />
+					<field name="balance_point" />
+					<field name="getting_point" />
+                </tree>
+            </field>            
+        </record> 	
+        
+        <record id="point_history_filter" model="ir.ui.view">
+            <field name="name">point.history.filter</field>
+            <field name="model">point.history</field>
+            <field name="arch" type="xml">
+                <search>         
+                    <field name="order_id" /> 
+                    <field name="partner_id" /> 
+                    <field name="membership_id" />                          
+                    <group expand="0" string="Group By">
+                        <filter string="Sale Order" context="{'group_by':'order_id'}"/>     
+                        <filter string="Customer" context="{'group_by':'partner_id'}"/>   
+                        <filter string="Membership Level" context="{'group_by':'membership_id'}"/>                                                                
+                    </group>
+               </search>
+            </field>
+        </record>
+		
+		<record id="action_point_history_view" model="ir.actions.act_window">
+            <field name="name">Point History</field>
+            <field name="res_model">point.history</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_point_history_tree"/>
+        </record>
+		
+        <menuitem id="points_and_memberships_menu" parent="base.menu_base_partner" name="Points and Memberships"
+			sequence="15" />
+		<menuitem id="point_history_menu" action="action_point_history_view"
+			parent="points_and_memberships_menu" sequence="1" />
+		
+    </data>
+</openerp>
