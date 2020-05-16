@@ -47,40 +47,40 @@ class product_product(models.Model):
             doc_ref = db.collection('uom_uom').document(node)
             doc_ref.set(row)    
 
-    def sync_product_product(self):
-        
-        self._cr.execute("""select  pp.id,pt.list_price,coalesce(replace(pt.description,',',';'), ' ') as description,pt.categ_id,pc.name as categ_name,pp.default_code, 
-            pt.name,substring(replace(cast(pt.image_small as text),'/',''),1,5) as image_small,pt.main_group,pt.uom_ratio,
-            pp.product_tmpl_id,pt.is_foc,pp.sequence,pt.type,pt.uom_id,ccs.id section_id
-            from product_sale_group_rel rel ,
-            crm_case_section ccs ,product_template pt, product_product pp , product_category pc
-            where pp.id = rel.product_id
-            and pt.id = pp.product_tmpl_id
-            and pt.active = true
-            and pp.active = true
-            and ccs.sale_group_id = rel.sale_group_id
-            and pc.id = pt.categ_id""")
-        firebase = FirebaseApplication('https://tabletsales-1373.firebaseio.com', None)         
-        for row in self._cr.dictfetchall():
-            res = {
-                'id': row['id'],
-                'list_price': row['list_price'],
-                'description': row['description'],                
-                'categ_id': row['categ_id'] ,
-                'categ_name': row['categ_name'],
-                'default_code': row['default_code'],
-                'name': row['name'],
-                'image_small': row['image_small'],
-                'main_group': row['main_group'],
-                'uom_ratio':row['uom_ratio'],
-                'product_tmpl_id':row['product_tmpl_id'],
-                'is_foc':row['is_foc'],
-                'sequence':row['sequence'],
-                'type':row['type'],
-                'uom_id':row['uom_id'],
-                'section_id':row['section_id'],
-            }
-            snapshot = firebase.post('/product_product', res)    
+#     def sync_product_product(self):
+#         
+#         self._cr.execute("""select  pp.id,pt.list_price,coalesce(replace(pt.description,',',';'), ' ') as description,pt.categ_id,pc.name as categ_name,pp.default_code, 
+#             pt.name,substring(replace(cast(pt.image_small as text),'/',''),1,5) as image_small,pt.main_group,pt.uom_ratio,
+#             pp.product_tmpl_id,pt.is_foc,pp.sequence,pt.type,pt.uom_id,ccs.id section_id
+#             from product_sale_group_rel rel ,
+#             crm_case_section ccs ,product_template pt, product_product pp , product_category pc
+#             where pp.id = rel.product_id
+#             and pt.id = pp.product_tmpl_id
+#             and pt.active = true
+#             and pp.active = true
+#             and ccs.sale_group_id = rel.sale_group_id
+#             and pc.id = pt.categ_id""")
+#         firebase = FirebaseApplication('https://tabletsales-1373.firebaseio.com', None)         
+#         for row in self._cr.dictfetchall():
+#             res = {
+#                 'id': row['id'],
+#                 'list_price': row['list_price'],
+#                 'description': row['description'],                
+#                 'categ_id': row['categ_id'] ,
+#                 'categ_name': row['categ_name'],
+#                 'default_code': row['default_code'],
+#                 'name': row['name'],
+#                 'image_small': row['image_small'],
+#                 'main_group': row['main_group'],
+#                 'uom_ratio':row['uom_ratio'],
+#                 'product_tmpl_id':row['product_tmpl_id'],
+#                 'is_foc':row['is_foc'],
+#                 'sequence':row['sequence'],
+#                 'type':row['type'],
+#                 'uom_id':row['uom_id'],
+#                 'section_id':row['section_id'],
+#             }
+#             snapshot = firebase.post('/product_product', res)    
 
 #     def sync_user(self):
 #         print "Hello Testing"
