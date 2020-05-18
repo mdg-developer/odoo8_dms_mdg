@@ -19,7 +19,7 @@ class product_product(models.Model):
         #get product
         self._cr.execute("""select  pp.id,pt.list_price,coalesce(replace(pt.description,',',';'), ' ') as description,pt.categ_id,pc.name as categ_name,pp.default_code, 
             pt.name,substring(replace(cast(pt.image_small as text),'/',''),1,5) as image_small,pt.main_group,pt.uom_ratio,
-            pp.product_tmpl_id,pt.is_foc,pp.sequence,pt.type,pt.uom_id,ccs.id section_id
+            pp.product_tmpl_id,pt.is_foc,pp.sequence,pt.type,pt.uom_id,ccs.id team_id
             from product_sale_group_rel rel ,
             crm_case_section ccs ,product_template pt, product_product pp , product_category pc
             where pp.id = rel.product_id
@@ -34,9 +34,9 @@ class product_product(models.Model):
             doc_ref.set(row)
         
         #get uom
-        self._cr.execute("""select distinct uom_id,uom_name,ratio,template_id,product_id from(
+        self._cr.execute("""select distinct uom_id,uom_name,ratio,template_id,product_id,team_id from(
                     select  pu.id as uom_id,pu.name as uom_name ,floor(round(1/factor,2)) as ratio,
-                    pur.product_template_id as template_id,pp.id as product_id,ccs.id as section_id
+                    pur.product_template_id as template_id,pp.id as product_id,ccs.id as team_id
                     from product_uom pu , product_template_product_uom_rel pur ,
                     product_product pp,
                     product_sale_group_rel rel,crm_case_section ccs
@@ -62,7 +62,7 @@ class product_product(models.Model):
                             A.zip,A.state_name,A.partner_latitude,A.partner_longitude,A.sale_plan_day_id,A.image_medium,A.credit_limit,
                             A.credit_allow,A.sales_channel,A.branch_id,A.pricelist_id,A.payment_term_id,A.outlet_type ,
                             A.city_id,A.township_id,A.country_id,A.state_id,A.unit,A.class_id,A.chiller,A.frequency_id,A.temp_customer,
-                            A.is_consignment,A.hamper,A.is_bank,A.is_cheque
+                            A.is_consignment,A.hamper,A.is_bank,A.is_cheque,A.sale_team team_id
                             from (
                             select RP.id,RP.name,'' as image,RP.is_company,RPS.line_id as sale_plan_day_id,
                             '' as image_small,RP.street,RP.street2,RC.name as city,RP.website,
@@ -71,7 +71,7 @@ class product_product(models.Model):
                             substring(replace(cast(RP.image_medium as text),'/',''),1,5) as image_medium,RP.credit_limit,RP.credit_allow,
                             RP.sales_channel,RP.branch_id,RP.pricelist_id,RP.payment_term_id,RP.outlet_type,RP.city as city_id,RP.township as township_id,
                             RP.country_id,RP.state_id,RP.unit,RP.class_id,RP.chiller,RP.frequency_id,RP.temp_customer,RP.is_consignment,RP.hamper,
-                            RP.is_bank,RP.is_cheque
+                            RP.is_bank,RP.is_cheque,SPD.sale_team
                             from sale_plan_day SPD ,outlettype_outlettype OT,
                                                 sale_plan_day_line RPS , res_partner RP ,res_country_state RS, res_city RC,res_township RT
                                                 where SPD.id = RPS.line_id 
@@ -90,31 +90,26 @@ class product_product(models.Model):
             doc_ref = db.collection('res_partner').document(node)
             doc_ref.set(row)                 
                     
-    def sync_users_company(self):
+    def sync_users(self):
         
         firebase_admin.get_app()        
         db = firestore.client()                 
                        
         #get users
-        self._cr.execute("""select id,active,login,password,partner_id,branch_id ,
+        self._cr.execute("""select ru.id,ru.active,login,password,partner_id,ru.branch_id ,
                             (select uid from res_groups_users_rel where gid in (select id from res_groups  
                             where name='Allow To Active') and uid=ru.id) allow_to_active,allow_collection_team,allow_product,allow_promotion,allow_customer,allow_sale_plan_day,
                             allow_sale_plan_trip,allow_stock_request,allow_stock_exchange,allow_visit_record,allow_pending_delivery,allow_credit_collection,allow_daily_order_report,
-                            allow_daily_sale_report,allow_pre_sale,allow_direct_sale,allow_assets,allow_customer_location_update,allow_stock_check,allow_rental,allow_feedback,allow_customer_create,allow_customer_edit,allow_visit_photo_taken
-                            from res_users ru
-                            where ru.active=true""")
+                            allow_daily_sale_report,allow_pre_sale,allow_direct_sale,allow_assets,allow_customer_location_update,allow_stock_check,allow_rental,allow_feedback,allow_customer_create,allow_customer_edit,allow_visit_photo_taken,
+                            ccs.id team_id
+                            from res_users ru,section_users_rel rel,crm_case_section ccs
+                            where ru.id=rel.uid
+                            and rel.section_id=ccs.id""")
         for row in self._cr.dictfetchall():
             node = str(row['id'])
             doc_ref = db.collection('res_users').document(node)
-            doc_ref.set(row)                 
-                        
-        #get company
-        self._cr.execute("""select id,name from res_company""")
-        for row in self._cr.dictfetchall():
-            node = str(row['id'])
-            doc_ref = db.collection('res_company').document(node)
-            doc_ref.set(row)        
-                                   
+            doc_ref.set(row)                
+                       
     def sync_promotions(self):    
                 
         firebase_admin.get_app()
@@ -150,7 +145,7 @@ class product_product(models.Model):
         db = firestore.client()
         
         #get product category
-        self._cr.execute("""select distinct categ_id,categ_name,section_id from (
+        self._cr.execute("""select distinct categ_id,categ_name,section_id team_id from (
                             select pp.product_tmpl_id,pt.list_price , pt.description,pt.categ_id,pc.name as categ_name,ccs.id section_id 
                             from product_sale_group_rel rel,
                             crm_case_section ccs ,product_template pt, product_product pp , product_category pc
