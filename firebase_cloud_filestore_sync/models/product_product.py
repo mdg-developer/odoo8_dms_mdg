@@ -239,3 +239,180 @@ class product_product(models.Model):
             node = str(row['id'])
             doc_ref = db.collection('product_pricelist_item').document(node)
             doc_ref.set(row) 
+            
+    def sync_sale_plan_day(self):    
+        
+        firebase_admin.get_app()        
+        db = firestore.client()
+        
+        #get sale plan day
+        self._cr.execute("""select p.id,p.date,p.sale_team team_id,p.name,p.principal,p.week from sale_plan_day p
+                            join  crm_case_section c on p.sale_team=c.id
+                            where p.active = true""")
+        for row in self._cr.dictfetchall():
+            node = str(row['id'])
+            doc_ref = db.collection('sale_plan_day').document(node)
+            doc_ref.set(row) 
+            
+    def sync_sale_plan_trip(self):    
+        
+        firebase_admin.get_app()        
+        db = firestore.client()
+        
+        #get sale plan trip
+        self._cr.execute("""select distinct p.id,p.date,p.sale_team team_id,p.name,p.principal from sale_plan_trip p
+                            ,crm_case_section c,res_partner_sale_plan_trip_rel d, res_partner e
+                            where  p.sale_team=c.id
+                            and p.active = true 
+                            and p.id = d.sale_plan_trip_id
+                            and e.id = d.partner_id""")
+        for row in self._cr.dictfetchall():
+            node = str(row['id'])
+            doc_ref = db.collection('sale_plan_trip').document(node)
+            doc_ref.set(row) 
+            
+    def sync_tablet_info(self):    
+        
+        firebase_admin.get_app()        
+        db = firestore.client()
+        
+        #get tablet info
+        self._cr.execute("""select id as tablet_id,date,create_uid,name,note,mac_address,model,type,storage_day
+                            ,replace(hotline,',',';') hotline,sale_team_id team_id,is_testing
+                            from tablets_information """)
+        for row in self._cr.dictfetchall():
+            node = str(row['tablet_id'])
+            doc_ref = db.collection('tablet').document(node)
+            doc_ref.set(row) 
+            
+    def sync_branch(self):    
+        
+        firebase_admin.get_app()        
+        db = firestore.client()
+        
+        #get branch
+        self._cr.execute("""select id,name,branch_code from res_branch where active = true""")
+        for row in self._cr.dictfetchall():
+            node = str(row['id'])
+            doc_ref = db.collection('res_branch').document(node)
+            doc_ref.set(row) 
+            
+    def sync_sale_channel(self):    
+        
+        firebase_admin.get_app()        
+        db = firestore.client()
+        
+        #get sale channel
+        self._cr.execute("""select id,name from sale_channel""")
+        for row in self._cr.dictfetchall():
+            node = str(row['id'])
+            doc_ref = db.collection('sale_channel').document(node)
+            doc_ref.set(row) 
+            
+    def sync_payment_term(self):    
+        
+        firebase_admin.get_app()        
+        db = firestore.client()
+        
+        #get payment term
+        self._cr.execute("""select id,name from account_payment_term where active = true""")
+        for row in self._cr.dictfetchall():
+            node = str(row['id'])
+            doc_ref = db.collection('account_payment_term').document(node)
+            doc_ref.set(row) 
+            
+    def sync_city(self):    
+        
+        firebase_admin.get_app()        
+        db = firestore.client()
+        
+        #get city
+        self._cr.execute("""select id,code,name,state_id from res_city""")
+        for row in self._cr.dictfetchall():
+            node = str(row['id'])
+            doc_ref = db.collection('res_city').document(node)
+            doc_ref.set(row) 
+            
+    def sync_township(self):    
+        
+        firebase_admin.get_app()        
+        db = firestore.client()
+        
+        #get township
+        self._cr.execute("""select id,code,name,city from res_township""")
+        for row in self._cr.dictfetchall():
+            node = str(row['id'])
+            doc_ref = db.collection('res_township').document(node)
+            doc_ref.set(row) 
+            
+    def sync_outlet_type(self):    
+        
+        firebase_admin.get_app()        
+        db = firestore.client()
+        
+        #get outlet type
+        self._cr.execute("""select id,name from outlettype_outlettype""")
+        for row in self._cr.dictfetchall():
+            node = str(row['id'])
+            doc_ref = db.collection('outlettype_outlettype').document(node)
+            doc_ref.set(row) 
+            
+    def sync_sale_demarcation(self):    
+        
+        firebase_admin.get_app()        
+        db = firestore.client()
+        
+        #get sale demarcation
+        self._cr.execute("""select id,name from sale_demarcation""")
+        for row in self._cr.dictfetchall():
+            node = str(row['id'])
+            doc_ref = db.collection('sale_demarcation').document(node)
+            doc_ref.set(row) 
+            
+    def sync_sale_class(self):    
+        
+        firebase_admin.get_app()        
+        db = firestore.client()
+        
+        #get sale class
+        self._cr.execute("""select id,name from sale_class""")
+        for row in self._cr.dictfetchall():
+            node = str(row['id'])
+            doc_ref = db.collection('sale_class').document(node)
+            doc_ref.set(row) 
+            
+    def sync_division_state(self):    
+        
+        firebase_admin.get_app()        
+        db = firestore.client()
+        
+        #get division state
+        self._cr.execute("""select id,name from res_country_state""")
+        for row in self._cr.dictfetchall():
+            node = str(row['id'])
+            doc_ref = db.collection('res_country_state').document(node)
+            doc_ref.set(row) 
+            
+    def sync_frequency(self):    
+        
+        firebase_admin.get_app()        
+        db = firestore.client()
+        
+        #get frequency
+        self._cr.execute("""select id,name from plan_frequency""")
+        for row in self._cr.dictfetchall():
+            node = str(row['id'])
+            doc_ref = db.collection('plan_frequency').document(node)
+            doc_ref.set(row) 
+            
+    def sync_stock_check_setting(self):    
+        
+        firebase_admin.get_app()        
+        db = firestore.client()
+        
+        #get stock check setting
+        self._cr.execute("""select scl.id ,sc.outlet_type,scl.product_id,scl.product_uom_qty as quantity,scl.available,scl.facing, scl.chiller from stock_check_setting sc ,stock_check_setting_line scl where sc.id=scl.stock_setting_ids""")
+        for row in self._cr.dictfetchall():
+            node = str(row['id'])
+            doc_ref = db.collection('stock_check_setting').document(node)
+            doc_ref.set(row) 
