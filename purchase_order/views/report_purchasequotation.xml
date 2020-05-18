@@ -30,6 +30,10 @@
 									<span t-field="o.name" />
 								</p>
 								<p>
+									<strong>Supplier Reference:</strong>
+									<span t-field="o.partner_ref" />
+								</p>
+								<p>
 									<strong>Supplier ID:</strong>
 									<span t-field="o.partner_id.customer_code" />
 								</p>
@@ -140,7 +144,7 @@
 								</tr>
 							</tbody>
 						</table>
-                        <strong>Amount In Words:</strong>
+						<strong>Amount In Words:</strong>
 						<p t-field="o.inword" />
 						<div class="oe_structure" />
 						<strong>Remark:</strong>
