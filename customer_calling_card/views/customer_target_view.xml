@@ -15,6 +15,8 @@
 
 								<field name="outlet_type" />
 								<field name="township" />
+								<field name="city" />
+
 								<field name="address" />
 								<field name="date" />
 							</group>
@@ -36,7 +38,7 @@
 							<page string="Product">
 								<field name="target_line_ids">
 									<tree string="Product" editable="bottom" default_order="sequence asc">
-										<field name="sequence" invisible="1"/>
+										<field name="sequence" invisible="1" />
 										<field name="product_id" on_change="onchange_product(product_id)" />
 										<field name="product_uom" />
 										<field name="price" />
@@ -69,6 +71,9 @@
 					<field name="customer_code" />
 					<field name="outlet_type" />
 					<field name="township" />
+					<field name="city" />
+
+
 					<field name="address" />
 					<field name="date" />
 					<field name="branch_id" />
@@ -87,6 +92,17 @@
 				<search string="Customer Target Filter">
 					<group expand="0" string="Group By...">
 						<filter string="Customer" context="{'group_by': 'partner_id'}" />
+						<filter string="Outlet type" context="{'group_by': 'outlet_type'}" />
+						<filter string="City" context="{'group_by': 'city'}" />
+						<filter string="Township" context="{'group_by': 'township'}" />
+						<filter string="Target Date" context="{'group_by': 'date'}" />
+						<filter string="Target Date Day" context="{'group_by':'date:day'}"/>
+						<filter string="Branch" context="{'group_by': 'branch_id'}" />
+						<filter string="Delivery Team" context="{'group_by': 'delivery_team_id'}" />
+						<filter string="Frequency" context="{'group_by': 'frequency_id'}" />
+						<filter string="Class" context="{'group_by': 'class_id'}" />
+						<filter string="Sale Channel" context="{'group_by': 'sales_channel'}" />
+
 					</group>
 				</search>
 			</field>
