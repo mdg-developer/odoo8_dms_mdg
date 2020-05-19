@@ -41,7 +41,9 @@ class customer_visit(osv.osv):
                    'customer_id', 'township',
                    type='many2one',
                    relation='res.township',
-                   string="Township",store=True)          
+                   string="Township",store=True),  
+        'is_sync':fields.boolean('Is Sync'),    
+        'doc_ref_id':fields.char('Document Reference ID'),    
     }
     _defaults = {        
         'm_status' : 'pending',
