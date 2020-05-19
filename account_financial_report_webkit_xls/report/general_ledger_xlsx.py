@@ -164,27 +164,29 @@ class GeneralLedgerXlsx(ReportXlsx):
         self.sheet.write_string(self.row_pos, 3, _('Journal'), self.format_header_center)
         # Partner
         self.sheet.write_string(self.row_pos, 4, _('Account'), self.format_header_center)
+        # Account Description
+        self.sheet.write_string(self.row_pos, 5, _('Account Description'), self.format_header_center)
         # Account
-        self.sheet.write_string(self.row_pos, 5, _('Analytic Account'), self.format_header_center)
+        self.sheet.write_string(self.row_pos, 6, _('Analytic Account'), self.format_header_center)
         # Branch
-        self.sheet.write_string(self.row_pos, 6, _('Branch'), self.format_header_center)
+        self.sheet.write_string(self.row_pos, 7, _('Branch'), self.format_header_center)
         # Analytic Account
-        self.sheet.write_string(self.row_pos, 7, _('Partner'), self.format_header_center)
+        self.sheet.write_string(self.row_pos, 8, _('Partner'), self.format_header_center)
         # Account name
-        self.sheet.write_string(self.row_pos, 8, _('Reference'), self.format_header_center)
+        self.sheet.write_string(self.row_pos, 9, _('Reference'), self.format_header_center)
         # Reference
-        self.sheet.write_string(self.row_pos, 9, _('Label'), self.format_header_center)
+        self.sheet.write_string(self.row_pos, 10, _('Label'), self.format_header_center)
         # Description
-        self.sheet.write_string(self.row_pos, 10, _('Counterpart'), self.format_header_center)
+        self.sheet.write_string(self.row_pos, 11, _('Counterpart'), self.format_header_center)
         # Debit
-        self.sheet.write_string(self.row_pos, 11, _('Debit'), self.format_header_center)
+        self.sheet.write_string(self.row_pos, 12, _('Debit'), self.format_header_center)
         # Credit
-        self.sheet.write_string(self.row_pos, 12, _('Credit'), self.format_header_center) 
+        self.sheet.write_string(self.row_pos, 13, _('Credit'), self.format_header_center) 
         # 'Cumul. Bal.'
-        self.sheet.write_string(self.row_pos, 13, _('Cumul. Bal.'), self.format_header_center) 
+        self.sheet.write_string(self.row_pos, 14, _('Cumul. Bal.'), self.format_header_center) 
         if _p.amount_currency(data):
-            self.sheet.write_string(self.row_pos, 14, _('Curr. Bal.'), self.format_header_center)
-            self.sheet.write_string(self.row_pos, 15, _('Curr.'), self.format_header_center)
+            self.sheet.write_string(self.row_pos, 15, _('Curr. Bal.'), self.format_header_center)
+            self.sheet.write_string(self.row_pos, 16, _('Curr.'), self.format_header_center)
         self.row_pos += 1
 
     def _generate_report_content(self, data,_p,objects):
@@ -432,70 +434,72 @@ class GeneralLedgerXlsx(ReportXlsx):
                      
                     self.sheet.write_string(self.row_pos, 4,account.code or '' , self.format_header_one)
                     self.sheet.set_column(4, 4, 20)
-                    
-                    self.sheet.write_string(self.row_pos, 5,line.get('analytic_account') or '' , self.format_header_one)
+                    self.sheet.write_string(self.row_pos, 5,account.name or '' , self.format_header_one)
                     self.sheet.set_column(5, 5, 20)
-                    
-                    self.sheet.write_string(self.row_pos, 6,line.get('branch') or '' , self.format_header_one)
+                                        
+                    self.sheet.write_string(self.row_pos, 6,line.get('analytic_account') or '' , self.format_header_one)
                     self.sheet.set_column(6, 6, 20)
-                 
-                    self.sheet.write_string(self.row_pos, 7,line.get('partner_name') or '' , self.format_header_one)
-                    self.sheet.set_column(7, 7, 30)
                     
-                    self.sheet.write_string(self.row_pos, 8,line.get('lref') or '' , self.format_header_one)
-                    self.sheet.set_column(8, 8, 20)
-                     
-                    self.sheet.write_string(self.row_pos, 9,label or '' , self.format_header_one)
+                    self.sheet.write_string(self.row_pos, 7,line.get('branch') or '' , self.format_header_one)
+                    self.sheet.set_column(7, 7, 20)
+                 
+                    self.sheet.write_string(self.row_pos, 8,line.get('partner_name') or '' , self.format_header_one)
+                    self.sheet.set_column(8, 8, 30)
+                    
+                    self.sheet.write_string(self.row_pos, 9,line.get('lref') or '' , self.format_header_one)
                     self.sheet.set_column(9, 9, 20)
                      
-                    self.sheet.write_string(self.row_pos, 10,line.get('counterparts') or '' , self.format_header_one)
+                    self.sheet.write_string(self.row_pos, 10,label or '' , self.format_header_one)
                     self.sheet.set_column(10, 10, 20)
-                 
-                    self.sheet.write_number(self.row_pos, 11, line.get('debit', 0.0) or 0.0 , self.format_header_one)
+                     
+                    self.sheet.write_string(self.row_pos, 11,line.get('counterparts') or '' , self.format_header_one)
                     self.sheet.set_column(11, 11, 20)
                  
-                    self.sheet.write_number(self.row_pos, 12, line.get('credit', 0.0) or 0.0 , self.format_header_one)
+                    self.sheet.write_number(self.row_pos, 12, line.get('debit', 0.0) or 0.0 , self.format_header_one)
                     self.sheet.set_column(12, 12, 20)
                  
-                    self.sheet.write_number(self.row_pos, 13, cumul_balance or 0.0 , self.format_header_one)
+                    self.sheet.write_number(self.row_pos, 13, line.get('credit', 0.0) or 0.0 , self.format_header_one)
                     self.sheet.set_column(13, 13, 20)
+                 
+                    self.sheet.write_number(self.row_pos, 14, cumul_balance or 0.0 , self.format_header_one)
+                    self.sheet.set_column(14, 14, 20)
                     
                     if _p.amount_currency(data):
-                        self.sheet.write_number(self.row_pos, 14, line.get('amount_currency') or 0.0 , self.format_header_one)
-                        self.sheet.set_column(14, 14, 20)
-                        self.sheet.write_number(self.row_pos, 15, line.get('currency_code') or 0.0 , self.format_header_one)
+                        self.sheet.write_number(self.row_pos, 15, line.get('amount_currency') or 0.0 , self.format_header_one)
                         self.sheet.set_column(15, 15, 20)
+                        self.sheet.write_number(self.row_pos, 16, line.get('currency_code') or 0.0 , self.format_header_one)
+                        self.sheet.set_column(16, 16, 20)
                     self.row_pos += 1
                     
-                debit_start = rowcol_to_cell(row_start, 11)
-                debit_end = rowcol_to_cell(self.row_pos - 1, 11)
+                debit_start = rowcol_to_cell(row_start, 12)
+                debit_end = rowcol_to_cell(self.row_pos - 1, 12)
                 debit_formula = 'SUM(' + debit_start + ':' + debit_end + ')'
-                credit_start = rowcol_to_cell(row_start, 12)
-                credit_end = rowcol_to_cell(self.row_pos - 1, 12)
+                credit_start = rowcol_to_cell(row_start, 13)
+                credit_end = rowcol_to_cell(self.row_pos - 1, 13)
                 credit_formula = 'SUM(' + credit_start + ':' + credit_end + ')'
-                balance_debit = rowcol_to_cell(self.row_pos, 11)
-                balance_credit = rowcol_to_cell(self.row_pos, 12)
+                balance_debit = rowcol_to_cell(self.row_pos, 12)
+                balance_credit = rowcol_to_cell(self.row_pos, 13)
                 balance_formula = balance_debit + '-' + balance_credit
                  
                 self.sheet.write_string(self.row_pos, 0,' - '.join([account.code, account.name]) or '' , self.format_header_center)
                 self.sheet.set_column(0,0, 30)
                    
-                self.sheet.write_string(self.row_pos, 10,_('Cumulated Balance on Account') or '' , self.format_header_center)
-                self.sheet.set_column(10,10, 20)
+                self.sheet.write_string(self.row_pos, 11,_('Cumulated Balance on Account') or '' , self.format_header_center)
+                self.sheet.set_column(11,11, 20)
                    
-                self.sheet.write_formula(self.row_pos, 11, debit_formula or 0.0 , self.format_header_center)
-                self.sheet.set_column(11, 11, 20)
-                   
-                self.sheet.write_formula(self.row_pos, 12, credit_formula or 0.0 , self.format_header_center)
+                self.sheet.write_formula(self.row_pos, 12, debit_formula or 0.0 , self.format_header_center)
                 self.sheet.set_column(12, 12, 20)
                    
-                self.sheet.write_formula(self.row_pos, 13, balance_formula or 0.0 , self.format_header_center)
+                self.sheet.write_formula(self.row_pos, 13, credit_formula or 0.0 , self.format_header_center)
                 self.sheet.set_column(13, 13, 20)
+                   
+                self.sheet.write_formula(self.row_pos, 14, balance_formula or 0.0 , self.format_header_center)
+                self.sheet.set_column(14, 14, 20)
                 
                 if _p.amount_currency(data):
                     if account.currency_id:
-                        self.sheet.write_string(self.row_pos, 14, cumul_balance_curr or 0.0 , self.format_header_center)
-                        self.sheet.set_column(14, 14, 20)
+                        self.sheet.write_string(self.row_pos, 15, cumul_balance_curr or 0.0 , self.format_header_center)
+                        self.sheet.set_column(15, 15, 20)
                 self.row_pos += 2
         self.row_pos += 6
 
