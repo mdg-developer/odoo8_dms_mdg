@@ -43,7 +43,11 @@ class customer_target(osv.osv):
         'township': fields.many2one('res.township',string="Township"),          
         'branch_id': fields.many2one('res.branch',string="Branch"),
         'section_ids': fields.many2many('crm.case.section','customer_target_team_rel','target_id','section_id',string="Sale Team"),
-        'delivery_team_id': fields.many2one('crm.case.section',string="Delivery Team"),
+        'customer_code': fields.related('partner_id','customer_code',type='char',string='Customer Code'),
+        'delivery_team_id': fields.related('partner_id','delivery_team_id',type='many2one',relation='crm.case.section',string='Delivery Team'),
+        'frequency_id': fields.related('partner_id','frequency_id',type='many2one',relation='plan.frequency',string='Frequency'),
+        'class_id': fields.related('partner_id','class_id',type='many2one',relation='sale.class',string='Class'),
+        'sales_channel': fields.related('partner_id','sales_channel',type='many2one',relation='sale.channel',string='Sale Channel'),
         'delivery': fields.char(string='Delivery'),   
         'updated_by': fields.many2one('res.users',string="Updated By"),
         'updated_time': fields.datetime(string='Updated Date Time'),
@@ -219,6 +223,7 @@ class customer_target(osv.osv):
                    
                 line_result = {
                             'product_id':product_obj.id,  
+                            'sequence':product_obj.sequence,
                             'month1':month1_sale,
                             'month2':month2_sale,
                             'month3':month3_sale,
@@ -282,6 +287,7 @@ class customer_target(osv.osv):
                         data ={
                                'product_id':stock_setting_id.product_id.id,
                                'line_id':ids[0],
+                               'sequence':stock_setting_id.product_id.sequence,
                                #'product_uom':uom_id,
                                }
                         new_id = customer_target_line_obj.create(cr,uid,data,context=context)
@@ -291,9 +297,12 @@ class customer_target(osv.osv):
                     and available='t'""",(stock_check_id[0],ids[0],))
                     product_data = cr.fetchall()
                     for p_id in product_data:
+                        product_obj = self.pool.get('product.product').browse(cr, uid, p_id[0], context=context)                
+
                         data ={
                                    'product_id':p_id[0],
                                    'line_id':ids[0],
+                                   'sequence':product_obj.sequence,
                                    #'product_uom':uom_id,
                                    }
                         new_id = customer_target_line_obj.create(cr,uid,data,context=context)            
@@ -479,8 +488,8 @@ class customer_target_line(osv.osv):
     _columns = {
                 
                 'line_id':fields.many2one('customer.target', 'Target Items', ondelete='cascade'),
-               
                 'product_id':fields.many2one('product.product', 'Product Name'),
+                'sequence':fields.integer(string='Sequence'),
                 #'product_uom':fields.many2one('product.uom', 'UOM',readonly=True,required=True),            
                 'product_uom':fields.function(_get_uom_from_product, type='many2one', relation='product.uom', string='UOM'),
                 'price':fields.function(_get_price_from_product, type='float', string='Unit Price'),
