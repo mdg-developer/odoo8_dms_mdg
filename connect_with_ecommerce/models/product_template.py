@@ -14,5 +14,13 @@ class product_template(osv.osv):
     _columns = {
         'is_sync_ecommerce': fields.related('product_variant_ids', 'is_sync_ecommerce', type='boolean', string='Is Sync Ecommerce', required=False),
 
-             }
+            }
        
+class product_uom_price(osv.osv):
+    _inherit = 'product.uom.price'
+    
+    _columns = {
+        
+        'for_ecommerce':fields.boolean('For E-Commerce' , default=True),
+
+    }
