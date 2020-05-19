@@ -12,7 +12,7 @@ class res_partner(osv.osv):
         'ecom_country_id': fields.many2one('res.country', 'Country', ondelete='restrict'),       
         'ecom_township_id':fields.many2one('res.township','Township'),
         'ecom_phone': fields.char('Phone'),
-        'ecommerce_phone': fields.char('Phone'),     
+#         'ecommerce_phone': fields.char('Phone'),     
 
     }
 
