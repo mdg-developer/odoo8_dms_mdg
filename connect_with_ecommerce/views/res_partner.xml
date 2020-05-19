@@ -21,8 +21,8 @@
 		                            <div>
 		                            	<field name="ecom_country_id" placeholder="Country" class="oe_no_button" options='{"no_open": True, "no_create": True}' attrs="{'readonly': [('use_parent_address','=',True)]}"/>	
 		                            	<field name="ecom_state_id" class="oe_no_button" placeholder="State" style="width: 37%%" options='{"no_open": True}'  attrs="{'readonly': [('use_parent_address','=',True)]}"/>    
-		                            	<field name="ecom_city" placeholder="City" style="width: 40%%" attrs="{'readonly': [('use_parent_address','=',True)]}"/>                                                      
-		                                <field name="ecom_township" class="o_address_state" placeholder="Township" domain="[('city', '=', city)]" style="width: 66%%" required="1"/>
+		                            	<field name="ecom_city_id" placeholder="City" style="width: 40%%" attrs="{'readonly': [('use_parent_address','=',True)]}"/>                                                      
+		                                <field name="ecom_township_id" class="o_address_state" placeholder="Township" domain="[('city', '=', city)]" style="width: 66%%" required="1"/>
 		                                <field name="ecom_street" placeholder="Street..."  attrs="{'readonly': [('use_parent_address','=',True)]}"/>
 		                                <field name="ecom_street2"  attrs="{'readonly': [('use_parent_address','=',True)]}"/>
 		                            </div>
