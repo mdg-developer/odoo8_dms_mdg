@@ -33,6 +33,11 @@ class product_product(models.Model):
             doc_ref = db.collection('product_product').document(node)
             doc_ref.set(row)
         
+    def sync_product_uom(self):
+        
+        firebase_admin.get_app()        
+        db = firestore.client()
+        
         #get uom
         self._cr.execute("""select distinct uom_id,uom_name,ratio,template_id,product_id,team_id from(
                     select  pu.id as uom_id,pu.name as uom_name ,floor(round(1/factor,2)) as ratio,
