@@ -113,7 +113,12 @@ class woo_config_settings(models.TransientModel):
     update_stock_interval_type = fields.Selection( [('minutes', 'Minutes'),
             ('hours','Hours'), ('work_days','Work Days'), ('days', 'Days'),('weeks', 'Weeks'), ('months', 'Months')], 'Update Order Interval Unit')
     update_stock_next_execution = fields.Datetime('Next Execution', help='Next execution time')
-        
+    
+    product_auto_import = fields.Boolean(string='Auto Product Import?')
+    product_import_interval_number = fields.Integer('Import Product Interval Number',help="Repeat every x.")
+    product_import_interval_type = fields.Selection( [('minutes', 'Minutes'),
+            ('hours','Hours'), ('work_days','Work Days'), ('days', 'Days'),('weeks', 'Weeks'), ('months', 'Months')], 'Import Order Interval Unit')
+    product_import_next_execution = fields.Datetime('Next Execution', help='Next execution time')    
     
     @api.onchange('woo_instance_id')
     def onchange_instance_id(self):        
@@ -135,6 +140,8 @@ class woo_config_settings(models.TransientModel):
         self.stock_auto_export=instance and instance.stock_auto_export
         self.order_auto_update=instance and instance.order_auto_update
         self.section_id=instance and instance.section_id and instance.section_id.id or False
+        self.product_auto_import=instance and instance.product_auto_import
+       
         try:
             inventory_cron_exist = instance and self.env.ref('woo_commerce_ept.ir_cron_update_woo_stock_instance_%d'%(instance.id),raise_if_not_found=False)
         except:
@@ -160,7 +167,16 @@ class woo_config_settings(models.TransientModel):
             self.order_update_interval_number = order_update_cron_exist.interval_number or False
             self.order_update_interval_type = order_update_cron_exist.interval_type or False
             self.order_update_next_execution = order_update_cron_exist.nextcall or False
-
+            
+        try:
+            product_import_cron_exist = instance and self.env.ref('woo_commerce_ept.ir_cron_import_woo_product_instance_%d'%(instance.id),raise_if_not_found=False)
+        except:
+            product_import_cron_exist=False
+        if product_import_cron_exist:
+            self.product_import_interval_number = product_import_cron_exist.interval_number or False
+            self.product_import_interval_type = product_import_cron_exist.interval_type or False
+            self.product_import_next_execution = product_import_cron_exist.nextcall or False   
+    
     @api.multi
     def execute(self):
         instance = self.woo_instance_id
@@ -184,11 +200,12 @@ class woo_config_settings(models.TransientModel):
             values['stock_auto_export']=self.stock_auto_export
             values['order_auto_update']=self.order_auto_update
             values['section_id']=self.section_id and self.section_id.id or False
+            values['product_auto_import']=self.product_auto_import
             instance.write(values)
             self.setup_order_import_cron(instance)
             self.setup_order_status_update_cron(instance)                             
-            self.setup_update_stock_cron(instance)                 
-
+            self.setup_update_stock_cron(instance) 
+            self.setup_product_import_cron(instance) 
         return res
 
     @api.multi   
@@ -324,3 +341,51 @@ class woo_config_settings(models.TransientModel):
             if cron_exist:
                 cron_exist.write({'active':False})        
         return True
+    
+    api.multi   
+    def setup_product_import_cron(self,instance):
+        if self.product_auto_import:
+            try:
+                cron_exist = self.env.ref('woo_commerce_ept.ir_cron_import_woo_product_instance_%d'%(instance.id),raise_if_not_found=False)
+            except:
+                cron_exist=False
+            nextcall = datetime.now()
+            nextcall += _intervalTypes[self.product_import_interval_type](self.product_import_interval_number)
+            vals = {
+                    'active' : True,
+                    'interval_number':self.product_import_interval_number,
+                    'interval_type':self.product_import_interval_type,
+                    'nextcall':nextcall.strftime('%Y-%m-%d %H:%M:%S'),
+                    'args':"([{'woo_instance_id':%d}])"%(instance.id)}
+                    
+            if cron_exist:
+                vals.update({'name' : cron_exist.name})
+                cron_exist.write(vals)
+            else:
+                try:
+                    import_product_cron = self.env.ref('woo_commerce_ept.ir_cron_import_woo_product')
+                except:
+                    import_product_cron=False
+                if not import_product_cron:
+                    raise Warning('Product Core settings of WooCommerce are deleted, please upgrade WooCommerce Connector module to back this settings.')
+                
+                name = instance.name + ' : ' +import_product_cron.name
+                vals.update({'name' : name})
+                new_cron = import_product_cron.copy(default=vals)
+                self.env['ir.model.data'].create({'module':'woo_commerce_ept',
+                                                  'name':'ir_cron_import_woo_product_instance_%d'%(instance.id),
+                                                  'model': 'ir.cron',
+                                                  'res_id' : new_cron.id,
+                                                  'noupdate' : True
+                                                  })
+        else:
+            try:
+                cron_exist = self.env.ref('woo_commerce_ept.ir_cron_import_woo_product_instance_%d'%(instance.id))
+            except:
+                cron_exist=False
+            
+            if cron_exist:
+                cron_exist.write({'active':False})
+        return True
+    
+    

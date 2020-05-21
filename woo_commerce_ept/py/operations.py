@@ -11,6 +11,7 @@ class woo_operations_ept(models.Model):
         import_order_cron = self.env.ref('woo_commerce_ept.ir_cron_import_woo_orders',raise_if_not_found=False)
         update_order_cron = self.env.ref('woo_commerce_ept.ir_cron_update_woo_order_status',raise_if_not_found=False)
         export_stock_cron = self.env.ref('woo_commerce_ept.ir_cron_update_woo_stock',raise_if_not_found=False)
+        import_product_cron = self.env.ref('woo_commerce_ept.ir_cron_import_woo_product',raise_if_not_found=False)
         cron_ids = []
         if import_order_cron:
             cron_ids.append(import_order_cron.id)
@@ -18,19 +19,24 @@ class woo_operations_ept(models.Model):
             cron_ids.append(update_order_cron.id)
         if export_stock_cron:
             cron_ids.append(export_stock_cron.id)
+        if import_product_cron:
+            cron_ids.append(import_product_cron.id)
         for instance in self.env['woo.instance.ept'].search([('state','=','confirmed')]):
             export_stock_cron = self.env.ref('woo_commerce_ept.ir_cron_update_woo_stock_instance_%d'%(instance.id),raise_if_not_found=False)
             import_order_cron = self.env.ref('woo_commerce_ept.ir_cron_import_woo_orders_instance_%d'%(instance.id),raise_if_not_found=False)
             update_order_cron = self.env.ref('woo_commerce_ept.ir_cron_update_woo_order_status_instance_%d'%(instance.id),raise_if_not_found=False)
+            import_product_cron = self.env.ref('woo_commerce_ept.ir_cron_import_woo_product_instance_%d'%(instance.id),raise_if_not_found=False)
             
             if import_order_cron:
                 cron_ids.append(import_order_cron.id)
             if update_order_cron:
                 cron_ids.append(update_order_cron.id)
             if export_stock_cron:
-                cron_ids.append(export_stock_cron.id)        
+                cron_ids.append(export_stock_cron.id)  
+            if import_product_cron:
+                cron_ids.append(import_product_cron.id)      
         return cron_ids
-            
+    
     @api.one
     def _count_operations(self):
         if self.action_id and self.display_record_count:
