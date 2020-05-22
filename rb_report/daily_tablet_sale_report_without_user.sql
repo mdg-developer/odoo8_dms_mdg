@@ -5,6 +5,10 @@
 CREATE TABLE public.daily_sale_temp
 (
   date date,
+  po_no character varying,
+  invoice_no character varying,
+  salesman_name character varying,
+  payment_term character varying,
   vr_no character varying,
   customer_code character varying,
   customerid integer,
