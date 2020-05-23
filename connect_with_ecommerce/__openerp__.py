@@ -42,7 +42,7 @@ Connect With Ecommerce
     'data': [
         'views/res_city_view.xml',
         'views/product_template_view.xml',
-        'views/res_country_state_view.xml',
+#         'views/res_country_state_view.xml',
         'views/res_partner.xml',
         'views/res_township_view.xml'
          
