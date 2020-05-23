@@ -105,6 +105,10 @@
                     <group attrs="{'invisible': [('woo_instance_id', '=', False)]}">
                         <label for="id" string="Products"/>
                         <div name="product_config">                                               
+                            <div>  
+                            	<label for="shipment_charge_product_id"/>
+                                <field name="shipment_charge_product_id" attrs="{'required':[('woo_instance_id','!=',False)]}" class="oe_inline"/>
+                            </div>                         
                             <div>
                                 <label for="discount_product_id"/>
                                 <field name="discount_product_id" attrs="{'required':[('woo_instance_id','!=',False)]}" class="oe_inline"/>
