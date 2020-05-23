@@ -76,10 +76,10 @@ class GeneralLedgerXlsx(ReportXlsx):
             'bold': True,            
         })
 
-    def _write_report_title(self, title):
+    def _write_report_title(self, title):        
         self.sheet.merge_range(
             self.row_pos, 0, self.row_pos, 7, title, self.format_title
-        )
+        )        
         self.row_pos += 2
         
     def _set_headers_top(self,data,_p):
@@ -388,24 +388,22 @@ class GeneralLedgerXlsx(ReportXlsx):
                     cumul_balance_curr = init_balance.get(
                         'init_balance_currency') or 0.0
                     
-#                     self.sheet.write_string(self.row_pos, 0,_('Initial Balance') or '' , self.format_border_top)
-#                     self.sheet.set_column(0, 0, 20)
-#                      
-#                     self.sheet.write_string(self.row_pos, 7, '' , self.format_border_top)
-#                     self.sheet.set_column(7, 7, 20)
-#                 
-#                     self.sheet.write_number(self.row_pos, 8, cumul_debit or 0.0 , self.format_border_top)
-#                     self.sheet.set_column(8, 8, 20)
-#                  
-#                     self.sheet.write_number(self.row_pos, 9, cumul_credit or 0.0 , self.format_border_top)
-#                     self.sheet.set_column(9, 9, 20)
-#                  
-#                     self.sheet.write_number(self.row_pos, 10, cumul_balance or 0.0 , self.format_border_top)
-#                     self.sheet.set_column(10, 10, 20)
+                    self.sheet.write_string(self.row_pos, 11, _('Initial Balance'), self.format_header_one)                    
+                    self.sheet.set_column(11, 11, 20)                     
+                                     
+                    self.sheet.write_number(self.row_pos, 12, cumul_debit or 0.0 , self.format_header_one)
+                    self.sheet.set_column(12, 12, 20)
+                  
+                    self.sheet.write_number(self.row_pos, 13, cumul_credit or 0.0 , self.format_header_one)
+                    self.sheet.set_column(13, 13, 20)
+                  
+                    self.sheet.write_number(self.row_pos, 14, cumul_balance or 0.0 , self.format_header_one)
+                    self.sheet.set_column(14, 14, 20)
                    
-#                     if _p.amount_currency(data):
-#                         self.sheet.write_number(self.row_pos, 11, cumul_balance_curr or '', self.format_border_top)
-#                         self.sheet.set_column(11,11, 20)
+                    if _p.amount_currency(data):
+                        self.sheet.write_number(self.row_pos, 15, cumul_balance_curr or '', self.format_header_one)
+                        self.sheet.set_column(15, 15, 20)
+                    self.row_pos += 1
 
                 for line in _p['ledger_lines'][account.id]:
 
