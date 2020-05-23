@@ -112,17 +112,20 @@ class GeneralLedgerWebkit(report_sxw.rml_parse, CommonReportHeaderWebkit):
         initial_balance = self.is_initial_balance_enabled(main_filter)
         initial_balance_mode = initial_balance \
             and self._get_initial_balance_mode(start) or False
-
+        
         # Retrieving accounts
         accounts = self.get_all_accounts(new_ids, exclude_type=['view'])
-        if initial_balance_mode == 'initial_balance':
-#             init_balance_memoizer = self._compute_init_balance_new(
-#                 accounts, new_analytic_account_ids, branch, start, fiscalyear)
-            init_balance_memoizer = self._compute_initial_balances(
-                accounts, new_analytic_account_ids, branch, start, fiscalyear)
-        elif initial_balance_mode == 'opening_balance':
-            init_balance_memoizer = self._read_opening_balance(accounts, new_analytic_account_ids, branch, start)
-
+        if main_filter != 'filter_date':
+            if initial_balance_mode == 'initial_balance':
+    #             init_balance_memoizer = self._compute_init_balance_new(
+    #                 accounts, new_analytic_account_ids, branch, start, fiscalyear)
+                init_balance_memoizer = self._compute_initial_balances(
+                    accounts, new_analytic_account_ids, branch, start, fiscalyear)
+            elif initial_balance_mode == 'opening_balance':
+                init_balance_memoizer = self._read_opening_balance(accounts, new_analytic_account_ids, branch, start)
+        else:
+            init_balance_memoizer = self._read_opening_balance_by_date(accounts, new_analytic_account_ids, branch, start)
+        
         ledger_lines_memoizer = self._compute_account_ledger_lines(
             accounts, new_analytic_account_ids, init_balance_memoizer, main_filter, target_move, start,
             stop,branch)

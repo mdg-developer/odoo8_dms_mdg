@@ -146,7 +146,7 @@ class GeneralLedgerXlsx(ReportXlsx):
             self.sheet.write_string(self.row_pos, 5, _p.display_target_move(data) or '', self.format_header_one)
             self.sheet.set_column(5, 5, 30)
             # Partner
-            self.sheet.write_string(self.row_pos, 6, initial_balance_text[_p.initial_balance_mode] or '', self.format_header_one)
+            self.sheet.write_string(self.row_pos, 6, 'Computed', self.format_header_one)
             self.sheet.set_column(6, 6, 20) 
             # Branch
             self.sheet.write_string(self.row_pos, 7, branch_name, self.format_header_one)
