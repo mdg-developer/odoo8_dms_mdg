@@ -40,6 +40,9 @@ OUT__res_partner__read_all__SCHEMA = (                # editable
     ('country_id', (
         'code',
     )),
+    'customer_code',
+    'mobile',
+    'phone',
 )
 #           ]
 #       }
@@ -64,6 +67,9 @@ OUT__res_partner__read_one__SCHEMA = (                # editable
     'zip',
     'phone',
     'email',
+    'customer_code',
+    'mobile',
+    'phone',
     # many2one fields:
     ('state_id', (
         'id',
