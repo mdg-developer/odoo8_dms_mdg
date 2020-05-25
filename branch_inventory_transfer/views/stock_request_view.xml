@@ -38,6 +38,7 @@
 								<field name="good_issue_id" invisible="0" />
 								<field name="vehicle_id" attrs="{'readonly':[('state','!=','draft')]}" />
 								<field name="internal_reference" />
+								<field name="branch_target_id" />
 							</group>
 							<group>
 								<field name="issue_to" attrs="{'readonly':[('state','!=','draft')]}" />
@@ -54,11 +55,15 @@
 								<field name="bal_viss" />
 								<field name="bal_cbm" />
 								<field name="pricelist_id" />
+								<field name="cbm_ratio" />
 							</group>
 						</group>
 						<button name="retrieve_data" string="Retrieve" type="object"
 							widget="statinfo" class="oe_highlight" attrs="{'invisible': [('state','!=','draft')]}"/>
-							
+						<button name="calculate_target" string="Calculate with Target" type="object"
+							widget="statinfo" class="oe_highlight" attrs="{'invisible': [('state','!=','draft')]}"/>
+						<button name="calculate_standard_rule" string="Calculate with Standard Rule" type="object"
+							widget="statinfo" class="oe_highlight" attrs="{'invisible': [('state','!=','draft')]}"/>	
 						<div class="oe_subtotal_footer_separator oe_inline"
 							groups="base.group_sale_supervisor,base.group_sale_manager,base.group_sale_admin,base.group_no_one">
 							<label string="Update Qty On Hand" class="oe_edit_only" />
@@ -75,6 +80,7 @@
 											<field name="sequence" invisible="1" />
 											<field name="product_id"
 												on_change="on_change_product_id(product_id,parent.to_location_id)" />
+											<field name="req_loc_bal" />
 											<field name="req_quantity" />
 											<field name="issue_quantity" invisible="1" />
 											<field name="diff_quantity" invisible="1" />

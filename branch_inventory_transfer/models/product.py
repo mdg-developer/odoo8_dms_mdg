@@ -8,5 +8,6 @@ class product_template(osv.osv):
     _columns = {
          'viss_value': fields.float('Viss'),
          'cbm_value': fields.float('CBM'),
+         'ctn_pallet': fields.float('Ctn/Pallet'),
         }
     

@@ -11,6 +11,16 @@
 				<field name="weight_net" position="after">
 					<field name="viss_value" />
 					<field name="cbm_value" />
+					<field name="ctn_pallet" />
+				</field>
+				<field name="volume" position="replace">
+					<field digits="(14, 3)" name="volume" invisible="1"/>					
+				</field>
+				<field name="weight" position="replace">
+					<field name="weight" invisible="1"/>					
+				</field>
+				<field name="weight_net" position="replace">
+					<field name="weight_net" invisible="1"/>					
 				</field>
 			</field>
 		</record>

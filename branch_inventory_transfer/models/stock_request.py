@@ -218,6 +218,8 @@ class branch_stock_requisition(osv.osv):
    'good_issue_id': fields.many2one('branch.good.issue.note', 'GIN No', required=False , readonly=True),
    'good_issue_line': fields.one2many('branch.good.issue.note', 'request_id', 'Good Issue Note Lines', copy=False),
    'internal_reference' : fields.char('Internal Reference', required=True ),
+   'branch_target_id': fields.many2one('sales.target.branch', 'Branch Target'),
+   'cbm_ratio':fields.float('CBM Ratio'),   
 }
     _defaults = {
         'state' : 'draft',
@@ -603,5 +605,6 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
          'remark':fields.char('Remark'),
         'qty_on_hand':fields.float(string='Qty On Hand', digits=(16, 0)),
         'sequence':fields.integer('Sequence'),
+        'req_loc_bal' : fields.float(string='Req Loc Bal', digits=(16, 0)),
     }
   
