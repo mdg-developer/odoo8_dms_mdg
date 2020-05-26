@@ -371,6 +371,12 @@ class branch_good_issue_note(osv.osv):
             if not receive_date:
                 raise osv.except_osv(_('Warning'),
                          _('Please Insert Receive Date'))
+            for line in note_value.p_line:
+                if line.receive_quantity > line.issue_quantity:
+                    raise osv.except_osv(
+                        _('Warning!'),
+                        _("%s's received quantity is greater than issued quantity!" % (line.product_id.name_template))
+                    )
             # location_id = note_value.tansit_location.id
             location_id = note_value.transit_location.id
             from_location_id = note_value.from_location_id.id
