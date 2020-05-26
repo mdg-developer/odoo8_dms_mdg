@@ -361,6 +361,7 @@ class branch_stock_requisition(osv.osv):
                                           'product_id': request_line_data.product_id.id,
                                           'product_uom': request_line_data.product_uom.id,
                                           'issue_quantity':request_line_data.req_quantity,
+                                          'req_quantity':request_line_data.req_quantity,
                                           'qty_on_hand':request_line_data.qty_on_hand,
                                           'sequence':request_line_data.sequence,
                                           'product_value':request_line_data.product_value,
