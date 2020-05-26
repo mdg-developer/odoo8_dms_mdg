@@ -35,6 +35,7 @@ Branch Inventory Transfer Module
     'category': 'stock',
     'sequence': 16,
     'data': [
+        'views/branch_requisition_wizard.xml',
         'views/product_requisition_sequence.xml',
         'views/stock_request_view.xml',
         'views/product_view.xml',
@@ -49,6 +50,7 @@ Branch Inventory Transfer Module
         'reports/report_issue_note.xml',
         'reports/report_receive_note.xml',
         'reports/report_branch_request_loose.xml',
+        'views/stock_warehouse_view.xml',
     ],
     'test': [
 

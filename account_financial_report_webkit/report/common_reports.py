@@ -445,7 +445,7 @@ class CommonReportHeaderWebkit(common_report_header):
                               mode='computed', default_values=False):
         if not isinstance(period_ids, list):
             period_ids = [period_ids]
-        res = {}
+        res = {}        
         
         if not default_values:
             if not account_id or not period_ids:
@@ -502,6 +502,66 @@ class CommonReportHeaderWebkit(common_report_header):
                 'init_balance': res.get('balance') or 0.0,
                 'init_balance_currency': res.get('curr_balance') or 0.0,
                 'state': mode}
+        
+    def _compute_init_balance_by_date(self, account_id=None, analytic_id=None, branch_id=None, start=None,
+                                      mode='computed', default_values=False):        
+        res = {}
+        
+        if not default_values:
+            if not account_id or not start:
+                raise Exception('Missing account or period_ids')
+            try:
+                if analytic_id and branch_id:
+                    self.cursor.execute("SELECT sum(debit) AS debit, "
+                                        " sum(credit) AS credit, "
+                                        " sum(debit)-sum(credit) AS balance, "
+                                        " sum(amount_currency) AS curr_balance"
+                                        " FROM account_move_line"
+                                        " WHERE date < %s"
+                                        " AND account_id = %s"
+                                        " AND analytic_account_id in %s"
+                                        " AND branch_id in %s",                                        
+                                        (start, account_id, tuple(analytic_id), tuple(branch_id)))  
+                elif analytic_id:                    
+                    self.cursor.execute("SELECT sum(debit) AS debit, "
+                                        " sum(credit) AS credit, "
+                                        " sum(debit)-sum(credit) AS balance, "
+                                        " sum(amount_currency) AS curr_balance"
+                                        " FROM account_move_line"
+                                        " WHERE date < %s"
+                                        " AND account_id = %s"
+                                        " AND analytic_account_id in %s",                                        
+                                        (start, account_id, tuple(analytic_id)))
+                elif branch_id:
+                    self.cursor.execute("SELECT sum(debit) AS debit, "
+                                        " sum(credit) AS credit, "
+                                        " sum(debit)-sum(credit) AS balance, "
+                                        " sum(amount_currency) AS curr_balance"
+                                        " FROM account_move_line"
+                                        " WHERE date < %s"
+                                        " AND account_id = %s"                                       
+                                        " AND branch_id in %s",                                        
+                                        (start, account_id, tuple(branch_id)))    
+                else:
+                    self.cursor.execute("SELECT sum(debit) AS debit, "
+                                        " sum(credit) AS credit, "
+                                        " sum(debit)-sum(credit) AS balance, "
+                                        " sum(amount_currency) AS curr_balance"
+                                        " FROM account_move_line"
+                                        " WHERE date < %s"
+                                        " AND account_id = %s",
+                                        (start, account_id))
+                res = self.cursor.dictfetchone()
+
+            except Exception:
+                self.cursor.rollback()
+                raise
+
+        return {'debit': res.get('debit') or 0.0,
+                'credit': res.get('credit') or 0.0,
+                'init_balance': res.get('balance') or 0.0,
+                'init_balance_currency': res.get('curr_balance') or 0.0,
+                'state': mode}
     
     def _read_opening_balance_new(self, account_ids, new_analytic_account_ids, branch_ids, start_period):
         """ Read opening balances from the opening balance
@@ -537,6 +597,15 @@ class CommonReportHeaderWebkit(common_report_header):
         for account_id in account_ids:
             res[account_id] = self._compute_init_balance(
                 account_id, new_analytic_account_ids,branch_ids, opening_period_selected, mode='read')
+        return res
+    
+    def _read_opening_balance_by_date(self, account_ids, new_analytic_account_ids, branch_ids, start):
+        """ Read opening balances from the opening balance
+        """        
+        res = {}
+        for account_id in account_ids:
+            res[account_id] = self._compute_init_balance_by_date(
+                account_id, new_analytic_account_ids,branch_ids, start, mode='read')
         return res
 
     def _compute_initial_balances(self, account_ids, new_analytic_account_ids, branch_ids, start_period, fiscalyear):
@@ -596,6 +665,7 @@ class CommonReportHeaderWebkit(common_report_header):
 
     def _get_move_ids_from_dates(self, account_id, new_analytic_account_ids, date_start, date_stop,
                                  target_move,branch, mode='include_opening'):
+        
         # TODO imporve perfomance by setting opening period as a property
         move_line_obj = self.pool.get('account.move.line')
         search_period = [('date', '>=', date_start),

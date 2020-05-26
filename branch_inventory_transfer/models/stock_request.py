@@ -18,7 +18,6 @@ from datetime import datetime, date, time
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as OE_DATETIMEFORMAT
 import openerp.addons.decimal_precision as dp
 
-
 class branch_stock_requisition(osv.osv):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _name = "branch.stock.requisition"
@@ -50,6 +49,19 @@ class branch_stock_requisition(osv.osv):
             cr.execute("""select location_id from branch_requesting_line
                           WHERE requesting_id = %s""", (branch_data.id,))
             to_location_list = cr.fetchall()
+            
+            cr.execute("""select branch_id
+                        from sales_target_branch
+                        where year=date_part('year',now()::date)::character varying
+                        and month=to_char(now()::date, 'MM')::character varying
+                        and branch_id=%s""", (branch_data.id,))
+            branch_target = cr.fetchall()
+            
+            if branch_target:
+                branch_target_id = branch_target[0]
+            else:
+                branch_target_id = None
+                
             domain = {'from_location_id':
                         [('id', 'in', location_list)],
                         'to_location_id':
@@ -57,6 +69,7 @@ class branch_stock_requisition(osv.osv):
 
             values = {
                  'from_location_id':branch_location,
+                 'branch_target_id':branch_target_id,
             }
         return {'value': values, 'domain': domain}    
 
@@ -159,6 +172,48 @@ class branch_stock_requisition(osv.osv):
             val1 = max_viss                                               
             res[order.id] = val1
         return res  
+    
+    def _cbm_ratio(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        request_quantity = 0
+        if context is None:
+            context = {}               
+        for order in self.browse(cr, uid, ids, context=context):      
+            for line in order.p_line:
+                request_quantity = request_quantity + line.req_quantity
+                if request_quantity > 0:
+                    res[order.id] = round(order.remaining_cbm / request_quantity,2)         
+        return res
+    
+    def _warehouse_cbm(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        if context is None:
+            context = {}               
+        for order in self.browse(cr, uid, ids, context=context):      
+            warehouse = self.pool.get('stock.warehouse').search(cr,uid,[('lot_stock_id','=',order.from_location_id.id)])
+            warehouse_data = self.pool.get('stock.warehouse').browse(cr, uid, warehouse, context=context)
+            warehoue_cbm = warehouse_data.warehouse_spacing                                                                 
+            res[order.id] = warehoue_cbm         
+        return res
+    
+    def _current_stock_cbm(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        req_loc_bal = 0
+        if context is None:
+            context = {}               
+        for order in self.browse(cr, uid, ids, context=context):   
+            for line in order.p_line:
+                req_loc_bal = req_loc_bal + (line.req_loc_bigger_qty_bal*line.product_id.product_tmpl_id.cbm_value)                                                                          
+            res[order.id] = req_loc_bal         
+        return res
+    
+    def _remaining_cbm(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        if context is None:
+            context = {}               
+        for order in self.browse(cr, uid, ids, context=context):                                                                               
+            res[order.id] = order.warehouse_cbm - order.current_stock_cbm       
+        return res
 
     def _max_cbm_amount(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
@@ -218,6 +273,12 @@ class branch_stock_requisition(osv.osv):
    'good_issue_id': fields.many2one('branch.good.issue.note', 'GIN No', required=False , readonly=True),
    'good_issue_line': fields.one2many('branch.good.issue.note', 'request_id', 'Good Issue Note Lines', copy=False),
    'internal_reference' : fields.char('Internal Reference', required=True ),
+   'branch_target_id': fields.many2one('sales.target.branch', 'Branch Target'),
+   'cbm_ratio':fields.function(_cbm_ratio, string='CBM Ratio', type='float'),    
+   'warehouse_cbm':fields.function(_warehouse_cbm, string='Warehouse CBM', digits_compute=dp.get_precision('Product Price'), type='float'),
+   'current_stock_cbm':fields.function(_current_stock_cbm, string='Current Stock CBM', digits_compute=dp.get_precision('Product Price'), type='float'),
+   'remaining_cbm':fields.function(_remaining_cbm, string='Remaining CBM', digits_compute=dp.get_precision('Product Price'), type='float'),
+   'proceed_existing':fields.boolean("Proceed Existing", default=False),
 }
     _defaults = {
         'state' : 'draft',
@@ -373,7 +434,8 @@ class branch_stock_requisition(osv.osv):
         return self.write(cr, uid, ids, {'state':'approve' , 'approve_by':uid, 'good_issue_id':good_id})    
     
     def confirm(self, cr, uid, ids, context=None):
-        if ids:
+        if ids:            
+            request_cbm = 0
             request_data=self.browse(cr, uid, ids[0], context=context)
             max_cbm=request_data.max_cbm
             total_cbm=request_data.total_cbm
@@ -383,7 +445,25 @@ class branch_stock_requisition(osv.osv):
                     raise osv.except_osv(
                         _('Warning!'),
                         _('Please Check Your CBM and Viss Value.It is Over!')
-                    )             
+                    ) 
+            for line in request_data.p_line:
+                request_cbm = request_cbm + line.req_quantity 
+            if request_data.remaining_cbm < request_cbm and request_data.proceed_existing == False:
+                dummy, view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'branch_inventory_transfer', 'view_branch_stock_requisition_wizard')
+                return {
+                    'name':_("Confirmation"),
+                    'view_mode': 'form',
+                    'view_id': view_id,
+                    'view_type': 'form',
+                    'res_model': 'branch.requisition.wizard',
+                    'type': 'ir.actions.act_window',
+                    'nodestroy': True,
+                    'target': 'new',
+                    'domain': '[]',
+                    'context': {                        
+                        'branch_requisition_id': request_data.id,                        
+                    }
+                }
         return self.write(cr, uid, ids, {'state':'confirm' })        
     
     def cancel(self, cr, uid, ids, context=None):
@@ -394,6 +474,7 @@ class branch_stock_requisition(osv.osv):
         branch_obj = self.pool.get('res.branch')
         request_data = self.browse(cr, uid, ids, context=context)
         branch_id = request_data.branch_id.id
+        from_location_id = request_data.from_location_id
         to_location_id = request_data.to_location_id
         pricelist_id = request_data.pricelist_id.id
         branch_data = branch_obj.browse(cr, uid, branch_id, context=context)
@@ -415,17 +496,81 @@ class branch_stock_requisition(osv.osv):
                     product_price=product_price[0]
                 else:
                     raise osv.except_osv(_('Warning'),
-                                        _('Please Check Price List For (%s)') % (product.name_template,))      
+                                        _('Please Check Price List For (%s)') % (product.name_template,))  
+                    
+                bigger_qty_on_hand = math.ceil(round(qty_on_hand/product.product_tmpl_id.report_uom_id.factor,1))   
+                
+                cr.execute('select SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (from_location_id.id, product.id,))
+                req_loc_small_qty = cr.fetchone()
+                if req_loc_small_qty:
+                    req_loc_small_qty_bal = req_loc_small_qty[0]
+                else:
+                    req_loc_small_qty_bal = 0  
+                    
+                req_loc_bigger_qty_bal = math.ceil(round(req_loc_small_qty_bal/product.product_tmpl_id.report_uom_id.factor,1)) 
+                
                 branch_req_line_obj.create(cr, uid, {'line_id': ids[0],
                                'sequence':product.sequence,
                               'product_id': product_id,
+                              'req_loc_small_qty_bal':req_loc_small_qty_bal,
+                              'req_loc_bigger_qty_bal':req_loc_bigger_qty_bal,
                               'product_uom':product.report_uom_id.id,
                               'qty_on_hand':qty_on_hand,
+                              'bigger_qty_on_hand':bigger_qty_on_hand,
                               'viss_value':product.viss_value,
                               'cbm_value':product.cbm_value,
                               'product_value':product_price,
                         }, context=context)  
 
+    def calculate_target(self, cr, uid, ids, context=None):
+        
+        target_line_obj = self.pool.get('sales.target.branch.line')
+        resupply_obj = self.pool.get('warehouse.resupply.rule.line')                
+        request_data = self.browse(cr, uid, ids, context=context)
+        warehouse = self.pool.get('stock.warehouse').search(cr,uid,[('lot_stock_id','=',request_data.from_location_id.id)])
+        warehouse_data = self.pool.get('stock.warehouse').browse(cr, uid, warehouse, context=context)
+        for line in request_data.p_line:
+            result = 0
+            target_qty = 0
+            branch_target = target_line_obj.search(cr, uid, [('sale_ids', '=', request_data.branch_target_id.id),
+                                                             ('product_id', '=', line.product_id.id)], context=context)
+            if branch_target:
+                branch_target_data = target_line_obj.browse(cr, uid, branch_target, context=context)
+                target_qty = branch_target_data.product_uom_qty * warehouse_data.target_ratio
+                
+                resupply = resupply_obj.search(cr,uid,[('warehouse_id','=',warehouse_data.id),
+                                                       ('product_id','=',line.product_id.id)])
+                resupply_data = resupply_obj.browse(cr, uid, resupply, context=context)
+                moq = resupply_data.moq_value
+                
+                if moq > target_qty:                    
+                    result = math.ceil(round(target_qty/resupply_data.factor,1)) * resupply_data.factor
+                else:
+                    result = moq
+            line.req_quantity = result
+            
+    def calculate_standard_rule(self, cr, uid, ids, context=None):
+                
+        resupply_obj = self.pool.get('warehouse.resupply.rule.line')                
+        request_data = self.browse(cr, uid, ids, context=context)
+        warehouse = self.pool.get('stock.warehouse').search(cr,uid,[('lot_stock_id','=',request_data.from_location_id.id)])
+        warehouse_data = self.pool.get('stock.warehouse').browse(cr, uid, warehouse, context=context)
+        for line in request_data.p_line:
+            result = 0
+            target_qty = 0                            
+            resupply = resupply_obj.search(cr,uid,[('warehouse_id','=',warehouse_data.id),
+                                                   ('product_id','=',line.product_id.id)])
+            if resupply:
+                resupply_data = resupply_obj.browse(cr, uid, resupply, context=context)                
+                target_qty = resupply_data.qty * warehouse_data.target_ratio               
+                moq = resupply_data.moq_value
+                
+                if moq > target_qty:                    
+                    result = math.ceil(round(target_qty/resupply_data.factor,1)) * resupply_data.factor
+                else:
+                    result = moq
+                line.req_quantity = result
+        
     def updateQtyOnHand(self, cr, uid, ids, context=None):
         product_line_obj = self.pool.get('branch.stock.requisition.line')
         if ids:
@@ -442,7 +587,10 @@ class branch_stock_requisition(osv.osv):
                     qty_on_hand = qty_on_hand[0]
                 else:
                     qty_on_hand = 0
-                cr.execute("update branch_stock_requisition_line set qty_on_hand=%s where product_id=%s and id=%s", (qty_on_hand, product_id,line_id,))
+                    
+                bigger_qty_on_hand = math.ceil(round(qty_on_hand/req_line_value.product_id.product_tmpl_id.report_uom_id.factor,1))   
+                
+                cr.execute("update branch_stock_requisition_line set qty_on_hand=%s,bigger_qty_on_hand=%s where product_id=%s and id=%s", (qty_on_hand, bigger_qty_on_hand, product_id,line_id,))
                  
 class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
     _name = 'branch.stock.requisition.line'
@@ -453,6 +601,7 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
         line_id = data['line_id']
         line_ids = requisition_obj.search(cr, uid, [('id', '=', line_id)], context=context)
         requisition = requisition_obj.browse(cr, uid, line_ids, context)
+        from_location_id = requisition.from_location_id.id
         location_id = requisition.to_location_id.id
         product = data['product_id']
         product_data = self.pool.get('product.product').browse(cr, uid, product, context=context)
@@ -462,15 +611,34 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
             qty_on_hand = qty_on_hand[0]
         else:
             qty_on_hand = 0
+        
+        bigger_qty_on_hand = math.ceil(round(qty_on_hand/product_data.product_tmpl_id.report_uom_id.factor,1))
+            
+        cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (from_location_id, product,))
+        req_loc_small_qty = cr.fetchone()
+        if req_loc_small_qty:
+            req_loc_small_qty_bal = req_loc_small_qty[0]
+        else:
+            req_loc_small_qty_bal = 0
+        
+        req_loc_bigger_qty_bal = math.ceil(round(req_loc_small_qty_bal/product_data.product_tmpl_id.report_uom_id.factor,1))    
+                        
+        data['req_loc_small_qty_bal'] = req_loc_small_qty_bal
+        data['req_loc_bigger_qty_bal'] = req_loc_bigger_qty_bal    
         data['qty_on_hand'] = qty_on_hand
+        data['bigger_qty_on_hand'] = bigger_qty_on_hand
+        
         # comment by EMTW
         #data['product_uom'] = product_data.product_tmpl_id.report_uom_id.id
         return super(stock_requisition_line, self).create(cr, uid, data, context=context)
     
-    def on_change_product_id(self, cr, uid, ids, product_id, to_location_id, context=None):
+    def on_change_product_id(self, cr, uid, ids, product_id, from_location_id, to_location_id, context=None):
         values = {}
         domain = {}
         qty_on_hand = 0
+        product = None
+        if product_id:
+            product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
         if to_location_id and product_id:
             cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (to_location_id, product_id,))
             qty_on_hand = cr.fetchone()
@@ -478,11 +646,27 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
                 qty_on_hand = qty_on_hand[0]
             else:
                 qty_on_hand = 0
-        if product_id:
-            product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+                
+            bigger_qty_on_hand = math.ceil(round(qty_on_hand/product.product_tmpl_id.report_uom_id.factor,1))   
+            
+        if from_location_id and product_id:
+            cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (from_location_id, product_id,))
+            req_loc_small_qty = cr.fetchone()
+            if req_loc_small_qty:
+                req_loc_small_qty_bal = req_loc_small_qty[0]
+            else:
+                req_loc_small_qty_bal = 0
+                
+            req_loc_bigger_qty_bal = math.ceil(round(req_loc_small_qty_bal/product.product_tmpl_id.report_uom_id.factor,1)) 
+                
+        if product:
+            
             values = {
                 'product_uom': product.product_tmpl_id.report_uom_id and product.product_tmpl_id.report_uom_id.id or False,
+                'req_loc_small_qty_bal': req_loc_small_qty_bal,
+                'req_loc_bigger_qty_bal': req_loc_bigger_qty_bal,
                 'qty_on_hand':qty_on_hand,
+                'bigger_qty_on_hand': bigger_qty_on_hand,
                 'sequence':product.sequence,
             }
             cr.execute("""SELECT uom.id FROM product_product pp 
@@ -603,6 +787,9 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
         'uom_ratio':fields.char('Packing Unit'),
          'remark':fields.char('Remark'),
         'qty_on_hand':fields.float(string='Qty On Hand', digits=(16, 0)),
+        'bigger_qty_on_hand':fields.float(string='Bigger Qty On Hand', digits=(16, 0)),
         'sequence':fields.integer('Sequence'),
+        'req_loc_small_qty_bal' : fields.float(string='Req Loc Bal(S)', digits=(16, 0)),
+        'req_loc_bigger_qty_bal' : fields.float(string='Req Loc Bal(B)', digits=(16, 0)),
     }
   

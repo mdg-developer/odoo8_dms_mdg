@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+		<record id="view_warehouse_inherit_resupply" model="ir.ui.view">
+			<field name="name">stock.warehouse.form.inherit.resupply</field>
+			<field name="model">stock.warehouse</field>
+			<field name="inherit_id" ref="stock.view_warehouse" />
+			<field name="arch" type="xml">			    
+			    <xpath expr="//field[@name='partner_id']" position="after">		
+			        <field name="target_ratio"/>
+					<field name="warehouse_spacing"/>
+			    </xpath>
+				<xpath expr="//page[@string='Technical Information']" position="after">				    
+					<page string="Resupply Rule">
+					    <button name="retrieve_resupply_rule" string="Retrieve Resupply Rule" type="object" widget="statinfo" class="oe_highlight" />
+						<field name="resupply_line">
+							<form string="Resupply Rule">
+								<group>
+									<group>
+										<field name="product_id" />
+										<field name="uom_id"/>
+										<field name="moq_value"/>
+										<field name="factor"/>
+										<field name="qty"/>
+										<field name="cbm_value"/>
+										<field name="pallet_value"/>
+									</group>
+								</group>
+							</form>
+							<tree string="Resupply Rule" editable="bottom">
+								<field name="product_id" />
+								<field name="uom_id" />
+								<field name="moq_value"/>
+								<field name="factor"/>
+								<field name="qty" sum="Total Product Qty"/>
+								<field name="cbm_value" />
+								<field name="pallet_value" />
+							</tree>
+						</field>
+					</page>					
+				</xpath>
+			</field>
+		</record>
+		
+	</data>
+</openerp>
+		

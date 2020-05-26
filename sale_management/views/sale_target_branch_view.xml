@@ -15,9 +15,10 @@
 								<field name="date" />
 								<field name="branch_id" on_change="on_change_branch_id(branch_id,pricelist_id)"/>
 								<field name="company_id" />
+								<field name="create_date" />
 							</group>
 							<group>
-								<field name="name" />
+								<field name="name" required="1" />
 								<field name="month" />
 								<field name="year" class="oe_inline" />
 							</group>

@@ -33,7 +33,8 @@ class woo_instance_ept(models.Model):
     admin_username=fields.Char("Username", help="Used to Export/Import Image Files.")
     admin_password=fields.Char("Password", help="Used to Export/Import Image Files.")
     woo_version = fields.Selection([('new','2.6+'),('old','<=2.6')],default='old',string="WooCommerce Version")        
-
+    product_auto_import = fields.Boolean(string='Auto Product Import?')
+    
     @api.multi
     def test_woo_connection(self):              
         wcapi = self.connect_in_woo()

@@ -121,7 +121,7 @@ class product_product(models.Model):
         db = firestore.client()    
                                    
         #get promotions
-        self._cr.execute("""select distinct id,sequence as seq,from_date ,to_date,active,name as p_name,
+        self._cr.execute("""select distinct id,sequence as seq,from_date::character varying from_date,to_date::character varying to_date,active,name as p_name,
                             logic ,expected_logic_result ,special, special1, special2, special3 ,description,
                             pr.promotion_count, pr.monthly_promotion ,code as p_code,manual,main_group
                             from promos_rules pr
@@ -220,7 +220,7 @@ class product_product(models.Model):
         db = firestore.client()
         
         #get pricelist versions
-        self._cr.execute("""select pv.id,date_end,date_start,pv.active,pv.name,pv.pricelist_id 
+        self._cr.execute("""select pv.id,date_end::character varying date_end,date_start::character varying date_start,pv.active,pv.name,pv.pricelist_id 
                             from product_pricelist_version pv, product_pricelist pp where pv.pricelist_id = pp.id   
                             and pv.active = true""")
         for row in self._cr.dictfetchall():
@@ -251,7 +251,7 @@ class product_product(models.Model):
         db = firestore.client()
         
         #get sale plan day
-        self._cr.execute("""select p.id,p.date,p.sale_team team_id,p.name,p.principal,p.week from sale_plan_day p
+        self._cr.execute("""select p.id,p.date::character varying date,p.sale_team team_id,p.name,p.principal,p.week from sale_plan_day p
                             join  crm_case_section c on p.sale_team=c.id
                             where p.active = true""")
         for row in self._cr.dictfetchall():
@@ -265,7 +265,7 @@ class product_product(models.Model):
         db = firestore.client()
         
         #get sale plan trip
-        self._cr.execute("""select distinct p.id,p.date,p.sale_team team_id,p.name,p.principal from sale_plan_trip p
+        self._cr.execute("""select distinct p.id,p.date::character varying date,p.sale_team team_id,p.name,p.principal from sale_plan_trip p
                             ,crm_case_section c,res_partner_sale_plan_trip_rel d, res_partner e
                             where  p.sale_team=c.id
                             and p.active = true 
@@ -282,7 +282,7 @@ class product_product(models.Model):
         db = firestore.client()
         
         #get tablet info
-        self._cr.execute("""select id as tablet_id,date,create_uid,name,note,mac_address,model,type,storage_day
+        self._cr.execute("""select id as tablet_id,date::character varying date,create_uid,name,note,mac_address,model,type,storage_day
                             ,replace(hotline,',',';') hotline,sale_team_id team_id,is_testing
                             from tablets_information """)
         for row in self._cr.dictfetchall():
@@ -420,4 +420,38 @@ class product_product(models.Model):
         for row in self._cr.dictfetchall():
             node = str(row['id'])
             doc_ref = db.collection('stock_check_setting').document(node)
+            doc_ref.set(row) 
+            
+    def sync_promotion_team(self):    
+        
+        firebase_admin.get_app()        
+        db = firestore.client()
+        
+        #get promotion team
+        self._cr.execute("""select ROW_NUMBER () OVER (ORDER BY promotion_id) id,*
+                            from
+                            (   select distinct pr.id promotion_id,sequence as seq,from_date::character varying from_date,to_date::character varying to_date,pr.active,pr.name as p_name,
+                                logic ,expected_logic_result ,special, special1, special2, special3 ,description,
+                                pr.promotion_count, pr.monthly_promotion ,pr.code as p_code,manual,main_group,ccs.id team_id
+                                from promos_rules pr
+                                left join promos_rules_res_branch_rel pro_br_rel on (pr.id = pro_br_rel.promos_rules_id)
+                                left join promos_rules_product_rel pro_pp_rel on (pr.id=pro_pp_rel.promos_rules_id)
+                                left join product_sale_group_rel ps_group_rel on (ps_group_rel.product_id=pro_pp_rel.product_id)
+                                left join crm_case_section ccs on (ccs.sale_group_id=ps_group_rel.sale_group_id)
+                                where pr.active = true                    
+                                and now()::date  between from_date::date and to_date::date
+                                and pr.id in (
+                                    select a.promo_id from promo_sale_channel_rel a
+                                    inner join sale_team_channel_rel b
+                                    on a.sale_channel_id = b.sale_channel_id    
+                                )
+                                and pro_pp_rel.product_id in (
+                                    select product_id
+                                    from crm_case_section ccs,product_sale_group_rel rel
+                                    where ccs.sale_group_id=rel.sale_group_id    
+                                )
+                            )A""")
+        for row in self._cr.dictfetchall():
+            node = str(row['id'])
+            doc_ref = db.collection('promotion_team').document(node)
             doc_ref.set(row) 

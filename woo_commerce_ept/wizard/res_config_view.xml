@@ -104,9 +104,9 @@
                     <separator string="Product Information" attrs="{'invisible': [('woo_instance_id', '=', False)]}"/>
                     <group attrs="{'invisible': [('woo_instance_id', '=', False)]}">
                         <label for="id" string="Products"/>
-                        <div name="product_config">
-                            <div>
-                                <label for="shipment_charge_product_id"/>
+                        <div name="product_config">                                               
+                            <div>  
+                            	<label for="shipment_charge_product_id"/>
                                 <field name="shipment_charge_product_id" attrs="{'required':[('woo_instance_id','!=',False)]}" class="oe_inline"/>
                             </div>                         
                             <div>
@@ -117,8 +117,19 @@
                                 <label for="fee_line_id"/>
                                 <field name="fee_line_id" attrs="{'required':[('woo_instance_id','!=',False)]}" class="oe_inline"/>
                             </div>
+                            <div>
+		                        <label for="product_auto_import"/>
+		                        <field name="product_auto_import" attrs="{'required':[('woo_instance_id','!=',False)]}" class="oe_inline"/>
+		                    </div>                                     
+		                    <div attrs="{'invisible': [('product_auto_import', '=', False)]}">
+		                        <label for="id" string="I want to import product at every "/>
+		                        <field name="product_import_interval_number" attrs="{'required':[('woo_instance_id','!=',False)]}" class="oe_inline"/>
+		                        <field name="product_import_interval_type" attrs="{'required':[('woo_instance_id','!=',False)]}" class="oe_inline"/>
+		                        <field name="product_import_next_execution" attrs="{'required':[('woo_instance_id','!=',False)]}" class="oe_inline"/>
+		                    </div>
                         </div>
                     </group>
+                    
                     <separator string="Payment Information" attrs="{'invisible': [('woo_instance_id', '=', False)]}"/>
                     <group attrs="{'invisible': [('woo_instance_id', '=', False)]}">
                         <label for="id" string="Payment"/>
