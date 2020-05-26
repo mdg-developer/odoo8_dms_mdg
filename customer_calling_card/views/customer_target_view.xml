@@ -32,6 +32,7 @@
 							<group>
 								<field name="updated_by" />
 								<field name="updated_time" />
+								<field name="create_date" />
 							</group>
 						</group>
 						<notebook>
