@@ -1,3 +1,4 @@
+import branch_requisition_wizard
 import stock_request
 import product
 import fleet
