@@ -53,5 +53,8 @@ class product_maingroup(osv.osv):
                 help="This account will be used to value price difference between purchase price and cost price."),
             'partner_id':fields.many2one('res.partner', 'Supplier', domain="[('supplier','=',True)]", required=True),
            'pricelist_id': fields.many2one('product.pricelist', 'FOC Price List', domain="[('type','=','sale')]" , required=True),
+        'is_separate_transition':fields.boolean('Is Separate Transition',default=False),
+                 
+                    
                     }
 product_maingroup()

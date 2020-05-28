@@ -77,7 +77,9 @@ class good_issue_note(osv.osv):
                 'issue_from_optional_location':fields.boolean('Issue from Optional Location',readonly=True),
                 'reverse_date':fields.date('Date for Reverse',required=False),
                 'reverse_user_id':fields.many2one('res.users', "Reverse User"),
-                'sub_d_customer_id':fields.many2one('sub.d.customer', 'Sub-D Customer'),                
+                'sub_d_customer_id':fields.many2one('sub.d.customer', 'Sub-D Customer'), 
+                    'principle_id'    :fields.many2one('product.maingroup', 'Principle'),
+               
 }
     _defaults = {
         'state' : 'draft',

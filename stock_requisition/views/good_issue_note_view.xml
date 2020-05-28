@@ -44,6 +44,9 @@
 								<!-- <field name="branch_id" widget="selection" attrs="{'readonly':[('state','=','issue')]}"/> -->
 								<field name="reverse_user_id" readonly="1" />
 								<field name="sub_d_customer_id" />
+								<field name="principle_id" readonly="1"/>
+								
+								
 							</group>
 							<group>
 								<field name="request_id" />

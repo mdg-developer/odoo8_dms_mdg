@@ -35,7 +35,7 @@
 								<field name="to_return_date" attrs="{'readonly':[('state','=','received')]}" />
 								<field name="write_date" attrs="{'readonly':[('state','=','received')]}" />
 								<field name="issue_from_optional_location"  attrs="{'readonly':[('state','=','received')]}" />
-								<!-- <field name="branch_id" widget="selection" /> -->
+								<field name="is_separate_srn"  attrs="{'readonly':[('state','=','received')]}" />
 							</group>
 							<group>
 								<field name="returner" attrs="{'readonly':[('state','=','received')]}" />
@@ -163,7 +163,10 @@
 					<field name="returner" />
 					<field name="return_date" />
 					<field name="vehicle_id" />
+					<field name="issue_from_optional_location"  />
+					<field name="is_separate_srn" />
 					<field name="state" />
+					
 				</tree>
 			</field>
 		</record>
