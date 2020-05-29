@@ -11,8 +11,10 @@
 						<group>
 							<field name="name" />	
 <!-- 							<field name="branch_id" />	 -->
+							<field name="principle_ids" />	
 							<field name="product_ids" />	
-							<field name="sales_team_line_ids" />					
+							<field name="sales_team_line_ids" />	
+							<field name="note"/>				
 						</group>						
 					</sheet>
 				</form>

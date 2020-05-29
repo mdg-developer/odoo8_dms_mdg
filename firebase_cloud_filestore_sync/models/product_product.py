@@ -140,10 +140,66 @@ class product_product(models.Model):
                                 where ccs.sale_group_id=rel.sale_group_id    
                             )""")
         for row in self._cr.dictfetchall():
-            node = str(row['id'])
-            doc_ref = db.collection('promos_rules').document(node)
-            doc_ref.set(row)     
+            node = str(row['id'])            
+            doc_ref = db.collection('promos_rules').document(node)   
+            doc_ref.set(row)           
+
+            if doc_ref:
+                
+                #add promotion actions                       
+                self._cr.execute("""select act.id,act.promotion,act.sequence as act_seq ,act.arguments,act.action_type,act.product_code,
+                                act.discount_product_code,pro_br_rel.res_branch_id,act.promotion
+                                from promos_rules r ,promos_rules_actions act,promos_rules_res_branch_rel pro_br_rel
+                                where r.id = act.promotion
+                                and r.active = 't'                            
+                                and r.id = pro_br_rel.promos_rules_id
+                                and r.id=%s""",(row['id'],))
+                for action_row in self._cr.dictfetchall():     
+                    promo_action_node = str(action_row['id'])            
+                    promo_action_ref = doc_ref.collection('promotion_action').document(promo_action_node)    
+                    promo_action_ref.set(action_row)            
             
+                #add promotion conditions
+                self._cr.execute("""select cond.id,cond.promotion,cond.sequence as cond_seq,
+                                cond.attribute as cond_attr,cond.comparator as cond_comparator,
+                                cond.value as comp_value,pro_br_rel.res_branch_id,cond.promotion
+                                from promos_rules r ,promos_rules_conditions_exps cond,promos_rules_res_branch_rel pro_br_rel
+                                where r.id = cond.promotion
+                                and r.active = 't'                           
+                                and r.id = pro_br_rel.promos_rules_id
+                                and r.id=%s""",(row['id'],))
+                for condition_row in self._cr.dictfetchall():                
+                    promo_condition_node = str(condition_row['id'])            
+                    promo_condition_ref = doc_ref.collection('promotion_condition').document(promo_condition_node)    
+                    promo_condition_ref.set(condition_row)
+                
+                #add sale channel
+                self._cr.execute("""select sale_channel_id
+                                from promo_sale_channel_rel
+                                where promo_id=%s""",(row['id'],))
+                for sale_channel_row in self._cr.dictfetchall():                
+                    sale_channel_node = str(sale_channel_row['sale_channel_id'])            
+                    sale_channel_ref = doc_ref.collection('sale_channel').document(sale_channel_node)    
+                    sale_channel_ref.set(sale_channel_row)
+                
+                #add partner category
+                self._cr.execute("""select category_id
+                                from promotion_rule_category_rel
+                                where promotion_id=%s""",(row['id'],))
+                for partner_category_row in self._cr.dictfetchall():                
+                    partner_category_node = str(partner_category_row['category_id'])            
+                    partner_category_ref = doc_ref.collection('partner_category').document(partner_category_node)    
+                    partner_category_ref.set(partner_category_row)
+                
+                #add join promotion
+                self._cr.execute("""select join_promotion_id
+                                from promos_rules_join_rel
+                                where promos_rules_id=%s""",(row['id'],))
+                for join_promo_row in self._cr.dictfetchall():                
+                    join_promo_node = str(join_promo_row['join_promotion_id'])            
+                    join_promo_ref = doc_ref.collection('join_promotion').document(join_promo_node)    
+                    join_promo_ref.set(join_promo_row)
+                                       
     def sync_product_category(self):    
         
         firebase_admin.get_app()        
@@ -162,43 +218,8 @@ class product_product(models.Model):
         for row in self._cr.dictfetchall():
             node = str(row['categ_id'])
             doc_ref = db.collection('product_category').document(node)
-            doc_ref.set(row) 
-            
-    def sync_promotion_actions(self):    
-        
-        firebase_admin.get_app()        
-        db = firestore.client()
-        
-        #get promotion actions
-        self._cr.execute("""select act.id,act.promotion,act.sequence as act_seq ,act.arguments,act.action_type,act.product_code,
-                            act.discount_product_code,pro_br_rel.res_branch_id,act.promotion
-                            from promos_rules r ,promos_rules_actions act,promos_rules_res_branch_rel pro_br_rel
-                            where r.id = act.promotion
-                            and r.active = 't'                            
-                            and r.id = pro_br_rel.promos_rules_id""")
-        for row in self._cr.dictfetchall():
-            node = str(row['id'])
-            doc_ref = db.collection('promotion_actions').document(node)
-            doc_ref.set(row) 
-            
-    def sync_promotion_conditions(self):    
-        
-        firebase_admin.get_app()        
-        db = firestore.client()
-        
-        #get promotion conditions
-        self._cr.execute("""select cond.id,cond.promotion,cond.sequence as cond_seq,
-                            cond.attribute as cond_attr,cond.comparator as cond_comparator,
-                            cond.value as comp_value,pro_br_rel.res_branch_id,cond.promotion
-                            from promos_rules r ,promos_rules_conditions_exps cond,promos_rules_res_branch_rel pro_br_rel
-                            where r.id = cond.promotion
-                            and r.active = 't'                           
-                            and r.id = pro_br_rel.promos_rules_id""")
-        for row in self._cr.dictfetchall():
-            node = str(row['id'])
-            doc_ref = db.collection('promotion_conditions').document(node)
-            doc_ref.set(row) 
-            
+            doc_ref.set(row)            
+                               
     def sync_product_pricelists(self):    
         
         firebase_admin.get_app()        
@@ -420,38 +441,17 @@ class product_product(models.Model):
         for row in self._cr.dictfetchall():
             node = str(row['id'])
             doc_ref = db.collection('stock_check_setting').document(node)
-            doc_ref.set(row) 
+            doc_ref.set(row)    
             
-    def sync_promotion_team(self):    
+    def sync_partner_category(self):    
         
         firebase_admin.get_app()        
         db = firestore.client()
         
-        #get promotion team
-        self._cr.execute("""select ROW_NUMBER () OVER (ORDER BY promotion_id) id,*
-                            from
-                            (   select distinct pr.id promotion_id,sequence as seq,from_date::character varying from_date,to_date::character varying to_date,pr.active,pr.name as p_name,
-                                logic ,expected_logic_result ,special, special1, special2, special3 ,description,
-                                pr.promotion_count, pr.monthly_promotion ,pr.code as p_code,manual,main_group,ccs.id team_id
-                                from promos_rules pr
-                                left join promos_rules_res_branch_rel pro_br_rel on (pr.id = pro_br_rel.promos_rules_id)
-                                left join promos_rules_product_rel pro_pp_rel on (pr.id=pro_pp_rel.promos_rules_id)
-                                left join product_sale_group_rel ps_group_rel on (ps_group_rel.product_id=pro_pp_rel.product_id)
-                                left join crm_case_section ccs on (ccs.sale_group_id=ps_group_rel.sale_group_id)
-                                where pr.active = true                    
-                                and now()::date  between from_date::date and to_date::date
-                                and pr.id in (
-                                    select a.promo_id from promo_sale_channel_rel a
-                                    inner join sale_team_channel_rel b
-                                    on a.sale_channel_id = b.sale_channel_id    
-                                )
-                                and pro_pp_rel.product_id in (
-                                    select product_id
-                                    from crm_case_section ccs,product_sale_group_rel rel
-                                    where ccs.sale_group_id=rel.sale_group_id    
-                                )
-                            )A""")
+        #get partner category
+        self._cr.execute("""select id,name from res_partner_category""")
         for row in self._cr.dictfetchall():
             node = str(row['id'])
-            doc_ref = db.collection('promotion_team').document(node)
-            doc_ref.set(row) 
+            doc_ref = db.collection('partner_category').document(node)
+            doc_ref.set(row)         
+   

@@ -371,6 +371,12 @@ class branch_good_issue_note(osv.osv):
             if not receive_date:
                 raise osv.except_osv(_('Warning'),
                          _('Please Insert Receive Date'))
+            for line in note_value.p_line:
+                if line.receive_quantity > line.issue_quantity:
+                    raise osv.except_osv(
+                        _('Warning!'),
+                        _("%s's received quantity is greater than issued quantity!" % (line.product_id.name_template))
+                    )
             # location_id = note_value.tansit_location.id
             location_id = note_value.transit_location.id
             from_location_id = note_value.from_location_id.id
@@ -649,6 +655,7 @@ class branch_good_issue_note_line(osv.osv):
     _columns = {                
         'line_id':fields.many2one('branch.good.issue.note', 'Line', ondelete='cascade', select=True),
         'product_id': fields.many2one('product.product', 'Product', required=True),
+        'req_quantity' : fields.float(string='Request (Qty)', digits=(16, 0), readonly=True),
         'issue_quantity': fields.float(string='Issued (Qty)', digits=(16, 0), readonly=False),
         'receive_quantity' : fields.float(string='Received (Qty)', digits=(16, 0)),
         'diff_quantity':fields.function(_diff_quantity_value, string='Diff(Qty)', digits=(16, 0), type='float', readonly=True),

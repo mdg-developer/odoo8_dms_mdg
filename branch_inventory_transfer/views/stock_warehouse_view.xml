@@ -28,14 +28,15 @@
 									</group>
 								</group>
 							</form>
-							<tree string="Resupply Rule" editable="bottom">
+							<tree string="Resupply Rule" editable="bottom" default_order="sequence asc">
 								<field name="product_id" />
+								<field name="sequence" invisible="1" />
 								<field name="uom_id" />
 								<field name="moq_value"/>
 								<field name="factor"/>
 								<field name="qty" sum="Total Product Qty"/>
-								<field name="cbm_value" />
-								<field name="pallet_value" />
+								<field name="cbm_value" sum="Total CBM Value"/>
+								<field name="pallet_value" sum="Total Pallet Value"/>
 							</tree>
 						</field>
 					</page>					

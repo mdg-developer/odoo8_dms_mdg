@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.6.0.v201606072122</property>
     <property name="units">in</property>
     <method name="initialize"><![CDATA[branchList = params["branch_id"].value.join(",");
 productList = params["product_id"].value.join(",");]]></method>
@@ -688,19 +688,19 @@ dat.x_product_id,
 dat.x_list_price,
 dat.x_uom_ratio,
 dat.x_uom,
-greatest(0,sum(dat.sellable)) as sellable,
-greatest(0,sum(dat.stock_temp))  as stock_temp,
-greatest(0,sum(dat.normal_return)) as normal_return,
-greatest(0,sum(dat.expiry)) as expiry,
-greatest(0,sum(dat.near_expiry)) as near_expiry,
-greatest(0,sum(dat.damage)) as damage,
-greatest(0,sum(dat.fresh_not_good)) as fresh_not_good,
-greatest(0,sum(dat.sellable)) + greatest(0,sum(dat.stock_temp)) + greatest(0,sum(dat.normal_return)) +
-greatest(0,sum(dat.expiry)) + greatest(0,sum(dat.near_expiry)) + greatest(0,sum(dat.damage)) +
-greatest(0,sum(dat.fresh_not_good)) as remaining_qty,
-(greatest(0,sum(dat.sellable)) + greatest(0,sum(dat.stock_temp)) + greatest(0,sum(dat.normal_return)) +
-greatest(0,sum(dat.expiry)) + greatest(0,sum(dat.near_expiry)) + greatest(0,sum(dat.damage)) +
-greatest(0,sum(dat.fresh_not_good)))* dat.x_list_price as value_sp
+sum(dat.sellable) as sellable,
+sum(dat.stock_temp)  as stock_temp,
+sum(dat.normal_return) as normal_return,
+sum(dat.expiry) as expiry,
+sum(dat.near_expiry) as near_expiry,
+sum(dat.damage) as damage,
+sum(dat.fresh_not_good) as fresh_not_good,
+COALESCE (sum(dat.sellable),0) + COALESCE (sum(dat.stock_temp),0) + COALESCE (sum(dat.normal_return),0) +
+COALESCE (sum(dat.expiry),0) + COALESCE (sum(dat.near_expiry),0) + COALESCE (sum(dat.damage),0) +
+COALESCE (sum(dat.fresh_not_good),0) as remaining_qty,
+(COALESCE(sum(dat.sellable),0) + COALESCE(sum(dat.stock_temp),0) + COALESCE(sum(dat.normal_return),0)+
+COALESCE(sum(dat.expiry),0) + COALESCE(sum(dat.near_expiry),0) + COALESCE(sum(dat.damage),0) +
+COALESCE(sum(dat.fresh_not_good),0))* dat.x_list_price as value_sp
 from
 (
 select w.name as x_warehouse,
@@ -815,68 +815,6 @@ dat.x_uom_ratio]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
-  <DataSetParameters>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>1</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>2</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>3</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>4</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-  </DataSetParameters>
   <design:ResultSets derivedMetaData="true">
     <design:resultSetDefinitions>
       <design:resultSetColumns>

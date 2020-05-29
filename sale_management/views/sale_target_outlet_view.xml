@@ -16,6 +16,7 @@
 								<field name="outlet_type_ids" widget="many2many_tags"/>
 								<field name="company_id" />
 								<field name="create_date" />
+								<field name="write_date" />
 							</group>
 							<group>
 								<field name="name" />

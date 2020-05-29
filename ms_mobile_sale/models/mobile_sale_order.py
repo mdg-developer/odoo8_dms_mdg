@@ -2969,7 +2969,9 @@ class mobile_sale_order(osv.osv):
                                 sequence = None
                             product_data = product_obj.browse(cursor, user, int(srl['product_id']), context=context)
                             if product_data:
-                                issue_category = product_data.categ_id.issue_from_optional_location                                
+                                issue_category = product_data.categ_id.issue_from_optional_location   
+                                principle_id= product_data.main_group.id                                
+                                is_separate_transition =product_data.main_group.is_separate_transition 
                             ori_req_quantity = int(srl['req_quantity'])
                             ori_uom_id = int(srl['product_uom'])
                             # print 'product_idddddddddddd',req_quantity
@@ -3017,7 +3019,78 @@ class mobile_sale_order(osv.osv):
                                         'so_no':sr['rfi_no'],
                                     }
                                     issue_stock_id = stock_request_obj.create(cursor, user, mso_result, context=context)
-
+                                mso_line_res = {                                                            
+                                              'line_id':issue_stock_id,
+                                              'remark':srl['remark'],
+                                              'req_quantity':ori_req_quantity,
+                                              'product_id':int(srl['product_id']),
+                                              'product_uom':ori_uom_id,
+                                              'uom_ratio':packing_unit ,
+                                              'big_uom_id':big_uom_id,
+                                              'big_req_quantity':0,
+                                              'qty_on_hand':qty_on_hand,
+                                              'sequence':sequence,
+                                              }
+                                stock_request_line_obj.create(cursor, user, mso_line_res, context=context)
+                                        
+                            elif is_separate_transition == True:
+                                request_ids = stock_request_obj.search(cursor, user , [('principle_id', '=', principle_id), ('sale_team_id', '=', delivery_id), ('request_date', '=', sr['request_date']), ('so_no', '=', sr['rfi_no'])])
+                                cursor.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (optional_issue_location_id, srl['product_id'],))
+                                qty_on_hand = cursor.fetchone()
+                                if qty_on_hand:
+                                    qty_on_hand = qty_on_hand[0]
+                                else:
+                                    qty_on_hand = 0              
+                                if request_ids:
+                                    issue_separate_stock_id = request_ids[0]
+                                else:
+                                    mso_result = {
+                                        'request_date':sr['request_date'],
+                                        'request_by':sr['request_by'],
+                                        'issue_date':sr['issue_date'] ,
+                                         's_issue_date':sr['issue_date'] ,
+                                        'state': 'draft',
+                                        'issue_to':receiver,
+                                        'principle_id':principle_id,
+                                        'company_id':company_id,
+                                        'branch_id':branch_id,
+                                        'vehicle_id':vehcle_no,
+                                        'from_location_id':from_location_id,
+                                        'to_location_id':to_location_id,
+                                        'sale_team_id':delivery_id,
+                                        'issue_from_optional_location':False,
+                                        'so_no':sr['rfi_no'],
+                                    }
+                                    issue_separate_stock_id = stock_request_obj.create(cursor, user, mso_result, context=context)
+                                mso_line_res = {                                                            
+                                      'line_id':issue_separate_stock_id,
+                                      'remark':srl['remark'],
+                                      'req_quantity':ori_req_quantity,
+                                      'product_id':int(srl['product_id']),
+                                      'product_uom':ori_uom_id,
+                                      'uom_ratio':packing_unit ,
+                                      'big_uom_id':big_uom_id,
+                                      'big_req_quantity':0,
+                                      'qty_on_hand':qty_on_hand,
+                                      'sequence':sequence,
+                                      }
+                                stock_request_line_obj.create(cursor, user, mso_line_res, context=context)
+                            
+                            else:
+                                    mso_line_res = {                                                            
+                                          'line_id':stock_id,
+                                          'remark':srl['remark'],
+                                          'req_quantity':ori_req_quantity,
+                                          'product_id':int(srl['product_id']),
+                                          'product_uom':ori_uom_id,
+                                          'uom_ratio':packing_unit ,
+                                          'big_uom_id':big_uom_id,
+                                          'big_req_quantity':0,
+                                          'qty_on_hand':qty_on_hand,
+                                          'sequence':sequence,
+                                          }
+                                    stock_request_line_obj.create(cursor, user, mso_line_res, context=context)
+                                
                             # comment by EMTW           
 #                             if int(srl['product_uom']) == int(big_uom_id):                                                                          
 #                                 mso_line_res = {                                                            
@@ -3033,23 +3106,11 @@ class mobile_sale_order(osv.osv):
 #                                       'sequence':sequence,
 #                                       }
 #                             else:
-                            if issue_category == True:
-                                master_id = issue_stock_id
-                            else:
-                                master_id = stock_id
-                            mso_line_res = {                                                            
-                                      'line_id':master_id,
-                                      'remark':srl['remark'],
-                                      'req_quantity':ori_req_quantity,
-                                      'product_id':int(srl['product_id']),
-                                      'product_uom':ori_uom_id,
-                                      'uom_ratio':packing_unit ,
-                                      'big_uom_id':big_uom_id,
-                                      'big_req_quantity':0,
-                                      'qty_on_hand':qty_on_hand,
-                                      'sequence':sequence,
-                                      }
-                            stock_request_line_obj.create(cursor, user, mso_line_res, context=context)
+#                             if issue_category == True:
+#                                 master_id = issue_stock_id
+#                             else:
+#                                 master_id = stock_id
+                            
             print 'True'
             return True       
         except Exception, e:
@@ -3700,9 +3761,12 @@ class mobile_sale_order(osv.osv):
                          and quant.product_id = product.id
                          and product.product_tmpl_id = product_temp.id
                          and product.active = true
+                       and main_group in (select principle_id from product_sale_group_principle_rel 
+                        where sale_group_id in (select sale_group_id from crm_case_section where id 
+                        in (select default_section_id from res_users where id =%s)))  
                          group by quant.product_id, main_group,name_template,product.id,price,product.sequence
             )A where qty_on_hand > 0  order by name_template
-            """, (warehouse_id,))   
+            """, (warehouse_id,uid,))   
             datas = cr.fetchall()        
             return datas
     

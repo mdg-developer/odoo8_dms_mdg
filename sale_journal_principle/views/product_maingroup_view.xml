@@ -32,6 +32,9 @@
 						<!-- <field name="property_account_discount_cash" /> <field name="property_account_discount_credit" 
 							/> <field name="property_account_foc" /> <field name="property_account_discount" 
 							/> -->
+					 <field name="is_separate_transition" />
+							
+							
 					</xpath>
 				</data>
 			</field>

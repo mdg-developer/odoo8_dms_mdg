@@ -15,11 +15,12 @@ class stock_warehouse(osv.osv):
         if ids:
             warehouse = self.browse(cr, uid, ids[0], context=context)
             warehouse.resupply_line.unlink()
-            cr.execute("""select pp.id,uom.id uom,cbm_value,ctn_pallet 
+            cr.execute("""select pp.id,uom.id uom,cbm_value,ctn_pallet
                         from product_product pp,product_template pt,product_uom uom
                         where pp.product_tmpl_id=pt.id 
                         and pt.report_uom_id=uom.id
                         and pt.type!='service' 
+                        and is_foc!='True'
                         and pt.active='True'
                         and pp.active='True' 
                         order by pp.sequence asc""")
@@ -46,6 +47,10 @@ class warehouse_resupply_rule_line(osv.osv):
     _columns = {
                 'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse'),
                 'product_id':fields.many2one('product.product', 'Product'),
+                'sequence' : fields.related('product_id', 'sequence',
+                                          type='char',
+                                          readonly=True,
+                                          string='Sequence'),       
                 'uom_id' : fields.related('product_id', 'product_tmpl_id', 'report_uom_id',
                                           type='many2one',
                                           readonly=True,

@@ -92,7 +92,7 @@ class customer_target(osv.osv):
             for product in product_product:
                 product_obj = self.pool.get('product.product').browse(cr, uid, product, context=context)                
                  
-                month1_sale = month2_sale = month3_sale = avg_sale = percentage_growth = current_month_sale = target_amount = customer_ams = divisor = 0                
+                month1_sale = month2_sale = month3_sale = avg_sale = percentage_growth = current_month_sale = target_amount = customer_ams = divisor = ach_percent = 0                
                 # get month 1 sale
                 cr.execute("""select COALESCE(sum(product_quantity),0) product_quantity
                             from 
@@ -222,7 +222,10 @@ class customer_target(osv.osv):
                 current_month_data = cr.fetchall()
                 if current_month_data:
                     current_month_sale = current_month_data[0][0]
-                   
+                  
+                if customer_ams > 0: 
+                    ach_percent = (current_month_sale / customer_ams) * 100
+                
                 line_result = {
                             'product_id':product_obj.id,
                             'sequence':product_obj.sequence,
@@ -232,6 +235,7 @@ class customer_target(osv.osv):
                             '6ams':avg_sale,
                             'target_qty':customer_ams,
                             'ach_qty':current_month_sale,
+                            'ach_percent':ach_percent,
                             'gap_qty':customer_ams - current_month_sale,
                             'line_id':target,
                         }

@@ -141,7 +141,8 @@ class stock_requisition(osv.osv):
      'partner_id':fields.many2one('res.partner', string='Partner'),
     'good_issue_id':fields.many2one('good.issue.note', 'GIN No' ,readonly=True),
     'issue_from_optional_location':fields.boolean('Issue from Optional Location'),
-    'sub_d_customer_id':fields.many2one('sub.d.customer', 'Sub-D Customer'),    
+    'sub_d_customer_id':fields.many2one('sub.d.customer', 'Sub-D Customer'),
+    'principle_id'    :fields.many2one('product.maingroup', 'Principle'),
 }
     _defaults = {
         'state' : 'draft',
@@ -280,6 +281,10 @@ class stock_requisition(osv.osv):
             branch_id = req_value.branch_id.id
             receiver = req_value.sale_team_id.receiver
             issue_from_optional_location=req_value.issue_from_optional_location
+            if req_value.principle_id:
+                principle_id=req_value.principle_id.id
+            else:
+                principle_id=None
             if req_value.sub_d_customer_id:
                 sub_d_customer_id = req_value.sub_d_customer_id.id
             else:
@@ -299,6 +304,7 @@ class stock_requisition(osv.osv):
                                           'vehicle_id':vehicle_no,
                                           'receiver':receiver,
                                           'issue_from_optional_location':issue_from_optional_location,
+                                          'principle_id':principle_id,
                                           'sub_d_customer_id':sub_d_customer_id,                                          
                                           'branch_id':branch_id}, context=context)
             
