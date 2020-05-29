@@ -4,5 +4,5 @@ import product_template
 # import res_partner
 import res_township
 import product_pricelist
-# import credit_application
+import credit_application
 
