@@ -201,7 +201,56 @@ class product_product(models.Model):
                 for join_promo_row in self._cr.dictfetchall():                
                     join_promo_node = str(join_promo_row['join_promotion_id'])            
                     join_promo_ref = doc_ref.collection('join_promotion').document(join_promo_node)    
-                    join_promo_ref.set(join_promo_row)                   
+                    join_promo_ref.set(join_promo_row) 
+                    
+                #add branch
+                self._cr.execute("""select res_branch_id branch_id,rb.name branch_name
+                                from promos_rules_res_branch_rel rel,res_branch rb
+                                where rel.res_branch_id=rb.id
+                                and promos_rules_id=%s""",(row['id'],))
+                for branch_row in self._cr.dictfetchall():                
+                    branch_node = str(branch_row['branch_id'])            
+                    branch_ref = doc_ref.collection('res_branch').document(branch_node)    
+                    branch_ref.set(branch_row)  
+                    
+                #add outlet type
+                self._cr.execute("""select outlettype_id,outlet.name outlettype_name
+                                from promos_rules_outlettype_rel rel,outlettype_outlettype outlet
+                                where rel.outlettype_id=outlet.id
+                                and promos_rules_id=%s""",(row['id'],))
+                for outlet_row in self._cr.dictfetchall():                
+                    outlet_node = str(outlet_row['outlettype_id'])            
+                    outlet_ref = doc_ref.collection('outlettype_outlettype').document(outlet_node)    
+                    outlet_ref.set(outlet_row)  
+                    
+                #add customer
+                self._cr.execute("""select res_partner_id,rp.name res_partner_name
+                                from promos_rules_res_partner_rel rel,res_partner rp
+                                where rel.res_partner_id=rp.id
+                                and promos_rules_id=%s""",(row['id'],))
+                for customer_row in self._cr.dictfetchall():                
+                    customer_node = str(customer_row['res_partner_id'])            
+                    customer_ref = doc_ref.collection('res_partner').document(customer_node)    
+                    customer_ref.set(customer_row)
+                      
+                    self._cr.execute("""select a.category_id partner_category_id,b.name partner_category_name
+                                    from res_partner_res_partner_category_rel a,res_partner_category b
+                                    where a.category_id = b.id
+                                    and partner_id=%s""",(customer_row['res_partner_id'],))
+                    for partner_categ_row in self._cr.dictfetchall(): 
+                        partner_categ_node = str(partner_categ_row['partner_category_id'])            
+                        partner_categ_ref = customer_ref.collection('partner_category').document(partner_categ_node)    
+                        partner_categ_ref.set(partner_categ_row)
+                        
+                #add monthly promotion history
+                self._cr.execute("""select h.id,promotion_id,date,partner_id,section_id team_id,user_id sale_man_id
+                                from sales_promotion_history h,promos_rules r 
+                                where h.promotion_id=r.id
+                                and promotion_id=%s""",(row['id'],))
+                for promo_row in self._cr.dictfetchall():                
+                    promo_node = str(promo_row['id'])            
+                    promo_ref = doc_ref.collection('monthly_promotion_history').document(promo_node)    
+                    promo_ref.set(promo_row) 
                                                        
     def sync_product_category(self):    
         
