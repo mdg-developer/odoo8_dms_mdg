@@ -174,32 +174,35 @@ class product_product(models.Model):
                     promo_condition_ref.set(condition_row)
                 
                 #add sale channel
-                self._cr.execute("""select sale_channel_id
-                                from promo_sale_channel_rel
-                                where promo_id=%s""",(row['id'],))
+                self._cr.execute("""select sale_channel_id,channel.name sale_channel_name
+                                from promo_sale_channel_rel rel,sale_channel channel
+                                where rel.sale_channel_id=channel.id
+                                and promo_id=%s""",(row['id'],))
                 for sale_channel_row in self._cr.dictfetchall():                
                     sale_channel_node = str(sale_channel_row['sale_channel_id'])            
                     sale_channel_ref = doc_ref.collection('sale_channel').document(sale_channel_node)    
                     sale_channel_ref.set(sale_channel_row)
                 
                 #add partner category
-                self._cr.execute("""select category_id
-                                from promotion_rule_category_rel
-                                where promotion_id=%s""",(row['id'],))
+                self._cr.execute("""select category_id,categ.name category_name
+                                from promotion_rule_category_rel rel,res_partner_category categ
+                                where rel.category_id=categ.id
+                                and promotion_id=%s""",(row['id'],))
                 for partner_category_row in self._cr.dictfetchall():                
                     partner_category_node = str(partner_category_row['category_id'])            
                     partner_category_ref = doc_ref.collection('partner_category').document(partner_category_node)    
                     partner_category_ref.set(partner_category_row)
                 
                 #add join promotion
-                self._cr.execute("""select join_promotion_id
-                                from promos_rules_join_rel
-                                where promos_rules_id=%s""",(row['id'],))
+                self._cr.execute("""select join_promotion_id,promo.name join_promotion_name
+                                from promos_rules_join_rel rel,promos_rules promo
+                                where rel.join_promotion_id=promo.id
+                                and promos_rules_id=%s""",(row['id'],))
                 for join_promo_row in self._cr.dictfetchall():                
                     join_promo_node = str(join_promo_row['join_promotion_id'])            
                     join_promo_ref = doc_ref.collection('join_promotion').document(join_promo_node)    
-                    join_promo_ref.set(join_promo_row)
-                                       
+                    join_promo_ref.set(join_promo_row)                   
+                                                       
     def sync_product_category(self):    
         
         firebase_admin.get_app()        
