@@ -93,7 +93,15 @@ class product_product(models.Model):
         for row in self._cr.dictfetchall():
             node = str(row['id'])
             doc_ref = db.collection('res_partner').document(node)
-            doc_ref.set(row)                 
+            doc_ref.set(row) 
+            self._cr.execute("""select a.category_id partner_category_id,b.name partner_category_name
+                                    from res_partner_res_partner_category_rel a,res_partner_category b
+                                    where a.category_id = b.id
+                                    and partner_id=%s""",(row['id'],))
+            for partner_categ_row in self._cr.dictfetchall(): 
+                partner_categ_node = str(partner_categ_row['partner_category_id'])            
+                partner_categ_ref = doc_ref.collection('customer_tags').document(partner_categ_node)    
+                partner_categ_ref.set(partner_categ_row)                 
                     
     def sync_users(self):
         
@@ -184,13 +192,13 @@ class product_product(models.Model):
                     sale_channel_ref.set(sale_channel_row)
                 
                 #add partner category
-                self._cr.execute("""select category_id,categ.name category_name
+                self._cr.execute("""select category_id partner_category_id,categ.name partner_category_name
                                 from promotion_rule_category_rel rel,res_partner_category categ
                                 where rel.category_id=categ.id
                                 and promotion_id=%s""",(row['id'],))
                 for partner_category_row in self._cr.dictfetchall():                
-                    partner_category_node = str(partner_category_row['category_id'])            
-                    partner_category_ref = doc_ref.collection('partner_category').document(partner_category_node)    
+                    partner_category_node = str(partner_category_row['partner_category_id'])            
+                    partner_category_ref = doc_ref.collection('customer_tags').document(partner_category_node)    
                     partner_category_ref.set(partner_category_row)
                 
                 #add join promotion
@@ -239,19 +247,9 @@ class product_product(models.Model):
                                     and partner_id=%s""",(customer_row['res_partner_id'],))
                     for partner_categ_row in self._cr.dictfetchall(): 
                         partner_categ_node = str(partner_categ_row['partner_category_id'])            
-                        partner_categ_ref = customer_ref.collection('partner_category').document(partner_categ_node)    
-                        partner_categ_ref.set(partner_categ_row)
-                        
-                #add monthly promotion history
-                self._cr.execute("""select h.id,promotion_id,date,partner_id,section_id team_id,user_id sale_man_id
-                                from sales_promotion_history h,promos_rules r 
-                                where h.promotion_id=r.id
-                                and promotion_id=%s""",(row['id'],))
-                for promo_row in self._cr.dictfetchall():                
-                    promo_node = str(promo_row['id'])            
-                    promo_ref = doc_ref.collection('monthly_promotion_history').document(promo_node)    
-                    promo_ref.set(promo_row) 
-                                                       
+                        partner_categ_ref = customer_ref.collection('customer_tags').document(partner_categ_node)    
+                        partner_categ_ref.set(partner_categ_row)                        
+                                                                       
     def sync_product_category(self):    
         
         firebase_admin.get_app()        
@@ -270,6 +268,21 @@ class product_product(models.Model):
         for row in self._cr.dictfetchall():
             node = str(row['categ_id'])
             doc_ref = db.collection('product_category').document(node)
+            doc_ref.set(row)  
+            
+    def sync_monthly_promotion_history(self):    
+        
+        firebase_admin.get_app()        
+        db = firestore.client()
+                            
+        #get monthly promotion history
+        self._cr.execute("""select h.id,promotion_id,date::character varying date,partner_id,section_id team_id,user_id sale_man_id
+                            from sales_promotion_history h,promos_rules r 
+                            where h.promotion_id=r.id
+                        """)
+        for row in self._cr.dictfetchall():
+            node = str(row['id'])
+            doc_ref = db.collection('monthly_promotion_history').document(node)
             doc_ref.set(row)            
                                
     def sync_product_pricelists(self):    
