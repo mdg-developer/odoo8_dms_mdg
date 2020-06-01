@@ -131,7 +131,8 @@ class product_product(models.Model):
         #get promotions
         self._cr.execute("""select distinct id,sequence as seq,from_date::character varying from_date,to_date::character varying to_date,active,name as p_name,
                             logic ,expected_logic_result ,special, special1, special2, special3 ,description,
-                            pr.promotion_count, pr.monthly_promotion ,code as p_code,manual,main_group
+                            pr.promotion_count, pr.monthly_promotion ,code as p_code,manual,main_group,
+                            (select ARRAY_AGG(sale_channel_id) from promo_sale_channel_rel where promo_id=pr.id) sale_channel
                             from promos_rules pr
                             left join promos_rules_res_branch_rel pro_br_rel on (pr.id = pro_br_rel.promos_rules_id)
                             left join promos_rules_product_rel pro_pp_rel on (pr.id=pro_pp_rel.promos_rules_id)
@@ -149,7 +150,7 @@ class product_product(models.Model):
                             )""")
         for row in self._cr.dictfetchall():
             node = str(row['id'])            
-            doc_ref = db.collection('promos_rules').document(node)   
+            doc_ref = db.collection('promos_rules').document(node) 
             doc_ref.set(row)           
 
             if doc_ref:
@@ -516,5 +517,20 @@ class product_product(models.Model):
         for row in self._cr.dictfetchall():
             node = str(row['id'])
             doc_ref = db.collection('partner_category').document(node)
-            doc_ref.set(row)                     
-   
+            doc_ref.set(row)  
+            
+    def sync_team_group_product(self):    
+        
+        firebase_admin.get_app()        
+        db = firestore.client()
+        
+        #get team group product
+        self._cr.execute("""select ROW_NUMBER () OVER (ORDER BY ccs.id) id,ccs.id team_id,rel.sale_group_id,product_id
+                            from crm_case_section ccs
+                            left join sales_group sg on (ccs.sale_group_id=sg.id)
+                            left join product_sale_group_rel rel on (rel.sale_group_id=sg.id)""")
+        for row in self._cr.dictfetchall():
+            node = str(row['id'])
+            doc_ref = db.collection('team_group_product').document(node)
+            doc_ref.set(row)
+               
