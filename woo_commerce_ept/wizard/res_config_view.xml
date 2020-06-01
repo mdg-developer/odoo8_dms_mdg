@@ -119,13 +119,13 @@
                             </div>
                             <div>
 		                        <label for="product_auto_import"/>
-		                        <field name="product_auto_import" attrs="{'required':[('woo_instance_id','!=',False)]}" class="oe_inline"/>
+		                        <field name="product_auto_import" class="oe_inline"/>
 		                    </div>                                     
 		                    <div attrs="{'invisible': [('product_auto_import', '=', False)]}">
 		                        <label for="id" string="I want to import product at every "/>
-		                        <field name="product_import_interval_number" attrs="{'required':[('woo_instance_id','!=',False)]}" class="oe_inline"/>
-		                        <field name="product_import_interval_type" attrs="{'required':[('woo_instance_id','!=',False)]}" class="oe_inline"/>
-		                        <field name="product_import_next_execution" attrs="{'required':[('woo_instance_id','!=',False)]}" class="oe_inline"/>
+		                        <field name="product_import_interval_number" attrs="{'required': [('product_auto_import', '=', True)]}" class="oe_inline"/>
+		                        <field name="product_import_interval_type" attrs="{'required': [('product_auto_import', '=', True)]}" class="oe_inline"/>
+		                        <field name="product_import_next_execution" attrs="{'required': [('product_auto_import', '=', True)]}" class="oe_inline"/>
 		                    </div>
                         </div>
                     </group>
