@@ -498,7 +498,7 @@ class branch_stock_requisition(osv.osv):
                     raise osv.except_osv(_('Warning'),
                                         _('Please Check Price List For (%s)') % (product.name_template,))  
                     
-                bigger_qty_on_hand = math.ceil(round(qty_on_hand/product.product_tmpl_id.report_uom_id.factor,1))   
+                bigger_qty_on_hand = math.ceil(round(qty_on_hand/(1/product.product_tmpl_id.report_uom_id.factor),1))   
                 
                 cr.execute('select SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (from_location_id.id, product.id,))
                 req_loc_small_qty = cr.fetchone()
@@ -507,7 +507,7 @@ class branch_stock_requisition(osv.osv):
                 else:
                     req_loc_small_qty_bal = 0  
                     
-                req_loc_bigger_qty_bal = math.ceil(round(req_loc_small_qty_bal/product.product_tmpl_id.report_uom_id.factor,1)) 
+                req_loc_bigger_qty_bal = math.ceil(round(req_loc_small_qty_bal/(1/product.product_tmpl_id.report_uom_id.factor),1)) 
                 
                 branch_req_line_obj.create(cr, uid, {'line_id': ids[0],
                                'sequence':product.sequence,
@@ -588,7 +588,7 @@ class branch_stock_requisition(osv.osv):
                 else:
                     qty_on_hand = 0
                     
-                bigger_qty_on_hand = math.ceil(round(qty_on_hand/req_line_value.product_id.product_tmpl_id.report_uom_id.factor,1))   
+                bigger_qty_on_hand = math.ceil(round(qty_on_hand/(1/req_line_value.product_id.product_tmpl_id.report_uom_id.factor),1))   
                 
                 cr.execute("update branch_stock_requisition_line set qty_on_hand=%s,bigger_qty_on_hand=%s where product_id=%s and id=%s", (qty_on_hand, bigger_qty_on_hand, product_id,line_id,))
                  
@@ -612,7 +612,7 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
         else:
             qty_on_hand = 0
         
-        bigger_qty_on_hand = math.ceil(round(qty_on_hand/product_data.product_tmpl_id.report_uom_id.factor,1))
+        bigger_qty_on_hand = math.ceil(round(qty_on_hand/(1/product_data.product_tmpl_id.report_uom_id.factor),1))
             
         cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (from_location_id, product,))
         req_loc_small_qty = cr.fetchone()
@@ -621,7 +621,7 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
         else:
             req_loc_small_qty_bal = 0
         
-        req_loc_bigger_qty_bal = math.ceil(round(req_loc_small_qty_bal/product_data.product_tmpl_id.report_uom_id.factor,1))    
+        req_loc_bigger_qty_bal = math.ceil(round(req_loc_small_qty_bal/(1/product_data.product_tmpl_id.report_uom_id.factor),1))    
                         
         data['req_loc_small_qty_bal'] = req_loc_small_qty_bal
         data['req_loc_bigger_qty_bal'] = req_loc_bigger_qty_bal    
@@ -647,7 +647,7 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
             else:
                 qty_on_hand = 0
                 
-            bigger_qty_on_hand = math.ceil(round(qty_on_hand/product.product_tmpl_id.report_uom_id.factor,1))   
+            bigger_qty_on_hand = math.ceil(round(qty_on_hand/(1/product.product_tmpl_id.report_uom_id.factor),1))   
             
         if from_location_id and product_id:
             cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (from_location_id, product_id,))
@@ -657,7 +657,7 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
             else:
                 req_loc_small_qty_bal = 0
                 
-            req_loc_bigger_qty_bal = math.ceil(round(req_loc_small_qty_bal/product.product_tmpl_id.report_uom_id.factor,1)) 
+            req_loc_bigger_qty_bal = math.ceil(round(req_loc_small_qty_bal/(1/product.product_tmpl_id.report_uom_id.factor),1)) 
                 
         if product:
             
