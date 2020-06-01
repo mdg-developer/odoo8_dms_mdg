@@ -248,7 +248,17 @@ class product_product(models.Model):
                     for partner_categ_row in self._cr.dictfetchall(): 
                         partner_categ_node = str(partner_categ_row['partner_category_id'])            
                         partner_categ_ref = customer_ref.collection('customer_tags').document(partner_categ_node)    
-                        partner_categ_ref.set(partner_categ_row)                        
+                        partner_categ_ref.set(partner_categ_row)         
+                        
+                #add product
+                self._cr.execute("""select product_id,name_template product_name
+                                    from promos_rules_product_rel rel,product_product pp
+                                    where rel.product_id=pp.id
+                                    and promos_rules_id=%s""",(row['id'],))
+                for product_row in self._cr.dictfetchall():                
+                    product_node = str(product_row['product_id'])            
+                    product_ref = doc_ref.collection('product_product').document(product_node)    
+                    product_ref.set(product_row) 
                                                                        
     def sync_product_category(self):    
         
@@ -299,38 +309,26 @@ class product_product(models.Model):
             node = str(row['id'])
             doc_ref = db.collection('product_pricelist').document(node)
             doc_ref.set(row) 
-            
-    def sync_pricelist_versions(self):    
-        
-        firebase_admin.get_app()        
-        db = firestore.client()
-        
-        #get pricelist versions
-        self._cr.execute("""select pv.id,date_end::character varying date_end,date_start::character varying date_start,pv.active,pv.name,pv.pricelist_id 
-                            from product_pricelist_version pv, product_pricelist pp where pv.pricelist_id = pp.id   
-                            and pv.active = true""")
-        for row in self._cr.dictfetchall():
-            node = str(row['id'])
-            doc_ref = db.collection('product_pricelist_version').document(node)
-            doc_ref.set(row) 
-            
-    def sync_pricelist_items(self):    
-        
-        firebase_admin.get_app()        
-        db = firestore.client()
-        
-        #get pricelist items
-        self._cr.execute("""select pi.id,pi.price_discount,pi.sequence,pi.product_tmpl_id,pi.name,pp.id base_pricelist_id,
-                            pi.product_id,pi.base,pi.price_version_id,pi.min_quantity,
-                            pi.categ_id,pi.new_price price_surcharge,pi.product_uom_id
-                            from product_pricelist_item pi, product_pricelist_version pv, product_pricelist pp
-                            where pv.pricelist_id = pp.id                             
-                            and pv.id = pi.price_version_id""")
-        for row in self._cr.dictfetchall():
-            node = str(row['id'])
-            doc_ref = db.collection('product_pricelist_item').document(node)
-            doc_ref.set(row) 
-            
+            self._cr.execute("""select pv.id,date_end::character varying date_end,date_start::character varying date_start,pv.active,pv.name,pv.pricelist_id 
+                                from product_pricelist_version pv, product_pricelist pp where pv.pricelist_id = pp.id   
+                                and pv.active = true
+                                and pp.id=%s""",(row['id'],))
+            for version_row in self._cr.dictfetchall(): 
+                version_node = str(version_row['id'])            
+                version_ref = doc_ref.collection('product_pricelist_version').document(version_node)    
+                version_ref.set(version_row)  
+                self._cr.execute("""select pi.id,pi.price_discount,pi.sequence,pi.product_tmpl_id,pi.name,pp.id base_pricelist_id,
+                                    pi.product_id,pi.base,pi.price_version_id,pi.min_quantity,
+                                    pi.categ_id,pi.new_price price_surcharge,pi.product_uom_id
+                                    from product_pricelist_item pi, product_pricelist_version pv, product_pricelist pp
+                                    where pv.pricelist_id = pp.id                             
+                                    and pv.id = pi.price_version_id
+                                    and pv.id=%s""",(version_row['id'],))
+                for item_row in self._cr.dictfetchall(): 
+                    item_node = str(item_row['id'])            
+                    item_ref = version_ref.collection('product_pricelist_item').document(item_node)    
+                    item_ref.set(item_row)             
+                           
     def sync_sale_plan_day(self):    
         
         firebase_admin.get_app()        
@@ -518,5 +516,5 @@ class product_product(models.Model):
         for row in self._cr.dictfetchall():
             node = str(row['id'])
             doc_ref = db.collection('partner_category').document(node)
-            doc_ref.set(row)         
+            doc_ref.set(row)                     
    
