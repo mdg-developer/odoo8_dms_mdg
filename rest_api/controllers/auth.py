@@ -74,7 +74,7 @@ OUT__auth_deletetokens__SUCCESS_CODE = 200          # editable
 class ControllerREST(http.Controller):
     
     # Login in Odoo database and get access tokens:
-    @http.route('/api/auth/get_tokens', methods=['POST'], type='http', auth='none', csrf=False)
+    @http.route('/api/auth/get_tokens', methods=['POST'], type='http', auth='none', cors='*', csrf=False)
     def api_auth_gettokens(self, **kw):
         # Get request parameters from url
         args = request.httprequest.args.to_dict()
