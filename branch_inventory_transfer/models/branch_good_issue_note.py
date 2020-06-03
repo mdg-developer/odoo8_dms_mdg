@@ -150,13 +150,12 @@ class branch_good_issue_note(osv.osv):
         'loading_date' : fields.date('Loading Date'),
         'eta_date' : fields.date('ETA Date'),
         'variable_costing': fields.boolean('Is Variable Costing'),
-        'transport_cost': fields.float('Transport Cost'),
-        'labor_cost': fields.float('Labor Cost'),
-        'total_value': fields.function(_get_total_value, type='float', string='Total Value'),
-        'total_tcl': fields.function(_get_total_tcl, type='float', string='Total TCL'),
+        'transport_cost': fields.float('Transport Cost', digits=(16, 0)),
+        'labor_cost': fields.float('Labor Cost', digits=(16, 0)),
+        'total_value': fields.function(_get_total_value, type='float', digits=(16, 0), string='Total Value'),
         'transit_location':fields.many2one('stock.location', "Transit Location"),
-        'total_tcl': fields.function(_get_total_tcl, type='float', string='Total TCL'),
-        'tcl_value': fields.function(_get_tcl_value, type='float', string='TCL/Value(%)'),
+        'total_tcl': fields.function(_get_total_tcl, type='float', digits=(16, 0), string='Total TCL'),
+        'tcl_value': fields.function(_get_tcl_value, type='float', digits=(16, 0), string='TCL/Value(%)'),
         'p_line':fields.one2many('branch.good.issue.note.line', 'line_id', 'Product Lines',
                               copy=True),
         'state': fields.selection([
@@ -175,13 +174,13 @@ class branch_good_issue_note(osv.osv):
     'total_cbm':fields.function(_cbm_amount, string='Total CBM', digits_compute=dp.get_precision('Product Price'), type='float'),
     'bal_viss':fields.function(_bal_viss_amount, string='Bal Viss', digits_compute=dp.get_precision('Product Price'), type='float'),
     'bal_cbm':fields.function(_bal_cbm_amount, string='Bal CBM', digits_compute=dp.get_precision('Product Price'), type='float'),
-    'total_diff_qty':fields.function(_total_diff_qty, string='Total Diff Qty', digits_compute=dp.get_precision('Product Price'), type='float'),
+    'total_diff_qty':fields.function(_total_diff_qty, string='Total Diff Qty', digits=(16, 0), type='float'),
 
     'remark': fields.text("Remark",copy=False),
     'change_gin': fields.char("Change GIN",copy=False),
     'reverse_date':fields.date('Date for Reverse',required=False),
     'internal_reference' : fields.char('Internal Reference', required=True ),
-    'reverse_user_id':fields.many2one('res.users', "Reverse User",readpnly=True),
+    'reverse_user_id':fields.many2one('res.users', "Reverse User",readonly=True),
 
         }
     

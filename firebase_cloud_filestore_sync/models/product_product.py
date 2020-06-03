@@ -67,7 +67,7 @@ class product_product(models.Model):
                             A.zip,A.state_name,A.partner_latitude,A.partner_longitude,A.sale_plan_day_id,A.image_medium,A.credit_limit,
                             A.credit_allow,A.sales_channel,A.branch_id,A.pricelist_id,A.payment_term_id,A.outlet_type ,
                             A.city_id,A.township_id,A.country_id,A.state_id,A.unit,A.class_id,A.chiller,A.frequency_id,A.temp_customer,
-                            A.is_consignment,A.hamper,A.is_bank,A.is_cheque,A.sale_team team_id
+                            A.is_consignment,A.hamper,A.is_bank,A.is_cheque,A.sale_team team_id,customer_tags
                             from (
                             select RP.id,RP.name,'' as image,RP.is_company,RPS.line_id as sale_plan_day_id,
                             '' as image_small,RP.street,RP.street2,RC.name as city,RP.website,
@@ -76,7 +76,11 @@ class product_product(models.Model):
                             substring(replace(cast(RP.image_medium as text),'/',''),1,5) as image_medium,RP.credit_limit,RP.credit_allow,
                             RP.sales_channel,RP.branch_id,RP.pricelist_id,RP.payment_term_id,RP.outlet_type,RP.city as city_id,RP.township as township_id,
                             RP.country_id,RP.state_id,RP.unit,RP.class_id,RP.chiller,RP.frequency_id,RP.temp_customer,RP.is_consignment,RP.hamper,
-                            RP.is_bank,RP.is_cheque,SPD.sale_team
+                            RP.is_bank,RP.is_cheque,SPD.sale_team,
+                            (select ARRAY_AGG(a.category_id) partner_category_id
+                            from res_partner_res_partner_category_rel a,res_partner_category b
+                            where a.category_id = b.id
+                            and partner_id=RP.id) customer_tags
                             from sale_plan_day SPD ,outlettype_outlettype OT,
                                                 sale_plan_day_line RPS , res_partner RP ,res_country_state RS, res_city RC,res_township RT
                                                 where SPD.id = RPS.line_id 
@@ -85,7 +89,7 @@ class product_product(models.Model):
                                                 and RP.city = RC.id
                                                 and RP.active = true
                                                 and RP.outlet_type = OT.id
-                                                and RPS.partner_id = RP.id                        
+                                                and RPS.partner_id = RP.id    
                                                 order by  RPS.sequence asc                         
                             
                             )A 
@@ -132,7 +136,11 @@ class product_product(models.Model):
         self._cr.execute("""select distinct id,sequence as seq,from_date::character varying from_date,to_date::character varying to_date,active,name as p_name,
                             logic ,expected_logic_result ,special, special1, special2, special3 ,description,
                             pr.promotion_count, pr.monthly_promotion ,code as p_code,manual,main_group,
-                            (select ARRAY_AGG(sale_channel_id) from promo_sale_channel_rel where promo_id=pr.id) sale_channel
+                            (select ARRAY_AGG(sale_channel_id) from promo_sale_channel_rel where promo_id=pr.id) sale_channel,
+                            (select ARRAY_AGG(category_id) partner_category_id
+                            from promotion_rule_category_rel rel,res_partner_category categ
+                            where rel.category_id=categ.id
+                            and promotion_id=pr.id) customer_tags
                             from promos_rules pr
                             left join promos_rules_res_branch_rel pro_br_rel on (pr.id = pro_br_rel.promos_rules_id)
                             left join promos_rules_product_rel pro_pp_rel on (pr.id=pro_pp_rel.promos_rules_id)
@@ -525,12 +533,12 @@ class product_product(models.Model):
         db = firestore.client()
         
         #get team group product
-        self._cr.execute("""select ROW_NUMBER () OVER (ORDER BY ccs.id) id,ccs.id team_id,rel.sale_group_id,product_id
+        self._cr.execute("""select ccs.id team_id,sg.id sale_group_id,
+                            (select ARRAY_AGG(product_id) from product_sale_group_rel where sale_group_id=sg.id) product_id
                             from crm_case_section ccs
-                            left join sales_group sg on (ccs.sale_group_id=sg.id)
-                            left join product_sale_group_rel rel on (rel.sale_group_id=sg.id)""")
+                            left join sales_group sg on (ccs.sale_group_id=sg.id)""")
         for row in self._cr.dictfetchall():
-            node = str(row['id'])
+            node = str(row['team_id'])
             doc_ref = db.collection('team_group_product').document(node)
             doc_ref.set(row)
-               
+                           
