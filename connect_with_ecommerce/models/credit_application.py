@@ -31,7 +31,7 @@ class credit_application(osv.osv):
                     'residence_township_id':fields.many2one('res.township','Township'),
                     'residence_zip': fields.char('Zip', size=24),
                     'residence_phone': fields.char('Phone'),
-                    'company_nrc': fields.char("Customer's NRC(For Individual/Sole Propprietor"), 
+                    'company_nrc': fields.char("Customer's NRC(For Individual/Sole Propprietor)"), 
                     'customer_email': fields.char('Customer Email Address'),
                     'phone': fields.char('Phone'),
                     'mobile': fields.char('Mobile'),
