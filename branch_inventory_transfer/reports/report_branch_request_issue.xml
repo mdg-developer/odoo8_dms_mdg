@@ -32,9 +32,9 @@
 				</div>
 				<h4>
 					<strong>
-					   Branch Request For Issue
+						Branch Request For Issue
 					</strong>
-				</h4>	
+				</h4>
 				<table class="table table-condensed">
 					<tr>
 						<td style="border:0pt;font-size:10pt;">
@@ -42,7 +42,7 @@
 						</td>
 						<td style="border:0pt;font-size:10pt;">
 							<strong t-field="o.name"></strong>
-						</td>					
+						</td>
 					</tr>
 					<tr>
 						<td style="border:0pt;font-size:10pt;">
@@ -58,15 +58,10 @@
 							<span t-field="o.issue_to" />
 						</td>
 					</tr>
-					<!-- <tr>					
-						<td style="border:0pt;font-size:10pt;">
-							<strong>Receiver:</strong>
-						</td>
-						<td style="border:0pt;font-size:10pt;">
-							<span t-field="o.issue_to" />
-						</td>
-					</tr>
- -->					<tr>
+					<!-- <tr> <td style="border:0pt;font-size:10pt;"> <strong>Receiver:</strong> 
+						</td> <td style="border:0pt;font-size:10pt;"> <span t-field="o.issue_to" 
+						/> </td> </tr> -->
+					<tr>
 						<td style="border:0pt;font-size:10pt;">
 							<strong>Requesting Location:</strong>
 						</td>
@@ -133,38 +128,32 @@
 					<thead>
 						<tr>
 							<th>Product</th>
-                            <th class="text-center">Qty</th>
-                            <th class="text-center">UOM</th>
-							<th class="text-center">Qty on Hand(S)</th>
+							<th class="text-center">UOM</th>
+							<th class="text-center">Qty</th>
 							<th>Remark</th>
 						</tr>
 					</thead>
 					<tbody class="invoice_tbody">
 						<tr t-foreach="o.p_line.sorted(key=lambda b: b.sequence)" t-as="l">
 
-                            <!-- <t t-if="(l.big_req_quantity)+(l.req_quantity)!=0"> -->
-                            <t t-if="(l.req_quantity)!=0">
-                            <t t-if="(l.loss)==False">
-								<td>
-									<span t-field="l.product_id" />
-								</td>
-								<td align="center">
-                                    <!-- <span t-field="l.big_req_quantity" />
-                                    / -->
+							<!-- <t t-if="(l.big_req_quantity)+(l.req_quantity)!=0"> -->
+							<t t-if="(l.req_quantity)!=0">
+								<t t-if="(l.loss)==False">
+									<td>
+										<span t-field="l.product_id" />
+									</td>
+									<td align="center">
+										<span t-field="l.product_uom" />
+									</td>
+									<td align="center">
 
-									<span t-field="l.req_quantity" />
-								</td>
-								<td align="center">
-                                    <span t-field="l.product_uom" />
-                                </td>
-								
-								<td align="right" style="padding-right: 5cm;">
-									<span t-field="l.qty_on_hand" />
-								</td>
-								<td>
-									<span t-field="l.remark" />
-								</td>
-							</t>
+										<span t-field="l.req_quantity" />
+									</td>
+
+									<td>
+										<span t-field="l.remark" />
+									</td>
+								</t>
 							</t>
 						</tr>
 					</tbody>

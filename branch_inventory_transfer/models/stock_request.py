@@ -200,8 +200,17 @@ class branch_stock_requisition(osv.osv):
         if context is None:
             context = {}               
         for order in self.browse(cr, uid, ids, context=context):   
-            for line in order.p_line:
-                req_loc_bal = req_loc_bal + (line.req_loc_bigger_qty_bal*line.product_id.product_tmpl_id.cbm_value)                                                                          
+            cr.execute('select  SUM(COALESCE(qty,0)) qty,product_id from stock_quant where location_id=%s and qty >0 group by product_id', (order.from_location_id.id,))
+            qty_on_hand_product_data = cr.fetchall()
+            for qty_on_hand_data in qty_on_hand_product_data:
+                if qty_on_hand_data is not None:
+                    qty_on_hand = qty_on_hand_data[0]
+                    product_id  = qty_on_hand_data[1]
+                    product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+                    bigger_qty_on_hand = math.ceil(round(qty_on_hand/(1/product.product_tmpl_id.report_uom_id.factor),1))   
+                else:
+                    bigger_qty_on_hand=0          
+                req_loc_bal = req_loc_bal + (bigger_qty_on_hand*product.product_tmpl_id.cbm_value)                                                                          
             res[order.id] = req_loc_bal         
         return res
     
@@ -269,12 +278,12 @@ class branch_stock_requisition(osv.osv):
     'total_cbm':fields.function(_cbm_amount, string='Total CBM', digits_compute=dp.get_precision('Product Price'), type='float'),
     'bal_viss':fields.function(_bal_viss_amount, string='Bal Viss', digits_compute=dp.get_precision('Product Price'), type='float'),
     'bal_cbm':fields.function(_bal_cbm_amount, string='Bal CBM', digits_compute=dp.get_precision('Product Price'), type='float'),
-    'total_value':fields.function(_total_value, string='Total Value', digits_compute=dp.get_precision('Product Price'), type='float'),
+    'total_value':fields.function(_total_value, string='Total Value', digits=(16, 0) , type='float'),
    'pricelist_id': fields.many2one('product.pricelist', 'Price list', required=True , readonly=True),
    'good_issue_id': fields.many2one('branch.good.issue.note', 'GIN No', required=False , readonly=True),
    'good_issue_line': fields.one2many('branch.good.issue.note', 'request_id', 'Good Issue Note Lines', copy=False),
    'internal_reference' : fields.char('Internal Reference', required=True ),
-   'branch_target_id': fields.many2one('sales.target.branch', 'Branch Target'),
+   'branch_target_id': fields.many2one('sales.target.branch', 'Branch Target',required=True),
    'cbm_ratio':fields.function(_cbm_ratio, string='CBM Ratio', type='float'),    
    'warehouse_cbm':fields.function(_warehouse_cbm, string='Warehouse CBM', digits_compute=dp.get_precision('Product Price'), type='float'),
    'current_stock_cbm':fields.function(_current_stock_cbm, string='Current Stock CBM', digits_compute=dp.get_precision('Product Price'), type='float'),
@@ -450,10 +459,8 @@ class branch_stock_requisition(osv.osv):
 #                     raise osv.except_osv(
 #                         _('Warning!'),
 #                         _('Please Check Your CBM and Viss Value.It is Over!')
-#                     ) 
-            for line in request_data.p_line:
-                request_cbm = request_cbm + line.req_quantity 
-            if request_data.remaining_cbm < request_cbm and request_data.proceed_existing == False:
+#                     )           
+            if request_data.remaining_cbm < total_cbm and request_data.proceed_existing == False:
                 dummy, view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'branch_inventory_transfer', 'view_branch_stock_requisition_wizard')
                 return {
                     'name':_("Confirmation"),
@@ -476,17 +483,32 @@ class branch_stock_requisition(osv.osv):
 
     def retrieve_data(self, cr, uid, ids, context=None):
         branch_req_line_obj = self.pool.get('branch.stock.requisition.line')
+        target_line_obj = self.pool.get('sales.target.branch.line')
         branch_obj = self.pool.get('res.branch')
         request_data = self.browse(cr, uid, ids, context=context)
         branch_id = request_data.branch_id.id
         from_location_id = request_data.from_location_id
         to_location_id = request_data.to_location_id
         pricelist_id = request_data.pricelist_id.id
+        if request_data.branch_target_id:
+            branch_target_id=request_data.branch_target_id.id
+        else:
+            raise osv.except_osv(
+                         _('Warning!'),
+                         _('Please Insert Branch Target!'))
+                         
         branch_data = branch_obj.browse(cr, uid, branch_id, context=context)
         cr.execute('delete from branch_stock_requisition_line where line_id=%s', (ids[0],))
         for b_data in branch_data.p_line:
             if b_data.assign == True:
                 product_id = b_data.product_id.id  
+                branch_target = target_line_obj.search(cr, uid, [('sale_ids', '=', branch_target_id),
+                                                             ('product_id', '=',product_id)], context=context)
+                if branch_target:
+                    branch_target_data = target_line_obj.browse(cr, uid, branch_target, context=context)
+                    target_qty =branch_target_data.product_uom_qty
+                else:
+                    target_qty=0
                 product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
                 cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (to_location_id.id, product.id,))
                 qty_on_hand = cr.fetchone()
@@ -494,7 +516,6 @@ class branch_stock_requisition(osv.osv):
                     qty_on_hand = qty_on_hand[0]
                 else:
                     qty_on_hand = 0 
-                print 'productname', product.name_template
                 cr.execute("select new_price from product_pricelist_item where price_version_id in ( select id from product_pricelist_version where pricelist_id=%s) and product_id=%s and product_uom_id=%s", (pricelist_id, product.id, product.report_uom_id.id,))
                 product_price = cr.fetchone()
                 if  product_price:
@@ -504,7 +525,7 @@ class branch_stock_requisition(osv.osv):
                                         _('Please Check Price List For (%s)') % (product.name_template,))  
                     
                 bigger_qty_on_hand = math.ceil(round(qty_on_hand/(1/product.product_tmpl_id.report_uom_id.factor),1))   
-                
+
                 cr.execute('select SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (from_location_id.id, product.id,))
                 req_loc_small_qty = cr.fetchone()
                 if req_loc_small_qty:
@@ -513,7 +534,11 @@ class branch_stock_requisition(osv.osv):
                     req_loc_small_qty_bal = 0  
                     
                 req_loc_bigger_qty_bal = math.ceil(round(req_loc_small_qty_bal/(1/product.product_tmpl_id.report_uom_id.factor),1)) 
-                
+                print 'bigger_qty_on_hand',req_loc_bigger_qty_bal
+                if target_qty >0:
+                    target_percent =(req_loc_bigger_qty_bal/target_qty)
+                else:
+                    target_percent=0                
                 branch_req_line_obj.create(cr, uid, {'line_id': ids[0],
                                'sequence':product.sequence,
                               'product_id': product_id,
@@ -521,6 +546,8 @@ class branch_stock_requisition(osv.osv):
                               'req_loc_bigger_qty_bal':req_loc_bigger_qty_bal,
                               'product_uom':product.report_uom_id.id,
                               'qty_on_hand':qty_on_hand,
+                              'target_quantity':target_qty,
+                              'target_percent':target_percent,
                               'bigger_qty_on_hand':bigger_qty_on_hand,
                               'viss_value':product.viss_value,
                               'cbm_value':product.cbm_value,
@@ -569,7 +596,7 @@ class branch_stock_requisition(osv.osv):
                                 result =check_qty
                 else:
                     result =0
-            line.req_quantity = result
+            line.recommend_quantity = result
             
     def calculate_standard_rule(self, cr, uid, ids, context=None):
                 
@@ -609,7 +636,7 @@ class branch_stock_requisition(osv.osv):
                                 result =check_qty
                 else:
                     result = 0
-                line.req_quantity = result
+                line.recommend_quantity = result
         
     def updateQtyOnHand(self, cr, uid, ids, context=None):
         product_line_obj = self.pool.get('branch.stock.requisition.line')
@@ -762,10 +789,10 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
             product = self.pool.get('product.product').browse(cr, uid, order.product_id.id, context=context)
             if product.product_tmpl_id.uom_id.id ==order.product_uom.id:
                 uom_ratio=product.product_tmpl_id.report_uom_id.factor            
-            if order.req_quantity >0:
-                val1 = order.req_quantity * (product.viss_value/uom_ratio)
+            if order.recommend_quantity >0:
+                val1 = order.recommend_quantity * (product.viss_value/uom_ratio)
             else:
-                val1 = order.req_quantity * product.viss_value                                     
+                val1 = order.recommend_quantity * product.viss_value                                     
             res[order.id] = val1
         return res   
          
@@ -779,10 +806,10 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
             if product.product_tmpl_id.uom_id.id ==order.product_uom.id:
                 uom_ratio=product.product_tmpl_id.report_uom_id.factor
                 
-            if order.req_quantity >0:
-                val1 = order.req_quantity * (product.cbm_value/uom_ratio)      
+            if order.recommend_quantity >0:
+                val1 = order.recommend_quantity * (product.cbm_value/uom_ratio)      
             else:
-                val1 = order.req_quantity * product.cbm_value      
+                val1 = order.recommend_quantity * product.cbm_value      
             res[order.id] = val1
         return res     
 
@@ -800,16 +827,19 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
                     product_value=product_price[0]  
                 else:
                     product_value=0           
-                if order.req_quantity >0:
-                    val1 = order.req_quantity * product_value      
+                if order.recommend_quantity >0:
+                    val1 = order.recommend_quantity * product_value      
                 else:
-                    val1 = order.req_quantity * product_value     
+                    val1 = order.recommend_quantity * product_value     
                 res[order.id] = val1
         return res  
                
     _columns = {                
         'line_id':fields.many2one('branch.stock.requisition', 'Line', ondelete='cascade', select=True),
         'product_id': fields.many2one('product.product', 'Product', required=True),
+        'target_quantity' : fields.float(string='Target (Qty)', digits=(16, 0)),
+        'target_percent' : fields.float(string='% Balance On target', digits=(16, 2)),
+        'recommend_quantity' : fields.float(string='Recommend (Qty)', digits=(16, 0)),
         'req_quantity' : fields.float(string='Request (Qty)', digits=(16, 0)),
         'issue_quantity': fields.float(string='Issued (Qty)', digits=(16, 0)),
         'gin_issue_quantity': fields.float(string='GIN Issued (Qty)', digits=(16, 0),copy=False),
@@ -817,9 +847,9 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
         'diff_quantity':fields.function(_diff_quantity_value, string='Diff(Qty)', digits=(16, 0), type='float', readonly=True),
         'loss' : fields.boolean(string='Loose'),
        # 'product_value' : fields.float(string='Value', digits=(16, 0), readonly=True),
-        'product_value':fields.function(_cal_product_value, string='Value', digits_compute=dp.get_precision('Product Price'), type='float'),
-        'viss_value':fields.function(_cal_viss_value, string='Viss', digits_compute=dp.get_precision('Product Price'), type='float'),
-        'cbm_value':fields.function(_cal_cbm_value, string='CBM', digits_compute=dp.get_precision('Product Price'), type='float'),
+        'product_value':fields.function(_cal_product_value, string='Value', type='float', digits=(16, 0)),
+        'viss_value':fields.function(_cal_viss_value, string='Viss', digits=(16, 0), type='float'),
+        'cbm_value':fields.function(_cal_cbm_value, string='CBM', digits=(16, 0), type='float'),
       #  'viss_value' : fields.float(string='Viss', digits=(16, 0)),
        # 'cbm_value' : fields.float(string='CBM', digits=(16, 0)),
         'state':fields.related('line_id', 'state', type='char', store=False, string='State'),

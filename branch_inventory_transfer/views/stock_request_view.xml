@@ -88,6 +88,9 @@
 												on_change="on_change_product_id(product_id,parent.from_location_id,parent.to_location_id)" />
 											<field name="req_loc_small_qty_bal" readonly="1" />
 											<field name="req_loc_bigger_qty_bal" readonly="1" />
+											<field name="target_quantity" readonly="1"/>
+											<field name="target_percent" readonly="1"/>
+											<field name="recommend_quantity" readonly="1"/>
 											<field name="req_quantity" />
 											<field name="issue_quantity" invisible="1" />
 											<field name="diff_quantity" invisible="1" />

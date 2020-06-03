@@ -126,13 +126,13 @@
 								<span t-field="o.loading_date" />
 							</td>
 
-<td style="border:0pt;font-size:10pt;">
-							<strong>ETA Date :</strong>
-						</td>
-						<td style="border:0pt;font-size:10pt;">
-							<span t-field="o.eta_date" />
-						</td>
-						
+							<td style="border:0pt;font-size:10pt;">
+								<strong>ETA Date :</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.eta_date" />
+							</td>
+
 						</tr>
 						<tr>
 							<td style="border:0pt;font-size:10pt;">
@@ -177,18 +177,18 @@
 							</td>
 						</tr>
 						<tr>
-						<td style="border:0pt;font-size:10pt;">
-							<strong>Last Updated on:</strong>
-						</td>
-						<td style="border:0pt;font-size:10pt;">
-						<span t-field="o.write_date" />
-						</td>
-						<td style="border:0pt;font-size:10pt;">
-							<strong>Total Value :</strong>
-						</td>						
-						<td style="border:0pt;font-size:10pt;">
-							<span t-field="o.total_value" />
-						</td>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Last Updated on:</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.write_date" />
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Total Value :</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.total_value" />
+							</td>
 						</tr>
 					</table>
 
@@ -196,11 +196,10 @@
 						<thead>
 							<tr>
 								<th>Product</th>
+								<th>UOM</th>
 								<th>Issued(QTY)</th>
 								<th>Received(QTY)</th>
 								<th>Diff(QTY)</th>
-								<th>UOM</th>
-								<th>Qty on Hands(S)</th>
 								<th>Remark</th>
 							</tr>
 						</thead>
@@ -210,6 +209,9 @@
 									<span t-field="l.product_id" />
 								</td>
 								<td>
+									<span t-field="l.product_uom" />
+								</td>
+								<td>
 									<span t-field="l.issue_quantity" />
 								</td>
 								<td>
@@ -217,12 +219,6 @@
 								</td>
 								<td>
 									<span t-field="l.diff_quantity" />
-								</td>
-								<td>
-									<span t-field="l.product_uom" />
-								</td>
-								<td>
-									<span t-field="l.qty_on_hand" />
 								</td>
 								<td>
 									<span t-field="l.remark" />

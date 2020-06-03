@@ -31,8 +31,8 @@ class branch_requisition_wizard(osv.osv_memory):
             requisition = self.pool.get('branch.stock.requisition').browse(cr, uid, requisition_id, context=context)  
             if requisition:          
                 for line in requisition.p_line:                      
-                    result = line.req_quantity * requisition.cbm_ratio
-                    line.req_quantity = result 
+                    result = line.recommend_quantity * requisition.cbm_ratio
+                    line.recommend_quantity = result 
                 requisition.proceed_existing = True
                         
     def proceed_existing(self, cr, uid, ids, context=None):

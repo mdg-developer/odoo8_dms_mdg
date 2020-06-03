@@ -133,9 +133,8 @@
 					<thead>
 						<tr>
 							<th>Product</th>
+							<th class="text-center">UOM</th>
                             <th class="text-center">Qty</th>
-                            <th class="text-center">UOM</th>
-							<th class="text-center">Qty on Hand(S)</th>
 							<th>Remark</th>
 						</tr>
 					</thead>
@@ -149,18 +148,15 @@
 									<span t-field="l.product_id" />
 								</td>
 								<td align="center">
+                                    <span t-field="l.product_uom" />
+                                </td>
+								<td align="center">
                                     <!-- <span t-field="l.big_req_quantity" />
                                     / -->
 
 									<span t-field="l.req_quantity" />
 								</td>
-								<td align="center">
-                                    <span t-field="l.product_uom" />
-                                </td>
 								
-								<td align="right" style="padding-right: 5cm;">
-									<span t-field="l.qty_on_hand" />
-								</td>
 								<td>
 									<span t-field="l.remark" />
 								</td>
