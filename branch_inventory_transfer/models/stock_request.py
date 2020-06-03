@@ -175,14 +175,12 @@ class branch_stock_requisition(osv.osv):
     
     def _cbm_ratio(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
-        request_quantity = 0
         if context is None:
             context = {}               
-        for order in self.browse(cr, uid, ids, context=context):      
-            for line in order.p_line:
-                request_quantity = request_quantity + line.req_quantity
-                if request_quantity > 0:
-                    res[order.id] = round(order.remaining_cbm / request_quantity,2)         
+        for order in self.browse(cr, uid, ids, context=context): 
+            if order.total_cbm>0:   
+                res[order.id] = round(order.remaining_cbm / order.total_cbm,2)     
+                
         return res
     
     def _warehouse_cbm(self, cr, uid, ids, field_name, arg, context=None):
@@ -241,11 +239,14 @@ class branch_stock_requisition(osv.osv):
         'issue_to':fields.char("Receiver"),
         'request_by':fields.many2one('res.users', "Requested By" , readonly=True),
         'approve_by':fields.many2one('res.users', "Approved By", readonly=True),
+        'plan_by':fields.many2one('res.users', "Plan By", readonly=True),
+
         'request_date' : fields.date('Date Requested'),
         'vehicle_id':fields.many2one('fleet.vehicle', 'Vehicle No'),
         'state': fields.selection([
             ('draft', 'Draft'),
             ('confirm', 'Confirm'),
+            ('loading_plan', 'Loading Plan Confirmed'),
             ('approve', 'Approved'),
             ('partial', 'Partial Complete'),
             ('full_complete', 'Full Complete'),
@@ -299,6 +300,9 @@ class branch_stock_requisition(osv.osv):
     
     def full_complete(self,cr,uid,ids,context=None):
         return self.write(cr, uid, ids, {'state':'full_complete' }) 
+    
+    def loading_plan(self,cr,uid,ids,context=None):
+        return self.write(cr, uid, ids, {'state':'loading_plan' ,'plan_by':uid})     
     
     def create_gin(self,cr,uid,ids,context=None):        
         product_line_obj = self.pool.get('branch.stock.requisition.line')
@@ -417,7 +421,8 @@ class branch_stock_requisition(osv.osv):
                     if quantity_on_hand > request_line_data.qty_on_hand:
                             raise osv.except_osv(_('Warning'),
                                      _('Please Check Qty On Hand For (%s)') % (product.name_template,))
-                    else:                     
+                    else:    
+                        if request_line_data.req_quantity>0:                 
                             good_line_obj.create(cr, uid, {'line_id': good_id,
                                           'product_id': request_line_data.product_id.id,
                                           'product_uom': request_line_data.product_uom.id,
@@ -441,11 +446,11 @@ class branch_stock_requisition(osv.osv):
             total_cbm=request_data.total_cbm
             max_viss=request_data.max_viss
             total_viss=request_data.total_cbm
-            if total_viss > max_viss and total_cbm >max_cbm:
-                    raise osv.except_osv(
-                        _('Warning!'),
-                        _('Please Check Your CBM and Viss Value.It is Over!')
-                    ) 
+#             if total_viss > max_viss and total_cbm >max_cbm:
+#                     raise osv.except_osv(
+#                         _('Warning!'),
+#                         _('Please Check Your CBM and Viss Value.It is Over!')
+#                     ) 
             for line in request_data.p_line:
                 request_cbm = request_cbm + line.req_quantity 
             if request_data.remaining_cbm < request_cbm and request_data.proceed_existing == False:
@@ -537,16 +542,33 @@ class branch_stock_requisition(osv.osv):
             if branch_target:
                 branch_target_data = target_line_obj.browse(cr, uid, branch_target, context=context)
                 target_qty = branch_target_data.product_uom_qty * warehouse_data.target_ratio
-                
+                big_qty_on_hand  =line.req_loc_bigger_qty_bal
                 resupply = resupply_obj.search(cr,uid,[('warehouse_id','=',warehouse_data.id),
                                                        ('product_id','=',line.product_id.id)])
                 resupply_data = resupply_obj.browse(cr, uid, resupply, context=context)
                 moq = resupply_data.moq_value
-                
-                if moq > target_qty:                    
-                    result = math.ceil(round(target_qty/resupply_data.factor,1)) * resupply_data.factor
+                if big_qty_on_hand < target_qty:
+                    check_qty = target_qty - big_qty_on_hand 
+                    if moq > check_qty or moq==0.0:   
+                        if resupply_data.factor > 0:  
+                            if moq>0:
+                                check_qty =moq    
+                            result = math.ceil(round(check_qty/resupply_data.factor,1)) * resupply_data.factor
+                        else:
+                            if moq>0:
+                                result =moq
+                            else:
+                                result =check_qty
+                    else:
+                        if resupply_data.factor > 0:               
+                            result = math.ceil(round(check_qty/resupply_data.factor,1)) * resupply_data.factor
+                        else:
+                            if moq>0:
+                                result =moq
+                            else:
+                                result =check_qty
                 else:
-                    result = moq
+                    result =0
             line.req_quantity = result
             
     def calculate_standard_rule(self, cr, uid, ids, context=None):
@@ -562,13 +584,31 @@ class branch_stock_requisition(osv.osv):
                                                    ('product_id','=',line.product_id.id)])
             if resupply:
                 resupply_data = resupply_obj.browse(cr, uid, resupply, context=context)                
-                target_qty = resupply_data.qty * warehouse_data.target_ratio               
+                target_qty = resupply_data.qty              
                 moq = resupply_data.moq_value
-                
-                if moq > target_qty:                    
-                    result = math.ceil(round(target_qty/resupply_data.factor,1)) * resupply_data.factor
+                big_qty_on_hand  =line.req_loc_bigger_qty_bal
+                if big_qty_on_hand < target_qty:
+                    check_qty = target_qty - big_qty_on_hand
+                    if moq > check_qty or moq==0.0:   
+                        if resupply_data.factor > 0:    
+                            if moq>0:
+                                check_qty =moq            
+                            result = math.ceil(round(check_qty/resupply_data.factor,1)) * resupply_data.factor
+                        else:
+                            if moq>0:
+                                result =moq
+                            else:
+                                result =check_qty
+                    else:
+                        if resupply_data.factor > 0:               
+                            result = math.ceil(round(check_qty/resupply_data.factor,1)) * resupply_data.factor
+                        else:
+                            if moq>0:
+                                result =moq
+                            else:
+                                result =check_qty
                 else:
-                    result = moq
+                    result = 0
                 line.req_quantity = result
         
     def updateQtyOnHand(self, cr, uid, ids, context=None):
@@ -725,7 +765,7 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
             if order.req_quantity >0:
                 val1 = order.req_quantity * (product.viss_value/uom_ratio)
             else:
-                val1 = product.viss_value                                     
+                val1 = order.req_quantity * product.viss_value                                     
             res[order.id] = val1
         return res   
          
@@ -742,7 +782,7 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
             if order.req_quantity >0:
                 val1 = order.req_quantity * (product.cbm_value/uom_ratio)      
             else:
-                val1 = product.cbm_value      
+                val1 = order.req_quantity * product.cbm_value      
             res[order.id] = val1
         return res     
 
@@ -763,7 +803,7 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
                 if order.req_quantity >0:
                     val1 = order.req_quantity * product_value      
                 else:
-                    val1 = product_value     
+                    val1 = order.req_quantity * product_value     
                 res[order.id] = val1
         return res  
                

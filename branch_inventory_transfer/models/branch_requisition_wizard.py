@@ -33,7 +33,7 @@ class branch_requisition_wizard(osv.osv_memory):
                 for line in requisition.p_line:                      
                     result = line.req_quantity * requisition.cbm_ratio
                     line.req_quantity = result 
-                requisition.proceed_existing = False
+                requisition.proceed_existing = True
                         
     def proceed_existing(self, cr, uid, ids, context=None):
         

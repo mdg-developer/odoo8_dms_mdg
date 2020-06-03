@@ -10,8 +10,10 @@
 					<header>
 						<button name="confirm" string="Confirm" class="oe_highlight"
 							type="object" states="draft" groups="base.group_sale_manager,base.group_no_one" />
-						<button name="approve" string="Approve" class="oe_highlight"
+						<button name="loading_plan" string="Loading Plan" class="oe_highlight"
 							type="object" states="confirm" groups="base.group_sale_manager,base.group_no_one" />
+						<button name="approve" string="Approve" class="oe_highlight"
+							type="object" states="loading_plan" groups="base.group_sale_manager,base.group_no_one" />
 						<button name="create_gin" string="Create GIN" class="oe_highlight" 
 							type="object" states="partial" groups="base.group_sale_manager,base.group_no_one" />
 						<button name="full_complete" string="Full Complete" class="oe_highlight"
@@ -37,7 +39,7 @@
 									invisible="1" />
 								<field name="good_issue_id" invisible="0" />
 								<field name="vehicle_id" attrs="{'readonly':[('state','!=','draft')]}" />
-								<field name="internal_reference" />
+								<field name="internal_reference"  attrs="{'readonly':[('state','!=','draft')]}"/>
 								<field name="branch_target_id" domain="[('branch_id','=',branch_id)]"/>
 								<field name="warehouse_cbm" />
 								<field name="current_stock_cbm" />
@@ -49,6 +51,7 @@
 									attrs="{'readonly':[('state','!=','draft')]}" />
 								<field name="request_by" />
 								<field name="approve_by" />
+								<field name="plan_by" />
 								<field name="total_value" />
 								<field name="truck_type_id" attrs="{'readonly':[('state','!=','draft')]}" />
 								<field name="max_viss" />
