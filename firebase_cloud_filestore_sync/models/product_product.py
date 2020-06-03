@@ -525,12 +525,12 @@ class product_product(models.Model):
         db = firestore.client()
         
         #get team group product
-        self._cr.execute("""select ROW_NUMBER () OVER (ORDER BY ccs.id) id,ccs.id team_id,rel.sale_group_id,product_id
+        self._cr.execute("""select ccs.id team_id,sg.id sale_group_id,
+                            (select ARRAY_AGG(product_id) from product_sale_group_rel where sale_group_id=sg.id) product_id
                             from crm_case_section ccs
-                            left join sales_group sg on (ccs.sale_group_id=sg.id)
-                            left join product_sale_group_rel rel on (rel.sale_group_id=sg.id)""")
+                            left join sales_group sg on (ccs.sale_group_id=sg.id)""")
         for row in self._cr.dictfetchall():
-            node = str(row['id'])
+            node = str(row['team_id'])
             doc_ref = db.collection('team_group_product').document(node)
             doc_ref.set(row)
-               
+                           
