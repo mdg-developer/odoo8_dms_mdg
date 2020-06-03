@@ -71,6 +71,18 @@
 						</tr>
 						<tr>
 							<td style="border:0pt;font-size:10pt;">
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Delivery Address And Ph :</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.address" />
+							</td>
+						</tr>
+						<tr>
+							<td style="border:0pt;font-size:10pt;">
 								<strong>Requesting Location:</strong>
 							</td>
 							<td style="border:0pt;font-size:10pt;">
@@ -118,7 +130,6 @@
 						</tr>
 
 						<tr>
-
 							<td style="border:0pt;font-size:10pt;">
 								<strong>Loading Date :</strong>
 							</td>
@@ -134,6 +145,35 @@
 							</td>
 
 						</tr>
+						<tr>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Loading Time :</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.loading_time" />
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Total Viss :</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.total_viss" />
+							</td>
+						</tr>
+						<tr>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Total Ctn Qty :</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.total_ctn" />
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Total Pcs Qty :</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.total_qty" />
+							</td>
+						</tr>
+
 						<tr>
 							<td style="border:0pt;font-size:10pt;">
 								<strong>Vehicle No:</strong>
@@ -164,7 +204,7 @@
 						</tr>
 						<tr>
 							<td style="border:0pt;font-size:10pt;">
-								<strong>Supplier :</strong>
+								<strong>Transporter Name :</strong>
 							</td>
 							<td style="border:0pt;font-size:10pt;">
 								<span t-field="o.supplier_id" />
@@ -188,6 +228,16 @@
 							</td>
 							<td style="border:0pt;font-size:10pt;">
 								<span t-field="o.total_value" />
+							</td>
+
+						</tr>
+						<tr>
+
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Checked By:</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.checked_by" />
 							</td>
 						</tr>
 					</table>
@@ -214,7 +264,7 @@
 									<span t-field="l.issue_quantity" />
 								</td>
 								<td>
-								
+
 								</td>
 								<td>
 									<span t-field="l.remark" />

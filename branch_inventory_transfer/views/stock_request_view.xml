@@ -40,7 +40,7 @@
 								<field name="good_issue_id" invisible="0" />
 								<field name="vehicle_id" attrs="{'readonly':[('state','!=','draft')]}" />
 								<field name="internal_reference"  attrs="{'readonly':[('state','!=','draft')]}"/>
-								<field name="branch_target_id" domain="[('branch_id','=',branch_id)]"/>
+								<field name="branch_target_id" domain="[('branch_id','=',branch_id)]" attrs="{'readonly':[('state','!=','draft')]}"/>
 								<field name="warehouse_cbm" />
 								<field name="current_stock_cbm" />
 								<field name="remaining_cbm" />
@@ -89,7 +89,7 @@
 											<field name="req_loc_small_qty_bal" readonly="1" />
 											<field name="req_loc_bigger_qty_bal" readonly="1" />
 											<field name="target_quantity" readonly="1"/>
-											<field name="target_percent" readonly="1"/>
+											<field name="target_percent" readonly="1" colors="red:target_percent&lt;20;blue:target_percent&gt;100;black:target_percent&gt;200" />
 											<field name="recommend_quantity" readonly="1"/>
 											<field name="req_quantity" />
 											<field name="issue_quantity" invisible="1" />

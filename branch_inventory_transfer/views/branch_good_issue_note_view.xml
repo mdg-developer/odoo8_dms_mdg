@@ -57,12 +57,15 @@
 								<field name="transit_location" readonly="1" />
 								<field name="reverse_date"
 									attrs="{'readonly':[('state','=','reversed')],'invisible': [('state','not in',('issue','reversed'))]}" />
-
 								<field name="reverse_user_id" />
-
 								<field name="change_gin" readonly="1" />
 								<field name="remark" />
-								<field name="internal_reference" />
+								<field name="internal_reference"
+									attrs="{'readonly':[('state','in',('issue','receive','cancel'))]}" />
+								<field name="address"
+									attrs="{'readonly':[('state','in',('issue','receive','cancel'))]}" />
+								<field name="checked_by"
+									attrs="{'readonly':[('state','in',('issue','receive','cancel'))]}" />
 							</group>
 							<group>
 								<field name="request_id" readonly="1" />
@@ -75,6 +78,8 @@
 									attrs="{'readonly':[('state','in',('receive','cancel'))],'required':[('state','=','issue')]}" />
 								<field name="loading_date"
 									attrs="{'readonly':[('state','in',('issue','receive','cancel'))],'required':[('state','!','draft')]}" />
+								<field name="loading_time"
+									attrs="{'readonly':[('state','in',('issue','receive','cancel'))]}" />
 								<field name="eta_date"
 									attrs="{'readonly':[('state','in',('issue','receive','cancel'))],'required':[('state','!','draft')]}" />
 								<field name="variable_costing"
@@ -91,8 +96,9 @@
 								<field name="total_cbm" readonly="1" />
 								<field name="bal_viss" readonly="1" />
 								<field name="bal_cbm" readonly="1" />
+								<field name="total_ctn" readonly="1" />
+								<field name="total_qty" readonly="1" />
 								<field name="total_diff_qty" readonly="1" />
-
 							</group>
 						</group>
 						<group>

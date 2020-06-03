@@ -63,6 +63,32 @@ class branch_good_issue_note(osv.osv):
             res[order.id] = val1
         return res            
 
+    def _qty_ctn_total(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        if context is None:
+            context = {}               
+        for order in self.browse(cr, uid, ids, context=context):
+            val1 = 0.0            
+            for line in order.p_line:
+                req_data = self.pool.get('branch.good.issue.note.line').browse(cr, uid, line.id, context=context)
+                if req_data.product_loss!=True:
+                    val1 += req_data.issue_quantity                    
+            res[order.id] = val1
+        return res   
+     
+    def _qty_pcs_total(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        if context is None:
+            context = {}               
+        for order in self.browse(cr, uid, ids, context=context):
+            val1 = 0.0            
+            for line in order.p_line:
+                req_data = self.pool.get('branch.good.issue.note.line').browse(cr, uid, line.id, context=context)
+                if req_data.product_loss==True:
+                    val1 += req_data.issue_quantity                     
+            res[order.id] = val1
+        return res    
+    
     def _cbm_amount(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         if context is None:
@@ -137,7 +163,7 @@ class branch_good_issue_note(osv.osv):
         'receive_date':fields.date('Date Of Receipt', required=False),
         'request_id':fields.many2one('branch.stock.requisition', 'RFI Ref', readonly=True),
         'from_location_id':fields.many2one('stock.location', 'Request Warehouse', readonly=True, required=True),
-        'supplier_id': fields.many2one('res.partner', 'Supplier'),
+        'supplier_id': fields.many2one('res.partner', 'Transporter Name'),
         'vehicle_id': fields.many2one('fleet.vehicle', 'Vehicle'),
         'route_id': fields.many2one('transport.route', 'Route'),
         'max_weight':fields.related('vehicle_id', 'alert_weight_viss', type='float', store=False, string='Max Viss'),
@@ -148,6 +174,7 @@ class branch_good_issue_note(osv.osv):
         'issue_by':fields.char("Issuer"),
         'receiver':fields.char("Receiver"),
         'loading_date' : fields.date('Loading Date'),
+        'loading_time':fields.char('Loading Time'),
         'eta_date' : fields.date('ETA Date'),
         'variable_costing': fields.boolean('Is Variable Costing'),
         'transport_cost': fields.float('Transport Cost', digits=(16, 0)),
@@ -170,6 +197,8 @@ class branch_good_issue_note(osv.osv):
               \nThe exception status is automatically set when a cancel operation occurs \
               in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\nThe 'Waiting Schedule' status is set when the invoice is confirmed\
                but waiting for the scheduler to run on the order date.", select=True),
+    'total_ctn':fields.function(_qty_ctn_total, string='Total Ctn Qty', digits=(16, 0), type='float'),
+    'total_qty':fields.function(_qty_pcs_total, string='Total Pcs Qty', digits=(16, 0), type='float'),
     'total_viss':fields.function(_viss_amount, string='Total Viss', digits_compute=dp.get_precision('Product Price'), type='float'),
     'total_cbm':fields.function(_cbm_amount, string='Total CBM', digits_compute=dp.get_precision('Product Price'), type='float'),
     'bal_viss':fields.function(_bal_viss_amount, string='Bal Viss', digits_compute=dp.get_precision('Product Price'), type='float'),
@@ -181,7 +210,8 @@ class branch_good_issue_note(osv.osv):
     'reverse_date':fields.date('Date for Reverse',required=False),
     'internal_reference' : fields.char('Internal Reference', required=True ),
     'reverse_user_id':fields.many2one('res.users', "Reverse User",readonly=True),
-
+    'checked_by':fields.char("Checked By"),
+    'address' : fields.char('Delivery Address & PH', required=False ),
         }
     
     _defaults = {
