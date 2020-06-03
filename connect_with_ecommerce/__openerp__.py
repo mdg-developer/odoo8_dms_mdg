@@ -43,7 +43,7 @@ Connect With Ecommerce
         'views/res_city_view.xml',
         'views/product_template_view.xml',
 #         'views/res_country_state_view.xml',
-#         'views/res_partner.xml',
+        'views/res_partner_view.xml',
         'views/res_township_view.xml',
         'views/product_pricelist_view.xml',
         'views/credit_application_view.xml'
