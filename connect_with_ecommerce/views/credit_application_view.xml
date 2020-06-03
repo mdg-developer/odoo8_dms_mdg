@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
 	<data>
-	<record id="view_credit_application_form" model="ir.ui.view">
+		<record id="view_credit_application_form" model="ir.ui.view">
 			<field name="name">credit.application.form</field>
 			<field name="model">credit.application</field>
 			<field name="arch" type="xml">
@@ -9,120 +9,204 @@
 					<sheet>
 						<group>
 							<group>
-								<field name="date_of_application"/>								
-								<field name="date_received"/>							
-							</group>
-							<group string="Business Type">								
-								<field name="sole_proprietor"/>	
-								<field name="corporation"/>
-								<field name="others"/>								
+								<group>
+									<field name="date_of_application"/>
+								</group>
+								<group>
+									<field name="date_received"/>
+								</group>
+								<group string="Business Type">
+									<group>
+										<group>
+											<group>
+												<field name="sole_proprietor"/>
+											</group>
+											<group>
+												<field name="corporation"/>
+											</group>
+										</group>
+									</group>
+									<group>
+										<group>
+											<group>
+												<field name="others"/>
+											</group>
+											<group>
+											</group>
+										</group>
+									</group>
+								</group>
 							</group>
 						</group>
-						<group string="Company Information">
+						<group string="Part I Company Information">
 							<group>
 								<field name="name"/>
 								<field name="company_register_name"/>
-								
-								
-								<label for="company_street" string="Company Register Address"/>
-		                            <div>
-		                            	<field name="company_country_id" placeholder="Country" class="oe_no_button" options='{"no_open": True, "no_create": True}'/>	
-		                            	<field name="company_state_id" class="oe_no_button" placeholder="State" style="width: 37%%" options='{"no_open": True}'/>    
-		                            	<field name="company_city_id" placeholder="City" style="width: 40%%" />                                                      
-		                                <field name="residence_zip" placeholder="Zip..."/>
-		                                <field name="company_township_id" class="o_address_state" placeholder="Township"  style="width: 66%%"/>
-		                                <field name="company_street" placeholder="Street..."/>
-		                                <field name="company_street2"/>
-		                            </div>				
-								
-								<field name="company_nrc"/>								
-								<field name="phone"/>
-								<field name="business_phone"/>
-								<field name="residential_phone"/>																			
+
+
+								<label for="company_street"
+									string="Company Register Address"/>
+								<div>
+									<field name="company_country_id" placeholder="Country"
+										class="oe_no_button"
+										options='{"no_open": True, "no_create": True}'/>
+									<field name="company_state_id" class="oe_no_button"
+										placeholder="State" style="width: 37%%"
+										options='{"no_open": True}'/>
+									<field name="company_city_id" placeholder="City"
+										style="width: 40%%"/>
+									<field name="residence_zip" placeholder="Zip..."/>
+									<field name="company_township_id" class="o_address_state"
+										placeholder="Township" style="width: 66%%" />
+									<field name="company_street" placeholder="Street..."/>
+									<field name="company_street2"/>
+								</div>
+
+								<field name="company_nrc"/>
+								<field name="customer_email"/>
 							</group>
-							
+
 							<group>
 								<field name="registration_date"/>
 								<field name="number_of_employees"/>
 								<field name="trade_brand_name"/>
-								<label for="residence_street" string="Customer's Residence Address"/>
-		                            <div>
-		                            	<field name="residence_country_id" placeholder="Country" class="oe_no_button" options='{"no_open": True, "no_create": True}'/>	
-		                            	<field name="residence_state_id" class="oe_no_button" placeholder="State" style="width: 37%%" options='{"no_open": True}'/>    
-		                            	<field name="residence_city_id" placeholder="City" style="width: 40%%" />                                                      
-		                                <field name="residence_zip" placeholder="Zip..."/>
-		                                <field name="residence_township_id" class="o_address_state" placeholder="Township"  style="width: 66%%"/>
-		                                <field name="residence_street" placeholder="Street..."/>
-		                                <field name="residence_street2"/>
-		                            </div>
-	                            
-	                            <field name="customer_email"/>
-	                            <field name="mobile"/>
-								<field name="viber"/>
-								<field name="wechat"/>
-								<field name="whatsapp"/>		
+								<label for="residence_street"
+									string="Customer's Residence Address"/>
+								<div>
+									<field name="residence_country_id" placeholder="Country"
+										class="oe_no_button"
+										options='{"no_open": True, "no_create": True}'/>
+									<field name="residence_state_id" class="oe_no_button"
+										placeholder="State" style="width: 37%%"
+										options='{"no_open": True}'/>
+									<field name="residence_city_id" placeholder="City"
+										style="width: 40%%" />
+									<field name="residence_zip" placeholder="Zip..."/>
+									<field name="residence_township_id"
+										class="o_address_state" placeholder="Township"
+										style="width: 66%%"/>
+									<field name="residence_street" placeholder="Street..."/>
+									<field name="residence_street2"/>
+								</div>
+								
 							</group>
 						</group>
-						<group string="Contact and Invoicing Information">							
+						
+						<group>
+								<group>
+									<field name="phone"/>
+									<group>
+										<group>
+											<group>
+												<field name="business_phone"/>
+											</group>
+										</group>
+									</group>
+									<group>
+										<group>
+											<group>
+												<field name="residential_phone"/>
+											</group>
+										</group>
+									</group>
+								</group>
+								<group>
+									<field name="mobile"/>
+									<group>
+										<group>
+											<group>
+												<field name="viber"/>
+											</group>
+										</group>
+										<group>
+											<group>
+												<field name="wechat"/>
+											</group>
+										</group>
+									</group>
+									<group>
+										<group>
+											<group>
+												<field name="whatsapp" style="width:5%"/>
+											</group>
+										</group>
+									</group>
+								</group>
+
+							</group>
+						
+						<group string="Part II Contact and Invoicing Information">
 							<group>
 								<field name="owner"/>
 								<field name="owner_email"/>
 								<field name="owner_phone"/>
 								<field name="owner_mobile"/>
-								
-								<field name="operation_manager"/>
-								<field name="om_email"/>
-								<field name="om_phone"/>
-								<field name="om_mobile"/>																														
 							</group>
-							
+
 							<group>
 								<field name="purchasing_manager"/>
 								<field name="pm_email"/>
 								<field name="pm_phone"/>
 								<field name="pm_mobile"/>
-																
+							</group>
+
+							<group>
+								<field name="operation_manager"/>
+								<field name="om_email"/>
+								<field name="om_phone"/>
+								<field name="om_mobile"/>
+							</group>
+
+							<group>
 								<field name="finance_manager"/>
 								<field name="fm_email"/>
 								<field name="fm_phone"/>
-								<field name="fm_mobile"/>	
+								<field name="fm_mobile"/>
 							</group>
-						</group>	
-						<group string="Details of Payment">
+						</group>
+						<group string="Part III Details of Payment">
 							<group>
 								<field name="cash"/>
-								<field name="bank"/>								
+								<field name="bank"/>
 							</group>
-							
+
 							<group>
 								<field name="company_cheque"/>
 								<field name="other_specify"/>
 							</group>
 						</group>
-						<group string="Bank Details">	
+						<group string="Part IV Bank Details">
 							<group>
-								<field name="bank_name"/>																
+								<field name="bank_name"/>
 								<label for="company_street" string="Bank Register Address"/>
-		                            <div>
-		                            	<field name="bank_register_country_id" placeholder="Country" class="oe_no_button" options='{"no_open": True, "no_create": True}'/>	
-		                            	<field name="bank_register_state_id" class="oe_no_button" placeholder="State" style="width: 37%%" options='{"no_open": True}'/>    
-		                            	<field name="bank_register_city_id" placeholder="City" style="width: 40%%" />                                                      
-		                                <field name="residence_zip" placeholder="Zip..."/>
-		                                <field name="bank_register_township_id" class="o_address_state" placeholder="Township"  style="width: 66%%"/>
-		                                <field name="bank_register_street" placeholder="Street..."/>
-		                                <field name="bank_register_street2"/>
-		                            </div>	                            	                            
+								<div>
+									<field name="bank_register_country_id"
+										placeholder="Country" class="oe_no_button"
+										options='{"no_open": True, "no_create": True}'/>
+									<field name="bank_register_state_id" class="oe_no_button"
+										placeholder="State" style="width: 37%%"
+										options='{"no_open": True}'/>
+									<field name="bank_register_city_id" placeholder="City"
+										style="width: 40%%"/>
+									<field name="residence_zip" placeholder="Zip..."/>
+									<field name="bank_register_township_id"
+										class="o_address_state" placeholder="Township"
+										style="width: 66%%"/>
+									<field name="bank_register_street"
+										placeholder="Street..."/>
+									<field name="bank_register_street2"/>
+								</div>
 							</group>
-							
+
 							<group>
-								<field name="date_of_opening"/>	
+								<field name="date_of_opening"/>
 								<field name="bank_officer"/>
 								<field name="bank_officer_email"/>
 								<field name="bank_officer_phone"/>
-								<field name="bank_officer_mobile"/>	
-							</group>						
+								<field name="bank_officer_mobile"/>
+							</group>
 						</group>
-					</sheet>					
+					</sheet>
 				</form>
 			</field>
 		</record>
@@ -135,14 +219,15 @@
 					<field name="name"/>
 					<field name="date_of_application"/>
 					<field name="registration_date"/>
-					<field name="date_received"/>	
+					<field name="date_received"/>
 					<field name="number_of_employees"/>
-					<field name="company_register_name"/>					
+					<field name="company_register_name"/>
 				</tree>
 			</field>
 		</record>
 
-		<record id="action_credit_application_view" model="ir.actions.act_window">
+		<record id="action_credit_application_view"
+			model="ir.actions.act_window">
 			<field name="name">Credit Application</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">credit.application</field>
@@ -151,11 +236,9 @@
 			<field name="view_id" eval="view_credit_application_tree"/>
 		</record>
 
-		<menuitem id="menu_credit_application" 
-				  sequence="13"
-				  parent="base.menu_sales"
-				  name="Credit Application"
-				  action="action_credit_application_view"/>
-		
+		<menuitem id="menu_credit_application" sequence="13"
+			parent="base.menu_sales" name="Credit Application"
+			action="action_credit_application_view"/>
+
 	</data>
 </openerp>
