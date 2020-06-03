@@ -340,6 +340,7 @@ sum(ail.quantity * ail.price_unit) as net_amt
 	and tp.categ_id=pc.id	
 	and ai.section_id=ccs.id
 	and rb.id=ai.branch_id
+        and ai.state not in ('draft','cancel')
 	and date_invoice between ? and ?
 	--$sales_team$
 	--$branch$
