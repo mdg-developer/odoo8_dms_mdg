@@ -1,4 +1,8 @@
 from openerp.osv import fields,osv
+import requests
+import json
+import logging
+import random
 
 class res_partner(osv.osv):
     _inherit = 'res.partner'
@@ -7,9 +11,41 @@ class res_partner(osv.osv):
                 'birthday': fields.date('Birthday'),
                 'gender': fields.selection([('Male', 'Male'), ('Female', 'Female')], 'Gender'),
                 'shop_name': fields.char('Shop/Business Name'),
-            }    
-
+            }   
+          
+    def send_otp_code(self, cr, uid, ids, mobile_phone, context=None):
+        
+        if mobile_phone:
+            try: 
+                headers = {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}            
+                sms_user= 'mdgpro'
+                password= 'fcdaa533-e23d-4f9e-8480-416454b2dfc2'
+                url='https://mpg-ids.mytel.com.mm/auth/realms/eis/protocol/openid-connect/token'
+                payload = {'grant_type': 'client_credentials'}
+                response = requests.post(url,headers=headers,auth=(sms_user, password), data=payload, verify=False)
+                number = random.randint(1000,9999)         
+                message = 'Dear customer,your OTP for registration is ' + str(number) + '.Use this code to register your account.'
+                if response.status_code == 200:                
+                    content = json.loads(response.content)
+                    token = content['access_token'] 
+                    header = {'Content-Type': 'application/json',
+                              'Authorization': 'Bearer {0}'.format(token)}                    
+                    sms_url = 'https://mytelapigw.mytel.com.mm/msg-service/v1.3/smsmt/sent'
+                    sms_payload = {
+                                   "source": "MDG",
+                                   "dest": mobile_phone,
+                                   "content": message 
+                            }                 
+                    response = requests.post(sms_url,  json = sms_payload, headers = header,verify=False)                
+                    if response.status_code == 200:
+                        return number              
+            except Exception as e:         
+                error_msg = 'Error Message: %s' % (e) 
+                logging.error(error_msg)  
+                return error_msg   
+          
     def create_or_update_woo_customer(self, cr, uid, ids, customer_code=None, name=None,street=None,street2=None,township=None,state=None,mobile=None,phone=None,gender=None,birthday=None,email=None,partner_latitude=None,partner_longitude=None,sms=None,viber=None,shop_name=None,context=None):
+        
         vals = {}
         township_obj = self.pool.get('res.township')
         city_obj = self.pool.get('res.city')
