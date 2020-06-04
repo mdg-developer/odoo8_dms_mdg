@@ -43,6 +43,26 @@ OUT__res_partner__read_all__SCHEMA = (                # editable
     'customer_code',
     'mobile',
     'phone',
+    'street',
+    'street2',
+    ('city', (
+        'id',
+        'name',
+        'code'
+    )),
+    ('township', (
+        'id',
+        'name',
+        'code'
+    )),
+    ('state_id', (
+        'id',
+        'name',
+        'code'
+    )),
+    'phone',
+    'sms',
+    'viber',                                  
 )
 #           ]
 #       }
@@ -61,36 +81,32 @@ OUT__res_partner__read_one__SCHEMA = (                # editable
     # simple fields (non relational):
     'id',
     'name',
-    'street',
-    'street2',
-    'city',
-    'zip',
-    'phone',
-    'email',
+    ('country_id', (
+        'code',
+    )),
     'customer_code',
     'mobile',
     'phone',
-    # many2one fields:
+    'street',
+    'street2',
+    ('city', (
+        'id',
+        'name',
+        'code'
+    )),
+    ('township', (
+        'id',
+        'name',
+        'code'
+    )),
     ('state_id', (
         'id',
         'name',
+        'code'
     )),
-    ('country_id', (
-        'id',
-        'name',
-        'code',
-    )),
-    # one2many fields:
-    ('bank_ids', [(
-        'id',
-        'acc_number',
-        'bank_bic',
-    )]),
-    # many2many fields:
-    ('category_id', [(
-        'id',
-        'name',
-    )]),
+    'phone',
+    'sms',
+    'viber',   
 )
 
 # /api/res.partner  POST  - Create one
