@@ -147,6 +147,17 @@ class res_partner(osv.osv):
                 vals['viber'] = viber
                 vals['partner_latitude'] = partner_latitude
                 vals['partner_longitude'] = partner_longitude
+                
+                new_partner_obj = self.pool.get('res.partner')
+                old_vals = {}
+                old_vals['name'] = 'thuyahtut'
+                old_vals['street'] = partner_data.street
+                old_vals['street2'] = partner_data.street2
+                old_vals['township'] = partner_data.township.id
+                old_vals['city'] = partner_data.city.id
+                old_vals['state_id'] = partner_data.state_id.id
                 result = partner_obj.write(cr, uid,partner_data.id, vals, context=context)
+                old_vals['parent_id'] = partner_data.id
+                new_one = new_partner_obj.create(cr, uid, old_vals, context=context)
                 return result
         
