@@ -18,7 +18,7 @@ class product_product(models.Model):
         
         #get product
         self._cr.execute("""select  pp.id,pt.list_price,coalesce(replace(pt.description,',',';'), ' ') as description,pt.categ_id,pc.name as categ_name,pp.default_code, 
-            pt.name,substring(replace(cast(pt.image_small as text),'/',''),1,5) as image_small,pt.main_group,pt.uom_ratio,
+            pt.name,encode(image_small, 'base64') as image_small,pt.main_group,pt.uom_ratio,
             pp.product_tmpl_id,pt.is_foc,pp.sequence,pt.type,pt.uom_id,ccs.id team_id
             from product_sale_group_rel rel ,
             crm_case_section ccs ,product_template pt, product_product pp , product_category pc
@@ -73,7 +73,7 @@ class product_product(models.Model):
                             '' as image_small,RP.street,RP.street2,RC.name as city,RP.website,
                             RP.phone,RT.name as township,RP.mobile,RP.email,RP.company_id,RP.customer, 
                             RP.customer_code,RP.mobile_customer,OT.name as shop_name,RP.address,RP.zip ,RP.partner_latitude,RP.partner_longitude,RS.name as state_name,
-                            substring(replace(cast(RP.image_medium as text),'/',''),1,5) as image_medium,RP.credit_limit,RP.credit_allow,
+                            encode(RP.image_medium, 'base64') as image_medium,RP.credit_limit,RP.credit_allow,
                             RP.sales_channel,RP.branch_id,RP.pricelist_id,RP.payment_term_id,RP.outlet_type,RP.city as city_id,RP.township as township_id,
                             RP.country_id,RP.state_id,RP.unit,RP.class_id,RP.chiller,RP.frequency_id,RP.temp_customer,RP.is_consignment,RP.hamper,
                             RP.is_bank,RP.is_cheque,SPD.sale_team,
