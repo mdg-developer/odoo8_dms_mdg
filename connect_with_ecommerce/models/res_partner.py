@@ -43,7 +43,26 @@ class res_partner(osv.osv):
                 error_msg = 'Error Message: %s' % (e) 
                 logging.error(error_msg)  
                 return error_msg   
-          
+
+    # def verify_customer_code(self, cr, uid, ids, customer_code, context=None):
+    #     vals={}
+    #     partner_obj = self.pool.get('res.partner')
+    #     partner = partner_obj.search(cr, uid, [('customer_code', '=', customer_code)])
+    #     if partner:
+    #         partner_data = partner_obj.browse(cr, uid, partner, context=context)
+    #         vals['street'] = partner_data.street
+    #         vals['street2'] = partner_data.street2
+    #         vals['township'] = partner_data.township.name
+    #         vals['phone'] = partner_data.phone
+    #         vals['sms'] = partner_data.sms
+    #         vals['viber'] = partner_data.viber
+    #         vals['partner_latitude'] = partner_data.partner_latitude
+    #         vals['partner_longitude'] = partner_data.partner_longitude
+    #         return vals
+    #     else:
+    #         return "Incorrect Customer Code."
+
+
     def create_or_update_woo_customer(self, cr, uid, ids, customer_code=None, name=None,street=None,street2=None,township=None,state=None,mobile=None,phone=None,gender=None,birthday=None,email=None,partner_latitude=None,partner_longitude=None,sms=None,viber=None,shop_name=None,context=None):
         
         vals = {}
@@ -106,4 +125,28 @@ class res_partner(osv.osv):
                 partner_data = partner_obj.browse(cr, uid, partner, context=context)
                 partner_obj.generate_customercode(cr, uid, [partner_data.id],partner_data,context=context)
             return result
+        else:
+            partner = partner_obj.search(cr, uid, [('customer_code', '=', customer_code)])
+            if partner:
+                partner_data = partner_obj.browse(cr, uid, partner, context=context)
+                vals['street'] = street
+                vals['street2'] = street2
+                if township:
+                    township_value = township_obj.search(cr, uid, [('name', '=ilike', township)], context=context, limit=1)
+                    if township_value:
+                        township_data = township_obj.browse(cr, uid, township_value, context=context)
+                        vals['township']= township_data.id
+                if state:                
+                    state_value = state_obj.search(cr, uid, [('name', '=ilike', state)], context=context, limit=1)
+                    if state_value:
+                        state_data = state_obj.browse(cr, uid, state_value, context=context)
+                        vals['state_id'] = state_data.id
+
+                vals['phone'] = phone
+                vals['sms'] = sms
+                vals['viber'] = viber
+                vals['partner_latitude'] = partner_latitude
+                vals['partner_longitude'] = partner_longitude
+                result = partner_obj.write(cr, uid,partner_data.id, vals, context=context)
+                return result
         
