@@ -35,6 +35,9 @@ class exchange_product(osv.osv):
                     string="Township",store=True)   ,   
             'total_value':fields.float('Value Of Out'),
             'pricelist_id':fields.many2one('product.pricelist', string='Pricelist'),
+             'ams_total':fields.float('3AMS Total'),
+             'out_ams_percent':fields.float('% Out on AMS'),
+
     }
     
     _defaults = {        

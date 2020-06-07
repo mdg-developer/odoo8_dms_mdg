@@ -80,6 +80,9 @@
 									attrs="{'readonly':[('e_status', '=', 'done')]}" />
 								<field name="void_flag" />
 								<field name="location_id" />
+								<field name="ams_total" />
+								<field name="out_ams_percent" />
+								
 							</group>
 						</group>
 						<notebook>

@@ -16,6 +16,7 @@
 							<field name="township" readonly="1" />
 							<field name="address" readonly="1" />
 							<field name="date" />
+							<field name="ams_total" readonly="1"/>
 						</group>
 						<group>
 
@@ -50,6 +51,7 @@
 									<!-- <field name="month5" readonly="1"/> -->
 									<!-- <field name="month6" readonly="1"/> -->
 									<field name="6ams" readonly="1" />
+									<field name="ams_value" readonly="1" />
 									<field name="target_qty" />
 									<field name="ach_qty" readonly="1" />
 									<field name="ach_percent" readonly="1" />
