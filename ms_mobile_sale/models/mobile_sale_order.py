@@ -162,6 +162,9 @@ class mobile_sale_order(osv.osv):
       'order_team':fields.many2one('crm.case.section', 'Order Team'),
       'rebate_later':fields.boolean('Rebate Later', readonly=True),
       'order_saleperson': fields.many2one('res.users', 'Order Saleperson'),
+      'pre_sale_order_id': fields.many2one('sale.order', 'Pre Sale Order'),
+
+      
    #     'journal_id'  : fields.many2one('account.journal', 'Journal' ,domain=[('type','in',('cash','bank'))]),   
     }
     _order = 'id desc'
@@ -384,15 +387,24 @@ class mobile_sale_order(osv.osv):
                         order_team = cursor.fetchone()[0]
                         # so['sale_team']=order_team
                         so['sale_team'] = so['sale_team']
-                        order_team = None
                     else:
                         order_team = None
                     if so['order_saleperson'] != 'null' and so['order_saleperson']:
                        # so['user_id']=so['order_saleperson']
                         so['user_id'] = so['user_id']
-                        so['order_saleperson'] = None
+                        order_saleperson =so['order_saleperson']
                     else:
-                        so['order_saleperson'] = None
+                        order_saleperson = None
+                    if so['presaleorderid'] != 'null' and so['presaleorderid']: 
+                        presaleorderid = so['presaleorderid'].replace('\\', '').replace('\\', '')   
+                        cursor.execute("select id from sale_order where name = %s ",(presaleorderid,))
+                        sale_order_data=cursor.fetchone()
+                        if sale_order_data:
+                            pre_sale_order_id =sale_order_data[0]
+                        else:
+                            pre_sale_order_id = None
+                    else:
+                        pre_sale_order_id = None 
                         
                     cursor.execute('select branch_id from crm_case_section where id=%s', (so['sale_team'],))
                     branch_id = cursor.fetchone()[0]     
@@ -450,7 +462,8 @@ class mobile_sale_order(osv.osv):
                         'void_print_count':so['void_print_count'],
                         'order_team':order_team,
                         'rebate_later':rebate,
-                        'order_saleperson':so['order_saleperson'],
+                        'order_saleperson':order_saleperson,
+                        'pre_sale_order_id':pre_sale_order_id,
                     }
                     s_order_id = mobile_sale_order_obj.create(cursor, user, mso_result, context=context)
                     so_ids.append(s_order_id);
@@ -681,7 +694,7 @@ class mobile_sale_order(osv.osv):
             product_trans_line = []
             for r in result:
                 print "length", len(r)
-                if len(r) >=15:
+                if len(r) ==15:
                     product_trans_line.append(r)                   
                 else:
                     product_trans.append(r)
@@ -735,6 +748,8 @@ class mobile_sale_order(osv.osv):
                                 'longitude':pt['mosLongitude'],
                                 'pricelist_id':pricelist_id,
                                 'total_value':pt['total_value'],
+                                'ams_total':pt ['ams_total'],
+                                'out_ams_percent':pt ['out_ams_percent'],
 
                                 }
                     s_order_id = product_trans_obj.create(cursor, user, mso_result, context=context)
@@ -963,7 +978,16 @@ class mobile_sale_order(osv.osv):
                     cr.execute("select company_id from res_users where id=%s", (ms_ids.user_id.id,))
                     company_id = cr.fetchone()[0]
                     date = datetime.strptime(ms_ids.date, '%Y-%m-%d %H:%M:%S')
-                    de_date = date.date()       
+                    de_date = date.date()    
+                    if  ms_ids.pre_sale_order_id:
+                        pre_sale_order_id=ms_ids.pre_sale_order_id.id
+                    else:
+                        pre_sale_order_id= False
+                    if ms_ids.order_team:
+                        order_team=ms_ids.order_team.id
+                    else:
+                        order_team=False
+                    
                     soResult = {
                                           'date_order':ms_ids.date,
                                            'partner_id':ms_ids.partner_id.id,
@@ -1000,6 +1024,8 @@ class mobile_sale_order(osv.osv):
                                             'rebate_later':ms_ids.rebate_later,
                                              'ignore_credit_limit':True,
                                              'credit_history_ids':[],
+                                             'pre_sale_order_id':pre_sale_order_id,
+                                             'order_team':order_team,
 
 
                                         }
@@ -1930,10 +1956,13 @@ class mobile_sale_order(osv.osv):
                         saleOrder_Id = data[0][0]
                     else:
                         saleOrder_Id = None
-                    cursor.execute("select manual from promos_rules where id=%s", (pro_line['pro_id'],))
-                    manual = cursor.fetchone()[0]
-                    if manual is not None:
-                        manual = manual
+                    if pro_line['pro_id']:
+                        cursor.execute("select manual from promos_rules where id=%s", (pro_line['pro_id'],))
+                        manual = cursor.fetchone()[0]
+                        if manual is not None:
+                            manual = manual
+                        else:
+                            manual = False
                     else:
                         manual = False
                     promo_line_result = {
@@ -2436,16 +2465,67 @@ class mobile_sale_order(osv.osv):
         return datas
     
     def get_target_setting(self, cr, uid, sale_team_id , context=None, **kwargs):
-        cr.execute('''            
-                  select tl.id ,target.partner_id,tl.product_id,1 as product_uom,tl.ach_qty,tl.target_qty,gap_qty as gap,month1,month2,month3 
+        section = self.pool.get('crm.case.section')      
+        sale_team_data = section.browse(cr, uid, sale_team_id, context=context)
+        is_supervisor=sale_team_data.is_supervisor    
+        if is_supervisor==True:
+            cr.execute('''            
+                    select tl.id ,target.partner_id,tl.product_id,1 as product_uom,tl.ach_qty,tl.target_qty,gap_qty as gap,month1,month2,month3,target.ams_total
                     from customer_target target ,customer_target_line tl,product_sale_group_rel rel,crm_case_section ccs
                     where target.id= tl.line_id
                     and rel.product_id=tl.product_id
                     and rel.sale_group_id=ccs.sale_group_id
                     and ccs.id =%s
                     and tl.target_qty > 0
-         ''', (sale_team_id,))                
-        datas = cr.fetchall()
+                    and target.partner_id in (
+                   select partner_id from (
+                    (select distinct b.partner_id from res_partner_res_partner_category_rel a,
+                 sale_plan_day_line b
+                 , sale_plan_day p
+                where a.partner_id = b.partner_id
+                and b.line_id = p.id
+                and p.sale_team in (select id from crm_case_section where supervisor_team= %s)
+                )
+                UNION ALL
+                (select distinct b.partner_id from res_partner_res_partner_category_rel a,sale_plan_trip p,
+                 res_partner_sale_plan_trip_rel b
+                where a.partner_id = b.partner_id
+                and b.sale_plan_trip_id = p.id
+                and p.sale_team in (select id from crm_case_section where supervisor_team= %s)
+                )
+                )a group by partner_id
+                )
+             ''', (sale_team_id,sale_team_id,sale_team_id))  
+            
+        else:
+            cr.execute('''            
+                  
+                select tl.id ,target.partner_id,tl.product_id,1 as product_uom,tl.ach_qty,tl.target_qty,gap_qty as gap,month1,month2,month3,target.ams_total
+                    from customer_target target ,customer_target_line tl,product_sale_group_rel rel,crm_case_section ccs
+                    where target.id= tl.line_id
+                    and rel.product_id=tl.product_id
+                    and rel.sale_group_id=ccs.sale_group_id
+                    and ccs.id =%s
+                    and tl.target_qty > 0
+                    and target.partner_id in (
+                    select partner_id from (
+                    (select distinct b.partner_id from res_partner_res_partner_category_rel a,
+                     sale_plan_day_line b
+                     , sale_plan_day p
+                    where a.partner_id = b.partner_id
+                    and b.line_id = p.id
+                    and p.sale_team = %s)
+                    UNION ALL
+                    (select distinct b.partner_id from res_partner_res_partner_category_rel a,sale_plan_trip p,
+                     res_partner_sale_plan_trip_rel b
+                    where a.partner_id = b.partner_id
+                    and b.sale_plan_trip_id = p.id
+                    and p.sale_team = %s
+                    )
+                    )a group by partner_id
+                    )
+             ''', (sale_team_id,sale_team_id,sale_team_id))                
+            datas = cr.fetchall()
         return datas    
     
     def get_stockcheck(self, cr, uid, sale_team_id , context=None, **kwargs):

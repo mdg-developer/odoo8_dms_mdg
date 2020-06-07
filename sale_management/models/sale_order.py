@@ -222,6 +222,9 @@ class sale_order(osv.osv):
         'credit_limit_amount' :fields.float('Credit Limit'),   
         'credit_balance' :fields.float('Credit Balance'),   
         'reverse_date':fields.date('Date for Reverse',required=False),
+        'pre_sale_order_id':fields.many2one('sale.order', 'Original Pre Sale Order No'),
+        'order_team':fields.many2one('crm.case.section', 'Order Team'),
+
                }
     def action_reverse(self, cr, uid, ids, context=None):
         pick_obj = self.pool.get('stock.picking')
