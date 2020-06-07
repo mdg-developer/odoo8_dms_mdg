@@ -32,6 +32,7 @@ class sale_order(models.Model):
                     break
 
     def _search_woo_order_ids(self,operator,value):
+        print("_search_woo_order_ids")
         query="""
                     select sale_order.id from stock_picking
                     inner join sale_order on sale_order.procurement_group_id=stock_picking.group_id                    

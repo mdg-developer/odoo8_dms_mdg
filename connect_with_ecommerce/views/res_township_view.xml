@@ -9,6 +9,7 @@
 			<field name="arch" type="xml">
 				<field name="city" position="after">
 					<field name="delivery_team_id" />
+					<field name="branch_id"/>
 				</field>
 			</field>
 		</record>
@@ -21,6 +22,7 @@
 			<field name="arch" type="xml">
 				<field name="city" position="after">
 					<field name="delivery_team_id" />
+					<field name="branch_id"/>
 				</field>
 			</field>
 		</record>
