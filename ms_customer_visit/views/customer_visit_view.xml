@@ -80,8 +80,7 @@
 									<field name="longitude" />
 									<field name="distance_status"/>
 									<field name="branch_id"/>
-									<field name="is_sync" readonly="1" />
-									<field name="doc_ref_id" readonly="1" />
+									<field name="is_sync" readonly="1" />									
 								</group>
 								<group>
 									<field name="date" />

@@ -42,8 +42,13 @@ class customer_visit(osv.osv):
                    type='many2one',
                    relation='res.township',
                    string="Township",store=True),  
-        'is_sync':fields.boolean('Is Sync'),    
-        'doc_ref_id':fields.char('Document Reference ID'),    
+        'is_sync':fields.boolean('Is Sync', default=False),    
+        'image1_reference':fields.char('Image1 Reference'),
+        'image2_reference':fields.char('Image2 Reference'),
+        'image3_reference':fields.char('Image3 Reference'),
+        'image4_reference':fields.char('Image4 Reference'),
+        'image5_reference':fields.char('Image5 Reference'),
+        'code':fields.char('Code'),
     }
     _defaults = {        
         'm_status' : 'pending',
