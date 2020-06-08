@@ -48,7 +48,6 @@ class customer_visit(osv.osv):
         'image3_reference':fields.char('Image3 Reference'),
         'image4_reference':fields.char('Image4 Reference'),
         'image5_reference':fields.char('Image5 Reference'),
-        'code':fields.char('Code'),
     }
     _defaults = {        
         'm_status' : 'pending',
