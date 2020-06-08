@@ -38,18 +38,15 @@ OUT__res_partner__read_all__SCHEMA = (                # editable
     'id',
     'name',
     ('country_id', (
-        'code',
+        'id',
+        'name',
+        'code'
     )),
     'customer_code',
     'mobile',
     'phone',
     'street',
-    'street2',
-    ('city', (
-        'id',
-        'name',
-        'code'
-    )),
+    'street2',    
     ('township', (
         'id',
         'name',
@@ -62,7 +59,10 @@ OUT__res_partner__read_all__SCHEMA = (                # editable
     )),
     'phone',
     'sms',
-    'viber',                                  
+    'viber',     
+    'image_medium', 
+    'gender',
+    'birthday',                            
 )
 #           ]
 #       }
@@ -88,12 +88,7 @@ OUT__res_partner__read_one__SCHEMA = (                # editable
     'mobile',
     'phone',
     'street',
-    'street2',
-    ('city', (
-        'id',
-        'name',
-        'code'
-    )),
+    'street2',    
     ('township', (
         'id',
         'name',
@@ -106,7 +101,10 @@ OUT__res_partner__read_one__SCHEMA = (                # editable
     )),
     'phone',
     'sms',
-    'viber',   
+    'viber',  
+    'image_medium',   
+    'gender',
+    'birthday',     
 )
 
 # /api/res.partner  POST  - Create one
