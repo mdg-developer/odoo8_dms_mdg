@@ -133,6 +133,7 @@ class res_partner(osv.osv):
                 vals['email'] = email
                 vals['sms'] = sms
                 vals['viber'] = viber
+                vals['shop_name'] = shop_name
                 vals['partner_latitude'] = partner_latitude
                 vals['partner_longitude'] = partner_longitude
                 vals['gender'] = gender
@@ -152,6 +153,7 @@ class res_partner(osv.osv):
                 old_vals['partner_longitude'] = partner_data.partner_longitude
                 old_vals['sms'] = partner_data.sms
                 old_vals['viber'] = partner_data.viber
+                old_vals['shop_name'] = partner_data.shop_name
                 old_vals['email'] = partner_data.email
                 old_vals['outlet_type'] = partner_data.outlet_type.id
                 old_vals['sales_channel'] = partner_data.sales_channel.id
