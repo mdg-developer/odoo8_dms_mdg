@@ -136,18 +136,19 @@ class sale_order(models.Model):
                            'phone':phone or partner.phone,'woo_customer_id':woo_customer_id or partner.woo_customer_id,
                            'lang':instance.lang_id.code,
                            'property_product_pricelist':instance.pricelist_id.id,
-                           'property_account_position_id':instance.fiscal_position_id and instance.fiscal_position_id.id or False,
-                           'property_payment_term_id':instance.payment_term_id and instance.payment_term_id.id or False})            
+                           'property_account_position':instance.fiscal_position_id and instance.fiscal_position_id.id or False,
+                           'property_payment_term':instance.payment_term_id and instance.payment_term_id.id or False})          
         else:
+            print("country",country)
             partner=partner_obj.create({'type':type,'parent_id':parent_id,'woo_customer_id':woo_customer_id or '',
                                         'name':name,'state_id':state and state.id or False,'city':city,'township':township,
                                         'street':address1,'street2':address2,
                                         'phone':phone,'zip':zip,'email':email,
-                                        'country_id':country and country.id or False,'is_company':is_company,
+                                        'country_id':country.id and country.id or False,'is_company':is_company,
                                         'lang':instance.lang_id.code,
                                         'property_product_pricelist':instance.pricelist_id.id,
-                                        'property_account_position_id':instance.fiscal_position_id and instance.fiscal_position_id.id or False,
-                                        'property_payment_term_id':instance.payment_term_id and instance.payment_term_id.id or False,
+                                        'property_account_position':instance.fiscal_position_id.id and instance.fiscal_position_id.id or False,
+                                        'property_payment_term':instance.payment_term_id.id and instance.payment_term_id.id or False,
                                         'woo_company_name_ept':company_name})
         return partner        
 
@@ -927,6 +928,35 @@ class sale_order(models.Model):
                     elif instance.woo_version == 'new':
                         picking.write({'updated_in_woo':True})
         return True                       
+
+    #Cancel action from quotation to woo
+    @api.model
+    def cancel_woo_order_action(self,instance=None):
+        transaction_log_obj=self.env["woo.transaction.log"]      
+        instance=self.env['woo.instance.ept'].search([('state','=','confirmed')],limit=1)    
+        if instance:
+            wcapi = instance.connect_in_woo()
+            for sale_order in self: 
+                if sale_order.woo_order_id:
+                    info = {"status": "cancel-request"} if sale_order.state == 'draft' else {"status": "cancelled"}
+                    data = info
+                    if instance.woo_version == 'old':                    
+                        data = {"order":info}
+                    response = wcapi.put('orders/%s'%(sale_order.woo_order_id),data)
+                    if response.status_code not in [200,201]:
+                        message = "Error in update order %s status,  %s"%(sale_order.name,response.content)
+                        log=transaction_log_obj.search([('woo_instance_id','=',instance.id),('message','=',message)])
+                        if not log:
+                            transaction_log_obj.create({'message':message,'mismatch_details':True,'type':'sales','woo_instance_id':instance.id})
+        return True                       
+    
+    #Add cancel_woo_order_action into order cancel action
+    def action_cancel(self, cr, uid, ids, context=None):
+        result = super(sale_order, self).action_cancel(cr, uid, ids, context=context)
+        if result:
+            for sale in self.browse(cr, uid, ids, context=context):
+                update = sale.cancel_woo_order_action()
+        return result
 
 class sale_order_line(models.Model):
     _inherit="sale.order.line"
