@@ -2691,10 +2691,12 @@ class mobile_sale_order(osv.osv):
                     so.payment_term,so.company_id,so.pricelist_id,so.user_id,so.amount_total,so.name as invoice_no,
                     so.warehouse_id,so.shipped,so.sale_plan_day_id,so.sale_plan_name,so.so_longitude,so.payment_type,
                     so.due_date,so.sale_plan_trip_id,so.so_latitude,so.customer_code,so.name as so_refNo,so.total_dis,so.deduct_amt,so.coupon_code,
-                    so.invoiced,so.branch_id,so.delivery_remark ,team.name,so.payment_term,so.due_date,so.rebate_later
-                    from sale_order so, crm_case_section team                                    
+                    so.invoiced,so.branch_id,so.delivery_remark ,team.name,so.payment_term,so.due_date,so.rebate_later,
+                    rp.name customer_name
+                    from sale_order so, crm_case_section team,res_partner rp                                    
                     where so.id= %s and so.state!= 'cancel'
-                    and  team.id = so.section_id''', (So_id,))
+                    and  team.id = so.section_id
+                    and  so.partner_id = rp.id''', (So_id,))
                     result = cr.fetchall()
                     print 'Result Sale Order', result
                     list.append(result)
