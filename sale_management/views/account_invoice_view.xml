@@ -31,6 +31,8 @@
 				<field name="journal_id" position="after">
 					<field name="paid_date" readonly="1"/>
 					<field name="tb_ref_no" attrs="{'invisible':[('type','!=','out_invoice')]}" />
+					<field name="pre_sale_order_id" attrs="{'invisible':[('type','!=','out_invoice')]}" />
+					<field name="order_team" attrs="{'invisible':[('type','!=','out_invoice')]}" />
 					<field name="ignore_credit_limit" attrs="{'invisible':[('type','!=','out_invoice')]}" />
 					<field name="principle_id"
 						attrs="{'readonly': [('state', '=', 'paid')],'invisible':[('type','in',('out_invoice','in_invoice'))]}" />
