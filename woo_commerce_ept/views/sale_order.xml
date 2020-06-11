@@ -30,6 +30,11 @@
                 <field name="inherit_id" ref="sale.view_order_form"/>
                 <field name="arch" type="xml">
                     <data>
+                    <!-- Custom Cancel button for quotation START-->
+            				<xpath expr="//button[@name='cancel']" position="replace">
+                      <button name="action_cancel" states="draft,sent"
+                        string="Cancel Quotation" type="object" groups="base.group_user" />
+                    </xpath>
 					 <notebook position="inside">
 					 	<page string="WooCommerce Info" attrs="{'invisible':[('woo_instance_id','=',False)]}">
 					 		<group>

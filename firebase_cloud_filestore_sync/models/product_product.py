@@ -11,6 +11,7 @@ firebase_admin.initialize_app(cred)
 class product_product(models.Model):
     _inherit = 'product.product' 
     
+    @api.model
     def sync_cloud_filestore(self):
         
         firebase_admin.get_app()        
@@ -18,7 +19,7 @@ class product_product(models.Model):
         
         #get product
         self._cr.execute("""select  pp.id,pt.list_price,coalesce(replace(pt.description,',',';'), ' ') as description,pt.categ_id,pc.name as categ_name,pp.default_code, 
-            pt.name,convert_from(image_medium,'utf8') as image_small,pt.main_group,pt.uom_ratio,
+            pt.name,convert_from(image_small,'utf8') as image_small,pt.main_group,pt.uom_ratio,
             pp.product_tmpl_id,pt.is_foc,pp.sequence,pt.type,pt.uom_id,ccs.id team_id
             from product_sale_group_rel rel ,
             crm_case_section ccs ,product_template pt, product_product pp , product_category pc
@@ -27,12 +28,15 @@ class product_product(models.Model):
             and pt.active = true
             and pp.active = true
             and ccs.sale_group_id = rel.sale_group_id
-            and pc.id = pt.categ_id""")
+            and pc.id = pt.categ_id
+            and ccs.id in (389,390,477)""")
         for row in self._cr.dictfetchall():
             node = str(row['id'])
             doc_ref = db.collection('product_product').document(node)
             doc_ref.set(row)
-        
+        return True
+    
+    @api.model    
     def sync_product_uom(self):
         
         firebase_admin.get_app()        
@@ -48,12 +52,15 @@ class product_product(models.Model):
                     where pp.product_tmpl_id = pur.product_template_id
                     and rel.product_id = pp.id
                     and pu.id = pur.product_uom_id
-                    and rel.sale_group_id=ccs.sale_group_id)A""")
+                    and rel.sale_group_id=ccs.sale_group_id
+                    and ccs.id in (389,390,477))A""")
         for row in self._cr.dictfetchall():
             node = str(row['uom_id'])
             doc_ref = db.collection('uom_uom').document(node)
             doc_ref.set(row)  
-            
+        return True
+    
+    @api.model        
     def sync_customers(self):
         
         firebase_admin.get_app()        
@@ -64,7 +71,8 @@ class product_product(models.Model):
                             replace(A.phone,',',';') phone,A.township, replace(A.mobile,',',';') mobile,A.email,A.company_id,A.customer, 
                             A.customer_code,A.mobile_customer,A.shop_name ,
                             A.address,
-                            A.zip,A.state_name,A.partner_latitude,A.partner_longitude,A.sale_plan_day_id,A.image_medium,A.credit_limit,
+                            A.zip,A.state_name,A.partner_latitude,A.partner_longitude,A.sale_plan_day_id,A.image_medium,
+                            A.image_one,A.image_two,A.image_three,A.image_four,A.image_five,A.credit_limit,
                             A.credit_allow,A.sales_channel,A.branch_id,A.pricelist_id,A.payment_term_id,A.outlet_type ,
                             A.city_id,A.township_id,A.country_id,A.state_id,A.unit,A.class_id,A.chiller,A.frequency_id,A.temp_customer,
                             A.is_consignment,A.hamper,A.is_bank,A.is_cheque,A.sale_team team_id,customer_tags
@@ -73,7 +81,9 @@ class product_product(models.Model):
                             '' as image_small,RP.street,RP.street2,RC.name as city,RP.website,
                             RP.phone,RT.name as township,RP.mobile,RP.email,RP.company_id,RP.customer, 
                             RP.customer_code,RP.mobile_customer,OT.name as shop_name,RP.address,RP.zip ,RP.partner_latitude,RP.partner_longitude,RS.name as state_name,
-                            convert_from(image_medium,'utf8') as image_medium,RP.credit_limit,RP.credit_allow,
+                            convert_from(image_medium,'utf8') as image_medium,convert_from(image_one,'utf8') as image_one,
+                            convert_from(image_two,'utf8') as image_two,convert_from(image_three,'utf8') as image_three,
+                            convert_from(image_four,'utf8') as image_four,convert_from(image_five,'utf8') as image_five,RP.credit_limit,RP.credit_allow,
                             RP.sales_channel,RP.branch_id,RP.pricelist_id,RP.payment_term_id,RP.outlet_type,RP.city as city_id,RP.township as township_id,
                             RP.country_id,RP.state_id,RP.unit,RP.class_id,RP.chiller,RP.frequency_id,RP.temp_customer,RP.is_consignment,RP.hamper,
                             RP.is_bank,RP.is_cheque,SPD.sale_team,
@@ -90,6 +100,7 @@ class product_product(models.Model):
                                                 and RP.active = true
                                                 and RP.outlet_type = OT.id
                                                 and RPS.partner_id = RP.id    
+                                                and SPD.sale_team in (389,390,477)
                                                 order by  RPS.sequence asc                         
                             
                             )A 
@@ -105,8 +116,10 @@ class product_product(models.Model):
             for partner_categ_row in self._cr.dictfetchall(): 
                 partner_categ_node = str(partner_categ_row['partner_category_id'])            
                 partner_categ_ref = doc_ref.collection('customer_tags').document(partner_categ_node)    
-                partner_categ_ref.set(partner_categ_row)                 
-                    
+                partner_categ_ref.set(partner_categ_row)    
+        return True             
+    
+    @api.model                
     def sync_users(self):
         
         firebase_admin.get_app()        
@@ -121,12 +134,15 @@ class product_product(models.Model):
                             ccs.id team_id
                             from res_users ru,section_users_rel rel,crm_case_section ccs
                             where ru.id=rel.uid
-                            and rel.section_id=ccs.id""")
+                            and rel.section_id=ccs.id
+                            and ccs.id in (389,390,477)""")
         for row in self._cr.dictfetchall():
             node = str(row['id'])
             doc_ref = db.collection('res_users').document(node)
-            doc_ref.set(row)                
-                       
+            doc_ref.set(row)     
+        return True           
+             
+    @api.model          
     def sync_promotions(self):    
                 
         firebase_admin.get_app()
@@ -268,7 +284,9 @@ class product_product(models.Model):
                     product_node = str(product_row['product_id'])            
                     product_ref = doc_ref.collection('product_product').document(product_node)    
                     product_ref.set(product_row) 
-                                                                       
+        return True
+        
+    @api.model                                                               
     def sync_product_category(self):    
         
         firebase_admin.get_app()        
@@ -283,12 +301,15 @@ class product_product(models.Model):
                             and pt.id = pp.product_tmpl_id
                             and ccs.sale_group_id = rel.sale_group_id
                             and pc.id = pt.categ_id    
+                            and ccs.id in (389,390,477)
                         )A""")
         for row in self._cr.dictfetchall():
             node = str(row['categ_id'])
             doc_ref = db.collection('product_category').document(node)
             doc_ref.set(row)  
+        return True
             
+    @api.model
     def sync_monthly_promotion_history(self):    
         
         firebase_admin.get_app()        
@@ -302,8 +323,10 @@ class product_product(models.Model):
         for row in self._cr.dictfetchall():
             node = str(row['id'])
             doc_ref = db.collection('monthly_promotion_history').document(node)
-            doc_ref.set(row)            
-                               
+            doc_ref.set(row)  
+        return True          
+                    
+    @api.model           
     def sync_product_pricelists(self):    
         
         firebase_admin.get_app()        
@@ -336,39 +359,54 @@ class product_product(models.Model):
                 for item_row in self._cr.dictfetchall(): 
                     item_node = str(item_row['id'])            
                     item_ref = version_ref.collection('product_pricelist_item').document(item_node)    
-                    item_ref.set(item_row)             
-                           
+                    item_ref.set(item_row)  
+        return True           
+                 
+    @api.model       
     def sync_sale_plan_day(self):    
         
         firebase_admin.get_app()        
         db = firestore.client()
         
         #get sale plan day
-        self._cr.execute("""select p.id,p.date::character varying date,p.sale_team team_id,p.name,p.principal,p.week from sale_plan_day p
-                            join  crm_case_section c on p.sale_team=c.id
-                            where p.active = true""")
+        self._cr.execute("""select p.id,p.date::character varying date,p.sale_team team_id,p.name,p.principal,p.week ,
+                            (select ARRAY_AGG(line.partner_id ORDER BY line.sequence) from sale_plan_day_line line where line.line_id=p.id) res_partner_id
+                            from sale_plan_day p
+                            join crm_case_section c on p.sale_team=c.id
+                            where p.active = true
+                            and c.id in (389,390,477)""")
         for row in self._cr.dictfetchall():
             node = str(row['id'])
             doc_ref = db.collection('sale_plan_day').document(node)
             doc_ref.set(row) 
+        return True
             
+    @api.model
     def sync_sale_plan_trip(self):    
         
         firebase_admin.get_app()        
         db = firestore.client()
         
         #get sale plan trip
-        self._cr.execute("""select distinct p.id,p.date::character varying date,p.sale_team team_id,p.name,p.principal from sale_plan_trip p
-                            ,crm_case_section c,res_partner_sale_plan_trip_rel d, res_partner e
+        self._cr.execute("""select distinct p.id,p.date::character varying date,p.sale_team team_id,p.name,p.principal,
+                            (select ARRAY_AGG(partner_id order by rp.name) 
+                            from res_partner_sale_plan_trip_rel rel,res_partner rp
+                            where rel.partner_id=rp.id
+                            and sale_plan_trip_id=p.id) res_partner_id
+                            from sale_plan_trip p,crm_case_section c,res_partner_sale_plan_trip_rel d, res_partner e
                             where  p.sale_team=c.id
                             and p.active = true 
                             and p.id = d.sale_plan_trip_id
-                            and e.id = d.partner_id""")
+                            and e.id = d.partner_id
+                            and c.id in (389,390,477)
+                            """)
         for row in self._cr.dictfetchall():
             node = str(row['id'])
             doc_ref = db.collection('sale_plan_trip').document(node)
             doc_ref.set(row) 
+        return True
             
+    @api.model
     def sync_tablet_info(self):    
         
         firebase_admin.get_app()        
@@ -382,7 +420,9 @@ class product_product(models.Model):
             node = str(row['tablet_id'])
             doc_ref = db.collection('tablet').document(node)
             doc_ref.set(row) 
+        return True
             
+    @api.model
     def sync_branch(self):    
         
         firebase_admin.get_app()        
@@ -394,7 +434,9 @@ class product_product(models.Model):
             node = str(row['id'])
             doc_ref = db.collection('res_branch').document(node)
             doc_ref.set(row) 
+        return True
             
+    @api.model
     def sync_sale_channel(self):    
         
         firebase_admin.get_app()        
@@ -406,7 +448,9 @@ class product_product(models.Model):
             node = str(row['id'])
             doc_ref = db.collection('sale_channel').document(node)
             doc_ref.set(row) 
+        return True
             
+    @api.model
     def sync_payment_term(self):    
         
         firebase_admin.get_app()        
@@ -418,7 +462,9 @@ class product_product(models.Model):
             node = str(row['id'])
             doc_ref = db.collection('account_payment_term').document(node)
             doc_ref.set(row) 
+        return True
             
+    @api.model
     def sync_city(self):    
         
         firebase_admin.get_app()        
@@ -430,7 +476,9 @@ class product_product(models.Model):
             node = str(row['id'])
             doc_ref = db.collection('res_city').document(node)
             doc_ref.set(row) 
-            
+        return True
+           
+    @api.model 
     def sync_township(self):    
         
         firebase_admin.get_app()        
@@ -442,7 +490,9 @@ class product_product(models.Model):
             node = str(row['id'])
             doc_ref = db.collection('res_township').document(node)
             doc_ref.set(row) 
+        return True
             
+    @api.model
     def sync_outlet_type(self):    
         
         firebase_admin.get_app()        
@@ -454,7 +504,9 @@ class product_product(models.Model):
             node = str(row['id'])
             doc_ref = db.collection('outlettype_outlettype').document(node)
             doc_ref.set(row) 
+        return True
             
+    @api.model
     def sync_sale_demarcation(self):    
         
         firebase_admin.get_app()        
@@ -466,7 +518,9 @@ class product_product(models.Model):
             node = str(row['id'])
             doc_ref = db.collection('sale_demarcation').document(node)
             doc_ref.set(row) 
+        return True
             
+    @api.model
     def sync_sale_class(self):    
         
         firebase_admin.get_app()        
@@ -478,7 +532,9 @@ class product_product(models.Model):
             node = str(row['id'])
             doc_ref = db.collection('sale_class').document(node)
             doc_ref.set(row) 
+        return True
             
+    @api.model
     def sync_division_state(self):    
         
         firebase_admin.get_app()        
@@ -490,7 +546,9 @@ class product_product(models.Model):
             node = str(row['id'])
             doc_ref = db.collection('res_country_state').document(node)
             doc_ref.set(row) 
-            
+        return True    
+        
+    @api.model
     def sync_frequency(self):    
         
         firebase_admin.get_app()        
@@ -502,7 +560,9 @@ class product_product(models.Model):
             node = str(row['id'])
             doc_ref = db.collection('plan_frequency').document(node)
             doc_ref.set(row) 
+        return True
             
+    @api.model
     def sync_stock_check_setting(self):    
         
         firebase_admin.get_app()        
@@ -514,7 +574,9 @@ class product_product(models.Model):
             node = str(row['id'])
             doc_ref = db.collection('stock_check_setting').document(node)
             doc_ref.set(row)    
+        return True
             
+    @api.model
     def sync_partner_category(self):    
         
         firebase_admin.get_app()        
@@ -526,7 +588,9 @@ class product_product(models.Model):
             node = str(row['id'])
             doc_ref = db.collection('partner_category').document(node)
             doc_ref.set(row)  
-            
+        return True
+           
+    @api.model 
     def sync_team_group_product(self):    
         
         firebase_admin.get_app()        
@@ -541,4 +605,22 @@ class product_product(models.Model):
             node = str(row['team_id'])
             doc_ref = db.collection('team_group_product').document(node)
             doc_ref.set(row)
-                           
+        return True    
+    
+#     @api.model
+#     def sync_customer_visit(self):
+#         
+#         firebase_admin.get_app()        
+#         db = firestore.client()        
+#         
+#         visit_obj = self.env['customer.visit'].search([('is_sync', '=', False),
+#                                                        ('doc_ref_id', '!=', False)])
+#         for visit in visit_obj:
+#             visit_ref = db.collection('customer_visit').document(visit.doc_ref_id)
+#             doc = visit_ref.get()            
+#     
+#             visit.write({'image': doc.to_dict().get('image'),
+#                          'image1': doc.to_dict().get('image1'),
+#                          'is_sync': True})
+#             visit_ref.delete()
+#         return True               
