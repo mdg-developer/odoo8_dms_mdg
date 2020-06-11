@@ -930,13 +930,13 @@ class sale_order(models.Model):
                         picking.write({'updated_in_woo':True})
         return True                       
 
-    #Cancel action from quotation to woo
+    #Update action from quotation to woo
     @api.model
     def update_woo_order_status_action(self,status):
         transaction_log_obj=self.env['woo.transaction.log']      
         instance=self.env['woo.instance.ept'].search([('state','=','confirmed')],limit=1)    
         if instance:
-            wcapi = instance.connect_in_woo()
+            wcapi = instance.connect_in_woo()            
             for sale_order in self: 
                 if sale_order.woo_order_id:
                     info = {'status': status}
@@ -969,10 +969,11 @@ class sale_order(models.Model):
     def write(self, cursor, user, ids, vals, context=None):
         result = super(sale_order, self).write(cursor, user, ids, vals, context=context)
         if result:
+            current_so = self.browse(cursor, user, ids, context=context)
             if vals.get('is_generate') == True:
-                self.update_woo_order_status_action('misha-shipment')
-        if vals.get('shipped') == True:
-                self.update_woo_order_status_action('delivered')            
+                current_so.update_woo_order_status_action('misha-shipment')
+            if vals.get('shipped') == True:
+                current_so.update_woo_order_status_action('delivered')            
         return result
 
 class sale_order_line(models.Model):
