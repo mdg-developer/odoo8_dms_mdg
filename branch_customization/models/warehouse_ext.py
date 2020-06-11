@@ -60,6 +60,7 @@ class stock_warehouse(osv.osv):
         
     _columns = {
                'branch_id':fields.many2one('res.branch', 'Branch', required=True),
+                'code': fields.char('Short Name', size=10, required=True, help="Short name used to identify your warehouse"),
                }
     _defaults = {
         'branch_id': _get_default_branch,

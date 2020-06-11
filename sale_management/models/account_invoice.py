@@ -175,6 +175,8 @@ class account_invoice(osv.osv):
                                       ('expired', 'Expired/Damage')], 'Type'),
                                         'is_pd_invoice':fields.boolean('Is Pending Delivery Invoice', default=False, readonly=True),
                     'paid_date': fields.date(string='Paid Date'),
+                    'pre_sale_order_id':fields.many2one('sale.order', 'Original Pre Sale Order No',readonly=True),
+                    'order_team':fields.many2one('crm.case.section', 'Order Team',readonly=True),
 
               }
 
