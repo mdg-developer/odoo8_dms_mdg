@@ -598,7 +598,19 @@ class sale_order(models.Model):
                                                 })                    
                         continue
                 woo_customer_id = order.get('customer',{}).get('id',False)
+                if not woo_customer_id:                    
+                    message="Customer Not Available In %s Order"%(order.get('order_number'))
+                    log=transaction_log_obj.search([('woo_instance_id','=',instance.id),('message','=',message)])
+                    if not log:
+                        transaction_log_obj.create(
+                                                    {'message':message,
+                                                     'mismatch_details':True,
+                                                     'type':'sales',
+                                                     'woo_instance_id':instance.id
+                                                    })
+                    continue
                 partner=order.get('billing_address',False) and self.create_or_update_woo_customer(woo_customer_id,order.get('billing_address'), False, False,False,instance)
+
                 if not partner:                    
                     message="Customer Not Available In %s Order"%(order.get('order_number'))
                     log=transaction_log_obj.search([('woo_instance_id','=',instance.id),('message','=',message)])
@@ -974,6 +986,9 @@ class sale_order(models.Model):
     def action_button_confirm(self, cr, uid, ids, context=None):
         result = super(sale_order, self).action_button_confirm(cr, uid, ids, context=context)
         self.write(cr, uid, ids, {'state':'manual'})
+        if result:
+            for sale in self.browse(cr, uid, ids, context=context):
+                update = sale.update_woo_order_status_action('manual')
         return result
 
     #update woo order status when update 'is_generate' and 'shipped' 
@@ -982,9 +997,17 @@ class sale_order(models.Model):
         if result:
             current_so = self.browse(cursor, user, ids, context=context)
             if vals.get('is_generate') == True:
-                current_so.update_woo_order_status_action('misha-shipment')
-            if vals.get('shipped') == True:
-                current_so.update_woo_order_status_action('delivered')            
+                current_so.update_woo_order_status_action('misha-shipment')           
+        return result
+    
+    @api.multi
+    def update_order_status_from_woo(self,woo_order_id,state):
+        instance=self.env['woo.instance.ept'].search([('state','=','confirmed')],limit=1)    
+        current_so = self.search([('woo_order_id','=',woo_order_id)])
+        if not current_so:
+            result = {"error_descrip": "Sale Order Not Found!", "error": "invalid_woo_order_id"}
+        elif current_so.state not in ['done']:
+            result = current_so.write({'state':state})        
         return result
 
 class sale_order_line(models.Model):
