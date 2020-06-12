@@ -70,6 +70,11 @@ class sale_order(models.Model):
         country_obj=self.env['res.country']
         state_obj=self.env['res.country.state']        
         partner_obj=self.env['res.partner']
+        account = self.env['account.account']
+
+        property_account_payable = account.search([('type', '=', 'payable')],limit=1)
+        property_account_payable_clearing = account.search([('type', '=', 'liquidity')],limit=1)
+        
         
         first_name=vals.get('first_name')
         last_name=vals.get('last_name')
@@ -137,7 +142,10 @@ class sale_order(models.Model):
                            'lang':instance.lang_id.code,
                            'property_product_pricelist':instance.pricelist_id.id,
                            'property_account_position':instance.fiscal_position_id and instance.fiscal_position_id.id or False,
-                           'property_payment_term':instance.payment_term_id and instance.payment_term_id.id or False})          
+                           'property_payment_term':instance.payment_term_id and instance.payment_term_id.id or False,
+                           'property_account_payable':property_account_payable.id,
+                           'property_account_payable_clearing':property_account_payable_clearing.id,
+                           })          
         else:
             partner=partner_obj.create({'type':type,'parent_id':parent_id,'woo_customer_id':woo_customer_id or '',
                                         'name':name,'state_id':state and state.id or False,'city':city,'township':township,
@@ -148,7 +156,10 @@ class sale_order(models.Model):
                                         'property_product_pricelist':instance.pricelist_id.id,
                                         'property_account_position':instance.fiscal_position_id.id and instance.fiscal_position_id.id or False,
                                         'property_payment_term':instance.payment_term_id.id and instance.payment_term_id.id or False,
-                                        'woo_company_name_ept':company_name})
+                                        'woo_company_name_ept':company_name,
+                                        'property_account_payable':property_account_payable.id,
+                                        'property_account_payable_clearing':property_account_payable_clearing.id,                                        
+                                        })
         return partner        
 
     @api.model
