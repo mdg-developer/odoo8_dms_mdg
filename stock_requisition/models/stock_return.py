@@ -353,7 +353,7 @@ class stock_return(osv.osv):
                         first_product_id = dis_data.product_id.id
                         product_data = product_obj.browse(cr, uid, first_product_id, context=context)
                         categ_issue_from_optional_location = product_data.product_tmpl_id.categ_id.issue_from_optional_location
-                        principle_is_separate_srn=product_cat.product_tmpl_id.main_group.is_separate_transition
+                        principle_is_separate_srn=product_data.product_tmpl_id.main_group.is_separate_transition
 
                         if issue_from_optional_location == categ_issue_from_optional_location and principle_is_separate_srn==is_separate_srn:
                             sequence = product_data.sequence
@@ -411,7 +411,7 @@ class stock_return(osv.osv):
                             product_id = move_data.product_id.id
                             product_data = product_obj.browse(cr, uid, product_id, context=context)
                             categ_issue_from_optional_location = product_data.product_tmpl_id.categ_id.issue_from_optional_location
-                            principle_is_separate_srn=product_cat.product_tmpl_id.main_group.is_separate_transition
+                            principle_is_separate_srn=product_data.product_tmpl_id.main_group.is_separate_transition
                             if issue_from_optional_location == categ_issue_from_optional_location and principle_is_separate_srn==is_separate_srn:
                                 sequence = product_data.sequence
                                 uom_id = product_data.uom_id.id
@@ -450,7 +450,7 @@ class stock_return(osv.osv):
                         product_id = quant_data.product_id.id
                         product_data = product_obj.browse(cr, uid, product_id, context=context)
                         categ_issue_from_optional_location = product_data.product_tmpl_id.categ_id.issue_from_optional_location
-                        principle_is_separate_srn=product_cat.product_tmpl_id.main_group.is_separate_transition
+                        principle_is_separate_srn=product_data.product_tmpl_id.main_group.is_separate_transition
                         if issue_from_optional_location == categ_issue_from_optional_location and principle_is_separate_srn==is_separate_srn:
                             sequence = product_data.sequence
                             uom_id = product_data.uom_id.id
@@ -488,7 +488,7 @@ class stock_return(osv.osv):
                         product_id = quant_data.product_id.id
                         product_data = product_obj.browse(cr, uid, product_id, context=context)
                         categ_issue_from_optional_location = product_data.product_tmpl_id.categ_id.issue_from_optional_location
-                        principle_is_separate_srn=product_cat.product_tmpl_id.main_group.is_separate_transition
+                        principle_is_separate_srn=product_data.product_tmpl_id.main_group.is_separate_transition
                         if issue_from_optional_location == categ_issue_from_optional_location and principle_is_separate_srn==is_separate_srn:
                             sequence = product_data.sequence
                             uom_id = product_data.uom_id.id
@@ -526,7 +526,7 @@ class stock_return(osv.osv):
                         product_id = quant_data.product_id.id
                         product_data = product_obj.browse(cr, uid, product_id, context=context)
                         categ_issue_from_optional_location = product_data.product_tmpl_id.categ_id.issue_from_optional_location
-                        principle_is_separate_srn=product_cat.product_tmpl_id.main_group.is_separate_transition
+                        principle_is_separate_srn=product_data.product_tmpl_id.main_group.is_separate_transition
                         if issue_from_optional_location == categ_issue_from_optional_location and principle_is_separate_srn==is_separate_srn:
                             sequence = product_data.sequence
                             uom_id = product_data.uom_id.id
@@ -564,7 +564,7 @@ class stock_return(osv.osv):
                         product_id = quant_data.product_id.id
                         product_data = product_obj.browse(cr, uid, product_id, context=context)
                         categ_issue_from_optional_location = product_data.product_tmpl_id.categ_id.issue_from_optional_location
-                        principle_is_separate_srn=product_cat.product_tmpl_id.main_group.is_separate_transition
+                        principle_is_separate_srn=product_data.product_tmpl_id.main_group.is_separate_transition
                         if issue_from_optional_location == categ_issue_from_optional_location  and principle_is_separate_srn==is_separate_srn:
                             sequence = product_data.sequence
                             uom_id = product_data.uom_id.id
@@ -601,7 +601,7 @@ class stock_return(osv.osv):
                         product_id = quant_data.product_id.id
                         product_data = product_obj.browse(cr, uid, product_id, context=context)
                         categ_issue_from_optional_location = product_data.product_tmpl_id.categ_id.issue_from_optional_location
-                        principle_is_separate_srn=product_cat.product_tmpl_id.main_group.is_separate_transition
+                        principle_is_separate_srn=product_data.product_tmpl_id.main_group.is_separate_transition
                         if issue_from_optional_location == categ_issue_from_optional_location and principle_is_separate_srn==is_separate_srn:
                             sequence = product_data.sequence
                             uom_id = product_data.uom_id.id
