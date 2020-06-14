@@ -11,7 +11,7 @@ class customer_asset(osv.osv):
         return branch_id
         
     _columns = {
-               'branch_id':fields.many2one('res.branch', 'Branch',required=True),
+               'branch_id':fields.many2one('res.branch', 'Branch', required=True),
                }
     _defaults = {
         'branch_id': _get_default_branch,

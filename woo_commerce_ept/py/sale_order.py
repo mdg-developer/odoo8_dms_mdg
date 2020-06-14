@@ -70,6 +70,11 @@ class sale_order(models.Model):
         country_obj=self.env['res.country']
         state_obj=self.env['res.country.state']        
         partner_obj=self.env['res.partner']
+        account = self.env['account.account']
+
+        property_account_payable = account.search([('type', '=', 'payable')],limit=1)
+        property_account_payable_clearing = account.search([('type', '=', 'liquidity')],limit=1)
+        
         
         first_name=vals.get('first_name')
         last_name=vals.get('last_name')
@@ -137,7 +142,10 @@ class sale_order(models.Model):
                            'lang':instance.lang_id.code,
                            'property_product_pricelist':instance.pricelist_id.id,
                            'property_account_position':instance.fiscal_position_id and instance.fiscal_position_id.id or False,
-                           'property_payment_term':instance.payment_term_id and instance.payment_term_id.id or False})          
+                           'property_payment_term':instance.payment_term_id and instance.payment_term_id.id or False,
+                           'property_account_payable':property_account_payable.id,
+                           'property_account_payable_clearing':property_account_payable_clearing.id,
+                           })          
         else:
             partner=partner_obj.create({'type':type,'parent_id':parent_id,'woo_customer_id':woo_customer_id or '',
                                         'name':name,'state_id':state and state.id or False,'city':city,'township':township,
@@ -148,7 +156,10 @@ class sale_order(models.Model):
                                         'property_product_pricelist':instance.pricelist_id.id,
                                         'property_account_position':instance.fiscal_position_id.id and instance.fiscal_position_id.id or False,
                                         'property_payment_term':instance.payment_term_id.id and instance.payment_term_id.id or False,
-                                        'woo_company_name_ept':company_name})
+                                        'woo_company_name_ept':company_name,
+                                        'property_account_payable':property_account_payable.id,
+                                        'property_account_payable_clearing':property_account_payable_clearing.id,                                        
+                                        })
         return partner        
 
     @api.model
@@ -587,7 +598,19 @@ class sale_order(models.Model):
                                                 })                    
                         continue
                 woo_customer_id = order.get('customer',{}).get('id',False)
+                if not woo_customer_id:                    
+                    message="Customer Not Available In %s Order"%(order.get('order_number'))
+                    log=transaction_log_obj.search([('woo_instance_id','=',instance.id),('message','=',message)])
+                    if not log:
+                        transaction_log_obj.create(
+                                                    {'message':message,
+                                                     'mismatch_details':True,
+                                                     'type':'sales',
+                                                     'woo_instance_id':instance.id
+                                                    })
+                    continue
                 partner=order.get('billing_address',False) and self.create_or_update_woo_customer(woo_customer_id,order.get('billing_address'), False, False,False,instance)
+
                 if not partner:                    
                     message="Customer Not Available In %s Order"%(order.get('order_number'))
                     log=transaction_log_obj.search([('woo_instance_id','=',instance.id),('message','=',message)])
@@ -930,13 +953,13 @@ class sale_order(models.Model):
                         picking.write({'updated_in_woo':True})
         return True                       
 
-    #Cancel action from quotation to woo
+    #Update action from quotation to woo
     @api.model
     def update_woo_order_status_action(self,status):
         transaction_log_obj=self.env['woo.transaction.log']      
         instance=self.env['woo.instance.ept'].search([('state','=','confirmed')],limit=1)    
         if instance:
-            wcapi = instance.connect_in_woo()
+            wcapi = instance.connect_in_woo()            
             for sale_order in self: 
                 if sale_order.woo_order_id:
                     info = {'status': status}
@@ -963,16 +986,28 @@ class sale_order(models.Model):
     def action_button_confirm(self, cr, uid, ids, context=None):
         result = super(sale_order, self).action_button_confirm(cr, uid, ids, context=context)
         self.write(cr, uid, ids, {'state':'manual'})
+        if result:
+            for sale in self.browse(cr, uid, ids, context=context):
+                update = sale.update_woo_order_status_action('manual')
         return result
 
     #update woo order status when update 'is_generate' and 'shipped' 
     def write(self, cursor, user, ids, vals, context=None):
         result = super(sale_order, self).write(cursor, user, ids, vals, context=context)
         if result:
+            current_so = self.browse(cursor, user, ids, context=context)
             if vals.get('is_generate') == True:
-                self.update_woo_order_status_action('misha-shipment')
-        if vals.get('shipped') == True:
-                self.update_woo_order_status_action('delivered')            
+                current_so.update_woo_order_status_action('misha-shipment')           
+        return result
+    
+    @api.multi
+    def update_order_status_from_woo(self,woo_order_id,state):
+        instance=self.env['woo.instance.ept'].search([('state','=','confirmed')],limit=1)    
+        current_so = self.search([('woo_order_id','=',woo_order_id)])
+        if not current_so:
+            result = {"error_descrip": "Sale Order Not Found!", "error": "invalid_woo_order_id"}
+        elif current_so.state not in ['done']:
+            result = current_so.write({'state':state})        
         return result
 
 class sale_order_line(models.Model):
