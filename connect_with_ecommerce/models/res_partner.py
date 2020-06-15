@@ -6,11 +6,24 @@ import random
 
 class res_partner(osv.osv):
     _inherit = 'res.partner'
-    
+
+    def _get_total_credit_app_data(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict(map(lambda x: (x,0), ids))
+        credit_obj=self.pool.get('credit.application')
+        # The current user may not have access rights for sale orders
+        try:
+            for partner in self.browse(cr, uid, ids, context):
+                credit_app_ids = credit_obj.search(cr, uid, [('customer_id','=',partner.id)], context=context) 
+                res[partner.id] = len(credit_app_ids)
+        except:
+            pass
+        return res
+            
     _columns = {
                 'birthday': fields.date('Birthday'),
                 'gender': fields.selection([('Male', 'Male'), ('Female', 'Female')], 'Gender'),
                 'shop_name': fields.char('Shop/Business Name'),
+                'credit_applications': fields.function(_get_total_credit_app_data,string='Credit Application'),
             }   
           
     def send_otp_code(self, cr, uid, ids, mobile_phone, context=None):
@@ -165,4 +178,4 @@ class res_partner(osv.osv):
                 old_vals['parent_id'] = partner_data.id
                 new_one = new_partner_obj.create(cr, uid, old_vals, context=context)
                 return result
-        
+

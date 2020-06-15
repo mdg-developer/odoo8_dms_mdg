@@ -46,6 +46,7 @@ Connect With Ecommerce
         'views/res_partner_view.xml',
         'views/res_township_view.xml',
         'views/product_pricelist_view.xml',
+        'views/credit_application_approval.xml',
         'views/credit_application_view.xml'
                 ],
     'installable': True,

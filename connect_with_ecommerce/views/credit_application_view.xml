@@ -6,38 +6,51 @@
 			<field name="model">credit.application</field>
 			<field name="arch" type="xml">
 				<form>
+					<header>
+						<button name="action_confirm" type="object" string="Approve" class="oe_highlight" attrs="{'invisible': [('state','=','approved')]}"/>
+						<button name="set_to_draft" type="object" string="Set To Draft" class="oe_highlight" attrs="{'invisible': [('state','=','draft')]}"/>
+                        <field name='state' widget='statusbar' statusbar_visible='new,approved'/>						
+                    </header>
 					<sheet>
 						<group>
-							<group>
+							<group col='3'>
 								<group>
 									<field name="date_of_application"/>
 								</group>
 								<group>
-									<field name="date_received"/>
+									<field name="customer_id" style="width: 40%%"/>
 								</group>
-								<group string="Business Type">
-									<group>
-										<group>
-											<group>
-												<field name="sole_proprietor"/>
-											</group>
-											<group>
-												<field name="corporation"/>
-											</group>
-										</group>
-									</group>
-									<group>
-										<group>
-											<group>
-												<field name="others"/>
-											</group>
-											<group>
-											</group>
-										</group>
-									</group>
+								<group>
+									<field name="date_received"/>
+									<field name="appiled_amount"/>
+									<field name="effective_date" readonly='1' attrs="{'invisible': [('state','=','draft')]}"/>
+                        			<field name="approved_amount" readonly='1' attrs="{'invisible': [('state','=','draft')]}"/>
 								</group>
 							</group>
 						</group>
+						<group>
+							<group string="Business Type">
+								<group>
+									<group>
+										<group>
+											<field name="sole_proprietor"/>
+										</group>
+										<group>
+											<field name="corporation"/>
+										</group>
+									</group>
+								</group>
+								<group>
+									<group>
+										<group>
+											<field name="others"/>
+										</group>
+										<group>
+										</group>
+									</group>
+								</group>
+							</group>								
+						</group>						
 						<group string="Part I Company Information">
 							<group>
 								<field name="name"/>
@@ -207,6 +220,10 @@
 							</group>
 						</group>
 					</sheet>
+					<div class="oe_chatter">
+                	    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                	    <field name="message_ids" widget="mail_thread"/>
+                	</div>					
 				</form>
 			</field>
 		</record>

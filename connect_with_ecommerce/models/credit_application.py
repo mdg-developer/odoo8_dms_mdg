@@ -1,9 +1,10 @@
 from openerp.osv import fields, osv
 import time
 import datetime
-
+from openerp import models, api, _
 class credit_application(osv.osv):
     _name = 'credit.application'
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
     _columns = {
                     'name': fields.char('Company Registration Number', required=True),
                     'date_of_application': fields.date('Date of Application'),                    
@@ -73,4 +74,72 @@ class credit_application(osv.osv):
                     'bank_officer_email': fields.char('Email Address'),
                     'bank_officer_phone': fields.char('Telephone Number'),
                     'bank_officer_mobile': fields.char('Mobile Phone'),
-                }
+                    'customer_id': fields.many2one('res.partner', 'Customer', track_visibility='onchange'),
+                    'appiled_amount': fields.float('Appiled Amount',track_visibility='onchange'),
+                    'approved_amount': fields.float('Approved Amount',track_visibility='onchange'),
+                    'state': fields.selection([('draft', 'Draft'),('approved', 'Approved')],'Status', required=True, readonly="1", track_visibility='onchange', default='draft'),
+                    'effective_date': fields.date('Effective Date', track_visibility='onchange'),
+     
+               }
+
+    @api.multi
+    def set_to_draft(self):
+        update = self.write({
+            'state': 'draft',
+            'approved_amount': False,
+            'effective_date': False,            
+        })
+        print("update",update)
+        return update
+
+
+    @api.multi
+    def action_confirm(self):
+        module = __name__.split('addons.')[1].split('.')[0]
+        view = self.env.ref('%s.view_credit_application_approval_form' % module)
+        return {
+            'name': _('Approve'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'credit.application.approval',
+            'view_id': view.id,
+            'target': 'new',
+            'type': 'ir.actions.act_window',
+        }        
+
+class credit_application_approval(models.TransientModel):
+    _name = 'credit.application.approval'
+
+    _columns = {
+        'name': fields.char('Company Registration Number', required=True),
+        'customer_id': fields.many2one('res.partner',string='customer'),
+        'appiled_amount': fields.float('Appiled Amount'),
+        'approved_amount': fields.float('Approved Amount'),
+        'effective_date': fields.date('Effective Date'),
+    }
+
+    @api.model
+    def default_get(self, fields):
+        res = super(credit_application_approval, self).default_get(fields)
+        credit_app_ids = self.env.context.get('active_ids', [])
+        data = {}
+        credit_app = self.env['credit.application'].search([('id','=', credit_app_ids[0])])
+        data['name'] = credit_app.name
+        data['customer_id'] = credit_app.customer_id.id if credit_app.customer_id else False
+        data['appiled_amount'] = credit_app.appiled_amount
+        data['approved_amount'] = credit_app.approved_amount
+        data['effective_date'] = credit_app.effective_date
+        res.update(data)
+        return res
+
+    @api.multi
+    def confirm_credit_application(self):
+        credit_app_ids = self.env.context.get('active_ids', [])
+        credit_app = self.env['credit.application'].search([('id','=', credit_app_ids[0])])
+        credit_app.write({
+            'state': 'approved',
+            'approved_amount': self.approved_amount,
+            'effective_date': self.effective_date,
+        })
+        return True
+    
