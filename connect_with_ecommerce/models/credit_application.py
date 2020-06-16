@@ -12,7 +12,7 @@ class credit_application(osv.osv):
                     'corporation': fields.boolean('Corporation', default=False),
                     'others': fields.boolean('Others', default=False),
                     'date_received': fields.date('Date Received'),                    
-                    'registration_date': fields.date('Registration Date'), 
+                    'registration_date': fields.date('Registration Date',default=datetime.datetime.today()), 
                     'number_of_employees': fields.integer('Number of Employees'),
                     'company_register_name': fields.char('Company Register Name'),
                     'trade_brand_name': fields.char('Trade Name/Brand Name'),
@@ -105,7 +105,92 @@ class credit_application(osv.osv):
             'view_id': view.id,
             'target': 'new',
             'type': 'ir.actions.act_window',
-        }        
+        }
+
+    def create_from_woo(self, cr, uid, ids, vals, context=None):
+        country_obj = self.pool.get('res.country')
+        township_obj = self.pool.get('res.township')
+        city_obj = self.pool.get('res.city')
+        state_obj = self.pool.get('res.country.state')
+        partner_obj = self.pool.get('res.partner')
+
+        #Company
+        if vals.get("company_country_id"):
+            country_value = country_obj.search(cr, uid, [('name', '=ilike', vals['company_country_id'])], context=context)
+            if country_value:
+                country = country_obj.browse(cr, uid, country_value, context=context)
+                vals['company_country_id'] = country.id
+        if vals.get("company_state_id"):
+            state_value = state_obj.search(cr, uid, [('name', '=ilike', vals['company_state_id'])], context=context)
+            if state_value:
+                state = state_obj.browse(cr, uid, state_value, context=context)
+                vals['company_state_id'] = state.id
+        if vals.get("company_city_id"):
+            city_value = city_obj.search(cr, uid, [('name', '=ilike', vals['company_city_id'])], context=context)
+            if city_value:
+                city = city_obj.browse(cr, uid, city_value, context=context)
+                vals['company_city_id'] = city.id
+        if vals.get("company_township_id"):
+            township_value = township_obj.search(cr, uid, [('name', '=ilike', vals['company_township_id'])], context=context)
+            if township_value:
+                township = township_obj.browse(cr, uid, township_value, context=context)
+                vals['company_township_id'] = township.id
+        
+        #Customer
+        if vals.get('customer_id'):
+            customer_value = partner_obj.search(cr, uid, [('customer_code','=',vals['customer_id'])], context=context)
+            if customer_value:
+                customer = partner_obj.browse(cr, uid, customer_value, context=context)
+                vals['customer_id'] = customer.id
+        
+        # Residence
+        if vals.get("residence_country_id"):
+            country_value = country_obj.search(cr, uid, [('name', '=ilike', vals['residence_country_id'])], context=context)
+            if country_value:
+                country = country_obj.browse(cr, uid, country_value, context=context)
+                vals['residence_country_id'] = country.id
+        if vals.get("residence_state_id"):
+            state_value = state_obj.search(cr, uid, [('name', '=ilike', vals['residence_state_id'])], context=context)
+            if state_value:
+                state = state_obj.browse(cr, uid, state_value, context=context)
+                vals['residence_state_id'] = state.id
+        if vals.get("residence_city_id"):
+            city_value = city_obj.search(cr, uid, [('name', '=ilike', vals['residence_city_id'])], context=context)
+            if city_value:
+                city = city_obj.browse(cr, uid, city_value, context=context)
+                vals['residence_city_id'] = city.id
+        if vals.get("residence_township_id"):
+            township_value = township_obj.search(cr, uid, [('name', '=ilike', vals['residence_township_id'])], context=context)
+            if township_value:
+                township = township_obj.browse(cr, uid, township_value, context=context)
+                vals['residence_township_id'] = township.id
+
+        # Bank
+        if vals.get("bank_register_country_id"):
+            country_value = country_obj.search(cr, uid, [('name', '=ilike', vals['bank_register_country_id'])], context=context)
+            if country_value:
+                country = country_obj.browse(cr, uid, country_value, context=context)
+                vals['bank_register_country_id'] = country.id
+        if vals.get("bank_register_state_id"):
+            state_value = state_obj.search(cr, uid, [('name', '=ilike', vals['bank_register_state_id'])], context=context)
+            if state_value:
+                state = state_obj.browse(cr, uid, state_value, context=context)
+                vals['bank_register_state_id'] = state.id
+        if vals.get("bank_register_city_id"):
+            city_value = city_obj.search(cr, uid, [('name', '=ilike', vals['bank_register_city_id'])], context=context)
+            if city_value:
+                city = city_obj.browse(cr, uid, city_value, context=context)
+                vals['bank_register_city_id'] = city.id
+        if vals.get("bank_register_township_id"):
+            township_value = township_obj.search(cr, uid, [('name', '=ilike', vals['bank_register_township_id'])], context=context)
+            if township_value:
+                township = township_obj.browse(cr, uid, township_value, context=context)
+                vals['bank_register_township_id'] = township.id                
+
+
+        result = self.create(cr, uid, vals, context=context)
+        return result
+
 
 class credit_application_approval(models.TransientModel):
     _name = 'credit.application.approval'

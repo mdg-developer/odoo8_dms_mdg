@@ -8,3 +8,4 @@ from . import model__report
 from . import model__res_partner
 from . import model__sale_order            # need install 'sale' module
 from . import model__sale_order_line       # need install 'sale' module
+from . import model_credit_application
