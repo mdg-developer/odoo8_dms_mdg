@@ -37,6 +37,21 @@ class customer_target(osv.osv):
     _name = 'customer.target'
     _description = 'Customer Target'
     
+    
+    def _get_ams_budget_total(self, cr, uid, ids, field_name, arg, context=None):
+        result = {}
+        ams_value=0
+        ams_budget_value=0
+        for rec in self.browse(cr, uid, ids, context=context):
+            for line in rec.target_line_ids:
+                ams_value+=line.ams_value
+            ams_budget_value =ams_value * 0.05
+            if ams_budget_value > 500000:
+                ams_budget_value=500000                
+            result[rec.id] = ams_budget_value
+            print 'ams_valueams_budget',ams_budget_value
+        return result     
+     
     def _get_ams_total(self, cr, uid, ids, field_name, arg, context=None):
         result = {}
         ams_value=0
@@ -47,6 +62,18 @@ class customer_target(osv.osv):
             print 'ams_valueams_valueams_value',ams_value
         return result  
     
+    def _get_month_out_todate_total(self, cr, uid, ids, field_name, arg, context=None):
+        result = {}
+        month_out_todate=0
+        for rec in self.browse(cr, uid, ids, context=context):
+            if rec.partner_id:
+                cr.execute('''select COALESCE(sum(total_value),0) as total_value from product_transactions
+                    where date_part('month', (SELECT date)) =date_part('month', (SELECT current_timestamp)) 
+                    and customer_id = %s
+                    ''',(rec.partner_id.id,))
+                month_out_todate=cr.fetchone()[0]
+            result[rec.id] = month_out_todate                        
+        return result      
     _columns = {
         'partner_id': fields.many2one('res.partner', string='Customer'),
         'outlet_type': fields.many2one('outlettype.outlettype', string="Outlet type"),
@@ -67,7 +94,8 @@ class customer_target(osv.osv):
         # 'target_id':fields.many2one('res.partner', 'Target Items'),                      
         'target_line_ids':fields.one2many('customer.target.line', 'line_id', 'Target Items', copy=True),
         'ams_total':fields.function(_get_ams_total, type='float', string='3AMS Total', digits=(16, 0),store=True),
-
+        'ams_buget_total':fields.function(_get_ams_budget_total, type='float', string='Budget', digits=(16, 0),store=True),
+        'month_out_todate':fields.function(_get_month_out_todate_total, type='float', string='Month Todate Out', digits=(16, 0),store=True),
     }
     _defaults = {
        
