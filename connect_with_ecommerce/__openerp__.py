@@ -40,14 +40,14 @@ Connect With Ecommerce
     2. Show Delivery Team in State
     """,
     'data': [
+        'views/credit_application_view.xml',
         'views/res_city_view.xml',
         'views/product_template_view.xml',
 #         'views/res_country_state_view.xml',
         'views/res_partner_view.xml',
         'views/res_township_view.xml',
         'views/product_pricelist_view.xml',
-        'views/credit_application_approval.xml',
-        'views/credit_application_view.xml'
+        'views/credit_application_approval.xml'
                 ],
     'installable': True,
     'auto_install': False,
