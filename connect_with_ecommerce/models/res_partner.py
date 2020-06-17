@@ -88,7 +88,7 @@ class res_partner(osv.osv):
                         if city_data.delivery_team_id:
                             vals['delivery_team_id']= city_data.delivery_team_id.id
             if state:                
-                state_value = state_obj.search(cr, uid, [('name', '=', state)], context=context)
+                state_value = state_obj.search(cr, uid, [('name', '=ilike', state)], context=context)
                 if state_value:
                     state_data = state_obj.browse(cr, uid, state_value, context=context)
                     vals['state_id'] = state_data.id
@@ -103,7 +103,7 @@ class res_partner(osv.osv):
             vals['birthday'] = birthday
             vals['email'] = email
             vals['customer'] = True
-            outlettype = outlettype_obj.search(cr, uid, [('name', '=', 'Site Registered')],context=context)            
+            outlettype = outlettype_obj.search(cr, uid, [('name', '=ilike', 'site registered')],context=context)            
             if outlettype:
                 outlettype_data = outlettype_obj.browse(cr, uid, outlettype, context=context)
                 vals['outlet_type'] = outlettype_data.id
