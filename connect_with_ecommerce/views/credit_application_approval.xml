@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+        <record id="view_credit_application_approval_form" model="ir.ui.view">
+            <field name="name">credit.application.approval.form</field>
+            <field name="model">credit.application.approval</field>
+            <field name="arch" type="xml">
+                <form string="Approve">
+                    <group>
+                        <field name="name" readonly='1'/>
+                        <field name="customer_id" style="width: 40%%" readonly='1'/>
+                        <field name="appiled_amount"/>
+                        <field name="effective_date"/>
+                        <field name="approved_amount"/>
+                    </group>
+                    <footer>
+                        <button string="Approve" name="confirm_credit_application" type="object" default_focus="1" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>                    
+                </form>
+            </field>
+        </record>    
+        <act_window id="credit_application_approval_action"
+                    name="Approve"
+                    src_model="credit.application"
+                    res_model="credit.application.approval"
+                    view_mode="form"
+                    target="new"
+                    key2="client_action_multi"/>
+	</data>
+</openerp>    
