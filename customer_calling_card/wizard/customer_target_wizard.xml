@@ -17,6 +17,10 @@
 							<field name="address" readonly="1" />
 							<field name="date" />
 							<field name="ams_total" readonly="1"/>
+							<field name="ams_buget_total" readonly="1" />
+							<field name="month_out_todate" readonly="1" />
+							
+							
 						</group>
 						<group>
 

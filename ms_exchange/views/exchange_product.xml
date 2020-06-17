@@ -69,7 +69,7 @@
 								<field name="longitude" />
 								<field name="distance_status" class="oe_inline" />
 								<field name="geo_point" class="oe_inline" />
-							    <field name="pricelist_id" />
+								<field name="pricelist_id" />
 								<field name="total_value" />
 							</group>
 							<group>
@@ -82,6 +82,10 @@
 								<field name="location_id" />
 								<field name="ams_total" />
 								<field name="out_ams_percent" />
+								<field name="ams_buget_total" />
+								<field name="month_out_todate" />
+								<field name="balance_total" />
+								
 								
 							</group>
 						</group>
@@ -113,7 +117,7 @@
 										<field name="exp_date" />
 										<field name="trans_type" />
 										<field name="total_price" />
-										<field name="note" />										
+										<field name="note" />
 
 									</tree>
 								</field>

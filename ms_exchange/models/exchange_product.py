@@ -37,6 +37,10 @@ class exchange_product(osv.osv):
             'pricelist_id':fields.many2one('product.pricelist', string='Pricelist'),
              'ams_total':fields.float('3AMS Total'),
              'out_ams_percent':fields.float('% Out on AMS'),
+            'ams_buget_total':fields.float('Budget'),
+             'month_out_todate':fields.float('Month Todate Out'),
+            'balance_total':fields.float('Balance'),
+
 
     }
     

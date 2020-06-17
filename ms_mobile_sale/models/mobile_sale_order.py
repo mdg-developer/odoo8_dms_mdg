@@ -750,6 +750,9 @@ class mobile_sale_order(osv.osv):
                                 'total_value':pt['total_value'],
                                 'ams_total':pt ['ams_total'],
                                 'out_ams_percent':pt ['out_ams_percent'],
+                              'ams_buget_total':pt ['ams_buget_total'],
+                                'month_out_todate':pt ['month_out_todate'],
+
 
                                 }
                     s_order_id = product_trans_obj.create(cursor, user, mso_result, context=context)
@@ -2470,7 +2473,7 @@ class mobile_sale_order(osv.osv):
         is_supervisor=sale_team_data.is_supervisor    
         if is_supervisor==True:
             cr.execute('''            
-                    select tl.id ,target.partner_id,tl.product_id,1 as product_uom,tl.ach_qty,tl.target_qty,gap_qty as gap,month1,month2,month3,target.ams_total
+                    select tl.id ,target.partner_id,tl.product_id,1 as product_uom,tl.ach_qty,tl.target_qty,gap_qty as gap,month1,month2,month3,target.ams_total,target.ams_buget_total,target.month_out_todate
                     from customer_target target ,customer_target_line tl,product_sale_group_rel rel,crm_case_section ccs
                     where target.id= tl.line_id
                     and rel.product_id=tl.product_id
@@ -2500,7 +2503,7 @@ class mobile_sale_order(osv.osv):
         else:
             cr.execute('''            
                   
-                select tl.id ,target.partner_id,tl.product_id,1 as product_uom,tl.ach_qty,tl.target_qty,gap_qty as gap,month1,month2,month3,target.ams_total
+                select tl.id ,target.partner_id,tl.product_id,1 as product_uom,tl.ach_qty,tl.target_qty,gap_qty as gap,month1,month2,month3,target.ams_total,target.ams_buget_total,target.month_out_todate
                     from customer_target target ,customer_target_line tl,product_sale_group_rel rel,crm_case_section ccs
                     where target.id= tl.line_id
                     and rel.product_id=tl.product_id
@@ -2526,6 +2529,7 @@ class mobile_sale_order(osv.osv):
                     )
              ''', (sale_team_id,sale_team_id,sale_team_id))                
             datas = cr.fetchall()
+            print 'target_dataaaaa',datas
         return datas    
     
     def get_stockcheck(self, cr, uid, sale_team_id , context=None, **kwargs):
