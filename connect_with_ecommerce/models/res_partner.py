@@ -154,7 +154,7 @@ class res_partner(osv.osv):
                 
                 new_partner_obj = self.pool.get('res.partner')
                 old_vals = {}
-                old_vals['name'] = 'thuyahtut'
+                old_vals['name'] = partner_data.name
                 old_vals['street'] = partner_data.street
                 old_vals['street2'] = partner_data.street2
                 old_vals['township'] = partner_data.township.id
