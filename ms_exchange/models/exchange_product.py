@@ -38,7 +38,7 @@ class exchange_product(osv.osv):
              'ams_total':fields.float('3AMS Total'),
              'out_ams_percent':fields.float('% Out on AMS'),
             'ams_buget_total':fields.float('Budget'),
-             'month_out_todate':fields.float('Month Todate Out'),
+             'month_out_todate':fields.float('Month To Date Out'),
             'balance_total':fields.float('Balance'),
 
 
