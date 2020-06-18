@@ -58,8 +58,7 @@ class res_partner(osv.osv):
                 return error_msg
 
 
-    def create_or_update_woo_customer(self, cr, uid, ids, mdg_customer=False, customer_code=None, name=None,street=None,street2=None,township=None,state=None,mobile=None,phone=None,gender=None,birthday=None,email=None,partner_latitude=None,partner_longitude=None,sms=None,viber=None,shop_name=None,context=None):
-        print("mdg_customer", mdg_customer)
+    def create_or_update_woo_customer(self, cr, uid, ids, mdg_customer=False, customer_code=None, name=None,street=None,street2=None,township=None,state=None,mobile=None,phone=None,gender=None,birthday=None,email=None,partner_latitude=None,partner_longitude=None,sms=None,viber=None,shop_name=None,woo_customer_id=None,context=None):
         vals = {}
         township_obj = self.pool.get('res.township')
         city_obj = self.pool.get('res.city')
@@ -88,10 +87,15 @@ class res_partner(osv.osv):
                         if city_data.delivery_team_id:
                             vals['delivery_team_id']= city_data.delivery_team_id.id
             if state:                
-                state_value = state_obj.search(cr, uid, [('name', '=', state)], context=context)
+                state_value = state_obj.search(cr, uid, [('name', '=ilike', state)], context=context)
                 if state_value:
                     state_data = state_obj.browse(cr, uid, state_value, context=context)
                     vals['state_id'] = state_data.id
+            if woo_customer_id:
+                instances=self.pool.get('woo.instance.ept').search(cr, uid, [('order_auto_import','=',True),('state','=','confirmed')], context=context)
+                if instances:
+                    woo_customer_id = "%s_%s"%(instances[0],woo_customer_id) if woo_customer_id else False
+                    vals['woo_customer_id'] = woo_customer_id
             vals['sms'] = sms
             vals['viber'] = viber
             vals['shop_name'] = shop_name
@@ -103,7 +107,7 @@ class res_partner(osv.osv):
             vals['birthday'] = birthday
             vals['email'] = email
             vals['customer'] = True
-            outlettype = outlettype_obj.search(cr, uid, [('name', '=', 'Site Registered')],context=context)            
+            outlettype = outlettype_obj.search(cr, uid, [('name', '=ilike', 'site registered')],context=context)            
             if outlettype:
                 outlettype_data = outlettype_obj.browse(cr, uid, outlettype, context=context)
                 vals['outlet_type'] = outlettype_data.id
@@ -154,7 +158,7 @@ class res_partner(osv.osv):
                 
                 new_partner_obj = self.pool.get('res.partner')
                 old_vals = {}
-                old_vals['name'] = 'thuyahtut'
+                old_vals['name'] = partner_data.name
                 old_vals['street'] = partner_data.street
                 old_vals['street2'] = partner_data.street2
                 old_vals['township'] = partner_data.township.id

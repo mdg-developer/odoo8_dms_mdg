@@ -146,20 +146,20 @@ class sale_order(models.Model):
                            'property_account_payable':property_account_payable.id,
                            'property_account_payable_clearing':property_account_payable_clearing.id,
                            })          
-        else:
-            partner=partner_obj.create({'type':type,'parent_id':parent_id,'woo_customer_id':woo_customer_id or '',
-                                        'name':name,'state_id':state and state.id or False,'city':city,'township':township,
-                                        'street':address1,'street2':address2,
-                                        'phone':phone,'zip':zip,'email':email,
-                                        'country_id':country.id and country.id or False,'is_company':is_company,
-                                        'lang':instance.lang_id.code,
-                                        'property_product_pricelist':instance.pricelist_id.id,
-                                        'property_account_position':instance.fiscal_position_id.id and instance.fiscal_position_id.id or False,
-                                        'property_payment_term':instance.payment_term_id.id and instance.payment_term_id.id or False,
-                                        'woo_company_name_ept':company_name,
-                                        'property_account_payable':property_account_payable.id,
-                                        'property_account_payable_clearing':property_account_payable_clearing.id,                                        
-                                        })
+        # else:
+        #     partner=partner_obj.create({'type':type,'parent_id':parent_id,'woo_customer_id':woo_customer_id or '',
+        #                                 'name':name,'state_id':state and state.id or False,'city':city,'township':township,
+        #                                 'street':address1,'street2':address2,
+        #                                 'phone':phone,'zip':zip,'email':email,
+        #                                 'country_id':country.id and country.id or False,'is_company':is_company,
+        #                                 'lang':instance.lang_id.code,
+        #                                 'property_product_pricelist':instance.pricelist_id.id,
+        #                                 'property_account_position':instance.fiscal_position_id.id and instance.fiscal_position_id.id or False,
+        #                                 'property_payment_term':instance.payment_term_id.id and instance.payment_term_id.id or False,
+        #                                 'woo_company_name_ept':company_name,
+        #                                 'property_account_payable':property_account_payable.id,
+        #                                 'property_account_payable_clearing':property_account_payable_clearing.id,                                        
+        #                                 })
         return partner        
 
     @api.model
@@ -598,6 +598,7 @@ class sale_order(models.Model):
                                                 })                    
                         continue
                 woo_customer_id = order.get('customer',{}).get('id',False)
+                print("woo_customer_id",woo_customer_id)
                 if not woo_customer_id:                    
                     message="Customer Not Available In %s Order"%(order.get('order_number'))
                     log=transaction_log_obj.search([('woo_instance_id','=',instance.id),('message','=',message)])
