@@ -26,10 +26,9 @@
 				}
 			</field>
 
-			<!-- <field name="domain">[('state', 'not in', ('draft', 'sent',
+			<field name="domain">[('state', 'not in', ('draft', 'sent',
 				'cancel')),('pre_order','=',True)]
-			</field> -->
-			<field name="domain">[('state', 'not in', ('cancel',)),('pre_order','=',True)]</field>
+			</field>
 			<field name="help" type="html">
 				<p class="oe_view_nocontent_create">
 					Click to create a quotation that can be converted into a
