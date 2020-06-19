@@ -519,9 +519,9 @@ class CommonReportHeaderWebkit(common_report_header):
                                         " FROM account_move_line aml,account_move am"
                                         " WHERE aml.move_id = am.id "
                                         " AND aml.date < %s"
-                                        " AND account_id = %s"
-                                        " AND analytic_account_id in %s"
-                                        " AND branch_id in %s"
+                                        " AND aml.account_id = %s"
+                                        " AND aml.analytic_account_id in %s"
+                                        " AND aml.branch_id in %s"
                                         " AND am.state = %s",                                        
                                         (start, account_id, tuple(analytic_id), tuple(branch_id), target_move))  
                 elif analytic_id:                    
@@ -532,8 +532,8 @@ class CommonReportHeaderWebkit(common_report_header):
                                         " FROM account_move_line aml,account_move am"
                                         " WHERE aml.move_id = am.id "
                                         " AND aml.date < %s"
-                                        " AND account_id = %s"
-                                        " AND analytic_account_id in %s"
+                                        " AND aml.account_id = %s"
+                                        " AND aml.analytic_account_id in %s"
                                         " AND am.state = %s",                                               
                                         (start, account_id, tuple(analytic_id), target_move))
                 elif branch_id:
@@ -544,8 +544,8 @@ class CommonReportHeaderWebkit(common_report_header):
                                         " FROM account_move_line aml,account_move am"
                                         " WHERE aml.move_id = am.id "
                                         " AND aml.date < %s"
-                                        " AND account_id = %s"                                       
-                                        " AND branch_id in %s"
+                                        " AND aml.account_id = %s"                                       
+                                        " AND aml.branch_id in %s"
                                         " AND am.state = %s",                                              
                                         (start, account_id, tuple(branch_id), target_move))    
                 else:
@@ -556,7 +556,7 @@ class CommonReportHeaderWebkit(common_report_header):
                                         " FROM account_move_line aml,account_move am"
                                         " WHERE aml.move_id = am.id "
                                         " AND aml.date < %s"
-                                        " AND account_id = %s"
+                                        " AND aml.account_id = %s"
                                         " AND am.state = %s",
                                         (start, account_id, target_move))
                 res = self.cursor.dictfetchone()
