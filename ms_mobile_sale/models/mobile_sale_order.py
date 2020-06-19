@@ -752,6 +752,8 @@ class mobile_sale_order(osv.osv):
                                 'out_ams_percent':pt ['out_ams_percent'],
                               'ams_buget_total':pt ['ams_buget_total'],
                                 'month_out_todate':pt ['month_out_todate'],
+                                'balance_total':pt ['balance_total'],
+
 
 
                                 }
@@ -2473,7 +2475,7 @@ class mobile_sale_order(osv.osv):
         is_supervisor=sale_team_data.is_supervisor    
         if is_supervisor==True:
             cr.execute('''            
-                    select tl.id ,target.partner_id,tl.product_id,1 as product_uom,tl.ach_qty,tl.target_qty,gap_qty as gap,month1,month2,month3,target.ams_total,target.ams_buget_total,target.month_out_todate
+                    select tl.id ,target.partner_id,tl.product_id,1 as product_uom,tl.ach_qty,tl.target_qty,gap_qty as gap,month1,month2,month3,target.ams_total,target.ams_buget_total,target.month_out_todate,target.ams_balance
                     from customer_target target ,customer_target_line tl,product_sale_group_rel rel,crm_case_section ccs
                     where target.id= tl.line_id
                     and rel.product_id=tl.product_id
@@ -2503,7 +2505,7 @@ class mobile_sale_order(osv.osv):
         else:
             cr.execute('''            
                   
-                select tl.id ,target.partner_id,tl.product_id,1 as product_uom,tl.ach_qty,tl.target_qty,gap_qty as gap,month1,month2,month3,target.ams_total,target.ams_buget_total,target.month_out_todate
+                select tl.id ,target.partner_id,tl.product_id,1 as product_uom,tl.ach_qty,tl.target_qty,gap_qty as gap,month1,month2,month3,target.ams_total,target.ams_buget_total,target.month_out_todate,target.ams_balance
                     from customer_target target ,customer_target_line tl,product_sale_group_rel rel,crm_case_section ccs
                     where target.id= tl.line_id
                     and rel.product_id=tl.product_id
@@ -2696,7 +2698,7 @@ class mobile_sale_order(osv.osv):
                     so.warehouse_id,so.shipped,so.sale_plan_day_id,so.sale_plan_name,so.so_longitude,so.payment_type,
                     so.due_date,so.sale_plan_trip_id,so.so_latitude,so.customer_code,so.name as so_refNo,so.total_dis,so.deduct_amt,so.coupon_code,
                     so.invoiced,so.branch_id,so.delivery_remark ,team.name,so.payment_term,so.due_date,so.rebate_later,
-                    rp.name customer_name
+                    rp.name customer_name,replace(so.note,',',';') as note
                     from sale_order so, crm_case_section team,res_partner rp                                    
                     where so.id= %s and so.state!= 'cancel'
                     and  team.id = so.section_id

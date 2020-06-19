@@ -62,6 +62,14 @@ class customer_target(osv.osv):
             print 'ams_valueams_valueams_value',ams_value
         return result  
     
+    def _get_ams_balance_total(self, cr, uid, ids, field_name, arg, context=None):
+        result = {}
+        ams_balance=0
+        for rec in self.browse(cr, uid, ids, context=context):
+            ams_balance=rec.ams_buget_total - rec.month_out_todate 
+            result[rec.id] = ams_balance
+        return result  
+    
     def _get_month_out_todate_total(self, cr, uid, ids, field_name, arg, context=None):
         result = {}
         month_out_todate=0
@@ -74,6 +82,7 @@ class customer_target(osv.osv):
                 month_out_todate=cr.fetchone()[0]
             result[rec.id] = month_out_todate                        
         return result      
+    
     _columns = {
         'partner_id': fields.many2one('res.partner', string='Customer'),
         'outlet_type': fields.many2one('outlettype.outlettype', string="Outlet type"),
@@ -95,7 +104,9 @@ class customer_target(osv.osv):
         'target_line_ids':fields.one2many('customer.target.line', 'line_id', 'Target Items', copy=True),
         'ams_total':fields.function(_get_ams_total, type='float', string='3AMS Total', digits=(16, 0),store=True),
         'ams_buget_total':fields.function(_get_ams_budget_total, type='float', string='Budget', digits=(16, 0),store=True),
-        'month_out_todate':fields.function(_get_month_out_todate_total, type='float', string='Month Todate Out', digits=(16, 0),store=True),
+        'month_out_todate':fields.function(_get_month_out_todate_total, type='float', string='Month To Date Out', digits=(16, 0),store=True),
+        'ams_balance':fields.function(_get_ams_balance_total, type='float', string='Balance', digits=(16, 0),store=True),
+
     }
     _defaults = {
        
