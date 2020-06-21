@@ -46,8 +46,8 @@ class customer_target(osv.osv):
             for line in rec.target_line_ids:
                 ams_value+=line.ams_value
             ams_budget_value =ams_value * 0.05
-            if ams_budget_value > 500000:
-                ams_budget_value=500000                
+            if ams_budget_value > 50000:
+                ams_budget_value=50000                
             result[rec.id] = ams_budget_value
             print 'ams_valueams_budget',ams_budget_value
         return result     
@@ -66,7 +66,11 @@ class customer_target(osv.osv):
         result = {}
         ams_balance=0
         for rec in self.browse(cr, uid, ids, context=context):
-            ams_balance=rec.ams_buget_total - rec.month_out_todate 
+            if rec.ams_buget_total > 50000:
+                ams_budget_value=50000 
+            else:
+                ams_budget_value =rec.ams_buget_total
+            ams_balance= ams_budget_value- rec.month_out_todate 
             result[rec.id] = ams_balance
         return result  
     
