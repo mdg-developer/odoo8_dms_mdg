@@ -292,6 +292,7 @@ class pre_sale_order(osv.osv):
                                                         'so_longitude':preObj_ids.mso_longitude,
                                                         'user_id':preObj_ids.user_id.id,
                                                         'section_id':preObj_ids.sale_team.id,
+                                                        'order_team':preObj_ids.sale_team.id,
                                                         'deduct_amt':preObj_ids.deduction_amount,
                                                         'additional_discount':0,
 #                                                         'client_order_ref':preObj_ids.tablet_id.name,

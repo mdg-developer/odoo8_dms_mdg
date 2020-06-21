@@ -991,7 +991,7 @@ class mobile_sale_order(osv.osv):
                     if ms_ids.order_team:
                         order_team=ms_ids.order_team.id
                     else:
-                        order_team=False
+                        order_team=sale_team_id
                     
                     soResult = {
                                           'date_order':ms_ids.date,
