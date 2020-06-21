@@ -106,10 +106,14 @@ class customer_target(osv.osv):
         'updated_time': fields.datetime(string='Updated Date Time'),
         # 'target_id':fields.many2one('res.partner', 'Target Items'),                      
         'target_line_ids':fields.one2many('customer.target.line', 'line_id', 'Target Items', copy=True),
-        'ams_total':fields.function(_get_ams_total, type='float', string='3AMS Total', digits=(16, 0),store=True),
-        'ams_buget_total':fields.function(_get_ams_budget_total, type='float', string='Budget', digits=(16, 0),store=True),
-        'month_out_todate':fields.function(_get_month_out_todate_total, type='float', string='Month To Date Out', digits=(16, 0),store=True),
-        'ams_balance':fields.function(_get_ams_balance_total, type='float', string='Balance', digits=(16, 0),store=True),
+#         'ams_total':fields.function(_get_ams_total, type='float', string='3AMS Total', digits=(16, 0),store=True),
+#         'ams_buget_total':fields.function(_get_ams_budget_total, type='float', string='Budget', digits=(16, 0),store=True),
+#         'month_out_todate':fields.function(_get_month_out_todate_total, type='float', string='Month To Date Out', digits=(16, 0),store=True),
+#         'ams_balance':fields.function(_get_ams_balance_total, type='float', string='Balance', digits=(16, 0),store=True),
+        'ams_total':fields.float('3AMS Total',readonly=True),
+        'ams_buget_total':fields.float('Budget',readonly=True),
+        'month_out_todate':fields.float('Month To Date Out',readonly=True),
+        'ams_balance':fields.float('Balance',readonly=True),
 
     }
     _defaults = {
@@ -141,7 +145,7 @@ class customer_target(osv.osv):
                         'branch_id':customer_obj.branch_id.id,
                     }
             target = self.pool.get('customer.target').create(cr, uid, result, context=context)   
-            
+            ams_total =0
             product_product = self.pool.get('product.product').search(cr, uid, [('active', '=', True),
                                                                                 ('sale_ok', '=', True),
                                                                                 ('is_foc', '!=', True),
@@ -288,6 +292,7 @@ class customer_target(osv.osv):
                         product_price=product_price_data[0]
                     else:
                         product_price=0
+                    ams_total += avg_sale * product_price
                     line_result = {
                                 'product_id':product_obj.id,
                                 'sequence':product_obj.sequence,
@@ -304,6 +309,23 @@ class customer_target(osv.osv):
                             }
     
                     target_line = self.pool.get('customer.target.line').create(cr, uid, line_result, context=context) 
+            ams_budget_value =ams_total * 0.05
+            if ams_budget_value > 50000:
+                ams_budget_value=50000   
+            month_out_todate=0
+            if customer_obj.id:
+                cr.execute('''select COALESCE(sum(total_value),0) as total_value from product_transactions
+                    where date_part('month', (SELECT date)) =date_part('month', (SELECT current_timestamp)) 
+                    and customer_id = %s
+                    ''',(customer_obj.id,))
+                month_out_todate=cr.fetchone()[0]                 
+            value = {
+                    'ams_total':ams_total,   
+                    'ams_budget_value':ams_budget_value,  
+                    'month_out_todate':month_out_todate, 
+                    'ams_balance': ams_budget_value-month_out_todate,                        
+                    }
+            self.pool.get('customer.target').write(cr, uid, target, value, context=context)
 
     def _check_file_ext(self, cursor, user, ids):
         for import_file in self.browse(cursor, user, ids):
