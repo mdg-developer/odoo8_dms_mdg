@@ -420,6 +420,12 @@ class sale_order(models.Model):
                 name="%s%s"%(instance.order_prefix,woo_order_number)
             else:
                 name=woo_order_number
+            
+            delivery_id = None
+            if partner.township.delivery_team_id:
+                delivery_id = partner.township.delivery_team_id.id
+            elif partner.city.delivery_team_id:
+                delivery_id = partner.city.delivery_team_id.id
                 
             ordervals = {
                 'name' :name,                
@@ -439,12 +445,12 @@ class sale_order(models.Model):
                 'woo_order_number':woo_order_number,
                 'auto_workflow_process_id':workflow.id,
                 'woo_instance_id':instance.id,
-                'section_id':instance.section_id and instance.section_id.id or False,
+                'section_id':delivery_id,
                 'company_id':instance.company_id.id,  
                 'payment_gateway_id':payment_gateway and payment_gateway.id or False,
                 'woo_trans_id':woo_trans_id,
                 'woo_customer_ip':woo_customer_ip,
-                'delivery_id':partner.township.delivery_team_id.id,
+                'delivery_id':delivery_id,
                 'pre_order':True
             }            
             return ordervals

@@ -212,9 +212,6 @@ class good_issue_note(osv.osv):
         picking_obj = self.pool.get('stock.picking')
         move_obj = self.pool.get('stock.move')
         note_value = req_lines = {}
-        current_note_obj = note_obj.browse(cr, uid, ids[0], context=context)
-        request_order_line = current_note_obj.request_id.order_line
-        sale_order_obj = self.pool.get('sale.order')
         if ids:
             note_value= note_obj.browse(cr, uid, ids[0], context=context)
             issue_date = note_value.issue_date
@@ -290,14 +287,7 @@ class good_issue_note(osv.osv):
                                           'state':'confirmed'}, context=context)     
                     move_obj.action_done(cr, uid, move_id, context=context)  
                     cr.execute('''update stock_move set date=((%s::date)::text || ' ' || date::time(0))::timestamp where state='done' and origin =%s''',(issue_date,origin,))
-        result = self.write(cr, uid, ids, {'state': 'issue'})
-        if result:
-            for line in request_order_line:
-                order_ids = sale_order_obj.search(cr, uid, [('name', '=', line.name)], context=context)
-                current_order = sale_order_obj.browse(cr, uid, order_ids[0], context=context)
-                if current_order:
-                    current_order.update_woo_order_status_action('delivered')                    
-        return result  
+        return self.write(cr, uid, ids, {'state': 'issue'}) 
                             
 class good_issue_line(osv.osv):  # #prod_pricelist_update_line
     _name = 'good.issue.note.line'

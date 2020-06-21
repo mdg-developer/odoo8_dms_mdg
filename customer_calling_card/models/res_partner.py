@@ -32,7 +32,7 @@ class res_partner(osv.osv):
        
     def customer_target(self, cr, uid, ids, context=None):
         mod_obj = self.pool.get('ir.model.data')
-        wiz_view = mod_obj.get_object_reference(cr, uid, 'customer_calling_card', 'customer_target_view')
+        wiz_view = mod_obj.get_object_reference(cr, uid, 'customer_calling_card', 'view_customer_target_form')
         for move in self.browse(cr, uid, ids, context=context):
             ctx = {
                 'partner_id': move.id,
