@@ -156,15 +156,15 @@ class stock_return(osv.osv):
 #                                           #'rec_small_uom_id':small_uom_id,
 #                                           #'rec_big_uom_id':big_uom_id,
 #                                         }, context=context)
-            if not mobile_ids:
-                mobile_create_id=mobile_obj.create(cr, uid, {
-                                                        'sale_team_id':sale_team_id,
-                                                        'user_id':uid,
-                                                       'branch_id':branch_id,
-                                                      'return_date': to_return_date,
-                                                      }, context=context) 
-                mobile_obj.manual_data(cr, uid, [mobile_create_id], context=context)
-                mobile_ids=[mobile_create_id]
+#             if not mobile_ids:
+#                 mobile_create_id=mobile_obj.create(cr, uid, {
+#                                                         'sale_team_id':sale_team_id,
+#                                                         'user_id':uid,
+#                                                        'branch_id':branch_id,
+#                                                       'return_date': to_return_date,
+#                                                       }, context=context) 
+#                 mobile_obj.manual_data(cr, uid, [mobile_create_id], context=context)
+#                 mobile_ids=[mobile_create_id]
             for mobile_id in mobile_ids:
                 return_mobile = mobile_obj.browse(cr, uid, mobile_id, context=context)    
                 return_quantity = 0
