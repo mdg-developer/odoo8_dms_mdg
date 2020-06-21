@@ -321,7 +321,7 @@ class customer_target(osv.osv):
                 month_out_todate=cr.fetchone()[0]                 
             value = {
                     'ams_total':ams_total,   
-                    'ams_budget_value':ams_budget_value,  
+                    'ams_buget_total':ams_budget_value,  
                     'month_out_todate':month_out_todate, 
                     'ams_balance': ams_budget_value-month_out_todate,                        
                     }
