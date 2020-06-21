@@ -113,7 +113,7 @@ class customer_target(osv.osv):
     }
   
     def create_customer_target_data(self, cr, uid, partner_id=None, context=None):         
-                
+           
         if partner_id:
             cr.execute("""delete from customer_target where partner_id=%s""", (partner_id,)) 
             customer_val = self.pool.get('res.partner').search(cr, uid, [('active', '=', True),
@@ -123,7 +123,8 @@ class customer_target(osv.osv):
         else:
             cr.execute("""delete from customer_target""") 
             customer_val = self.pool.get('res.partner').search(cr, uid, [('active', '=', True),
-                                                                         ('customer', '=', True)
+                                                                         ('customer', '=', True),
+                                                                         ('mobile_customer', '!=', True)
                                                                         ])
         for customer in customer_val:
             customer_obj = self.pool.get('res.partner').browse(cr, uid, customer, context=context)                                    
