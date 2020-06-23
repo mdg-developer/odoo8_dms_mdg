@@ -668,7 +668,7 @@ class branch_good_issue_note_line(osv.osv):
             request_data = self.pool.get('branch.good.issue.note').browse(cr, uid, order.line_id.id, context=context)
             if request_data:
                 pricelist_id = request_data.pricelist_id.id
-                cr.execute("select new_price from product_pricelist_item where price_version_id in ( select id from product_pricelist_version where pricelist_id=%s) and product_id=%s and product_uom_id=%s", (pricelist_id, order.product_id.id, order.product_uom.id,))
+                cr.execute("select new_price from product_pricelist_item where price_version_id in ( select id from product_pricelist_version where pricelist_id=%s and active=True) and product_id=%s and product_uom_id=%s", (pricelist_id, order.product_id.id, order.product_uom.id,))
                 product_price = cr.fetchone()
                 if product_price:
                     product_value = product_price[0]  

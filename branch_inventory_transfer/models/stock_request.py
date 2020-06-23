@@ -83,6 +83,7 @@ class branch_stock_requisition(osv.osv):
                 req_data = self.pool.get('branch.stock.requisition.line').browse(cr, uid, line.id, context=context)
                 val1 += req_data.viss_value                      
             res[order.id] = val1
+            cr.execute("update branch_stock_requisition set total_viss_store=%s where id =%s",(val1,order.id,))
         return res            
 
     def _cbm_amount(self, cr, uid, ids, field_name, arg, context=None):
@@ -95,6 +96,8 @@ class branch_stock_requisition(osv.osv):
                 req_data = self.pool.get('branch.stock.requisition.line').browse(cr, uid, line.id, context=context)
                 val1 += req_data.cbm_value                      
             res[order.id] = val1
+            cr.execute("update branch_stock_requisition set total_cbm_store=%s where id =%s",(val1,order.id,))
+            
         return res   
        
     def _total_value(self, cr, uid, ids, field_name, arg, context=None):
@@ -275,6 +278,8 @@ class branch_stock_requisition(osv.osv):
     'max_viss':fields.function(_max_viss_amount, string='Max Viss', digits_compute=dp.get_precision('Product Price'), type='float'),
     'max_cbm':fields.function(_max_cbm_amount, string='Max CBM', digits_compute=dp.get_precision('Product Price'), type='float'),
     'total_viss':fields.function(_viss_amount, string='Total Viss', digits_compute=dp.get_precision('Product Price'), type='float'),
+    'total_viss_store':fields.float("Total Viss", digits_compute=dp.get_precision('Product Price'),readonly=True),
+    'total_cbm_store':fields.float("Total CBM", digits_compute=dp.get_precision('Product Price'),readonly=True),
     'total_cbm':fields.function(_cbm_amount, string='Total CBM', digits_compute=dp.get_precision('Product Price'), type='float'),
     'bal_viss':fields.function(_bal_viss_amount, string='Bal Viss', digits_compute=dp.get_precision('Product Price'), type='float'),
     'bal_cbm':fields.function(_bal_cbm_amount, string='Bal CBM', digits_compute=dp.get_precision('Product Price'), type='float'),
@@ -473,7 +478,7 @@ class branch_stock_requisition(osv.osv):
                     'target': 'new',
                     'domain': '[]',
                     'context': {                        
-                        'branch_requisition_id': request_data.id,                        
+                    'branch_requisition_id': request_data.id,                        
                     }
                 }
         return self.write(cr, uid, ids, {'state':'confirm' })        
@@ -516,7 +521,7 @@ class branch_stock_requisition(osv.osv):
                     qty_on_hand = qty_on_hand[0]
                 else:
                     qty_on_hand = 0 
-                cr.execute("select new_price from product_pricelist_item where price_version_id in ( select id from product_pricelist_version where pricelist_id=%s) and product_id=%s and product_uom_id=%s", (pricelist_id, product.id, product.report_uom_id.id,))
+                cr.execute("select new_price from product_pricelist_item where price_version_id in ( select id from product_pricelist_version where pricelist_id=%s and active=True) and product_id=%s and product_uom_id=%s", (pricelist_id, product.id, product.report_uom_id.id,))
                 product_price = cr.fetchone()
                 if  product_price:
                     product_price=product_price[0]
@@ -789,10 +794,10 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
             product = self.pool.get('product.product').browse(cr, uid, order.product_id.id, context=context)
             if product.product_tmpl_id.uom_id.id ==order.product_uom.id:
                 uom_ratio=product.product_tmpl_id.report_uom_id.factor            
-            if order.recommend_quantity >0:
-                val1 = order.recommend_quantity * (product.viss_value/uom_ratio)
+            if order.req_quantity >0:
+                val1 = order.req_quantity * (product.viss_value/uom_ratio)
             else:
-                val1 = order.recommend_quantity * product.viss_value                                     
+                val1 = order.req_quantity * product.viss_value                                     
             res[order.id] = val1
         return res   
          
@@ -806,10 +811,10 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
             if product.product_tmpl_id.uom_id.id ==order.product_uom.id:
                 uom_ratio=product.product_tmpl_id.report_uom_id.factor
                 
-            if order.recommend_quantity >0:
-                val1 = order.recommend_quantity * (product.cbm_value/uom_ratio)      
+            if order.req_quantity >0:
+                val1 = order.req_quantity * (product.cbm_value/uom_ratio)      
             else:
-                val1 = order.recommend_quantity * product.cbm_value      
+                val1 = order.req_quantity * product.cbm_value      
             res[order.id] = val1
         return res     
 
@@ -821,16 +826,16 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
             request_data = self.pool.get('branch.stock.requisition').browse(cr, uid, order.line_id.id, context=context)
             if request_data:
                 pricelist_id=request_data.pricelist_id.id
-                cr.execute("select new_price from product_pricelist_item where price_version_id in ( select id from product_pricelist_version where pricelist_id=%s) and product_id=%s and product_uom_id=%s", (pricelist_id,order.product_id.id, order.product_uom.id,))
+                cr.execute("select new_price from product_pricelist_item where price_version_id in ( select id from product_pricelist_version where pricelist_id=%s and active=True) and product_id=%s and product_uom_id=%s", (pricelist_id,order.product_id.id, order.product_uom.id,))
                 product_price = cr.fetchone()
                 if product_price:
                     product_value=product_price[0]  
                 else:
                     product_value=0           
-                if order.recommend_quantity >0:
-                    val1 = order.recommend_quantity * product_value      
+                if order.req_quantity >0:
+                    val1 = order.req_quantity * product_value      
                 else:
-                    val1 = order.recommend_quantity * product_value     
+                    val1 = order.req_quantity * product_value     
                 res[order.id] = val1
         return res  
                

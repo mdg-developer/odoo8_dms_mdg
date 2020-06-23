@@ -110,10 +110,10 @@ class customer_target(osv.osv):
 #         'ams_buget_total':fields.function(_get_ams_budget_total, type='float', string='Budget', digits=(16, 0),store=True),
 #         'month_out_todate':fields.function(_get_month_out_todate_total, type='float', string='Month To Date Out', digits=(16, 0),store=True),
 #         'ams_balance':fields.function(_get_ams_balance_total, type='float', string='Balance', digits=(16, 0),store=True),
-        'ams_total':fields.float('3AMS Total',readonly=True),
-        'ams_buget_total':fields.float('Budget',readonly=True),
-        'month_out_todate':fields.float('Month To Date Out',readonly=True),
-        'ams_balance':fields.float('Balance',readonly=True),
+        'ams_total':fields.float('3AMS Total',readonly=True, digits=(16, 0)),
+        'ams_buget_total':fields.float('Budget',readonly=True, digits=(16, 0)),
+        'month_out_todate':fields.float('Month To Date Out',readonly=True, digits=(16, 0)),
+        'ams_balance':fields.float('Balance',readonly=True, digits=(16, 0)),
 
     }
     _defaults = {

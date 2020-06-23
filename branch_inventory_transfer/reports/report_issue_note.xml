@@ -318,6 +318,100 @@
 							</tr>
 						</tbody>
 					</table>
+					<table class="table table-condensed">
+						<thead>
+							<tr>
+								<th>LOSS/DAMAGE/SHORTAGE</th>
+								<th></th>
+								<th></th>
+								<th></th>
+								<th></th>
+							</tr>
+							<tr>
+								<th>Item Description</th>
+								<th>Damage/Shortage</th>
+								<th>QTY CTN</th>
+								<th>QTY in Pcs</th>
+								<th>Remark</th>
+							</tr>
+						</thead>
+						<tbody class="invoice_tbody">
+							<tr t-foreach="o" t-as="l">
+								<td>
+
+								</td>
+								<td>
+									damage
+								</td>
+								<td>
+
+								</td>
+								<td>
+
+								</td>
+								<td>
+
+								</td>
+								<br />
+							</tr>
+							<tr>
+								<td>
+
+								</td>
+								<td>
+									shortage
+								</td>
+								<td>
+
+								</td>
+								<td>
+
+								</td>
+								<td>
+
+								</td>
+								<br />
+							</tr>
+							<tr>
+								<td>
+
+								</td>
+								<td>
+								  -
+								</td>
+								<td>
+
+								</td>
+								<td>
+
+								</td>
+								<td>
+
+								</td>
+								<br />
+							</tr>
+							<tr>
+								<td>
+									<b>(We hereby certify the receipt of goods unloaded in above
+										condition.)
+									</b>
+								</td>
+								<td>
+								  
+								</td>
+								<td>
+
+								</td>
+								<td>
+
+								</td>
+								<td>
+
+								</td>
+							</tr>
+
+						</tbody>
+					</table>
 
 				</t>
 			</div>
