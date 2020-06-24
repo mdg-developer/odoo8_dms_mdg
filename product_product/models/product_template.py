@@ -75,7 +75,11 @@ class product_template(osv.osv):
          'sequence': fields.related('product_variant_ids', 'sequence', type='integer', string='Sequence', required=True),
                  
          'is_price_diff_product':fields.related('product_variant_ids', 'is_price_diff_product', type='boolean', string='Is Price Diff Product'),
-         
+         'standard_price': fields.property(type = 'float', digits_compute=dp.get_precision('Cost Price'), 
+                                          help="Cost price of the product template used for standard stock valuation in accounting and used as a base price on purchase orders. "
+                                               "Expressed in the default unit of measure of the product.",
+                                          groups="base.group_user", string="Cost Price"),
+
                 }
      
     _defaults = {
