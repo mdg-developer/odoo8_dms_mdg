@@ -3,7 +3,7 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 
-cred = credentials.Certificate('D:/dev/git/mdg_new4/firebase_cloud_filestore_sync/json/tabletsales-1373-firebase-adminsdk-12xpb-9cafccb3de.json')
+cred = credentials.Certificate('/tmp/json/tabletsales-1373-firebase-adminsdk-12xpb-9cafccb3de.json')
 firebase_admin.initialize_app(cred)
 
 cr = None
@@ -22,7 +22,7 @@ def dictfetchall(cursor):
                 record[key] = value
     return result
 
-def insert_product(cr):
+def insert_products(cr):
     
     firebase_admin.get_app()        
     db = firestore.client()
@@ -51,7 +51,7 @@ def insert_product(cr):
     print ('inserted product')
     return True
 
-def insert_customer(cr):
+def insert_customers(cr):
     
     firebase_admin.get_app()        
     db = firestore.client()
@@ -104,6 +104,48 @@ def insert_customer(cr):
         doc_ref.set(row)        
     print ('inserted customers')
     return True
+
+def insert_promotions(cr):
+    
+    firebase_admin.get_app()        
+    db = firestore.client()
+     
+    query = """select distinct id,sequence as seq,from_date::character varying from_date,to_date::character varying to_date,active,name as p_name,
+                logic ,expected_logic_result ,special, special1, special2, special3 ,description,
+                pr.promotion_count, pr.monthly_promotion ,code as p_code,manual,main_group,
+                (select ARRAY_AGG(sale_channel_id) from promo_sale_channel_rel where promo_id=pr.id) sale_channel,
+                (select ARRAY_AGG(category_id) from promotion_rule_category_rel where promotion_id=pr.id) customer_tags,
+                (select ARRAY_AGG(join_promotion_id) from promos_rules_join_rel rel where promos_rules_id=pr.id) join_promotion,
+                (select ARRAY_AGG(res_branch_id) from promos_rules_res_branch_rel where promos_rules_id=pr.id) res_branch,
+                (select ARRAY_AGG(outlettype_id) from promos_rules_outlettype_rel where promos_rules_id=pr.id) outlettype_outlettype,
+                (select ARRAY_AGG(res_partner_id) from promos_rules_res_partner_rel where promos_rules_id=pr.id) res_partner,
+                (select ARRAY_AGG(product_id) from promos_rules_product_rel rel where promos_rules_id=pr.id) product_product
+                from promos_rules pr
+                left join promos_rules_res_branch_rel pro_br_rel on (pr.id = pro_br_rel.promos_rules_id)
+                left join promos_rules_product_rel pro_pp_rel on (pr.id=pro_pp_rel.promos_rules_id)
+                where pr.active = true                    
+                and now()::date  between from_date::date and to_date::date
+                and pr.id in (
+                    select a.promo_id from promo_sale_channel_rel a
+                    inner join sale_team_channel_rel b
+                    on a.sale_channel_id = b.sale_channel_id    
+                )
+                and pro_pp_rel.product_id in (
+                    select product_id
+                    from crm_case_section ccs,product_sale_group_rel rel
+                    where ccs.sale_group_id=rel.sale_group_id    
+                )"""
+    cr.execute(query)
+    resultMap = dictfetchall(cr)
+    print ('ready to insert promotions')
+    for row in resultMap:
+        node = str(row['id'])
+        print ('promotion node',node)
+        print ('promotion name',row['p_name'])
+        doc_ref = db.collection('promos_rules').document(node)
+        doc_ref.set(row)        
+    print ('inserted promotions')
+    return True
     
 import psycopg2
 try:
@@ -122,8 +164,9 @@ try:
     record = cursor.fetchone()
     print("You are connected to - ", record,"\n")
     
-#     insert_product(cursor)
-    insert_customer(cursor)
+#     insert_products(cursor)
+#     insert_customers(cursor)
+    insert_promotions(cursor)
 
 except (Exception, psycopg2.Error) as error :
     print ("Error while connecting to PostgreSQL", error)
