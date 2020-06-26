@@ -120,6 +120,10 @@ class customer_target(osv.osv):
        
     }
   
+    def insert_daily_customer_target(self, cr, uid, context=None): 
+                
+        cr.execute("select * from insert_daily_customer_target();")        
+        
     def create_customer_target_data(self, cr, uid, partner_id=None, context=None):         
            
         if partner_id:
