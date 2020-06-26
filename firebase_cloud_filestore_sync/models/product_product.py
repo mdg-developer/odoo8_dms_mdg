@@ -152,10 +152,18 @@ class product_product(models.Model):
                             logic ,expected_logic_result ,special, special1, special2, special3 ,description,
                             pr.promotion_count, pr.monthly_promotion ,code as p_code,manual,main_group,
                             (select ARRAY_AGG(sale_channel_id) from promo_sale_channel_rel where promo_id=pr.id) sale_channel,
-                            (select ARRAY_AGG(category_id) partner_category_id
+                            (select ARRAY_AGG(category_id)
                             from promotion_rule_category_rel rel,res_partner_category categ
                             where rel.category_id=categ.id
-                            and promotion_id=pr.id) customer_tags
+                            and promotion_id=pr.id) customer_tags,
+                            (select ARRAY_AGG(product_id)
+                            from promos_rules_product_rel rel,product_product pp
+                            where rel.product_id=pp.id
+                            and promos_rules_id=pr.id) product_product,
+                            (select ARRAY_AGG(res_branch_id)
+                            from promos_rules_res_branch_rel rel,res_branch rb
+                            where rel.res_branch_id=rb.id
+                            and promos_rules_id=pr.id) res_branch
                             from promos_rules pr
                             left join promos_rules_res_branch_rel pro_br_rel on (pr.id = pro_br_rel.promos_rules_id)
                             left join promos_rules_product_rel pro_pp_rel on (pr.id=pro_pp_rel.promos_rules_id)
