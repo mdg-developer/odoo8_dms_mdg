@@ -20,7 +20,8 @@ class product_product(models.Model):
         #get product
         self._cr.execute("""select  pp.id,pt.list_price,coalesce(replace(pt.description,',',';'), ' ') as description,pt.categ_id,pc.name as categ_name,pp.default_code, 
             pt.name,convert_from(image_small,'utf8') as image_small,pt.main_group,pt.uom_ratio,
-            pp.product_tmpl_id,pt.is_foc,pp.sequence,pt.type,pt.uom_id,ccs.id team_id
+            pp.product_tmpl_id,pt.is_foc,pp.sequence,pt.type,pt.uom_id,ccs.id team_id,
+            concat(pp.id,'-',ccs.id,'-',rel.sale_group_id)::character varying product_key
             from product_sale_group_rel rel ,
             crm_case_section ccs ,product_template pt, product_product pp , product_category pc
             where pp.id = rel.product_id
@@ -28,8 +29,7 @@ class product_product(models.Model):
             and pt.active = true
             and pp.active = true
             and ccs.sale_group_id = rel.sale_group_id
-            and pc.id = pt.categ_id
-            and ccs.id in (389,390,477)""")
+            and pc.id = pt.categ_id""")
         for row in self._cr.dictfetchall():
             node = str(row['id'])
             doc_ref = db.collection('product_product').document(node)
@@ -53,7 +53,7 @@ class product_product(models.Model):
                     and rel.product_id = pp.id
                     and pu.id = pur.product_uom_id
                     and rel.sale_group_id=ccs.sale_group_id
-                    and ccs.id in (389,390,477))A""")
+                    )A""")
         for row in self._cr.dictfetchall():
             node = str(row['uom_id'])
             doc_ref = db.collection('uom_uom').document(node)
@@ -99,8 +99,7 @@ class product_product(models.Model):
                                                 and RP.city = RC.id
                                                 and RP.active = true
                                                 and RP.outlet_type = OT.id
-                                                and RPS.partner_id = RP.id    
-                                                and SPD.sale_team in (389,390,477)
+                                                and RPS.partner_id = RP.id   
                                                 order by  RPS.sequence asc                         
                             
                             )A 
@@ -135,7 +134,7 @@ class product_product(models.Model):
                             from res_users ru,section_users_rel rel,crm_case_section ccs
                             where ru.id=rel.uid
                             and rel.section_id=ccs.id
-                            and ccs.id in (389,390,477)""")
+                            """)
         for row in self._cr.dictfetchall():
             node = str(row['id'])
             doc_ref = db.collection('res_users').document(node)
@@ -300,8 +299,7 @@ class product_product(models.Model):
                             where pp.id = rel.product_id
                             and pt.id = pp.product_tmpl_id
                             and ccs.sale_group_id = rel.sale_group_id
-                            and pc.id = pt.categ_id    
-                            and ccs.id in (389,390,477)
+                            and pc.id = pt.categ_id   
                         )A""")
         for row in self._cr.dictfetchall():
             node = str(row['categ_id'])
@@ -374,7 +372,7 @@ class product_product(models.Model):
                             from sale_plan_day p
                             join crm_case_section c on p.sale_team=c.id
                             where p.active = true
-                            and c.id in (389,390,477)""")
+                            """)
         for row in self._cr.dictfetchall():
             node = str(row['id'])
             doc_ref = db.collection('sale_plan_day').document(node)
@@ -397,8 +395,7 @@ class product_product(models.Model):
                             where  p.sale_team=c.id
                             and p.active = true 
                             and p.id = d.sale_plan_trip_id
-                            and e.id = d.partner_id
-                            and c.id in (389,390,477)
+                            and e.id = d.partner_id                            
                             """)
         for row in self._cr.dictfetchall():
             node = str(row['id'])
