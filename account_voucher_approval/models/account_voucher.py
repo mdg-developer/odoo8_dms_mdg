@@ -183,16 +183,16 @@ class account_voucher(osv.osv):
             remaining_amount -= rs['amount']
             #in case a corresponding move_line hasn't been found, we now try to assign the voucher amount
             #on existing invoices: we split voucher amount by most old first, but only for lines in the same currency
-            if not move_lines_found:
-                if currency_id == line_currency_id:
-                    if line.credit:
-                        amount = min(amount_unreconciled, abs(total_debit))
-                        rs['amount'] = amount
-                        total_debit -= amount
-                    else:
-                        amount = min(amount_unreconciled, abs(total_credit))
-                        rs['amount'] = amount
-                        total_credit -= amount
+#             if not move_lines_found:
+#                 if currency_id == line_currency_id:
+#                     if line.credit:
+#                         amount = min(amount_unreconciled, abs(total_debit))
+#                         rs['amount'] = amount
+#                         total_debit -= amount
+#                     else:
+#                         amount = min(amount_unreconciled, abs(total_credit))
+#                         rs['amount'] = amount
+#                         total_credit -= amount
 
             if rs['amount_unreconciled'] == rs['amount']:
                 rs['reconcile'] = True

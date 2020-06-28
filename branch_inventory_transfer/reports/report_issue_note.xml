@@ -153,6 +153,18 @@
 								<span t-field="o.loading_time" />
 							</td>
 							<td style="border:0pt;font-size:10pt;">
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+							</td>
+						</tr>
+						<tr>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Total CBM :</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.total_cbm" />
+							</td>
+							<td style="border:0pt;font-size:10pt;">
 								<strong>Total Viss :</strong>
 							</td>
 							<td style="border:0pt;font-size:10pt;">
@@ -377,7 +389,7 @@
 
 								</td>
 								<td>
-								  -
+									-
 								</td>
 								<td>
 
@@ -397,7 +409,7 @@
 									</b>
 								</td>
 								<td>
-								  
+
 								</td>
 								<td>
 
