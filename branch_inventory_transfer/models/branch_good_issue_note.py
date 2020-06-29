@@ -695,8 +695,8 @@ class branch_good_issue_note_line(osv.osv):
         'product_loss' : fields.boolean(string='Loose'),
 #         'product_viss' : fields.float(string='Viss', digits=(16, 0)),
 #         'product_cbm' : fields.float(string='CBM', digits=(16, 0)),
-        'product_viss':fields.function(_cal_viss_value, string='Viss', digits_compute=dp.get_precision('Product Price'), type='float'),
-        'product_cbm':fields.function(_cal_cbm_value, string='CBM', digits_compute=dp.get_precision('Product Price'), type='float'),
+        'product_viss':fields.function(_cal_viss_value, string='Viss', digits_compute=dp.get_precision('Cost Price'), type='float'),
+        'product_cbm':fields.function(_cal_cbm_value, string='CBM', digits_compute=dp.get_precision('Cost Price'), type='float'),
          'remark':fields.char('Remark'),
         'state':fields.related('line_id', 'state', type='char', store=False, string='State'),
     }
