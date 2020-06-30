@@ -8,6 +8,7 @@ firebase_admin.initialize_app(cred)
 
 cr = None
 
+
 def dictfetchall(cursor):
     "Returns all rows from a cursor as a dict"
     desc = cursor.description
@@ -17,16 +18,16 @@ def dictfetchall(cursor):
     ]
     for record in result:
         for key in record:
-            if(isinstance(record[key], Decimal)):
+            if (isinstance(record[key], Decimal)):
                 value = float(record[key])
                 record[key] = value
     return result
 
+
 def insert_products(cr):
-    
-    firebase_admin.get_app()        
+    firebase_admin.get_app()
     db = firestore.client()
-     
+
     query = """select concat(pp.id,ccs.id,rel.sale_group_id) seq,pp.id,pt.list_price,coalesce(replace(pt.description,',',';'), ' ') as description,pt.categ_id,pc.name as categ_name,pp.default_code, 
             pt.name,convert_from(image_small,'utf8') as image_small,pt.main_group,pt.uom_ratio,
             pp.product_tmpl_id,pt.is_foc,pp.sequence,pt.type,pt.uom_id,ccs.id team_id,
@@ -40,21 +41,21 @@ def insert_products(cr):
             and ccs.sale_group_id = rel.sale_group_id
             and pc.id = pt.categ_id;"""
     cr.execute(query)
-    resultMap = dictfetchall(cr)
-    for row in resultMap:
+    productMap = dictfetchall(cr)
+    for row in productMap:
         node = str(row['seq'])
-        print ('product node',node)
-        print ('product name',row['name'])
+        print ('product node', node)
+        print ('product name', row['name'])
         doc_ref = db.collection('product_product').document(node)
-        doc_ref.set(row)        
+        doc_ref.set(row)
     print ('inserted product')
     return True
 
+
 def insert_customers(cr):
-    
-    firebase_admin.get_app()        
+    firebase_admin.get_app()
     db = firestore.client()
-     
+
     query = """select A.seq,A.id,A.name,A.image,A.is_company, A.image_small,replace(A.street,',',';') street, replace(A.street2,',',';') street2,A.city,A.website,
                 replace(A.phone,',',';') phone,A.township, replace(A.mobile,',',';') mobile,A.email,A.company_id,A.customer, 
                 A.customer_code,A.mobile_customer,A.shop_name ,
@@ -93,16 +94,17 @@ def insert_customers(cr):
                 )A 
                 where A.customer_code is not null"""
     cr.execute(query)
-    resultMap = dictfetchall(cr)
-    print ('ready to insert customers')
-    for row in resultMap:
+    customerMap = dictfetchall(cr)
+    print ('ready to insert customers' + len(customerMap))
+    for row in customerMap:
         node = str(row['seq'])
-        print ('customer node',node)
-        print ('customer name',row['name'])
+        print ('customer node', node)
+        print ('customer name', row['name'])
         doc_ref = db.collection('res_partner').document(node)
-        doc_ref.set(row)        
+        doc_ref.set(row)
     print ('inserted customers')
     return True
+
 
 def insert_product_pricelists(cr):
     firebase_admin.get_app()
@@ -113,9 +115,9 @@ def insert_product_pricelists(cr):
                             from price_list_line cpr , product_pricelist ppl
                             where ppl.id = cpr.property_product_pricelist 
                             and ppl.active = true""")
-    resultMap = dictfetchall(cr)
-
-    for row in resultMap:
+    productMap = dictfetchall(cr)
+    print("Price list retrieve count%s", len(productMap))
+    for row in productMap:
         node = str(row['id'])
         doc_ref = db.collection('product_pricelist').document(node)
         doc_ref.set(row)
@@ -124,6 +126,7 @@ def insert_product_pricelists(cr):
                                 and pv.active = true
                                 and pp.id=%s""", (row['id'],))
         resultPricelistVersionMap = dictfetchall(cr)
+        print("Price list version count%s", len(resultPricelistVersionMap))
 
         for version_row in resultPricelistVersionMap:
             version_node = str(version_row['id'])
@@ -137,12 +140,16 @@ def insert_product_pricelists(cr):
                                     and pv.id = pi.price_version_id
                                     and pv.id=%s""", (version_row['id'],))
             resultPricelistItemMap = dictfetchall(cr)
+            print("Price list items count%s", len(resultPricelistItemMap))
 
             for item_row in resultPricelistItemMap:
                 item_node = str(item_row['id'])
                 item_ref = version_ref.collection('product_pricelist_item').document(item_node)
                 item_ref.set(item_row)
+
+    print("Price list insert count%s", len(resultMap))
     return True
+
 
 def insert_sale_plan_day(cr):
     firebase_admin.get_app()
@@ -156,6 +163,7 @@ def insert_sale_plan_day(cr):
                             where p.active = true
                             """)
     resultSalePlanDayMap = dictfetchall(cr)
+    print("Sale Plan Day retrieve count%s", len(resultSalePlanDayMap))
 
     for row in resultSalePlanDayMap:
         node = str(row['id'])
@@ -181,6 +189,7 @@ def insert_sale_plan_trip(cr):
                             and e.id = d.partner_id                            
                             """)
     resultSalePlanTripMap = dictfetchall(cr)
+    print("Sale Plan Trip retrieve count%s", len(resultSalePlanTripMap))
 
     for row in resultSalePlanTripMap:
         node = str(row['id'])
@@ -188,11 +197,11 @@ def insert_sale_plan_trip(cr):
         doc_ref.set(row)
     return True
 
+
 def insert_promotions(cr):
-    
-    firebase_admin.get_app()        
+    firebase_admin.get_app()
     db = firestore.client()
-     
+
     query = """select distinct id,sequence as seq,from_date::character varying from_date,to_date::character varying to_date,active,name as p_name,
                 logic ,expected_logic_result ,special, special1, special2, special3 ,description,
                 pr.promotion_count, pr.monthly_promotion ,code as p_code,manual,main_group,
@@ -222,28 +231,28 @@ def insert_promotions(cr):
     resultMap = dictfetchall(cr)
     for row in resultMap:
         node = str(row['id'])
-        print ('promotion node',node)
-        print ('promotion name',row['p_name'])
+        print ('promotion node', node)
+        print ('promotion name', row['p_name'])
         doc_ref = db.collection('promos_rules').document(node)
-        doc_ref.set(row)  
-        
+        doc_ref.set(row)
+
         if doc_ref:
-            #add promotion actions
+            # add promotion actions
             action_query = """select act.id,act.promotion,act.sequence as act_seq ,act.arguments,act.action_type,act.product_code,
                             act.discount_product_code,pro_br_rel.res_branch_id,act.promotion
                             from promos_rules r ,promos_rules_actions act,promos_rules_res_branch_rel pro_br_rel
                             where r.id = act.promotion
                             and r.active = 't'                            
                             and r.id = pro_br_rel.promos_rules_id
-                            and r.id=%s"""  
-            cr.execute(action_query,(row['id'],))
+                            and r.id=%s"""
+            cr.execute(action_query, (row['id'],))
             actionresultMap = dictfetchall(cr)
-            for action_row in actionresultMap:     
-                promo_action_node = str(action_row['id'])    
-                promo_action_ref = doc_ref.collection('promotion_action').document(promo_action_node)    
-                promo_action_ref.set(action_row)  
-                
-            #add promotion conditions  
+            for action_row in actionresultMap:
+                promo_action_node = str(action_row['id'])
+                promo_action_ref = doc_ref.collection('promotion_action').document(promo_action_node)
+                promo_action_ref.set(action_row)
+
+                # add promotion conditions
             condition_query = """select cond.id,cond.promotion,cond.sequence as cond_seq,
                             cond.attribute as cond_attr,cond.comparator as cond_comparator,
                             cond.value as comp_value,pro_br_rel.res_branch_id,cond.promotion
@@ -251,15 +260,16 @@ def insert_promotions(cr):
                             where r.id = cond.promotion
                             and r.active = 't'                           
                             and r.id = pro_br_rel.promos_rules_id
-                            and r.id=%s"""  
-            cr.execute(condition_query,(row['id'],))
+                            and r.id=%s"""
+            cr.execute(condition_query, (row['id'],))
             conditionresultMap = dictfetchall(cr)
-            for condition_row in conditionresultMap:     
-                promo_condition_node = str(condition_row['id'])    
-                promo_condition_ref = doc_ref.collection('promotion_condition').document(promo_condition_node)    
-                promo_condition_ref.set(condition_row)        
+            for condition_row in conditionresultMap:
+                promo_condition_node = str(condition_row['id'])
+                promo_condition_ref = doc_ref.collection('promotion_condition').document(promo_condition_node)
+                promo_condition_ref.set(condition_row)
     print ('inserted promotions')
     return True
+
 
 def insert_product_category(cr):
     firebase_admin.get_app()
@@ -276,12 +286,14 @@ def insert_product_category(cr):
                             and pc.id = pt.categ_id   
                         )A""")
     resultMap = dictfetchall(cr)
+    print("Product Categories retrieve count%s", len(resultMap))
 
     for row in resultMap:
         node = str(row['categ_id'])
         doc_ref = db.collection('product_category').document(node)
         doc_ref.set(row)
     return True
+
 
 def insert_partner_category(cr):
     firebase_admin.get_app()
@@ -296,37 +308,49 @@ def insert_partner_category(cr):
         doc_ref.set(row)
     return True
 
+
 import psycopg2
+
 try:
-    connection = psycopg2.connect(user = "odoo",
-                                  password = "jack123$",
-                                  host = "mdgtest.ctwxzwpgho6b.ap-southeast-1.rds.amazonaws.com",
-                                  port = "5432",
-                                  database = "mdg_uat")
+    connection = psycopg2.connect(user="odoo",
+                                  password="jack123$",
+                                  host="mdgtest.ctwxzwpgho6b.ap-southeast-1.rds.amazonaws.com",
+                                  port="5432",
+                                  database="mdg_uat")
 
     cursor = connection.cursor()
     # Print PostgreSQL Connection properties
-    print ( connection.get_dsn_parameters(),"\n")
+    print (connection.get_dsn_parameters(), "\n")
 
     # Print PostgreSQL version
     cursor.execute("SELECT version();")
     record = cursor.fetchone()
-    print("You are connected to - ", record,"\n")
-    
-#     insert_products(cursor)
-#     insert_customers(cursor)
-#    insert_promotions(cursor)
+    #     insert_products(cursor)
+    #     insert_customers(cursor)
+    #    insert_promotions(cursor)
+    print("Pricelist Inserting");
     insert_product_pricelists(cursor)
-    insert_sale_plan_day(cursor)
-    insert_sale_plan_trip(cursor)
-    insert_partner_category(cursor)
-    insert_product_category(cursor)
+    print("Pricelist inserted");
+    #print("Sale Plan Day Inserting");
+    #insert_sale_plan_day(cursor);
+    #print("Sale Plan Day Inserted");
+    #print("Sale Plan Trip Inserting");
+    #insert_sale_plan_trip(cursor);
+    #print("Sale Plan Trip Inserted");
+    #print("Parter Category Inserting");
+    #insert_partner_category(cursor)
+    #print("Parter Category Inserted");
+    #print("Product Category Inserting");
+    #insert_product_category(cursor)
+    #print("Product Category Inserted");
 
 except (Exception, psycopg2.Error) as error :
     print ("Error while connecting to PostgreSQL", error)
+
 finally:
     #closing database connection.
         if(connection):
             cursor.close()
             connection.close()
-            print("PostgreSQL connection is closed")            
+            print("PostgreSQL connection is closed")
+
