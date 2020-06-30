@@ -3,7 +3,7 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 
-cred = credentials.Certificate('tmp/json/mdg_live.json')
+cred = credentials.Certificate('/Users/phyo936/Downloads/mdg_live.json')
 firebase_admin.initialize_app(cred)
 
 cr = None
@@ -41,7 +41,6 @@ def insert_products(cr):
             and pc.id = pt.categ_id;"""
     cr.execute(query)
     resultMap = dictfetchall(cr)
-    print ('ready to insert product')
     for row in resultMap:
         node = str(row['seq'])
         print ('product node',node)
@@ -114,7 +113,9 @@ def insert_product_pricelists(cr):
                             from price_list_line cpr , product_pricelist ppl
                             where ppl.id = cpr.property_product_pricelist 
                             and ppl.active = true""")
-    for row in cr.dictfetchall():
+    resultMap = dictfetchall(cr)
+
+    for row in resultMap:
         node = str(row['id'])
         doc_ref = db.collection('product_pricelist').document(node)
         doc_ref.set(row)
@@ -122,7 +123,9 @@ def insert_product_pricelists(cr):
                                 from product_pricelist_version pv, product_pricelist pp where pv.pricelist_id = pp.id   
                                 and pv.active = true
                                 and pp.id=%s""", (row['id'],))
-        for version_row in cr.dictfetchall():
+        resultPricelistVersionMap = dictfetchall(cr)
+
+        for version_row in resultPricelistVersionMap:
             version_node = str(version_row['id'])
             version_ref = doc_ref.collection('product_pricelist_version').document(version_node)
             version_ref.set(version_row)
@@ -133,7 +136,9 @@ def insert_product_pricelists(cr):
                                     where pv.pricelist_id = pp.id                             
                                     and pv.id = pi.price_version_id
                                     and pv.id=%s""", (version_row['id'],))
-            for item_row in cr.dictfetchall():
+            resultPricelistItemMap = dictfetchall(cr)
+
+            for item_row in resultPricelistItemMap:
                 item_node = str(item_row['id'])
                 item_ref = version_ref.collection('product_pricelist_item').document(item_node)
                 item_ref.set(item_row)
@@ -150,7 +155,9 @@ def insert_sale_plan_day(cr):
                             join crm_case_section c on p.sale_team=c.id
                             where p.active = true
                             """)
-    for row in cr.dictfetchall():
+    resultSalePlanDayMap = dictfetchall(cr)
+
+    for row in resultSalePlanDayMap:
         node = str(row['id'])
         doc_ref = db.collection('sale_plan_day').document(node)
         doc_ref.set(row)
@@ -173,7 +180,9 @@ def insert_sale_plan_trip(cr):
                             and p.id = d.sale_plan_trip_id
                             and e.id = d.partner_id                            
                             """)
-    for row in cr.dictfetchall():
+    resultSalePlanTripMap = dictfetchall(cr)
+
+    for row in resultSalePlanTripMap:
         node = str(row['id'])
         doc_ref = db.collection('sale_plan_trip').document(node)
         doc_ref.set(row)
@@ -211,7 +220,6 @@ def insert_promotions(cr):
                 )"""
     cr.execute(query)
     resultMap = dictfetchall(cr)
-    print ('ready to insert promotions')
     for row in resultMap:
         node = str(row['id'])
         print ('promotion node',node)
@@ -267,21 +275,27 @@ def insert_product_category(cr):
                             and ccs.sale_group_id = rel.sale_group_id
                             and pc.id = pt.categ_id   
                         )A""")
-    for row in cr.dictfetchall():
+    resultMap = dictfetchall(cr)
+
+    for row in resultMap:
         node = str(row['categ_id'])
         doc_ref = db.collection('product_category').document(node)
         doc_ref.set(row)
     return True
+
 def insert_partner_category(cr):
     firebase_admin.get_app()
     db = firestore.client()
     # get partner category
     cr.execute("""select id,name from res_partner_category""")
-    for row in cr.dictfetchall():
+    resultMap = dictfetchall(cr)
+
+    for row in resultMap:
         node = str(row['id'])
         doc_ref = db.collection('partner_category').document(node)
         doc_ref.set(row)
     return True
+
 import psycopg2
 try:
     connection = psycopg2.connect(user = "odoo",
@@ -301,7 +315,7 @@ try:
     
 #     insert_products(cursor)
 #     insert_customers(cursor)
-    insert_promotions(cursor)
+#    insert_promotions(cursor)
     insert_product_pricelists(cursor)
     insert_sale_plan_day(cursor)
     insert_sale_plan_trip(cursor)
