@@ -10,4 +10,5 @@ from pg_stat_activity
 where usename='odoo'
     and datname='mdg_uat'
     and client_addr='172.31.11.143'
-    and application_name='psql'
+    and pid=22105 --22105
+and application_name='psql'
