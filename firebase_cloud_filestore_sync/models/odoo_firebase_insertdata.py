@@ -111,14 +111,14 @@ def insert_product_pricelists(cr):
     db = firestore.client()
 
     # get product pricelists
-    cr.execute("""select ppl.id,ppl.name,ppl.type, ppl.active , cpr.is_default,cpr.team_id
+    cr.execute("""select concat(ppl.id,cpr.team_id) seq,ppl.id,ppl.name,ppl.type, ppl.active , cpr.is_default,cpr.team_id
                             from price_list_line cpr , product_pricelist ppl
                             where ppl.id = cpr.property_product_pricelist 
                             and ppl.active = true""")
     productMap = dictfetchall(cr)
     print("Price list retrieve count%s", len(productMap))
     for row in productMap:
-        node = str(row['id'])
+        node = str(row['seq'])
         doc_ref = db.collection('product_pricelist').document(node)
         doc_ref.set(row)
         cr.execute("""select pv.id,date_end::character varying date_end,date_start::character varying date_start,pv.active,pv.name,pv.pricelist_id 
@@ -147,7 +147,7 @@ def insert_product_pricelists(cr):
                 item_ref = version_ref.collection('product_pricelist_item').document(item_node)
                 item_ref.set(item_row)
 
-    print("Price list insert count%s", len(resultMap))
+    print("Price list insert count%s", len(productMap))
     return True
 
 
