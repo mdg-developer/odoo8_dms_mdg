@@ -3,7 +3,7 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 
-cred = credentials.Certificate('/tmp/json/tabletsales-1373-firebase-adminsdk-12xpb-9cafccb3de.json')
+cred = credentials.Certificate('tmp/json/mdg_live.json')
 firebase_admin.initialize_app(cred)
 
 cr = None
@@ -27,10 +27,10 @@ def insert_products(cr):
     firebase_admin.get_app()        
     db = firestore.client()
      
-    query = """select  pp.id,pt.list_price,coalesce(replace(pt.description,',',';'), ' ') as description,pt.categ_id,pc.name as categ_name,pp.default_code, 
+    query = """select concat(pp.id,ccs.id,rel.sale_group_id) seq,pp.id,pt.list_price,coalesce(replace(pt.description,',',';'), ' ') as description,pt.categ_id,pc.name as categ_name,pp.default_code, 
             pt.name,convert_from(image_small,'utf8') as image_small,pt.main_group,pt.uom_ratio,
             pp.product_tmpl_id,pt.is_foc,pp.sequence,pt.type,pt.uom_id,ccs.id team_id,
-            concat(pp.id,'-',ccs.id,'-',rel.sale_group_id)::character varying product_key
+            concat(ccs.id,'-',rel.sale_group_id)::character varying product_key
             from product_sale_group_rel rel ,
             crm_case_section ccs ,product_template pt, product_product pp , product_category pc
             where pp.id = rel.product_id
@@ -38,12 +38,12 @@ def insert_products(cr):
             and pt.active = true
             and pp.active = true
             and ccs.sale_group_id = rel.sale_group_id
-            and pc.id = pt.categ_id"""
+            and pc.id = pt.categ_id;"""
     cr.execute(query)
     resultMap = dictfetchall(cr)
     print ('ready to insert product')
     for row in resultMap:
-        node = str(row['id'])
+        node = str(row['seq'])
         print ('product node',node)
         print ('product name',row['name'])
         doc_ref = db.collection('product_product').document(node)
@@ -56,7 +56,7 @@ def insert_customers(cr):
     firebase_admin.get_app()        
     db = firestore.client()
      
-    query = """select A.id,A.name,A.image,A.is_company, A.image_small,replace(A.street,',',';') street, replace(A.street2,',',';') street2,A.city,A.website,
+    query = """select A.seq,A.id,A.name,A.image,A.is_company, A.image_small,replace(A.street,',',';') street, replace(A.street2,',',';') street2,A.city,A.website,
                 replace(A.phone,',',';') phone,A.township, replace(A.mobile,',',';') mobile,A.email,A.company_id,A.customer, 
                 A.customer_code,A.mobile_customer,A.shop_name ,
                 A.address,
@@ -66,7 +66,7 @@ def insert_customers(cr):
                 A.city_id,A.township_id,A.country_id,A.state_id,A.unit,A.class_id,A.chiller,A.frequency_id,A.temp_customer,
                 A.is_consignment,A.hamper,A.is_bank,A.is_cheque,A.sale_team team_id,customer_tags
                 from (
-                select RP.id,RP.name,'' as image,RP.is_company,RPS.line_id as sale_plan_day_id,
+                select concat(RP.id,SPD.id,SPD.sale_team) seq,RP.id,RP.name,'' as image,RP.is_company,RPS.line_id as sale_plan_day_id,
                 '' as image_small,RP.street,RP.street2,RC.name as city,RP.website,
                 RP.phone,RT.name as township,RP.mobile,RP.email,RP.company_id,RP.customer, 
                 RP.customer_code,RP.mobile_customer,OT.name as shop_name,RP.address,RP.zip ,RP.partner_latitude,RP.partner_longitude,RS.name as state_name,
@@ -97,7 +97,7 @@ def insert_customers(cr):
     resultMap = dictfetchall(cr)
     print ('ready to insert customers')
     for row in resultMap:
-        node = str(row['id'])
+        node = str(row['seq'])
         print ('customer node',node)
         print ('customer name',row['name'])
         doc_ref = db.collection('res_partner').document(node)
@@ -143,7 +143,40 @@ def insert_promotions(cr):
         print ('promotion node',node)
         print ('promotion name',row['p_name'])
         doc_ref = db.collection('promos_rules').document(node)
-        doc_ref.set(row)        
+        doc_ref.set(row)  
+        
+        if doc_ref:
+                
+            #add promotion actions  
+            action_query = """select act.id,act.promotion,act.sequence as act_seq ,act.arguments,act.action_type,act.product_code,
+                            act.discount_product_code,pro_br_rel.res_branch_id,act.promotion
+                            from promos_rules r ,promos_rules_actions act,promos_rules_res_branch_rel pro_br_rel
+                            where r.id = act.promotion
+                            and r.active = 't'                            
+                            and r.id = pro_br_rel.promos_rules_id
+                            and r.id=%s"""  
+            cr.execute(action_query,(row['id'],))
+            actionresultMap = dictfetchall(cr)
+            for action_row in actionresultMap:     
+                promo_action_node = str(action_row['id'])    
+                promo_action_ref = doc_ref.collection('promotion_action').document(promo_action_node)    
+                promo_action_ref.set(action_row)  
+                
+            #add promotion conditions  
+            condition_query = """select cond.id,cond.promotion,cond.sequence as cond_seq,
+                            cond.attribute as cond_attr,cond.comparator as cond_comparator,
+                            cond.value as comp_value,pro_br_rel.res_branch_id,cond.promotion
+                            from promos_rules r ,promos_rules_conditions_exps cond,promos_rules_res_branch_rel pro_br_rel
+                            where r.id = cond.promotion
+                            and r.active = 't'                           
+                            and r.id = pro_br_rel.promos_rules_id
+                            and r.id=%s"""  
+            cr.execute(condition_query,(row['id'],))
+            conditionresultMap = dictfetchall(cr)
+            for condition_row in conditionresultMap:     
+                promo_condition_node = str(condition_row['id'])    
+                promo_condition_ref = doc_ref.collection('promotion_condition').document(promo_condition_node)    
+                promo_condition_ref.set(condition_row)        
     print ('inserted promotions')
     return True
     
@@ -153,7 +186,7 @@ try:
                                   password = "jack123$",
                                   host = "mdgtest.ctwxzwpgho6b.ap-southeast-1.rds.amazonaws.com",
                                   port = "5432",
-                                  database = "mdg_testing_new")
+                                  database = "mdg_uat")
 
     cursor = connection.cursor()
     # Print PostgreSQL Connection properties
