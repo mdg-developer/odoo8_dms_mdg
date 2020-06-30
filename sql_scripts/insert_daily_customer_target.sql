@@ -40,7 +40,7 @@ BEGIN
 					and rp.customer=True
 					and mobile_customer!=True
 	loop			
-		
+		raise notice 'running for customer:'+cusotmer.customer_coe;
 		delete from customer_target where partner_id=customer.id;
 		
 		WITH customer_target AS (
