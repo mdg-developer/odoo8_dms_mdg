@@ -286,7 +286,8 @@ class product_product(models.Model):
                     product_ref = doc_ref.collection('product_product').document(product_node)    
                     product_ref.set(product_row) 
         return True
-        
+
+    #not using
     @api.model                                                               
     def sync_product_category(self):    
         
