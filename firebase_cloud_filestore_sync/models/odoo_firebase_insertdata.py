@@ -105,6 +105,80 @@ def insert_customers(cr):
     print ('inserted customers')
     return True
 
+def insert_product_pricelists(cr):
+    firebase_admin.get_app()
+    db = firestore.client()
+
+    # get product pricelists
+    cr.execute("""select ppl.id,ppl.name,ppl.type, ppl.active , cpr.is_default,cpr.team_id
+                            from price_list_line cpr , product_pricelist ppl
+                            where ppl.id = cpr.property_product_pricelist 
+                            and ppl.active = true""")
+    for row in cr.dictfetchall():
+        node = str(row['id'])
+        doc_ref = db.collection('product_pricelist').document(node)
+        doc_ref.set(row)
+        cr.execute("""select pv.id,date_end::character varying date_end,date_start::character varying date_start,pv.active,pv.name,pv.pricelist_id 
+                                from product_pricelist_version pv, product_pricelist pp where pv.pricelist_id = pp.id   
+                                and pv.active = true
+                                and pp.id=%s""", (row['id'],))
+        for version_row in cr.dictfetchall():
+            version_node = str(version_row['id'])
+            version_ref = doc_ref.collection('product_pricelist_version').document(version_node)
+            version_ref.set(version_row)
+            cr.execute("""select pi.id,pi.price_discount,pi.sequence,pi.product_tmpl_id,pi.name,pp.id base_pricelist_id,
+                                    pi.product_id,pi.base,pi.price_version_id,pi.min_quantity,
+                                    pi.categ_id,pi.new_price price_surcharge,pi.product_uom_id
+                                    from product_pricelist_item pi, product_pricelist_version pv, product_pricelist pp
+                                    where pv.pricelist_id = pp.id                             
+                                    and pv.id = pi.price_version_id
+                                    and pv.id=%s""", (version_row['id'],))
+            for item_row in cr.dictfetchall():
+                item_node = str(item_row['id'])
+                item_ref = version_ref.collection('product_pricelist_item').document(item_node)
+                item_ref.set(item_row)
+    return True
+
+def insert_sale_plan_day(cr):
+    firebase_admin.get_app()
+    db = firestore.client()
+
+    # get sale plan day
+    cr.execute("""select p.id,p.date::character varying date,p.sale_team team_id,p.name,p.principal,p.week ,
+                            (select ARRAY_AGG(line.partner_id ORDER BY line.sequence) from sale_plan_day_line line where line.line_id=p.id) res_partner_id
+                            from sale_plan_day p
+                            join crm_case_section c on p.sale_team=c.id
+                            where p.active = true
+                            """)
+    for row in cr.dictfetchall():
+        node = str(row['id'])
+        doc_ref = db.collection('sale_plan_day').document(node)
+        doc_ref.set(row)
+    return True
+
+
+def insert_sale_plan_trip(cr):
+    firebase_admin.get_app()
+    db = firestore.client()
+
+    # get sale plan trip
+    cr.execute("""select distinct p.id,p.date::character varying date,p.sale_team team_id,p.name,p.principal,
+                            (select ARRAY_AGG(partner_id order by rp.name) 
+                            from res_partner_sale_plan_trip_rel rel,res_partner rp
+                            where rel.partner_id=rp.id
+                            and sale_plan_trip_id=p.id) res_partner_id
+                            from sale_plan_trip p,crm_case_section c,res_partner_sale_plan_trip_rel d, res_partner e
+                            where  p.sale_team=c.id
+                            and p.active = true 
+                            and p.id = d.sale_plan_trip_id
+                            and e.id = d.partner_id                            
+                            """)
+    for row in cr.dictfetchall():
+        node = str(row['id'])
+        doc_ref = db.collection('sale_plan_trip').document(node)
+        doc_ref.set(row)
+    return True
+
 def insert_promotions(cr):
     
     firebase_admin.get_app()        
@@ -146,8 +220,7 @@ def insert_promotions(cr):
         doc_ref.set(row)  
         
         if doc_ref:
-                
-            #add promotion actions  
+            #add promotion actions
             action_query = """select act.id,act.promotion,act.sequence as act_seq ,act.arguments,act.action_type,act.product_code,
                             act.discount_product_code,pro_br_rel.res_branch_id,act.promotion
                             from promos_rules r ,promos_rules_actions act,promos_rules_res_branch_rel pro_br_rel
@@ -179,7 +252,36 @@ def insert_promotions(cr):
                 promo_condition_ref.set(condition_row)        
     print ('inserted promotions')
     return True
-    
+
+def insert_product_category(cr):
+    firebase_admin.get_app()
+    db = firestore.client()
+
+    # get product category
+    cr.execute("""select distinct categ_id,categ_name,section_id team_id from (
+                            select pp.product_tmpl_id,pt.list_price , pt.description,pt.categ_id,pc.name as categ_name,ccs.id section_id 
+                            from product_sale_group_rel rel,
+                            crm_case_section ccs ,product_template pt, product_product pp , product_category pc
+                            where pp.id = rel.product_id
+                            and pt.id = pp.product_tmpl_id
+                            and ccs.sale_group_id = rel.sale_group_id
+                            and pc.id = pt.categ_id   
+                        )A""")
+    for row in cr.dictfetchall():
+        node = str(row['categ_id'])
+        doc_ref = db.collection('product_category').document(node)
+        doc_ref.set(row)
+    return True
+def insert_partner_category(cr):
+    firebase_admin.get_app()
+    db = firestore.client()
+    # get partner category
+    cr.execute("""select id,name from res_partner_category""")
+    for row in cr.dictfetchall():
+        node = str(row['id'])
+        doc_ref = db.collection('partner_category').document(node)
+        doc_ref.set(row)
+    return True
 import psycopg2
 try:
     connection = psycopg2.connect(user = "odoo",
@@ -200,6 +302,11 @@ try:
 #     insert_products(cursor)
 #     insert_customers(cursor)
     insert_promotions(cursor)
+    insert_product_pricelists(cursor)
+    insert_sale_plan_day(cursor)
+    insert_sale_plan_trip(cursor)
+    insert_partner_category(cursor)
+    insert_product_category(cursor)
 
 except (Exception, psycopg2.Error) as error :
     print ("Error while connecting to PostgreSQL", error)
