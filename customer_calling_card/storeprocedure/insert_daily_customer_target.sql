@@ -30,7 +30,8 @@ $BODY$
 	
 BEGIN
 		
-	for customer in select rp.id,rp.name,customer_code,outlet.id outlet,rc.id city,rt.id township,street,rb.id branch
+	for customer in select rp.id,rp.name,customer_code,outlet.id outlet,rc.id city,rt.id township,street,rb.id branch,
+					frequency_id,class_id,sales_channel,rp.delivery_team_id
 					from res_partner rp,outlettype_outlettype outlet,res_city rc,res_township rt,res_branch rb
 					where rp.outlet_type=outlet.id
 					and rp.city=rc.id
@@ -44,9 +45,11 @@ BEGIN
 		delete from customer_target where partner_id=customer.id;
 		
 		WITH customer_target AS (
-			insert into customer_target(partner_id,outlet_type,township,city,address,date)
+			insert into customer_target(partner_id,outlet_type,township,city,address,date,
+			frequency_id,class_id,sales_channel,branch_id,delivery_team_id)
 			values(customer.id,customer.outlet,customer.township,customer.city,
-			   customer.street,now()::date)
+			   	customer.street,now()::date,
+				customer.frequency_id,customer.class_id,customer.sales_channel,customer.branch,customer.delivery_team_id)
 			RETURNING id
 		)
 		
