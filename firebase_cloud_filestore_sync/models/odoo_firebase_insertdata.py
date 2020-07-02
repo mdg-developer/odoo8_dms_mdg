@@ -3,7 +3,7 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 
-cred = credentials.Certificate('/Users/phyo936/Downloads/mdg_live.json')
+cred = credentials.Certificate('/tmp/json/mdg_live.json')
 firebase_admin.initialize_app(cred)
 
 cr = None
@@ -308,6 +308,23 @@ def insert_partner_category(cr):
         doc_ref.set(row)
     return True
 
+def insert_team_group_product(cr):
+    firebase_admin.get_app()
+    db = firestore.client()
+
+    query = """select ccs.id team_id,sg.id sale_group_id,
+                (select ARRAY_AGG(product_id) from product_sale_group_rel where sale_group_id=sg.id) product_id
+                from crm_case_section ccs
+                left join sales_group sg on (ccs.sale_group_id=sg.id)"""
+    cr.execute(query)
+    productMap = dictfetchall(cr)
+    for row in productMap:
+        node = str(row['team_id'])
+        print ('team_group_product node', node)        
+        doc_ref = db.collection('team_group_product').document(node)
+        doc_ref.set(row)
+    print ('inserted team_group_product')
+    return True
 
 import psycopg2
 
@@ -327,10 +344,8 @@ try:
     record = cursor.fetchone()
     #     insert_products(cursor)
     #     insert_customers(cursor)
-    #    insert_promotions(cursor)
-    print("Pricelist Inserting");
-    insert_product_pricelists(cursor)
-    print("Pricelist inserted");
+    #    insert_promotions(cursor)    
+    #     insert_product_pricelists(cursor)    
     #print("Sale Plan Day Inserting");
     #insert_sale_plan_day(cursor);
     #print("Sale Plan Day Inserted");
@@ -343,6 +358,7 @@ try:
     #print("Product Category Inserting");
     #insert_product_category(cursor)
     #print("Product Category Inserted");
+    insert_team_group_product(cursor)
 
 except (Exception, psycopg2.Error) as error :
     print ("Error while connecting to PostgreSQL", error)
