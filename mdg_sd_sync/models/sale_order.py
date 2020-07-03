@@ -55,9 +55,16 @@ class sale_order(osv.osv):
                             'stock.picking.type', 'search',
                             [[['warehouse_id', '=', warehouse_id[0]], ['name', 'like', 'Transfers']]],
                             {'limit': 1})
-                            
+                            reverse_name = 'Reverse ' + str(inv.origin)
+                            reverse_id = models.execute_kw(db, sd_uid, password,
+                            'stock.picking', 'search',
+                            [[['origin', 'like',reverse_name]]],
+                            {'limit': 1})
+                            if reverse_id:
+                                result = super(sale_order, self).action_reverse(cr, uid, ids, context=context)
+                                return result                                
                             res = {
-                                    'origin': inv.origin,
+                                    'origin': reverse_name,
                                     'move_type':'direct',
                                     'invoice_state':'none',
                                     'picking_type_id':picking_type_id[0],
@@ -80,7 +87,7 @@ class sale_order(osv.osv):
                                       'company_id':inv.company_id.id,
                                       'date_expected':inv.date_invoice,
                                       'date':inv.date_invoice,
-                                      'origin':inv.origin,
+                                      'origin':reverse_name,
                                       'location_id':loc_id[0],
                                       'location_dest_id':dest_loc_id[0],
                                       'create_date':inv.date_invoice,

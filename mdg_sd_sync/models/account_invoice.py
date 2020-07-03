@@ -44,9 +44,14 @@ class account_invoice(models.Model):
                     'stock.picking.type', 'search',
                     [[['warehouse_id', '=', warehouse_id[0]], ['name', 'like', 'Transfers']]],
                     {'limit': 1})
-                    
+                    sd_move_id = models.execute_kw(db, sd_uid, password,
+                            'stock.picking', 'search',
+                            [[['origin', 'like','Import '+ str(inv.origin)]]],
+                            {'limit': 1})
+                    if sd_move_id:
+                        return result    
                     res = {
-                            'origin': inv.origin,
+                            'origin': 'Import '+ str(inv.origin),
                             'move_type':'direct',
                             'invoice_state':'none',
                             'picking_type_id':picking_type_id[0],
@@ -69,7 +74,7 @@ class account_invoice(models.Model):
                               'company_id':inv.company_id.id,
                               'date_expected':inv.date_invoice,
                               'date':inv.date_invoice,
-                              'origin':inv.origin,
+                              'origin':'Import '+ str(inv.origin),
                               'location_id':loc_id[0],
                               'location_dest_id':dest_loc_id[0],
                               'create_date':inv.date_invoice,
