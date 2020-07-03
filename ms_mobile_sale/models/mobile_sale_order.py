@@ -1488,15 +1488,66 @@ class mobile_sale_order(osv.osv):
         return datas
 
     # Get Res Partner and Res Partner Category res_partner_res_partner_category_rel
+#     def get_res_partner_category_datas(self, cr, uid , context=None, **kwargs):
+#         cr.execute('''
+#         select a.category_id, a.partner_id ,b.name
+#         from res_partner_res_partner_category_rel a , res_partner_category b
+#         where a.category_id = b.id
+#         ''')
+#         datas = cr.fetchall()
+#         return datas
+
     def get_res_partner_category_datas(self, cr, uid , context=None, **kwargs):
-        cr.execute('''
-        select a.category_id, a.partner_id ,b.name
-        from res_partner_res_partner_category_rel a , res_partner_category b
-        where a.category_id = b.id
-        ''')
-        datas = cr.fetchall()
-        return datas
-    
+#         cr.execute('''
+#         select a.category_id, a.partner_id ,b.name
+#         from res_partner_res_partner_category_rel a , res_partner_category b
+#         where a.category_id = b.id
+#         ''')
+        team_obj = self.pool.get('crm.case.section')
+        cr.execute('''select default_section_id from res_users where id =%s''',(uid,))   
+        sale_team_data=cr.fetchone() 
+        if sale_team_data:
+            sale_team_id =sale_team_data[0]
+        else:
+            sale_team_id=False
+        team_data=team_obj.browse(cr, uid, sale_team_id, context=context)     
+        section_id=  team_data.id                            
+        is_supervisor=team_data.is_supervisor    
+        if is_supervisor==True:
+            cr.execute('''(select distinct a.category_id, a.partner_id ,(select name from res_partner_category where id = a.category_id) as name from res_partner_res_partner_category_rel a,
+                     sale_plan_day_line b
+                     , sale_plan_day p
+                    where a.partner_id = b.partner_id
+                    and b.line_id = p.id
+                    and p.sale_team in (select id from crm_case_section where supervisor_team= %s)
+                    )
+                    UNION ALL
+                    (select distinct a.category_id, a.partner_id ,(select name from res_partner_category where id = a.category_id) as name 
+                    from res_partner_res_partner_category_rel a,sale_plan_trip p,
+                     res_partner_sale_plan_trip_rel b
+                    where a.partner_id = b.partner_id
+                    and b.sale_plan_trip_id = p.id
+                    and p.sale_team in (select id from crm_case_section where supervisor_team= %s))
+                    ''', (section_id, section_id,))
+            datas = cr.fetchall()     
+        else:
+            cr.execute('''(select distinct a.category_id, a.partner_id ,(select name from res_partner_category where id = a.category_id) as name from res_partner_res_partner_category_rel a,
+             sale_plan_day_line b
+             , sale_plan_day p
+            where a.partner_id = b.partner_id
+            and b.line_id = p.id
+            and p.sale_team = %s
+            )
+            UNION ALL
+            (select distinct a.category_id, a.partner_id ,(select name from res_partner_category where id = a.category_id) as name from res_partner_res_partner_category_rel a,sale_plan_trip p,
+             res_partner_sale_plan_trip_rel b
+            where a.partner_id = b.partner_id
+            and b.sale_plan_trip_id = p.id
+            and p.sale_team = %s
+            )
+            ''', (section_id, section_id,))
+            datas = cr.fetchall()    
+        return datas        
     def get_sale_team_members_datas(self, cr, uid , member_id, saleteam_id, context=None, **kwargs):
         cr.execute('''select u.id as id,u.active as active,u.login as login,u.password as password,u.partner_id as partner_id,p.name as name from res_users u, res_partner p
                    where u.partner_id = p.id and u.id in(select member_id from crm_case_section cr, sale_member_rel sm where sm.section_id = cr.id and cr.id =%s)''', (saleteam_id,)) 
@@ -2313,9 +2364,9 @@ class mobile_sale_order(osv.osv):
         return datas
     
     def get_promo_sale_channel(self, cr, uid , context=None):        
-        cr.execute('''select promo_id,sale_channel_id from promo_sale_channel_rel''')
+        cr.execute('''select rel.promo_id,rel.sale_channel_id from promo_sale_channel_rel rel,promos_rules rule where rule.id =rel.promo_id  and now()::date between from_date::date and to_date::date''')
         datas = cr.fetchall()        
-        return datas    
+        return datas 
     
 #     def get_sale_team_channel(self, cr, uid, sale_team_id , context=None, **kwargs):    
 #         cr.execute("""select sale_team_id,sale_channel_id from sale_team_channel_rel
@@ -2942,17 +2993,17 @@ class mobile_sale_order(osv.osv):
             return False    
         
     def get_promos_outlet(self, cr, uid, context=None, **kwargs):    
-        cr.execute("""select promos_rules_id,outlettype_id from promos_rules_outlettype_rel""")
+        cr.execute("""select rel.promos_rules_id,rel.outlettype_id from promos_rules_outlettype_rel rel,promos_rules rule where rule.id =rel.promos_rules_id  and now()::date between from_date::date and to_date::date""")
         datas = cr.fetchall()        
         return datas
     
     def get_promos_branch(self, cr, uid, context=None, **kwargs):    
-        cr.execute("""select promos_rules_id,res_branch_id from promos_rules_res_branch_rel""")
+        cr.execute("""select rel.promos_rules_id,rel.res_branch_id from promos_rules_res_branch_rel rel,promos_rules rule where rule.id =rel.promos_rules_id  and now()::date between from_date::date and to_date::date""")
         datas = cr.fetchall()        
         return datas
     
     def get_promos_partner(self, cr, uid, context=None, **kwargs):    
-        cr.execute("""select promos_rules_id,res_partner_id from promos_rules_res_partner_rel""")
+        cr.execute("""select rel.promos_rules_id,rel.res_partner_id from promos_rules_res_partner_rel rel,promos_rules rule where rule.id =rel.promos_rules_id  and now()::date between from_date::date and to_date::date""")
         datas = cr.fetchall()        
         return datas
     
@@ -2962,7 +3013,7 @@ class mobile_sale_order(osv.osv):
         return datas
         
     def get_promo_product(self, cr, uid, context=None, **kwargs):    
-        cr.execute('''select promos_rules_id,product_id from promos_rules_product_rel''')
+        cr.execute('''select rel.promos_rules_id,rel.product_id from promos_rules_product_rel rel,promos_rules rule where rule.id =rel.promos_rules_id  and now()::date between from_date::date and to_date::date''')
         datas = cr.fetchall()        
         return datas
     
@@ -3743,27 +3794,66 @@ class mobile_sale_order(osv.osv):
         return datas
 
     def get_promo_partner_category(self, cr, uid , context=None):        
-        cr.execute('''select * from promotion_rule_category_rel''')
+        cr.execute('''select rel.* from promotion_rule_category_rel rel,promos_rules rule where rule.id =rel.promotion_id  and now()::date between from_date::date and to_date::date''')
         datas = cr.fetchall()        
         return datas
     
-    def get_partner_category_rel(self, cr, uid, section_id , context=None):        
-        cr.execute('''(select a.* from res_partner_res_partner_category_rel a,
-                 sale_plan_day_line b
-                 , sale_plan_day p
-                where a.partner_id = b.partner_id
-                and b.line_id = p.id
-                and p.sale_team = %s
-                order by b.sequence asc)
-                UNION ALL
-                (select a.* from res_partner_res_partner_category_rel a,sale_plan_trip p,
-                 res_partner_sale_plan_trip_rel b
-                where a.partner_id = b.partner_id
-                and b.sale_plan_trip_id = p.id
-                and p.sale_team = %s)
-                ''', (section_id, section_id,))
-        datas = cr.fetchall()        
-        return datas
+#     def get_partner_category_rel(self, cr, uid, section_id , context=None):        
+#         cr.execute('''(select a.* from res_partner_res_partner_category_rel a,
+#                  sale_plan_day_line b
+#                  , sale_plan_day p
+#                 where a.partner_id = b.partner_id
+#                 and b.line_id = p.id
+#                 and p.sale_team = %s
+#                 order by b.sequence asc)
+#                 UNION ALL
+#                 (select a.* from res_partner_res_partner_category_rel a,sale_plan_trip p,
+#                  res_partner_sale_plan_trip_rel b
+#                 where a.partner_id = b.partner_id
+#                 and b.sale_plan_trip_id = p.id
+#                 and p.sale_team = %s)
+#                 ''', (section_id, section_id,))
+#         datas = cr.fetchall()        
+#         return datas
+
+    def get_partner_category_rel(self, cr, uid, section_id , context=None):  
+        section = self.pool.get('crm.case.section')      
+        sale_team_data = section.browse(cr, uid, section_id, context=context)
+        is_supervisor=sale_team_data.is_supervisor    
+        if is_supervisor==True:
+            cr.execute('''(select distinct a.* from res_partner_res_partner_category_rel a,
+                     sale_plan_day_line b
+                     , sale_plan_day p
+                    where a.partner_id = b.partner_id
+                    and b.line_id = p.id
+                    and p.sale_team in (select id from crm_case_section where supervisor_team= %s)
+                    )
+                    UNION ALL
+                    (select distinct a.* from res_partner_res_partner_category_rel a,sale_plan_trip p,
+                     res_partner_sale_plan_trip_rel b
+                    where a.partner_id = b.partner_id
+                    and b.sale_plan_trip_id = p.id
+                    and p.sale_team in (select id from crm_case_section where supervisor_team= %s))
+                    ''', (section_id, section_id,))
+            datas = cr.fetchall()     
+        else:
+            cr.execute('''(select distinct a.* from res_partner_res_partner_category_rel a,
+             sale_plan_day_line b
+             , sale_plan_day p
+            where a.partner_id = b.partner_id
+            and b.line_id = p.id
+            and p.sale_team = %s
+            )
+            UNION ALL
+            (select distinct a.* from res_partner_res_partner_category_rel a,sale_plan_trip p,
+             res_partner_sale_plan_trip_rel b
+            where a.partner_id = b.partner_id
+            and b.sale_plan_trip_id = p.id
+            and p.sale_team = %s
+            )
+            ''', (section_id, section_id,))
+            datas = cr.fetchall()    
+        return datas    
     
 #     def get_monthly_promotion_history(self, cr, uid, section_id , context=None, **kwargs):
 #             cr.execute("""
