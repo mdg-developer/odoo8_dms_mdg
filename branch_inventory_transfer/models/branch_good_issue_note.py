@@ -212,6 +212,8 @@ class branch_good_issue_note(osv.osv):
     'reverse_user_id':fields.many2one('res.users', "Reverse User",readonly=True),
     'checked_by':fields.char("Checked By"),
     'address' : fields.char('Delivery Address & PH', required=False ),
+    'dock_no' : fields.char('Dock No', required=False ),
+
         }
     
     _defaults = {

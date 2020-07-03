@@ -64,6 +64,8 @@
 									attrs="{'readonly':[('state','in',('issue','receive','cancel'))]}" />
 								<field name="address"
 									attrs="{'readonly':[('state','in',('issue','receive','cancel'))]}" />
+								<field name="dock_no"
+									attrs="{'readonly':[('state','in',('issue','receive','cancel'))]}" />
 								<field name="checked_by"
 									attrs="{'readonly':[('state','in',('issue','receive','cancel'))]}" />
 							</group>
