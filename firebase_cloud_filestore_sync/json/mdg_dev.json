@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "tabletsales-1373",
+  "private_key_id": "d98ff6fc6443696223fac3399da04ecea303d417",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDvhcrTZICUI6h7\n87jEhkjSbtR1OVRkQfAIzHTn2/PS8YeIAOWt0ZmkrarSnbHh2znZOEuNyerQf+F1\n8CHUdXlrNPDtunFQCtuN1kq+qBrrTb1rc0XABCUxbg9dcPcmrUKMqjD9ZE3Ujrlt\na/pD9XvXnc2Y9D1l4UorOTZyrz5NsU3PLWPtbPlhpKiVr2+Q96IngR7jRcQX2YQ0\nZCKbnq+jCZ/YnXbcXA8RvXWughocBR/b5PQ26+bSswO1I/OIA/tl6J6Jdc9xmDj+\n4y7b44kYd0sSHs3VaKzNwOxQlrRSLDoY2FgOXYaGeRtBuKPUFcancnXyoZ/gTtQe\nzpYV20exAgMBAAECggEADx97kEgL0b6kHkpjv73KRoYSokGfxVI/93BAT9zcetS+\n5cyHs+c0XBhOfSyRfQUIVKGYLKBDdA1k9Ps3yZgutcEClsHzMlZzKRQPBVVsGLAA\nfhKpxF9GoWW1cOUHZ9Df7y12OSN+ggWOad0b0LNk0bbwEqCWKVL1ib/boxdTN9iz\nHTUfbUHnAuM+t16KKrWSHm37L44RC9q32noTwiXwPfV9mCowVDujjYZViDkIGIEa\nrLgAhS+UhxqaWOH1sSCcf90ncGExE0U/D9QPk4cFm0ibTX6YK0W+feAZlFvcPUDP\nqT6VJJINInJsaqEUrrdEHY0bSscmSZVqm/cc1HDweQKBgQD+FinL3XTzdgG/Gg/A\niaY1Q+tygfwBvqZ2df0S767ivvqa/pi4iVnJSSJduZ8+0moXnENxQAcIoEgOt+lZ\n8AlFw+VRZ2cVfkvkReK33EC19zBx5PcU9Y4aog1aylnOwjcQHzuCGmbVrKn6JVQs\ndpZYf2HaPw9LVYJgiduHDF/5mQKBgQDxU41ZYe4/NRCipyueN1XzyoOvnEFkn8In\n5NeRdKlRHaSWjDfUt6dhGIHJR+Kc1H5We7Vy9cYxEJdldxbCNEy861bvZtSkr456\nSX5XFb9iPdavWQKXb4AC9JxJLjwt3uXBq7TU9CEmchG1DF5yInDRGgfJTBYanqk0\nvU/fZ0l92QKBgQDJ4QQudXNhqSY0F1niqbuEYMWmwn5fSIJsZszACe4TPJhTI+xl\n2sOa+V+zxjMvr/EZd0/ioHO2N9tozlk620wSwVXnetfdrO5RnfFIEljb+13jcH+c\niInywUUJGPOIIqmrRpV6hs2kAj8/f/9EIKjOAc/Wnvng6jzfxUjGIV/0KQKBgEl6\n6lgj9Ho0eys7gZF8QeSobi5jgpnT9zdUe7rjbcawIvRgH4Pao9Fxt9sE02BzZ0CI\nDHjDkyRPa/nOKBTb/d2sPt1IT0kR120uwZRcn9iXAa6EiMB5h93eg1PZCyPgcc7l\nrHsHFqzxIKki6gMQr49LwMEvNK/ITbcsSYy5k2wJAoGBAM5ida9UPyUQ0SffXXiG\naYn/G8Kj6w5b8BVe58xQNWds4XKCrGy3UkOSG+4hG3pt66oZJcqk7qJvJFmaDg+d\nV8DUXmPPlQuuHdG0Ksbt4Wv/mhOd3YW1Vbq6n42ZgWfys7dQNjEcRi8M7ISX4pwh\nRPOP2C9ZevA4uYOr1VxqcL6J\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-12xpb@tabletsales-1373.iam.gserviceaccount.com",
+  "client_id": "103503063571142570851",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-12xpb%40tabletsales-1373.iam.gserviceaccount.com"
+}

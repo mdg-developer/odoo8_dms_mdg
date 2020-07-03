@@ -30,8 +30,7 @@ $BODY$
 	
 BEGIN
 		
-	for customer in select rp.id,rp.name,customer_code,outlet.id outlet,rc.id city,rt.id township,street,rb.id branch,
-					frequency_id,class_id,sales_channel,rp.delivery_team_id
+	for customer in select rp.id,rp.name,customer_code,outlet.id outlet,rc.id city,rt.id township,street,rb.id branch
 					from res_partner rp,outlettype_outlettype outlet,res_city rc,res_township rt,res_branch rb
 					where rp.outlet_type=outlet.id
 					and rp.city=rc.id
@@ -41,15 +40,13 @@ BEGIN
 					and rp.customer=True
 					and mobile_customer!=True
 	loop			
-		
+		raise notice 'running for customer:'+cusotmer.customer_coe;
 		delete from customer_target where partner_id=customer.id;
 		
 		WITH customer_target AS (
-			insert into customer_target(partner_id,outlet_type,township,city,address,date,
-			frequency_id,class_id,sales_channel,branch_id,delivery_team_id)
+			insert into customer_target(partner_id,outlet_type,township,city,address,date)
 			values(customer.id,customer.outlet,customer.township,customer.city,
-			   	customer.street,now()::date,
-				customer.frequency_id,customer.class_id,customer.sales_channel,customer.branch,customer.delivery_team_id)
+			   customer.street,now()::date)
 			RETURNING id
 		)
 		

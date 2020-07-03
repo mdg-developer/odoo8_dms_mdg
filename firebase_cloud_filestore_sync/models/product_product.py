@@ -18,7 +18,7 @@ class product_product(models.Model):
         db = firestore.client()
         
         #get product
-        self._cr.execute("""select  pp.id,pt.list_price,coalesce(replace(pt.description,',',';'), ' ') as description,pt.categ_id,pc.name as categ_name,pp.default_code, 
+        self._cr.execute("""select ROW_NUMBER () OVER (ORDER BY product_id) seq,pt.list_price,coalesce(replace(pt.description,',',';'), ' ') as description,pt.categ_id,pc.name as categ_name,pp.default_code, 
             pt.name,convert_from(image_small,'utf8') as image_small,pt.main_group,pt.uom_ratio,
             pp.product_tmpl_id,pt.is_foc,pp.sequence,pt.type,pt.uom_id,ccs.id team_id,
             concat(ccs.id,'-',rel.sale_group_id)::character varying product_key
@@ -31,7 +31,7 @@ class product_product(models.Model):
             and ccs.sale_group_id = rel.sale_group_id
             and pc.id = pt.categ_id""")
         for row in self._cr.dictfetchall():
-            node = str(row['id'])
+            node = str(row['seq'])
             doc_ref = db.collection('product_product').document(node)
             doc_ref.set(row)
         return True
@@ -286,7 +286,8 @@ class product_product(models.Model):
                     product_ref = doc_ref.collection('product_product').document(product_node)    
                     product_ref.set(product_row) 
         return True
-        
+
+    #not using
     @api.model                                                               
     def sync_product_category(self):    
         
