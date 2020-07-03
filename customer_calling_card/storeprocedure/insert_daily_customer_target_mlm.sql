@@ -1,7 +1,7 @@
--- select * from insert_daily_customer_target();
--- DROP FUNCTION insert_daily_customer_target();
+-- select * from insert_daily_customer_target_mlm();
+-- DROP FUNCTION insert_daily_customer_target_mlm();
 
-CREATE OR REPLACE FUNCTION insert_daily_customer_target()
+CREATE OR REPLACE FUNCTION insert_daily_customer_target_mlm()
   RETURNS void AS
 $BODY$
 
@@ -37,9 +37,10 @@ BEGIN
 					left join res_city rc on (rp.city=rc.id)
 					left join res_township rt on (rp.township=rt.id)
 					left join res_branch rb on (rp.branch_id=rb.id)
-					where rp.active=True 
+					where rp.active=True  
 					and rp.customer=True
 					and mobile_customer!=True
+					and rb.branch_code='MLM'
 	loop			
 		
 		delete from customer_target where partner_id=customer.id;

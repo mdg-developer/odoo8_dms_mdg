@@ -1,7 +1,7 @@
--- select * from insert_daily_customer_target();
--- DROP FUNCTION insert_daily_customer_target();
+-- select * from insert_daily_customer_target_cwh();
+-- DROP FUNCTION insert_daily_customer_target_cwh();
 
-CREATE OR REPLACE FUNCTION insert_daily_customer_target()
+CREATE OR REPLACE FUNCTION insert_daily_customer_target_cwh()
   RETURNS void AS
 $BODY$
 
@@ -40,6 +40,7 @@ BEGIN
 					where rp.active=True 
 					and rp.customer=True
 					and mobile_customer!=True
+					and rb.branch_code='CWH'
 	loop			
 		
 		delete from customer_target where partner_id=customer.id;
