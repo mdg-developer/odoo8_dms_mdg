@@ -153,9 +153,7 @@
 								<span t-field="o.loading_time" />
 							</td>
 							<td style="border:0pt;font-size:10pt;">
-							
 								<strong>Dock No :</strong>
-							
 							</td>
 							<td style="border:0pt;font-size:10pt;">
 							   <span t-field="o.dock_no" />

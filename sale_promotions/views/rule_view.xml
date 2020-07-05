@@ -160,6 +160,8 @@
 					<field name="main_group" />
 					<field name="from_date" />
 					<field name="to_date" />
+					<field name="status" />
+					
 				</tree>
 			</field>
 		</record>

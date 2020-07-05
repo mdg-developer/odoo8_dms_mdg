@@ -37,6 +37,8 @@
  
     """,
     'data': [
+     'security/account_security.xml',
+
         'views/rule_view.xml',
 	 'views/sale_view.xml',
      'wizard/foc_any_product_view.xml',
