@@ -326,6 +326,22 @@ def insert_team_group_product(cr):
     print ('inserted team_group_product')
     return True
 
+def insert_sale_channel(cr):
+    firebase_admin.get_app()
+    db = firestore.client()
+
+    query = """select id,name from sale_channel;"""
+    cr.execute(query)
+    channelMap = dictfetchall(cr)
+    for row in channelMap:
+        node = str(row['id'])
+        print ('channel node', node)
+        print ('channel name', row['name'])
+        doc_ref = db.collection('sale_channel').document(node)
+        doc_ref.set(row)
+    print ('inserted sale channel')
+    return True
+
 import psycopg2
 
 try:
@@ -358,7 +374,8 @@ try:
     #print("Product Category Inserting");
     #insert_product_category(cursor)
     #print("Product Category Inserted");
-    insert_team_group_product(cursor)
+    #insert_team_group_product(cursor)
+    insert_sale_channel(cursor)
 
 except (Exception, psycopg2.Error) as error :
     print ("Error while connecting to PostgreSQL", error)
