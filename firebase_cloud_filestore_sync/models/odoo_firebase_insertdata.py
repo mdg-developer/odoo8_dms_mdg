@@ -111,10 +111,15 @@ def insert_product_pricelists(cr):
     db = firestore.client()
 
     # get product pricelists
-    cr.execute("""select concat(ppl.id,cpr.team_id) seq,ppl.id,ppl.name,ppl.type, ppl.active , cpr.is_default,cpr.team_id
-                            from price_list_line cpr , product_pricelist ppl
-                            where ppl.id = cpr.property_product_pricelist 
-                            and ppl.active = true""")
+    cr.execute("""select concat(ppl.id,cpr.team_id) seq,ppl.id,ppl.name,ppl.type, ppl.active , cpr.is_default,cpr.team_id,
+                    (select ARRAY_AGG(pv.id)
+                    from product_pricelist_version pv, product_pricelist pp 
+                    where pv.pricelist_id = pp.id   
+                    and pv.active = true
+                    and pp.id=ppl.id) product_pricelist_version
+                    from price_list_line cpr , product_pricelist ppl
+                    where ppl.id = cpr.property_product_pricelist 
+                    and ppl.active = true""")
     productMap = dictfetchall(cr)
     print("Price list retrieve count%s", len(productMap))
     for row in productMap:
@@ -342,6 +347,43 @@ def insert_sale_channel(cr):
     print ('inserted sale channel')
     return True
 
+def insert_product_pricelist_item(cr):
+    firebase_admin.get_app()
+    db = firestore.client()
+
+    query = """select pi.id,pi.price_discount,pi.sequence,pi.product_tmpl_id,pi.name,pp.id base_pricelist_id,
+                pi.product_id,pi.base,pi.price_version_id,pi.min_quantity,
+                pi.categ_id,pi.new_price price_surcharge,pi.product_uom_id
+                from product_pricelist_item pi, product_pricelist_version pv, product_pricelist pp
+                where pv.pricelist_id = pp.id                             
+                and pv.id = pi.price_version_id;"""
+    cr.execute(query)
+    itemMap = dictfetchall(cr)
+    for row in itemMap:
+        node = str(row['id'])
+        print ('pricelist item node', node)        
+        doc_ref = db.collection('product_pricelist_item').document(node)
+        doc_ref.set(row)
+    print ('inserted product_pricelist_item')
+    return True
+
+def insert_product_pricelist_version(cr):
+    firebase_admin.get_app()
+    db = firestore.client()
+
+    query = """select pv.id,date_end::character varying date_end,date_start::character varying date_start,pv.active,pv.name,pv.pricelist_id 
+                from product_pricelist_version pv, product_pricelist pp where pv.pricelist_id = pp.id   
+                and pv.active = true;"""
+    cr.execute(query)
+    versionMap = dictfetchall(cr)
+    for row in versionMap:
+        node = str(row['id'])
+        print ('pricelist version node', node)        
+        doc_ref = db.collection('product_pricelist_version').document(node)
+        doc_ref.set(row)
+    print ('inserted product_pricelist_version')
+    return True
+
 import psycopg2
 
 try:
@@ -361,7 +403,7 @@ try:
     #     insert_products(cursor)
     #     insert_customers(cursor)
     #    insert_promotions(cursor)    
-    #     insert_product_pricelists(cursor)    
+    insert_product_pricelists(cursor)    
     #print("Sale Plan Day Inserting");
     #insert_sale_plan_day(cursor);
     #print("Sale Plan Day Inserted");
@@ -375,7 +417,9 @@ try:
     #insert_product_category(cursor)
     #print("Product Category Inserted");
     #insert_team_group_product(cursor)
-    insert_sale_channel(cursor)
+    #insert_sale_channel(cursor)
+    #insert_product_pricelist_item(cursor)
+    #insert_product_pricelist_version(cursor)
 
 except (Exception, psycopg2.Error) as error :
     print ("Error while connecting to PostgreSQL", error)
