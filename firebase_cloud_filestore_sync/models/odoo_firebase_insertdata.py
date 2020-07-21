@@ -92,12 +92,12 @@ def insert_customers(cr):
                                     order by  RPS.sequence asc                         
                 
                 )A 
-                where A.customer_code is not null"""
+                where A.customer_code is not null;"""
     cr.execute(query)
     customerMap = dictfetchall(cr)
-    print ('ready to insert customers' + len(customerMap))
+    print ('ready to insert customers',len(customerMap))
     for row in customerMap:
-        node = str(row['seq'])
+        node = str(row['id'])
         print ('customer node', node)
         print ('customer name', row['name'])
         doc_ref = db.collection('res_partner').document(node)
@@ -399,11 +399,11 @@ try:
 
     # Print PostgreSQL version
     cursor.execute("SELECT version();")
-    record = cursor.fetchone()
+    record = cursor.fetchone()    
     #     insert_products(cursor)
-    #     insert_customers(cursor)
+    insert_customers(cursor)
     #    insert_promotions(cursor)    
-    insert_product_pricelists(cursor)    
+    #insert_product_pricelists(cursor)    
     #print("Sale Plan Day Inserting");
     #insert_sale_plan_day(cursor);
     #print("Sale Plan Day Inserted");
