@@ -31,6 +31,22 @@ class sale_order(models.Model):
                     order.updated_in_woo=False
                     break
 
+    @api.one
+    def _get_woo_customer_id(self):
+        for order in self:
+            if order.partner_id.woo_customer_id:
+                woo_customer_id = order.partner_id.woo_customer_id.split("_")[1]                
+                order.woo_customer_id = woo_customer_id
+            else:
+                pass
+    
+    def create(self, cursor, user, vals, context=None):
+        partner = self.pool.get('res.partner').browse(cursor, user, [vals['partner_id']], context=context)
+        if partner.woo_customer_id:
+            woo_customer_id = partner.woo_customer_id.split("_")[1]
+            vals.update(woo_customer_id=woo_customer_id)
+        return super(sale_order, self).create(cursor, user, vals, context=context)                               
+
     def _search_woo_order_ids(self,operator,value):
         print("_search_woo_order_ids")
         query="""
@@ -62,6 +78,7 @@ class sale_order(models.Model):
     woo_instance_id=fields.Many2one("woo.instance.ept","Instance")
     woo_trans_id=fields.Char("Transaction Id")
     woo_customer_ip=fields.Char("Customer IP")
+    woo_customer_id=fields.Char('Woo Customer ID')
     visible_trans_id=fields.Boolean("trans_id_avail",compute=visible_transaction_id,store=False)
     payment_gateway_id=fields.Many2one("woo.payment.gateway","Payment Gateway")
     

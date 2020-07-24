@@ -41,6 +41,7 @@ OUT__sale_order__read_all__SCHEMA = (                 # editable
     'date_order',
     'amount_total',
     'state',
+    'woo_customer_id',
     # many2one fields:
     ('partner_id', (
         'id',
@@ -50,6 +51,37 @@ OUT__sale_order__read_all__SCHEMA = (                 # editable
         'id',
         'name',
     )),
+    ('user_id', (
+        'id',
+        'name',
+    )),
+    # one2many fields:
+    ('order_line', [(
+        'id',
+        ('product_id', (  # many2one
+            'id',
+            'name',
+            'type',
+            'state',
+            'ean13',
+            ('categ_id', (  # many2one
+                'id',
+                'name',
+            )),
+            ('attribute_line_ids', [(  # one2many
+                'id',
+                'display_name',
+            )]),
+        )),
+        'name',
+        'product_uom_qty',
+        'price_unit',
+        ('tax_id', [(  # many2many
+            'id',
+            'name',
+        )]),
+        'price_subtotal',
+    )]),
 )
 #           ]
 #       }
