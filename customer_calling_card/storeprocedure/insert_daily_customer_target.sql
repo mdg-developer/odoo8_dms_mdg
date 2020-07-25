@@ -63,14 +63,13 @@ BEGIN
 		month_out_todate_data = 0;
 		ams_balance_data = 0;
 		
-		for product in select pp.id,name_template,sequence,report_uom_id 
-					   from product_product pp,product_template pt
-					   where pp.product_tmpl_id=pt.id					    
-					   and pp.active=true
-					   and pt.active=true
-					   and sale_ok=true
-					   and is_foc!=true
-					   and type!='service'
+		for product in select distinct pp.id,name_template,pp.sequence,report_uom_id 
+					   from sales_target_outlet_line line,sales_target_outlet st,product_product pp,product_template pt
+					   where st.id=line.sale_ids
+					   and line.product_id=pp.id
+					   and pp.product_tmpl_id=pt.id						  
+					   and st.year=date_part('year',current_date)::character varying
+					   and st.month=to_char(now(),'MM')
 		loop
 			
 			month1_sale = 0.00;
@@ -174,7 +173,7 @@ BEGIN
 			product_uom_qty*(select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=product_uom) as product_uom_qty
 			into percentage_growth_value,target_amount
 			from sales_target_outlet target
-			left join sales_target_outlet_line line on (target.id=line.sale_ids)
+			inner join sales_target_outlet_line line on (target.id=line.sale_ids)
 			left join target_outlets_rel rel on (rel.target_id=target.id)
 			where year=date_part('year',current_date)::character varying
 			and month=to_char(now(),'MM')
