@@ -1,7 +1,7 @@
 -- select * from insert_daily_customer_target(55,432);
--- DROP FUNCTION insert_daily_customer_target();
+-- DROP FUNCTION insert_daily_customer_target(integer,integer)
 
-CREATE OR REPLACE FUNCTION insert_daily_customer_target(branch_id integer,township_id integer)
+CREATE OR REPLACE FUNCTION insert_daily_customer_target(param_branch integer,param_township integer)
   RETURNS void AS
 $BODY$
 
@@ -28,6 +28,7 @@ $BODY$
 	month_out_todate_data numeric;
 	ams_balance_data numeric;
 	customer_record record;
+	customer_count integer;
 	sql text :=   'select rp.id,rp.name,customer_code,outlet.id outlet,rc.id city,rt.id township,street,rb.id branch,
 					frequency_id,class_id,sales_channel,rp.delivery_team_id
 					from res_partner rp
@@ -41,21 +42,77 @@ $BODY$
 	
 BEGIN
 						
-	IF branch_id IS NOT NULL THEN
-		sql := sql || ' AND rp.branch_id ='|| branch_id;
+	IF param_branch IS NOT NULL THEN
+		sql := sql || ' AND rp.branch_id ='|| param_branch;
 	END IF;
 	
-	IF township_id IS NOT NULL THEN
-		sql := sql || ' AND rp.township ='|| township_id;
+	IF param_township IS NOT NULL THEN
+		sql := sql || ' AND rp.township ='|| param_township;
 	END IF;
 	
 	RAISE NOTICE 'sqlsql(%)', sql;
 	
+	IF param_branch IS NOT NULL AND param_township IS NOT NULL THEN
+		select count(ct.id) into customer_count
+		from customer_target ct,res_partner rp
+		where ct.partner_id=rp.id
+		and rp.branch_id=param_branch
+		and rp.township=param_township;
+		
+		IF customer_count > 0 THEN
+			delete from customer_target 
+			where partner_id in (select rp.id from res_partner rp 
+								 where rp.active=true and rp.customer=true 
+								 and rp.branch_id=param_branch and rp.township=param_township);
+		END IF;
+		
+	END IF;
+	
+	IF param_branch IS NOT NULL AND param_township IS NULL THEN
+		select count(ct.id) into customer_count
+		from customer_target ct,res_partner rp
+		where ct.partner_id=rp.id
+		and rp.branch_id=param_branch;
+		
+		IF customer_count > 0 THEN
+			delete from customer_target 
+			where partner_id in (select rp.id from res_partner rp 
+								 where rp.active=true and rp.customer=true 
+								 and rp.branch_id=param_branch);
+		END IF;
+		
+	END IF;
+	
+	IF param_branch IS NULL AND param_township IS NOT NULL THEN
+		select count(ct.id) into customer_count
+		from customer_target ct,res_partner rp
+		where ct.partner_id=rp.id
+		and rp.township=param_township;
+		
+		IF customer_count > 0 THEN
+			delete from customer_target 
+			where partner_id in (select rp.id from res_partner rp 
+								 where rp.active=true and rp.customer=true 
+								 and rp.township=param_township);
+		END IF;
+	END IF;
+	
+	IF param_branch IS NULL AND param_township IS NULL THEN
+		select count(ct.id) into customer_count
+		from customer_target ct,res_partner rp
+		where ct.partner_id=rp.id;
+		
+		IF customer_count > 0 THEN
+			delete from customer_target 
+			where partner_id in (select rp.id from res_partner rp 
+								 where rp.active=true and rp.customer=true);
+		END IF;
+	END IF;
+	
 	for customer in EXECUTE sql
 	loop			
 		RAISE NOTICE 'customer (%)', customer.id;				
-		delete from customer_target where partner_id=customer.id;
-		
+				
 		WITH customer_target AS (
 			insert into customer_target(partner_id,outlet_type,township,city,address,date,
 			frequency_id,class_id,sales_channel,branch_id,delivery_team_id)
