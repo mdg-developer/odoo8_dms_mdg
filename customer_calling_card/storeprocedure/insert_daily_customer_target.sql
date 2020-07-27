@@ -1,7 +1,7 @@
--- select * from insert_daily_customer_target();
+-- select * from insert_daily_customer_target(55,432);
 -- DROP FUNCTION insert_daily_customer_target();
 
-CREATE OR REPLACE FUNCTION insert_daily_customer_target()
+CREATE OR REPLACE FUNCTION insert_daily_customer_target(branch_id integer,township_id integer)
   RETURNS void AS
 $BODY$
 
@@ -27,10 +27,8 @@ $BODY$
 	ams_budget_value_data numeric;
 	month_out_todate_data numeric;
 	ams_balance_data numeric;
-	
-BEGIN
-		
-	for customer in select rp.id,rp.name,customer_code,outlet.id outlet,rc.id city,rt.id township,street,rb.id branch,
+	customer_record record;
+	sql text :=   'select rp.id,rp.name,customer_code,outlet.id outlet,rc.id city,rt.id township,street,rb.id branch,
 					frequency_id,class_id,sales_channel,rp.delivery_team_id
 					from res_partner rp
 					left join outlettype_outlettype outlet on (rp.outlet_type=outlet.id)
@@ -39,9 +37,23 @@ BEGIN
 					left join res_branch rb on (rp.branch_id=rb.id)
 					where rp.active=True 
 					and rp.customer=True
-					and mobile_customer!=True
+					and mobile_customer!=True';
+	
+BEGIN
+						
+	IF branch_id IS NOT NULL THEN
+		sql := sql || ' AND rp.branch_id ='|| branch_id;
+	END IF;
+	
+	IF township_id IS NOT NULL THEN
+		sql := sql || ' AND rp.township ='|| township_id;
+	END IF;
+	
+	RAISE NOTICE 'sqlsql(%)', sql;
+	
+	for customer in EXECUTE sql
 	loop			
-		
+		RAISE NOTICE 'customer (%)', customer.id;				
 		delete from customer_target where partner_id=customer.id;
 		
 		WITH customer_target AS (
@@ -90,7 +102,9 @@ BEGIN
 			select COALESCE(sum(product_quantity),0.00) into month1_sale
 			from 
 			(   select 
-				(quantity*(select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=inv_line.uos_id)) as product_quantity
+				case when inv_line.uos_id=pt.report_uom_id then sum(round(quantity,2)) 
+                                when inv_line.uos_id !=pt.report_uom_id then sum(round(quantity/(select floor(round(1/factor,2)) from product_uom where id=report_uom_id),2)) 
+                                end as product_quantity 
 				from account_invoice_line inv_line,account_invoice inv,product_product pp,product_template pt
 				where inv_line.invoice_id=inv.id
 				and inv_line.product_id=pp.id
@@ -102,7 +116,7 @@ BEGIN
 				and product_id=product.id
 				and date_invoice between (select date_trunc('month', current_date - interval '3' month)::date)
 				and (select ((date_trunc('month', current_date - interval '3' month)+ INTERVAL '1 MONTH - 1 day'))::date)
-				group by inv_line.quantity,inv_line.uos_id,pt.uom_id,pt.big_uom_id
+				group by inv_line.quantity,inv_line.uos_id,pt.uom_id,pt.report_uom_id
 			)A;
 			
 			if month1_sale > 0 then
@@ -112,7 +126,9 @@ BEGIN
 			select COALESCE(sum(product_quantity),0.00) into month2_sale
 			from 
 			(   select 
-				(quantity*(select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=inv_line.uos_id)) as product_quantity
+				case when inv_line.uos_id=pt.report_uom_id then sum(round(quantity,2)) 
+                                when inv_line.uos_id !=pt.report_uom_id then sum(round(quantity/(select floor(round(1/factor,2)) from product_uom where id=report_uom_id),2)) 
+                                end as product_quantity 
 				from account_invoice_line inv_line,account_invoice inv,product_product pp,product_template pt
 				where inv_line.invoice_id=inv.id
 				and inv_line.product_id=pp.id
@@ -124,7 +140,7 @@ BEGIN
 				and product_id=product.id
 				and date_invoice between (select date_trunc('month', current_date - interval '2' month)::date)
 				and (select ((date_trunc('month', current_date - interval '2' month)+ INTERVAL '1 MONTH - 1 day'))::date)
-				group by inv_line.quantity,inv_line.uos_id,pt.uom_id,pt.big_uom_id
+				group by inv_line.quantity,inv_line.uos_id,pt.uom_id,pt.report_uom_id
 			)A;
 			
 			if month2_sale > 0 then
@@ -134,7 +150,9 @@ BEGIN
 			select COALESCE(sum(product_quantity),0.00) into month3_sale
 			from 
 			(   select 
-				(quantity*(select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=inv_line.uos_id)) as product_quantity
+				case when inv_line.uos_id=pt.report_uom_id then sum(round(quantity,2)) 
+                                when inv_line.uos_id !=pt.report_uom_id then sum(round(quantity/(select floor(round(1/factor,2)) from product_uom where id=report_uom_id),2)) 
+                                end as product_quantity 
 				from account_invoice_line inv_line,account_invoice inv,product_product pp,product_template pt
 				where inv_line.invoice_id=inv.id
 				and inv_line.product_id=pp.id
@@ -146,7 +164,7 @@ BEGIN
 				and product_id=product.id
 				and date_invoice between (select date_trunc('month', current_date - interval '1' month)::date)
 				and (select ((date_trunc('month', current_date - interval '1' month)+ INTERVAL '1 MONTH - 1 day'))::date)
-				group by inv_line.quantity,inv_line.uos_id,pt.uom_id,pt.big_uom_id
+				group by inv_line.quantity,inv_line.uos_id,pt.uom_id,pt.report_uom_id
 			)A;
 			
 			if month3_sale > 0 then
@@ -170,7 +188,7 @@ BEGIN
 			end if;		
 						
 			select COALESCE(percentage_growth,0.00),
-			product_uom_qty*(select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=product_uom) as product_uom_qty
+			product_uom_qty 
 			into percentage_growth_value,target_amount
 			from sales_target_outlet target
 			inner join sales_target_outlet_line line on (target.id=line.sale_ids)
@@ -202,8 +220,10 @@ BEGIN
 			select COALESCE(sum(product_quantity),0.00) product_quantity into current_month_sale
 			from 
 			(   select 
-				quantity*(select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=inv_line.uos_id) as product_quantity
-				from account_invoice_line inv_line,account_invoice inv,product_product pp,product_template pt
+                                case when inv_line.uos_id=pt.report_uom_id then sum(round(quantity,2)) 
+                                when inv_line.uos_id !=pt.report_uom_id then sum(round(quantity/(select floor(round(1/factor,2)) from product_uom where id=report_uom_id),2)) 
+                                end as product_quantity 
+                                from account_invoice_line inv_line,account_invoice inv,product_product pp,product_template pt
 				where inv_line.invoice_id=inv.id
 				and inv_line.product_id=pp.id
 				and pp.product_tmpl_id=pt.id
@@ -214,7 +234,7 @@ BEGIN
 				and product_id=product.id
 				and date_invoice between (select date_trunc('month', current_date)::date)
 				and (select ((date_trunc('month', current_date)+ INTERVAL '1 MONTH - 1 day'))::date)
-				group by inv_line.quantity,inv_line.uos_id,pt.uom_id,pt.big_uom_id
+				group by inv_line.quantity,inv_line.uos_id,pt.uom_id,pt.report_uom_id
 			)A;		
 						
 			if customer_ams > 0 then
