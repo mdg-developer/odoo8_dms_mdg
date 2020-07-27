@@ -19,6 +19,7 @@ This module provide professional RESTful API (json) access to Odoo models with p
     'depends': [
         'base',
         'web',
+        'sale_promotions'
     ],
     'data': [
         'data/ir_configparameter_data.xml',
