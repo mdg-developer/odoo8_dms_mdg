@@ -290,7 +290,7 @@ class customer_target(osv.osv):
                       
                     if customer_ams > 0: 
                         ach_percent = (current_month_sale / customer_ams) * 100
-                    cr.execute("select new_price from product_pricelist_item where price_version_id in ( select id from product_pricelist_version where pricelist_id=%s and active=True) and product_id=%s and product_uom_id=%s", (1, product_obj.id, product_obj.product_tmpl_id.report_uom_id.id,))
+                    cr.execute("select new_price from product_pricelist_item where price_version_id in ( select id from product_pricelist_version where pricelist_id=%s and active=True) and product_id=%s and product_uom_id=%s", (1, product_obj.id, product_obj.product_tmpl_id.uom_id.id,))
                     product_price_data = cr.fetchone()
                     if product_price_data:
                         product_price=product_price_data[0]
@@ -554,13 +554,13 @@ class customer_target_line(osv.osv):
     def _get_uom_from_product(self, cr, uid, ids, field_name, arg, context=None):
         result = {}
         for rec in self.browse(cr, uid, ids, context=context):
-            result[rec.id] = rec.product_id.product_tmpl_id.report_uom_id.id or rec.product_id.product_tmpl_id.uom_id.id
+            result[rec.id] = rec.product_id.product_tmpl_id.uom_id.id
         return result  
 
     def _get_price_from_product(self, cr, uid, ids, field_name, arg, context=None):
         result = {}
         for rec in self.browse(cr, uid, ids, context=context):
-            cr.execute("select new_price from product_pricelist_item where price_version_id in ( select id from product_pricelist_version where pricelist_id=%s and active=True) and product_id=%s and product_uom_id=%s", (1, rec.product_id.id, rec.product_id.product_tmpl_id.report_uom_id.id,))
+            cr.execute("select new_price from product_pricelist_item where price_version_id in ( select id from product_pricelist_version where pricelist_id=%s and active=True) and product_id=%s and product_uom_id=%s", (1, rec.product_id.id, rec.product_id.product_tmpl_id.uom_id.id,))
             product_price_data = cr.fetchone()
             if product_price_data:
                 product_price=product_price_data[0]
@@ -623,6 +623,6 @@ class customer_target_line(osv.osv):
 #         if type_id:
         p = self.pool.get('product.product').browse(cr, uid, product_id)
         if p:
-            val['product_uom'] = p.product_tmpl_id.report_uom_id.id or p.product_tmpl_id.uom_id.id
+            val['product_uom'] = p.product_tmpl_id.uom_id.id
                 
         return {'value': val}
