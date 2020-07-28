@@ -316,7 +316,7 @@ BEGIN
 			insert into customer_target_line(line_id,product_id,sequence,month1,month2,month3,"6ams",
 			ams_value,target_qty,ach_qty,ach_percent,gap_qty)
 			values(target_id,product.id,product.sequence,month1_sale,month2_sale,month3_sale,avg_sale,
-			COALESCE(avg_sale,0.00)*COALESCE(product_price,0.00),customer_ams,current_month_sale,ach_percent,customer_ams - current_month_sale);
+			COALESCE(avg_sale,0.00)*COALESCE(product_price,0.00),CEIL(customer_ams),CEIL(current_month_sale),ach_percent,(CEIL(customer_ams) - CEIL(current_month_sale)));
 			
 			update customer_target
 			set ams_total=COALESCE(ams_total_data,0.00),
