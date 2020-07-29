@@ -319,10 +319,10 @@ BEGIN
 			COALESCE(avg_sale,0.00)*COALESCE(product_price,0.00),CEIL(customer_ams),CEIL(current_month_sale),ach_percent,(CEIL(customer_ams) - CEIL(current_month_sale)));
 			
 			update customer_target
-			set ams_total=COALESCE(ams_total_data,0.00),
-				ams_buget_total=COALESCE(ams_budget_value_data,0.00),
-				month_out_todate=COALESCE(month_out_todate_data,0.00),
-				ams_balance=COALESCE(ams_budget_value_data,0.00)-COALESCE(month_out_todate_data,0.00)
+			set ams_total=ROUND(COALESCE(ams_total_data,0.00),0),
+				ams_buget_total=ROUND(COALESCE(ams_budget_value_data,0.00),0),
+				month_out_todate=ROUND(COALESCE(month_out_todate_data,0.00),0),
+				ams_balance=ROUND(COALESCE(ams_budget_value_data,0.00)-COALESCE(month_out_todate_data,0.00),0)
 			where id=target_id;
 			
 			raise notice 'inserted customer target line';
