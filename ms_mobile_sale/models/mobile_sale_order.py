@@ -876,11 +876,27 @@ class mobile_sale_order(osv.osv):
                 customer_visit.append(r)  
             if customer_visit:
                 for vs in customer_visit:
+
                     cursor.execute('select branch_id from crm_case_section where id=%s', (vs['sale_team_id'],))
                     branch_id = cursor.fetchone()[0]
                     cursor.execute('select id from res_partner where customer_code=%s', (vs['customer_code'],))
                     customer_id = cursor.fetchone()  
-                    if customer_id:                                                             
+                    is_image1 =False
+                    is_image2 =False
+                    is_image3 =False
+                    is_image4 =False
+                    is_image5 =False
+                    if customer_id:  
+                        if vs['image1_reference']:
+                                is_image1 =True
+                        if vs['image2_reference']:
+                                is_image2=True                      
+                        if vs['image3_reference']:
+                                is_image3=True,                                
+                        if vs['image4_reference']:
+                                is_image4=True                                          
+                        if vs['image5_reference']:
+                                is_image5=True                                                                   
                         visit_result = {
                             'customer_code':vs['customer_code'],
                             'branch_id':branch_id,
@@ -902,6 +918,17 @@ class mobile_sale_order(osv.osv):
                             'image2':vs['image2'],
                             'image3':vs['image3'],
                             'image4':vs['image4'],
+                             'is_image1':is_image1,
+                              'is_image2':is_image2,
+                              'is_image3':is_image3,
+                              'is_image4':is_image4,
+                              'is_image5':is_image5,                                  
+                             'image1_reference':vs['image1_reference'],
+                            'image2_reference':vs['image2_reference'],
+                            'image3_reference':vs['image3_reference'],
+                            'image4_reference':vs['image4_reference'],
+                            'image5_reference':vs['image5_reference'],
+
                         }
                         customer_visit_obj.create(cursor, user, visit_result, context=context)
             return True
@@ -2475,7 +2502,7 @@ class mobile_sale_order(osv.osv):
         is_supervisor=sale_team_data.is_supervisor    
         if is_supervisor==True:
             cr.execute('''            
-                    select tl.id ,target.partner_id,tl.product_id,1 as product_uom,tl.ach_qty,tl.target_qty,gap_qty as gap,month1,month2,month3,target.ams_total,target.ams_buget_total,target.month_out_todate,target.ams_balance
+                    select tl.id ,target.partner_id,tl.product_id,1 as product_uom,tl.ach_qty,tl.target_qty,gap_qty as gap,month1,month2,month3,COALESCE(target.ams_total,0) as ams_total,COALESCE(target.ams_buget_total,0) as ams_buget_total,target.month_out_todate,COALESCE(target.ams_balance,0) as ams_balance
                     from customer_target target ,customer_target_line tl,product_sale_group_rel rel,crm_case_section ccs
                     where target.id= tl.line_id
                     and rel.product_id=tl.product_id
@@ -2505,7 +2532,7 @@ class mobile_sale_order(osv.osv):
         else:
             cr.execute('''            
                   
-                select tl.id ,target.partner_id,tl.product_id,1 as product_uom,tl.ach_qty,tl.target_qty,gap_qty as gap,month1,month2,month3,target.ams_total,target.ams_buget_total,target.month_out_todate,target.ams_balance
+                select tl.id ,target.partner_id,tl.product_id,1 as product_uom,tl.ach_qty,tl.target_qty,gap_qty as gap,month1,month2,month3,COALESCE(target.ams_total,0) as ams_total,COALESCE(target.ams_buget_total,0) as ams_buget_total,target.month_out_todate,COALESCE(target.ams_balance,0) as ams_balance
                     from customer_target target ,customer_target_line tl,product_sale_group_rel rel,crm_case_section ccs
                     where target.id= tl.line_id
                     and rel.product_id=tl.product_id
@@ -2534,6 +2561,73 @@ class mobile_sale_order(osv.osv):
             print 'target_dataaaaa',datas
         return datas    
     
+    def get_target_setting_with_customer(self, cr, uid, sale_team_id ,customer_id, context=None, **kwargs):
+        section = self.pool.get('crm.case.section')      
+        sale_team_data = section.browse(cr, uid, sale_team_id, context=context)
+        is_supervisor=sale_team_data.is_supervisor    
+        if is_supervisor==True:
+            cr.execute('''            
+                    select tl.id ,target.partner_id,tl.product_id,1 as product_uom,tl.ach_qty,tl.target_qty,gap_qty as gap,month1,month2,month3,COALESCE(target.ams_total,0) as ams_total,COALESCE(target.ams_buget_total,0) as ams_buget_total,target.month_out_todate,COALESCE(target.ams_balance,0) as ams_balance
+                    from customer_target target ,customer_target_line tl,product_sale_group_rel rel,crm_case_section ccs
+                    where target.id= tl.line_id
+                    and rel.product_id=tl.product_id
+                    and rel.sale_group_id=ccs.sale_group_id
+                    and ccs.id =%s
+                    and target.partner_id =%s
+                    and tl.target_qty > 0
+                    and target.partner_id in (
+                   select partner_id from (
+                    (select distinct b.partner_id from res_partner_res_partner_category_rel a,
+                 sale_plan_day_line b
+                 , sale_plan_day p
+                where a.partner_id = b.partner_id
+                and b.line_id = p.id
+                and p.sale_team in (select id from crm_case_section where supervisor_team= %s)
+                )
+                UNION ALL
+                (select distinct b.partner_id from res_partner_res_partner_category_rel a,sale_plan_trip p,
+                 res_partner_sale_plan_trip_rel b
+                where a.partner_id = b.partner_id
+                and b.sale_plan_trip_id = p.id
+                and p.sale_team in (select id from crm_case_section where supervisor_team= %s)
+                )
+                )a group by partner_id
+                )
+             ''', (sale_team_id,customer_id,sale_team_id,sale_team_id))  
+            
+        else:
+            cr.execute('''            
+                  
+                select tl.id ,target.partner_id,tl.product_id,1 as product_uom,tl.ach_qty,tl.target_qty,gap_qty as gap,month1,month2,month3,COALESCE(target.ams_total,0) as ams_total,COALESCE(target.ams_buget_total,0) as ams_buget_total,target.month_out_todate,COALESCE(target.ams_balance,0) as ams_balance
+                    from customer_target target ,customer_target_line tl,product_sale_group_rel rel,crm_case_section ccs
+                    where target.id= tl.line_id
+                    and rel.product_id=tl.product_id
+                    and rel.sale_group_id=ccs.sale_group_id
+                    and ccs.id =%s
+                    and tl.target_qty > 0
+                    and target.partner_id =%s
+                    and target.partner_id in (
+                    select partner_id from (
+                    (select distinct b.partner_id from res_partner_res_partner_category_rel a,
+                     sale_plan_day_line b
+                     , sale_plan_day p
+                    where a.partner_id = b.partner_id
+                    and b.line_id = p.id
+                    and p.sale_team = %s)
+                    UNION ALL
+                    (select distinct b.partner_id from res_partner_res_partner_category_rel a,sale_plan_trip p,
+                     res_partner_sale_plan_trip_rel b
+                    where a.partner_id = b.partner_id
+                    and b.sale_plan_trip_id = p.id
+                    and p.sale_team = %s
+                    )
+                    )a group by partner_id
+                    )
+             ''', (sale_team_id,customer_id,sale_team_id,sale_team_id))                
+            datas = cr.fetchall()
+            print 'target_dataaaaa',datas
+        return datas    
+        
     def get_stockcheck(self, cr, uid, sale_team_id , context=None, **kwargs):
         cr.execute('''            
                   select scl.id ,sc.outlet_type,scl.product_id,scl.product_uom_qty as quantity,scl.available,scl.facing, scl.chiller from stock_check_setting sc ,stock_check_setting_line scl where sc.id=scl.stock_setting_ids

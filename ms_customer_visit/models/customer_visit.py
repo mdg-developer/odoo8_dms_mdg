@@ -9,6 +9,8 @@ from openerp import tools, api
 from openerp.osv import osv, fields
 from openerp.osv.expression import get_unaccent_wrapper
 from openerp.tools.translate import _
+baseUrlPrefix = "https://firebasestorage.googleapis.com/v0/b/odoo-8d694.appspot.com/o/customer_visit%2F"
+baseUrlPostFix = ".png?alt=media"
 class customer_visit(osv.osv):
     _name = "customer.visit"
     _description = "Customer Visit"
@@ -48,6 +50,12 @@ class customer_visit(osv.osv):
         'image3_reference':fields.char('Image3 Reference'),
         'image4_reference':fields.char('Image4 Reference'),
         'image5_reference':fields.char('Image5 Reference'),
+        'is_image1':fields.boolean('Is Image1', default=False),   
+        'is_image2':fields.boolean('Is Image2', default=False),    
+        'is_image3':fields.boolean('Is Image3', default=False),    
+        'is_image4':fields.boolean('Is Image4', default=False),    
+        'is_image5':fields.boolean('Is Image5', default=False),    
+ 
     }
     _defaults = {        
         'm_status' : 'pending',
@@ -206,10 +214,71 @@ class customer_visit(osv.osv):
     def _inverse_image_small4(self):
         for rec in self:
             rec.image4 = tools.image_resize_image_big(rec.image_small4)
+            
+    def go_image1(self, cr, uid, ids, context=None):
+        result =  {
+                  'name'     : 'Show Image1',
+                  'res_model': 'ir.actions.act_url',
+                  'type'     : 'ir.actions.act_url',
+                  'target'   : 'new',
+               }
+        for record in self.browse(cr,uid,ids,context=context):
+            result['url'] = baseUrlPrefix + record.image1_reference + baseUrlPostFix
+            
+        return result
+    
+    def go_image2(self, cr, uid, ids, context=None):
+        result =  {
+                  'name'     : 'Show Image2',
+                  'res_model': 'ir.actions.act_url',
+                  'type'     : 'ir.actions.act_url',
+                  'target'   : 'new',
+               }
+        for record in self.browse(cr,uid,ids,context=context):
+            result['url'] = baseUrlPrefix + record.image2_reference + baseUrlPostFix
+            
+        return result
+    
+    def go_image3(self, cr, uid, ids, context=None):
+        result =  {
+                  'name'     : 'Show Image3',
+                  'res_model': 'ir.actions.act_url',
+                  'type'     : 'ir.actions.act_url',
+                  'target'   : 'new',
+               }
+        for record in self.browse(cr,uid,ids,context=context):
+            result['url'] = baseUrlPrefix + record.image3_reference + baseUrlPostFix
+            
+        return result     
+                   
+    def go_image4(self, cr, uid, ids, context=None):
+        result =  {
+                  'name'     : 'Show Image4',
+                  'res_model': 'ir.actions.act_url',
+                  'type'     : 'ir.actions.act_url',
+                  'target'   : 'new',
+               }
+        for record in self.browse(cr,uid,ids,context=context):
+            result['url'] = baseUrlPrefix + record.image4_reference + baseUrlPostFix
+            
+        return result  
+     
+    def go_image5(self, cr, uid, ids, context=None):
+        result =  {
+                  'name'     : 'Show Image5',
+                  'res_model': 'ir.actions.act_url',
+                  'type'     : 'ir.actions.act_url',
+                  'target'   : 'new',
+               }
+        for record in self.browse(cr,uid,ids,context=context):
+            result['url'] = baseUrlPrefix + record.image5_reference + baseUrlPostFix
+            
+        return result               
     @api.model
     def _get_default_image(self, is_company, colorize=False):
-        img_path = openerp.modules.get_module_resource(
-            'base', 'static/src/img', 'company_image.png' if is_company else 'avatar.png')
+#         img_path = openerp.modules.get_module_resource(
+#             'base', 'static/src/img', 'company_image.png' if is_company else 'avatar.png')
+        img_path ='https://firebasestorage.googleapis.com/v0/b/odoo-8d694.appspot.com/o/customer_visit%2FMQLJVUZLJG.png?alt=media&token=3b9304bb-4213-4480-9661-8d7434ad2d48'
         with open(img_path, 'rb') as f:
             image = f.read()
 
