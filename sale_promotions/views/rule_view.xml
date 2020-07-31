@@ -35,7 +35,8 @@
 							<!-- <field name="special" colspan="2" select="1" invisible="1"/> -->
 							<!-- <field name="special1" colspan="2" select="1" /> <field name="special2" 
 								colspan="2" select="1" /> <field name="special3" colspan="2" select="1" /> -->
-							<field name="main_group" colspan="2" select="1" />
+							<field name="main_group" colspan="2" select="1" on_change="onchange_main_group(main_group)" />
+							<field name="checking_main_group" colspan="2" select="1" />
 							<field name="sale_channel_id" colspan="2" widget="many2many_tags" />
 							<field name="outlettype_id" colspan="2" widget="many2many_tags" />
 							<field name="branch_id" colspan="2" widget="many2many_tags" />
@@ -160,7 +161,7 @@
 					<field name="main_group" />
 					<field name="from_date" />
 					<field name="to_date" />
-					<field name="status" />
+					<field name="state" />
 					
 				</tree>
 			</field>

@@ -20,7 +20,7 @@
 					<field name="main_group" invisible="1"/>
 					<field name="promotion_id"
 						attrs="{'readonly':[('edit_promotion','=',False)]}"
-						domain="[('from_date','&lt;=',parent.date_invoice),('to_date','&gt;=',parent.date_invoice),('main_group','=',main_group),('state','=','approve')]" />
+						domain="[('from_date','&lt;=',parent.date_invoice),('to_date','&gt;=',parent.date_invoice),('checking_main_group','=',main_group),('state','=','approve')]" />
 
 				</xpath>
 
