@@ -175,7 +175,7 @@ as
 			)D
 		)E
 	)
-	select *,
+	select ROW_NUMBER () OVER (ORDER BY customer_id) id,*,
 	(ams_buget_total-month_out_todate) ams_balance
 	from 
 	(
