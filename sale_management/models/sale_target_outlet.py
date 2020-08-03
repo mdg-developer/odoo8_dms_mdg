@@ -150,7 +150,7 @@ class sale_target_outlet_line(osv.osv):
             if product.product_tmpl_id.type != 'service' and product.is_foc != True:
                 cr.execute(
                     "select new_price from product_pricelist_item where price_version_id in ( select id from product_pricelist_version where pricelist_id=%s and active=True) and product_id=%s and product_uom_id=%s",
-                    (pricelist_id, product.id, product.product_tmpl_id.report_uom_id.id,))
+                    (pricelist_id, product.id, product.product_tmpl_id.uom_id.id,))
                 product_price = cr.fetchone()
                 if product_price:
                     product_price = product_price[0]
@@ -159,7 +159,7 @@ class sale_target_outlet_line(osv.osv):
                                          _('Please Check Price List For (%s)') % (product.name_template,))
                 sequence = product.sequence
                 values = {
-                    'product_uom': product.product_tmpl_id.report_uom_id and product.product_tmpl_id.report_uom_id.id or False,
+                    'product_uom': product.product_tmpl_id.uom_id and product.product_tmpl_id.uom_id.id or False,
                     'price_unit': product_price,
                     'sequence': sequence,
 
@@ -172,7 +172,7 @@ class sale_target_outlet_line(osv.osv):
             product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
             cr.execute(
                 "select new_price from product_pricelist_item where price_version_id in ( select id from product_pricelist_version where pricelist_id=%s and active=True) and product_id=%s and product_uom_id=%s",
-                (pricelist_id, product.id, product.product_tmpl_id.report_uom_id.id,))
+                (pricelist_id, product.id, product.product_tmpl_id.uom_id.id,))
             product_price = cr.fetchone()[0]
             if product.product_tmpl_id.type != 'service' and product.is_foc != True:
                 values = {
