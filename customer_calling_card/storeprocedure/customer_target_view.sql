@@ -1,4 +1,4 @@
---select * from mv_customer_target_view
+--select * from mv_customer_target_view where partner_id=46997
 --DROP MATERIALIZED VIEW mv_customer_target_view
 
 CREATE MATERIALIZED VIEW mv_customer_target_view
@@ -137,7 +137,7 @@ as
 									and st.month=to_char(now(),'MM')
 									and inv.type='out_invoice'
 									and inv.state in ('open','paid')
-									and foc!=true --and inv.partner_id in (28521,28522,28528)
+									and foc!=true
 									and date_invoice between (select date_trunc('month', current_date - interval '3' month)::date)
 									and (select ((date_trunc('month', current_date - interval '3' month)+ INTERVAL '1 MONTH - 1 day'))::date)
 									group by inv_line.quantity,inv_line.uos_id,pt.uom_id,pt.report_uom_id,inv.partner_id,customer_code,
@@ -168,7 +168,7 @@ as
 									and st.month=to_char(now(),'MM')
 									and inv.type='out_invoice'
 									and inv.state in ('open','paid')
-									and foc!=true --and inv.partner_id in (28521,28522,28528)
+									and foc!=true
 									and date_invoice between (select date_trunc('month', current_date - interval '2' month)::date)
 									and (select ((date_trunc('month', current_date - interval '2' month)+ INTERVAL '1 MONTH - 1 day'))::date)
 									group by inv_line.quantity,inv_line.uos_id,pt.uom_id,pt.report_uom_id,inv.partner_id,customer_code,inv_line.product_id,
@@ -199,7 +199,7 @@ as
 									and st.month=to_char(now(),'MM')
 									and inv.type='out_invoice'
 									and inv.state in ('open','paid')
-									and foc!=true --and inv.partner_id in (28521,28522,28528)
+									and foc!=true
 									and date_invoice between (select date_trunc('month', current_date - interval '1' month)::date)
 									and (select ((date_trunc('month', current_date - interval '1' month)+ INTERVAL '1 MONTH - 1 day'))::date)
 									group by inv_line.quantity,inv_line.uos_id,pt.uom_id,pt.report_uom_id,inv.partner_id,inv_line.product_id,
@@ -230,7 +230,7 @@ as
 									and st.month=to_char(now(),'MM')
 									and inv.type='out_invoice'
 									and inv.state in ('open','paid')
-									and foc!=true --and inv.partner_id in (28521,28522,28528)
+									and foc!=true
 									and date_invoice between (select date_trunc('month', current_date)::date)
 									and (select ((date_trunc('month', current_date)+ INTERVAL '1 MONTH - 1 day'))::date)
 									group by inv_line.quantity,inv_line.uos_id,pt.uom_id,pt.report_uom_id,inv.partner_id,inv_line.product_id,
@@ -249,19 +249,15 @@ as
 		)EE
 	)
 	select ROW_NUMBER () OVER (ORDER BY partner_id) id,partner_id,product_id,uom_id,ach_qty,target_qty,gap_qty,
-	month1_sale,month2_sale,month3_sale,ams_total,ams_buget_total,month_out_todate,
-	(ams_buget_total-month_out_todate) ams_balance
+	month1_sale,month2_sale,month3_sale,ams_total,round(ams_buget_total,0) ams_buget_total,round(month_out_todate::numeric,0) month_out_todate,
+	round((ams_buget_total-month_out_todate)::numeric,0) ams_balance	
 	from 
 	(
 		select *,
-		(select ROUND(COALESCE(sum(tl.ams_value),0.00),0) from target_line tl where tl.partner_id=partner_id) ams_total,
-		case when (select ROUND(COALESCE(sum(tl.ams_value),0.00),0) from target_line tl where tl.partner_id=partner_id) * 0.05 > 50000 then 50000
-		else (select ROUND(COALESCE(sum(tl.ams_value),0.00),0) from target_line tl where tl.partner_id=partner_id) * 0.05 
+		(select ROUND(COALESCE(sum(tt.ams_value),0),0) from target_line tt where tt.partner_id=tl.partner_id) ams_total,
+		case when (select ROUND(COALESCE(sum(tt.ams_value),0),0) from target_line tt where tt.partner_id=tl.partner_id) * 0.05 > 50000 then 50000
+		else (select ROUND(COALESCE(sum(tt.ams_value),0),0) from target_line tt where tt.partner_id=tl.partner_id) * 0.05 
 		end as ams_buget_total,
-		(select COALESCE(sum(trans.total_value),0) from product_trans trans where trans.partner_id=partner_id) month_out_todate 
-		from target_line
-		group by partner_id,target_date,customer_code,outlet_type,city,township,street,branch_id,frequency_id,
-		class_id,sales_channel,delivery_team_id,product_id,uom_id,unit_price,month1_sale,
-		month2_sale,month3_sale,total_sale_qty,divisor,avg_sale,ams_value,percentage_growth_value,target_amount,
-		final_ams,target_qty,ach_qty,ach_percent,gap_qty
+		(select COALESCE(sum(trans.total_value),0) from product_trans trans where trans.partner_id=tl.partner_id) month_out_todate 
+		from target_line tl		
 	)AAA
