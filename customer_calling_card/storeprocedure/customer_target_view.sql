@@ -260,4 +260,4 @@ as
 		end as ams_buget_total,
 		(select COALESCE(sum(trans.total_value),0) from product_trans trans where trans.partner_id=tl.partner_id) month_out_todate 
 		from target_line tl		
-	)AAA
+	)AAA;
