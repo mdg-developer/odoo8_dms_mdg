@@ -47,7 +47,7 @@ class sale_order_line(osv.osv):
         delivery_product = False
         if product_obj.product_tmpl_id.type == 'service':
             delivery_obj = self.pool.get('delivery.carrier')
-            delivery = delivery_obj.search(cr, uid, [('product_id', '=', product_obj.id)], context=context)
+            delivery = delivery_obj.search(cr, uid, [('product_id', '=', product_obj.id)],limit=1, context=context)
             if delivery:
                 delivery_data = delivery_obj.browse(cr,uid,delivery,context=context)
                 if product_obj.id == delivery_data.product_id.id:                    
