@@ -2502,14 +2502,7 @@ class mobile_sale_order(osv.osv):
         is_supervisor=sale_team_data.is_supervisor    
         if is_supervisor==True:
             cr.execute('''            
-                    select tl.id ,target.partner_id,tl.product_id,1 as product_uom,tl.ach_qty,tl.target_qty,gap_qty as gap,month1,month2,month3,COALESCE(target.ams_total,0) as ams_total,COALESCE(target.ams_buget_total,0) as ams_buget_total,target.month_out_todate,COALESCE(target.ams_balance,0) as ams_balance
-                    from customer_target target ,customer_target_line tl,product_sale_group_rel rel,crm_case_section ccs
-                    where target.id= tl.line_id
-                    and rel.product_id=tl.product_id
-                    and rel.sale_group_id=ccs.sale_group_id
-                    and ccs.id =%s
-                    and tl.target_qty > 0
-                    and target.partner_id in (
+                    select ARRAY_AGG(partner_id) as  partner_id from (
                    select partner_id from (
                     (select distinct b.partner_id from res_partner_res_partner_category_rel a,
                  sale_plan_day_line b
@@ -2526,21 +2519,18 @@ class mobile_sale_order(osv.osv):
                 and p.sale_team in (select id from crm_case_section where supervisor_team= %s)
                 )
                 )a group by partner_id
-                )
-             ''', (sale_team_id,sale_team_id,sale_team_id))  
+                )b
+             ''', (sale_team_id,sale_team_id))
+            partner_data=cr.fetchone()
+            if partner_data:
+                partner_ids =partner_data[0]
+                cr.execute('''select * from get_customer_target_multi_customer(%s)''', (partner_ids,))
+                datas = cr.fetchall()
             
         else:
             cr.execute('''            
-                  
-                select tl.id ,target.partner_id,tl.product_id,1 as product_uom,tl.ach_qty,tl.target_qty,gap_qty as gap,month1,month2,month3,COALESCE(target.ams_total,0) as ams_total,COALESCE(target.ams_buget_total,0) as ams_buget_total,target.month_out_todate,COALESCE(target.ams_balance,0) as ams_balance
-                    from customer_target target ,customer_target_line tl,product_sale_group_rel rel,crm_case_section ccs
-                    where target.id= tl.line_id
-                    and rel.product_id=tl.product_id
-                    and rel.sale_group_id=ccs.sale_group_id
-                    and ccs.id =%s
-                    and tl.target_qty > 0
-                    and target.partner_id in (
-                    select partner_id from (
+                   select ARRAY_AGG(partner_id) as  partner_id from (
+                   select partner_id from (
                     (select distinct b.partner_id from res_partner_res_partner_category_rel a,
                      sale_plan_day_line b
                      , sale_plan_day p
@@ -2555,77 +2545,85 @@ class mobile_sale_order(osv.osv):
                     and p.sale_team = %s
                     )
                     )a group by partner_id
-                    )
-             ''', (sale_team_id,sale_team_id,sale_team_id))                
-            datas = cr.fetchall()
-            print 'target_dataaaaa',datas
+                    )b
+             ''', (sale_team_id,sale_team_id))                
+            partner_data=cr.fetchone()
+            if partner_data:
+                partner_ids =partner_data[0]
+                cr.execute('''select * from get_customer_target_multi_customer(%s)''', (partner_ids,))
+                datas = cr.fetchall()
         return datas    
     
+    def insert_target_setting(self, cr, uid, sale_team_id ,customer_id, context=None, **kwargs):
+        cr.execute("select * from insert_daily_customer_target_customer(%s)",(customer_id,))
+        return True
+    
     def get_target_setting_with_customer(self, cr, uid, sale_team_id ,customer_id, context=None, **kwargs):
-        section = self.pool.get('crm.case.section')      
-        sale_team_data = section.browse(cr, uid, sale_team_id, context=context)
-        is_supervisor=sale_team_data.is_supervisor    
-        if is_supervisor==True:
-            cr.execute('''            
-                    select tl.id ,target.partner_id,tl.product_id,1 as product_uom,tl.ach_qty,tl.target_qty,gap_qty as gap,month1,month2,month3,COALESCE(target.ams_total,0) as ams_total,COALESCE(target.ams_buget_total,0) as ams_buget_total,target.month_out_todate,COALESCE(target.ams_balance,0) as ams_balance
-                    from customer_target target ,customer_target_line tl,product_sale_group_rel rel,crm_case_section ccs
-                    where target.id= tl.line_id
-                    and rel.product_id=tl.product_id
-                    and rel.sale_group_id=ccs.sale_group_id
-                    and ccs.id =%s
-                    and target.partner_id =%s
-                    and tl.target_qty > 0
-                    and target.partner_id in (
-                   select partner_id from (
-                    (select distinct b.partner_id from res_partner_res_partner_category_rel a,
-                 sale_plan_day_line b
-                 , sale_plan_day p
-                where a.partner_id = b.partner_id
-                and b.line_id = p.id
-                and p.sale_team in (select id from crm_case_section where supervisor_team= %s)
-                )
-                UNION ALL
-                (select distinct b.partner_id from res_partner_res_partner_category_rel a,sale_plan_trip p,
-                 res_partner_sale_plan_trip_rel b
-                where a.partner_id = b.partner_id
-                and b.sale_plan_trip_id = p.id
-                and p.sale_team in (select id from crm_case_section where supervisor_team= %s)
-                )
-                )a group by partner_id
-                )
-             ''', (sale_team_id,customer_id,sale_team_id,sale_team_id))  
-            
-        else:
-            cr.execute('''            
-                  
-                select tl.id ,target.partner_id,tl.product_id,1 as product_uom,tl.ach_qty,tl.target_qty,gap_qty as gap,month1,month2,month3,COALESCE(target.ams_total,0) as ams_total,COALESCE(target.ams_buget_total,0) as ams_buget_total,target.month_out_todate,COALESCE(target.ams_balance,0) as ams_balance
-                    from customer_target target ,customer_target_line tl,product_sale_group_rel rel,crm_case_section ccs
-                    where target.id= tl.line_id
-                    and rel.product_id=tl.product_id
-                    and rel.sale_group_id=ccs.sale_group_id
-                    and ccs.id =%s
-                    and tl.target_qty > 0
-                    and target.partner_id =%s
-                    and target.partner_id in (
-                    select partner_id from (
-                    (select distinct b.partner_id from res_partner_res_partner_category_rel a,
-                     sale_plan_day_line b
-                     , sale_plan_day p
-                    where a.partner_id = b.partner_id
-                    and b.line_id = p.id
-                    and p.sale_team = %s)
-                    UNION ALL
-                    (select distinct b.partner_id from res_partner_res_partner_category_rel a,sale_plan_trip p,
-                     res_partner_sale_plan_trip_rel b
-                    where a.partner_id = b.partner_id
-                    and b.sale_plan_trip_id = p.id
-                    and p.sale_team = %s
-                    )
-                    )a group by partner_id
-                    )
-             ''', (sale_team_id,customer_id,sale_team_id,sale_team_id))                
-            datas = cr.fetchall()
-            print 'target_dataaaaa',datas
+        #cr.execute("select * from insert_daily_customer_target_customer(%s)",(customer_id,))
+#         sale_team_data = section.browse(cr, uid, sale_team_id, context=context)
+#         is_supervisor=sale_team_data.is_supervisor    
+#         if is_supervisor==True:
+#             cr.execute('''            
+#                     select tl.id ,target.partner_id,tl.product_id,1 as product_uom,tl.ach_qty,tl.target_qty,gap_qty as gap,month1,month2,month3,COALESCE(target.ams_total,0) as ams_total,COALESCE(target.ams_buget_total,0) as ams_buget_total,target.month_out_todate,COALESCE(target.ams_balance,0) as ams_balance
+#                     from customer_target target ,customer_target_line tl,product_sale_group_rel rel,crm_case_section ccs
+#                     where target.id= tl.line_id
+#                     and rel.product_id=tl.product_id
+#                     and rel.sale_group_id=ccs.sale_group_id
+#                     and ccs.id =%s
+#                     and target.partner_id =%s
+#                     and tl.target_qty > 0
+#                     and target.partner_id in (
+#                    select partner_id from (
+#                     (select distinct b.partner_id from res_partner_res_partner_category_rel a,
+#                  sale_plan_day_line b
+#                  , sale_plan_day p
+#                 where a.partner_id = b.partner_id
+#                 and b.line_id = p.id
+#                 and p.sale_team in (select id from crm_case_section where supervisor_team= %s)
+#                 )
+#                 UNION ALL
+#                 (select distinct b.partner_id from res_partner_res_partner_category_rel a,sale_plan_trip p,
+#                  res_partner_sale_plan_trip_rel b
+#                 where a.partner_id = b.partner_id
+#                 and b.sale_plan_trip_id = p.id
+#                 and p.sale_team in (select id from crm_case_section where supervisor_team= %s)
+#                 )
+#                 )a group by partner_id
+#                 )
+#              ''', (sale_team_id,customer_id,sale_team_id,sale_team_id))  
+#             
+#         else:
+#             cr.execute('''            
+#                   
+#                 select tl.id ,target.partner_id,tl.product_id,1 as product_uom,tl.ach_qty,tl.target_qty,gap_qty as gap,month1,month2,month3,COALESCE(target.ams_total,0) as ams_total,COALESCE(target.ams_buget_total,0) as ams_buget_total,target.month_out_todate,COALESCE(target.ams_balance,0) as ams_balance
+#                     from customer_target target ,customer_target_line tl,product_sale_group_rel rel,crm_case_section ccs
+#                     where target.id= tl.line_id
+#                     and rel.product_id=tl.product_id
+#                     and rel.sale_group_id=ccs.sale_group_id
+#                     and ccs.id =%s
+#                     and tl.target_qty > 0
+#                     and target.partner_id =%s
+#                     and target.partner_id in (
+#                     select partner_id from (
+#                     (select distinct b.partner_id from res_partner_res_partner_category_rel a,
+#                      sale_plan_day_line b
+#                      , sale_plan_day p
+#                     where a.partner_id = b.partner_id
+#                     and b.line_id = p.id
+#                     and p.sale_team = %s)
+#                     UNION ALL
+#                     (select distinct b.partner_id from res_partner_res_partner_category_rel a,sale_plan_trip p,
+#                      res_partner_sale_plan_trip_rel b
+#                     where a.partner_id = b.partner_id
+#                     and b.sale_plan_trip_id = p.id
+#                     and p.sale_team = %s
+#                     )
+#                     )a group by partner_id
+#                     )
+#              ''', (sale_team_id,customer_id,sale_team_id,sale_team_id))                
+#             datas = cr.fetchall()
+        cr.execute('''select * from get_customer_target(%s)''', (customer_id,))
+        datas = cr.fetchall()
         return datas    
         
     def get_stockcheck(self, cr, uid, sale_team_id , context=None, **kwargs):
