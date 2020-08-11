@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record id="view_promotion_rules_form_inherit" model="ir.ui.view">
+			<field name="name">promos.rules.form.inherit</field>
+			<field name="model">promos.rules</field>
+			<field name="type">form</field>
+			<field name="inherit_id" ref="sale_promotions.view_promotion_rules_form" />
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//field[@name='high_priority']" position="after">
+						<field name="ecommerce" />
+					</xpath>
+				</data>
+			</field>
+		</record>
+
+	</data>
+</openerp>
+	

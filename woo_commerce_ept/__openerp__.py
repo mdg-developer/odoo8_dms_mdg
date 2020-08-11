@@ -71,7 +71,8 @@ For more information about us, visit www.emiprotechnologies.com \n
              'security/ir.model.access.csv',
              'data/woo.commerce.operations.ept.csv',
              'views/web_templates.xml',
-             'views/ir_cron.xml'                
+             'views/ir_cron.xml',
+             'views/promos_rules_view.xml',                
              ],    
     'installable': True,
     'auto_install': False,

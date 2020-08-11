@@ -15,3 +15,4 @@ import woo_process_job
 import operations
 import woo_payment_gateway
 import woo_coupons_ept
+import promos_rules
