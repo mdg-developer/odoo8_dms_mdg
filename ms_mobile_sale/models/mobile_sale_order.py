@@ -1505,6 +1505,19 @@ class mobile_sale_order(osv.osv):
                 return res['res_id']
             except Exception, e:
                 return False
+            
+    def get_field_audit_question(self, cr, uid,context=None, **kwargs):
+        cr.execute('''select id,sequence,name,english_name from audit_question order by sequence asc                     ''')
+        datas = cr.fetchall()
+        return datas 
+    
+    def get_supervisor_sale_team(self, cr, uid,section_id,context=None, **kwargs):
+        cr.execute('''select id,name,branch_id as team_branch_id,(select name from res_branch where id =branch_id) as team_branch_name from crm_case_section 
+        where supervisor_team= %s
+                     ''', (section_id,))
+        datas = cr.fetchall()
+        return datas           
+    
                 
     # kzo Edit
     def get_products_by_sale_team(self, cr, uid, section_id , last_date, context=None, **kwargs):
