@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record id="view_audit_question_form" model="ir.ui.view">
+			<field name="name">audit.question.form</field>
+			<field name="model">audit.question</field>
+			<field name="arch" type="xml">
+				<form string="Audit Question Form">
+					<sheet>
+						<group>
+							<field name="name" />
+							<field name="english_name" />
+							<field name="sequence" />
+							<field name="note" />
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+
+		<record model="ir.ui.view" id="view_audit_question_tree">
+			<field name="name">audit.question.tree</field>
+			<field name="model">audit.question</field>
+			<field name="arch" type="xml">
+				<tree string="Audit Question">
+					<field name="name" />
+					<field name="english_name" />
+					<field name="sequence" />
+					<field name="note" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="action_audit_question_view" model="ir.actions.act_window">
+			<field name="name">Field Audit Setting</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">audit.question</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" eval="view_audit_question_tree" />
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to create new audit question.
+				</p>
+			</field>
+		</record>
+
+		<menuitem id="menu_audit_question_setting" action="action_audit_question_view"
+			 parent="sale_promotions.sales" name="Field Audit Setting" sequence="12" />
+
+	</data>
+</openerp>	    
