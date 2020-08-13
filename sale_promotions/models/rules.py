@@ -153,6 +153,13 @@ class PromotionsRules(osv.Model):
             res[promotion_rule.id] = len(matching_ids)
         return res
     
+    
+    def onchange_main_group(self, cr, uid, ids, main_group, context=None):
+        checking_main_group = False        
+        if main_group:
+            checking_main_group = main_group      
+        return {'value': {'checking_main_group': checking_main_group}} 
+
     _columns = {
                 
         'code':fields.char('Promo Code', readonly=True,track_visibility='always', copy=False),
@@ -205,6 +212,7 @@ class PromotionsRules(osv.Model):
                     string="Actions", copy=True
                         ),
         'main_group':fields.many2one('product.maingroup', 'Main Group',track_visibility='always'),
+        'checking_main_group':fields.many2one('product.maingroup', 'Promotion Checking Main Group',track_visibility='always',required=True),
         'state': fields.selection([
             ('draft', 'Draft'),
             ('approve', 'Approved'),
@@ -225,6 +233,7 @@ class PromotionsRules(osv.Model):
         'high_priority':fields.boolean('High Priority'),
         'approved_datetime':fields.datetime('Approved Datetime',readonly=True),
         'approved_by':fields.many2one('res.users', 'Approved By',readonly=True),
+    
     }
     _defaults = {
         'logic':lambda * a:'and',

@@ -28,7 +28,7 @@
 					<field name="delivery_product" invisible="1" /> 
 					<field name="promotion_id"
 						attrs="{'required':['|',('sale_foc','=',True),('service_product','=',True),('delivery_product','!=',True)]}"
-						domain="[('from_date','&lt;=',parent.date_order),('to_date','&gt;=',parent.date_order),('main_group','=',main_group),('state','=','approve')]" />
+						domain="[('from_date','&lt;=',parent.date_order),('to_date','&gt;=',parent.date_order),('checking_main_group','=',main_group),('state','=','approve')]" />
 
 				</xpath>
 			</field>
