@@ -12,6 +12,9 @@
 					<xpath expr="//field[@name='high_priority']" position="after">
 						<field name="ecommerce" />
 					</xpath>
+					<xpath expr="//field[@name='checking_main_group']" position="replace">
+					    <field name="checking_main_group" colspan="2" select="1" attrs="{'required':[('ecommerce','!=',True)]}"/>
+					</xpath>
 				</data>
 			</field>
 		</record>
