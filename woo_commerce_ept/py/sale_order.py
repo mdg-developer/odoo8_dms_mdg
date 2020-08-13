@@ -975,6 +975,25 @@ class sale_order(models.Model):
                             picking.write({'updated_in_woo':True})
                     elif instance.woo_version == 'new':
                         picking.write({'updated_in_woo':True})
+                        
+            order_response = wcapi.get('orders')      
+            order_response_data = order_response.json()
+            if instance.woo_version == 'old':                
+                woo_orders = order_response_data.get("orders")                
+            elif instance.woo_version == 'new':
+                woo_orders = order_response_data.get("orders")      
+            
+            for order in woo_orders:
+                woo_order_id = order.get('order_number',False)     
+                woo_order_status = order.get('status',False)                  
+                if woo_order_status == 'cancelled':        
+                    print ('woo_order_id',woo_order_id)
+                    print ('woo_order_status',woo_order_status)            
+                    draft_sale_orders = self.search([('woo_order_number','=',woo_order_id),
+                                                     ('state','=','draft')])
+                    if draft_sale_orders:                        
+                        draft_sale_orders.action_cancel()   
+                        print ('odoo order cancelled')  
         return True                       
 
     #Update action from quotation to woo
