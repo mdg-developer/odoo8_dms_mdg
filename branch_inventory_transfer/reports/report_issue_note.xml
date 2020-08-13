@@ -71,8 +71,10 @@
 						</tr>
 						<tr>
 							<td style="border:0pt;font-size:10pt;">
+								<strong>Internal Reference :</strong>
 							</td>
 							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.internal_reference" />
 							</td>
 							<td style="border:0pt;font-size:10pt;">
 								<strong>Delivery Address And Ph :</strong>
@@ -156,8 +158,8 @@
 								<strong>Dock No :</strong>
 							</td>
 							<td style="border:0pt;font-size:10pt;">
-							   <span t-field="o.dock_no" />
-							
+								<span t-field="o.dock_no" />
+
 							</td>
 						</tr>
 						<tr>
@@ -269,6 +271,7 @@
 						</thead>
 						<tbody class="invoice_tbody">
 							<tr t-foreach="o.p_line" t-as="l">
+							 <t t-if="(l.issue_quantity)>0">
 								<td>
 									<span t-field="l.product_id" />
 								</td>
@@ -284,6 +287,7 @@
 								<td>
 									<span t-field="l.remark" />
 								</td>
+								</t>
 							</tr>
 						</tbody>
 					</table>

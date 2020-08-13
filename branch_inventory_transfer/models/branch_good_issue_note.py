@@ -261,7 +261,7 @@ class branch_good_issue_note(osv.osv):
                 
                 
                 grn_ids = self.search(cr, uid, [('request_id', '=', gin_value.request_id.id),('state','=','approve')], context=context)
-                gin_line_ids = ginline_obj.search(cr, uid, [('line_id', 'in', grn_ids), ('product_id', '=', line.product_id.id),('product_uom','=',line.product_uom.id)], context=context)
+                gin_line_ids = ginline_obj.search(cr, uid, [('line_id', 'in', grn_ids), ('product_id', '=', line.product_id.id),('product_uom','=',line.product_uom.id),('product_loss','=',line.loss)], context=context)
                 
                 for gin_line in ginline_obj.browse(cr,uid,gin_line_ids,context=context):
                     issue_qty += gin_line.issue_quantity

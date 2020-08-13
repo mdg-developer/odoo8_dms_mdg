@@ -287,6 +287,12 @@ from res_partner where supplier='t']]></xml-property>
                     <text-property name="displayName">remark</text-property>
                     <text-property name="heading">remark</text-property>
                 </structure>
+                <structure>
+                    <property name="columnName">state</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">state</text-property>
+                    <text-property name="heading">state</text-property>
+                </structure>
             </list-property>
             <list-property name="parameters">
                 <structure>
@@ -395,6 +401,11 @@ from res_partner where supplier='t']]></xml-property>
                     <structure>
                         <property name="position">17</property>
                         <property name="name">remark</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">18</property>
+                        <property name="name">state</property>
                         <property name="dataType">string</property>
                     </structure>
                 </list-property>
@@ -524,10 +535,17 @@ this.queryText =this.queryText.replace("--$principal_id$", "and h.principle_id i
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
+                <structure>
+                    <property name="position">18</property>
+                    <property name="name">state</property>
+                    <property name="nativeName">state</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select h.name as Refid,h.issue_type as type,l.name as issue_location,p.name as receiver,h.date as requested_date,sp.date_done as issue_date,
 h.memo_refno,i.name as debit_note,h.claim_attachment,pr.name as principle,h.principle_support,pt.name as product,d.quantity as issue_qty,(select name from product_uom where id =d.uom_id) as uom,
-d.claim_price,d.claim_total,'' as remark
+d.claim_price,d.claim_total,'' as remark,h.state
 from product_nonsell_issue h 
 left join product_nonsell_issue_line d on h.id=d.line_id
 left join stock_location l on h.location_id=l.id
@@ -753,7 +771,7 @@ from res_branch rb
     </styles>
     <page-setup>
         <simple-master-page name="Simple MasterPage" id="2">
-            <property name="type">us-legal</property>
+            <property name="type">us-super-b</property>
             <property name="orientation">landscape</property>
             <page-footer>
                 <text id="3">
@@ -808,7 +826,7 @@ from res_branch rb
             <property name="resultSetColumn">principal_id</property>
         </data>
         <table id="25">
-            <property name="width">13.427083333333334in</property>
+            <property name="width">16.020833333333332in</property>
             <property name="dataSet">report_ds</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -925,6 +943,12 @@ from res_branch rb
                     <expression name="expression" type="javascript">dataSetRow["uom"]</expression>
                     <property name="dataType">string</property>
                 </structure>
+                <structure>
+                    <property name="name">state</property>
+                    <text-property name="displayName">state</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["state"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
             </list-property>
             <column id="128">
                 <property name="width">0.2604166666666667in</property>
@@ -978,7 +1002,10 @@ from res_branch rb
                 <property name="width">0.8333333333333334in</property>
             </column>
             <column id="124">
-                <property name="width">0.40625in</property>
+                <property name="width">1.2604166666666667in</property>
+            </column>
+            <column id="847">
+                <property name="width">1.7395833333333333in</property>
             </column>
             <header>
                 <row id="26">
@@ -1218,6 +1245,19 @@ from res_branch rb
                             <text-property name="text">Remark</text-property>
                         </label>
                     </cell>
+                    <cell id="844">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="848">
+                            <text-property name="text">Status</text-property>
+                        </label>
+                    </cell>
                 </row>
             </header>
             <detail>
@@ -1443,6 +1483,17 @@ from res_branch rb
                             <property name="resultSetColumn">remark</property>
                         </data>
                     </cell>
+                    <cell id="845">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <data id="849">
+                            <property name="resultSetColumn">state</property>
+                        </data>
+                    </cell>
                 </row>
             </detail>
             <footer>
@@ -1466,6 +1517,7 @@ from res_branch rb
                     <cell id="106"/>
                     <cell id="107"/>
                     <cell id="108"/>
+                    <cell id="846"/>
                 </row>
             </footer>
         </table>
