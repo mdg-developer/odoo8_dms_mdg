@@ -26,8 +26,10 @@
 					position="after">
 					<field name="main_group" invisible="1" />
 					<field name="delivery_product" invisible="1" /> 
+					<field name="discount_product" invisible="1" /> 
+					<field name="fees_product" invisible="1" /> 
 					<field name="promotion_id"
-						attrs="{'required':['|',('sale_foc','=',True),('service_product','=',True),('delivery_product','!=',True)]}"
+						attrs="{'required':['|',('sale_foc','=',True),('service_product','=',True),('delivery_product','!=',True),('discount_product','!=',True),('fees_product','!=',True)]}"
 						domain="[('from_date','&lt;=',parent.date_order),('to_date','&gt;=',parent.date_order),('checking_main_group','=',main_group),('state','=','approve')]" />
 
 				</xpath>

@@ -44,15 +44,31 @@ class sale_order_line(osv.osv):
         product_obj = product_obj.browse(cr, uid, product, context=context_partner)
         price = 0
         uom2 = False
-        delivery_product = False
+        delivery_product = discount_product = fees_product = False
         if product_obj.product_tmpl_id.type == 'service':
             delivery_obj = self.pool.get('delivery.carrier')
             delivery = delivery_obj.search(cr, uid, [('product_id', '=', product_obj.id)],limit=1, context=context)
             if delivery:
                 delivery_data = delivery_obj.browse(cr,uid,delivery,context=context)
                 if product_obj.id == delivery_data.product_id.id:                    
-                    delivery_product = True
-            result.update({'service_product': True,'main_group':product_obj.product_tmpl_id.main_group.id,'delivery_product':delivery_product})
+                    delivery_product = True                    
+            woo_setting = self.pool.get('woo.config.settings').search(cr, uid, [], context=context)
+            if woo_setting:
+                woo_setting_data = self.pool.get('woo.config.settings').browse(cr,uid,woo_setting,context=context)
+                for woo in woo_setting_data:
+                    if woo.discount_product_id:
+                        woo_discount_product = self.pool.get('product.product').search(cr, uid, [('id', '=', woo.discount_product_id.id)], context=context)
+                        if woo_discount_product:
+                            woo_discount_product_data = self.pool.get('product.product').browse(cr,uid,woo_discount_product,context=context)
+                            if product_obj.id == woo_discount_product_data.id: 
+                                discount_product = True
+                    if woo.fee_line_id:
+                        woo_fee_product = self.pool.get('product.product').search(cr, uid, [('id', '=', woo.fee_line_id.id)], context=context)
+                        if woo_fee_product:
+                            woo_fee_product_data = self.pool.get('product.product').browse(cr,uid,woo_fee_product,context=context)
+                            if product_obj.id == woo_fee_product_data.id:
+                                fees_product = True           
+            result.update({'service_product': True,'main_group':product_obj.product_tmpl_id.main_group.id,'delivery_product':delivery_product,'discount_product':discount_product,'fees_product':fees_product})
         else:
             result.update({'service_product': False,'main_group':product_obj.product_tmpl_id.main_group.id})   
         if uom:
