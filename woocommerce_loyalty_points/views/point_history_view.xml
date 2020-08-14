@@ -6,7 +6,7 @@
             <field name="name">point.history.tree</field>
             <field name="model">point.history</field>            
             <field name="arch" type="xml">
-                <tree default_order='date desc' string="Point History" create="false" edit="false">
+                <tree default_order='id desc' string="Point History" create="false" edit="false">
                     <field name="partner_id" />
 					<field name="date" />
 					<field name="order_id" />
