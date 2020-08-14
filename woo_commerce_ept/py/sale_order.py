@@ -554,6 +554,7 @@ class sale_order(models.Model):
     @api.model
     def import_woo_orders(self,instance=False):        
         instances=[]
+        current_point=0
         transaction_log_obj=self.env["woo.transaction.log"]
         if not instance:
             instances=self.env['woo.instance.ept'].search([('order_auto_import','=',True),('state','=','confirmed')])
@@ -675,11 +676,15 @@ class sale_order(models.Model):
                 
                 if sale_order and sale_order.getting_point != 0:
                     point_date = dateutil.parser.parse(sale_order.date_order).date()
+                    self.env.cr.execute("select COALESCE(sum(getting_point),0) from point_history where partner_id=%s", (partner.id,))    
+                    point_data = self.env.cr.fetchall()
+                    if point_data:
+                        current_point = point_data[0][0]
                     self.env['point.history'].create({'partner_id': sale_order.partner_id.id,
                                                       'date': point_date,
                                                       'order_id': sale_order.id,
                                                       'membership_id': sale_order.partner_id.membership_id.id,                                                      
-                                                      'balance_point': sale_order.partner_id.point_count,
+                                                      'balance_point': current_point + sale_order.getting_point,
                                                       'getting_point': sale_order.getting_point,
                                                     })
                     
@@ -943,6 +948,7 @@ class sale_order(models.Model):
     def update_woo_order_status(self,instance):
         transaction_log_obj=self.env["woo.transaction.log"]
         instances=[]
+        current_point=0
         if not instance:
             instances=self.env['woo.instance.ept'].search([('order_auto_update','=',True),('state','=','confirmed')])
         else:
@@ -1030,11 +1036,15 @@ class sale_order(models.Model):
                                     getting_point = int(woo_point)
                                     draft_sale_orders.write({'getting_point': getting_point})
                                     point_date = datetime.today()
+                                    self.env.cr.execute("select COALESCE(sum(getting_point),0) from point_history where partner_id=%s", (draft_sale_orders.partner_id.id,))    
+                                    point_data = self.env.cr.fetchall()
+                                    if point_data:
+                                        current_point = point_data[0][0]
                                     self.env['point.history'].create({'partner_id': draft_sale_orders.partner_id.id,
                                                                       'date': point_date,
                                                                       'order_id': draft_sale_orders.id,
                                                                       'membership_id': draft_sale_orders.partner_id.membership_id.id,                                                      
-                                                                      'balance_point': draft_sale_orders.partner_id.point_count,
+                                                                      'balance_point': current_point + draft_sale_orders.getting_point,
                                                                       'getting_point': draft_sale_orders.getting_point,
                                                                     })
                                     break   
