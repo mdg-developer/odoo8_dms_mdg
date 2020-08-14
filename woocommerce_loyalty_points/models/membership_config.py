@@ -6,7 +6,7 @@ class membership_configuration(osv.osv):
     
     _columns = {
             'name':fields.char('Level'),  
-            'points':fields.integer('Points'),          
+            'points':fields.float('Points'),          
             'start_date':fields.date('Start Date'),
             'end_date':fields.date('End Date'),           
     }

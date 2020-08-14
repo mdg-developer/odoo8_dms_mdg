@@ -73,4 +73,15 @@ class woo_instance_ept(models.Model):
         version = "wc-api/v1" if wp_api else "v3"
         wcapi = woocommerce.api.API(url=host, consumer_key=consumer_key,
                     consumer_secret=consumer_secret,verify_ssl=self.verify_ssl,wp_api=wp_api,version=version,query_string_auth=True)
-        return wcapi                 
+        return wcapi  
+    
+    @api.model
+    def connect_for_point_in_woo(self):
+        host = self.host
+        consumer_key = self.consumer_key
+        consumer_secret = self.consumer_secret        
+        wp_api = True
+        version = "my-route/v1"            
+        wcapi = woocommerce.api.API(url=host, consumer_key=consumer_key,
+                    consumer_secret=consumer_secret,verify_ssl=self.verify_ssl,wp_api=wp_api,version=version,query_string_auth=True)
+        return wcapi            

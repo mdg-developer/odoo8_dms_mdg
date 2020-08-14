@@ -4,6 +4,7 @@ from .. import woocommerce
 import time
 import requests
 from datetime import timedelta,datetime
+import dateutil.parser
 
 class sale_order(models.Model):
     _inherit="sale.order"
@@ -419,6 +420,7 @@ class sale_order(models.Model):
             created_at = False
             woo_trans_id=""
             woo_customer_ip=""
+            getting_point = 0
             
             if instance.woo_version == 'old':
                 woo_order_number = result.get('order_number')
@@ -443,7 +445,20 @@ class sale_order(models.Model):
                 delivery_id = partner.township.delivery_team_id.id
             elif partner.city.delivery_team_id:
                 delivery_id = partner.city.delivery_team_id.id
-                
+               
+            woo_instance_obj=self.env['woo.instance.ept']
+            instance=woo_instance_obj.search([('state','=','confirmed')], limit=1)
+            if instance:
+                wcapi = instance.connect_for_point_in_woo()   
+                point_response = wcapi.get('point')      
+                point_response_data = point_response.json()                
+                for point in point_response_data:
+                    woo_order_id = point.get('order_id',False)     
+                    woo_point = point.get('amount',False)                      
+                    if woo_order_number == str(woo_order_id) and int(woo_point) > 0:
+                        getting_point = int(woo_point)                        
+                        break
+              
             ordervals = {
                 'name' :name,                
                 'picking_policy' : workflow.picking_policy,
@@ -468,7 +483,8 @@ class sale_order(models.Model):
                 'woo_trans_id':woo_trans_id,
                 'woo_customer_ip':woo_customer_ip,
                 'delivery_id':delivery_id,
-                'pre_order':True
+                'pre_order':True,
+                'getting_point':getting_point,
             }            
             return ordervals
 
@@ -657,6 +673,16 @@ class sale_order(models.Model):
                 woo_order_vals=self.get_woo_order_vals(order, workflow, partner, instance, partner, shipping_address, pricelist_id, fiscal_position, payment_term, payment_gateway)
                 sale_order = self.create(woo_order_vals) if woo_order_vals else False
                 
+                if sale_order and sale_order.getting_point != 0:
+                    point_date = dateutil.parser.parse(sale_order.date_order).date()
+                    self.env['point.history'].create({'partner_id': sale_order.partner_id.id,
+                                                      'date': point_date,
+                                                      'order_id': sale_order.id,
+                                                      'membership_id': sale_order.partner_id.membership_id.id,                                                      
+                                                      'balance_point': sale_order.partner_id.point_count,
+                                                      'getting_point': sale_order.getting_point,
+                                                    })
+                    
                 if not sale_order:
                     continue
 
@@ -911,8 +937,8 @@ class sale_order(models.Model):
         if woo_instance_id:
             instance=woo_instance_obj.search([('id','=',woo_instance_id),('state','=','confirmed')])
             instance and self.update_woo_order_status(instance)
-        return True
-    
+        return True   
+       
     @api.model
     def update_woo_order_status(self,instance):
         transaction_log_obj=self.env["woo.transaction.log"]
@@ -986,13 +1012,32 @@ class sale_order(models.Model):
             for order in woo_orders:
                 woo_order_id = order.get('order_number',False)     
                 woo_order_status = order.get('status',False)                  
-                if woo_order_status == 'cancelled':        
-                    print ('woo_order_id',woo_order_id)
-                    print ('woo_order_status',woo_order_status)            
+                if woo_order_status == 'cancelled':       
                     draft_sale_orders = self.search([('woo_order_number','=',woo_order_id),
                                                      ('state','=','draft')])
                     if draft_sale_orders:                        
-                        draft_sale_orders.action_cancel()   
+                        draft_sale_orders.action_cancel()
+                        woo_instance_obj=self.env['woo.instance.ept']
+                        instance=woo_instance_obj.search([('state','=','confirmed')], limit=1)
+                        if instance:
+                            wcapi = instance.connect_for_point_in_woo()   
+                            point_response = wcapi.get('point')      
+                            point_response_data = point_response.json()                
+                            for point in point_response_data:
+                                woo_order_id = point.get('order_id',False)     
+                                woo_point = point.get('amount',False)   
+                                if draft_sale_orders.woo_order_number == str(woo_order_id) and int(woo_point) < 0:
+                                    getting_point = int(woo_point)
+                                    draft_sale_orders.write({'getting_point': getting_point})
+                                    point_date = datetime.today()
+                                    self.env['point.history'].create({'partner_id': draft_sale_orders.partner_id.id,
+                                                                      'date': point_date,
+                                                                      'order_id': draft_sale_orders.id,
+                                                                      'membership_id': draft_sale_orders.partner_id.membership_id.id,                                                      
+                                                                      'balance_point': draft_sale_orders.partner_id.point_count,
+                                                                      'getting_point': draft_sale_orders.getting_point,
+                                                                    })
+                                    break   
                         print ('odoo order cancelled')  
         return True                       
 

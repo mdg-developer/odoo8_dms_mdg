@@ -15,6 +15,7 @@ class res_partner(osv.osv):
 
     _columns = {
         'point_count': fields.function(_point_count, string='# of Point', type='integer'),
-        'point_history_ids': fields.one2many('point.history','partner_id','Point History')
+        'point_history_ids': fields.one2many('point.history','partner_id','Point History'),
+        'membership_id':fields.many2one('membership.config', 'Membership Level'),
     }
     
