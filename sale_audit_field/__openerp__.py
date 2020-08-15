@@ -32,9 +32,11 @@ Sale Group
 """,
     'author': 'Seventh Computing Developer Group',
     'website': 'http://www.7thcomputing.com',
-    'depends': ['base', 'sale'],
+    'depends': ['base', 'sale', 'menu_customization'],
     'data': [      
+        'views/field_audit_sequence.xml',
         'views/question_view.xml',
+        'views/field_audit_view.xml',
     ],
     'installable': True,
     'auto_install': False,

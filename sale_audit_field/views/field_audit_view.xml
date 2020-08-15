@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record id="view_field_audit_form" model="ir.ui.view">
+			<field name="name">field.audit.form</field>
+			<field name="model">field.audit</field>
+			<field name="arch" type="xml">
+				<form string="Field Audit Form">
+					<sheet>
+					    <group>
+					        <group>
+								<field name="name" readonly="1" />
+								<field name="partner_id" domain="[('customer', '=', True)]"/>
+								<field name="customer_code" />
+								<field name="outlet_type" />
+								<field name="township_id" />
+								<field name="city_id" />
+								<field name="address" />
+								<field name="auditor_team_id" />
+								<field name="date" />
+								<field name="auditor_image" widget="image" class="oe_avatar"/>
+								<field name="total_score"/>
+								<field name="total_missed"/>
+							</group>
+							<group>
+							    <field name="frequency_id" />
+								<field name="class_id" />
+								<field name="sales_channel" />
+								<field name="branch_id" />
+								<field name="sale_team_id" />
+								<field name="latitude" />
+								<field name="longitude" />
+								<field name="shop_image" widget="image" class="oe_avatar"/>
+							</group>
+					    </group>	
+					    <notebook>
+	                        <page string="Lines" name="line_ids">
+	                            <field name="line_ids">
+	                                <tree editable="bottom" string="Field Audit lines">
+	                                    <field name="sequence"/>		
+	                                    <field name="question_id"/>		
+	                                    <field name="complete"/>
+	                                </tree>
+	                            </field>  	                                                    
+	                        </page>	                        
+	                   	</notebook>	                   				
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+
+		<record model="ir.ui.view" id="view_field_audit_tree">
+			<field name="name">field.audit.tree</field>
+			<field name="model">field.audit</field>
+			<field name="arch" type="xml">
+				<tree string="Field Audit">
+					<field name="name" />
+					<field name="date" />
+					<field name="partner_id" />
+					<field name="customer_code" />
+					<field name="township_id" />
+					<field name="city_id" />
+					<field name="address" />
+					<field name="outlet_type" />
+					<field name="frequency_id" />
+					<field name="class_id" />
+					<field name="sales_channel" />
+					<field name="branch_id" />
+					<field name="sale_team_id" />
+					<field name="auditor_team_id" />
+					<field name="total_score" />
+					<field name="total_missed" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="action_field_audit_view" model="ir.actions.act_window">
+			<field name="name">Field Audit</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">field.audit</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" eval="view_field_audit_tree" />
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to create new field audit.
+				</p>
+			</field>
+		</record>
+
+		<menuitem id="menu_field_audit" action="action_field_audit_view"
+			 parent="menu_customization.menu_sales_rental_menu" name="Field Audit" sequence="1" />
+
+	</data>
+</openerp>	    
