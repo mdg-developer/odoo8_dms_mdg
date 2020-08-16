@@ -13,6 +13,7 @@ class product_template(osv.osv):
     _inherit = 'product.template' 
     _columns = {
         'is_sync_ecommerce': fields.related('product_variant_ids', 'is_sync_ecommerce', type='boolean', string='Is Sync Ecommerce', required=False),
+        'short_name': fields.char('Product Short Name', size=20),
 
             }
        
