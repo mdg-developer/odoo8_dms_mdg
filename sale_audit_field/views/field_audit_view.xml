@@ -76,6 +76,41 @@
 			</field>
 		</record>
 
+		<record id="view_field_audit_filter" model="ir.ui.view">
+			<field name="name">Field Audit Filter</field>
+			<field name="model">field.audit</field>
+			<field name="arch" type="xml">
+				<search string="Field Audit Filter">
+					<group expand="0" string="Group By...">
+						<filter string="Date Day" icon="terp-partner" domain="[]"
+							context="{'group_by':'date:day'}" />
+						<filter string="Customer" icon="terp-partner" domain="[]"
+							context="{'group_by':'partner_id'}" />
+						<filter string="Customer Code" icon="terp-partner" domain="[]"
+							context="{'group_by':'customer_code'}" />
+						<filter string="Township" icon="terp-partner" domain="[]"
+							context="{'group_by':'township_id'}" />
+						<filter string="City" icon="terp-partner" domain="[]"
+							context="{'group_by':'city_id'}" />
+						<filter string="Oultet Type" icon="terp-partner" domain="[]"
+							context="{'group_by':'outlet_type'}" />
+						<filter string="Frequency" icon="terp-partner" domain="[]"
+							context="{'group_by':'frequency_id'}" />
+						<filter string="Class" icon="terp-partner" domain="[]"
+							context="{'group_by':'class_id'}" />
+						<filter string="Sale Channel" icon="terp-partner" domain="[]"
+							context="{'group_by':'sales_channel'}" />
+						<filter string="Branch" icon="terp-partner" domain="[]"
+							context="{'group_by':'branch_id'}" />
+						<filter string="Sales Team" icon="terp-partner" domain="[]"
+							context="{'group_by':'sale_team_id'}" />
+						<filter string="Auditor Team" icon="terp-partner" domain="[]"
+							context="{'group_by':'auditor_team_id'}" />						
+					</group>
+				</search>
+			</field>
+		</record>
+		
 		<record id="action_field_audit_view" model="ir.actions.act_window">
 			<field name="name">Field Audit</field>
 			<field name="type">ir.actions.act_window</field>
