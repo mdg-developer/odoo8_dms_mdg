@@ -35,6 +35,7 @@ class field_audit(osv.Model):
         'line_ids': fields.one2many('field.audit.line', 'audit_id', 'Field Audit lines'),
         'total_score':fields.float('Total Score'),
         'total_missed':fields.float('Total Missed'),
+        'transaction_id':fields.char(string='Transaction Id'),
     }  
     
     def create(self, cursor, user, vals, context=None):

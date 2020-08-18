@@ -796,7 +796,128 @@ class mobile_sale_order(osv.osv):
         except Exception, e:
             print 'False'
             return False
-    
+
+
+    def create_field_audit_record(self, cursor, user, vals, context=None):
+        print 'vals', vals
+        try : 
+            product_trans_obj = self.pool.get('field.audit')
+            customer_obj = self.pool.get('res.partner')
+            product_trans_line_obj = self.pool.get('field.audit.line')
+            str = "{" + vals + "}"
+            str = str.replace(":''", ":'")  # change Order_id
+            str = str.replace("'',", "',")  # null
+            str = str.replace(":',", ":'',")  # due to order_id
+            str = str.replace(":'}", ":''}")
+            str = str.replace("}{", "}|{")
+            
+            new_arr = str.split('|')
+            result = []
+            for data in new_arr:
+                x = ast.literal_eval(data)
+                result.append(x)
+            field_trans = []
+            field_trans_line = []
+            for r in result:
+                print "length", len(r)
+                if len(r) <10:
+                    field_trans_line.append(r)                   
+                else:
+                    field_trans.append(r)
+            
+            if field_trans:
+                for pt in field_trans:
+                    customer_id = int(pt['customer_id'])
+                    customer_data=customer_obj.browse(cursor, user, customer_id , context=None)
+                    if customer_data:
+                        outlet_type_id=sales_channel_id=township_id=city_id=frequency_id=class_id=None
+                        outlet_type=customer_data.outlet_type
+                        sales_channel=customer_data.sales_channel
+                        township=customer_data.township
+                        city=customer_data.city
+                        address=customer_data.street
+                        frequency=customer_data.frequency_id
+                        class_id=customer_data.class_id
+                        if outlet_type:
+                            outlet_type_id=outlet_type.id
+                        if sales_channel:
+                            sales_channel_id=sales_channel.id
+                        if township:
+                            township_id=township.id
+                        if city:
+                            city_id=city.id
+                        if frequency:
+                            frequency_id=frequency.id
+                        if class_id:
+                            class_id=class_id.id
+                        
+                    if pt['createdDateTime']:
+                        date_time = pt['createdDateTime']
+                        trans_date = datetime.strptime(date_time, '%Y-%m-%d %I:%M:%S %p') - timedelta(hours=6, minutes=30)
+
+                    if pt['branch']:
+                        branch_name= pt['branch']
+                        cursor.execute("select id from res_branch where name=%s",(branch_name,))
+                        branch_data=cursor.fetchone()
+                        if branch_data:
+                            branch_id =branch_data[0]
+                        else:
+                            branch_id=None
+                            
+                    if pt['auditorName']:
+                        team_name= pt['auditorName']
+                        cursor.execute("select id from crm_case_section where name=%s",(team_name,))
+                        team_data=cursor.fetchone()
+                        if team_data:
+                            auditor_id =team_data[0]
+                        else:
+                            auditor_id=None
+
+                        
+                    mso_result = {
+                                'transaction_id':pt['customer_audit_id'],
+                                'partner_id':pt['customer_id'],
+                                'outlet_type': outlet_type_id,
+                                'township_id':township_id,
+                                'city_id':city_id,
+                                'address':address,
+                                'frequency_id':frequency_id,
+                                'class_id':class_id,
+                                'sales_channel':sales_channel_id,
+                                'customer_code':pt['customer_code'] ,
+                                'sale_team_id':pt['sale_team_id'],
+                                'date':trans_date,
+                                'latitude':pt['latitude'],
+                                'longitude':pt['longitude'],
+                                'branch_id':branch_id,
+                                'total_score':pt['total_score'],
+                                'total_missed':pt ['total_missed'],
+                                'shop_image':pt ['shop_image'],
+                                'auditor_image':pt ['saleman_image'],
+                                'auditor_team_id':auditor_id,
+                                }
+                    s_order_id = product_trans_obj.create(cursor, user, mso_result, context=context)
+                    cursor.execute("select sequence,id from audit_question")
+                    question_data=cursor.fetchall()    
+                    for question_ids in question_data:
+                        question_result = {
+                            'sequence':question_ids[0],
+                            'question_id':question_ids[1],
+                            'audit_id':s_order_id,
+                            }
+                        product_trans_line_obj.create(cursor, user, question_result, context=context)
+                    
+                    for ptl in field_trans_line:
+
+                        if ptl['customer_audit_id'] == pt['customer_audit_id']:
+                            cursor.execute("update field_audit_line set complete=True where audit_id =%s and question_id=%s",(s_order_id,ptl['auditline_id'],))
+            
+            print 'Truwwwwwwwwwwwwwwwwwwwwwe'
+            return True       
+        except Exception, e:
+            print 'False'
+            return False
+            
     def create_mo(self, cursor, user, vals, context=None):
         print 'vals', vals
         try : 
@@ -1546,7 +1667,8 @@ class mobile_sale_order(osv.osv):
     def get_salePlanDays_by_sale_team(self, cr, uid, section_id , context=None, **kwargs):
         cr.execute('''select id,name,date,sale_team from sale_plan_day where sale_team=%s ''', (section_id,))
         datas = cr.fetchall()
-        cr.execute
+        print 'get_salePlanDays_by_sale_team',datas
+
         return datas
     
     # get promotion datas from database
@@ -4282,7 +4404,7 @@ class mobile_sale_order(osv.osv):
     def res_partners_team(self, cr, uid, section_id, late_date, context=None, **kwargs):
         
         lastdate = datetime.strptime(late_date, "%Y-%m-%d")
-        print 'DateTime', lastdate
+        print 'DateTimeTEAN', lastdate
         
         cr.execute('''                                
         select A.id,A.name,A.image,A.is_company, A.image_small,replace(A.street,',',';') street,replace(A.street2,',',';') street2,A.city,A.website,
@@ -4324,7 +4446,7 @@ class mobile_sale_order(osv.osv):
         sale_team_data = section.browse(cr, uid, section_id, context=context)
         is_supervisor=sale_team_data.is_supervisor    
         lastdate = datetime.strptime(pull_date, "%Y-%m-%d")
-        print 'DateTime', lastdate
+        #print 'DateTimePARTNER', lastdate
         if is_supervisor==True:
             where ='and SPD.sale_team in (select id from crm_case_section where supervisor_team= %s)' % (section_id,)
         else:
@@ -4364,6 +4486,7 @@ class mobile_sale_order(osv.osv):
                         where A.customer_code is not null
             '''%(where),(day_id,))
         datas = cr.fetchall()
+        #print 'sale_plan_data',datas
         return datas
     
 # kzo Edit add Sale Plan Trip and Day ID
