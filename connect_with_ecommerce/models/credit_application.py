@@ -2,6 +2,11 @@ from openerp.osv import fields, osv
 import time
 import datetime
 from openerp import models, api, _
+import json
+import logging
+import random
+import requests
+
 class credit_application(osv.osv):
     _name = 'credit.application'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
@@ -75,7 +80,7 @@ class credit_application(osv.osv):
                     'bank_officer_phone': fields.char('Telephone Number'),
                     'bank_officer_mobile': fields.char('Mobile Phone'),
                     'customer_id': fields.many2one('res.partner', 'Customer', track_visibility='onchange'),
-                    'appiled_amount': fields.float('Appiled Amount',track_visibility='onchange'),
+                    'applied_amount': fields.float('Applied Amount',track_visibility='onchange'),
                     'approved_amount': fields.float('Approved Amount',track_visibility='onchange'),
                     'state': fields.selection([('draft', 'Draft'),('approved', 'Approved')],'Status', required=True, readonly="1", track_visibility='onchange', default='draft'),
                     'effective_date': fields.date('Effective Date', track_visibility='onchange'),
@@ -198,7 +203,7 @@ class credit_application_approval(models.TransientModel):
     _columns = {
         'name': fields.char('Company Registration Number', required=True),
         'customer_id': fields.many2one('res.partner',string='customer'),
-        'appiled_amount': fields.float('Appiled Amount'),
+        'applied_amount': fields.float('Applied Amount'),
         'approved_amount': fields.float('Approved Amount'),
         'effective_date': fields.date('Effective Date'),
     }
@@ -211,7 +216,7 @@ class credit_application_approval(models.TransientModel):
         credit_app = self.env['credit.application'].search([('id','=', credit_app_ids[0])])
         data['name'] = credit_app.name
         data['customer_id'] = credit_app.customer_id.id if credit_app.customer_id else False
-        data['appiled_amount'] = credit_app.appiled_amount
+        data['applied_amount'] = credit_app.applied_amount
         data['approved_amount'] = credit_app.approved_amount
         data['effective_date'] = credit_app.effective_date
         res.update(data)
@@ -219,12 +224,55 @@ class credit_application_approval(models.TransientModel):
 
     @api.multi
     def confirm_credit_application(self):
+        message = sms_error_msg = None
         credit_app_ids = self.env.context.get('active_ids', [])
         credit_app = self.env['credit.application'].search([('id','=', credit_app_ids[0])])
         credit_app.write({
             'state': 'approved',
+            'applied_amount': self.applied_amount,
             'approved_amount': self.approved_amount,
             'effective_date': self.effective_date,
         })
+        credit_app_ids = self.env.context.get('active_ids', [])
+        credit_app = self.env['credit.application'].search([('id','=', credit_app_ids[0])])
+        if credit_app:
+            if credit_app.mobile:
+                try: 
+                    headers = {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}            
+                    sms_user= 'mdgpro'
+                    password= 'fcdaa533-e23d-4f9e-8480-416454b2dfc2'
+                    url='https://mpg-ids.mytel.com.mm/auth/realms/eis/protocol/openid-connect/token'
+                    payload = {'grant_type': 'client_credentials'}
+                    response = requests.post(url,headers=headers,auth=(sms_user, password), data=payload, verify=False)
+                    message = 'Congratulations! Your credit application approved with ' + str(int(self.approved_amount)) + ' MMK start using ' + self.effective_date 
+                    if response.status_code == 200:                
+                        content = json.loads(response.content)
+                        token = content['access_token'] 
+                        header = {'Content-Type': 'application/json',
+                                  'Authorization': 'Bearer {0}'.format(token)}                    
+                        sms_url = 'https://mytelapigw.mytel.com.mm/msg-service/v1.3/smsmt/sent'
+                        sms_payload = {
+                                       "source": "MDG",
+                                       "dest": credit_app.mobile,
+                                       "content": message 
+                                }                 
+                        response = requests.post(sms_url,  json = sms_payload, headers = header,verify=False)                
+                        if response.status_code == 200:
+                            sms_status = 'success'                    
+                        else:
+                            sms_status = 'fail'               
+                except Exception as e:         
+                    error_msg = 'Error Message: %s' % (e) 
+                    logging.error(error_msg)  
+                    sms_status = 'fail' 
+                    sms_error_msg = error_msg    
+                vals = { 'name': 'Credit Application',
+                         'partner_id': self.customer_id.id,
+                         'phone': credit_app.mobile,
+                         'message': message,
+                         'error_log': sms_error_msg,
+                         'status': sms_status
+                        }
+                return self.env['sms.message'].create(vals)
         return True
     

@@ -9,7 +9,7 @@
 					<header>
 						<button name="action_confirm" type="object" string="Approve" class="oe_highlight" attrs="{'invisible': [('state','=','approved')]}"/>
 						<button name="set_to_draft" type="object" string="Set To Draft" class="oe_highlight" attrs="{'invisible': [('state','=','draft')]}"/>
-                        <field name='state' widget='statusbar' statusbar_visible='new,approved'/>						
+                        <field name='state' widget='statusbar' statusbar_visible='draft,approved'/>						
                     </header>
 					<sheet>
 						<group>
@@ -22,7 +22,7 @@
 								</group>
 								<group>
 									<field name="date_received"/>
-									<field name="appiled_amount"/>
+									<field name="applied_amount"/>
 									<field name="effective_date" readonly='1' attrs="{'invisible': [('state','=','draft')]}"/>
                         			<field name="approved_amount" readonly='1' attrs="{'invisible': [('state','=','draft')]}"/>
 								</group>
