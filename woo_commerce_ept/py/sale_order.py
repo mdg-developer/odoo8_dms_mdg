@@ -1074,10 +1074,45 @@ class sale_order(models.Model):
     
     #Add cancel_woo_order_action into order cancel action
     def action_cancel(self, cr, uid, ids, context=None):
+        customer_id = None
         result = super(sale_order, self).action_cancel(cr, uid, ids, context=context)
         if result:
+            woo_instance_obj=self.pool.get('woo.instance.ept')
+            instance=woo_instance_obj.search(cr, uid, [('state','=','confirmed')], context=context, limit=1)
+            if instance:                
+                woo_instance = woo_instance_obj.browse(cr, uid, instance[0], context=context)
+                wcapi = woo_instance.connect_for_point_in_woo()   
             for sale in self.browse(cr, uid, ids, context=context):
                 update = sale.update_woo_order_status_action('cancelled')
+                if sale.getting_point > 0:
+                    getting_point = -sale.getting_point
+                    sale.write({'getting_point':getting_point})
+                    cr.execute("select COALESCE(sum(getting_point),0) from point_history where partner_id=%s", (sale.partner_id.id,))    
+                    point_data = cr.fetchall()
+                    if point_data:
+                        history_point = point_data[0][0]
+                    vals = { 'partner_id': sale.partner_id.id,
+                             'date': datetime.today(),
+                             'order_id': sale.id,
+                             'membership_id': sale.partner_id.membership_id.id,                                                      
+                             'balance_point': history_point + sale.getting_point,
+                             'getting_point': sale.getting_point,
+                            }
+                    self.pool.get('point.history').create(cr, uid, vals, context=context)
+                    if wcapi:
+                        order_response = wcapi.get('point')      
+                        order_response_data = order_response.json()                
+                        for order in order_response_data:
+                            woo_order_number = order.get('number',False)     
+                            if sale.woo_order_number == woo_order_number:
+                                customer_id = order.get('customer_id',False) 
+                                break
+                        data = { 'user_id': customer_id,
+                                 'action': 'order_cancelled',
+                                 'order_id': sale.woo_order_number,
+                                 'amount': sale.getting_point,                                                                 
+                                }                        
+                        wcapi.post("point", data)
         return result
     
     #Fix Order Confirm Fail For Local
@@ -1086,7 +1121,7 @@ class sale_order(models.Model):
         self.write(cr, uid, ids, {'state':'manual'})
         if result:
             for sale in self.browse(cr, uid, ids, context=context):
-                update = sale.update_woo_order_status_action('manual')
+                update = sale.update_woo_order_status_action('manual')                
         return result
 
     #update woo order status when update 'is_generate' and 'shipped' 
