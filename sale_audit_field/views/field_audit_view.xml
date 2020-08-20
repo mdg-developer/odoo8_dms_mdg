@@ -44,7 +44,17 @@
 	                                    <field name="complete"/>
 	                                </tree>
 	                            </field>  	                                                    
-	                        </page>	                        
+	                        </page>	
+	                        <page string="Map" name="map">
+	                            <widget type="gmap_marker" lat="latitude" lng="longitude" description="field_descriptions"/>
+								<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+									<div class="modal-dialog modal-lg">
+										<div class="modal-content" align="center">
+											<img id="zoom" src="" width="500" height="500" border="1"/>										
+										</div>
+									</div>
+								</div>
+	                        </page>                        
 	                   	</notebook>	                   				
 					</sheet>
 				</form>
