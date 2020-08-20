@@ -320,6 +320,28 @@ class sale_order(models.Model):
                                                                          fiscal_position.id,False)
         product_data=product_data.get('value')
 
+        delivery_product = discount_product = fees_product = False
+        if product.product_tmpl_id.type == 'service':
+            delivery_obj = self.env['delivery.carrier']
+            delivery = delivery_obj.search([('product_id', '=', product.id)])
+            if delivery:    
+                for deli in delivery:            
+                    if product.id == deli.product_id.id:                    
+                        delivery_product = True 
+                        break
+        woo_setting = self.env['woo.config.settings'].search([])
+        if woo_setting:            
+            for woo in woo_setting:
+                if woo.discount_product_id:
+                    woo_discount_product = self.env['product.product'].search([('id', '=', woo.discount_product_id.id)])
+                    if woo_discount_product:
+                        if product.id == woo_discount_product.id: 
+                            discount_product = True
+                if woo.fee_line_id:
+                    woo_fee_product = self.env['product.product'].search([('id', '=', woo.fee_line_id.id)])
+                    if woo_fee_product:
+                        if product.id == woo_fee_product.id:
+                            fees_product = True
         product_data.update(
                             {
                             'name':product.name or name,
@@ -330,7 +352,10 @@ class sale_order(models.Model):
                             'price_unit':price,
                             'woo_line_id':line.get('id'),
                             'th_weight':float(line.get('grams',0.0))*quantity/1000,
-                            'tax_id':tax_ids
+                            'tax_id':tax_ids,
+                            'delivery_product':delivery_product,
+                            'discount_product':discount_product,
+                            'fees_product':fees_product,
                             }                                    
                             )
         sale_order_line_obj.create(product_data) 
@@ -458,7 +483,7 @@ class sale_order(models.Model):
                     if woo_order_number == str(woo_order_id) and int(woo_point) > 0:
                         getting_point = int(woo_point)                        
                         break
-              
+            print 'shipping_address',shipping_address  
             ordervals = {
                 'name' :name,                
                 'picking_policy' : workflow.picking_policy,
