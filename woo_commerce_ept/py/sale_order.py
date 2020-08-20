@@ -465,10 +465,14 @@ class sale_order(models.Model):
                 name=woo_order_number
             
             delivery_id = None
-            if partner.township.delivery_team_id:
-                delivery_id = partner.township.delivery_team_id.id
-            elif partner.city.delivery_team_id:
-                delivery_id = partner.city.delivery_team_id.id
+            
+            shipping_partner = self.env['res.partner'].search([('id','=',shipping_address.ids[0])])           
+                        
+            if shipping_partner.township.delivery_team_id:        
+                woo_warehouse = shipping_partner.township.delivery_team_id.issue_warehouse_id.id       
+                delivery_id = shipping_partner.township.delivery_team_id.id
+            elif shipping_partner.city.delivery_team_id:
+                delivery_id = shipping_partner.city.delivery_team_id.id
                
             woo_instance_obj=self.env['woo.instance.ept']
             instance=woo_instance_obj.search([('state','=','confirmed')], limit=1)
@@ -481,15 +485,15 @@ class sale_order(models.Model):
                     woo_point = point.get('amount',False)                      
                     if woo_order_number == str(woo_order_id) and int(woo_point) > 0:
                         getting_point = int(woo_point)                        
-                        break
-            
+                        break           
+                                   
             ordervals = {
                 'name' :name,                
                 'picking_policy' : workflow.picking_policy,
                 'order_policy' : workflow.invoice_on,                        
                 'partner_invoice_id' : invoice_address.ids[0],
                 'date_order' :created_at,
-                'warehouse_id' : instance.warehouse_id.id,
+                'warehouse_id' : woo_warehouse,
                 'partner_id' : partner.ids[0],
                 'partner_shipping_id' : shipping_address.ids[0],
                 'state' : 'draft',
