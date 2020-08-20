@@ -124,10 +124,10 @@
 			sequence="10" name="Promotions" />
 
 		<menuitem id="promotion_monthly_menu1" parent="promotions"
-			action="action_sales_promotion_view" sequence="2" />
+			action="action_sales_promotion_view"  invisible ="1"  sequence="2" />
 
 		<menuitem id="promotion_monthly_menu2" parent="promotions"
-			action="action_sales_promotion_view1" sequence="3" />
+			action="action_sales_promotion_view1" invisible ="1" sequence="3" />
 
 		<!-- Monthly Promotion -->
 

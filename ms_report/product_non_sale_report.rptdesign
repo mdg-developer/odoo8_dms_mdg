@@ -545,7 +545,9 @@ this.queryText =this.queryText.replace("--$principal_id$", "and h.principle_id i
             </list-property>
             <xml-property name="queryText"><![CDATA[select h.name as Refid,h.issue_type as type,l.name as issue_location,p.name as receiver,h.date as requested_date,sp.date_done as issue_date,
 h.memo_refno,i.name as debit_note,h.claim_attachment,pr.name as principle,h.principle_support,pt.name as product,d.quantity as issue_qty,(select name from product_uom where id =d.uom_id) as uom,
-d.claim_price,d.claim_total,'' as remark,h.state
+d.claim_price,d.claim_total,'' as remark,CASE WHEN h.state='approve'   THEN  'awaiting_claimed' 
+              ELSE h.state
+       END as state
 from product_nonsell_issue h 
 left join product_nonsell_issue_line d on h.id=d.line_id
 left join stock_location l on h.location_id=l.id

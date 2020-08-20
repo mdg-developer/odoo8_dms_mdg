@@ -637,11 +637,13 @@ class branch_good_issue_note_line(osv.osv):
             val1 = 0.0            
             product = self.pool.get('product.product').browse(cr, uid, order.product_id.id, context=context)
             if product.product_tmpl_id.uom_id.id == order.product_uom.id:
-                uom_ratio = product.product_tmpl_id.report_uom_id.factor            
+                cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (product.product_tmpl_id.report_uom_id.id,))
+                bigger_qty = cr.fetchone()[0]
+                uom_ratio = bigger_qty               
             if order.issue_quantity > 0:
                 val1 = order.issue_quantity * (product.viss_value / uom_ratio)
             else:
-                val1 = product.viss_value                                     
+                val1 = 0                                     
             res[order.id] = val1
         return res       
     
@@ -653,12 +655,14 @@ class branch_good_issue_note_line(osv.osv):
         for order in self.browse(cr, uid, ids, context=context):
             product = self.pool.get('product.product').browse(cr, uid, order.product_id.id, context=context)
             if product.product_tmpl_id.uom_id.id == order.product_uom.id:
-                uom_ratio = product.product_tmpl_id.report_uom_id.factor
+                cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (product.product_tmpl_id.report_uom_id.id,))
+                bigger_qty = cr.fetchone()[0]
+                uom_ratio = bigger_qty 
                 
             if order.issue_quantity > 0:
                 val1 = order.issue_quantity * (product.cbm_value / uom_ratio)      
             else:
-                val1 = product.cbm_value      
+                val1 = 0     
             res[order.id] = val1
         return res     
 
@@ -679,7 +683,7 @@ class branch_good_issue_note_line(osv.osv):
                 if order.issue_quantity > 0:
                     val1 = order.issue_quantity * product_value      
                 else:
-                    val1 = product_value     
+                    val1 = 0     
                 res[order.id] = val1
         return res          
 

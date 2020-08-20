@@ -666,9 +666,18 @@ else
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select gin.state,sq.name as rfi_no, gin.name as gin_no,gin.internal_reference as internal_ref ,gin.branch_id ,rb.name as  branch_name,
-issue_by ,gin.receiver,(select name from fleet_vehicle where id = gin.vehicle_id) as vehicle,pt.cbm_value,pt.viss_value,
+issue_by ,gin.receiver,(select name from fleet_vehicle where id = gin.vehicle_id) as vehicle,
+CASE WHEN pt.uom_id=ginl.product_uom THEN  round (ginl.issue_quantity * (pt.cbm_value/(select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=pt.report_uom_id)),4)
+              ELSE round(pt.cbm_value,4)
+       END as cbm_value,
+CASE WHEN pt.uom_id=ginl.product_uom THEN round ( ginl.issue_quantity * (pt.viss_value/(select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=pt.report_uom_id)),4)
+              ELSE round (pt.viss_value,4)
+       END as viss_value,
+---pt.cbm_value,pt.viss_value,
 (select name from stock_location where id =gin.to_location_id ) as requesting_location,(select name from stock_location where id =gin.from_location_id) as request_warehouse,
-(select name from res_partner where id in (select partner_id from res_users where id =gin.reverse_user_id)) as reverse_user,(select name from res_partner where id in (select partner_id from res_users where id =gin.request_by)) as request_by,(select name from res_partner where id in (select partner_id from res_users where id =gin.approve_by)) as approve_by,
+(select name from res_partner where id in (select partner_id from res_users where id =gin.reverse_user_id)) as reverse_user,
+(select name from res_partner where id in (select partner_id from res_users where id =gin.request_by)) as request_by,
+(select name from res_partner where id in (select partner_id from res_users where id =gin.approve_by)) as approve_by,
 gin.issue_date,gin.receive_date,pp.name_template as product,req_quantity,issue_quantity,receive_quantity,uom.name as product_uom,pp.sequence,
 round(req_quantity*(select floor(round(1/factor,2)) from product_uom where id=ginl.product_uom),0)  as small_req_quantity,
 round(issue_quantity*(select floor(round(1/factor,2)) from product_uom where id=ginl.product_uom),0)  as product_quantity,round(receive_quantity*(select floor(round(1/factor,2)) from product_uom where id=ginl.product_uom),0)  as product_rec_quantity,(select name from product_uom where id =pt.uom_id) as base_uom,ginl.remark
@@ -1983,6 +1992,10 @@ group by state
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="1068">
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">###0.0000{RoundingMode=HALF_UP}</property>
+                            </structure>
                             <property name="textAlign">center</property>
                             <property name="resultSetColumn">cbm_value</property>
                         </data>
@@ -1997,6 +2010,10 @@ group by state
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="1069">
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">###0.0000{RoundingMode=HALF_UP}</property>
+                            </structure>
                             <property name="textAlign">center</property>
                             <property name="resultSetColumn">viss_value</property>
                         </data>
