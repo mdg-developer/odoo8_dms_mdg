@@ -244,7 +244,7 @@ class credit_application_approval(models.TransientModel):
                     url='https://mpg-ids.mytel.com.mm/auth/realms/eis/protocol/openid-connect/token'
                     payload = {'grant_type': 'client_credentials'}
                     response = requests.post(url,headers=headers,auth=(sms_user, password), data=payload, verify=False)
-                    message = 'Congratulations! Your credit application approved with ' + str('{:,}'.format(int(self.approved_amount))) + ' MMK start using ' + self.effective_date 
+                    message = 'Congratulation! Your credit application for MDG Retail is approved with ' + str('{:,}'.format(int(self.approved_amount))) + ' MMK starting from ' + self.effective_date 
                     if response.status_code == 200:                
                         content = json.loads(response.content)
                         token = content['access_token'] 
