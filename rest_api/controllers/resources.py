@@ -12,3 +12,4 @@ from . import model_credit_application
 from . import model_point_history
 from . import model__promos_rules
 from . import model__res_township
+from . import model__membership_config
