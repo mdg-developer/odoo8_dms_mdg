@@ -321,6 +321,24 @@
 			</field>
 		</record>
 
+		<record id="view_crm_partner_geo_form_inherit_verify" model="ir.ui.view">
+			<field name="name">res.partner.geo.inherit</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="base_geolocalize.view_crm_partner_geo_form" />
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//button[@name='geo_localize']" position="after">
+						<button string="Verify" name="verify_lat_long" colspan="2"
+							icon="gtk-apply" type="object" />
+					</xpath>
+					<xpath expr="//field[@name='date_localization']" position="after">
+					    <field name="verify_person_id" readonly="1" />
+					    <field name="verify" readonly="1" />
+					</xpath>
+				</data>
+			</field>
+		</record>
+		
 		<!-- customer tree view -->
 		<record id="res_partner_tree_view" model="ir.ui.view">
 			<field name="name">res.partner.tree.view</field>
