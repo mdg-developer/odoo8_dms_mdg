@@ -432,7 +432,10 @@ class res_partner(osv.osv):
                 type='datetime', readonly=True,
                 string='Lastest Visit Date'),                        
         'user_id': fields.many2one('res.users', 'Created By', help='The internal user that is in charge of communicating with this contact if any.'),
-          
+        'partner_latitude': fields.float('Geo Latitude', digits=(16, 8)),
+        'partner_longitude': fields.float('Geo Longitude', digits=(16, 8)),  
+        'verify':fields.boolean('Is Verify', default=False),
+        'verify_person_id':fields.many2one('res.users', 'Verify Person'),
  } 
     _defaults = {
         'is_company': True,
@@ -463,6 +466,17 @@ class res_partner(osv.osv):
                     'date_localization': fields.date.context_today(self, cr, uid, context=context)
                 }, context=context)
         return True
+    
+    def verify_lat_long(self, cr, uid, ids, context=None):        
+        
+        partner_obj = self.pool.get('res.partner')
+        for partner in self.browse(cr, uid, ids):   
+            vals = { 'verify_person_id': uid,
+                     'verify': True,
+                     'date_localization': datetime.now().date()
+                }                
+            partner_obj.write(cr, uid, partner.id, vals, context=None)                       
+        return True                        
     
     def partner_id_from_sale_plan_day(self, cr, uid, sale_team_id , context=None, **kwargs):
         cr.execute('select RP.id from sale_plan_day SPD , res_partner_sale_plan_day_rel RPS , res_partner RP where SPD.id = RPS.sale_plan_day_id and RPS.res_partner_id = RP.id and SPD.sale_team = %s ', (sale_team_id,))
