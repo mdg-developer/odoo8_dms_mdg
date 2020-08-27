@@ -670,10 +670,10 @@ issue_by ,gin.receiver,(select name from fleet_vehicle where id = gin.vehicle_id
 --,pt.cbm_value,pt.viss_value,
 ,
 CASE WHEN pt.uom_id=ginl.product_uom THEN  round (ginl.issue_quantity * (pt.cbm_value/(select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=pt.report_uom_id)),4)
-              ELSE round(pt.cbm_value,4)
+              ELSE round(ginl.issue_quantity * pt.cbm_value,4)
        END as cbm_value,
 CASE WHEN pt.uom_id=ginl.product_uom THEN round ( ginl.issue_quantity * (pt.viss_value/(select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=pt.report_uom_id)),4)
-              ELSE round (pt.viss_value,4)
+              ELSE round (ginl.issue_quantity * pt.viss_value,4)
        END as viss_value,
 (select name from stock_location where id =gin.to_location_id ) as requesting_location,(select name from stock_location where id =gin.from_location_id) as request_warehouse,
 (select name from res_partner where id in (select partner_id from res_users where id =gin.reverse_user_id)) as reverse_user,(select name from res_partner where id in (select partner_id from res_users where id =gin.request_by)) as request_by,(select name from res_partner where id in (select partner_id from res_users where id =gin.approve_by)) as approve_by,

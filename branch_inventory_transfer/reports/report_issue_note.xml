@@ -271,22 +271,22 @@
 						</thead>
 						<tbody class="invoice_tbody">
 							<tr t-foreach="o.p_line" t-as="l">
-							 <t t-if="(l.issue_quantity)>0">
-								<td>
-									<span t-field="l.product_id" />
-								</td>
-								<td>
-									<span t-field="l.product_uom" />
-								</td>
-								<td>
-									<span t-field="l.issue_quantity" />
-								</td>
-								<td>
+								<t t-if="(l.issue_quantity)>0">
+									<td>
+										<span t-field="l.product_id" />
+									</td>
+									<td>
+										<span t-field="l.product_uom" />
+									</td>
+									<td>
+										<span t-field="l.issue_quantity" />
+									</td>
+									<td>
 
-								</td>
-								<td>
-									<span t-field="l.remark" />
-								</td>
+									</td>
+									<td>
+										<span t-field="l.remark" />
+									</td>
 								</t>
 							</tr>
 						</tbody>
@@ -295,9 +295,10 @@
 					<table class="table table-condensed">
 						<thead>
 							<tr>
-								<th></th>
+								<th />
 								<th>Issued By</th>
 								<th>Approved By</th>
+								<th>Received By</th>
 								<th>Received By</th>
 
 							</tr>
@@ -315,25 +316,32 @@
 								<td>
 									<p t-field="l.receiver" />
 								</td>
+								<td>
+
+								</td>
 								<br />
 							</tr>
 							<tr>
 								<td>Position</td>
-								<td></td>
-								<td></td>
-								<td></td>
+								<td />
+								<td />
+								<td>Transporter</td>
+								<td>Customer</td>
+
 							</tr>
 							<tr>
 								<td>Signature</td>
-								<td></td>
-								<td></td>
-								<td></td>
+								<td />
+								<td />
+								<td />
+								<td />
 							</tr>
 							<tr>
 								<td>Date</td>
-								<td></td>
-								<td></td>
-								<td></td>
+								<td />
+								<td />
+								<td />
+								<td />
 							</tr>
 						</tbody>
 					</table>

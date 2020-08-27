@@ -124,10 +124,10 @@
 			sequence="10" name="Promotions" />
 
 		<menuitem id="promotion_monthly_menu1" parent="promotions"
-			action="action_sales_promotion_view"  invisible ="1"  sequence="2" />
+			action="action_sales_promotion_view"   groups="base.group_no_one"  sequence="2" />
 
 		<menuitem id="promotion_monthly_menu2" parent="promotions"
-			action="action_sales_promotion_view1" invisible ="1" sequence="3" />
+			action="action_sales_promotion_view1"  groups="base.group_no_one"  sequence="3" />
 
 		<!-- Monthly Promotion -->
 
@@ -214,7 +214,7 @@
 		</record>
 
 		<menuitem id="monthly_promotion" parent="promotions"
-			action="action_sale_monthly_promotion_view" sequence="4" />
+			action="action_sale_monthly_promotion_view"  groups="base.group_no_one" sequence="4" />
 	</data>
 </openerp>
 	    
