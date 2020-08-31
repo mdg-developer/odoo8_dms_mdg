@@ -318,8 +318,12 @@ class sale_order(models.Model):
                                                                          ,False,True,time.strftime('%Y-%m-%d'),False,
                                                                          fiscal_position.id,False)
         product_data=product_data.get('value')
-
+                                
         delivery_product = discount_product = fees_product = False
+        promotion_id = None
+        
+        promotion = self.env['promos.rules'].search([('ecommerce', '=', True)], limit=1)
+                    
         if product.product_tmpl_id.type == 'service':
             delivery_obj = self.env['delivery.carrier']
             delivery = delivery_obj.search([('product_id', '=', product.id)])
@@ -335,12 +339,21 @@ class sale_order(models.Model):
                     woo_discount_product = self.env['product.product'].search([('id', '=', woo.discount_product_id.id)])
                     if woo_discount_product:
                         if product.id == woo_discount_product.id: 
-                            discount_product = True
+                            discount_product = True 
+                            if promotion:
+                                promotion_id = promotion.id
                 if woo.fee_line_id:
                     woo_fee_product = self.env['product.product'].search([('id', '=', woo.fee_line_id.id)])
                     if woo_fee_product:
                         if product.id == woo_fee_product.id:
-                            fees_product = True
+                            fees_product = True                             
+                            if promotion:
+                                promotion_id = promotion.id                                                                      
+        
+        if price == 0:
+            if promotion:
+                promotion_id = promotion.id
+                                
         product_data.update(
                             {
                             'name':product.name or name,
@@ -354,11 +367,11 @@ class sale_order(models.Model):
                             'tax_id':tax_ids,
                             'delivery_product':delivery_product,
                             'discount_product':discount_product,
-                            'fees_product':fees_product,
+                            'fees_product':fees_product,   
+                            'promotion_id':promotion_id                         
                             }                                    
                             )
-        sale_order_line_obj.create(product_data) 
-        
+        sale_order_line_obj.create(product_data)         
         return True
 
     @api.model
