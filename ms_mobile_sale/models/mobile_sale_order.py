@@ -981,10 +981,6 @@ class mobile_sale_order(osv.osv):
         
         try:
             # print 'vals', vals
-            import base64
-
-            baseUrlPrefix = "https://firebasestorage.googleapis.com/v0/b/odoo-8d694.appspot.com/o/customer_visit%2F"
-            baseUrlPostFix = ".png?alt=media"
             customer_visit_obj = self.pool.get('customer.visit')
             str = "{" + vals + "}"    
             str = str.replace("'',", "',")  # null
@@ -1019,29 +1015,29 @@ class mobile_sale_order(osv.osv):
                     if customer_id:  
                         if vs['image1_reference']:
                                 is_image1 =True
-                                url =baseUrlPrefix + vs['image1_reference'] + baseUrlPostFix
-                                response = requests.get(url).content
-                                image1 = base64.b64encode(response)
+#                                 url =baseUrlPrefix + vs['image1_reference'] + baseUrlPostFix
+#                                 response = requests.get(url).content
+#                                 image1 = base64.b64encode(response)
                         if vs['image2_reference']:
                                 is_image2=True
-                                url =baseUrlPrefix + vs['image2_reference'] + baseUrlPostFix
-                                response = requests.get(url).content
-                                image2 = base64.b64encode(response)                                                      
+#                                 url =baseUrlPrefix + vs['image2_reference'] + baseUrlPostFix
+#                                 response = requests.get(url).content
+#                                 image2 = base64.b64encode(response)                                                      
                         if vs['image3_reference']:
                                 is_image3=True
-                                url =baseUrlPrefix + vs['image3_reference'] + baseUrlPostFix
-                                response = requests.get(url).content
-                                image3 = base64.b64encode(response)                                                                
+#                                 url =baseUrlPrefix + vs['image3_reference'] + baseUrlPostFix
+#                                 response = requests.get(url).content
+#                                 image3 = base64.b64encode(response)                                                                
                         if vs['image4_reference']:
                                 is_image4=True  
-                                url =baseUrlPrefix + vs['image4_reference'] + baseUrlPostFix
-                                response = requests.get(url).content
-                                image4 = base64.b64encode(response)                                                                        
+#                                 url =baseUrlPrefix + vs['image4_reference'] + baseUrlPostFix
+#                                 response = requests.get(url).content
+#                                 image4 = base64.b64encode(response)                                                                        
                         if vs['image5_reference']:
                                 is_image5=True    
-                                url =baseUrlPrefix + vs['image5_reference'] + baseUrlPostFix
-                                response = requests.get(url).content
-                                image5 = base64.b64encode(response)                                                                                               
+#                                 url =baseUrlPrefix + vs['image5_reference'] + baseUrlPostFix
+#                                 response = requests.get(url).content
+#                                 image5 = base64.b64encode(response)                                                                                               
                         visit_result = {
                             'customer_code':vs['customer_code'],
                             'branch_id':branch_id,
@@ -1058,11 +1054,11 @@ class mobile_sale_order(osv.osv):
                             'visit_reason':vs['visit_reason'],
                             'latitude':vs['latitude'],
                             'longitude':vs['longitude'],
-                            'image':image1,
-                            'image1':image2,
-                            'image2':image3,
-                            'image3':image4,
-                            'image4':image5,
+#                             'image':image1,
+#                             'image1':image2,
+#                             'image2':image3,
+#                             'image3':image4,
+#                             'image4':image5,
                              'is_image1':is_image1,
                               'is_image2':is_image2,
                               'is_image3':is_image3,
@@ -1075,8 +1071,9 @@ class mobile_sale_order(osv.osv):
                             'image5_reference':vs['image5_reference'],
 
                         }
-                        customer_visit_obj.create(cursor, user, visit_result, context=context)
-            return True
+                        visit_id=customer_visit_obj.create(cursor, user, visit_result, context=context)
+                        customer_visit_obj.generate_image(cursor, user, [visit_id], context=context)
+                return True
         except Exception, e:
             print e            
             return False

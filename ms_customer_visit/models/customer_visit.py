@@ -9,6 +9,8 @@ from openerp import tools, api
 from openerp.osv import osv, fields
 from openerp.osv.expression import get_unaccent_wrapper
 from openerp.tools.translate import _
+import requests
+
 baseUrlPrefix = "https://firebasestorage.googleapis.com/v0/b/odoo-8d694.appspot.com/o/customer_visit%2F"
 baseUrlPostFix = ".png?alt=media"
 class customer_visit(osv.osv):
@@ -278,7 +280,8 @@ class customer_visit(osv.osv):
     def _get_default_image(self, is_company, colorize=False):
 #         img_path = openerp.modules.get_module_resource(
 #             'base', 'static/src/img', 'company_image.png' if is_company else 'avatar.png')
-        img_path ='https://firebasestorage.googleapis.com/v0/b/odoo-8d694.appspot.com/o/customer_visit%2FMQLJVUZLJG.png?alt=media&token=3b9304bb-4213-4480-9661-8d7434ad2d48'
+        img_path = openerp.modules.get_module_resource(
+            'base', 'static/src/img', 'company_image.png' if is_company else 'avatar.png')
         with open(img_path, 'rb') as f:
             image = f.read()
 
@@ -336,5 +339,36 @@ class customer_visit(osv.osv):
 
         return tools.image_resize_image_big(image.encode('base64'))
 
-         
+    def generate_image(self, cr, uid, ids, context=None):
+        if ids:
+            visit_data = self.browse(cr, uid, ids[0], context=context)
+            import base64
+            image1 =False
+            image2 =False
+            image3 =False
+            image4 =False
+            image5 =False
+            if visit_data.image1_reference:
+                    url =baseUrlPrefix + visit_data.image1_reference + baseUrlPostFix
+                    response = requests.get(url).content
+                    image1 = base64.b64encode(response)
+            if visit_data.image2_reference:
+                    url =baseUrlPrefix + visit_data.image2_reference + baseUrlPostFix
+                    response = requests.get(url).content
+                    image2 = base64.b64encode(response)                                                      
+            if visit_data.image3_reference:
+                    url =baseUrlPrefix + visit_data.image3_reference + baseUrlPostFix
+                    response = requests.get(url).content
+                    image3 = base64.b64encode(response)                                                                
+            if visit_data.image4_reference:
+                    url =baseUrlPrefix + visit_data.image4_reference + baseUrlPostFix
+                    response = requests.get(url).content
+                    image4 = base64.b64encode(response)                                                                        
+            if visit_data.image5_reference:
+                    url =baseUrlPrefix + visit_data.image5_reference + baseUrlPostFix
+                    response = requests.get(url).content
+                    image5 = base64.b64encode(response)    
+        return self.write(cr, uid, ids, {'image':image1,'image1':image2,'image2':image3,'image3':image4,'image4':image5})
+                   
+                                        
 customer_visit()
