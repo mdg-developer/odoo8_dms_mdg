@@ -498,7 +498,13 @@ class sale_order(models.Model):
                     woo_point = point.get('amount',False)                      
                     if woo_order_number == str(woo_order_id) and int(woo_point) > 0:
                         getting_point = int(woo_point)                        
-                        break           
+                        break              
+                        
+            if result.get('payment_details'):                
+                if result.get('payment_details').get('method_title',False) == 'Credit Application Amount':
+                    payment_type = "credit"
+                else:
+                    payment_type = "cash"     
                                    
             ordervals = {
                 'name' :name,                
@@ -526,6 +532,7 @@ class sale_order(models.Model):
                 'delivery_id':delivery_id,
                 'pre_order':True,
                 'getting_point':getting_point,
+                'payment_type':payment_type,
             }            
             return ordervals
 
