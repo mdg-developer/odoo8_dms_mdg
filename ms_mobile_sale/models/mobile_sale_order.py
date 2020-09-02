@@ -1072,7 +1072,7 @@ class mobile_sale_order(osv.osv):
 
                         }
                         visit_id=customer_visit_obj.create(cursor, user, visit_result, context=context)
-                        customer_visit_obj.generate_image(cursor, user, [visit_id], context=context)
+                        #customer_visit_obj.generate_image(cursor, user, [visit_id], context=context)
                 return True
         except Exception, e:
             print e            

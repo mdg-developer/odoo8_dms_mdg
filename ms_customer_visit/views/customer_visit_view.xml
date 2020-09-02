@@ -90,6 +90,10 @@
 									<field name="image3_reference" readonly="1" />
 									<field name="image4_reference" readonly="1" />
 									<field name="image5_reference" readonly="1" />
+									<div>
+										<button name="generate_image" string="Show Image View"
+											type="object" icon="terp-gtk-jump-to-ltr" />
+									</div>
 								</group>
 								<group>
 									<field name="date" readonly="1" />
@@ -101,19 +105,24 @@
 									<field name="is_sync" readonly="1" />
 									<field name="m_status" readonly="1" />
 
-									<button name="go_image1" string="Show Image1"  attrs="{'invisible':[('is_image1','!=',True)]}"  type="object"
+									<button name="go_image1" string="Show Image1"
+										attrs="{'invisible':[('is_image1','!=',True)]}" type="object"
 										icon="terp-gtk-jump-to-ltr" />
 									<br />
-									<button name="go_image2" string="Show Image2" attrs="{'invisible':[('is_image2','!=',True)]}" type="object"
+									<button name="go_image2" string="Show Image2"
+										attrs="{'invisible':[('is_image2','!=',True)]}" type="object"
 										icon="terp-gtk-jump-to-ltr" />
 									<br />
-									<button name="go_image3" string="Show Image3" attrs="{'invisible':[('is_image3','!=',True)]}" type="object"
+									<button name="go_image3" string="Show Image3"
+										attrs="{'invisible':[('is_image3','!=',True)]}" type="object"
 										icon="terp-gtk-jump-to-ltr" />
 									<br />
-									<button name="go_image4" string="Show Image4" attrs="{'invisible':[('is_image4','!=',True)]}" type="object"
+									<button name="go_image4" string="Show Image4"
+										attrs="{'invisible':[('is_image4','!=',True)]}" type="object"
 										icon="terp-gtk-jump-to-ltr" />
 									<br />
-									<button name="go_image5" string="Show Image5"  attrs="{'invisible':[('is_image5','!=',True)]}" type="object"
+									<button name="go_image5" string="Show Image5"
+										attrs="{'invisible':[('is_image5','!=',True)]}" type="object"
 										icon="terp-gtk-jump-to-ltr" />
 									<br />
 									<field name="other_reason" placeholder="Additional Reasons..." />
