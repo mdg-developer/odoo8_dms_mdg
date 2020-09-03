@@ -37,6 +37,54 @@ OUT__product_template__read_all__SUCCESS_CODE = 200 # editable
 OUT__product_template__read_all__SCHEMA = (           # editable
     'id',
     'name',
+    'type',
+    'state',
+    'sale_ok',
+    'ean13',
+    # many2one fields:
+    ('categ_id', (
+        'id',
+        'name',
+    )),
+    ('product_manager', (
+        'id',
+        'name',
+        'mobile',
+    )),
+    # one2many fields:
+    ('attribute_line_ids', [(
+        'id',
+        'display_name',
+    )]),
+    ('seller_ids', [(
+        'id',
+        ('name', (
+            'id',
+            'name',
+            'phone',
+            ('child_ids', [(
+                'id',
+                'name',
+                'mobile',
+            )]),
+        )),
+        'min_qty',
+        'delay',
+    )]),
+    ('city_lines', [(  
+        'id',
+        'name',
+        'code',
+        ('state_id', (
+            'id',
+            'name',
+            'code',
+        )),  
+        ('delivery_team_id', (
+            'id',
+            'name',
+        )),                    
+    )]),      
 )
 #           ]
 #       }
@@ -89,6 +137,20 @@ OUT__product_template__read_one__SCHEMA = (           # editable
         'min_qty',
         'delay',
     )]),
+    ('city_lines', [(  
+        'id',
+        'name',
+        'code',
+        ('state_id', (
+            'id',
+            'name',
+            'code',
+        )),  
+        ('delivery_team_id', (
+            'id',
+            'name',
+        )),                    
+    )]),                                       
     # many2many fields:
     #('supplier_taxes_id', [(    # need install 'account' module
         #'id',
