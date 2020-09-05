@@ -10,9 +10,9 @@
 					<sheet>
 						<group>							
 							<group>
-								<field name="partner_id" domain="[('customer','=',True)]"/>
-								<field name="notified_days_ids" widget="many2many_tags"/>
-								<field name="message"/>
+								<field name="partner_id" domain="[('customer','=',True)]" required="1"/>
+								<field name="notified_days_ids" widget="many2many_tags" required="1"/>
+								<field name="message" required="1"/>
 							</group>
 						</group>			
 					</sheet>									
