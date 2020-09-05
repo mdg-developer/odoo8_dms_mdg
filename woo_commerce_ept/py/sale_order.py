@@ -809,6 +809,13 @@ class sale_order(models.Model):
                     fee_line_tax_ids =  self.get_woo_tax_id_ept(instance,tax_datas,False)
                     if fee_value:
                         self.create_woo_sale_order_line({},fee_line_tax_ids,instance.fee_line_id,1,fiscal_position,partner,pricelist_id,fee,sale_order,fee_value)
+                if sale_order:           
+                    one_signal_values = {
+                                         'partner_id': sale_order.partner_id.id,
+                                         'contents': "Your order " + sale_order.name + " is created successfully.",
+                                         'headings': "MDG Retailer"
+                                        }                          
+                    self.env['one.signal.notification.messages'].create(one_signal_values)    
             if import_order_ids:
                 self.env['sale.workflow.process.ept'].auto_workflow_process(ids=import_order_ids)
         return True
@@ -1123,7 +1130,7 @@ class sale_order(models.Model):
     #Add cancel_woo_order_action into order cancel action
     def action_cancel(self, cr, uid, ids, context=None):
         customer_id = None
-        result = super(sale_order, self).action_cancel(cr, uid, ids, context=context)
+        result = super(sale_order, self).action_cancel(cr, uid, ids, context=context)       
         if result:
             woo_instance_obj=self.pool.get('woo.instance.ept')
             instance=woo_instance_obj.search(cr, uid, [('state','=','confirmed')], context=context, limit=1)
@@ -1132,6 +1139,13 @@ class sale_order(models.Model):
                 wcapi = woo_instance.connect_for_point_in_woo()   
             for sale in self.browse(cr, uid, ids, context=context):
                 update = sale.update_woo_order_status_action('cancelled')
+                if sale.woo_order_number:
+                    one_signal_values = {
+                                            'partner_id': sale.partner_id.id,
+                                            'contents': "Your order " + sale.name + " is cancelled.",
+                                            'headings': "MDG Retailer"
+                                        }     
+                    self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)
                 if sale.getting_point > 0:
                     getting_point = -sale.getting_point
                     sale.write({'getting_point':getting_point})
@@ -1169,7 +1183,14 @@ class sale_order(models.Model):
         self.write(cr, uid, ids, {'state':'manual'})
         if result:
             for sale in self.browse(cr, uid, ids, context=context):
-                update = sale.update_woo_order_status_action('manual')                
+                update = sale.update_woo_order_status_action('manual')  
+                if sale.woo_order_number:           
+                    one_signal_values = {
+                                         'partner_id': sale.partner_id.id,
+                                         'contents': "Your order " + sale.name + " is confirmed.",
+                                         'headings': "MDG Retailer"
+                                        }                          
+                    self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)                  
         return result
 
     #update woo order status when update 'is_generate' and 'shipped' 

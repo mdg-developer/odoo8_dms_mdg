@@ -45,7 +45,7 @@ For more information about us, visit www.emiprotechnologies.com \n
     'author': 'Emipro Technologies Pvt. Ltd.',
     'website': 'http://www.emiprotechnologies.com/',
     'maintainer': 'Emipro Technologies Pvt. Ltd.',
-    'depends': ['sale_stock','auto_invoice_workflow_ept', 'delivery'],    
+    'depends': ['sale_stock','auto_invoice_workflow_ept', 'delivery', 'stock_requisition'],    
     'data': ['security/group.xml',
              'data/import_order_status.xml',
              'views/woo_instance_view.xml',
