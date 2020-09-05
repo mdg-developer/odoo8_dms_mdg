@@ -119,7 +119,14 @@ class res_partner(osv.osv):
             # if res_branch:
             #     res_branch_data = res_branch_obj.browse(cr, uid, res_branch, context=context)
             #     vals['branch_id'] = res_branch_data.id                      
-            result = partner_obj.create(cr, uid, vals, context=context)
+            result = partner_obj.create(cr, uid, vals, context=context)                    
+            if result:           
+                one_signal_values = {
+                                     'partner_id': result,
+                                     'contents': "Thank you for registration in MDG Retailer E-commerce.",
+                                     'headings': "MDG Retailer"
+                                    }     
+                self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)     
             partner = partner_obj.search(cr, uid, [('id', '=', result)])
             if partner:
                 partner_data = partner_obj.browse(cr, uid, partner, context=context)
@@ -178,8 +185,14 @@ class res_partner(osv.osv):
                 old_vals['gender'] = partner_data.gender
                 old_vals['birthday'] = partner_data.birthday
                 vals['customer'] = True
-                result = partner_obj.write(cr, uid,partner_data.id, vals, context=context)
+                result = partner_obj.write(cr, uid,partner_data.id, vals, context=context)                
                 old_vals['parent_id'] = partner_data.id
-                new_one = new_partner_obj.create(cr, uid, old_vals, context=context)
-                return result
-
+                new_one = new_partner_obj.create(cr, uid, old_vals, context=context)                
+                if result:           
+                    one_signal_values = {
+                                         'partner_id': partner_data.id,
+                                         'contents': "Thank you for registration in MDG Retailer E-commerce.",
+                                         'headings': "MDG Retailer"
+                                        }     
+                    self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)  
+                return result        
