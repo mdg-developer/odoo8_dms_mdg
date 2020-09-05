@@ -35,7 +35,7 @@
             <field name="name">Messages</field>
             <field name="model">one.signal.notification.messages</field>
             <field name="arch" type="xml">
-                <tree string="Messages" decoration-muted="status in ('sent')" decoration-info="status=='draft'" decoration-danger="status=='fail'" create="false" edit="false">
+                <tree string="Messages" default_order="id desc" decoration-muted="status in ('sent')" decoration-info="status=='draft'" decoration-danger="status=='fail'" create="false" edit="false">
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="one_signal_notification_id"/>
                     <field name="partner_id" />

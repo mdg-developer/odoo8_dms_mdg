@@ -11,7 +11,7 @@
 					<sheet>				
 						<group>
 							<field name="company_id" required="1" groups="base.group_multi_company"/>
-							<field name="email" required="1"/>
+							<field name="email" />
 							<field name="user_auth_key" required="1"/>
 							<field name="active"/>
 						</group>

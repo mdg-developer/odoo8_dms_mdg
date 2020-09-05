@@ -7,7 +7,7 @@ class OneSignalNotificationUserAccount(models.Model):
     def _get_company(self):
         return self.env.user.company_id
 
-    email = fields.Char(string="Email", required=True, help="Email Id with which one signal is created")
+    email = fields.Char(string="Email", help="Email Id with which one signal is created")
     user_auth_key = fields.Char(string="User Auth Key", required=True, help="User Account Auth Key")
     company_id = fields.Many2one(comodel_name="res.company", string="Company", required=True, default=_get_company)
     active = fields.Boolean(string="Is Active?", default=True)
