@@ -91,7 +91,7 @@
 						attrs="{'invisible': [('is_company','=',False), ('child_ids', '=', [])]}"
 						autofocus="autofocus">
 						<field name="child_ids" mode="tree"
-							context="{'default_parent_id': active_id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_supplier': supplier, 'default_customer': customer, 'default_use_parent_address': True}">
+							context="{'default_parent_id': active_id, 'default_street': street, 'default_street2': street2, 'default_township': township, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_supplier': supplier, 'default_customer': customer, 'default_use_parent_address': True}">
 <!-- 							<kanban> -->
 <!-- 								<field name="color" /> -->
 <!-- 								<field name="name" /> -->
