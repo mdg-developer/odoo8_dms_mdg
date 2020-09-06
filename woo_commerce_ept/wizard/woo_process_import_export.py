@@ -298,7 +298,11 @@ class woo_process_import_export(models.TransientModel):
                         else:
                             woo_categ_id.write({'name':categ_name})
                         woo_categ_ids = [(6, 0, woo_categ_id.ids)]
-                    woo_template=woo_template_obj.create({'woo_instance_id':instance.id,'product_tmpl_id':odoo_template.id,'name':odoo_template.name,'woo_categ_ids':woo_categ_ids,'description':odoo_template.description_sale,'short_description':odoo_template.description})                
+                    if odoo_template.short_name:
+                        product_name = odoo_template.short_name
+                    else:
+                        product_name = odoo_template.name
+                    woo_template=woo_template_obj.create({'woo_instance_id':instance.id,'product_tmpl_id':odoo_template.id,'name':product_name,'woo_categ_ids':woo_categ_ids,'description':odoo_template.description_sale,'short_description':odoo_template.description})                
                 for variant in odoo_template.product_variant_ids:
                     woo_variant = woo_product_obj.search([('woo_instance_id','=',instance.id),('product_id','=',variant.id)])
                     if not woo_variant:
@@ -417,13 +421,13 @@ class woo_process_import_export(models.TransientModel):
             instances=self.instance_ids
 
         for instance in instances:
-            if woo_template_ids:
+            if woo_template_ids:                
                 woo_templates=woo_product_tmpl_obj.search([('woo_instance_id','=',instance.id),('id','in',woo_template_ids)])
-                woo_templates=self.filter_templates(woo_templates)
+                woo_templates=self.filter_templates(woo_templates)                
             else:
                 woo_templates=woo_product_tmpl_obj.search([('woo_instance_id','=',instance.id),('exported_in_woo','=',False)])
                 self.check_products(woo_templates)
-            if instance.woo_version == 'old':
+            if instance.woo_version == 'old':                
                 woo_product_tmpl_obj.export_products_in_woo(instance,woo_templates,self.update_price_in_product,self.update_stock_in_product,self.publish)
             elif instance.woo_version == 'new':
                 woo_product_tmpl_obj.export_new_products_in_woo(instance,woo_templates,self.update_price_in_product,self.update_stock_in_product,self.publish)
