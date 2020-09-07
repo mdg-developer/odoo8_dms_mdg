@@ -224,6 +224,7 @@ class sale_order(osv.osv):
         'reverse_date':fields.date('Date for Reverse',required=False),
         'pre_sale_order_id':fields.many2one('sale.order', 'Original Pre Sale Order No'),
         'order_team':fields.many2one('crm.case.section', 'Order Team'),
+        'is_missed': fields.boolean('Is Missed',default=False,readonly=True),
 
                }
     def action_reverse(self, cr, uid, ids, context=None):
