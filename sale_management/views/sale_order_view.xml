@@ -109,6 +109,7 @@
 					<field name="pre_sale_order_id" attrs="{'readonly':[('state','!=','draft')]}"/>
 					<field name="order_team" attrs="{'readonly':[('state','!=','draft')]}"/>
 					
+					<field name="is_missed"/>
 					
 					<field name="delivery_remark" />
 					<field name="rebate_later" />
