@@ -183,11 +183,10 @@ class stock_requisition(osv.osv):
                 location_id = stock_request_data.to_location_id.id
                 cr.execute("select so.id from stock_requisition_order request_order,sale_order so where  request_order.name =so.name and request_order.stock_line_id=%s", (stock_request_data.id,))
                 order_ids =cr.fetchall()
-                print 'order_listorder_listorder_list',order_ids
+                cr.execute("update stock_requisition_line set sale_req_quantity=0,req_quantity=0 where  line_id=%s",(stock_request_data.id,))
                 if request_date and order_ids:
                         order_list = str(tuple(order_ids))
                         order_list = eval(order_list)
-                        print 'evalorder_listorder_listorder_list',order_list
                         cr.execute("select sol.product_id,sum(product_uom_qty) as qty ,sol.product_uom from sale_order so,sale_order_line sol,product_product pp ,product_template pt,product_category pc where so.id=sol.order_id  and pp.id=sol.product_id and pp.product_tmpl_id =pt.id and pc.id=pt.categ_id and so.id in %s and pc.issue_from_optional_location =%s group by product_id,product_uom", (order_list,issue_from_optional_location,))
                         sale_record = cr.fetchall()             
                         if sale_record:
@@ -209,7 +208,6 @@ class stock_requisition(osv.osv):
                                     bigger_qty = int(bigger_qty)
                                     sale_qty = bigger_qty * sale_qty
                                 cr.execute("update stock_requisition_line set sale_req_quantity=sale_req_quantity+%s,qty_on_hand=%s,sequence=%s where product_id=%s and line_id=%s", (sale_qty, qty_on_hand, sequence,product_id, stock_request_data.id,))
-                                            
         except ValueError as err: 
             message = 'Unable to refresh sale order %s', err   
         return True
@@ -490,7 +488,6 @@ class stock_requisition(osv.osv):
             sale_req_qty = req_line_value.sale_req_quantity
             add_req_qty = req_line_value.addtional_req_quantity
             product_id = req_line_value.product_id.id
-            print 'product_id',product_id
             total_qty = sale_req_qty + add_req_qty
             cr.execute("update stock_requisition_line set req_quantity=%s where product_id=%s and line_id=%s", (total_qty, product_id, ids[0],))
 
