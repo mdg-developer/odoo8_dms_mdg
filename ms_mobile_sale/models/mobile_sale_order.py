@@ -3026,7 +3026,8 @@ class mobile_sale_order(osv.osv):
                                  'latitude':deli['mosLatitude'],
                                   'longitude':deli['mosLongitude']    
                             }
-                        pending_id = pending_obj.create(cr, uid, delivery, context=context)                                            
+                        pending_miss_id=pending_obj.create(cr, uid, delivery, context=context)
+                        cr.execute('update sale_order set is_generate = false, due_date = %s where id=%s', (pending_miss_id.due_date, pending_miss_id.order_id.id,))                                           
                     else:                            
                         So_id = soObj.search(cr, uid, [('pre_order', '=', True), ('shipped', '=', False), ('invoiced', '=', False)
                                                        , ('name', '=', so_ref_no)], context=context)
@@ -3043,7 +3044,7 @@ class mobile_sale_order(osv.osv):
                                   'longitude':deli['mosLongitude']                             
                             }
                         pending_id = pending_obj.create(cr, uid, delivery, context=context)                                                                                                                                 
-                    pending_ids.append(pending_id)
+                        pending_ids.append(pending_id)
             session = ConnectorSession(cr, uid, context)
             # jobid=pending_obj.create_automation_pending_delivery(cr, uid, pending_ids, context=context)       
             jobid = automation_pending_delivery.delay(session, pending_ids, priority=50)
