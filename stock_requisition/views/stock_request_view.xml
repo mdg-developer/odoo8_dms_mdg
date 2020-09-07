@@ -40,13 +40,13 @@
 							<group>
 								<field name="issue_to" attrs="{'readonly':[('state','=','approve')]}" />
 								<field name="to_location_id" />
-								<field name="issue_date" attrs="{'readonly':[('state','=','approve')]}" />
+								<!-- <field name="issue_date" attrs="{'readonly':[('state','=','approve')]}" />
 								<label for="s_issue_date" />
 								<div>
 									<field name="s_issue_date" attrs="{'readonly':[('state','=','approve')]}" />
 									<button name="so_list" string="Refresh" type="object"
 										icon="terp-gtk-jump-to-ltr" attrs="{'invisible':[('pre_order','=',False)]}" />
-								</div>
+								</div> -->
 								<field name="request_by" />
 								<field name="approve_by"/>
 								<field name="issue_from_optional_location" attrs="{'readonly':[('state','=','approve')]}"/>								
@@ -86,14 +86,14 @@
 									</field>
 								</page>
 								<page string="Sales Order" attrs="{'invisible':[('pre_order','=',False)]}">
-									<field name="order_line"  readonly="1">
+									<field name="order_line"  readonly="0">
 										<tree string="Stock Request Order Line" editable="bottom">
-											<field name="name" />
-											<field name="ref_no" />
-											<field name="amount" />
-											<field name="date" />
-											<field name="sale_team_id" />
-											<field name="state" />
+											<field name="name" readonly="1"/>
+											<field name="ref_no" readonly="1"/>
+											<field name="amount" readonly="1"/>
+											<field name="date" readonly="1"/>
+											<field name="sale_team_id" readonly="1"/>
+											<field name="state" readonly="1"/>
 										</tree>
 									</field>
 								</page>
