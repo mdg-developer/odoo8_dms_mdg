@@ -12,7 +12,8 @@
 					<xpath
 						expr="//form/sheet/div[@class='oe_title oe_left']/h1/field[@name='name']"
 						position="after">
-						<field name="customer_code" placeholder="Code" attrs="{'readonly':[('customer','=',True)]}"/>
+						<field name="customer_code" placeholder="Code"
+							attrs="{'readonly':[('customer','=',True)]}" />
 					</xpath>
 					<xpath expr="//field[@name='website']" position="after">
 						<field name="outlet_type"
@@ -31,12 +32,12 @@
 					<xpath expr="//field[@name='function']" position="before">
 						<field name="temp_customer" />
 					</xpath>
-                    <xpath expr="//field[@name='category_id']" position="replace">
+					<xpath expr="//field[@name='category_id']" position="replace">
 
-                        <field name="category_id" widget="many2many_tags"
-                            placeholder="Tags..." attrs="{'invisible':[('supplier','=',True)]}" />
-                    </xpath>
-					
+						<field name="category_id" widget="many2many_tags"
+							placeholder="Tags..." attrs="{'invisible':[('supplier','=',True)]}" />
+					</xpath>
+
 					<xpath expr="//field[@name='title']" position="replace">
 
 					</xpath>
@@ -44,7 +45,7 @@
 						<field name="title" invisible="1" />
 					</xpath>
 					<xpath expr="//field[@name='email']" position="after">
-                        <field name="class_id" attrs="{'invisible':[('supplier','=',True)]}" />
+						<field name="class_id" attrs="{'invisible':[('supplier','=',True)]}" />
 						<field name="frequency_id" attrs="{'invisible':[('customer','=',False)]}" />
 
 						<field name="old_code" />
@@ -52,13 +53,9 @@
 						<group>
 							<button name="generate_customercode" type="object" string="Generate Code" />
 						</group>
-						<!-- <group>
-
-						</group>
-						<group>
-							<field name="customer_target_id" widget="selection"/>
-							<button name="customer_target" type="object" string="Customer Target" />
-						</group> -->
+						<!-- <group> </group> <group> <field name="customer_target_id" widget="selection"/> 
+							<button name="customer_target" type="object" string="Customer Target" /> 
+							</group> -->
 					</xpath>
 
 					<xpath expr="//div[@name='buttons']" position="inside">
@@ -148,7 +145,8 @@
 								<group>
 									<field name="customer" readonly="1" />
 									<field name="supplier" />
-                                    <field name="mobile_customer" readonly="1" attrs="{'invisible':[('supplier','=',True)]}"  />
+									<field name="mobile_customer" readonly="1"
+										attrs="{'invisible':[('supplier','=',True)]}" />
 								</group>
 								<!-- <group> <field name="ref"/> <field name="lang"/> <field name="date"/> 
 									</group> -->
@@ -305,9 +303,10 @@
 					</notebook>
 					<xpath expr="//form//sheet" position="before">
 						<header>
-						    <button name="update_customer_target" string="Update Customer Target" type="object"/>
+							<button name="update_customer_target" string="Update Customer Target"
+								type="object" />
 						</header>
-			        </xpath>
+					</xpath>
 					<!-- </xpath> -->
 					<!-- <xpath expr="//field[@name='user_id']" position="replace"> -->
 					<!-- <field name="user_id" string="Salesman Name" -->
@@ -332,13 +331,13 @@
 							icon="gtk-apply" type="object" />
 					</xpath>
 					<xpath expr="//field[@name='date_localization']" position="after">
-					    <field name="verify_person_id" readonly="1" />
-					    <field name="verify" readonly="1" />
+						<field name="verify_person_id" readonly="1" />
+						<field name="verify" readonly="1" />
 					</xpath>
 				</data>
 			</field>
 		</record>
-		
+
 		<!-- customer tree view -->
 		<record id="res_partner_tree_view" model="ir.ui.view">
 			<field name="name">res.partner.tree.view</field>
@@ -567,7 +566,7 @@
 					<group expand="0" string="Group By...">
 						<filter string="Customer" icon="terp-partner" domain="[]"
 							context="{'group_by':'partner_id'}" />
-						<filter string="Date Day" context="{'group_by': 'date:day'}" />	
+						<filter string="Date Day" context="{'group_by': 'date:day'}" />
 						<filter string="Township" context="{'group_by':'township_id'}" />
 						<filter string="Branch" context="{'group_by':'branch_id'}" />
 					</group>
@@ -624,5 +623,50 @@
 
 		<menuitem id="config_view_customer_asset_type_action" parent="config_asset_type_action"
 			action="open_view_customer_asset_type_action" />
+
+
+		<record id="view_partner_asset_configuration_tree" model="ir.ui.view">
+			<field name="name">res.partner.asset.configuration</field>
+			<field name="model">asset.configuration</field>
+			<field name="arch" type="xml">
+				<tree string="Asset Configuration">
+					<field name="name" />
+					<field name="asset_type_id" />
+					<field name="type" />
+					<field name="is_auto_fill" />
+
+				</tree>
+			</field>
+		</record>
+
+		<record id="view_partner_asset_configuration_form" model="ir.ui.view">
+			<field name="name">asset.configuration.form</field>
+			<field name="model">asset.configuration</field>
+			<field name="arch" type="xml">
+				<form string="Asset Type">
+					<group>
+						<field name="name" />
+						<field name="asset_type_id" />
+					</group>
+					<group>
+						<field name="type" />
+						<field name="is_auto_fill" />
+					</group>
+				</form>
+			</field>
+		</record>
+
+		<record model="ir.actions.act_window" id="open_view_customer_asset_configuration_action">
+			<field name="name">Assets Configuration</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">asset.configuration</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_partner_asset_configuration_tree" />
+		</record>
+		<menuitem id="config_view_customer_asset_configuration_action" parent="config_asset_type_action"
+			action="open_view_customer_asset_configuration_action" />
+			
+			
 	</data>
 </openerp>

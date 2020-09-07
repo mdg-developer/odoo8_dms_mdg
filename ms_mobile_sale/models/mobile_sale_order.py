@@ -2917,7 +2917,7 @@ class mobile_sale_order(osv.osv):
         return datas
     
     def get_asset_type(self, cr, uid, context=None, **kwargs):    
-        cr.execute("""select id,name from asset_type""")
+        cr.execute("""select conf.id,conf.name,type.name as asset_type,is_auto_fill,type from asset_configuration conf ,asset_type type where conf.asset_type_id=type.id""")
         datas = cr.fetchall()        
         return datas
     
@@ -3021,13 +3021,13 @@ class mobile_sale_order(osv.osv):
                                   'miss':True,
                                   'delivery_date':datetime.now(),
                                   'due_date':deli['due_date'],
-                                  'state':'draft',
+                                  'state':'done',
                                   'delivery_team_id': delivery_team_id ,
                                  'latitude':deli['mosLatitude'],
                                   'longitude':deli['mosLongitude']    
                             }
-                        pending_miss_id=pending_obj.create(cr, uid, delivery, context=context)
-                        cr.execute('update sale_order set is_generate = false, due_date = %s where id=%s', (pending_miss_id.due_date, pending_miss_id.order_id.id,))                                           
+                        pending_obj.create(cr, uid, delivery, context=context)
+                        cr.execute('update sale_order set is_generate = false,is_missed=True, due_date = %s where id=%s', (deli['due_date'],So_id[0],))                                           
                     else:                            
                         So_id = soObj.search(cr, uid, [('pre_order', '=', True), ('shipped', '=', False), ('invoiced', '=', False)
                                                        , ('name', '=', so_ref_no)], context=context)

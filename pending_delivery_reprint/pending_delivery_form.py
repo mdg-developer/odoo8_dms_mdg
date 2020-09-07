@@ -95,7 +95,7 @@ class pendingdelivery(osv.osv):
             for pending_id in pending_obj.browse(cr, uid, ids[0], context=context):
                 if pending_id:
                     if pending_id.miss == True:
-                        cr.execute('update sale_order set is_generate = false,is_missed=True,due_date = %s where id=%s', (pending_id.due_date, pending_id.order_id.id,))
+                        cr.execute('update sale_order set is_generate = false,is_missed=True where id=%s', (pending_id.order_id.id,))
                         cr.execute('select tb_ref_no from sale_order where id=%s', (pending_id.order_id.id,))
                         ref_no = cr.fetchone()[0]
                         cr.execute("update pre_sale_order set void_flag = 'voided' where name=%s", (ref_no,))

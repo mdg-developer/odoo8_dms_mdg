@@ -591,6 +591,9 @@ class res_partner_asset(osv.Model):
     _defaults = {
         'date': fields.datetime.now,
                     }
+
+    
+
     
 class asset_type(osv.Model):
 
@@ -598,4 +601,16 @@ class asset_type(osv.Model):
     _name = 'asset.type'
     _columns = {
                 'name':fields.char('Name',required=True),
+                }
+    
+class asset_configuration(osv.Model):
+
+    _description = 'Asset Configuration'
+    _name = 'asset.configuration'
+    _columns = {
+                'name':fields.char('Name',required=True),
+                'asset_type_id':fields.many2one('asset.type', 'Asset Type',required=True),
+                'type':fields.selection ([('rent', 'Rent'), ('give', 'Giving')],
+                                                    'Type', required=True, default='rent'),
+                'is_auto_fill':fields.boolean("Qty Auto Fill 1"),
                 }
