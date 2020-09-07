@@ -1137,9 +1137,9 @@ class sale_order(models.Model):
             if instance:                
                 woo_instance = woo_instance_obj.browse(cr, uid, instance[0], context=context)
                 wcapi = woo_instance.connect_for_point_in_woo()   
-            for sale in self.browse(cr, uid, ids, context=context):
-                update = sale.update_woo_order_status_action('cancelled')
+            for sale in self.browse(cr, uid, ids, context=context):                
                 if sale.woo_order_number:
+                    update = sale.update_woo_order_status_action('cancelled')
                     one_signal_values = {
                                             'partner_id': sale.partner_id.id,
                                             'contents': "Your order " + sale.name + " is cancelled.",
@@ -1198,7 +1198,7 @@ class sale_order(models.Model):
         result = super(sale_order, self).write(cursor, user, ids, vals, context=context)
         if result:
             current_so = self.browse(cursor, user, ids, context=context)
-            if vals.get('is_generate') == True:
+            if vals.get('is_generate') == True and current_so.woo_order_number:
                 current_so.update_woo_order_status_action('misha-shipment')           
         return result
     
