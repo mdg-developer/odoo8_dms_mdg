@@ -1,11 +1,11 @@
-import time
-
 import os
 from datetime import datetime
 from datetime import timedelta  
 from dateutil.relativedelta import relativedelta
 from dateutil import parser
 import time
+import openerp.addons.decimal_precision as dp
+
 from openerp.osv import fields , osv
 from openerp.tools.translate import _
 import datetime
@@ -31,7 +31,7 @@ class product_agree_rate_line(osv.osv):
     _columns ={
               'line_id':fields.many2one('product.agree.rate',"Product Line",required=True),
               'product_id':fields.many2one('product.product',"Product Name",required=True),
-              'agreed_price':fields.float('Agreed Price',required =True),
+              'agreed_price':fields.float('Agreed Price',required =True, digits_compute=dp.get_precision('Cost Price')),
 #               'currency':fields.many2one('res.currency','Currency',required=True),
 #               'rate':fields.float("Rate",required = True),
               }
