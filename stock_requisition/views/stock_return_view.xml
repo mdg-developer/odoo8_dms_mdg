@@ -112,6 +112,7 @@
 											<field name="closing_stock_qty" string="Closing Stock Qty" style="background-color: green;"
 												on_change="on_change_ground_quantity(closing_stock_qty,actual_return_quantity)" attrs="{'readonly':[('state','=','received')]}"/>
 											<field name="different_qty" groups="base.group_no_one" style="background-color: yellow;"/>
+											<field name="miss_qty"  readonly="1" style="background-color: yellow;"/>
 											<field name="expiry_date" string="Expiry" attrs="{'readonly':[('state','=','received')]}"/>
 											<field name="remark" string="Remark" attrs="{'readonly':[('state','=','received')]}"/>
 											<field name="state" invisible="1"/>

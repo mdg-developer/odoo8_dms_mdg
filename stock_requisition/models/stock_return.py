@@ -351,7 +351,42 @@ class stock_return(osv.osv):
                                                      # 'rec_small_uom_id':small_uom_id,
                                                     #  'rec_big_uom_id':big_uom,
                                                       }, context=context)
-                        
+
+
+            cr.execute('''
+                select sol.product_id,sum(product_uom_qty *(select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=sol.product_uom)) as total_qty from pending_delivery delivery ,
+                sale_order so,sale_order_line sol,product_product pp,
+                product_template pt,product_category pc 
+                where so.id=sol.order_id  
+                and delivery.order_id=so.id and pp.id=sol.product_id and pp.product_tmpl_id =pt.id and pc.id=pt.categ_id  
+                and delivery.delivery_team_id = %s
+                and pt.type!='service'
+                and delivery.delivery_date between %s and %s 
+                group by product_id''', (sale_team_id,return_date,to_return_date,))
+            sale_record = cr.fetchall()             
+            if sale_record:
+                for sale_data in sale_record:
+                    sale_product_id = int(sale_data[0])
+                    miss_qty = int(sale_data[1])
+                    product = self.pool.get('product.product').browse(cr, uid, sale_product_id, context=context)
+                    miss_stock_id = stock_return_obj.search(cr, uid , [('line_id', '=', ids[0]) , ('product_id', '=', sale_product_id), ('status', '=', 'Stock Return')])
+                    if miss_stock_id:
+                        cr.execute("update stock_return_line set miss_qty=miss_qty+%s where status ='Stock Return' and product_id=%s and line_id=%s", (miss_qty,sale_product_id, ids[0],))                        
+                    else:
+                        location_type='Missed Order'
+                        stock_return_obj.create(cr, uid, {'line_id': ids[0],
+                                                   'sequence':product.sequence,
+                                                  'product_id': sale_product_id,
+                                                  'product_uom': product.product_tmpl_id.uom_id.id,
+                                                  'assembly_qty':0,
+                                                  'return_quantity':0,
+                                                  'exchange_qty':0,
+                                                  'sale_quantity':0,
+                                                  'miss_qty':miss_qty,
+                                                  'status':location_type,
+                                                  'from_location_id':from_location_id,
+                                                  'to_location_id': to_location_id,
+                                                  }, context=context)                   
             disassembly_ids = product_disassembly_obj.search(cr, uid, [('date', '>=', return_date), ('date', '<=', to_return_date), ('section_id', '=', sale_team_id)], context=context),
             for d_list in disassembly_ids:
                 for d_id in d_list:
@@ -680,6 +715,7 @@ class stock_return(osv.osv):
 #                         cr.execute("update stock_return_line set return_quantity_big=%s,return_quantity=%s where product_id=%s and line_id=%s and id=%s", (big_quantity, small_quantity, product_id, ids[0],record_id,))
 #                 else:
 #                         cr.execute("update stock_return_line set return_quantity_big=0,return_quantity=%s where product_id=%s and line_id=%s and id=%s", ( return_qty, product_id, ids[0],record_id,))
+
         return True 
         
     def _get_default_branch(self, cr, uid, context=None):
@@ -965,6 +1001,8 @@ class stock_return_line(osv.osv):  # #prod_pricelist_update_line
         'in_stock_qty':fields.float('In Qty'),
         'exchange_qty':fields.float('Exchange Qty'),
         'assembly_qty' :fields.float('Disassembly Qty'),
+        'miss_qty' :fields.float('Missed Order Qty',readonly=False),
+
     }
         
     def on_change_return_quantity(self, cr, uid, ids, closing_stock_qty, return_quantity, context=None):
