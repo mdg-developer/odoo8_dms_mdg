@@ -529,6 +529,8 @@
 					<field name="type" />
 					<field name="asset_type" />
 					<field name="qty" />
+					<field name="active" />
+
 				</tree>
 			</field>
 		</record>
@@ -551,7 +553,7 @@
 							<field name="asset_type" />
 							<field name="qty" />
 							<field name="image" widget='image' class="oe_avatar" />
-
+							<field name="active" />
 						</group>
 					</group>
 				</form>
@@ -664,9 +666,9 @@
 			<field name="view_mode">tree,form</field>
 			<field name="view_id" ref="view_partner_asset_configuration_tree" />
 		</record>
-		<menuitem id="config_view_customer_asset_configuration_action" parent="config_asset_type_action"
-			action="open_view_customer_asset_configuration_action" />
-			
-			
+		<menuitem id="config_view_customer_asset_configuration_action"
+			parent="config_asset_type_action" action="open_view_customer_asset_configuration_action" />
+
+
 	</data>
 </openerp>

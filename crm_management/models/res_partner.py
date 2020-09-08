@@ -586,6 +586,7 @@ class res_partner_asset(osv.Model):
                         'asset_type':fields.many2one('asset.type', 'Asset Type',required=True),
                        'qty':fields.integer('Qty',required=True),
                         'image': fields.binary("Image"),
+                        'active': fields.boolean("Active",default=True),
                         'note':fields.text('Note'),
   }
     _defaults = {
@@ -612,5 +613,5 @@ class asset_configuration(osv.Model):
                 'asset_type_id':fields.many2one('asset.type', 'Asset Type',required=True),
                 'type':fields.selection ([('rent', 'Rent'), ('give', 'Giving')],
                                                     'Type', required=True, default='rent'),
-                'is_auto_fill':fields.boolean("Qty Auto Fill 1"),
+                'is_auto_fill':fields.boolean("Qty Auto Fill 1",default=False),
                 }

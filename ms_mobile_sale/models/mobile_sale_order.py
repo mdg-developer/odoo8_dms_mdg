@@ -2925,7 +2925,8 @@ class mobile_sale_order(osv.osv):
         cr.execute("""select A.id,A.name,A.partner_id,substring(encode(image::bytea, 'hex'),1,5) as image
                     ,A.qty,A.date,B.name,A.type 
                     from res_partner_asset A, asset_type B
-                    where A.asset_type = B.id""")
+                    where A.asset_type = B.id
+                    and A.active=True""")
         datas = cr.fetchall()
         return datas
         
