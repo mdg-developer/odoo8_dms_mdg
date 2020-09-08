@@ -302,7 +302,7 @@ class woo_process_import_export(models.TransientModel):
                         product_name = odoo_template.short_name
                     else:
                         product_name = odoo_template.name
-                    woo_template=woo_template_obj.create({'woo_instance_id':instance.id,'product_tmpl_id':odoo_template.id,'name':product_name,'woo_categ_ids':woo_categ_ids,'description':odoo_template.description_sale,'short_description':odoo_template.description})                
+                    woo_template=woo_template_obj.create({'woo_instance_id':instance.id,'product_tmpl_id':odoo_template.id,'name':product_name,'description':odoo_template.description_sale,'short_description':odoo_template.description})                
                 for variant in odoo_template.product_variant_ids:
                     woo_variant = woo_product_obj.search([('woo_instance_id','=',instance.id),('product_id','=',variant.id)])
                     if not woo_variant:
