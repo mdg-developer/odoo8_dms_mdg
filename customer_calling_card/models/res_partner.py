@@ -27,6 +27,34 @@ TIME_SELECTION = [
         ('23', '23'),
         ('24', '24'),
     ]
+
+class MergePartnerAutomatic(osv.osv):
+    _inherit = "base.partner.merge.automatic.wizard"
+    _columns = {    
+                'customer_code': fields.char(string='Destination Contact Code'),
+
+}
+    
+    
+    def onchange_dst_partner_id(self, cr, uid, ids, dst_partner_id, context=None):
+        partner_obj = self.pool.get('res.partner')
+        customer_code = False        
+        if dst_partner_id:
+            customer_id = partner_obj.browse(cr, uid, dst_partner_id, context=context)
+            customer_code = customer_id.customer_code         
+        return {'value': {'customer_code': customer_code}}    
+    def default_get(self, cr, uid, fields, context=None):
+        if context is None:
+            context = {}
+        res = super(MergePartnerAutomatic, self).default_get(cr, uid, fields, context)
+        if context.get('active_model') == 'res.partner' and context.get('active_ids'):
+            partner_ids = context['active_ids']
+            res['state'] = 'selection'
+            res['partner_ids'] = partner_ids
+            res['dst_partner_id'] = self._get_ordered_partner(cr, uid, partner_ids, context=context)[-1].id
+            res['customer_code'] =self._get_ordered_partner(cr, uid, partner_ids, context=context)[-1].customer_code
+        return res    
+    
 class res_partner(osv.osv):
     _inherit = "res.partner"
        
