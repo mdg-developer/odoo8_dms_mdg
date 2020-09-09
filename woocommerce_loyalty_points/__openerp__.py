@@ -13,6 +13,7 @@ Woocommerce Loyalty Points and Rewards
         'views/point_history_view.xml',        
         'views/membership_config_view.xml',        
         'views/res_partner_view.xml',  
+        'views/redeem_point_view.xml',  
 	],
     'installable': True,
     'auto_install': False,
