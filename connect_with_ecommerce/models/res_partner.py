@@ -115,10 +115,10 @@ class res_partner(osv.osv):
             if sale_channel:
                 sale_channel_data = sale_channel_obj.browse(cr, uid, sale_channel, context=context)
                 vals['sales_channel'] = sale_channel_data.id                
-            #res_branch = res_branch_obj.search(cr, uid, [('branch_code', '=', 'TMW')], context=context)
-            # if res_branch:
-            #     res_branch_data = res_branch_obj.browse(cr, uid, res_branch, context=context)
-            #     vals['branch_id'] = res_branch_data.id                      
+            res_branch = res_branch_obj.search(cr, uid, [('branch_code', '=', 'TMW')], context=context)
+            if res_branch:
+                res_branch_data = res_branch_obj.browse(cr, uid, res_branch, context=context)
+                vals['branch_id'] = res_branch_data.id                      
             result = partner_obj.create(cr, uid, vals, context=context)                    
             if result:           
                 one_signal_values = {
