@@ -576,6 +576,30 @@ class sale_order(models.Model):
         elif instance and instance.woo_version == 'new':
             self.import_new_woo_orders(instance)
         return True
+    
+    @api.model
+    def update_woo_cancel_sale_order_ept(self):
+        woo_instance_obj=self.env['woo.instance.ept']
+        instance=woo_instance_obj.search([('state','=','confirmed')],limit=1)
+        if instance:
+            wcapi = instance.connect_in_woo() 
+            if wcapi:                
+                order_response = wcapi.get('orders')      
+                order_response_data = order_response.json()
+                if instance.woo_version == 'old':                
+                    woo_orders = order_response_data.get("orders")                
+                elif instance.woo_version == 'new':
+                    woo_orders = order_response_data.get("orders")      
+                
+                for order in woo_orders:
+                    woo_order_number = order.get('order_number',False)     
+                    woo_order_status = order.get('status',False)                                    
+                    if woo_order_status == 'cancelled' or woo_order_status == 'cancel-request': 
+                        sale_order = self.env['sale.order'].search([('woo_order_number', '=', woo_order_number),
+                                                                    ('state', 'in', ('draft','sent','manual'))])
+                        if sale_order:
+                            sale_order.action_cancel()
+        return True
 
     @api.model
     def verify_order(self,instance,order):
@@ -1073,9 +1097,9 @@ class sale_order(models.Model):
             for order in woo_orders:
                 woo_order_id = order.get('order_number',False)     
                 woo_order_status = order.get('status',False)                  
-                if woo_order_status == 'cancelled':       
+                if woo_order_status == 'cancelled' or woo_order_status == 'cancel-request':       
                     draft_sale_orders = self.search([('woo_order_number','=',woo_order_id),
-                                                     ('state','=','draft')])
+                                                     ('state','in',('draft','sent','manual'))])
                     if draft_sale_orders:                        
                         draft_sale_orders.action_cancel()
                         woo_instance_obj=self.env['woo.instance.ept']
