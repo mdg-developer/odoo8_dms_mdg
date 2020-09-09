@@ -1805,7 +1805,7 @@ class woo_product_template_ept(models.Model):
                     variation_data.update({'attributes':att,'sku':variant.default_code,'weight':variant.product_id.weight})                    
                     if update_price:                     
                         price=instance.pricelist_id.with_context(uom=variant.product_id.uom_id.id).price_get(variant.product_id.id,1.0,partner=False,context=self._context)[instance.pricelist_id.id]
-                        variation_data.update({'regular_price':price,'sale_price':price})
+                        variation_data.update({'regular_price':variant.product_id.product_tmpl_id.list_price,'sale_price':variant.product_id.product_tmpl_id.list_price})
                     if update_stock:                        
                         quantity=self.get_stock(variant,instance.warehouse_id.id,instance.stock_field.name)
                         variation_data.update({'managing_stock':True,'stock_quantity':int(quantity)})
@@ -1835,7 +1835,7 @@ class woo_product_template_ept(models.Model):
                 data.update({'type': 'simple','sku':variant.default_code,'weight':variant.product_id.weight})
                 if update_price:
                     price=instance.pricelist_id.with_context(uom=variant.product_id.uom_id.id).price_get(variant.product_id.id,1.0,partner=False,context=self._context)[instance.pricelist_id.id]
-                    data.update({'regular_price':price,'sale_price':price})
+                    data.update({'regular_price':variant.product_id.product_tmpl_id.list_price,'sale_price':variant.product_id.product_tmpl_id.list_price})
                 if update_stock:                        
                     quantity=self.get_stock(variant,instance.warehouse_id.id,instance.stock_field.name)
                     data.update({'managing_stock':True,'stock_quantity':int(quantity)})
@@ -1883,7 +1883,7 @@ class woo_product_template_ept(models.Model):
                         else:
                             tmpl_images.append({'id':img_url,'position': position})
                         position += 1                
-            tmpl_images and data.update({"images":tmpl_images})                                                                                                                   
+            tmpl_images and data.update({"images":tmpl_images})  
             new_product = wcapi.post('products',{'product':data})
             if not isinstance(new_product,requests.models.Response):               
                 transaction_log_obj.create({'message': "Export Product \nResponse is not in proper format :: %s"%(new_product),
