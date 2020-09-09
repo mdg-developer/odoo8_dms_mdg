@@ -50,6 +50,7 @@ Connect With Ecommerce
         'views/credit_application_approval.xml',
         'views/notified_days_view.xml',
         'views/weekly_noti_view.xml',
+        'views/product_reorder_view.xml',
                 ],
     'installable': True,
     'auto_install': False,

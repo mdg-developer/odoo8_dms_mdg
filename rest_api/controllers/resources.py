@@ -17,3 +17,4 @@ from . import model__weekly_noti
 from . import model__res_country_state
 from . import model__res_city
 from . import model__redeem_point
+from . import model__product_reorder
