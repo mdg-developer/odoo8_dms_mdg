@@ -111,7 +111,7 @@ class res_partner(osv.osv):
             if outlettype:
                 outlettype_data = outlettype_obj.browse(cr, uid, outlettype, context=context)
                 vals['outlet_type'] = outlettype_data.id
-            sale_channel = sale_channel_obj.search(cr, uid, [('code', '=', 'ECOM')], context=context)
+            sale_channel = sale_channel_obj.search(cr, uid, [('code', '=', 'RETAIL')], context=context)
             if sale_channel:
                 sale_channel_data = sale_channel_obj.browse(cr, uid, sale_channel, context=context)
                 vals['sales_channel'] = sale_channel_data.id                
