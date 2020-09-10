@@ -7,4 +7,5 @@ import product_pricelist
 import credit_application
 import weekly_noti
 import product_reorder
+import stock_transfer_details
 
