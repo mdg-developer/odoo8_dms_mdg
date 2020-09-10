@@ -38,7 +38,8 @@
 			<field name="model">sales.group</field>
 			<field name="arch" type="xml">
 				<tree string="Sales Group">
-					<field name="name" />	
+					<field name="name" />								
+					<field name="note"/>				
 <!-- 					<field name="branch_id" />	 -->
 				</tree>
 			</field>

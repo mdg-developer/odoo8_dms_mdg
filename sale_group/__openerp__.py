@@ -35,6 +35,13 @@ Sale Group
     'depends': ['base', 'sale'],
     'data': [      
         'views/sales_group_view.xml',
+        'views/sales_person_name_view.xml',
+        'views/sales_supervisor_view.xml',
+        'views/sales_manager_view.xml',
+        'views/branch_manager_view.xml',
+        'views/sales_rom_view.xml',
+        'views/sales_csm_view.xml',
+        'views/sales_nsm_view.xml',
         'views/sale_team_view.xml',       
     ],
     'installable': True,
