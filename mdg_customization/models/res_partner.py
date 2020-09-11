@@ -74,3 +74,41 @@ class res_partner(osv.osv):
                'is_tax':False,
     }
     
+    def swap_contact(self, cr, uid, ids, val, context=None):
+        
+        tmp_vals = customer_vals = {}
+        for res in self.browse(cr, uid, ids, context=context):
+            
+            if res.parent_id:
+                
+                #copy contact address into tmp vals
+                tmp_vals['street']= res.street
+                tmp_vals['street2']= res.street2
+                tmp_vals['township']= res.township.id or None
+                tmp_vals['city']= res.city.id or None
+                tmp_vals['state_id']= res.state_id.id or None
+                tmp_vals['zip']= res.zip
+                tmp_vals['country_id']= res.country_id.id or None
+                
+                #assign customer address into contact address
+                res.street = res.parent_id.street
+                res.street2 = res.parent_id.street2
+                res.township = res.parent_id.township.id or None
+                res.city = res.parent_id.city.id or None
+                res.state_id = res.parent_id.state_id.id or None
+                res.zip = res.parent_id.zip
+                res.country_id = res.parent_id.country_id.id or None
+                
+                #assign contact address into customer address
+                customer_vals['street']= tmp_vals['street']
+                customer_vals['street2']= tmp_vals['street2']
+                customer_vals['township']= tmp_vals['township']
+                customer_vals['city']= tmp_vals['city']
+                customer_vals['state_id']= tmp_vals['state_id']
+                customer_vals['zip']= tmp_vals['zip']
+                customer_vals['country_id']= tmp_vals['country_id']
+                
+                self.pool.get('res.partner').write(cr, uid, res.parent_id.id, customer_vals, context=context)
+                       
+                return True
+                

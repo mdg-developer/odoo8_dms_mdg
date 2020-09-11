@@ -193,6 +193,7 @@
 							    <field name="city" />
 							    <field name="state_id" />
 							    <field name="country_id" />
+							    <button name="swap_contact" type="object" string="Swap"/>
 							</tree>
 							<form string="Contact">
 								<sheet>
