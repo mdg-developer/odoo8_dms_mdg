@@ -477,7 +477,7 @@ class sale_order(models.Model):
             else:
                 name=woo_order_number
             
-            delivery_id = None
+            delivery_id = woo_warehouse = None
             
             shipping_partner = self.env['res.partner'].search([('id','=',shipping_address.ids[0])])           
                         
