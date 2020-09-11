@@ -432,7 +432,10 @@ class res_partner(osv.osv):
                 type='datetime', readonly=True,
                 string='Lastest Visit Date'),                        
         'user_id': fields.many2one('res.users', 'Created By', help='The internal user that is in charge of communicating with this contact if any.'),
-          
+        'partner_latitude': fields.float('Geo Latitude', digits=(16, 8)),
+        'partner_longitude': fields.float('Geo Longitude', digits=(16, 8)),  
+        'verify':fields.boolean('Is Verify', default=False),
+        'verify_person_id':fields.many2one('res.users', 'Verify Person'),
  } 
     _defaults = {
         'is_company': True,
@@ -463,6 +466,17 @@ class res_partner(osv.osv):
                     'date_localization': fields.date.context_today(self, cr, uid, context=context)
                 }, context=context)
         return True
+    
+    def verify_lat_long(self, cr, uid, ids, context=None):        
+        
+        partner_obj = self.pool.get('res.partner')
+        for partner in self.browse(cr, uid, ids):   
+            vals = { 'verify_person_id': uid,
+                     'verify': True,
+                     'date_localization': datetime.now().date()
+                }                
+            partner_obj.write(cr, uid, partner.id, vals, context=None)                       
+        return True                        
     
     def partner_id_from_sale_plan_day(self, cr, uid, sale_team_id , context=None, **kwargs):
         cr.execute('select RP.id from sale_plan_day SPD , res_partner_sale_plan_day_rel RPS , res_partner RP where SPD.id = RPS.sale_plan_day_id and RPS.res_partner_id = RP.id and SPD.sale_team = %s ', (sale_team_id,))
@@ -572,11 +586,15 @@ class res_partner_asset(osv.Model):
                         'asset_type':fields.many2one('asset.type', 'Asset Type',required=True),
                        'qty':fields.integer('Qty',required=True),
                         'image': fields.binary("Image"),
+                        'active': fields.boolean("Active",default=True),
                         'note':fields.text('Note'),
   }
     _defaults = {
         'date': fields.datetime.now,
                     }
+
+    
+
     
 class asset_type(osv.Model):
 
@@ -584,4 +602,16 @@ class asset_type(osv.Model):
     _name = 'asset.type'
     _columns = {
                 'name':fields.char('Name',required=True),
+                }
+    
+class asset_configuration(osv.Model):
+
+    _description = 'Asset Configuration'
+    _name = 'asset.configuration'
+    _columns = {
+                'name':fields.char('Name',required=True),
+                'asset_type_id':fields.many2one('asset.type', 'Asset Type',required=True),
+                'type':fields.selection ([('rent', 'Rent'), ('give', 'Giving')],
+                                                    'Type', required=True, default='rent'),
+                'is_auto_fill':fields.boolean("Qty Auto Fill 1",default=False),
                 }
