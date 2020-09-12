@@ -44,8 +44,10 @@ class OneSignalNotification(models.Model):
         woo_user_ids =[]
         if vals['partner_id']:
             partner_obj = self.pool.get('res.partner').browse(cursor, user, vals['partner_id'], context=context)
-            for partner in partner_obj:                
-                woo_user_ids.append(partner.mobile)
+            for partner in partner_obj:
+                if partner.woo_customer_id:          
+                    woo_id = partner.woo_customer_id.split("_")      
+                    woo_user_ids.append(woo_id[1])
         data['include_external_user_ids'] = woo_user_ids
         data['contents'] = vals['contents']
         if vals['headings']:
