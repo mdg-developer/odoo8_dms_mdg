@@ -38,6 +38,7 @@ OUT__sale_order__read_all__SCHEMA = (                 # editable
     # simple fields (non relational):
     'id',
     'name',
+    'woo_order_number',
     'date_order',
     'amount_total',
     'state',
@@ -100,6 +101,7 @@ OUT__sale_order__read_one__SCHEMA = (                 # editable
     # simple fields (non relational):
     'id',
     'name',
+    'woo_order_number',
     'date_order',
     'create_date',
     'amount_tax',
