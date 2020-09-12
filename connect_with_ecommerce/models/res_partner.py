@@ -117,10 +117,10 @@ class res_partner(osv.osv):
             if sale_channel:
                 sale_channel_data = sale_channel_obj.browse(cr, uid, sale_channel, context=context)
                 vals['sales_channel'] = sale_channel_data.id                
-            res_branch = res_branch_obj.search(cr, uid, [('branch_code', '=', 'TMW')], context=context)
-            if res_branch:
-                res_branch_data = res_branch_obj.browse(cr, uid, res_branch, context=context)
-                vals['branch_id'] = res_branch_data.id                      
+#             res_branch = res_branch_obj.search(cr, uid, [('branch_code', '=', 'TMW')], context=context)
+#             if res_branch:
+#                 res_branch_data = res_branch_obj.browse(cr, uid, res_branch, context=context)
+#                 vals['branch_id'] = res_branch_data.id                      
             result = partner_obj.create(cr, uid, vals, context=context)                    
             if result:           
                 one_signal_values = {
@@ -138,24 +138,26 @@ class res_partner(osv.osv):
             partner = partner_obj.search(cr, uid, [('customer_code', '=', customer_code)])
             if partner:
                 partner_data = partner_obj.browse(cr, uid, partner, context=context)
-                vals['street'] = street
-                vals['street2'] = street2
+#                 vals['street'] = street
+#                 vals['street2'] = street2
                 if township:
                     township_value = township_obj.search(cr, uid, [('name', '=ilike', township)], context=context, limit=1)
                     if township_value:
                         township_data = township_obj.browse(cr, uid, township_value, context=context)
-                        vals['township']= township_data.id
+                        contact_township = township_data.id
                         vals['branch_id'] = township_data.branch_id.id 
+                        city = city_obj.search(cr, uid, [('id', '=', township_data.city.id)], context=context)
+                        if city:
+                            city_data = city_obj.browse(cr, uid, city, context=context)
+                            contact_city = city_data.id
                 if state:                
                     state_value = state_obj.search(cr, uid, [('name', '=ilike', state)], context=context, limit=1)
                     if state_value:
                         state_data = state_obj.browse(cr, uid, state_value, context=context)
-                        vals['state_id'] = state_data.id
+                        contact_state = state_data.id
                 if image:
                     vals['image'] = image
-                vals['name'] = name
-                vals['street'] = street
-                vals['street2'] = street2                
+                vals['name'] = name             
                 vals['phone'] = phone
                 vals['mobile'] = mobile
                 vals['email'] = email
@@ -170,11 +172,11 @@ class res_partner(osv.osv):
                 new_partner_obj = self.pool.get('res.partner')
                 old_vals = {}
                 old_vals['name'] = partner_data.name
-                old_vals['street'] = partner_data.street
-                old_vals['street2'] = partner_data.street2
-                old_vals['township'] = partner_data.township.id
-                old_vals['city'] = partner_data.city.id
-                old_vals['state_id'] = partner_data.state_id.id
+                old_vals['street'] = street
+                old_vals['street2'] = street2
+                old_vals['township'] = contact_township
+                old_vals['city'] = contact_city
+                old_vals['state_id'] = contact_state
                 old_vals['mobile'] = partner_data.mobile
                 old_vals['phone'] = partner_data.phone
                 old_vals['partner_latitude'] = partner_data.partner_latitude
