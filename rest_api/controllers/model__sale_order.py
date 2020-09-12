@@ -105,6 +105,7 @@ OUT__sale_order__read_one__SCHEMA = (                 # editable
     'amount_tax',
     'amount_total',
     'state',
+    'woo_customer_id',
     'invoiced',
     # many2one fields:
     ('partner_id', (
