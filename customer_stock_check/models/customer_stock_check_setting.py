@@ -7,7 +7,7 @@ class customer_stock_check(osv.osv):
     _columns = {      
                 'outlet_type': fields.many2one('outlettype.outlettype', 'Outlet Type'), 
                 'date': fields.date('Checked Date'),   
-                'stock_setting_line':fields.one2many('stock.check.setting.line', 'stock_setting_ids', string='Product'),
+                'stock_setting_line':fields.one2many('stock.check.setting.line', 'stock_setting_ids', string='Product',copy=True),
     }    
     
     def retrieve_stock(self, cr, uid, ids, context=None):  
