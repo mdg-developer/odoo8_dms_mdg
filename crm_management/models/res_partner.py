@@ -568,6 +568,7 @@ class res_partner(osv.osv):
                     #self.write(cr, uid, ids, {'customer_code':code,'date_partnership':datetime.now().date(),'mobile_customer':False}, context=context)
             return True
 res_partner()
+
 class res_partner_asset(osv.Model):
 
     _description = 'Partner Tags'
@@ -593,7 +594,21 @@ class res_partner_asset(osv.Model):
         'date': fields.datetime.now,
                     }
 
-    
+class res_partner_asset_check(osv.Model):
+
+    _description = 'Partner Asset Check'
+    _name = 'res.partner.asset.check'
+    _columns = {    
+                'partner_id': fields.many2one('res.partner', 'Customer', select=True, ondelete='cascade',required=False),                        
+                'status':fields.char("Status"),
+                'status':fields.selection ([('New', 'New'), ('Good', 'Good'), ('Need Repair', 'Need Repair'),('Missing', 'Missing')],
+                                                    'Type', required=True, default='New'),
+                'date':fields.datetime('Check Date Time',required=True),
+                'check_by':fields.many2one('crm.case.section', 'Check By', select=True, ondelete='cascade',required=False), 
+                'asset_id':fields.many2one('res.partner.asset', 'Parter Asset', select=True, ondelete='cascade',required=False),
+                'asset_name':fields.many2one('asset.configuration', 'Asset Name', select=True, ondelete='cascade',required=False),
+                'image': fields.binary("Image"),
+        }
 
     
 class asset_type(osv.Model):

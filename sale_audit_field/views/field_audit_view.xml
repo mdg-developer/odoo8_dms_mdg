@@ -137,7 +137,7 @@
 		</record>
 
 		<menuitem id="menu_field_audit" action="action_field_audit_view"
-			 parent="menu_customization.menu_sales_rental_menu" name="Field Audit" sequence="1" />
+			 parent="menu_customization.menu_sales_rental_menu" name="Field Audit" sequence="2" />
 
 	</data>
 </openerp>	    
