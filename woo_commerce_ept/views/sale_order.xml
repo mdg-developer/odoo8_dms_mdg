@@ -52,6 +52,9 @@
 					 		</group>							
 					 	</page>
 					 </notebook>
+					 <xpath expr="//field[@name='client_order_ref']" position="after">
+					     <field name="barcode"/>
+					 </xpath>
                     </data>
                </field>
         </record>

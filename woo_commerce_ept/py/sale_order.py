@@ -82,6 +82,7 @@ class sale_order(models.Model):
     woo_customer_id=fields.Char('Woo Customer ID')
     visible_trans_id=fields.Boolean("trans_id_avail",compute=visible_transaction_id,store=False)
     payment_gateway_id=fields.Many2one("woo.payment.gateway","Payment Gateway")
+    barcode=fields.Char('Barcode')
     
     @api.multi
     def create_or_update_woo_customer(self,woo_cust_id,vals,is_company=False,parent_id=False,type=False,instance=False):
@@ -90,6 +91,7 @@ class sale_order(models.Model):
         partner_obj=self.env['res.partner']
         account = self.env['account.account']
 
+        township = None
         property_account_payable = account.search([('type', '=', 'payable')],limit=1)
         property_account_payable_clearing = account.search([('type', '=', 'liquidity')],limit=1)
                 
@@ -152,7 +154,7 @@ class sale_order(models.Model):
             partner=partner_obj.search([('name','=',name),('city','=',city),('township','=',township),('street','=',address1),('street2','=',address2),('email','=',email),('phone','=',phone),('zip','=',zip),('country_id','=',country.id),('state_id','=',state.id)],limit=1)
         if not partner:
             partner=partner_obj.search([('name','=',name),('city','=',city),('township','=',township),('street','=',address1),('street2','=',address2),('zip','=',zip),('country_id','=',country.id)],limit=1)
-            
+           
         if partner:
             partner.write({'state_id':state and state.id or False,'is_company':is_company,'woo_company_name_ept':company_name or partner.woo_company_name_ept,
                            'phone':phone or partner.phone,'woo_customer_id':woo_customer_id or partner.woo_customer_id,
@@ -458,6 +460,7 @@ class sale_order(models.Model):
             woo_trans_id=""
             woo_customer_ip=""
             getting_point = 0
+            barcode_value = None
             
             if instance.woo_version == 'old':
                 woo_order_number = result.get('order_number')
@@ -498,7 +501,13 @@ class sale_order(models.Model):
                     woo_point = point.get('amount',False)                      
                     if woo_order_number == str(woo_order_id) and int(woo_point) > 0:
                         getting_point = int(woo_point)                        
-                        break              
+                        break                
+                 
+                barcode_response = wcapi.get('post-barcode/%s'%(woo_order_number))                  
+                barcode_response_data = barcode_response.json()   
+                if barcode_response_data:             
+                    for barcode in barcode_response_data:
+                        barcode_value = barcode.get('meta_value',False)             
                         
             if result.get('payment_details'):                
                 if result.get('payment_details').get('method_title',False) == 'Credit Application Amount':
@@ -533,6 +542,7 @@ class sale_order(models.Model):
                 'pre_order':True,
                 'getting_point':getting_point,
                 'payment_type':payment_type,
+                'barcode':barcode_value,
             }            
             return ordervals
 
