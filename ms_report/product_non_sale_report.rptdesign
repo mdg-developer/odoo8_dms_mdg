@@ -46,6 +46,9 @@
             <expression name="labelExpr" type="javascript">dataSetRow["name"]</expression>
             <property name="dataType">integer</property>
             <property name="distinct">true</property>
+            <simple-property-list name="defaultValue">
+                <value type="javascript">0</value>
+            </simple-property-list>
             <list-property name="selectionList"/>
             <property name="paramType">multi-value</property>
             <property name="controlType">list-box</property>
@@ -410,9 +413,21 @@ from res_partner where supplier='t']]></xml-property>
                     </structure>
                 </list-property>
             </structure>
-            <method name="beforeOpen"><![CDATA[this.queryText =this.queryText.replace("--$branch_id$", "and h.branch_id in ("+ params["branch_id"].value.join(",")+")")
-this.queryText =this.queryText.replace("--$principal_id$", "and h.principle_id in ("+ params["principal_id"].value.join(",")+")")
+            <method name="beforeOpen"><![CDATA[if (params["principal_id"].value[0] == '0' ){    
+	this.queryText =this.queryText.replace("--$principal_id$", "and h.principle_id is null")
+}
+else{ 
+   this.queryText =this.queryText.replace("--$principal_id$", "and h.principle_id in ("+ params["principal_id"].value.join(",")+")");
+}
 
+if (params["branch_id"].value == null ){     
+   this.queryText =this.queryText.replace("--$branch_id$", "")
+}
+else
+{     
+   this.queryText =this.queryText.replace("--$branch_id$", "and h.branch_id in ("+ params["branch_id"].value.join(",")+")")
+}
+//this.queryText =this.queryText.replace("--$branch_id$", "and h.branch_id in ("+ params["branch_id"].value.join(",")+")");
 ]]></method>
             <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
@@ -558,10 +573,10 @@ left join product_template pt on pp.product_tmpl_id=pt.id
 left join stock_picking sp on h.picking_id = sp.id
 left join res_branch b on h.branch_id=b.id
 left join account_invoice i on h.debit_note= i.id
-where  h.state <> 'cancel' and
-h.date between ? and ?
---$principal_id$
---$branch_id$]]></xml-property>
+where  h.state <> 'cancel' 
+and h.date between ? and ?
+--$branch_id$
+--$principal_id$]]></xml-property>
         </oda-data-set>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="users" id="135"
  extends="report_library.users"/>
