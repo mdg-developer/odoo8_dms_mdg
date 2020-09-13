@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.6.0.v201606072122</property>
     <property name="units">in</property>
     <method name="initialize"><![CDATA[branchList = params["branch_id"].value.join(",");
 teamList = params["sales_team_id"].value.join(",");]]></method>
     <property name="iconFile">/templates/blank_report.gif</property>
+    <property name="layoutPreference">auto layout</property>
     <property name="bidiLayoutOrientation">ltr</property>
     <property name="imageDPI">96</property>
     <list-property name="libraries">
@@ -107,6 +108,12 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">phone</text-property>
                     <text-property name="heading">phone</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mobile</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">mobile</text-property>
+                    <text-property name="heading">mobile</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">channel</property>
@@ -215,31 +222,36 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     </structure>
                     <structure>
                         <property name="position">14</property>
-                        <property name="name">channel</property>
+                        <property name="name">mobile</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">15</property>
-                        <property name="name">delivery</property>
+                        <property name="name">channel</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">16</property>
-                        <property name="name">collection</property>
+                        <property name="name">delivery</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">17</property>
-                        <property name="name">team</property>
+                        <property name="name">collection</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">18</property>
+                        <property name="name">team</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">19</property>
                         <property name="name">last_visit_date</property>
                         <property name="dataType">date-time</property>
                     </structure>
                     <structure>
-                        <property name="position">19</property>
+                        <property name="position">20</property>
                         <property name="name">last_purchase_date</property>
                         <property name="dataType">date</property>
                     </structure>
@@ -343,41 +355,48 @@ this.queryText =this.queryText.replace("--$branch$", "and rp.branch_id in ("+ pa
                 </structure>
                 <structure>
                     <property name="position">14</property>
+                    <property name="name">mobile</property>
+                    <property name="nativeName">mobile</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">15</property>
                     <property name="name">channel</property>
                     <property name="nativeName">channel</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">15</property>
+                    <property name="position">16</property>
                     <property name="name">delivery</property>
                     <property name="nativeName">delivery</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">16</property>
+                    <property name="position">17</property>
                     <property name="name">collection</property>
                     <property name="nativeName">collection</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">17</property>
+                    <property name="position">18</property>
                     <property name="name">team</property>
                     <property name="nativeName">team</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">18</property>
+                    <property name="position">19</property>
                     <property name="name">last_visit_date</property>
                     <property name="nativeName">last_visit_date</property>
                     <property name="dataType">date-time</property>
                     <property name="nativeDataType">93</property>
                 </structure>
                 <structure>
-                    <property name="position">19</property>
+                    <property name="position">20</property>
                     <property name="name">last_purchase_date</property>
                     <property name="nativeName">last_purchase_date</property>
                     <property name="dataType">date</property>
@@ -385,7 +404,7 @@ this.queryText =this.queryText.replace("--$branch$", "and rp.branch_id in ("+ pa
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select rp.id,rp.customer_code,rp.name customer,outlet.name outlet,array_to_string(array_agg(distinct rpc.name),', ') AS tags,rt.name township,
-'' as coverage,rp.street,rb.name branch,pf.name frequency,sc.name sale_class,rp.temp_customer,rp.phone,channel.name channel,
+'' as coverage,rp.street,rb.name branch,pf.name frequency,sc.name sale_class,rp.temp_customer,rp.phone,rp.mobile,channel.name channel,
 delivery.name delivery,collection.name collection,array_to_string(array_agg(distinct ccs.name),', ') AS team ,
 (select max(date) as visit_date from customer_visit where customer_id =rp.id limit 1 ) last_visit_date,
 (select max(date_order::date) as date_order from sale_order where partner_id =rp.id limit 1 ) last_purchase_date
@@ -691,8 +710,9 @@ from res_branch rb
     </data-sets>
     <page-setup>
         <simple-master-page name="Simple MasterPage" id="2">
-            <property name="type">custom</property>
+            <property name="type">us-super-b</property>
             <property name="orientation">landscape</property>
+            <property name="rightMargin">0in</property>
             <property name="height">15in</property>
             <property name="width">24in</property>
             <page-footer>
@@ -922,6 +942,12 @@ from res_branch rb
                     </list-property>
                     <property name="allowExport">true</property>
                 </structure>
+                <structure>
+                    <property name="name">mobile</property>
+                    <text-property name="displayName">mobile</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["mobile"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
             </list-property>
             <column id="756">
                 <property name="width">0.6979166666666666in</property>
@@ -960,6 +986,9 @@ from res_branch rb
                 <property name="width">1.3645833333333333in</property>
             </column>
             <column id="767">
+                <property name="width">1.2291666666666667in</property>
+            </column>
+            <column id="861">
                 <property name="width">1.2291666666666667in</property>
             </column>
             <column id="768">
@@ -1152,6 +1181,19 @@ from res_branch rb
                         <property name="borderTopWidth">thin</property>
                         <label id="850">
                             <text-property name="text">Phone No</text-property>
+                        </label>
+                    </cell>
+                    <cell id="859">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="862">
+                            <text-property name="text">Mobile No</text-property>
                         </label>
                     </cell>
                     <cell id="706">
@@ -1478,6 +1520,20 @@ from res_branch rb
                             <property name="borderRightStyle">none</property>
                             <property name="borderTopStyle">none</property>
                             <property name="resultSetColumn">phone</property>
+                        </data>
+                    </cell>
+                    <cell id="860">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="863">
+                            <property name="fontFamily">"Arial"</property>
+                            <property name="resultSetColumn">mobile</property>
                         </data>
                     </cell>
                     <cell id="727">
