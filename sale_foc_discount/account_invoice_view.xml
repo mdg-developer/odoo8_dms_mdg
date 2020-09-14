@@ -26,7 +26,7 @@
 						on_change="foc_change(product_id,quantity,context)" groups="sale.group_discount_per_so_line"/>
 
 				</xpath>
-				<xpath expr="//field[@name='journal_id']" position="after">
+				<xpath expr="//field[@name='journal_id']" position="before">
 				    <field name="ecommerce"/>
 					<field name="original_ecommerce_number"/>
 				</xpath>
