@@ -83,6 +83,7 @@ class sale_order(models.Model):
     visible_trans_id=fields.Boolean("trans_id_avail",compute=visible_transaction_id,store=False)
     payment_gateway_id=fields.Many2one("woo.payment.gateway","Payment Gateway")
     barcode=fields.Char('Barcode')
+    ecommerce=fields.Boolean("Ecommerce",default=False)
     
     @api.multi
     def create_or_update_woo_customer(self,woo_cust_id,vals,is_company=False,parent_id=False,type=False,instance=False):
@@ -355,7 +356,25 @@ class sale_order(models.Model):
         if price == 0:
             if promotion:
                 promotion_id = promotion.id
-                                
+        
+        woo_instance_obj=self.env['woo.instance.ept']
+        instance=woo_instance_obj.search([('state','=','confirmed')], limit=1)
+        if instance:
+            discount_wcapi = instance.connect_for_point_in_woo() 
+            discount_response = discount_wcapi.get('order-discount')                  
+            discount_response_data = discount_response.json()   
+            if discount_response_data:             
+                for discount in discount_response_data:
+                    woo_order_number = discount.get('order_id',False)                       
+                    if woo_order_number == order.woo_order_number:
+                        if float(price) < 0 or float(price) == 0:
+                            discount_label = discount.get('cart_discount_label',False) 
+                            if discount_label:  
+                                discount_promotion = self.env['promos.rules'].search([('ecommerce','=',True),
+                                                                                      ('name','=',discount_label)], limit=1)
+                                if discount_promotion:
+                                    promotion_id = discount_promotion.id    
+                                                   
         product_data.update(
                             {
                             'name':product.name or name,
