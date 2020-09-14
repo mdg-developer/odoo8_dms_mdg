@@ -37,7 +37,8 @@ With this module for discount making.
         'sale_discount_view.xml',
         'account_invoice_view.xml',
        # 'res_config_view.xml',
-        'stock_view.xml'
+        'stock_view.xml',
+        'sale_order_view.xml'
     ],
     'demo': [],
     'installable': True,
