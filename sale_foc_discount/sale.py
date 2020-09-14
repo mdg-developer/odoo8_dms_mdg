@@ -353,7 +353,10 @@ class sale_order(osv.osv):
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
                 'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
             },
-            multi='sums', help="The amount without tax.", track_visibility='always'),}
+            multi='sums', help="The amount without tax.", track_visibility='always'),
+        'ecommerce':fields.boolean("Ecommerce",default=False,readonly=True),             
+        'original_ecommerce_number':fields.char('Original Ecommerce Order No',readonly=True),     
+        }
     _default={
               'amount_untaxed':0.0,
               'amount_tax':0.0,
@@ -476,7 +479,8 @@ class sale_order(osv.osv):
             'longitude':order.so_longitude,
             'pre_sale_order_id':pre_sale_order_id,
             'order_team':order_team,
-
+            'ecommerce': order.ecommerce,
+            'original_ecommerce_number': order.original_ecommerce_number,
         }
 
         # Care for deprecated _inv_get() hook - FIXME: to be removed after 6.1
