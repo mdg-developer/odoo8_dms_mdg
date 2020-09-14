@@ -83,7 +83,7 @@ class sale_order(models.Model):
     visible_trans_id=fields.Boolean("trans_id_avail",compute=visible_transaction_id,store=False)
     payment_gateway_id=fields.Many2one("woo.payment.gateway","Payment Gateway")
     barcode=fields.Char('Barcode')
-    ecommerce=fields.Boolean("Ecommerce",default=False)
+    ecommerce=fields.Boolean("Ecommerce",default=False,readonly=True)
     
     @api.multi
     def create_or_update_woo_customer(self,woo_cust_id,vals,is_company=False,parent_id=False,type=False,instance=False):
@@ -562,6 +562,7 @@ class sale_order(models.Model):
                 'getting_point':getting_point,
                 'payment_type':payment_type,
                 'barcode':barcode_value,
+                'ecommerce':True,
             }            
             return ordervals
 
