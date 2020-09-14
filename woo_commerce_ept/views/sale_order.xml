@@ -53,8 +53,7 @@
 					 	</page>
 					 </notebook>
 					 <xpath expr="//field[@name='client_order_ref']" position="after">
-					     <field name="barcode"/>
-					     <field name="ecommerce"/>
+					     <field name="barcode"/>					     
 					 </xpath>
                     </data>
                </field>
