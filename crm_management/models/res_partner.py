@@ -580,7 +580,8 @@ class res_partner_asset(osv.Model):
                                             type='many2one',
                                             relation='res.township',
                                             string="Township",store=True), 
-                        'name':fields.char('Asset Name',required=True),
+                        'name':fields.char('Asset No',required=False),
+                        'asset_name_id':fields.many2one('asset.configuration', 'Asset Name',required=False),
                         'date':fields.date('Date',required=True),
                         'type':fields.selection ([('rent', 'Rent'), ('give', 'Giving')],
                                                     'Type', required=True, default='rent'),
@@ -589,6 +590,8 @@ class res_partner_asset(osv.Model):
                         'image': fields.binary("Image"),
                         'active': fields.boolean("Active",default=True),
                         'note':fields.text('Note'),
+                        'check_line':fields.one2many('res.partner.asset.check', 'asset_id', 'Customer Assets Check',
+                              copy=True),
   }
     _defaults = {
         'date': fields.datetime.now,
@@ -600,10 +603,9 @@ class res_partner_asset_check(osv.Model):
     _name = 'res.partner.asset.check'
     _columns = {    
                 'partner_id': fields.many2one('res.partner', 'Customer', select=True, ondelete='cascade',required=False),                        
-                'status':fields.char("Status"),
                 'status':fields.selection ([('New', 'New'), ('Good', 'Good'), ('Need Repair', 'Need Repair'),('Missing', 'Missing')],
-                                                    'Type', required=True, default='New'),
-                'date':fields.datetime('Check Date Time',required=True),
+                                                    'Type', required=False, default='New'),
+                'date':fields.datetime('Check Date Time',required=False),
                 'check_by':fields.many2one('crm.case.section', 'Check By', select=True, ondelete='cascade',required=False), 
                 'asset_id':fields.many2one('res.partner.asset', 'Parter Asset', select=True, ondelete='cascade',required=False),
                 'asset_name':fields.many2one('asset.configuration', 'Asset Name', select=True, ondelete='cascade',required=False),

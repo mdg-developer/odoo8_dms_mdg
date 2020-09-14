@@ -2922,7 +2922,7 @@ class mobile_sale_order(osv.osv):
         return datas
     
     def get_assets(self, cr, uid, context=None, **kwargs):    
-        cr.execute("""select A.id,A.name,A.partner_id,substring(encode(image::bytea, 'hex'),1,5) as image
+        cr.execute("""select A.name as id ,(select name from asset_configuration where id = A.asset_name_id) as asset_name,A.partner_id,substring(encode(image::bytea, 'hex'),1,5) as image
                     ,A.qty,A.date,B.name,A.type 
                     from res_partner_asset A, asset_type B
                     where A.asset_type = B.id
@@ -2947,7 +2947,7 @@ class mobile_sale_order(osv.osv):
                     so.warehouse_id,so.shipped,so.sale_plan_day_id,so.sale_plan_name,so.so_longitude,so.payment_type,
                     so.due_date,so.sale_plan_trip_id,so.so_latitude,so.customer_code,so.name as so_refNo,so.total_dis,so.deduct_amt,so.coupon_code,
                     so.invoiced,so.branch_id,so.delivery_remark ,team.name,so.payment_term,so.due_date,so.rebate_later,
-                    rp.name customer_name,replace(so.note,',',';') as note
+                    rp.name customer_name,replace(so.note,',',';') as note,so.original_ecommerce_number,so.ecommerce
                     from sale_order so, crm_case_section team,res_partner rp                                    
                     where so.id= %s and so.state!= 'cancel'
                     and  team.id = so.section_id
@@ -4338,14 +4338,21 @@ class mobile_sale_order(osv.osv):
                     if data:
                         access_type_id = data[0][0]
                     else:
-                        access_type_id = None                            
+                        access_type_id = None        
+                    cursor.execute('select id from asset_configuration where name = %s ', (ar['name'],))
+                    data = cursor.fetchall()
+                    if data:
+                        asset_name_id = data[0][0]
+                    else:
+                        asset_name_id = None                                                
                         
                     rental_result = {                    
                         'partner_id':ar['partner_id'],
                         'qty':ar['qty'],
                         'image':ar['image'],
                         'date':ar['date'],
-                        'name':ar['name'],
+                        'name':ar['asset_id'],
+                        'asset_name_id':asset_name_id,
                         'asset_type':access_type_id,
                         'type':ar['type'],
                     }
@@ -4354,7 +4361,61 @@ class mobile_sale_order(osv.osv):
         except Exception, e:
             print 'False'
             return False         
+
+
+    def create_customer_asset_check(self, cursor, user, vals, context=None):
+        try:
+            rental_obj = self.pool.get('res.partner.asset.check')
+            str = "{" + vals + "}"
+            str = str.replace("'',", "',")  # null
+            str = str.replace(":',", ":'',")  # due to order_id
+            str = str.replace("}{", "}|{")
+            str = str.replace(":'}{", ":''}")
+            new_arr = str.split('|')
+            result = []
+            for data in new_arr:
+                x = ast.literal_eval(data)
+                result.append(x)
+            if result:
+                for ar in result:         
+                    check_date=None                   
+                    if ar['check_date']:
+                        date_time = ar['check_date']
+                        check_date = datetime.strptime(date_time, '%Y-%m-%d %I:%M:%S %p') - timedelta(hours=6, minutes=30)
+                    if ar['check_by']:
+                        team_name= ar['check_by']
+                        cursor.execute("select id from crm_case_section where name=%s",(team_name,))
+                        team_data=cursor.fetchone()
+                        if team_data:
+                            team_id =team_data[0]
+                        else:
+                            team_id=None
+                    if ar['asset_id']:
+                        cursor.execute("select id,asset_name_id from res_partner_asset where name=%s",(ar['asset_id'],))
+                        asset_data=cursor.fetchone()
+                        if asset_data:
+                            asset_id =asset_data[0]
+                            asset_name_id =asset_data[1]
+                        else:
+                            asset_id=None
+                            asset_name_id=None
+                        
+                    rental_result = {                    
+                        'partner_id':ar['customer_id'],
+                        'status':ar['status'],
+                        'date':check_date,
+                        'check_by':team_id,
+                        'asset_id':asset_id,
+                        'asset_name':asset_name_id,
+                        'image':ar['asset_image'],
+                    }
+                    rental_obj.create(cursor, user, rental_result, context=context)
+            return True
+        except Exception, e:
+            print 'False'
+            return False   
         
+             
     def dayplan_is_update(self, cr, uid, team_id, late_date , context=None, **kwargs):
             
             flag = False
