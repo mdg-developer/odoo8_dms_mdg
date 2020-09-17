@@ -24,6 +24,8 @@ class res_partner(osv.osv):
                 'gender': fields.selection([('Male', 'Male'), ('Female', 'Female')], 'Gender'),
                 'shop_name': fields.char('Shop/Business Name'),
                 'credit_applications': fields.function(_get_total_credit_app_data,string='Credit Application'),
+                'mobile': fields.char('Main Phone No'),
+                'phone': fields.char('Secondary Phone No'),
             }   
           
     def send_otp_code(self, cr, uid, ids, mobile_phone, context=None):
