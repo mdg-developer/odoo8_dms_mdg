@@ -373,7 +373,12 @@ class sale_order(models.Model):
                                                                                       ('name','=',discount_label)], limit=1)
                                 if discount_promotion:
                                     promotion_id = discount_promotion.id    
-                                                   
+        
+        if float(price) == 0:
+            sale_foc = True
+        else:
+            sale_foc = False 
+                                                       
         product_data.update(
                             {
                             'name':product.name or name,
@@ -388,7 +393,9 @@ class sale_order(models.Model):
                             'delivery_product':delivery_product,
                             'discount_product':discount_product,
                             'fees_product':fees_product,   
-                            'promotion_id':promotion_id                         
+                            'promotion_id':promotion_id,
+                            'discount_amt':0,   
+                            'sale_foc':sale_foc,                              
                             }                                    
                             )
         sale_order_line_obj.create(product_data)         
