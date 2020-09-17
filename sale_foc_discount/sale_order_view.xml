@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record id="view_order_form_inherit_woocommerce" model="ir.ui.view">
+			<field name="name">sale.order.form.inherit.ecommerce</field>
+			<field name="model">sale.order</field>
+			<field name="type">form</field>
+			<field name="inherit_id" ref="sale.view_order_form" />
+			<field name="arch" type="xml">
+				<data>					
+					<xpath expr="//field[@name='client_order_ref']" position="before">
+						<field name="ecommerce" />	
+						<field name="original_ecommerce_number" />					
+					</xpath>
+				</data>
+			</field>
+		</record>
+		
+	</data>
+</openerp>
