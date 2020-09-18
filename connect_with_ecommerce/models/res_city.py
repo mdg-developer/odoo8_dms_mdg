@@ -17,13 +17,27 @@ class res_city(osv.osv):
                 city = city_obj.browse(cr, uid, city_data, context=context)
                 if city.delivery_team_id:
                     issue_location = city.delivery_team_id.issue_location_id.id                             
-                    cr.execute('''select COALESCE(sum(qty),0) qty,default_code product_code
-                                from stock_quant sq,product_product pp,product_template pt
-                                where sq.product_id=pp.id
-                                and pp.product_tmpl_id=pt.id
-                                and location_id=%s
-                                group by default_code''',(issue_location,))
-                    quantity = cr.dictfetchall()                    
-                    if quantity:
-                        return quantity                  
+                    cr.execute('''select A.default_code product_code,case when B.qty is null then 'Out of Stock' end as label
+                                from
+                                (   select default_code
+                                    from product_product pp,product_template pt
+                                    where pp.product_tmpl_id=pt.id
+                                    and pp.active=true
+                                    and pt.active=true
+                                    and type!='service'
+                                    and default_code is not null
+                                )A
+                                left join
+                                (
+                                    select COALESCE(sum(qty),0) qty,default_code
+                                    from stock_quant sq,product_product pp,product_template pt
+                                    where sq.product_id=pp.id
+                                    and pp.product_tmpl_id=pt.id
+                                    and location_id=%s
+                                    group by default_code
+                                )B on (A.default_code=B.default_code)
+                                where qty is null''',(issue_location,))
+                    product_record = cr.dictfetchall()                    
+                    if product_record:
+                        return product_record                  
                                     
