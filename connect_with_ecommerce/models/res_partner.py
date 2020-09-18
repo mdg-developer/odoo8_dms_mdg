@@ -3,6 +3,7 @@ import requests
 import json
 import logging
 import random
+from datetime import timedelta,datetime
 
 class res_partner(osv.osv):
     _inherit = 'res.partner'
@@ -111,6 +112,7 @@ class res_partner(osv.osv):
             vals['birthday'] = birthday
             vals['email'] = email
             vals['customer'] = True
+            vals['date_partnership'] = datetime.today()
             outlettype = outlettype_obj.search(cr, uid, [('name', '=ilike', 'site registered')],context=context)            
             if outlettype:
                 outlettype_data = outlettype_obj.browse(cr, uid, outlettype, context=context)
@@ -193,6 +195,7 @@ class res_partner(osv.osv):
                 old_vals['gender'] = partner_data.gender
                 old_vals['birthday'] = partner_data.birthday
                 vals['customer'] = True
+                vals['date_partnership'] = datetime.today()
                 result = partner_obj.write(cr, uid,partner_data.id, vals, context=context)                
                 old_vals['parent_id'] = partner_data.id
                 new_one = new_partner_obj.create(cr, uid, old_vals, context=context)                
