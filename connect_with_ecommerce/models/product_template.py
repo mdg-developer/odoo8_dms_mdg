@@ -15,7 +15,8 @@ class product_template(osv.osv):
         'is_sync_ecommerce': fields.related('product_variant_ids', 'is_sync_ecommerce', type='boolean', string='Is Sync Ecommerce', required=False),
         'short_name': fields.char('Product Short Name', size=20),
         'city_lines':fields.many2many('res.city'),
-
+        'ecommerce_price': fields.float('Price'),
+        'ecommerce_uom_id': fields.many2one('product.uom', 'UOM'),
             }
        
 class product_uom_price(osv.osv):

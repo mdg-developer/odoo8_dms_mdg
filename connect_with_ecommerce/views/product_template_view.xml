@@ -25,6 +25,16 @@
 					<page name="city" string="City">
 						<field name="city_lines"/>
 					</page>
+					<page name="ecommerce" string="Ecommerce">
+					    <group>
+					        <group>
+								<field name="ecommerce_price"/>
+						    </group>
+						    <group>
+						        <field name="ecommerce_uom_id"/>
+						    </group>
+					    </group>					    						
+					</page>
 				</xpath>
 			</field>
 		</record>
