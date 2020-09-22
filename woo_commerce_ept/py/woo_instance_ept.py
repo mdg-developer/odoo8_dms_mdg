@@ -76,6 +76,17 @@ class woo_instance_ept(models.Model):
         return wcapi  
     
     @api.model
+    def connect_for_product_in_woo(self):
+        host = self.host
+        consumer_key = self.consumer_key
+        consumer_secret = self.consumer_secret
+        wp_api = True
+        version = "wc/v3"
+        wcapi = woocommerce.api.API(url=host, consumer_key=consumer_key,
+                    consumer_secret=consumer_secret,verify_ssl=self.verify_ssl,wp_api=wp_api,version=version,query_string_auth=True)
+        return wcapi  
+    
+    @api.model
     def connect_for_point_in_woo(self):
         host = self.host
         consumer_key = self.consumer_key

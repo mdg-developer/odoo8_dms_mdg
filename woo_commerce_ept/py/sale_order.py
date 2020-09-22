@@ -312,7 +312,7 @@ class sale_order(models.Model):
         return mismatch
 
     @api.model
-    def create_woo_sale_order_line(self,line,tax_ids,product,quantity,fiscal_position,partner,pricelist_id,name,order,price):
+    def create_woo_sale_order_line(self,line,tax_ids,product,woo_product_uom,quantity,fiscal_position,partner,pricelist_id,name,order,price):
         sale_order_line_obj=self.env['sale.order.line']
         uom_id=product and product.uom_id and product.uom_id.id or False
         product_data=sale_order_line_obj.product_id_change(pricelist_id,product and product.ids[0] or False,quantity,uom_id
@@ -378,7 +378,12 @@ class sale_order(models.Model):
             sale_foc = True
         else:
             sale_foc = False 
-                                                       
+        
+        if woo_product_uom and product.type == 'product':
+            product_uom = self.env['product.uom'].search([('name', '=', woo_product_uom)])
+            if product_uom:
+                product_data.update({'product_uom': product_uom.id})   
+                                                        
         product_data.update(
                             {
                             'name':product.name or name,
@@ -662,6 +667,7 @@ class sale_order(models.Model):
     @api.model
     def import_woo_orders(self,instance=False):        
         instances=[]
+        woo_product_uom=None
         current_point=0
         transaction_log_obj=self.env["woo.transaction.log"]
         if not instance:
@@ -830,6 +836,15 @@ class sale_order(models.Model):
                     if not woo_product:
                         continue
                     product=woo_product.product_id
+                    woo_product_id=line.get('product_id')
+                    product_wcapi = instance.connect_for_product_in_woo()                    
+                    product_response=product_wcapi.get('products/%s'%(woo_product_id))                    
+                    product_res = product_response.json()                   
+                    product_meta_data = product_res.get('meta_data')
+                    for meta_data in product_meta_data:
+                        if meta_data.get('key') == '_woo_uom_input':                            
+                            woo_product_uom = meta_data.get('value')
+                            
                     actual_unit_price = 0.0                    
                     if tax_included:
                         actual_unit_price=(float(line.get('subtotal_tax')) + float(line.get('subtotal'))) / float(line.get('quantity'))                            
@@ -837,7 +852,7 @@ class sale_order(models.Model):
                         actual_unit_price = float(line.get('subtotal')) / float(line.get('quantity'))
                     if tax_included and float(total_discount)>0.0:
                         discount_value += calclulate_line_discount(line) if order_discount else 0.0                                                                            
-                    self.create_woo_sale_order_line(line,tax_ids,product,line.get('quantity'),fiscal_position,partner,pricelist_id,product.name,sale_order,actual_unit_price)                  
+                    self.create_woo_sale_order_line(line,tax_ids,product,woo_product_uom,line.get('quantity'),fiscal_position,partner,pricelist_id,product.name,sale_order,actual_unit_price)                  
     
                 shipping_product=instance.shipment_charge_product_id 
                 product_id=shipping_product and shipping_product.ids[0] or False
@@ -858,9 +873,9 @@ class sale_order(models.Model):
                         sale_order.write({'carrier_id':carrier.id})
                         if carrier.product_id:
                             shipping_product=carrier.product_id
-                    self.create_woo_sale_order_line(line,shipping_tax_ids,shipping_product,1,fiscal_position,partner,pricelist_id,shipping_product and shipping_product.name or line.get('method_title'),sale_order,line.get('total'))
+                    self.create_woo_sale_order_line(line,shipping_tax_ids,shipping_product,woo_product_uom,1,fiscal_position,partner,pricelist_id,shipping_product and shipping_product.name or line.get('method_title'),sale_order,line.get('total'))
                 if order_discount and discount_value:                                                                                                                            
-                    self.create_woo_sale_order_line({},tax_ids,instance.discount_product_id,1,fiscal_position,partner,pricelist_id,instance.discount_product_id.name,sale_order,discount_value*-1)
+                    self.create_woo_sale_order_line({},tax_ids,instance.discount_product_id,woo_product_uom,1,fiscal_position,partner,pricelist_id,instance.discount_product_id.name,sale_order,discount_value*-1)
                 fee_lines = order.get("fee_lines",[])
                 for fee_line in fee_lines:
                     fee_value = fee_line.get("total")
@@ -868,7 +883,7 @@ class sale_order(models.Model):
                     fee_line_tax_ids = []
                     fee_line_tax_ids =  self.get_woo_tax_id_ept(instance,tax_datas,False)
                     if fee_value:
-                        self.create_woo_sale_order_line({},fee_line_tax_ids,instance.fee_line_id,1,fiscal_position,partner,pricelist_id,fee,sale_order,fee_value)
+                        self.create_woo_sale_order_line({},fee_line_tax_ids,instance.fee_line_id,woo_product_uom,1,fiscal_position,partner,pricelist_id,fee,sale_order,fee_value)
                 if sale_order:           
                     one_signal_values = {
                                          'partner_id': sale_order.partner_id.id,
@@ -883,6 +898,7 @@ class sale_order(models.Model):
     @api.model
     def import_new_woo_orders(self,instance=False):        
         instances=[]
+        woo_product_uom = None
         transaction_log_obj=self.env["woo.transaction.log"]
         if not instance:
             instances=self.env['woo.instance.ept'].search([('order_auto_import','=',True),('state','=','confirmed')])
@@ -1012,7 +1028,7 @@ class sale_order(models.Model):
                         actual_unit_price=(float(line.get('subtotal_tax')) + float(line.get('subtotal'))) / float(line.get('quantity'))                            
                     else:
                         actual_unit_price = float(line.get('subtotal')) / float(line.get('quantity'))                                                                                                
-                    self.create_woo_sale_order_line(line,tax_ids,product,line.get('quantity'),fiscal_position,partner,pricelist_id,product.name,sale_order,actual_unit_price)                  
+                    self.create_woo_sale_order_line(line,tax_ids,product,woo_product_uom,line.get('quantity'),fiscal_position,partner,pricelist_id,product.name,sale_order,actual_unit_price)                  
     
                 shipping_product=instance.shipment_charge_product_id 
                 product_id=shipping_product and shipping_product.ids[0] or False
@@ -1033,9 +1049,9 @@ class sale_order(models.Model):
                         sale_order.write({'carrier_id':carrier.id})
                         if carrier.product_id:
                             shipping_product=carrier.product_id
-                    self.create_woo_sale_order_line(line,shipping_tax_ids,shipping_product,1,fiscal_position,partner,pricelist_id,shipping_product and shipping_product.name or line.get('method_title'),sale_order,line.get('total'))
+                    self.create_woo_sale_order_line(line,shipping_tax_ids,shipping_product,woo_product_uom,1,fiscal_position,partner,pricelist_id,shipping_product and shipping_product.name or line.get('method_title'),sale_order,line.get('total'))
                 if total_discount > 0.0:                                                                                                                            
-                    self.create_woo_sale_order_line({},tax_ids,instance.discount_product_id,1,fiscal_position,partner,pricelist_id,instance.discount_product_id.name,sale_order,total_discount*-1)
+                    self.create_woo_sale_order_line({},tax_ids,instance.discount_product_id,woo_product_uom,1,fiscal_position,partner,pricelist_id,instance.discount_product_id.name,sale_order,total_discount*-1)
                 
                 fee_lines = order.get("fee_lines",[])
                 for fee_line in fee_lines:
@@ -1044,7 +1060,7 @@ class sale_order(models.Model):
                     fee_line_tax_ids = []
                     fee_line_tax_ids =  self.get_woo_tax_id_ept(instance,tax_datas,False)
                     if fee_value:
-                        self.create_woo_sale_order_line({},fee_line_tax_ids,instance.fee_line_id,1,fiscal_position,partner,pricelist_id,fee,sale_order,fee_value)    
+                        self.create_woo_sale_order_line({},fee_line_tax_ids,instance.fee_line_id,woo_product_uom,1,fiscal_position,partner,pricelist_id,fee,sale_order,fee_value)    
             if import_order_ids:
                 self.env['sale.workflow.process.ept'].auto_workflow_process(ids=import_order_ids)
         return True
