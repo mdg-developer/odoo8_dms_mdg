@@ -532,12 +532,21 @@ class sale_order(models.Model):
                     if woo_order_number == str(woo_order_id) and int(woo_point) > 0:
                         getting_point = int(woo_point)                        
                         break                
-                 
-                barcode_response = wcapi.get('post-barcode/%s'%(woo_order_number))                  
-                barcode_response_data = barcode_response.json()   
-                if barcode_response_data:             
-                    for barcode in barcode_response_data:
-                        barcode_value = barcode.get('meta_value',False)             
+                
+                barcode_response = wcapi.get('post-barcode/%s'%(woo_order_number))    
+                if barcode_response.status_code in [200,201]:              
+                    barcode_response_data = barcode_response.json()   
+                    if barcode_response_data:                                   
+                        for barcode in barcode_response_data:                            
+                            barcode_value = barcode.get('meta_value',False)  
+                else:
+                    message = "Error in Import Barcode for Order %s %s"%(woo_order_number,barcode_response.content)                        
+                    self.env["woo.transaction.log"].create(
+                                                            {'message':message,
+                                                             'mismatch_details':True,
+                                                             'type':'sales',
+                                                             'woo_instance_id':instance.id
+                                                            })           
                         
             if result.get('payment_details'):                
                 if result.get('payment_details').get('method_title',False) == 'Credit Application Amount':
