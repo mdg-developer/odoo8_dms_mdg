@@ -285,7 +285,7 @@ class mobile_sale_order(osv.osv):
             status = 'approve'
             cr.execute('''select id,sequence as seq,from_date ,to_date,active,name as p_name,
                         logic ,expected_logic_result ,special, special1, special2, special3 ,description,
-                        pr.promotion_count, pr.monthly_promotion ,code as p_code,manual,main_group
+                        pr.promotion_count, pr.monthly_promotion ,code as p_code,manual,main_group,pr.ecommerce
                         from promos_rules pr ,promos_rules_res_branch_rel pro_br_rel
                         where pr.active = true                     
                         and pr.id = pro_br_rel.promos_rules_id
@@ -304,7 +304,7 @@ class mobile_sale_order(osv.osv):
             status = 'draft'            
             cr.execute('''select id,sequence as seq,from_date ,to_date,active,name as p_name,
                         logic ,expected_logic_result ,special, special1, special2, special3 ,description,
-                        pr.promotion_count, pr.monthly_promotion,code as p_code,manual,main_group
+                        pr.promotion_count, pr.monthly_promotion,code as p_code,manual,main_group,pr.ecommerce
                         from promos_rules pr ,promos_rules_res_branch_rel pro_br_rel
                         where pr.active = true                     
                         and pr.id = pro_br_rel.promos_rules_id
@@ -1713,7 +1713,7 @@ class mobile_sale_order(osv.osv):
             status = 'approve'
             cr.execute('''select distinct id,sequence as seq,from_date ,to_date,active,name as p_name,
                         logic ,expected_logic_result ,special, special1, special2, special3 ,description,
-                        pr.promotion_count, pr.monthly_promotion ,code as p_code,manual,main_group
+                        pr.promotion_count, pr.monthly_promotion ,code as p_code,manual,main_group,pr.ecommerce
                         from promos_rules pr
                         left join promos_rules_res_branch_rel pro_br_rel on (pr.id = pro_br_rel.promos_rules_id)
                         left join promos_rules_product_rel pro_pp_rel on (pr.id=pro_pp_rel.promos_rules_id)
@@ -1738,7 +1738,7 @@ class mobile_sale_order(osv.osv):
             status = 'draft'            
             cr.execute('''select distinct id,sequence as seq,from_date ,to_date,active,name as p_name,
                         logic ,expected_logic_result ,special, special1, special2, special3 ,description,
-                        pr.promotion_count, pr.monthly_promotion,code as p_code,manual,main_group
+                        pr.promotion_count, pr.monthly_promotion,code as p_code,manual,main_group,pr.ecommerce
                         from promos_rules pr
                         left join promos_rules_res_branch_rel pro_br_rel on (pr.id = pro_br_rel.promos_rules_id)
                         left join promos_rules_product_rel pro_pp_rel on (pr.id=pro_pp_rel.promos_rules_id)
@@ -2943,11 +2943,11 @@ class mobile_sale_order(osv.osv):
                 for So_id in list_val:
                     print 'Sale Order Id', So_id
                     cr.execute('''select so.id,so.date_order,so.partner_id,so.amount_tax,so.amount_untaxed,
-                    so.payment_term,so.company_id,so.pricelist_id,so.user_id,so.amount_total,so.name as invoice_no,
+                    so.payment_term,so.company_id,so.pricelist_id,so.user_id,so.amount_total,so.tb_ref_no as invoice_no,
                     so.warehouse_id,so.shipped,so.sale_plan_day_id,so.sale_plan_name,so.so_longitude,so.payment_type,
                     so.due_date,so.sale_plan_trip_id,so.so_latitude,so.customer_code,so.name as so_refNo,so.total_dis,so.deduct_amt,so.coupon_code,
                     so.invoiced,so.branch_id,so.delivery_remark ,team.name,so.payment_term,so.due_date,so.rebate_later,
-                    rp.name customer_name,replace(so.note,',',';') as note,so.original_ecommerce_number,so.ecommerce
+                    rp.name customer_name,replace(so.note,',',';') as note,so.woo_order_id,so.ecommerce
                     from sale_order so, crm_case_section team,res_partner rp                                    
                     where so.id= %s and so.state!= 'cancel'
                     and  team.id = so.section_id
