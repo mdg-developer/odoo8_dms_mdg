@@ -1921,7 +1921,7 @@ class woo_product_template_ept(models.Model):
                                              'woo_instance_id':instance.id
                                             })
                 continue
-            response = response.get('product')
+            response = response.get('product')            
             response_variations = response.get('variations')
             for response_variation in response_variations:
                 response_variant_data = {}
@@ -1941,14 +1941,21 @@ class woo_product_template_ept(models.Model):
                 woo_product = woo_product_product_ept.search([('default_code','=',variant_sku),('woo_template_id','=',woo_template.id),('woo_instance_id','=',instance.id)])
                 response_variant_data.update({'variant_id':variant_id,'created_at':variant_created_at,'updated_at':variant_updated_at,'exported_in_woo':True})
                 woo_product and woo_product.write(response_variant_data) 
-            woo_tmpl_id = response.get('id')            
+            woo_tmpl_id = response.get('id')                        
             if variant.product_id.product_tmpl_id.ecommerce_uom_id:
                 woo_instance_obj=self.env['woo.instance.ept']
                 instance=woo_instance_obj.search([('state','=','confirmed')], limit=1)
                 if instance:
                     uom_wcapi = instance.connect_for_point_in_woo() 
                     uom_data = variant.product_id.product_tmpl_id.ecommerce_uom_id.name                    
-                    uom_wcapi.post('insert-uom/%s'%(woo_tmpl_id),uom_data)                    
+                    uom_wcapi.post('insert-uom/%s'%(woo_tmpl_id),uom_data)                
+            if variant.product_id.product_tmpl_id.barcode_no:
+                woo_instance_obj=self.env['woo.instance.ept']
+                instance=woo_instance_obj.search([('state','=','confirmed')], limit=1)
+                if instance:
+                    barcode_wcapi = instance.connect_for_point_in_woo() 
+                    barcode_data = variant.product_id.product_tmpl_id.barcode_no                                    
+                    barcode_wcapi.post('insert-barcode/%s'%(woo_tmpl_id),barcode_data)                             
             tmpl_images = response.get('images')
             offset = 0
             for tmpl_image in tmpl_images:
