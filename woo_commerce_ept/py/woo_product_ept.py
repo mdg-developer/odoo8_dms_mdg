@@ -1681,7 +1681,7 @@ class woo_product_template_ept(models.Model):
         return actual_stock                 
 
     @api.model
-    def export_products_in_woo(self,instance,woo_templates,update_price,update_stock,publish,update_image=True):
+    def export_products_in_woo(self,instance,woo_templates,update_price,update_stock,publish,update_image=False):
         transaction_log_obj=self.env['woo.transaction.log']
         wcapi = instance.connect_in_woo()        
         woo_product_product_ept = self.env['woo.product.product.ept']
