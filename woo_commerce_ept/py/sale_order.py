@@ -130,7 +130,7 @@ class sale_order(models.Model):
             state=state_obj.search([('name','=',state_name)],limit=1)            
         else:
             state = state_obj.search(["|", ('code', '=', state_name), ('name', '=', state_name), ('country_id', '=', country.id)],limit=1)
-          
+        
         if city:  
             self.env.cr.execute("""select rc.id
                                 from res_township rt,res_city rc
@@ -140,12 +140,13 @@ class sale_order(models.Model):
             city_data = self.env.cr.fetchall()    
             if city_data:
                 city = city_data[0][0]  
-        
+                
             self.env.cr.execute("""select id
                                 from res_township rt
                                 where lower(name)=lower(%s)
                                 """, (vals.get('city'),))    
             township_data = self.env.cr.fetchall()    
+            
             if township_data:
                 township = township_data[0][0]    
                         
@@ -165,7 +166,7 @@ class sale_order(models.Model):
                            'property_account_payable':property_account_payable.id,
                            'property_account_payable_clearing':property_account_payable_clearing.id,
                            })          
-        else:
+        else:            
             partner=partner_obj.create({'type':type,'parent_id':parent_id,'woo_customer_id':woo_customer_id or '',
                                         'name':name,'state_id':state and state.id or False,'city':city,'township':township,
                                         'street':address1,'street2':address2,
@@ -201,8 +202,8 @@ class sale_order(models.Model):
         for tax in tax_datas:
             rate=float(tax.get('rate',0.0))
             if rate!=0.0:
-                rate = rate / 100.0 if rate >= 1 else rate
-                acctax_id = self.env['account.tax'].search([('price_include','=',tax_included),('type_tax_use', '=', 'sale'), ('amount', '=', rate),('company_id','=',instance.warehouse_id.company_id.id)])
+                rate = rate / 100.0 if rate >= 1 else rate                
+                acctax_id = self.env['account.tax'].search([('price_include','=',tax_included),('type_tax_use', '=', 'sale'), ('company_id','=',instance.warehouse_id.company_id.id)],limit=1)
                 if not acctax_id:
                     acctax_id = self.createWooAccountTax(rate,tax_included,instance.warehouse_id.company_id,tax.get('name'))
                     if acctax_id:
@@ -356,6 +357,9 @@ class sale_order(models.Model):
             if promotion:
                 promotion_id = promotion.id
         
+        sol_name = product.name or name
+        sol_product_id = product and product.ids[0] or False
+        
         woo_instance_obj=self.env['woo.instance.ept']
         instance=woo_instance_obj.search([('state','=','confirmed')], limit=1)
         if instance:
@@ -372,8 +376,14 @@ class sale_order(models.Model):
                                 discount_promotion = self.env['promos.rules'].search([('ecommerce','=',True),
                                                                                       ('name','=',discount_label)], limit=1)
                                 if discount_promotion:
-                                    promotion_id = discount_promotion.id    
-        
+                                    promotion_id = discount_promotion.id 
+                    odoo_discount_id = discount.get('odoo_discount_id',False)                       
+                    if odoo_discount_id and fees_product == True:
+                        odoo_promotion = self.env['product.product'].search([('id','=',odoo_discount_id)])
+                        if odoo_promotion:
+                            sol_product_id = odoo_promotion.id
+                            sol_name = odoo_promotion.name 
+                                                    
         if float(price) == 0:
             sale_foc = True
         else:
@@ -386,8 +396,8 @@ class sale_order(models.Model):
                                                         
         product_data.update(
                             {
-                            'name':product.name or name,
-                            'product_id':product and product.ids[0] or False,
+                            'name':sol_name,
+                            'product_id':sol_product_id,
                             'order_id':order.id,
                             'product_uom_qty':quantity,
                             'product_uos_qty':quantity,
@@ -712,8 +722,12 @@ class sale_order(models.Model):
                     for page in range(2,int(total_pages)+1):            
                         order_ids = order_ids + self.import_all_woo_orders(wcapi,instance,transaction_log_obj,order_status,page)            
             
-            import_order_ids=[]
-            
+            import_order_ids=[]            
+            if instance:
+                discount_label_wcapi = instance.connect_for_point_in_woo()   
+                discount_label_info = {"discount": "foc"}                              
+                discount_label_wcapi.put('put-discount-label-for-null/1',discount_label_info) 
+                
             for order in order_ids:                                                             
                 if self.search([('woo_instance_id','=',instance.id),('woo_order_id','=',order.get('id')),('woo_order_number','=',order.get('order_number'))]):
                     continue
