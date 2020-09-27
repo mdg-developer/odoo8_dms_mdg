@@ -159,8 +159,7 @@ class res_partner(osv.osv):
                     if state_value:
                         state_data = state_obj.browse(cr, uid, state_value, context=context)
                         contact_state = state_data.id
-                if image:
-                    vals['image'] = image
+                
                 vals['name'] = name             
                 vals['phone'] = phone
                 vals['mobile'] = mobile
@@ -172,6 +171,11 @@ class res_partner(osv.osv):
                 vals['partner_longitude'] = partner_longitude
                 vals['gender'] = gender
                 vals['birthday'] = birthday
+                if woo_customer_id:
+                    instances=self.pool.get('woo.instance.ept').search(cr, uid, [('order_auto_import','=',True),('state','=','confirmed')], context=context)
+                    if instances:
+                        woo_customer_id = "%s_%s"%(instances[0],woo_customer_id) if woo_customer_id else False
+                        vals['woo_customer_id'] = woo_customer_id
                 
                 new_partner_obj = self.pool.get('res.partner')
                 old_vals = {}
@@ -188,12 +192,14 @@ class res_partner(osv.osv):
                 old_vals['sms'] = partner_data.sms
                 old_vals['viber'] = partner_data.viber
                 old_vals['shop_name'] = partner_data.shop_name
-                old_vals['email'] = partner_data.email
+                old_vals['email'] = email
                 old_vals['outlet_type'] = partner_data.outlet_type.id
                 old_vals['sales_channel'] = partner_data.sales_channel.id
                 old_vals['branch_id'] = partner_data.branch_id.id
                 old_vals['gender'] = partner_data.gender
                 old_vals['birthday'] = partner_data.birthday
+                if image:
+                    old_vals['image'] = image
                 vals['customer'] = True
                 vals['date_partnership'] = datetime.today()
                 result = partner_obj.write(cr, uid,partner_data.id, vals, context=context)                
