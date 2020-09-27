@@ -82,6 +82,7 @@ class res_partner(osv.osv):
             if res.parent_id:
                 
                 #copy contact address into tmp vals
+                tmp_vals['image']= res.image
                 tmp_vals['street']= res.street
                 tmp_vals['street2']= res.street2
                 tmp_vals['township']= res.township.id or None
@@ -91,6 +92,7 @@ class res_partner(osv.osv):
                 tmp_vals['country_id']= res.country_id.id or None
                 
                 #assign customer address into contact address
+                res.image = res.parent_id.image
                 res.street = res.parent_id.street
                 res.street2 = res.parent_id.street2
                 res.township = res.parent_id.township.id or None
@@ -100,6 +102,7 @@ class res_partner(osv.osv):
                 res.country_id = res.parent_id.country_id.id or None
                 
                 #assign contact address into customer address
+                customer_vals['image']= tmp_vals['image']
                 customer_vals['street']= tmp_vals['street']
                 customer_vals['street2']= tmp_vals['street2']
                 customer_vals['township']= tmp_vals['township']
