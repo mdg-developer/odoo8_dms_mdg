@@ -369,20 +369,30 @@ class sale_order(models.Model):
             if discount_response_data:             
                 for discount in discount_response_data:
                     woo_order_number = discount.get('order_id',False)                       
-                    if woo_order_number == order.woo_order_number:
-                        if float(price) < 0 or float(price) == 0:
-                            discount_label = discount.get('cart_discount_label',False) 
-                            if discount_label:  
-                                discount_promotion = self.env['promos.rules'].search([('ecommerce','=',True),
-                                                                                      ('name','=',discount_label)], limit=1)
-                                if discount_promotion:
-                                    promotion_id = discount_promotion.id 
-                    odoo_discount_id = discount.get('odoo_discount_id',False)                       
-                    if odoo_discount_id and fees_product == True:
-                        odoo_promotion = self.env['product.product'].search([('id','=',odoo_discount_id)])
-                        if odoo_promotion:
-                            sol_product_id = odoo_promotion.id
-                            sol_name = odoo_promotion.name 
+                    if woo_order_number == order.woo_order_id:
+                        if float(price) < 0 or float(price) == 0:                            
+                            odoo_discount_id = discount.get('odoo_discount_id',False)         
+                            if odoo_discount_id and fees_product == True:
+                                odoo_promotion = self.env['promos.rules'].search([('ecommerce','=',True),
+                                                                                  ('id','=',odoo_discount_id)])                                
+                                if odoo_promotion and odoo_promotion.main_group:                                                           
+                                    self.env.cr.execute('''select pp.id product_id,name_template product_name
+                                                        from product_product pp,product_template pt
+                                                        where pp.product_tmpl_id=pt.id
+                                                        and main_group=%s
+                                                        and pp.active=true
+                                                        and pt.active=true
+                                                        and pt.type='service'                                                
+                                                        and lower(name_template) like %s
+                                                        limit 1''',(odoo_promotion.main_group.id,'%discount',))
+                                    product_record = self.env.cr.dictfetchall() 
+                                    if product_record:                           
+                                        for product in product_record:                            
+                                            product_id = product.get('product_id')
+                                            product_name = product.get('product_name')
+                                            sol_product_id = product_id
+                                            sol_name = product_name
+                                            promotion_id = odoo_promotion.id
                                                     
         if float(price) == 0:
             sale_foc = True

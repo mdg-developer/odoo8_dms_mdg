@@ -1,9 +1,11 @@
 import time
 from openerp.osv import fields, osv
+from openerp import _
 from openerp import http
 from openerp.http import request
 from openerp.tools import html_escape as escape
 import json
+from openerp.osv.orm import except_orm
 
 class promotion_sync(osv.osv_memory):
     _name = 'promotion.sync'
@@ -29,20 +31,11 @@ class promotion_sync(osv.osv_memory):
                                 
         promo_lists=context.get('active_ids', [])
         for promo_id in self.pool.get('promos.rules').browse(cr,uid,promo_lists,context=None):
-            if promo_id.is_sync_woo != True:
-                if promo_id.main_group:
-                    cr.execute('''select pp.id product_id,name_template product_name 
-                                from product_product pp,product_template pt
-                                where pp.product_tmpl_id=pt.id
-                                and main_group=%s
-                                and pp.active=true
-                                and pt.active=true''',(promo_id.main_group.id,))
-                    product_record = cr.dictfetchall() 
-                    if product_record:                           
-                        for product in product_record:                            
-                            product_id = product.get('product_id')
-                            product_name = product.get('product_name')
-                            wcapi.post('odoo-discount/%s'%(product_id),product_name)  
-                    cr.execute('''update promos_rules set is_sync_woo=True where id=%s''',(promo_id.id,))                   
+            if promo_id.ecommerce == True:
+                if promo_id.is_sync_woo != True:
+                    wcapi.post('odoo-discount/%s'%(promo_id.id),promo_id.name)  
+                    cr.execute('''update promos_rules set is_sync_woo=True where id=%s''',(promo_id.id,)) 
+            else:
+                raise except_orm(_('UserError'), _("%s is not ecommerce promotion.You can sync only ecommerce promotion!") % (promo_id.name,))              
         return True
     
