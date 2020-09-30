@@ -18,7 +18,7 @@
         </record>
 
         <record id="action_uom_sync" model="ir.actions.act_window">
-            <field name="name">UOM Sync to Woo</field>
+            <field name="name">Sync to Woo</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">uom.sync</field>
             <field name="view_type">form</field>
