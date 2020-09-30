@@ -40,6 +40,8 @@ Purchase Order
             'views/purchase_view.xml',
             'views/report_purchaseorder.xml',
             'views/report_purchasequotation.xml',
+            'wizard/due_date_assign_view.xml',
+            'views/account_invoice_view.xml',
     ],
     'installable': True,
     'auto_install': False,

@@ -11,7 +11,27 @@ class account_invoice(models.Model):
     
     journal_claim = fields.Boolean(default=False)
     due_date_rate = fields.Float(string='Due Date MMK Rate',default=0)
-    #due_date_rate = fields.float
+    
+    def reassign_due_date(self, cr, uid, ids, context=None):
+        if not ids: return []
+        dummy, view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'purchase_order', 'view_set_invoice_due_date')
+        inv = self.browse(cr, uid, ids[0], context=context)
+        return {
+            'name':_("Set Due Date"),
+            'view_mode': 'form',
+            'view_id': view_id,
+            'view_type': 'form',
+            'res_model': 'due.date.assign',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+            'domain': '[]',
+            'context': {
+            'default_invoice_id':inv.id,
+            }
+        }
+        
+            
     def account_journal_get(self,invoice):       
         
         journal_id = self.env['account.journal'].search([('code', '=', 'MISC')])[0]
