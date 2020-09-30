@@ -15,6 +15,7 @@
 				<field name="date_done" position="after">
 					<field name="customer" invisible="1" />
 					<field name="supplier" invisible="1" />
+					<field name="partner_ref" attrs="{'invisible':[('customer','=',True)]}" />
 					<field name="bl_date" attrs="{'invisible':[('customer','=',True)]}" />
 					<field name="staffing_date" attrs="{'invisible':[('customer','=',True)]}" />
 					<field name="etd_date" attrs="{'invisible':[('customer','=',True)]}" />

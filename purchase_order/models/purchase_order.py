@@ -18,7 +18,19 @@ class stock_location(osv.osv):
                 }     
 class purchase_order(osv.osv):
     _inherit = 'purchase.order'
-
+    
+    def action_picking_create(self, cr, uid, ids, context=None):
+        for order in self.browse(cr, uid, ids):
+            picking_vals = {
+                'picking_type_id': order.picking_type_id.id,
+                'partner_id': order.partner_id.id,
+                'date': order.date_order,
+                'origin': order.name,
+                'partner_ref':order.partner_ref,
+            }
+            picking_id = self.pool.get('stock.picking').create(cr, uid, picking_vals, context=context)
+            self._create_stock_moves(cr, uid, order, order.order_line, picking_id, context=context)
+        return picking_id
 
     def _prepare_inv_line(self, cr, uid, account_id, order_line, context=None):
         """Collects require data from purchase order line that is used to create invoice line
@@ -85,6 +97,9 @@ class purchase_order_line(osv.osv):
 #                 'is_margin': fields.related('order_id', 'is_margin', type='boolean', string='Margin', store=True, readonly=True),
                 'agreed_price': fields.float('Agreed Price', required=False, digits_compute=dp.get_precision('Cost Price')),
                 'gross_margin': fields.function(_amount_margin, string='Gross Margin', digits_compute=dp.get_precision('Cost Price'), store=True),
+                'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Cost Price')),
+               
+                
                 }     
     
     def onchange_product_uom(self, cr, uid, ids, pricelist_id, product_id, qty, uom_id,

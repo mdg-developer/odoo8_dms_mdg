@@ -30,6 +30,8 @@ class stock_picking(osv.osv):
                 'eta_date':fields.date('ETA Date'),
                 'order_date':fields.date('Order Confirmed Date'),
                 'invoice_date':fields.date('Invoice Date'),
+                'partner_ref': fields.char('PO Reference No', readonly=True)
+                
                }    
     #def change_location(self,cr,uid,ids,picking_type_id,context=None):
     def change_location(self,cr,uid,ids,context=None):
@@ -100,7 +102,8 @@ class stock_shipping(osv.osv):
                 if base_on_payment=='invoice_date':
                     invoice_date =picking.invoice_date                                
             if invoice_date:
-                value['invoice_date']=invoice_date                         
+                value['invoice_date']=invoice_date
+            value['supplier_invoice_number']=picking.partner_ref                         
             usage = picking.move_lines[0].location_id.usage if type == 'incoming' else picking.move_lines[0].location_dest_id.usage
             journal_types = JOURNAL_TYPE_MAP.get((type, usage), ['sale', 'purchase', 'sale_refund', 'purchase_refund'])
             domain['journal_id'] = [('type', 'in', journal_types)]
