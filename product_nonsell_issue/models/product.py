@@ -309,7 +309,7 @@ class product_nonsell_issue_line(osv.osv):
     def create(self, cr, uid, values, context=None):
         if values.get('line_id') and values.get('product_id') and  any(f not in values for f in ['price_unit', 'quantity', 'uom_id']):
             order = self.pool['product.nonsell.issue'].read(cr, uid, values['line_id'], ['pricelist_id'], context=context)
-            defaults = self.on_change_product_id(cr, uid, [], values['product_id'], order['pricelist_id'][0], context=dict(context or {}))['value']
+            defaults = self.on_change_product_uom(cr, uid, [], values['product_id'], order['pricelist_id'][0],values['uom_id'],values['quantity'],context=dict(context or {}))['value']
             values = dict(defaults, **values)
         return super(product_nonsell_issue_line, self).create(cr, uid, values, context=context)
 
