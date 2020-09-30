@@ -70,5 +70,10 @@ class product_template(models.Model):
                                     }
                                 }                            
                                 wcapi.put("products/%s"%(product_id), data).json()  
-        return True     
+        return True 
+    
+class product_uom(models.Model):
+    _inherit = 'product.uom'    
+    
+    is_sync_woo = fields.Boolean('Is Sync Woo', default=False)    
     
