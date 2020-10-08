@@ -70,8 +70,8 @@ class res_partner(osv.osv):
         sale_channel_obj = self.pool.get('sale.channel')
         res_branch_obj = self.pool.get('res.branch')
         state_obj = self.pool.get('res.country.state')
-        if not mdg_customer:
-            vals['name']= name
+        if not mdg_customer:            
+            vals['name']= shop_name if shop_name else name
             vals['street']= street
             vals['street2']= street2
             if township:
@@ -112,7 +112,8 @@ class res_partner(osv.osv):
             vals['birthday'] = birthday
             vals['email'] = email
             vals['customer'] = True
-            vals['date_partnership'] = datetime.today()
+            vals['date_partnership'] = datetime.today()             
+            vals['temp_customer'] = name
             outlettype = outlettype_obj.search(cr, uid, [('name', '=ilike', 'site registered')],context=context)            
             if outlettype:
                 outlettype_data = outlettype_obj.browse(cr, uid, outlettype, context=context)
@@ -160,7 +161,7 @@ class res_partner(osv.osv):
                         state_data = state_obj.browse(cr, uid, state_value, context=context)
                         contact_state = state_data.id
                 
-                vals['name'] = name             
+                vals['name'] = shop_name if shop_name else name             
                 vals['phone'] = phone
                 vals['mobile'] = mobile
                 vals['email'] = email
@@ -171,6 +172,7 @@ class res_partner(osv.osv):
                 vals['partner_longitude'] = partner_longitude
                 vals['gender'] = gender
                 vals['birthday'] = birthday
+                vals['temp_customer'] = name
                 outlettype = outlettype_obj.search(cr, uid, [('name', '=ilike', 'site registered')],context=context)            
                 if outlettype:
                     outlettype_data = outlettype_obj.browse(cr, uid, outlettype, context=context)
