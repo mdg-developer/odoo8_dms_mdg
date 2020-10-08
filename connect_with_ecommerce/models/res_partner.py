@@ -117,7 +117,7 @@ class res_partner(osv.osv):
             if outlettype:
                 outlettype_data = outlettype_obj.browse(cr, uid, outlettype, context=context)
                 vals['outlet_type'] = outlettype_data.id
-            sale_channel = sale_channel_obj.search(cr, uid, [('code', '=', 'RT')], context=context)
+            sale_channel = sale_channel_obj.search(cr, uid, [('code', '=', 'CS')], context=context)
             if sale_channel:
                 sale_channel_data = sale_channel_obj.browse(cr, uid, sale_channel, context=context)
                 vals['sales_channel'] = sale_channel_data.id                
@@ -171,6 +171,14 @@ class res_partner(osv.osv):
                 vals['partner_longitude'] = partner_longitude
                 vals['gender'] = gender
                 vals['birthday'] = birthday
+                outlettype = outlettype_obj.search(cr, uid, [('name', '=ilike', 'site registered')],context=context)            
+                if outlettype:
+                    outlettype_data = outlettype_obj.browse(cr, uid, outlettype, context=context)
+                    vals['outlet_type'] = outlettype_data.id
+                sale_channel = sale_channel_obj.search(cr, uid, [('code', '=', 'RT')], context=context)
+                if sale_channel:
+                    sale_channel_data = sale_channel_obj.browse(cr, uid, sale_channel, context=context)
+                    vals['sales_channel'] = sale_channel_data.id  
                 if woo_customer_id:
                     instances=self.pool.get('woo.instance.ept').search(cr, uid, [('order_auto_import','=',True),('state','=','confirmed')], context=context)
                     if instances:
@@ -193,8 +201,8 @@ class res_partner(osv.osv):
                 old_vals['viber'] = partner_data.viber
                 old_vals['shop_name'] = partner_data.shop_name
                 old_vals['email'] = email
-                old_vals['outlet_type'] = partner_data.outlet_type.id
-                old_vals['sales_channel'] = partner_data.sales_channel.id
+                old_vals['outlet_type'] = outlettype_data.id
+                old_vals['sales_channel'] = sale_channel_data.id
                 old_vals['branch_id'] = partner_data.branch_id.id
                 old_vals['gender'] = partner_data.gender
                 old_vals['birthday'] = partner_data.birthday
