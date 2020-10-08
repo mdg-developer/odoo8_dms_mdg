@@ -1947,7 +1947,7 @@ class woo_product_template_ept(models.Model):
                 instance=woo_instance_obj.search([('state','=','confirmed')], limit=1)
                 if instance:
                     uom_wcapi = instance.connect_for_point_in_woo() 
-                    uom_data = variant.product_id.product_tmpl_id.ecommerce_uom_id.name                    
+                    uom_data = variant.product_id.product_tmpl_id.ecommerce_uom_id.id                    
                     uom_wcapi.post('insert-uom/%s'%(woo_tmpl_id),uom_data)                
             if variant.product_id.product_tmpl_id.barcode_no:
                 woo_instance_obj=self.env['woo.instance.ept']
