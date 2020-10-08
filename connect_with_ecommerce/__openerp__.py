@@ -30,7 +30,8 @@
                     "base",
                     "address_management_system",
                     "product",
-                    "product_product"
+                    "product_product",
+                    "woo_commerce_ept"
                 ],
     'description': """
 Connect With Ecommerce    
@@ -51,6 +52,7 @@ Connect With Ecommerce
         'views/notified_days_view.xml',
         'views/weekly_noti_view.xml',
         'views/product_reorder_view.xml',
+        'views/app_version_view.xml',
                 ],
     'installable': True,
     'auto_install': False,
