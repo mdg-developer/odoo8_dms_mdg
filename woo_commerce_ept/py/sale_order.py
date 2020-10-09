@@ -335,7 +335,7 @@ class sale_order(models.Model):
                     if product.id == deli.product_id.id:                    
                         delivery_product = True 
                         break
-        woo_setting = self.env['woo.config.settings'].search([])
+        woo_setting = self.env['woo.instance.ept'].search([])
         if woo_setting:            
             for woo in woo_setting:
                 if woo.discount_product_id:

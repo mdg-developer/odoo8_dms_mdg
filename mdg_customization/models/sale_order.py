@@ -52,9 +52,9 @@ class sale_order_line(osv.osv):
                 delivery_data = delivery_obj.browse(cr,uid,delivery,context=context)
                 if product_obj.id == delivery_data.product_id.id:                    
                     delivery_product = True                    
-            woo_setting = self.pool.get('woo.config.settings').search(cr, uid, [], context=context)
+            woo_setting = self.pool.get('woo.instance.ept').search(cr, uid, [], limit=1, context=context)
             if woo_setting:
-                woo_setting_data = self.pool.get('woo.config.settings').browse(cr,uid,woo_setting,context=context)
+                woo_setting_data = self.pool.get('woo.instance.ept').browse(cr,uid,woo_setting,context=context)
                 for woo in woo_setting_data:
                     if woo.discount_product_id:
                         woo_discount_product = self.pool.get('product.product').search(cr, uid, [('id', '=', woo.discount_product_id.id)], context=context)
