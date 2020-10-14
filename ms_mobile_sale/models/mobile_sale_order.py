@@ -2923,7 +2923,7 @@ class mobile_sale_order(osv.osv):
     
     def get_assets(self, cr, uid, context=None, **kwargs):    
         cr.execute("""select A.name as id ,(select name from asset_configuration where id = A.asset_name_id) as asset_name,A.partner_id,substring(encode(image::bytea, 'hex'),1,5) as image
-                    ,A.qty,A.date,B.name,A.type 
+                    ,A.qty,A.date,B.name,A.type,A.id as asset_db_id
                     from res_partner_asset A, asset_type B
                     where A.asset_type = B.id
                     and A.active=True""")
@@ -2935,7 +2935,7 @@ class mobile_sale_order(osv.osv):
         
         sale_order_obj = self.pool.get('sale.order')
         list_val = None
-        list_val = sale_order_obj.search(cr, uid, [('pre_order', '=', True), ('is_generate', '=', True), ('delivery_id', '=', saleTeamId), ('shipped', '=', False), ('invoiced', '=', False) , ('tb_ref_no', 'not in', soList)], context=context)
+        list_val = sale_order_obj.search(cr, uid, [('pre_order', '=', True), ('is_generate', '=', True),('state', '=', 'manual'), ('delivery_id', '=', saleTeamId), ('shipped', '=', False), ('invoiced', '=', False) , ('tb_ref_no', 'not in', soList)], context=context)
         print 'list_val', list_val
         list = []
         try:
@@ -2947,11 +2947,13 @@ class mobile_sale_order(osv.osv):
                     so.warehouse_id,so.shipped,so.sale_plan_day_id,so.sale_plan_name,so.so_longitude,so.payment_type,
                     so.due_date,so.sale_plan_trip_id,so.so_latitude,so.customer_code,so.name as so_refNo,so.total_dis,so.deduct_amt,so.coupon_code,
                     so.invoiced,so.branch_id,so.delivery_remark ,team.name,so.payment_term,so.due_date,so.rebate_later,
-                    rp.name customer_name,replace(so.note,',',';') as note,so.woo_order_id,so.ecommerce
-                    from sale_order so, crm_case_section team,res_partner rp                                    
+                    rp.name customer_name,replace(so.note,',',';') as note,so.woo_order_id,so.ecommerce ,rp.township ,rt.name as township_name
+                    from sale_order so, crm_case_section team,res_partner rp,res_township rt                                  
                     where so.id= %s and so.state!= 'cancel'
                     and  team.id = so.section_id
-                    and  so.partner_id = rp.id''', (So_id,))
+                    and  so.partner_id = rp.id
+                    and rt.id =rp.township
+                    ''', (So_id,))
                     result = cr.fetchall()
                     print 'Result Sale Order', result
                     list.append(result)

@@ -35,6 +35,7 @@ class stock_return_from_mobile(osv.osv):
         'branch_id':fields.many2one('res.branch', 'Branch', required=True),
         'company_id':fields.many2one('res.company', 'Company'),
         'manual':fields.boolean('Manual'),
+        'is_late_sale_invoice':fields.boolean('Is Late'),
 
 }
     _defaults = {
