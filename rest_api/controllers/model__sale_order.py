@@ -40,14 +40,40 @@ OUT__sale_order__read_all__SCHEMA = (                 # editable
     'name',
     'woo_order_number',
     'date_order',
+    'amount_tax',
     'amount_total',
     'state',
     'woo_customer_id',
     # many2one fields:
+    ('carrier_id', (
+        'id',
+        'name',
+    )),
     ('partner_id', (
         'id',
         'name',
     )),
+    ('partner_shipping_id', (
+        'id',
+        'street',
+        'street2',
+        ('township', (
+            'id',
+            'name',
+        )),
+        ('city', (
+            'id',
+            'name',
+        )),
+        ('state_id', (
+            'id',
+            'name',
+        )),
+        ('country_id', (
+            'id',
+            'name',
+        )),
+    )),  
     ('user_id', (
         'id',
         'name',
@@ -110,11 +136,36 @@ OUT__sale_order__read_one__SCHEMA = (                 # editable
     'woo_customer_id',
     'invoiced',
     # many2one fields:
+    ('carrier_id', (
+        'id',
+        'name',
+    )),
     ('partner_id', (
         'id',
         'name',
         'city',
     )),
+    ('partner_shipping_id', (
+        'id',
+        'street',
+        'street2',
+        ('township', (
+            'id',
+            'name',
+        )),
+        ('city', (
+            'id',
+            'name',
+        )),
+        ('state_id', (
+            'id',
+            'name',
+        )),
+        ('country_id', (
+            'id',
+            'name',
+        )),
+    )),                                 
     ('user_id', (
         'id',
         'name',
