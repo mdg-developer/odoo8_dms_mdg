@@ -514,7 +514,7 @@ class sale_order(models.Model):
             
             if instance.woo_version == 'old':
                 woo_order_number = result.get('order_number')
-                note = result.get('note')
+                note = result.get('note') or result.get('customer_note')
                 created_at = result.get('created_at')
                 woo_trans_id = ""
                 woo_customer_ip = result.get("customer_ip")
