@@ -56,15 +56,15 @@ OUT__res_partner__read_all__SCHEMA = (                # editable
         'id',
         'name',
         'code'
-    )),
-    'phone',
+    )),   
     'sms',
     'viber',
     'email',
     'shop_name',
     'image_medium', 
     'gender',
-    'birthday',                            
+    'birthday',         
+    'temp_customer',                   
 )
 #           ]
 #       }
@@ -100,8 +100,7 @@ OUT__res_partner__read_one__SCHEMA = (                # editable
         'id',
         'name',
         'code'
-    )),
-    'phone',
+    )),    
     'sms',
     'viber',
     'email',
@@ -109,6 +108,7 @@ OUT__res_partner__read_one__SCHEMA = (                # editable
     'image_medium',   
     'gender',
     'birthday',     
+    'temp_customer',   
 )
 
 # /api/res.partner  POST  - Create one
