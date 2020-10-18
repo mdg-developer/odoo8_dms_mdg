@@ -1291,9 +1291,9 @@ class sale_order(models.Model):
         result = super(sale_order, self).action_button_confirm(cr, uid, ids, context=context)
         self.write(cr, uid, ids, {'state':'manual'})
         if result:
-            for sale in self.browse(cr, uid, ids, context=context):
-                update = sale.update_woo_order_status_action('manual')  
-                if sale.woo_order_number:           
+            for sale in self.browse(cr, uid, ids, context=context):                
+                if sale.woo_order_number:    
+                    update = sale.update_woo_order_status_action('processing')         
                     one_signal_values = {
                                          'partner_id': sale.partner_id.id,
                                          'contents': "Your order " + sale.name + " is confirmed.",
