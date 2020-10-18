@@ -64,7 +64,8 @@ OUT__res_partner__read_all__SCHEMA = (                # editable
     'image_medium', 
     'gender',
     'birthday',         
-    'temp_customer',                   
+    'temp_customer',     
+    'woo_customer_id',              
 )
 #           ]
 #       }
@@ -109,6 +110,7 @@ OUT__res_partner__read_one__SCHEMA = (                # editable
     'gender',
     'birthday',     
     'temp_customer',   
+    'woo_customer_id',         
 )
 
 # /api/res.partner  POST  - Create one
