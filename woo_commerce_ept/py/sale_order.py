@@ -387,9 +387,9 @@ class sale_order(models.Model):
                                                         limit 1''',(odoo_promotion.main_group.id,'%discount',))
                                     product_record = self.env.cr.dictfetchall() 
                                     if product_record:                           
-                                        for product in product_record:                            
-                                            product_id = product.get('product_id')
-                                            product_name = product.get('product_name')
+                                        for p_data in product_record:                            
+                                            product_id = p_data.get('product_id')
+                                            product_name = p_data.get('product_name')
                                             sol_product_id = product_id
                                             sol_name = product_name
                                             promotion_id = odoo_promotion.id
@@ -400,7 +400,7 @@ class sale_order(models.Model):
             sale_foc = False 
         
         if woo_product_uom and product.type == 'product':
-            product_uom = self.env['product.uom'].search([('name', '=', woo_product_uom)])
+            product_uom = self.env['product.uom'].search([('id', '=', woo_product_uom)])
             if product_uom:
                 product_data.update({'product_uom': product_uom.id})   
                                                         
