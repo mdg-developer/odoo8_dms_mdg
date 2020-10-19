@@ -603,6 +603,7 @@ class sale_order(models.Model):
                 'payment_type':payment_type,
                 'barcode':barcode_value,
                 'ecommerce':True,
+                'tb_ref_no':woo_order_number,
             }            
             return ordervals
 
