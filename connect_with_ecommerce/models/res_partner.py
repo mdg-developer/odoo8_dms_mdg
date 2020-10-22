@@ -63,6 +63,7 @@ class res_partner(osv.osv):
 
     def create_or_update_woo_customer(self, cr, uid, ids, mdg_customer=False, customer_code=None, name=None,street=None,street2=None,township=None,state=None,mobile=None,phone=None,gender=None,birthday=None,email=None,partner_latitude=None,partner_longitude=None,sms=None,viber=None,shop_name=None,woo_customer_id=None,image=None,context=None):
         vals = {}
+        contact_township = None
         township_obj = self.pool.get('res.township')
         city_obj = self.pool.get('res.city')
         partner_obj = self.pool.get('res.partner')
