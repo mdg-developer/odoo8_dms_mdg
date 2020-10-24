@@ -223,4 +223,76 @@ class res_partner(osv.osv):
                                          'headings': "MDG Retailer"
                                         }     
                     self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)  
-                return result        
+                return result 
+            
+    def create_or_update_delivery_address(self, cr, uid, ids, customer_code=None, woo_customer_id=None, name=None, contact_note=None, street=None,street2=None,township=None,state=None, delivery_address_id=None, image=None,context=None):
+        
+        vals = {}
+        township_id = city_id = state_id = None
+        partner_obj = self.pool.get('res.partner')
+        township_obj = self.pool.get('res.township')
+        state_obj = self.pool.get('res.country.state')
+        city_obj = self.pool.get('res.city')
+        if delivery_address_id:
+            vals['image'] = image
+            vals['name'] = name
+            vals['contact_note'] = contact_note
+            vals['street'] = street
+            vals['street2'] = street2
+            if township:
+                township_value = township_obj.search(cr, uid, [('name', '=ilike', township)], context=context)
+                if township_value:
+                    township_data = township_obj.browse(cr, uid, township_value, context=context)
+                    vals['township']= township_data.id
+                    city = city_obj.search(cr, uid, [('id', '=', township_data.city.id)], context=context)
+                    if city:
+                        city_data = city_obj.browse(cr, uid, city, context=context)
+                        vals['city']= city_data.id
+            if state:                
+                state_value = state_obj.search(cr, uid, [('name', '=ilike', state)], context=context)
+                if state_value:
+                    state_data = state_obj.browse(cr, uid, state_value, context=context)
+                    vals['state_id'] = state_data.id
+            result = partner_obj.write(cr, uid, delivery_address_id, vals, context=context) 
+            return result
+        else:
+            domain = []
+            if customer_code:                
+                domain += [('customer_code', '=', customer_code)]
+            if woo_customer_id:
+                instances = self.pool.get('woo.instance.ept').search(cr, uid, [('order_auto_import','=',True),('state','=','confirmed')], context=context)
+                woo_customer_code = "%s_%s"%(instances[0],woo_customer_id) if woo_customer_id else False
+                domain += [('woo_customer_id', '=', woo_customer_code)]
+            partner = partner_obj.search(cr, uid, domain, context=context)
+            if partner:
+                partner_data = partner_obj.browse(cr, uid, partner, context=context)
+                partner_id = partner_data.id
+                if township:
+                    township_value = township_obj.search(cr, uid, [('name', '=ilike', township)], context=context)
+                    if township_value:
+                        township_data = township_obj.browse(cr, uid, township_value, context=context)
+                        township_id = township_data.id
+                        city = city_obj.search(cr, uid, [('id', '=', township_data.city.id)], context=context)
+                        if city:
+                            city_data = city_obj.browse(cr, uid, city, context=context)
+                            city_id = city_data.id
+                if state:                
+                    state_value = state_obj.search(cr, uid, [('name', '=ilike', state)], context=context)
+                    if state_value:
+                        state_data = state_obj.browse(cr, uid, state_value, context=context)
+                        state_id = state_data.id
+                partner_values = {
+                                    'parent_id': partner_id,
+                                    'type': 'delivery',
+                                    'image': image,
+                                    'name': name,
+                                    'contact_note': contact_note,
+                                    'street': street,
+                                    'street2': street2,
+                                    'township': township_id,
+                                    'city': city_id,
+                                    'state_id': state_id,
+                                }     
+                new_partner = partner_obj.create(cr, uid, partner_values, context=context)
+                return new_partner    
+                
