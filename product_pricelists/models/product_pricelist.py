@@ -16,6 +16,7 @@ class product_pricelist(osv.osv):
               \nThe exception status is automatically set when a cancel operation occurs \
               in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\nThe 'Waiting Schedule' status is set when the invoice is confirmed\
                but waiting for the scheduler to run on the order date.", select=True),
+        'consumer':fields.boolean('Is Consumer Pricelist' , default=False),
                 
                 }
     _defaults = {

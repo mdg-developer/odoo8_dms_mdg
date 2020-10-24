@@ -1860,7 +1860,7 @@ class mobile_sale_order(osv.osv):
         return list    
 
     def get_pricelist_datas(self, cr, uid , section_id, context=None, **kwargs):
-        cr.execute('''select ppl.id,ppl.name,ppl.type, ppl.active , cpr.is_default
+        cr.execute('''select ppl.id,ppl.name,ppl.type, ppl.active , cpr.is_default,consumer
                  from price_list_line cpr , product_pricelist ppl
                  where ppl.id = cpr.property_product_pricelist 
                  and ppl.active = true
