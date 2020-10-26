@@ -61,11 +61,12 @@ OUT__res_partner__read_all__SCHEMA = (                # editable
     'viber',
     'email',
     'shop_name',
-    'image_medium', 
+    'image', 
     'gender',
     'birthday',         
     'temp_customer',     
-    'woo_customer_id',              
+    'woo_customer_id',    
+    'contact_note',               
 )
 #           ]
 #       }
@@ -106,11 +107,12 @@ OUT__res_partner__read_one__SCHEMA = (                # editable
     'viber',
     'email',
     'shop_name',      
-    'image_medium',   
+    'image',   
     'gender',
     'birthday',     
     'temp_customer',   
-    'woo_customer_id',         
+    'woo_customer_id', 
+    'contact_note',        
 )
 
 # /api/res.partner  POST  - Create one
