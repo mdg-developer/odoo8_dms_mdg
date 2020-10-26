@@ -66,7 +66,9 @@ OUT__res_partner__read_all__SCHEMA = (                # editable
     'birthday',         
     'temp_customer',     
     'woo_customer_id',    
-    'contact_note',               
+    'contact_note',   
+    'type',
+    'address_title',            
 )
 #           ]
 #       }
@@ -112,7 +114,9 @@ OUT__res_partner__read_one__SCHEMA = (                # editable
     'birthday',     
     'temp_customer',   
     'woo_customer_id', 
-    'contact_note',        
+    'contact_note',   
+    'type',
+    'address_title',      
 )
 
 # /api/res.partner  POST  - Create one
