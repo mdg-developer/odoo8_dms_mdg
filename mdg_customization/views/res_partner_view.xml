@@ -214,6 +214,7 @@
 										<field name="email" />
 										<field name="phone" />
 										<field name="mobile" />
+										<field name="address_title" placeholder="e.g. office or shop"/>
 									</group>
 									<div>
 										<field name="use_parent_address" />

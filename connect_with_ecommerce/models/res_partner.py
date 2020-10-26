@@ -225,7 +225,7 @@ class res_partner(osv.osv):
                     self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)  
                 return result 
             
-    def create_or_update_delivery_address(self, cr, uid, ids, customer_code=None, woo_customer_id=None, name=None, contact_note=None, street=None,street2=None,township=None,state=None, delivery_address_id=None, image=None, type=None, context=None):
+    def create_or_update_delivery_address(self, cr, uid, ids, customer_code=None, woo_customer_id=None, name=None, contact_note=None, street=None,street2=None,township=None,state=None, delivery_address_id=None, image=None, type=None, address_title=None, context=None):
         
         vals = {}
         township_id = city_id = state_id = None
@@ -237,6 +237,7 @@ class res_partner(osv.osv):
             vals['image'] = image
             vals['name'] = name
             vals['contact_note'] = contact_note
+            vals['address_title'] = address_title
             vals['street'] = street
             vals['street2'] = street2
             if township:
@@ -287,6 +288,7 @@ class res_partner(osv.osv):
                                     'image': image,
                                     'name': name,
                                     'contact_note': contact_note,
+                                    'address_title': address_title,
                                     'street': street,
                                     'street2': street2,
                                     'township': township_id,
