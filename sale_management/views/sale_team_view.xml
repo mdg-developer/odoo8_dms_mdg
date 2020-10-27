@@ -141,6 +141,14 @@
 							</kanban>
 						</field>
 					</page>
+					<page string="Related Sales Team">
+						<field name="related_sales_team_ids" widget="many2many_list">
+						    <tree>
+						        <field name="name"/>
+						        <field name="code"/>
+						    </tree>
+						</field>
+					</page>
 					<!-- Add Product Main Group -->
 					<!-- <page string="Product Main Group"> -->
 					<!-- <separator string="Main Group" /> -->
