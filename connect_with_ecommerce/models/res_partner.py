@@ -303,5 +303,6 @@ class res_partner(osv.osv):
         partner_obj = self.pool.get('res.partner')
         if delivery_address_id:
             delivery_data = partner_obj.browse(cr, uid, delivery_address_id, context=context)
-            delivery_data.unlink()
+            if delivery_data:
+                delivery_data.unlink()
                 
