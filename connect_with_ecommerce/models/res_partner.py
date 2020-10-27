@@ -296,5 +296,12 @@ class res_partner(osv.osv):
                                     'state_id': state_id,
                                 }     
                 new_partner = partner_obj.create(cr, uid, partner_values, context=context)
-                return new_partner    
+                return new_partner  
+            
+    def delete_delivery_address(self, cr, uid, ids, delivery_address_id=None, context=None):  
+        
+        partner_obj = self.pool.get('res.partner')
+        if delivery_address_id:
+            delivery_data = partner_obj.browse(cr, uid, delivery_address_id, context=context)
+            delivery_data.unlink()
                 
