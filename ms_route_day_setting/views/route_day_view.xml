@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+		
+		<record id="view_route_day_form" model="ir.ui.view">
+			<field name="name">route.day.form</field>
+			<field name="model">route.day</field>
+			<field name="arch" type="xml">
+				<form>
+				    <sheet>
+				        <group>
+					        <group>
+					            <field name="name" />
+					        </group>
+					        <group>
+					            <field name="sequence" />
+					        </group>
+					    </group>
+				    </sheet>				    
+				</form>
+			</field>
+		</record>
+		
+		<record model="ir.ui.view" id="view_route_day_tree">
+			<field name="name">route.day.tree</field>
+			<field name="model">route.day</field>
+			<field name="arch" type="xml">
+				<tree string="Route Day" default_order="sequence">
+					<field name="name" />
+					<field name="sequence" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="action_route_day_view" model="ir.actions.act_window">
+			<field name="name">Route Day Setup</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">route.day</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_route_day_tree" />
+		</record>
+
+		<record id="view_route_day_filter" model="ir.ui.view">
+			<field name="name">route.day.select</field>
+			<field name="model">route.day</field>
+			<field name="arch" type="xml">
+				<search string="Search Route Day">
+					<group expand="0" string="Group By...">
+						<filter string="Day" domain="[]" context="{'group_by':'name'}" />
+						<filter string="Sequence" domain="[]"
+							context="{'group_by':'sequence'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+		
+		<menuitem id="menu_route_day" parent="base.menu_base_partner"
+			name="Route Days" sequence="5" />
+
+		<menuitem id="menu_route_day_form" parent="ms_route_day_setting.menu_route_day"
+			name="Route Day" action="action_route_day_view"
+			sequence="1" />
+
+	</data>
+</openerp>
