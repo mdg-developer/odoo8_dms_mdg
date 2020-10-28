@@ -55,6 +55,11 @@
 					 <xpath expr="//field[@name='client_order_ref']" position="after">
 					     <field name="barcode"/>					     
 					 </xpath>
+					 <xpath expr="//field[@name='partner_shipping_id']" position="after">
+					     <field name="delivery_address"/>
+					     <field name="delivery_contact_no"/>
+					     <field name="delivery_township_id"/>
+					 </xpath>
                     </data>
                </field>
         </record>

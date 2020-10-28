@@ -83,6 +83,9 @@ class sale_order(models.Model):
     visible_trans_id=fields.Boolean("trans_id_avail",compute=visible_transaction_id,store=False)
     payment_gateway_id=fields.Many2one("woo.payment.gateway","Payment Gateway")
     barcode=fields.Char('Barcode')
+    delivery_address=fields.Text('Delivery Address')
+    delivery_contact_no=fields.Char('Delivery Contact No')
+    delivery_township_id=fields.Many2one("res.township","Delivery Township")
         
     @api.multi
     def create_or_update_woo_customer(self,woo_cust_id,vals,is_company=False,parent_id=False,type=False,instance=False):
@@ -698,6 +701,8 @@ class sale_order(models.Model):
     def import_woo_orders(self,instance=False):        
         instances=[]
         woo_product_uom=None
+        delivery_address = ''
+        shipping_phone = None
         current_point=0
         transaction_log_obj=self.env["woo.transaction.log"]
         if not instance:
@@ -822,6 +827,31 @@ class sale_order(models.Model):
                 woo_order_vals=self.get_woo_order_vals(order, workflow, partner, instance, partner, shipping_address, pricelist_id, fiscal_position, payment_term, payment_gateway)
                 sale_order = self.create(woo_order_vals) if woo_order_vals else False
                 
+                if sale_order:
+                    if sale_order.partner_shipping_id:
+                        if sale_order.partner_shipping_id.street:
+                            delivery_address += sale_order.partner_shipping_id.street
+                        if sale_order.partner_shipping_id.street2:
+                            delivery_address += ' ' + sale_order.partner_shipping_id.street2
+                        if sale_order.partner_shipping_id.township:
+                            delivery_address += ' ' + sale_order.partner_shipping_id.township.name
+                        if sale_order.partner_shipping_id.city:
+                            delivery_address += ' ' + sale_order.partner_shipping_id.city.name
+                                           
+                    phone_wcapi = instance.connect_for_product_in_woo()                    
+                    phone_response = phone_wcapi.get('orders/%s'%(order.get('id')))                    
+                    phone_res = phone_response.json()                   
+                    phone_meta_data = phone_res.get('meta_data')
+                    for phone_meta_data in phone_meta_data:
+                        if phone_meta_data.get('key') == '_shipping_phone':                       
+                            shipping_phone = phone_meta_data.get('value')
+                                
+                    sale_order.write({ 
+                                      'delivery_address' : delivery_address,
+                                      'delivery_contact_no' : shipping_phone,
+                                      'delivery_township_id' : sale_order.partner_shipping_id.township.id if sale_order.partner_shipping_id.township else None,
+                                    })
+                    
                 if sale_order and sale_order.getting_point != 0:
                     point_date = dateutil.parser.parse(sale_order.date_order).date()
                     self.env.cr.execute("select COALESCE(sum(getting_point),0) from point_history where partner_id=%s", (partner.id,))    
