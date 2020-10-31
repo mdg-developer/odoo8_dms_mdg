@@ -53,6 +53,7 @@ Connect With Ecommerce
         'views/weekly_noti_view.xml',
         'views/product_reorder_view.xml',
         'views/app_version_view.xml',
+        'wizards/pricelist_multi_sync_woo_view.xml',
                 ],
     'installable': True,
     'auto_install': False,

@@ -10,6 +10,8 @@
 				<field name="company_id" position="after">
 					<field name="city_id" />
 					<field name="township_id" />
+					<field name="retail" />
+					<field name="is_sync_woo" />
 				</field>
 			</field>
 		</record>
@@ -22,6 +24,7 @@
 				<field name="active" position="before">
 					<field name="city_id" />
 					<field name="township_id" />
+					<field name="is_sync_woo" />
 				</field>
 			</field>
 		</record>
@@ -34,6 +37,9 @@
 				<field name="company_id" position="after">
 					<field name="city_id" />
 					<field name="township_id" />
+					<field name="is_sync_woo" />
+					<button name="sync_to_woo" string="Sync To Woo" class="oe_highlight"
+						type="object" />
 				</field>
 			</field>
 		</record>
@@ -46,6 +52,7 @@
 				<field name="date_end" position="after">
 					<field name="city_id" />
 					<field name="township_id" />
+					<field name="is_sync_woo" />
 				</field>
 			</field>
 		</record>
