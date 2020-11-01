@@ -39,10 +39,10 @@ class product_pricelist(osv.osv):
                         price = pricelist_item.new_price
                         pricelist_id = data.id
                         if data.consumer == True:                            
-                            price_info = product_code + "," + str(price) + "," + str(pricelist_id) + ',consumer'                        
+                            price_info = product_code + "," + str(int(price)) + "," + str(pricelist_id) + ',consumer'                        
                             wcapi.put('dynamic-price-consumer',price_info) 
                         if data.retail == True:
-                            price_info = product_code + "," + str(price) + "," + str(pricelist_id) + ',retail'                      
+                            price_info = product_code + "," + str(int(price)) + "," + str(pricelist_id) + ',retail'                      
                             wcapi.put('dynamic-price-retailer',price_info)
             if data.is_sync_woo != True:
                 self.write(cr, uid, ids, {'is_sync_woo': True}, context=context)
