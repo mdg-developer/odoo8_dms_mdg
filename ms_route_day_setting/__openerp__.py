@@ -28,6 +28,7 @@
  'init_xml': [],
  'data': [
         'views/route_day_view.xml',
+        'views/route_day_setting_view.xml',
  ],
  'installable': True,
  'active': False,
