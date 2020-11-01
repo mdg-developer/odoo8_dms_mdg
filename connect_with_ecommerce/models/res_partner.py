@@ -306,3 +306,32 @@ class res_partner(osv.osv):
             if delivery_data:
                 delivery_data.unlink()
                 
+    def edit_customer_profile(self, cr, uid, ids, customer_code=None, woo_customer_id=None, mobile=None, phone=None, name=None, shop_name=None, gender=None, birthday=None, image=None, context=None): 
+        
+        vals = {}
+        partner_obj = self.pool.get('res.partner')
+        domain = []
+        if customer_code:                
+            domain += [('customer_code', '=', customer_code)]
+        if woo_customer_id:
+            instances = self.pool.get('woo.instance.ept').search(cr, uid, [('order_auto_import','=',True),('state','=','confirmed')], context=context)
+            woo_customer_code = "%s_%s"%(instances[0],woo_customer_id) if woo_customer_id else False
+            domain += [('woo_customer_id', '=', woo_customer_code)]
+        partner = partner_obj.search(cr, uid, domain, context=context)
+        if partner:
+            partner_data = partner_obj.browse(cr, uid, partner, context=context)
+            partner_id = partner_data.id
+            partner_values = {
+                                'parent_id': partner_id,
+                                'type': 'delivery',
+                                'mobile': mobile,
+                                'phone': phone,
+                                'name': name,
+                                'shop_name': shop_name,
+                                'gender': gender,
+                                'birthday': birthday,
+                                'image': image,
+                            }     
+            new_partner = partner_obj.create(cr, uid, partner_values, context=context)
+            return new_partner       
+                
