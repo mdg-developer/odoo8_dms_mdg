@@ -68,7 +68,15 @@ OUT__res_partner__read_all__SCHEMA = (                # editable
     'woo_customer_id',    
     'contact_note',   
     'type',
-    'address_title',            
+    'address_title',       
+    ('outlet_type', (
+        'id',
+        'name',
+    )),    
+    ('sales_channel', (
+        'id',
+        'name',
+    )), 
 )
 #           ]
 #       }
@@ -116,7 +124,15 @@ OUT__res_partner__read_one__SCHEMA = (                # editable
     'woo_customer_id', 
     'contact_note',   
     'type',
-    'address_title',      
+    'address_title',    
+    ('outlet_type', (
+        'id',
+        'name',
+    )),    
+    ('sales_channel', (
+        'id',
+        'name',
+    )),   
 )
 
 # /api/res.partner  POST  - Create one
