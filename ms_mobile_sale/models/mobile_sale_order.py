@@ -1181,6 +1181,7 @@ class mobile_sale_order(osv.osv):
                                             'partner_shipping_id':ms_ids.partner_id.id,
                                             # 'shipped':'f',
                                             'tb_ref_no':ms_ids.name,
+                                            'delivery_township_id':ms_ids.partner_id.township.id,
                                             'sale_plan_name':ms_ids.sale_plan_name,
                                             'payment_type':ms_ids.type,
                                             'section_id':sale_team_id,
@@ -2947,12 +2948,12 @@ class mobile_sale_order(osv.osv):
                     so.warehouse_id,so.shipped,so.sale_plan_day_id,so.sale_plan_name,so.so_longitude,so.payment_type,
                     so.due_date,so.sale_plan_trip_id,so.so_latitude,so.customer_code,so.name as so_refNo,so.total_dis,so.deduct_amt,so.coupon_code,
                     so.invoiced,so.branch_id,so.delivery_remark ,team.name,so.payment_term,so.due_date,so.rebate_later,
-                    rp.name customer_name,replace(so.note,',',';') as note,so.woo_order_id,so.ecommerce ,rp.township ,rt.name as township_name
+                    rp.name customer_name,replace(so.note,',',';') as note,so.woo_order_id,so.ecommerce ,so.delivery_township_id ,rt.name as township_name,replace(so.delivery_address,',',';') phone ,replace(so.delivery_contact_no,',',';') phone
                     from sale_order so, crm_case_section team,res_partner rp,res_township rt                                  
                     where so.id= %s and so.state!= 'cancel'
                     and  team.id = so.section_id
                     and  so.partner_id = rp.id
-                    and rt.id =rp.township
+                    and rt.id =so.delivery_township_id
                     ''', (So_id,))
                     result = cr.fetchall()
                     print 'Result Sale Order', result
