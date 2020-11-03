@@ -267,6 +267,7 @@ class crm_case_section(osv.osv):
                 'supervisor_team': fields.many2one('crm.case.section', 'Supervisor Team'),                
                 'is_entry_team':fields.boolean('Is Entry Team',default=False),
                 'is_customer_delivery_team':fields.boolean("Send Via Customer's Delivery",default=False),
+                'related_sales_team_ids':fields.many2many('crm.case.section', 'sale_team_related_team_rel', 'sale_team_id', 'related_team_id', string='Related Sales Team Lines'),
         }
     _sql_constraints = [
         ('code_uniq', 'unique (code)', 'The code of the sales team must be unique !')

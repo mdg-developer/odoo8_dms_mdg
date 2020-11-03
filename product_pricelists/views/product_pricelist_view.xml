@@ -22,6 +22,7 @@
 					<group>
 						<group>
 							<field name="branch_id" string="Branch"  widget="many2many_tags"/>
+							<field name="consumer"/>
 						</group>
 					</group>
 				</xpath>

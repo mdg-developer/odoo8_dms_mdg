@@ -13,7 +13,8 @@ class res_township(osv.osv):
                 
     'city' : fields.many2one('res.city', 'City', ondelete='restrict',required=True),
     'name': fields.char('Township Name', required=True),
-    'code': fields.char('Township Code', size=4, help='The township code in max. three chars.', required=True)
+    'code': fields.char('Township Code', size=4, help='The township code in max. three chars.', required=True),
+    'sequence': fields.integer('Sequence', required=True, default=0),
                }
     _sql_constraints = [
         ('name_uniq', 'unique (name)',
