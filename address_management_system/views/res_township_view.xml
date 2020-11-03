@@ -10,6 +10,7 @@
 					<field name="name" />
 					<field name="code"/>
 					<field name="city" />
+					<field name="sequence"/>
 				</tree>
 			</field>
 		</record>
@@ -30,6 +31,9 @@
 						<group>
 							<field name="city" options='{"no_open": True}'/>
 						</group>
+						<group>
+							<field name="sequence"/>
+						</group>	
 					</group>
 				</form>
 			</field>
