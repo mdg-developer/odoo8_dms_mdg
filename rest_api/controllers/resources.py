@@ -19,3 +19,4 @@ from . import model__res_city
 from . import model__redeem_point
 from . import model__product_reorder
 from . import model__app_version
+from . import model__push_noti_app
