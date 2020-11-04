@@ -10,4 +10,8 @@ class PushNotiApp(osv.osv):
                'name':fields.char(string='Name'),      
                'date':fields.datetime('Date'),         
             }
+    
+    _defaults = {
+        'date': fields.datetime.now,
+    } 
                 
