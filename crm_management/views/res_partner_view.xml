@@ -525,6 +525,7 @@
 				<tree string="Asset">
 					<field name="partner_id" />
 					<field name="name" />
+					<field name="asset_name_id" />
 					<field name="date" />
 					<field name="type" />
 					<field name="asset_type" />
@@ -545,6 +546,8 @@
 							<field name="partner_id" />
 							<field name="township_id" />
 							<field name="name" />
+							<field name="asset_name_id" />
+
 							<field name="date" />
 							<field name="type" />
 							<field name="note" />
@@ -555,6 +558,13 @@
 							<field name="image" widget='image' class="oe_avatar" />
 							<field name="active" />
 						</group>
+					</group>
+					<group>
+						<notebook>
+							<page string="Customer Assets Check">
+								<field name="check_line" />
+							</page>
+						</notebook>
 					</group>
 				</form>
 			</field>
@@ -647,12 +657,14 @@
 			<field name="arch" type="xml">
 				<form string="Asset Type">
 					<group>
-						<field name="name" />
-						<field name="asset_type_id" />
-					</group>
-					<group>
-						<field name="type" />
-						<field name="is_auto_fill" />
+						<group>
+							<field name="name" />
+							<field name="asset_type_id" />
+						</group>
+						<group>
+							<field name="type" />
+							<field name="is_auto_fill" />
+						</group>
 					</group>
 				</form>
 			</field>
@@ -668,6 +680,58 @@
 		</record>
 		<menuitem id="config_view_customer_asset_configuration_action"
 			parent="config_asset_type_action" action="open_view_customer_asset_configuration_action" />
+
+		<!-- Asset Check -->
+		<record id="view_partner_asset_check_tree" model="ir.ui.view">
+			<field name="name">res.partner.asset.check</field>
+			<field name="model">res.partner.asset.check</field>
+			<field name="arch" type="xml">
+				<tree string="Assets Check Tree">
+					<field name="partner_id" />
+					<field name="status" />
+					<field name="asset_id" />
+					<field name="asset_name" />
+					<field name="date" />
+					<field name="check_by" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="view_partner_asset_check_form" model="ir.ui.view">
+			<field name="name">res.partner.asset.check.form</field>
+			<field name="model">res.partner.asset.check</field>
+			<field name="arch" type="xml">
+				<form string="Assets Check">
+					<group>
+						<group>
+							<field name="partner_id" />
+							<field name="status" />
+							<field name="asset_id" />
+							<field name="asset_name" />
+
+						</group>
+						<group>
+							<field name="date" />
+							<field name="check_by" />
+							<field name="image" widget='image' class="oe_avatar" />
+
+						</group>
+					</group>
+				</form>
+			</field>
+		</record>
+
+		<record model="ir.actions.act_window" id="open_view_customer_asset_check_action">
+			<field name="name">Assets Check</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">res.partner.asset.check</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_partner_asset_check_tree" />
+		</record>
+		<menuitem id="config_view_customer_asset_check_action"
+			parent="base.menu_sales" action="open_view_customer_asset_check_action"
+			sequence="10" />
 
 
 	</data>
