@@ -116,7 +116,7 @@ class res_partner(osv.osv):
             vals['date_partnership'] = datetime.today()             
             vals['temp_customer'] = name
             if sale_channel == 'consumer':
-                outlettype = outlettype_obj.search(cr, uid, [('name', '=ilike', 'Consumer')],context=context)            
+                outlettype = outlettype_obj.search(cr, uid, [('name', '=ilike', 'Site Registered')],context=context)            
                 if outlettype:
                     outlettype_data = outlettype_obj.browse(cr, uid, outlettype, context=context)
                     vals['outlet_type'] = outlettype_data.id
@@ -326,10 +326,11 @@ class res_partner(osv.osv):
             if delivery_data:
                 delivery_data.unlink()
                 
-    def edit_customer_profile(self, cr, uid, ids, customer_code=None, woo_customer_id=None, mobile=None, phone=None, name=None, shop_name=None, gender=None, birthday=None, image=None, context=None): 
+    def edit_customer_profile(self, cr, uid, ids, customer_code=None, woo_customer_id=None, mobile=None, phone=None, name=None, shop_name=None, gender=None, birthday=None, image=None, sale_channel=None, context=None): 
         
         vals = {}
         partner_obj = self.pool.get('res.partner')
+        outlettype_obj = self.pool.get('outlettype.outlettype')
         domain = []
         if customer_code:                
             domain += [('customer_code', '=', customer_code)]
@@ -337,13 +338,23 @@ class res_partner(osv.osv):
             instances = self.pool.get('woo.instance.ept').search(cr, uid, [('order_auto_import','=',True),('state','=','confirmed')], context=context)
             woo_customer_code = "%s_%s"%(instances[0],woo_customer_id) if woo_customer_id else False
             domain += [('woo_customer_id', '=', woo_customer_code)]
+        if sale_channel == 'consumer':
+            outlettype = outlettype_obj.search(cr, uid, [('name', '=ilike', 'Site Registered')],context=context)            
+            if outlettype:
+                outlettype_data = outlettype_obj.browse(cr, uid, outlettype, context=context)
+                outlet_type = outlettype_data.id
+        if sale_channel == 'retailer':
+            outlettype = outlettype_obj.search(cr, uid, [('name', '=ilike', 'Verify Retailer')],context=context)            
+            if outlettype:
+                outlettype_data = outlettype_obj.browse(cr, uid, outlettype, context=context)
+                outlet_type = outlettype_data.id
         partner = partner_obj.search(cr, uid, domain, context=context)
         if partner:
             partner_data = partner_obj.browse(cr, uid, partner, context=context)
             partner_id = partner_data.id
             partner_values = {
                                 'parent_id': partner_id,
-                                'type': 'delivery',
+                                'type': 'contact',
                                 'mobile': mobile,
                                 'phone': phone,
                                 'name': name,
@@ -351,6 +362,7 @@ class res_partner(osv.osv):
                                 'gender': gender,
                                 'birthday': birthday,
                                 'image': image,
+                                'outlet_type': outlet_type,
                             }     
             new_partner = partner_obj.create(cr, uid, partner_values, context=context)
             return new_partner       
