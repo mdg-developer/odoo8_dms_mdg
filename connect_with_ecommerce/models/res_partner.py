@@ -302,21 +302,34 @@ class res_partner(osv.osv):
                     if state_value:
                         state_data = state_obj.browse(cr, uid, state_value, context=context)
                         state_id = state_data.id
-                partner_values = {
-                                    'parent_id': partner_id,
-                                    'type': type,
-                                    'image': image,
-                                    'name': name,
-                                    'contact_note': contact_note,
-                                    'address_title': address_title,
-                                    'street': street,
-                                    'street2': street2,
-                                    'township': township_id,
-                                    'city': city_id,
-                                    'state_id': state_id,
-                                }     
-                new_partner = partner_obj.create(cr, uid, partner_values, context=context)
-                return new_partner  
+                existing_delivery_address = partner_obj.search(cr, uid, [('parent_id', '=', partner_id),
+                                                                        ('type', '=', type),
+                                                                        ('image', '=', image),
+                                                                        ('name', '=', name),
+                                                                        ('contact_note', '=', contact_note),
+                                                                        ('address_title', '=', address_title),
+                                                                        ('street', '=', street),
+                                                                        ('street2', '=', street2),
+                                                                        ('township', '=', township),
+                                                                        ('city', '=', city),
+                                                                        ('state_id', '=', state_id),
+                                                                        ], context=context)
+                if not existing_delivery_address:
+                    partner_values = {
+                                        'parent_id': partner_id,
+                                        'type': type,
+                                        'image': image,
+                                        'name': name,
+                                        'contact_note': contact_note,
+                                        'address_title': address_title,
+                                        'street': street,
+                                        'street2': street2,
+                                        'township': township_id,
+                                        'city': city_id,
+                                        'state_id': state_id,
+                                    }     
+                    new_partner = partner_obj.create(cr, uid, partner_values, context=context)
+                    return new_partner  
             
     def delete_delivery_address(self, cr, uid, ids, delivery_address_id=None, context=None):  
         
