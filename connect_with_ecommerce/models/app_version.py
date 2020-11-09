@@ -9,6 +9,7 @@ class AppVersion(osv.osv):
     
     _columns = {
                'name':fields.char(string='App Version Name'), 
+               'play_store_version':fields.char(string='Play Store Version Name'), 
                'state':fields.selection([('draft', 'Draft'), ('confirm', 'Confirmed')], 'Status'),              
             }
             

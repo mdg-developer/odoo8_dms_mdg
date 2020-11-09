@@ -16,6 +16,7 @@
 						<group>							
 							<group>
 								<field name="name" />
+								<field name="play_store_version" />
 							</group>
 						</group>			
 					</sheet>									
@@ -29,6 +30,7 @@
 			<field name="arch" type="xml">
 				<tree>
 					<field name="name"/>
+					<field name="play_store_version" />
 					<field name="state"/>
 				</tree>
 			</field>

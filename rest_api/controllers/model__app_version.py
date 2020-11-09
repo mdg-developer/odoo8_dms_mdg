@@ -43,6 +43,7 @@ OUT__app_version__read_all__SUCCESS_CODE = 200       # editable
 OUT__app_version__read_all__SCHEMA = (                 # editable
     'id',
     'name',
+    'play_store_version',
 )
 #           ]
 #       }
@@ -71,6 +72,7 @@ OUT__app_version__read_one__SCHEMA = (                 # editable
     # simple fields (non relational):
     'id',
     'name',
+    'play_store_version',
 )
 
 # /api/app.version  POST  - Create one
