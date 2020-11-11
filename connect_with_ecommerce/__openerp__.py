@@ -30,7 +30,8 @@
                     "base",
                     "address_management_system",
                     "product",
-                    "product_product"
+                    "product_product",
+                    "woo_commerce_ept"
                 ],
     'description': """
 Connect With Ecommerce    
@@ -47,7 +48,12 @@ Connect With Ecommerce
         'views/res_partner_view.xml',
         'views/res_township_view.xml',
         'views/product_pricelist_view.xml',
-        'views/credit_application_approval.xml'
+        'views/credit_application_approval.xml',
+        'views/notified_days_view.xml',
+        'views/weekly_noti_view.xml',
+        'views/product_reorder_view.xml',
+        'views/app_version_view.xml',
+        'wizards/pricelist_multi_sync_woo_view.xml',
                 ],
     'installable': True,
     'auto_install': False,

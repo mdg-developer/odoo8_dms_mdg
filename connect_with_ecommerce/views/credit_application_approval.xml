@@ -9,7 +9,7 @@
                     <group>
                         <field name="name" readonly='1'/>
                         <field name="customer_id" style="width: 40%%" readonly='1'/>
-                        <field name="appiled_amount"/>
+                        <field name="applied_amount"/>
                         <field name="effective_date"/>
                         <field name="approved_amount"/>
                     </group>

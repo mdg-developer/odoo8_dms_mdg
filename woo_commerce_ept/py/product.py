@@ -40,4 +40,40 @@ class product_template(models.Model):
             woo_template_obj.sync_new_products(instance)
         return True 
     
+    @api.model
+    def auto_update_woo_product_short_name(self):
+        woo_instance_obj=self.env['woo.instance.ept']
+        instance=woo_instance_obj.search([('state','=','confirmed')], limit=1)
+        if instance:               
+            wcapi = instance.connect_in_woo() 
+            if wcapi:                
+                response = wcapi.get('products')
+                response_data = response.json()  
+                if instance.woo_version == 'old':                
+                    woo_products = response_data.get("products")                    
+                elif instance.woo_version == 'new':
+                    woo_products = response_data
+                
+                for product in woo_products:                
+                    
+                    product_id = product.get('id',False)
+                    product_code = product.get('sku',False)
+                    product_name = product.get('title',False)
+                    product_obj = self.env['product.product'].search([('default_code', '=', product_code)])
+                    if product_obj:
+                        short_name = product_obj.product_tmpl_id.short_name  
+                        if short_name:                    
+                            if product_name != short_name:
+                                data = {
+                                    "product": {
+                                        "title": short_name
+                                    }
+                                }                            
+                                wcapi.put("products/%s"%(product_id), data).json()  
+        return True 
+    
+class product_uom(models.Model):
+    _inherit = 'product.uom'    
+    
+    is_sync_woo = fields.Boolean('Is Sync Woo', default=False)    
     

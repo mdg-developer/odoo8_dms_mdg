@@ -23,6 +23,22 @@
 				</xpath>
 			</field>
 		</record>  
+		
+		<record id="inherit_view_crm_partner_assign_form_ecommerce" model="ir.ui.view">
+			<field name="name">res.partner.form.ecommerce</field>
+			<field name="model">res.partner</field>
+			<field name="type">form</field>
+			<field name="inherit_id" ref="mdg_customization.inherit_view_crm_partner_assign_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='child_ids']/tree/field[@name='name']" position="after">
+					<field name="shop_name" />
+				</xpath>				
+				<xpath expr="//form/sheet/group/field[@name='email']" position="after">
+					<field name="birthday" />
+					<field name="gender" />
+				</xpath>
+			</field>
+		</record>  
 		     
 	</data>
 </openerp>

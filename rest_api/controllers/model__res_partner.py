@@ -56,15 +56,27 @@ OUT__res_partner__read_all__SCHEMA = (                # editable
         'id',
         'name',
         'code'
-    )),
-    'phone',
+    )),   
     'sms',
     'viber',
     'email',
     'shop_name',
-    'image_medium', 
+    'image', 
     'gender',
-    'birthday',                            
+    'birthday',         
+    'temp_customer',     
+    'woo_customer_id',    
+    'contact_note',   
+    'type',
+    'address_title',       
+    ('outlet_type', (
+        'id',
+        'name',
+    )),    
+    ('sales_channel', (
+        'id',
+        'name',
+    )), 
 )
 #           ]
 #       }
@@ -100,15 +112,27 @@ OUT__res_partner__read_one__SCHEMA = (                # editable
         'id',
         'name',
         'code'
-    )),
-    'phone',
+    )),    
     'sms',
     'viber',
     'email',
     'shop_name',      
-    'image_medium',   
+    'image',   
     'gender',
     'birthday',     
+    'temp_customer',   
+    'woo_customer_id', 
+    'contact_note',   
+    'type',
+    'address_title',    
+    ('outlet_type', (
+        'id',
+        'name',
+    )),    
+    ('sales_channel', (
+        'id',
+        'name',
+    )),   
 )
 
 # /api/res.partner  POST  - Create one

@@ -38,11 +38,43 @@ OUT__sale_order__read_all__SCHEMA = (                 # editable
     # simple fields (non relational):
     'id',
     'name',
+    'woo_order_number',
     'date_order',
+    'amount_tax',
     'amount_total',
     'state',
+    'woo_customer_id',
     # many2one fields:
+    ('carrier_id', (
+        'id',
+        'name',
+    )),
     ('partner_id', (
+        'id',
+        'name',
+    )),
+    ('partner_shipping_id', (
+        'id',
+        'street',
+        'street2',
+        ('township', (
+            'id',
+            'name',
+        )),
+        ('city', (
+            'id',
+            'name',
+        )),
+        ('state_id', (
+            'id',
+            'name',
+        )),
+        ('country_id', (
+            'id',
+            'name',
+        )),
+    )),  
+    ('user_id', (
         'id',
         'name',
     )),
@@ -50,6 +82,33 @@ OUT__sale_order__read_all__SCHEMA = (                 # editable
         'id',
         'name',
     )),
+    # one2many fields:
+    ('order_line', [(
+        'id',
+        ('product_id', (  # many2one
+            'id',
+            'name',
+            'type',
+            'state',
+            'ean13',
+            ('categ_id', (  # many2one
+                'id',
+                'name',
+            )),
+            ('attribute_line_ids', [(  # one2many
+                'id',
+                'display_name',
+            )]),
+        )),
+        'name',
+        'product_uom_qty',
+        'price_unit',
+        ('tax_id', [(  # many2many
+            'id',
+            'name',
+        )]),
+        'price_subtotal',
+    )]),
 )
 #           ]
 #       }
@@ -68,18 +127,45 @@ OUT__sale_order__read_one__SCHEMA = (                 # editable
     # simple fields (non relational):
     'id',
     'name',
+    'woo_order_number',
     'date_order',
     'create_date',
     'amount_tax',
     'amount_total',
     'state',
+    'woo_customer_id',
     'invoiced',
     # many2one fields:
+    ('carrier_id', (
+        'id',
+        'name',
+    )),
     ('partner_id', (
         'id',
         'name',
         'city',
     )),
+    ('partner_shipping_id', (
+        'id',
+        'street',
+        'street2',
+        ('township', (
+            'id',
+            'name',
+        )),
+        ('city', (
+            'id',
+            'name',
+        )),
+        ('state_id', (
+            'id',
+            'name',
+        )),
+        ('country_id', (
+            'id',
+            'name',
+        )),
+    )),                                 
     ('user_id', (
         'id',
         'name',

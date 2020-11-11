@@ -165,20 +165,20 @@
       parent="menu_item_parent_woo_invoices_ept" action="action_refund_woo_invoices" sequence="5"/>
 
 
-        <record id="invoice_form_ept" model="ir.ui.view">
-            <field name="name">account.invoice.form</field>
-            <field name="model">account.invoice</field>
-			<field name="inherit_id" ref="account.invoice_form"/>
-            <field name="arch" type="xml">
-            	<field name="account_id" position="after">
-            		<field name="woo_instance_id" invisible="1"/>
-            		<field name="is_refund_in_woo" invisible="1"/>
-            	</field>
-            	<button name="invoice_cancel" position="after">
-            		<button name="refund_in_woo" type="object" string="Refund In WooCommerce" attrs="{'invisible':['|','|','|',('is_refund_in_woo','!=',False),('woo_instance_id','=',False),('state','!=','paid'),('type','!=','out_refund')]}"/>
-            	</button>
-			</field>
-		</record>
+<!--         <record id="invoice_form_ept" model="ir.ui.view"> -->
+<!--             <field name="name">account.invoice.form</field> -->
+<!--             <field name="model">account.invoice</field> -->
+<!-- 			<field name="inherit_id" ref="account.invoice_form"/> -->
+<!--             <field name="arch" type="xml"> -->
+<!--             	<field name="account_id" position="after"> -->
+<!--             		<field name="woo_instance_id" invisible="1"/> -->
+<!--             		<field name="is_refund_in_woo" invisible="1"/> -->
+<!--             	</field> -->
+<!--             	<button name="invoice_cancel" position="after"> -->
+<!--             		<button name="refund_in_woo" type="object" string="Refund In WooCommerce" attrs="{'invisible':['|','|','|',('is_refund_in_woo','!=',False),('woo_instance_id','=',False),('state','!=','paid'),('type','!=','out_refund')]}"/> -->
+<!--             	</button> -->
+<!-- 			</field> -->
+<!-- 		</record> -->
 
 	</data>
 </openerp>

@@ -1681,7 +1681,7 @@ class woo_product_template_ept(models.Model):
         return actual_stock                 
 
     @api.model
-    def export_products_in_woo(self,instance,woo_templates,update_price,update_stock,publish,update_image=True):
+    def export_products_in_woo(self,instance,woo_templates,update_price,update_stock,publish,update_image=False):
         transaction_log_obj=self.env['woo.transaction.log']
         wcapi = instance.connect_in_woo()        
         woo_product_product_ept = self.env['woo.product.product.ept']
@@ -1805,7 +1805,7 @@ class woo_product_template_ept(models.Model):
                     variation_data.update({'attributes':att,'sku':variant.default_code,'weight':variant.product_id.weight})                    
                     if update_price:                     
                         price=instance.pricelist_id.with_context(uom=variant.product_id.uom_id.id).price_get(variant.product_id.id,1.0,partner=False,context=self._context)[instance.pricelist_id.id]
-                        variation_data.update({'regular_price':price,'sale_price':price})
+                        variation_data.update({'regular_price':variant.product_id.product_tmpl_id.ecommerce_price,'sale_price':variant.product_id.product_tmpl_id.ecommerce_price})
                     if update_stock:                        
                         quantity=self.get_stock(variant,instance.warehouse_id.id,instance.stock_field.name)
                         variation_data.update({'managing_stock':True,'stock_quantity':int(quantity)})
@@ -1835,7 +1835,7 @@ class woo_product_template_ept(models.Model):
                 data.update({'type': 'simple','sku':variant.default_code,'weight':variant.product_id.weight})
                 if update_price:
                     price=instance.pricelist_id.with_context(uom=variant.product_id.uom_id.id).price_get(variant.product_id.id,1.0,partner=False,context=self._context)[instance.pricelist_id.id]
-                    data.update({'regular_price':price,'sale_price':price})
+                    data.update({'regular_price':variant.product_id.product_tmpl_id.ecommerce_price,'sale_price':variant.product_id.product_tmpl_id.ecommerce_price})
                 if update_stock:                        
                     quantity=self.get_stock(variant,instance.warehouse_id.id,instance.stock_field.name)
                     data.update({'managing_stock':True,'stock_quantity':int(quantity)})
@@ -1883,7 +1883,7 @@ class woo_product_template_ept(models.Model):
                         else:
                             tmpl_images.append({'id':img_url,'position': position})
                         position += 1                
-            tmpl_images and data.update({"images":tmpl_images})                                                                                                                   
+            tmpl_images and data.update({"images":tmpl_images})  
             new_product = wcapi.post('products',{'product':data})
             if not isinstance(new_product,requests.models.Response):               
                 transaction_log_obj.create({'message': "Export Product \nResponse is not in proper format :: %s"%(new_product),
@@ -1921,7 +1921,7 @@ class woo_product_template_ept(models.Model):
                                              'woo_instance_id':instance.id
                                             })
                 continue
-            response = response.get('product')
+            response = response.get('product')            
             response_variations = response.get('variations')
             for response_variation in response_variations:
                 response_variant_data = {}
@@ -1941,7 +1941,28 @@ class woo_product_template_ept(models.Model):
                 woo_product = woo_product_product_ept.search([('default_code','=',variant_sku),('woo_template_id','=',woo_template.id),('woo_instance_id','=',instance.id)])
                 response_variant_data.update({'variant_id':variant_id,'created_at':variant_created_at,'updated_at':variant_updated_at,'exported_in_woo':True})
                 woo_product and woo_product.write(response_variant_data) 
-            woo_tmpl_id = response.get('id')
+            woo_tmpl_id = response.get('id')                        
+            if variant.product_id.product_tmpl_id.ecommerce_uom_id:
+                woo_instance_obj=self.env['woo.instance.ept']
+                instance=woo_instance_obj.search([('state','=','confirmed')], limit=1)
+                if instance:
+                    uom_wcapi = instance.connect_for_point_in_woo() 
+                    uom_data = variant.product_id.product_tmpl_id.ecommerce_uom_id.id                    
+                    uom_wcapi.post('insert-uom/%s'%(woo_tmpl_id),uom_data)                
+            if variant.product_id.product_tmpl_id.barcode_no:
+                woo_instance_obj=self.env['woo.instance.ept']
+                instance=woo_instance_obj.search([('state','=','confirmed')], limit=1)
+                if instance:
+                    barcode_wcapi = instance.connect_for_point_in_woo() 
+                    barcode_data = variant.product_id.product_tmpl_id.barcode_no                                    
+                    barcode_wcapi.post('insert-barcode/%s'%(woo_tmpl_id),barcode_data) 
+            if variant.product_id.product_tmpl_id.uom_ratio:
+                woo_instance_obj=self.env['woo.instance.ept']
+                instance=woo_instance_obj.search([('state','=','confirmed')], limit=1)
+                if instance:
+                    packing_size_wcapi = instance.connect_for_point_in_woo() 
+                    packing_size_data = variant.product_id.product_tmpl_id.uom_ratio                                 
+                    packing_size_wcapi.post('insert-packsize/%s'%(woo_tmpl_id),packing_size_data)   
             tmpl_images = response.get('images')
             offset = 0
             for tmpl_image in tmpl_images:
@@ -1971,7 +1992,8 @@ class woo_product_template_ept(models.Model):
                 woo_product.write({'variant_id':woo_tmpl_id,'created_at':created_at,'updated_at':updated_at,'exported_in_woo':True})
             tmpl_data= {'woo_tmpl_id':woo_tmpl_id,'created_at':created_at,'updated_at':updated_at,'exported_in_woo':True}
             tmpl_data.update({'website_published':True}) if publish else tmpl_data.update({'website_published':False})
-            woo_template.write(tmpl_data)             
+            woo_template.write(tmpl_data)    
+            woo_template.product_tmpl_id.write({'is_sync_ecommerce': True})         
             self._cr.commit()
         return True
     

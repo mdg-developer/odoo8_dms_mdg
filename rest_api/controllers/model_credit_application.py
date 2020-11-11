@@ -40,7 +40,11 @@ OUT__credit_application__read_all__SCHEMA = (                # editable
     ('customer_id', (
         'id',
         'name',
-    )),                          
+    )),
+    'date_received',
+    'applied_amount',
+    'effective_date',
+    'approved_amount'                                                                   
 )
 #           ]
 #       }
@@ -62,7 +66,11 @@ OUT__credit_application__read_one__SCHEMA = (                # editable
     ('customer_id', (
         'id',
         'name',
-    )),     
+    )),    
+    'date_received',
+    'applied_amount',
+    'effective_date',
+    'approved_amount'     
 )
 
 # /api/credit.application  POST  - Create one

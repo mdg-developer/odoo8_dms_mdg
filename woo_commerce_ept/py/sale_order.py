@@ -4,6 +4,7 @@ from .. import woocommerce
 import time
 import requests
 from datetime import timedelta,datetime
+import dateutil.parser
 
 class sale_order(models.Model):
     _inherit="sale.order"
@@ -30,6 +31,22 @@ class sale_order(models.Model):
                 if not picking.updated_in_woo:
                     order.updated_in_woo=False
                     break
+
+    @api.one
+    def _get_woo_customer_id(self):
+        for order in self:
+            if order.partner_id.woo_customer_id:
+                woo_customer_id = order.partner_id.woo_customer_id.split("_")[1]                
+                order.woo_customer_id = woo_customer_id
+            else:
+                pass
+    
+    def create(self, cursor, user, vals, context=None):
+        partner = self.pool.get('res.partner').browse(cursor, user, [vals['partner_id']], context=context)
+        if partner.woo_customer_id:
+            woo_customer_id = partner.woo_customer_id.split("_")[1]
+            vals.update(woo_customer_id=woo_customer_id)
+        return super(sale_order, self).create(cursor, user, vals, context=context)                               
 
     def _search_woo_order_ids(self,operator,value):
         print("_search_woo_order_ids")
@@ -62,9 +79,14 @@ class sale_order(models.Model):
     woo_instance_id=fields.Many2one("woo.instance.ept","Instance")
     woo_trans_id=fields.Char("Transaction Id")
     woo_customer_ip=fields.Char("Customer IP")
+    woo_customer_id=fields.Char('Woo Customer ID')
     visible_trans_id=fields.Boolean("trans_id_avail",compute=visible_transaction_id,store=False)
     payment_gateway_id=fields.Many2one("woo.payment.gateway","Payment Gateway")
-    
+    barcode=fields.Char('Barcode')
+    delivery_address=fields.Text('Delivery Address')
+    delivery_contact_no=fields.Char('Delivery Contact No')
+    delivery_township_id=fields.Many2one("res.township","Delivery Township")
+        
     @api.multi
     def create_or_update_woo_customer(self,woo_cust_id,vals,is_company=False,parent_id=False,type=False,instance=False):
         country_obj=self.env['res.country']
@@ -72,10 +94,10 @@ class sale_order(models.Model):
         partner_obj=self.env['res.partner']
         account = self.env['account.account']
 
+        township = None
         property_account_payable = account.search([('type', '=', 'payable')],limit=1)
         property_account_payable_clearing = account.search([('type', '=', 'liquidity')],limit=1)
-        
-        
+                
         first_name=vals.get('first_name')
         last_name=vals.get('last_name')
         
@@ -111,7 +133,7 @@ class sale_order(models.Model):
             state=state_obj.search([('name','=',state_name)],limit=1)            
         else:
             state = state_obj.search(["|", ('code', '=', state_name), ('name', '=', state_name), ('country_id', '=', country.id)],limit=1)
-          
+        
         if city:  
             self.env.cr.execute("""select rc.id
                                 from res_township rt,res_city rc
@@ -121,12 +143,13 @@ class sale_order(models.Model):
             city_data = self.env.cr.fetchall()    
             if city_data:
                 city = city_data[0][0]  
-        
+                
             self.env.cr.execute("""select id
                                 from res_township rt
                                 where lower(name)=lower(%s)
                                 """, (vals.get('city'),))    
             township_data = self.env.cr.fetchall()    
+            
             if township_data:
                 township = township_data[0][0]    
                         
@@ -135,7 +158,7 @@ class sale_order(models.Model):
             partner=partner_obj.search([('name','=',name),('city','=',city),('township','=',township),('street','=',address1),('street2','=',address2),('email','=',email),('phone','=',phone),('zip','=',zip),('country_id','=',country.id),('state_id','=',state.id)],limit=1)
         if not partner:
             partner=partner_obj.search([('name','=',name),('city','=',city),('township','=',township),('street','=',address1),('street2','=',address2),('zip','=',zip),('country_id','=',country.id)],limit=1)
-            
+           
         if partner:
             partner.write({'state_id':state and state.id or False,'is_company':is_company,'woo_company_name_ept':company_name or partner.woo_company_name_ept,
                            'phone':phone or partner.phone,'woo_customer_id':woo_customer_id or partner.woo_customer_id,
@@ -146,20 +169,20 @@ class sale_order(models.Model):
                            'property_account_payable':property_account_payable.id,
                            'property_account_payable_clearing':property_account_payable_clearing.id,
                            })          
-        # else:
-        #     partner=partner_obj.create({'type':type,'parent_id':parent_id,'woo_customer_id':woo_customer_id or '',
-        #                                 'name':name,'state_id':state and state.id or False,'city':city,'township':township,
-        #                                 'street':address1,'street2':address2,
-        #                                 'phone':phone,'zip':zip,'email':email,
-        #                                 'country_id':country.id and country.id or False,'is_company':is_company,
-        #                                 'lang':instance.lang_id.code,
-        #                                 'property_product_pricelist':instance.pricelist_id.id,
-        #                                 'property_account_position':instance.fiscal_position_id.id and instance.fiscal_position_id.id or False,
-        #                                 'property_payment_term':instance.payment_term_id.id and instance.payment_term_id.id or False,
-        #                                 'woo_company_name_ept':company_name,
-        #                                 'property_account_payable':property_account_payable.id,
-        #                                 'property_account_payable_clearing':property_account_payable_clearing.id,                                        
-        #                                 })
+        else:    
+            partner=partner_obj.create({'type':type,'parent_id':parent_id,'woo_customer_id':woo_customer_id or '',
+                                        'name':name,'state_id':state and state.id or False,'city':city,'township':township,
+                                        'street':address1,'street2':address2,
+                                        'phone':phone,'zip':zip,'email':email,
+                                        'country_id':country.id and country.id or False,'is_company':is_company,
+                                        'lang':instance.lang_id.code,
+                                        'property_product_pricelist':instance.pricelist_id.id,
+                                        'property_account_position':instance.fiscal_position_id.id and instance.fiscal_position_id.id or False,
+                                        'property_payment_term':instance.payment_term_id.id and instance.payment_term_id.id or False,
+                                        'woo_company_name_ept':company_name,
+                                        'property_account_payable':property_account_payable.id,
+                                        'property_account_payable_clearing':property_account_payable_clearing.id,                                        
+                                        })
         return partner        
 
     @api.model
@@ -182,8 +205,8 @@ class sale_order(models.Model):
         for tax in tax_datas:
             rate=float(tax.get('rate',0.0))
             if rate!=0.0:
-                rate = rate / 100.0 if rate >= 1 else rate
-                acctax_id = self.env['account.tax'].search([('price_include','=',tax_included),('type_tax_use', '=', 'sale'), ('amount', '=', rate),('company_id','=',instance.warehouse_id.company_id.id)])
+                rate = rate / 100.0 if rate >= 1 else rate                
+                acctax_id = self.env['account.tax'].search([('price_include','=',tax_included),('type_tax_use', '=', 'sale'), ('company_id','=',instance.warehouse_id.company_id.id)],limit=1)
                 if not acctax_id:
                     acctax_id = self.createWooAccountTax(rate,tax_included,instance.warehouse_id.company_id,tax.get('name'))
                     if acctax_id:
@@ -293,7 +316,7 @@ class sale_order(models.Model):
         return mismatch
 
     @api.model
-    def create_woo_sale_order_line(self,line,tax_ids,product,quantity,fiscal_position,partner,pricelist_id,name,order,price):
+    def create_woo_sale_order_line(self,line,tax_ids,product,woo_product_uom,quantity,fiscal_position,partner,pricelist_id,name,order,price):
         sale_order_line_obj=self.env['sale.order.line']
         uom_id=product and product.uom_id and product.uom_id.id or False
         product_data=sale_order_line_obj.product_id_change(pricelist_id,product and product.ids[0] or False,quantity,uom_id
@@ -301,22 +324,109 @@ class sale_order(models.Model):
                                                                          ,False,True,time.strftime('%Y-%m-%d'),False,
                                                                          fiscal_position.id,False)
         product_data=product_data.get('value')
-
+                                
+        delivery_product = discount_product = fees_product = False
+        promotion_id = None
+        
+        promotion = self.env['promos.rules'].search([('ecommerce', '=', True)], limit=1)
+                    
+        if product.product_tmpl_id.type == 'service':
+            delivery_obj = self.env['delivery.carrier']
+            delivery = delivery_obj.search([('product_id', '=', product.id)])
+            if delivery:    
+                for deli in delivery:            
+                    if product.id == deli.product_id.id:                    
+                        delivery_product = True 
+                        break
+        woo_setting = self.env['woo.instance.ept'].search([])
+        if woo_setting:            
+            for woo in woo_setting:
+                if woo.discount_product_id:
+                    woo_discount_product = self.env['product.product'].search([('id', '=', woo.discount_product_id.id)])
+                    if woo_discount_product:
+                        if product.id == woo_discount_product.id: 
+                            discount_product = True 
+                            if promotion:
+                                promotion_id = promotion.id
+                if woo.fee_line_id:
+                    woo_fee_product = self.env['product.product'].search([('id', '=', woo.fee_line_id.id)])
+                    if woo_fee_product:
+                        if product.id == woo_fee_product.id:
+                            fees_product = True                             
+                            if promotion:
+                                promotion_id = promotion.id                                                                      
+        
+        if price == 0:
+            if promotion:
+                promotion_id = promotion.id
+        
+        sol_name = product.name or name
+        sol_product_id = product and product.ids[0] or False
+        
+        woo_instance_obj=self.env['woo.instance.ept']
+        instance=woo_instance_obj.search([('state','=','confirmed')], limit=1)
+        if instance:
+            discount_wcapi = instance.connect_for_point_in_woo() 
+            discount_response = discount_wcapi.get('order-discount')                  
+            discount_response_data = discount_response.json()   
+            if discount_response_data:             
+                for discount in discount_response_data:
+                    woo_order_number = discount.get('order_id',False)                       
+                    if woo_order_number == order.woo_order_id:
+                        if float(price) < 0 or float(price) == 0:                            
+                            odoo_discount_id = discount.get('odoo_discount_id',False)         
+                            if odoo_discount_id and fees_product == True:
+                                odoo_promotion = self.env['promos.rules'].search([('ecommerce','=',True),
+                                                                                  ('id','=',odoo_discount_id)])                                
+                                if odoo_promotion and odoo_promotion.main_group:                                                           
+                                    self.env.cr.execute('''select pp.id product_id,name_template product_name
+                                                        from product_product pp,product_template pt
+                                                        where pp.product_tmpl_id=pt.id
+                                                        and main_group=%s
+                                                        and pp.active=true
+                                                        and pt.active=true
+                                                        and pt.type='service'                                                
+                                                        and lower(name_template) like %s
+                                                        limit 1''',(odoo_promotion.main_group.id,'%discount',))
+                                    product_record = self.env.cr.dictfetchall() 
+                                    if product_record:                           
+                                        for p_data in product_record:                            
+                                            product_id = p_data.get('product_id')
+                                            product_name = p_data.get('product_name')
+                                            sol_product_id = product_id
+                                            sol_name = product_name
+                                            promotion_id = odoo_promotion.id
+                                                    
+        if float(price) == 0:
+            sale_foc = True
+        else:
+            sale_foc = False 
+        
+        if woo_product_uom and product.type == 'product':
+            product_uom = self.env['product.uom'].search([('id', '=', woo_product_uom)])
+            if product_uom:
+                product_data.update({'product_uom': product_uom.id})   
+                                                        
         product_data.update(
                             {
-                            'name':product.name or name,
-                            'product_id':product and product.ids[0] or False,
+                            'name':sol_name,
+                            'product_id':sol_product_id,
                             'order_id':order.id,
                             'product_uom_qty':quantity,
                             'product_uos_qty':quantity,
                             'price_unit':price,
                             'woo_line_id':line.get('id'),
                             'th_weight':float(line.get('grams',0.0))*quantity/1000,
-                            'tax_id':tax_ids
+                            'tax_id':tax_ids,
+                            'delivery_product':delivery_product,
+                            'discount_product':discount_product,
+                            'fees_product':fees_product,   
+                            'promotion_id':promotion_id,
+                            'discount_amt':0,   
+                            'sale_foc':sale_foc,                              
                             }                                    
                             )
-        sale_order_line_obj.create(product_data) 
-        
+        sale_order_line_obj.create(product_data)         
         return True
 
     @api.model
@@ -402,10 +512,12 @@ class sale_order(models.Model):
             created_at = False
             woo_trans_id=""
             woo_customer_ip=""
+            getting_point = 0
+            barcode_value = None
             
             if instance.woo_version == 'old':
                 woo_order_number = result.get('order_number')
-                note = result.get('note')
+                note = result.get('note') or result.get('customer_note')
                 created_at = result.get('created_at')
                 woo_trans_id = ""
                 woo_customer_ip = result.get("customer_ip")
@@ -421,19 +533,57 @@ class sale_order(models.Model):
             else:
                 name=woo_order_number
             
-            delivery_id = None
-            if partner.township.delivery_team_id:
-                delivery_id = partner.township.delivery_team_id.id
-            elif partner.city.delivery_team_id:
-                delivery_id = partner.city.delivery_team_id.id
+            delivery_id = woo_warehouse = None
+            
+            shipping_partner = self.env['res.partner'].search([('id','=',shipping_address.ids[0])])           
+                        
+            if shipping_partner.township.delivery_team_id:        
+                woo_warehouse = shipping_partner.township.delivery_team_id.issue_warehouse_id.id       
+                delivery_id = shipping_partner.township.delivery_team_id.id
+            elif shipping_partner.city.delivery_team_id:
+                delivery_id = shipping_partner.city.delivery_team_id.id
+               
+            woo_instance_obj=self.env['woo.instance.ept']
+            instance=woo_instance_obj.search([('state','=','confirmed')], limit=1)
+            if instance:
+                wcapi = instance.connect_for_point_in_woo()   
+                point_response = wcapi.get('point')      
+                point_response_data = point_response.json()                
+                for point in point_response_data:
+                    woo_order_id = point.get('order_id',False)     
+                    woo_point = point.get('amount',False)                      
+                    if woo_order_number == str(woo_order_id) and int(woo_point) > 0:
+                        getting_point = int(woo_point)                        
+                        break                
                 
+                barcode_response = wcapi.get('post-barcode/%s'%(woo_order_number))    
+                if barcode_response.status_code in [200,201]:              
+                    barcode_response_data = barcode_response.json()   
+                    if barcode_response_data:                                   
+                        for barcode in barcode_response_data:                            
+                            barcode_value = barcode.get('meta_value',False)  
+                else:
+                    message = "Error in Import Barcode for Order %s %s"%(woo_order_number,barcode_response.content)                        
+                    self.env["woo.transaction.log"].create(
+                                                            {'message':message,
+                                                             'mismatch_details':True,
+                                                             'type':'sales',
+                                                             'woo_instance_id':instance.id
+                                                            })           
+                        
+            if result.get('payment_details'):                
+                if result.get('payment_details').get('method_title',False) == 'Credit Application Amount':
+                    payment_type = "credit"
+                else:
+                    payment_type = "cash"     
+                                 
             ordervals = {
                 'name' :name,                
                 'picking_policy' : workflow.picking_policy,
                 'order_policy' : workflow.invoice_on,                        
                 'partner_invoice_id' : invoice_address.ids[0],
                 'date_order' :created_at,
-                'warehouse_id' : instance.warehouse_id.id,
+                'warehouse_id' : woo_warehouse,
                 'partner_id' : partner.ids[0],
                 'partner_shipping_id' : shipping_address.ids[0],
                 'state' : 'draft',
@@ -451,7 +601,12 @@ class sale_order(models.Model):
                 'woo_trans_id':woo_trans_id,
                 'woo_customer_ip':woo_customer_ip,
                 'delivery_id':delivery_id,
-                'pre_order':True
+                'pre_order':True,
+                'getting_point':getting_point,
+                'payment_type':payment_type,
+                'barcode':barcode_value,
+                'ecommerce':True,
+                'tb_ref_no':woo_order_number,
             }            
             return ordervals
 
@@ -495,6 +650,30 @@ class sale_order(models.Model):
         elif instance and instance.woo_version == 'new':
             self.import_new_woo_orders(instance)
         return True
+    
+    @api.model
+    def update_woo_cancel_sale_order_ept(self):
+        woo_instance_obj=self.env['woo.instance.ept']
+        instance=woo_instance_obj.search([('state','=','confirmed')],limit=1)
+        if instance:
+            wcapi = instance.connect_in_woo() 
+            if wcapi:                
+                order_response = wcapi.get('orders')      
+                order_response_data = order_response.json()
+                if instance.woo_version == 'old':                
+                    woo_orders = order_response_data.get("orders")                
+                elif instance.woo_version == 'new':
+                    woo_orders = order_response_data.get("orders")      
+                
+                for order in woo_orders:
+                    woo_order_number = order.get('order_number',False)     
+                    woo_order_status = order.get('status',False)                                    
+                    if woo_order_status == 'cancelled' or woo_order_status == 'cancel-request': 
+                        sale_order = self.env['sale.order'].search([('woo_order_number', '=', woo_order_number),
+                                                                    ('state', 'in', ('draft','sent','manual'))])
+                        if sale_order:
+                            sale_order.action_cancel()
+        return True
 
     @api.model
     def verify_order(self,instance,order):
@@ -521,6 +700,10 @@ class sale_order(models.Model):
     @api.model
     def import_woo_orders(self,instance=False):        
         instances=[]
+        woo_product_uom=None
+        delivery_address = ''
+        shipping_phone = None
+        current_point=0
         transaction_log_obj=self.env["woo.transaction.log"]
         if not instance:
             instances=self.env['woo.instance.ept'].search([('order_auto_import','=',True),('state','=','confirmed')])
@@ -555,8 +738,12 @@ class sale_order(models.Model):
                     for page in range(2,int(total_pages)+1):            
                         order_ids = order_ids + self.import_all_woo_orders(wcapi,instance,transaction_log_obj,order_status,page)            
             
-            import_order_ids=[]
-            
+            import_order_ids=[]            
+            if instance:
+                discount_label_wcapi = instance.connect_for_point_in_woo()   
+                discount_label_info = {"discount": "foc"}                              
+                discount_label_wcapi.put('put-discount-label-for-null/1',discount_label_info) 
+                
             for order in order_ids:                                                             
                 if self.search([('woo_instance_id','=',instance.id),('woo_order_id','=',order.get('id')),('woo_order_number','=',order.get('order_number'))]):
                     continue
@@ -604,7 +791,6 @@ class sale_order(models.Model):
                                                 })                    
                         continue
                 woo_customer_id = order.get('customer',{}).get('id',False)
-                print("woo_customer_id",woo_customer_id)
                 if not woo_customer_id:                    
                     message="Customer Not Available In %s Order"%(order.get('order_number'))
                     log=transaction_log_obj.search([('woo_instance_id','=',instance.id),('message','=',message)])
@@ -617,7 +803,7 @@ class sale_order(models.Model):
                                                     })
                     continue
                 partner=order.get('billing_address',False) and self.create_or_update_woo_customer(woo_customer_id,order.get('billing_address'), False, False,False,instance)
-
+                
                 if not partner:                    
                     message="Customer Not Available In %s Order"%(order.get('order_number'))
                     log=transaction_log_obj.search([('woo_instance_id','=',instance.id),('message','=',message)])
@@ -629,7 +815,7 @@ class sale_order(models.Model):
                                                      'woo_instance_id':instance.id
                                                     })
                     continue
-                shipping_address=order.get('shipping_address',False) and self.create_or_update_woo_customer(False,order.get('shipping_address'), False,partner.id,'delivery',instance) or partner                                                
+                shipping_address=order.get('shipping_address',False) and self.create_or_update_woo_customer(False,order.get('shipping_address'), False,partner.id,'delivery',instance) or partner
                 partner_result=self.onchange_partner_id(partner.ids[0])
                 partner_result=partner_result.get('value')
                 
@@ -640,6 +826,46 @@ class sale_order(models.Model):
                 woo_order_vals=self.get_woo_order_vals(order, workflow, partner, instance, partner, shipping_address, pricelist_id, fiscal_position, payment_term, payment_gateway)
                 sale_order = self.create(woo_order_vals) if woo_order_vals else False
                 
+                if sale_order:
+                    if sale_order.partner_shipping_id:
+                        if sale_order.partner_shipping_id.street:
+                            delivery_address += sale_order.partner_shipping_id.street
+                        if sale_order.partner_shipping_id.street2:
+                            delivery_address += ' ' + sale_order.partner_shipping_id.street2
+                        if sale_order.partner_shipping_id.township:
+                            delivery_address += ' ' + sale_order.partner_shipping_id.township.name
+                        if sale_order.partner_shipping_id.city:
+                            delivery_address += ' ' + sale_order.partner_shipping_id.city.name
+                                           
+                    phone_wcapi = instance.connect_for_product_in_woo()                    
+                    phone_response = phone_wcapi.get('orders/%s'%(order.get('id')))                    
+                    phone_res = phone_response.json()                   
+                    phone_meta_data = phone_res.get('meta_data')
+                    if phone_meta_data:
+                        for phone_meta_data in phone_meta_data:
+                            if phone_meta_data.get('key') == '_shipping_phone':                       
+                                shipping_phone = phone_meta_data.get('value')
+                                
+                    sale_order.write({ 
+                                      'delivery_address' : delivery_address,
+                                      'delivery_contact_no' : shipping_phone,
+                                      'delivery_township_id' : sale_order.partner_shipping_id.township.id if sale_order.partner_shipping_id.township else None,
+                                    })
+                    
+                if sale_order and sale_order.getting_point != 0:
+                    point_date = dateutil.parser.parse(sale_order.date_order).date()
+                    self.env.cr.execute("select COALESCE(sum(getting_point),0) from point_history where partner_id=%s", (partner.id,))    
+                    point_data = self.env.cr.fetchall()
+                    if point_data:
+                        current_point = point_data[0][0]
+                    self.env['point.history'].create({'partner_id': sale_order.partner_id.id,
+                                                      'date': point_date,
+                                                      'order_id': sale_order.id,
+                                                      'membership_id': sale_order.partner_id.membership_id.id,                                                      
+                                                      'balance_point': current_point + sale_order.getting_point,
+                                                      'getting_point': sale_order.getting_point,
+                                                    })
+                    
                 if not sale_order:
                     continue
 
@@ -674,6 +900,16 @@ class sale_order(models.Model):
                     if not woo_product:
                         continue
                     product=woo_product.product_id
+                    woo_product_id=line.get('product_id')
+                    product_wcapi = instance.connect_for_product_in_woo()                    
+                    product_response=product_wcapi.get('products/%s'%(woo_product_id))                    
+                    product_res = product_response.json()                   
+                    product_meta_data = product_res.get('meta_data')
+                    if product_meta_data:
+                        for meta_data in product_meta_data:
+                            if meta_data.get('key') == '_woo_uom_input':                            
+                                woo_product_uom = meta_data.get('value')
+                            
                     actual_unit_price = 0.0                    
                     if tax_included:
                         actual_unit_price=(float(line.get('subtotal_tax')) + float(line.get('subtotal'))) / float(line.get('quantity'))                            
@@ -681,7 +917,7 @@ class sale_order(models.Model):
                         actual_unit_price = float(line.get('subtotal')) / float(line.get('quantity'))
                     if tax_included and float(total_discount)>0.0:
                         discount_value += calclulate_line_discount(line) if order_discount else 0.0                                                                            
-                    self.create_woo_sale_order_line(line,tax_ids,product,line.get('quantity'),fiscal_position,partner,pricelist_id,product.name,sale_order,actual_unit_price)                  
+                    self.create_woo_sale_order_line(line,tax_ids,product,woo_product_uom,line.get('quantity'),fiscal_position,partner,pricelist_id,product.name,sale_order,actual_unit_price)                  
     
                 shipping_product=instance.shipment_charge_product_id 
                 product_id=shipping_product and shipping_product.ids[0] or False
@@ -702,9 +938,9 @@ class sale_order(models.Model):
                         sale_order.write({'carrier_id':carrier.id})
                         if carrier.product_id:
                             shipping_product=carrier.product_id
-                    self.create_woo_sale_order_line(line,shipping_tax_ids,shipping_product,1,fiscal_position,partner,pricelist_id,shipping_product and shipping_product.name or line.get('method_title'),sale_order,line.get('total'))
+                    self.create_woo_sale_order_line(line,shipping_tax_ids,shipping_product,woo_product_uom,1,fiscal_position,partner,pricelist_id,shipping_product and shipping_product.name or line.get('method_title'),sale_order,line.get('total'))
                 if order_discount and discount_value:                                                                                                                            
-                    self.create_woo_sale_order_line({},tax_ids,instance.discount_product_id,1,fiscal_position,partner,pricelist_id,instance.discount_product_id.name,sale_order,discount_value*-1)
+                    self.create_woo_sale_order_line({},tax_ids,instance.discount_product_id,woo_product_uom,1,fiscal_position,partner,pricelist_id,instance.discount_product_id.name,sale_order,discount_value*-1)
                 fee_lines = order.get("fee_lines",[])
                 for fee_line in fee_lines:
                     fee_value = fee_line.get("total")
@@ -712,7 +948,14 @@ class sale_order(models.Model):
                     fee_line_tax_ids = []
                     fee_line_tax_ids =  self.get_woo_tax_id_ept(instance,tax_datas,False)
                     if fee_value:
-                        self.create_woo_sale_order_line({},fee_line_tax_ids,instance.fee_line_id,1,fiscal_position,partner,pricelist_id,fee,sale_order,fee_value)
+                        self.create_woo_sale_order_line({},fee_line_tax_ids,instance.fee_line_id,woo_product_uom,1,fiscal_position,partner,pricelist_id,fee,sale_order,fee_value)
+                if sale_order:           
+                    one_signal_values = {
+                                         'partner_id': sale_order.partner_id.id,
+                                         'contents': "Your order " + sale_order.name + " is created successfully.",
+                                         'headings': "MDG Retailer"
+                                        }                          
+                    self.env['one.signal.notification.messages'].create(one_signal_values)    
             if import_order_ids:
                 self.env['sale.workflow.process.ept'].auto_workflow_process(ids=import_order_ids)
         return True
@@ -720,6 +963,7 @@ class sale_order(models.Model):
     @api.model
     def import_new_woo_orders(self,instance=False):        
         instances=[]
+        woo_product_uom = None
         transaction_log_obj=self.env["woo.transaction.log"]
         if not instance:
             instances=self.env['woo.instance.ept'].search([('order_auto_import','=',True),('state','=','confirmed')])
@@ -849,7 +1093,7 @@ class sale_order(models.Model):
                         actual_unit_price=(float(line.get('subtotal_tax')) + float(line.get('subtotal'))) / float(line.get('quantity'))                            
                     else:
                         actual_unit_price = float(line.get('subtotal')) / float(line.get('quantity'))                                                                                                
-                    self.create_woo_sale_order_line(line,tax_ids,product,line.get('quantity'),fiscal_position,partner,pricelist_id,product.name,sale_order,actual_unit_price)                  
+                    self.create_woo_sale_order_line(line,tax_ids,product,woo_product_uom,line.get('quantity'),fiscal_position,partner,pricelist_id,product.name,sale_order,actual_unit_price)                  
     
                 shipping_product=instance.shipment_charge_product_id 
                 product_id=shipping_product and shipping_product.ids[0] or False
@@ -870,9 +1114,9 @@ class sale_order(models.Model):
                         sale_order.write({'carrier_id':carrier.id})
                         if carrier.product_id:
                             shipping_product=carrier.product_id
-                    self.create_woo_sale_order_line(line,shipping_tax_ids,shipping_product,1,fiscal_position,partner,pricelist_id,shipping_product and shipping_product.name or line.get('method_title'),sale_order,line.get('total'))
+                    self.create_woo_sale_order_line(line,shipping_tax_ids,shipping_product,woo_product_uom,1,fiscal_position,partner,pricelist_id,shipping_product and shipping_product.name or line.get('method_title'),sale_order,line.get('total'))
                 if total_discount > 0.0:                                                                                                                            
-                    self.create_woo_sale_order_line({},tax_ids,instance.discount_product_id,1,fiscal_position,partner,pricelist_id,instance.discount_product_id.name,sale_order,total_discount*-1)
+                    self.create_woo_sale_order_line({},tax_ids,instance.discount_product_id,woo_product_uom,1,fiscal_position,partner,pricelist_id,instance.discount_product_id.name,sale_order,total_discount*-1)
                 
                 fee_lines = order.get("fee_lines",[])
                 for fee_line in fee_lines:
@@ -881,7 +1125,7 @@ class sale_order(models.Model):
                     fee_line_tax_ids = []
                     fee_line_tax_ids =  self.get_woo_tax_id_ept(instance,tax_datas,False)
                     if fee_value:
-                        self.create_woo_sale_order_line({},fee_line_tax_ids,instance.fee_line_id,1,fiscal_position,partner,pricelist_id,fee,sale_order,fee_value)    
+                        self.create_woo_sale_order_line({},fee_line_tax_ids,instance.fee_line_id,woo_product_uom,1,fiscal_position,partner,pricelist_id,fee,sale_order,fee_value)    
             if import_order_ids:
                 self.env['sale.workflow.process.ept'].auto_workflow_process(ids=import_order_ids)
         return True
@@ -894,12 +1138,13 @@ class sale_order(models.Model):
         if woo_instance_id:
             instance=woo_instance_obj.search([('id','=',woo_instance_id),('state','=','confirmed')])
             instance and self.update_woo_order_status(instance)
-        return True
-    
+        return True   
+       
     @api.model
     def update_woo_order_status(self,instance):
         transaction_log_obj=self.env["woo.transaction.log"]
         instances=[]
+        current_point=0
         if not instance:
             instances=self.env['woo.instance.ept'].search([('order_auto_update','=',True),('state','=','confirmed')])
         else:
@@ -958,6 +1203,48 @@ class sale_order(models.Model):
                             picking.write({'updated_in_woo':True})
                     elif instance.woo_version == 'new':
                         picking.write({'updated_in_woo':True})
+                        
+            order_response = wcapi.get('orders')      
+            order_response_data = order_response.json()
+            if instance.woo_version == 'old':                
+                woo_orders = order_response_data.get("orders")                
+            elif instance.woo_version == 'new':
+                woo_orders = order_response_data.get("orders")      
+            
+            for order in woo_orders:
+                woo_order_id = order.get('order_number',False)     
+                woo_order_status = order.get('status',False)                  
+                if woo_order_status == 'cancelled' or woo_order_status == 'cancel-request':       
+                    draft_sale_orders = self.search([('woo_order_number','=',woo_order_id),
+                                                     ('state','in',('draft','sent','manual'))])
+                    if draft_sale_orders:                        
+                        draft_sale_orders.action_cancel()
+                        woo_instance_obj=self.env['woo.instance.ept']
+                        instance=woo_instance_obj.search([('state','=','confirmed')], limit=1)
+                        if instance:
+                            wcapi = instance.connect_for_point_in_woo()   
+                            point_response = wcapi.get('point')      
+                            point_response_data = point_response.json()                
+                            for point in point_response_data:
+                                woo_order_id = point.get('order_id',False)     
+                                woo_point = point.get('amount',False)   
+                                if draft_sale_orders.woo_order_number == str(woo_order_id) and int(woo_point) < 0:
+                                    getting_point = int(woo_point)
+                                    draft_sale_orders.write({'getting_point': getting_point})
+                                    point_date = datetime.today()
+                                    self.env.cr.execute("select COALESCE(sum(getting_point),0) from point_history where partner_id=%s", (draft_sale_orders.partner_id.id,))    
+                                    point_data = self.env.cr.fetchall()
+                                    if point_data:
+                                        current_point = point_data[0][0]
+                                    self.env['point.history'].create({'partner_id': draft_sale_orders.partner_id.id,
+                                                                      'date': point_date,
+                                                                      'order_id': draft_sale_orders.id,
+                                                                      'membership_id': draft_sale_orders.partner_id.membership_id.id,                                                      
+                                                                      'balance_point': current_point + draft_sale_orders.getting_point,
+                                                                      'getting_point': draft_sale_orders.getting_point,
+                                                                    })
+                                    break   
+                        print ('odoo order cancelled')  
         return True                       
 
     #Update action from quotation to woo
@@ -983,10 +1270,52 @@ class sale_order(models.Model):
     
     #Add cancel_woo_order_action into order cancel action
     def action_cancel(self, cr, uid, ids, context=None):
-        result = super(sale_order, self).action_cancel(cr, uid, ids, context=context)
+        customer_id = None
+        result = super(sale_order, self).action_cancel(cr, uid, ids, context=context)       
         if result:
-            for sale in self.browse(cr, uid, ids, context=context):
-                update = sale.update_woo_order_status_action('cancelled')
+            woo_instance_obj=self.pool.get('woo.instance.ept')
+            instance=woo_instance_obj.search(cr, uid, [('state','=','confirmed')], context=context, limit=1)
+            if instance:                
+                woo_instance = woo_instance_obj.browse(cr, uid, instance[0], context=context)
+                wcapi = woo_instance.connect_for_point_in_woo()   
+            for sale in self.browse(cr, uid, ids, context=context):                
+                if sale.woo_order_number:
+                    update = sale.update_woo_order_status_action('cancelled')
+                    one_signal_values = {
+                                            'partner_id': sale.partner_id.id,
+                                            'contents': "Your order " + sale.name + " is cancelled.",
+                                            'headings': "MDG Retailer"
+                                        }     
+                    self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)
+                if sale.getting_point > 0:
+                    getting_point = -sale.getting_point
+                    sale.write({'getting_point':getting_point})
+                    cr.execute("select COALESCE(sum(getting_point),0) from point_history where partner_id=%s", (sale.partner_id.id,))    
+                    point_data = cr.fetchall()
+                    if point_data:
+                        history_point = point_data[0][0]
+                    vals = { 'partner_id': sale.partner_id.id,
+                             'date': datetime.today(),
+                             'order_id': sale.id,
+                             'membership_id': sale.partner_id.membership_id.id,                                                      
+                             'balance_point': history_point + sale.getting_point,
+                             'getting_point': sale.getting_point,
+                            }
+                    self.pool.get('point.history').create(cr, uid, vals, context=context)
+                    if wcapi:
+                        order_response = wcapi.get('point')      
+                        order_response_data = order_response.json()                
+                        for order in order_response_data:
+                            woo_order_number = order.get('number',False)     
+                            if sale.woo_order_number == woo_order_number:
+                                customer_id = order.get('customer_id',False) 
+                                break
+                        data = { 'user_id': customer_id,
+                                 'action': 'order_cancelled',
+                                 'order_id': sale.woo_order_number,
+                                 'amount': sale.getting_point,                                                                 
+                                }                        
+                        wcapi.post("point", data)
         return result
     
     #Fix Order Confirm Fail For Local
@@ -994,8 +1323,15 @@ class sale_order(models.Model):
         result = super(sale_order, self).action_button_confirm(cr, uid, ids, context=context)
         self.write(cr, uid, ids, {'state':'manual'})
         if result:
-            for sale in self.browse(cr, uid, ids, context=context):
-                update = sale.update_woo_order_status_action('manual')
+            for sale in self.browse(cr, uid, ids, context=context):                
+                if sale.woo_order_number:    
+                    update = sale.update_woo_order_status_action('processing')         
+                    one_signal_values = {
+                                         'partner_id': sale.partner_id.id,
+                                         'contents': "Your order " + sale.name + " is confirmed.",
+                                         'headings': "MDG Retailer"
+                                        }                          
+                    self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)                  
         return result
 
     #update woo order status when update 'is_generate' and 'shipped' 
@@ -1003,7 +1339,7 @@ class sale_order(models.Model):
         result = super(sale_order, self).write(cursor, user, ids, vals, context=context)
         if result:
             current_so = self.browse(cursor, user, ids, context=context)
-            if vals.get('is_generate') == True:
+            if vals.get('is_generate') == True and current_so.woo_order_number:
                 current_so.update_woo_order_status_action('misha-shipment')           
         return result
     

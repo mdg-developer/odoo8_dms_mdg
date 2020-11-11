@@ -67,6 +67,8 @@ class SaleOrderLine(osv.osv):
         'promotion_id': fields.many2one('promos.rules', 'Promotion', readonly=True, states={'draft':[('readonly',False)]})  ,
         'main_group' : fields.many2one('product.maingroup','Main Group'),
         'delivery_product': fields.boolean(string='Delivery Product',default=False),
+        'discount_product': fields.boolean(string='Discount Product',default=False),
+        'fees_product': fields.boolean(string='Fees Product',default=False),
     }  
     
 
