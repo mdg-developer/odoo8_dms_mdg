@@ -169,7 +169,7 @@ class sale_order(models.Model):
                            'property_account_payable':property_account_payable.id,
                            'property_account_payable_clearing':property_account_payable_clearing.id,
                            })          
-        else:            
+        else:    
             partner=partner_obj.create({'type':type,'parent_id':parent_id,'woo_customer_id':woo_customer_id or '',
                                         'name':name,'state_id':state and state.id or False,'city':city,'township':township,
                                         'street':address1,'street2':address2,
@@ -576,7 +576,7 @@ class sale_order(models.Model):
                     payment_type = "credit"
                 else:
                     payment_type = "cash"     
-                                   
+                                 
             ordervals = {
                 'name' :name,                
                 'picking_policy' : workflow.picking_policy,
@@ -791,7 +791,6 @@ class sale_order(models.Model):
                                                 })                    
                         continue
                 woo_customer_id = order.get('customer',{}).get('id',False)
-                print("woo_customer_id",woo_customer_id)
                 if not woo_customer_id:                    
                     message="Customer Not Available In %s Order"%(order.get('order_number'))
                     log=transaction_log_obj.search([('woo_instance_id','=',instance.id),('message','=',message)])
@@ -842,9 +841,10 @@ class sale_order(models.Model):
                     phone_response = phone_wcapi.get('orders/%s'%(order.get('id')))                    
                     phone_res = phone_response.json()                   
                     phone_meta_data = phone_res.get('meta_data')
-                    for phone_meta_data in phone_meta_data:
-                        if phone_meta_data.get('key') == '_shipping_phone':                       
-                            shipping_phone = phone_meta_data.get('value')
+                    if phone_meta_data:
+                        for phone_meta_data in phone_meta_data:
+                            if phone_meta_data.get('key') == '_shipping_phone':                       
+                                shipping_phone = phone_meta_data.get('value')
                                 
                     sale_order.write({ 
                                       'delivery_address' : delivery_address,
@@ -905,9 +905,10 @@ class sale_order(models.Model):
                     product_response=product_wcapi.get('products/%s'%(woo_product_id))                    
                     product_res = product_response.json()                   
                     product_meta_data = product_res.get('meta_data')
-                    for meta_data in product_meta_data:
-                        if meta_data.get('key') == '_woo_uom_input':                            
-                            woo_product_uom = meta_data.get('value')
+                    if product_meta_data:
+                        for meta_data in product_meta_data:
+                            if meta_data.get('key') == '_woo_uom_input':                            
+                                woo_product_uom = meta_data.get('value')
                             
                     actual_unit_price = 0.0                    
                     if tax_included:
