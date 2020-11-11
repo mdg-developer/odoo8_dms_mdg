@@ -2944,11 +2944,11 @@ class mobile_sale_order(osv.osv):
                 for So_id in list_val:
                     print 'Sale Order Id', So_id
                     cr.execute('''select so.id,so.date_order,so.partner_id,so.amount_tax,so.amount_untaxed,
-                    so.payment_term,so.company_id,so.pricelist_id,so.user_id,so.amount_total,so.tb_ref_no as invoice_no,
+                    so.payment_term,so.company_id,so.pricelist_id,so.user_id,so.amount_total,replace(so.tb_ref_no,'/','') as invoice_no,
                     so.warehouse_id,so.shipped,so.sale_plan_day_id,so.sale_plan_name,so.so_longitude,so.payment_type,
                     so.due_date,so.sale_plan_trip_id,so.so_latitude,so.customer_code,so.name as so_refNo,so.total_dis,so.deduct_amt,so.coupon_code,
                     so.invoiced,so.branch_id,so.delivery_remark ,team.name,so.payment_term,so.due_date,so.rebate_later,
-                    rp.name customer_name,replace(so.note,',',';') as note,so.woo_order_id,so.ecommerce ,so.delivery_township_id ,rt.name as township_name,replace(so.delivery_address,',',';') phone ,replace(so.delivery_contact_no,',',';') phone
+                    rp.name customer_name,replace(so.note,',',';') as note,so.woo_order_id,so.ecommerce ,so.delivery_township_id ,rt.name as township_name,replace(so.delivery_address,',',';') delivery_address ,replace(so.delivery_contact_no,',',';') delivery_contact_no
                     from sale_order so, crm_case_section team,res_partner rp,res_township rt                                  
                     where so.id= %s and so.state!= 'cancel'
                     and  team.id = so.section_id
