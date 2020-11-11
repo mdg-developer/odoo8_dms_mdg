@@ -26,10 +26,9 @@
 				}
 			</field>
 
-<!-- 			<field name="domain">[('state', 'not in', ('draft', 'sent', -->
-<!-- 				'cancel')),('pre_order','=',True)] -->
-<!-- 			</field> -->
-			<field name="domain">[('state', 'not in', ('cancel',)),('pre_order','=',True)]</field>
+			<field name="domain">[('state', 'not in', ('draft', 'sent',
+				'cancel')),('pre_order','=',True)]
+			</field>
 			<field name="help" type="html">
 				<p class="oe_view_nocontent_create">
 					Click to create a quotation that can be converted into a
@@ -486,7 +485,8 @@
 				<p>
 					Use sales team to organize your different salespersons or
 					departments into separate teams. Each team will work in
-					its own list of opportunities.
+					its own list
+					of opportunities.
 				</p>
 			</field>
 		</record>
@@ -718,6 +718,11 @@
 		<menuitem id="crm_management.menu_customer_asset_form111"
 			parent="menu_sales_rental_menu" action="crm_management.open_view_customer_asset_action"
 			name="Customer Assets" sequence="1" />
+
+		<menuitem id="crm_management.config_view_customer_asset_check_action"
+			parent="menu_sales_rental_menu" action="crm_management.open_view_customer_asset_check_action"
+			name="Assets Check" sequence="1" />
+			
 		<menuitem id="sale_management.sales_rental" action="sale_management.action_sales_rental_view"
 			parent="menu_sales_rental_menu" name="Space Rental" sequence="3" />
 
