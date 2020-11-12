@@ -342,6 +342,7 @@ class res_partner(osv.osv):
     def edit_customer_profile(self, cr, uid, ids, customer_code=None, woo_customer_id=None, mobile=None, phone=None, name=None, shop_name=None, gender=None, birthday=None, image=None, sale_channel=None, context=None): 
         
         vals = {}
+        outlet_type = None
         partner_obj = self.pool.get('res.partner')
         outlettype_obj = self.pool.get('outlettype.outlettype')
         domain = []
