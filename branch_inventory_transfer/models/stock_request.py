@@ -368,22 +368,22 @@ class branch_stock_requisition(osv.osv):
                         bigger_qty = int(bigger_qty)
                         if  bigger_qty:
                             quantity_on_hand = request_line_data.gin_diff_quantity * bigger_qty
-                    if quantity_on_hand > request_line_data.qty_on_hand:
-                        raise osv.except_osv(_('Warning'),
-                                 _('Please Check Qty On Hand For (%s)') % (product.name_template,))
-                    else:   
-                        if request_line_data.gin_diff_quantity > 0:                  
-                            good_line_obj.create(cr, uid, {'line_id': good_id,
-                                          'product_id': request_line_data.product_id.id,
-                                          'product_uom': request_line_data.product_uom.id,
-                                          'issue_quantity':request_line_data.gin_diff_quantity,
-                                          'qty_on_hand':request_line_data.qty_on_hand,
-                                          'sequence':request_line_data.sequence,
-                                          'product_value':request_line_data.product_value,
-                                          'product_loss':request_line_data.loss,
-                                            'product_viss':request_line_data.viss_value,
-                                            'product_cbm':request_line_data.cbm_value,
-                                          }, context=context) 
+#                     if quantity_on_hand > request_line_data.qty_on_hand:
+#                         raise osv.except_osv(_('Warning'),
+#                                  _('Please Check Qty On Hand For (%s)') % (product.name_template,))
+#                     else:   
+                    if request_line_data.gin_diff_quantity > 0:                  
+                        good_line_obj.create(cr, uid, {'line_id': good_id,
+                                      'product_id': request_line_data.product_id.id,
+                                      'product_uom': request_line_data.product_uom.id,
+                                      'issue_quantity':request_line_data.gin_diff_quantity,
+                                      'qty_on_hand':request_line_data.qty_on_hand,
+                                      'sequence':request_line_data.sequence,
+                                      'product_value':request_line_data.product_value,
+                                      'product_loss':request_line_data.loss,
+                                        'product_viss':request_line_data.viss_value,
+                                        'product_cbm':request_line_data.cbm_value,
+                                      }, context=context) 
         return self.write(cr, uid, ids, {'approve_by':uid})
         
                         
@@ -432,24 +432,24 @@ class branch_stock_requisition(osv.osv):
                         bigger_qty = int(bigger_qty)
                         if  bigger_qty:
                             quantity_on_hand = request_line_data.req_quantity * bigger_qty
-                    if quantity_on_hand > request_line_data.qty_on_hand:
-                            raise osv.except_osv(_('Warning'),
-                                     _('Please Check Qty On Hand For (%s)') % (product.name_template,))
-                    else:    
-                        if request_line_data.req_quantity>0:                 
-                            good_line_obj.create(cr, uid, {'line_id': good_id,
-                                          'product_id': request_line_data.product_id.id,
-                                          'product_uom': request_line_data.product_uom.id,
-                                          'issue_quantity':request_line_data.req_quantity,
-                                          'req_quantity':request_line_data.req_quantity,
-                                          'qty_on_hand':request_line_data.qty_on_hand,
-                                          'sequence':request_line_data.sequence,
-                                          'product_value':request_line_data.product_value,
-                                          'product_loss':request_line_data.loss,
-                                            'product_viss':request_line_data.viss_value,
-                                            'product_cbm':request_line_data.cbm_value,
-                                            'remark':request_line_data.remark,
-                                          }, context=context)                                    
+#                     if quantity_on_hand > request_line_data.qty_on_hand:
+#                             raise osv.except_osv(_('Warning'),
+#                                      _('Please Check Qty On Hand For (%s)') % (product.name_template,))
+#                     else:    
+                    if request_line_data.req_quantity>0:                 
+                        good_line_obj.create(cr, uid, {'line_id': good_id,
+                                      'product_id': request_line_data.product_id.id,
+                                      'product_uom': request_line_data.product_uom.id,
+                                      'issue_quantity':request_line_data.req_quantity,
+                                      'req_quantity':request_line_data.req_quantity,
+                                      'qty_on_hand':request_line_data.qty_on_hand,
+                                      'sequence':request_line_data.sequence,
+                                      'product_value':request_line_data.product_value,
+                                      'product_loss':request_line_data.loss,
+                                        'product_viss':request_line_data.viss_value,
+                                        'product_cbm':request_line_data.cbm_value,
+                                        'remark':request_line_data.remark,
+                                      }, context=context)                                    
         return self.write(cr, uid, ids, {'state':'approve' , 'approve_by':uid, 'good_issue_id':good_id})    
     
     def confirm(self, cr, uid, ids, context=None):

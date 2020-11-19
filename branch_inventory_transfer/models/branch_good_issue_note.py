@@ -228,7 +228,25 @@ class branch_good_issue_note(osv.osv):
                                                 'branch.gin.code') or '/'
         vals['name'] = id_code       
         return super(branch_good_issue_note, self).create(cursor, user, vals, context=context)
-    
+
+    def updateQtyOnHand(self, cr, uid, ids, context=None):
+        product_line_obj = self.pool.get('branch.good.issue.note.line')
+        if ids:
+            note_data = self.browse(cr, uid, ids[0], context=context)
+            location_id = note_data.to_location_id.id
+            req_line_id = product_line_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context)
+            for data in req_line_id:
+                note_line_value = product_line_obj.browse(cr, uid, data, context=context)
+                line_id= note_line_value.id
+                product_id = note_line_value.product_id.id
+                cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (location_id, product_id,))
+                qty_on_hand = cr.fetchone()
+                if qty_on_hand:
+                    qty_on_hand = qty_on_hand[0]
+                else:
+                    qty_on_hand = 0
+                cr.execute("update branch_good_issue_note_line set qty_on_hand=%s where product_id=%s and id=%s", (qty_on_hand, product_id,line_id,))
+                 
     def approve(self, cr, uid, ids, context=None):
         if ids:
             request_data=self.browse(cr, uid, ids[0], context=context)
@@ -334,7 +352,7 @@ class branch_good_issue_note(osv.osv):
                 detailObj.do_detailed_transfer()
             cr.execute("update stock_move set date=%s where origin=%s", (reverse_date, 'Reverse ' +move.origin,))
 
-                                                                      
+        self.update_status_to_rfi(cr, uid, ids, context=context)            
         return self.write(cr, uid, ids, {'state':'reversed','reverse_user_id':uid}) 
     
     def issue(self, cr, uid, ids, context=None):
@@ -369,20 +387,38 @@ class branch_good_issue_note(osv.osv):
                     name = note_line_value.product_id.name_template
                     product_uom = note_line_value.product_uom.id
                     origin = origin
-                    quantity = note_line_value.issue_quantity                        
-                    move_id = move_obj.create(cr, uid, {'picking_id': picking_id,
-                                              'picking_type_id':picking_type_id,
-                                          'product_id': product_id,
-                                          'product_uom_qty': quantity,
-                                          'product_uos_qty': quantity,
-                                          'product_uom':product_uom,
-                                          'location_id':location_id,
-                                          'location_dest_id':from_location_id,
-                                          'name':name,
-                                           'origin':origin,
-                                          'state':'confirmed'}, context=context)     
-                    move_obj.action_done(cr, uid, move_id, context=context)  
-                    cr.execute('''update stock_move set date=((%s::date)::text || ' ' || date::time(0))::timestamp where state='done' and origin =%s''', (issue_date, origin,))
+                    quantity = note_line_value.issue_quantity   
+                    check_qty =note_line_value.issue_quantity 
+                    cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (location_id, product_id,))
+                    quantity_on_hand=cr.fetchone()
+                    if quantity_on_hand:
+                        qty_on_hand = quantity_on_hand[0]
+                    else:
+                        qty_on_hand = 0   
+                    product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)   
+                    if note_line_value.product_uom.id  != product.product_tmpl_id.uom_id.id  :                                                                  
+                        cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (note_line_value.product_uom.id,))
+                        bigger_qty = cr.fetchone()[0]
+                        bigger_qty = int(bigger_qty)
+                        if  bigger_qty:
+                            check_qty = quantity * bigger_qty 
+                    if check_qty > qty_on_hand:
+                            raise osv.except_osv(_('Warning'),
+                                     _('Please Check Qty On Hand For (%s)') % (product.name_template,))
+                    else:
+                        move_id = move_obj.create(cr, uid, {'picking_id': picking_id,
+                                                  'picking_type_id':picking_type_id,
+                                              'product_id': product_id,
+                                              'product_uom_qty': quantity,
+                                              'product_uos_qty': quantity,
+                                              'product_uom':product_uom,
+                                              'location_id':location_id,
+                                              'location_dest_id':from_location_id,
+                                              'name':name,
+                                               'origin':origin,
+                                              'state':'confirmed'}, context=context)     
+                        move_obj.action_done(cr, uid, move_id, context=context)  
+                        cr.execute('''update stock_move set date=((%s::date)::text || ' ' || date::time(0))::timestamp where state='done' and origin =%s''', (issue_date, origin,))
         #update status to BRFI >>> partial or complete
         self.update_status_to_rfi(cr, uid, ids, context=context)            
         return self.write(cr, uid, ids, {'state': 'issue'})       
