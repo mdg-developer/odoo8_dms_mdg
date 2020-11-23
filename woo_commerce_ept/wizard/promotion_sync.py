@@ -33,8 +33,11 @@ class promotion_sync(osv.osv_memory):
         for promo_id in self.pool.get('promos.rules').browse(cr,uid,promo_lists,context=None):
             if promo_id.ecommerce == True:
                 if promo_id.is_sync_woo != True:
-                    wcapi.post('odoo-discount/%s'%(promo_id.id),promo_id.name)  
-                    cr.execute('''update promos_rules set is_sync_woo=True where id=%s''',(promo_id.id,)) 
+                    response = wcapi.post('odoo-discount/%s'%(promo_id.id),promo_id.name)  
+                    if response.status_code not in [200,201]:
+                        raise except_orm(_('Error'), _("Error in syncing for %s %s") % (promo_id.name,response.content,)) 
+                    else:
+                        cr.execute('''update promos_rules set is_sync_woo=True where id=%s''',(promo_id.id,)) 
             else:
                 raise except_orm(_('UserError'), _("%s is not ecommerce promotion.You can sync only ecommerce promotion!") % (promo_id.name,))              
         return True

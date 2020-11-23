@@ -32,7 +32,10 @@ class uom_sync(osv.osv_memory):
         uom_lists=context.get('active_ids', [])
         for uom_id in self.pool.get('product.uom').browse(cr,uid,uom_lists,context=None):
             if uom_id.is_sync_woo != True:
-                wcapi.post('insert-uom-dropdown/%s'%(uom_id.id),uom_id.name)  
-                cr.execute('''update product_uom set is_sync_woo=True where id=%s''',(uom_id.id,))               
+                response = wcapi.post('insert-uom-dropdown/%s'%(uom_id.id),uom_id.name)
+                if response.status_code not in [200,201]:
+                    raise except_orm(_('Error'), _("Error in syncing for %s %s") % (uom_id.name,response.content,))    
+                else:
+                    cr.execute('''update product_uom set is_sync_woo=True where id=%s''',(uom_id.id,))               
         return True
     
