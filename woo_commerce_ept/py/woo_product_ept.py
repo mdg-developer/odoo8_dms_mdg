@@ -1962,7 +1962,14 @@ class woo_product_template_ept(models.Model):
                 if instance:
                     packing_size_wcapi = instance.connect_for_point_in_woo() 
                     packing_size_data = variant.product_id.product_tmpl_id.uom_ratio                                 
-                    packing_size_wcapi.post('insert-packsize/%s'%(woo_tmpl_id),packing_size_data)   
+                    packing_size_wcapi.post('insert-packsize/%s'%(woo_tmpl_id),packing_size_data) 
+            if variant.product_id.name_template:
+                woo_instance_obj=self.env['woo.instance.ept']
+                instance=woo_instance_obj.search([('state','=','confirmed')], limit=1)
+                if instance:
+                    full_name_wcapi = instance.connect_for_point_in_woo() 
+                    full_name_data = variant.product_id.name_template                                 
+                    full_name_wcapi.post('product-fullname/%s'%(woo_tmpl_id),full_name_data)     
             tmpl_images = response.get('images')
             offset = 0
             for tmpl_image in tmpl_images:
