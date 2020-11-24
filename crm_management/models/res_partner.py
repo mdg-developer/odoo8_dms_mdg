@@ -554,18 +554,37 @@ class res_partner_asset(osv.Model):
                                             type='many2one',
                                             relation='res.township',
                                             string="Township",store=True), 
-                        'name':fields.char('Asset Name',required=True),
+                        'name':fields.char('Asset No',required=False),
+                        'asset_name_id':fields.many2one('asset.configuration', 'Asset Name',required=False),
                         'date':fields.date('Date',required=True),
                         'type':fields.selection ([('rent', 'Rent'), ('give', 'Giving')],
                                                     'Type', required=True, default='rent'),
                         'asset_type':fields.many2one('asset.type', 'Asset Type',required=True),
                        'qty':fields.integer('Qty',required=True),
                         'image': fields.binary("Image"),
+                        'active': fields.boolean("Active",default=True),
                         'note':fields.text('Note'),
+                        'check_line':fields.one2many('res.partner.asset.check', 'asset_id', 'Customer Assets Check',
+                              copy=True),
   }
     _defaults = {
         'date': fields.datetime.now,
                     }
+    
+class res_partner_asset_check(osv.Model):
+
+    _description = 'Partner Asset Check'
+    _name = 'res.partner.asset.check'
+    _columns = {    
+                'partner_id': fields.many2one('res.partner', 'Customer', select=True, ondelete='cascade',required=False),                        
+                'status':fields.selection ([('New', 'New'), ('Good', 'Good'), ('Need Repair', 'Need Repair'),('Missing', 'Missing')],
+                                                    'Type', required=False, default='New'),
+                'date':fields.datetime('Check Date Time',required=False),
+                'check_by':fields.many2one('crm.case.section', 'Check By', select=True, ondelete='cascade',required=False), 
+                'asset_id':fields.many2one('res.partner.asset', 'Parter Asset', select=True, ondelete='cascade',required=False),
+                'asset_name':fields.many2one('asset.configuration', 'Asset Name', select=True, ondelete='cascade',required=False),
+                'image': fields.binary("Image"),
+        }
     
 class asset_type(osv.Model):
 
@@ -573,4 +592,16 @@ class asset_type(osv.Model):
     _name = 'asset.type'
     _columns = {
                 'name':fields.char('Name',required=True),
+                }
+    
+class asset_configuration(osv.Model):
+
+    _description = 'Asset Configuration'
+    _name = 'asset.configuration'
+    _columns = {
+                'name':fields.char('Name',required=True),
+                'asset_type_id':fields.many2one('asset.type', 'Asset Type',required=True),
+                'type':fields.selection ([('rent', 'Rent'), ('give', 'Giving')],
+                                                    'Type', required=True, default='rent'),
+                'is_auto_fill':fields.boolean("Qty Auto Fill 1",default=False),
                 }
