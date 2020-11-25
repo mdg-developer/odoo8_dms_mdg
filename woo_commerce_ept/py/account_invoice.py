@@ -7,6 +7,10 @@ class account_invoice(models.Model):
     
     woo_instance_id=fields.Many2one("woo.instance.ept","Instances")
     is_refund_in_woo=fields.Boolean("Refund In Woo Commerce",default=False)
+    delivery_address=fields.Text('Delivery Address')
+    delivery_contact_no=fields.Char('Delivery Contact No')
+    delivery_township_id=fields.Many2one("res.township","Delivery Township")
+    
     @api.multi
     def refund_in_woo(self):
         transaction_log_obj=self.env['woo.transaction.log']
