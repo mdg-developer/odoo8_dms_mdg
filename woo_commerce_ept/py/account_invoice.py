@@ -7,6 +7,10 @@ class account_invoice(models.Model):
     
     woo_instance_id=fields.Many2one("woo.instance.ept","Instances")
     is_refund_in_woo=fields.Boolean("Refund In Woo Commerce",default=False)
+    delivery_address=fields.Text('Delivery Address')
+    delivery_contact_no=fields.Char('Delivery Contact No')
+    delivery_township_id=fields.Many2one("res.township","Delivery Township")
+    
     @api.multi
     def refund_in_woo(self):
         transaction_log_obj=self.env['woo.transaction.log']
@@ -44,7 +48,15 @@ class account_invoice(models.Model):
         values = super(account_invoice,self)._prepare_refund(invoice, date=date, period_id=period_id, description=description, journal_id=journal_id)
         if invoice.woo_instance_id:
             values.update({'woo_instance_id':invoice.woo_instance_id.id,'sale_ids':[(6,0,invoice.sale_ids.ids)]})        
-        return values    
+        return values   
+    
+#     @api.multi
+#     def confirm_paid(self):
+#         values = super(account_invoice,self).confirm_paid()
+#         if self.sale_order_id:
+#             if self.sale_order_id.woo_order_number:
+#                 self.sale_order_id.update_woo_order_status_action('completed')       
+#         return values
 
 class sale_order(models.Model):
     _inherit="sale.order"

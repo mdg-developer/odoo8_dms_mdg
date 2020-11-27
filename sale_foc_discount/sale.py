@@ -481,6 +481,9 @@ class sale_order(osv.osv):
             'order_team':order_team,
             'ecommerce': order.ecommerce,
             'original_ecommerce_number': order.original_ecommerce_number,
+            'delivery_address': order.delivery_address,
+            'delivery_contact_no': order.delivery_contact_no,
+            'delivery_township_id': order.delivery_township_id.id,
         }
 
         # Care for deprecated _inv_get() hook - FIXME: to be removed after 6.1

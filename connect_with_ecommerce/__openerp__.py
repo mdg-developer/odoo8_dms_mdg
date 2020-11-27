@@ -54,6 +54,8 @@ Connect With Ecommerce
         'views/product_reorder_view.xml',
         'views/app_version_view.xml',
         'wizards/pricelist_multi_sync_woo_view.xml',
+        'views/stock_view.xml',
+        'views/res_branch_view.xml',
                 ],
     'installable': True,
     'auto_install': False,

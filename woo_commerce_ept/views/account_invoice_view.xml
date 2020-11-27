@@ -180,5 +180,19 @@
 <!-- 			</field> -->
 <!-- 		</record> -->
 
+		<record id="invoice_form_inherit_delivery_address" model="ir.ui.view">
+			<field name="name">account.invoice.form</field>
+			<field name="model">account.invoice</field>
+			<field name="type">form</field>
+			<field name="inherit_id" ref="account.invoice_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='fiscal_position']" position="after">
+					<field name="delivery_address" />
+					<field name="delivery_contact_no" />
+					<field name="delivery_township_id" />
+				</xpath>
+			</field>
+		</record>  
+
 	</data>
 </openerp>
