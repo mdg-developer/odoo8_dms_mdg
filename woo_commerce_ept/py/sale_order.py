@@ -701,7 +701,6 @@ class sale_order(models.Model):
     def import_woo_orders(self,instance=False):        
         instances=[]
         woo_product_uom=None
-        delivery_address = ''
         shipping_phone = None
         current_point=0
         transaction_log_obj=self.env["woo.transaction.log"]
@@ -828,6 +827,7 @@ class sale_order(models.Model):
                 
                 if sale_order:
                     if sale_order.partner_shipping_id:
+                        delivery_address = ''
                         if sale_order.partner_shipping_id.street:
                             delivery_address += sale_order.partner_shipping_id.street
                         if sale_order.partner_shipping_id.street2:

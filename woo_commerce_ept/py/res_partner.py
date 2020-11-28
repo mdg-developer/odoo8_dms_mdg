@@ -1,5 +1,6 @@
 from openerp import models,fields,api
 import requests
+from pyfcm import FCMNotification
 
 class res_partner(models.Model):
     _inherit="res.partner"
@@ -20,7 +21,7 @@ class res_partner(models.Model):
                     instance = woo_instance_obj.search([('state','=','confirmed')],limit=1)
                     if instance:
                         wcapi = instance.connect_for_point_in_woo() 
-                        if wcapi: 
+                        if wcapi:
                             if channel.code == 'CS':
                                 data = "Consumer,,customer" 
                             if channel.code == 'RT':
@@ -34,7 +35,12 @@ class res_partner(models.Model):
                                                      'type':'sales',
                                                      'woo_instance_id':instance.id
                                                     })
-                                continue  
+                                continue
+                            else:                                
+                                fcm_api_key = self.env['ir.config_parameter'].get_param('retail_fcm_api_key')
+                                if fcm_api_key and channel.code == 'RT':
+                                    push_service = FCMNotification(api_key=fcm_api_key)
+                                    result = push_service.notify_topic_subscribers(topic_name="role_changes", message_body="You are now a retailer!")
         return result
     
     @api.model
