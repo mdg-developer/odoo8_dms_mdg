@@ -299,7 +299,7 @@ class sale_order(models.Model):
             if not odoo_product and not woo_variant:
                 woo_variant=sku and woo_product_obj.search([('default_code','=',sku),('woo_instance_id','=',instance.id)],limit=1)
                 if not woo_variant:
-                    odoo_product=sku and odoo_product_obj.search([('default_code','=',sku)],limit=1)
+                    odoo_product=sku and odoo_product_obj.search([('default_code','=',sku.rstrip('!'))],limit=1)
 
             if not woo_variant and not odoo_product:
                 message="%s Product Code Not found for order %s"%(sku,order_number)
@@ -444,7 +444,7 @@ class sale_order(models.Model):
             woo_product=woo_product_obj.search([('woo_instance_id','=',instance.id),('variant_id','=',variant_id)],limit=1)
             if woo_product:
                 return woo_product
-            woo_product=woo_product_obj.search([('woo_instance_id','=',instance.id),('default_code','=',line.get('sku'))],limit=1)
+            woo_product=woo_product_obj.search([('woo_instance_id','=',instance.id),('default_code','=',line.get('sku').rstrip('!'))],limit=1)
             woo_product and woo_product.write({'variant_id':variant_id})
             if woo_product:
                 return woo_product
@@ -472,7 +472,7 @@ class sale_order(models.Model):
                 woo_product_tmpl_obj.sync_new_products(instance,parent_id,update_templates=True)                        
             woo_product=woo_product_obj.search([('woo_instance_id','=',instance.id),('variant_id','=',variant_id)],limit=1)
         else:
-            woo_product=woo_product_obj.search([('woo_instance_id','=',instance.id),('default_code','=',line.get('sku'))],limit=1)
+            woo_product=woo_product_obj.search([('woo_instance_id','=',instance.id),('default_code','=',line.get('sku').rstrip('!'))],limit=1)
             if woo_product:
                 return woo_product
         return woo_product
@@ -701,7 +701,6 @@ class sale_order(models.Model):
     def import_woo_orders(self,instance=False):        
         instances=[]
         woo_product_uom=None
-        delivery_address = ''
         shipping_phone = None
         current_point=0
         transaction_log_obj=self.env["woo.transaction.log"]
@@ -828,6 +827,7 @@ class sale_order(models.Model):
                 
                 if sale_order:
                     if sale_order.partner_shipping_id:
+                        delivery_address = ''
                         if sale_order.partner_shipping_id.street:
                             delivery_address += sale_order.partner_shipping_id.street
                         if sale_order.partner_shipping_id.street2:
