@@ -33,7 +33,14 @@ class promotion_sync(osv.osv_memory):
         for promo_id in self.pool.get('promos.rules').browse(cr,uid,promo_lists,context=None):
             if promo_id.ecommerce == True:
                 if promo_id.is_sync_woo != True:
-                    response = wcapi.post('odoo-discount/%s'%(promo_id.id),promo_id.name)  
+                    promotion_info = str(promo_id.id) + "," + promo_id.name + ","
+                    if promo_id.main_group:
+                        promotion_info += promo_id.main_group.name
+                    cr.execute("select ((%s at time zone 'utc' )at time zone 'asia/rangoon')::date,((%s at time zone 'utc' )at time zone 'asia/rangoon')::date", (promo_id.from_date,promo_id.to_date,))    
+                    date_data = cr.fetchall()
+                    if date_data:
+                        promotion_info += "," + str(date_data[0][0]) + "," + str(date_data[0][1])
+                    response = wcapi.post('odoo-discount',promotion_info)  
                     if response.status_code not in [200,201]:
                         raise except_orm(_('Error'), _("Error in syncing for %s %s") % (promo_id.name,response.content,)) 
                     else:
