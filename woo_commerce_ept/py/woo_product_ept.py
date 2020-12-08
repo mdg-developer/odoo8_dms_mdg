@@ -962,9 +962,19 @@ class woo_product_template_ept(models.Model):
             tag_ids = []
             odoo_template = template.product_tmpl_id                                         
             
-            data = {'title':template.name,'enable_html_description':True,'enable_html_short_description':True,'description':template.description or '',
+            data = {'title':template.product_tmpl_id.short_name,'enable_html_description':True,'enable_html_short_description':True,'description':template.description or '',
                     'weight':template.product_tmpl_id.weight,'short_description':template.short_description or '','taxable':template.taxable and 'true' or 'false'}
             
+            if template.product_tmpl_id:
+                woo_product = self.env['product.product'].search([('product_tmpl_id','=',template.product_tmpl_id.id)], limit=1)
+                if woo_product:
+                    woo_instance_obj=self.env['woo.instance.ept']
+                    instance=woo_instance_obj.search([('state','=','confirmed')], limit=1)
+                    if instance:
+                        full_name_wcapi = instance.connect_for_point_in_woo() 
+                        full_name_data = woo_product.name_template                                 
+                        full_name_wcapi.post('product-fullname/%s'%(template.woo_tmpl_id),full_name_data)   
+
             tmpl_images=[]                           
             position = 0
             
