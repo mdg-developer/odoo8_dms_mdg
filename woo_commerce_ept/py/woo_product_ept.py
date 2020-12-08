@@ -1803,9 +1803,9 @@ class woo_product_template_ept(models.Model):
                         att_data ={'name':attribute_value.attribute_id.name,'option':attribute_value.name}
                         att.append(att_data)                                            
                     variation_data.update({'attributes':att,'sku':variant.default_code,'weight':variant.product_id.weight})                    
-                    if update_price:                     
-                        price=instance.pricelist_id.with_context(uom=variant.product_id.uom_id.id).price_get(variant.product_id.id,1.0,partner=False,context=self._context)[instance.pricelist_id.id]
-                        variation_data.update({'regular_price':variant.product_id.product_tmpl_id.ecommerce_price,'sale_price':variant.product_id.product_tmpl_id.ecommerce_price})
+#                     if update_price:                     
+#                         price=instance.pricelist_id.with_context(uom=variant.product_id.uom_id.id).price_get(variant.product_id.id,1.0,partner=False,context=self._context)[instance.pricelist_id.id]
+#                         variation_data.update({'regular_price':variant.product_id.product_tmpl_id.ecommerce_price,'sale_price':variant.product_id.product_tmpl_id.ecommerce_price})
                     if update_stock:                        
                         quantity=self.get_stock(variant,instance.warehouse_id.id,instance.stock_field.name)
                         variation_data.update({'managing_stock':True,'stock_quantity':int(quantity)})
@@ -1833,9 +1833,9 @@ class woo_product_template_ept(models.Model):
                             res = img_file_upload.upload_image(instance,variant.product_id.image,"%s_%s"%(variant.name,variant.id))
                         single_var_url = res and res.get('id',False) or ''
                 data.update({'type': 'simple','sku':variant.default_code,'weight':variant.product_id.weight})
-                if update_price:
-                    price=instance.pricelist_id.with_context(uom=variant.product_id.uom_id.id).price_get(variant.product_id.id,1.0,partner=False,context=self._context)[instance.pricelist_id.id]
-                    data.update({'regular_price':variant.product_id.product_tmpl_id.ecommerce_price,'sale_price':variant.product_id.product_tmpl_id.ecommerce_price})
+#                 if update_price:
+#                     price=instance.pricelist_id.with_context(uom=variant.product_id.uom_id.id).price_get(variant.product_id.id,1.0,partner=False,context=self._context)[instance.pricelist_id.id]
+#                     data.update({'regular_price':variant.product_id.product_tmpl_id.ecommerce_price,'sale_price':variant.product_id.product_tmpl_id.ecommerce_price})
                 if update_stock:                        
                     quantity=self.get_stock(variant,instance.warehouse_id.id,instance.stock_field.name)
                     data.update({'managing_stock':True,'stock_quantity':int(quantity)})
