@@ -1,10 +1,11 @@
-from openerp import models,fields,api
+from openerp import models, fields, api, _
 import openerp.addons.decimal_precision as dp
 from datetime import datetime
 from .. img_upload import img_file_upload
 import base64
 import requests
 import hashlib
+from openerp.osv.orm import except_orm
 
 class woo_product_template_ept(models.Model):
     _name="woo.product.template.ept"
@@ -962,19 +963,22 @@ class woo_product_template_ept(models.Model):
             tag_ids = []
             odoo_template = template.product_tmpl_id                                         
             
-            data = {'title':template.product_tmpl_id.short_name,'enable_html_description':True,'enable_html_short_description':True,'description':template.description or '',
-                    'weight':template.product_tmpl_id.weight,'short_description':template.short_description or '','taxable':template.taxable and 'true' or 'false'}
-            
             if template.product_tmpl_id:
                 woo_product = self.env['product.product'].search([('product_tmpl_id','=',template.product_tmpl_id.id)], limit=1)
                 if woo_product:
+                    if not template.product_tmpl_id.short_name:
+                        raise except_orm(_('UserError'), _("Please define short name for %s!") % (woo_product.name_template,)) 
+                    
                     woo_instance_obj=self.env['woo.instance.ept']
                     instance=woo_instance_obj.search([('state','=','confirmed')], limit=1)
                     if instance:
                         full_name_wcapi = instance.connect_for_point_in_woo() 
                         full_name_data = woo_product.name_template                                 
-                        full_name_wcapi.post('product-fullname/%s'%(template.woo_tmpl_id),full_name_data)   
-
+                        full_name_wcapi.post('product-fullname/%s'%(template.woo_tmpl_id),full_name_data)
+            
+            data = {'title':template.product_tmpl_id.short_name,'enable_html_description':True,'enable_html_short_description':True,'description':template.description or '',
+                    'weight':template.product_tmpl_id.weight,'short_description':template.short_description or '','taxable':template.taxable and 'true' or 'false'}
+            
             tmpl_images=[]                           
             position = 0
             

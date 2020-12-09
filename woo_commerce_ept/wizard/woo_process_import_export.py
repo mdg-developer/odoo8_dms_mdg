@@ -1,5 +1,6 @@
 from openerp import models, fields, api, _
 from openerp.exceptions import Warning
+from openerp.osv.orm import except_orm
 
 class woo_process_import_export(models.TransientModel):
     _name = 'woo.process.import.export'   
@@ -301,7 +302,7 @@ class woo_process_import_export(models.TransientModel):
                     if odoo_template.short_name:
                         product_name = odoo_template.short_name
                     else:
-                        product_name = odoo_template.name
+                        raise except_orm(_('UserError'), _("Please define short name for %s!") % (odoo_template.name,)) 
                     woo_template=woo_template_obj.create({'woo_instance_id':instance.id,'product_tmpl_id':odoo_template.id,'name':product_name,'description':odoo_template.description_sale,'short_description':odoo_template.description})                
                 for variant in odoo_template.product_variant_ids:
                     woo_variant = woo_product_obj.search([('woo_instance_id','=',instance.id),('product_id','=',variant.id)])
