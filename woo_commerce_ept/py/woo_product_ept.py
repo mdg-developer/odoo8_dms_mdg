@@ -980,42 +980,42 @@ class woo_product_template_ept(models.Model):
             
             if not odoo_template.attribute_line_ids and template.woo_tmpl_id == template.woo_product_ids[0].variant_id:
                 position = 1
-            if update_image:
-                gallery_img_keys={}
-                key = False    
-                for br_gallery_image in template.woo_gallery_image_ids:                               
-                    img_url = ''
-                    if instance.is_image_url:
-                        if br_gallery_image.response_url:
-                            try:
-                                img = requests.get(br_gallery_image.response_url,stream=True,verify=False,timeout=10)
-                                if img.status_code == 200:
-                                    img_url = br_gallery_image.response_url
-                                elif br_gallery_image.url:
-                                    img_url = br_gallery_image.url
-                            except Exception:
-                                img_url = br_gallery_image.url or ''                        
-                        elif br_gallery_image.url:
-                            img_url = br_gallery_image.url
-                    else:
-                        res = {}            
-                        if br_gallery_image.image:
-                            key=hashlib.md5(br_gallery_image.image).hexdigest()
-                            if not key:
-                                continue
-                            if gallery_img_keys.has_key(key):
-                                continue
-                            else:
-                                gallery_img_keys.update({key:br_gallery_image.id})
-                            res = img_file_upload.upload_image(instance,br_gallery_image.image,"%s_%s_%s"%(odoo_template.name,odoo_template.categ_id.name,odoo_template.id))
-                        img_url = res and res.get('id',False) or ''
-                    if img_url:
-                        if instance.is_image_url:
-                            tmpl_images.append({'src':img_url,'position': position})
-                        else:
-                            tmpl_images.append({'id':img_url,'position': position})
-                        position += 1
-            tmpl_images and data.update({"images":tmpl_images})                                                                   
+#             if update_image:
+#                 gallery_img_keys={}
+#                 key = False    
+#                 for br_gallery_image in template.woo_gallery_image_ids:                               
+#                     img_url = ''
+#                     if instance.is_image_url:
+#                         if br_gallery_image.response_url:
+#                             try:
+#                                 img = requests.get(br_gallery_image.response_url,stream=True,verify=False,timeout=10)
+#                                 if img.status_code == 200:
+#                                     img_url = br_gallery_image.response_url
+#                                 elif br_gallery_image.url:
+#                                     img_url = br_gallery_image.url
+#                             except Exception:
+#                                 img_url = br_gallery_image.url or ''                        
+#                         elif br_gallery_image.url:
+#                             img_url = br_gallery_image.url
+#                     else:
+#                         res = {}            
+#                         if br_gallery_image.image:
+#                             key=hashlib.md5(br_gallery_image.image).hexdigest()
+#                             if not key:
+#                                 continue
+#                             if gallery_img_keys.has_key(key):
+#                                 continue
+#                             else:
+#                                 gallery_img_keys.update({key:br_gallery_image.id})
+#                             res = img_file_upload.upload_image(instance,br_gallery_image.image,"%s_%s_%s"%(odoo_template.name,odoo_template.categ_id.name,odoo_template.id))
+#                         img_url = res and res.get('id',False) or ''
+#                     if img_url:
+#                         if instance.is_image_url:
+#                             tmpl_images.append({'src':img_url,'position': position})
+#                         else:
+#                             tmpl_images.append({'id':img_url,'position': position})
+#                         position += 1
+#             tmpl_images and data.update({"images":tmpl_images})                                                                   
             for woo_categ in template.woo_categ_ids:
                 if not woo_categ.woo_categ_id:                    
                     woo_categ.sync_product_category(instance,woo_product_categ=woo_categ)
@@ -1122,34 +1122,34 @@ class woo_product_template_ept(models.Model):
                 info= {}
                 info.update({'sku':variant.default_code,'weight':variant.product_id.weight})
                 var_url = ''
-                if update_image:
-                    if instance.is_image_url:                
-                        if variant.response_url:
-                            try:
-                                img = requests.get(variant.response_url,stream=True,verify=False,timeout=10)
-                                if img.status_code == 200:
-                                    var_url = variant.response_url
-                                elif variant.woo_variant_url or variant.product_id.image_url :
-                                    var_url = variant.woo_variant_url or variant.product_id.image_url or ''
-                            except Exception:
-                                var_url = variant.woo_variant_url or variant.product_id.image_url or ''
-                        else:
-                            var_url = variant.woo_variant_url or variant.product_id.image_url or ''
-                    else:
-                        res = {}
-                        if variant.product_id.image:
-                            key=hashlib.md5(variant.product_id.image).hexdigest()                                                                          
-                            if not variant_img_keys.has_key(key):
-                                res = img_file_upload.upload_image(instance,variant.product_id.image,"%s_%s"%(variant.name,variant.id))
-                                var_url = res and res.get('id',False) or ''
-                                variant_img_keys.update({key:var_url})
-                            else:
-                                var_url = variant_img_keys.get(key)                
-                if var_url:
-                    if instance.is_image_url:
-                        info.update({"images":[{'src':var_url,'position': 0}]})
-                    else:
-                        info.update({"images":[{'id':var_url,'position': 0}]})
+#                 if update_image:
+#                     if instance.is_image_url:                
+#                         if variant.response_url:
+#                             try:
+#                                 img = requests.get(variant.response_url,stream=True,verify=False,timeout=10)
+#                                 if img.status_code == 200:
+#                                     var_url = variant.response_url
+#                                 elif variant.woo_variant_url or variant.product_id.image_url :
+#                                     var_url = variant.woo_variant_url or variant.product_id.image_url or ''
+#                             except Exception:
+#                                 var_url = variant.woo_variant_url or variant.product_id.image_url or ''
+#                         else:
+#                             var_url = variant.woo_variant_url or variant.product_id.image_url or ''
+#                     else:
+#                         res = {}
+#                         if variant.product_id.image:
+#                             key=hashlib.md5(variant.product_id.image).hexdigest()                                                                          
+#                             if not variant_img_keys.has_key(key):
+#                                 res = img_file_upload.upload_image(instance,variant.product_id.image,"%s_%s"%(variant.name,variant.id))
+#                                 var_url = res and res.get('id',False) or ''
+#                                 variant_img_keys.update({key:var_url})
+#                             else:
+#                                 var_url = variant_img_keys.get(key)                
+#                 if var_url:
+#                     if instance.is_image_url:
+#                         info.update({"images":[{'src':var_url,'position': 0}]})
+#                     else:
+#                         info.update({"images":[{'id':var_url,'position': 0}]})
                 var_res = wcapi.put('products/%s'%(variant.variant_id),{'product':info})
                 if not isinstance(var_res,requests.models.Response):
                     transaction_log_obj.create(
