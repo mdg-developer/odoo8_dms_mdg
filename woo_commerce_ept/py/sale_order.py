@@ -5,6 +5,7 @@ import time
 import requests
 from datetime import timedelta,datetime
 import dateutil.parser
+import logging
 
 class sale_order(models.Model):
     _inherit="sale.order"
@@ -743,7 +744,8 @@ class sale_order(models.Model):
                 discount_label_info = {"discount": "foc"}                              
                 discount_label_wcapi.put('put-discount-label-for-null/1',discount_label_info) 
                 
-            for order in order_ids:                                                             
+            for order in order_ids: 
+                logging.warning("Check order: %s", order.get('order_number'))                                                            
                 if self.search([('woo_instance_id','=',instance.id),('woo_order_id','=',order.get('id')),('woo_order_number','=',order.get('order_number'))]):
                     continue
                 lines=order.get('line_items')
