@@ -211,60 +211,47 @@ class stock_requisition(osv.osv):
         except ValueError as err: 
             message = 'Unable to refresh sale order %s', err   
         return True
+    
     def so_list(self, cr, uid, ids, context=None):
         try:
             sale_order_obj = self.pool.get('sale.order')
             so_line_obj = self.pool.get('stock.requisition.order')
             if ids:
                 stock_request_data = self.browse(cr, uid, ids[0], context=context)
-                issue_date_from = stock_request_data.issue_date
-                issue_date_to = stock_request_data.s_issue_date
                 sale_team_id = stock_request_data.sale_team_id.id
                 optional_issue_location_id = stock_request_data.sale_team_id.optional_issue_location_id.id
                 request_date = stock_request_data.request_date
                 issue_from_optional_location=stock_request_data.issue_from_optional_location
                 if issue_from_optional_location==True:
                     cr.execute("update stock_requisition set to_location_id=%s where id =%s",(optional_issue_location_id,stock_request_data))
-                location_id = stock_request_data.to_location_id.id
-                    
-                
-                #sql = 'select id from sale_order where delivery_id=%s, shipped=False and is_generate=False and invoiced=False and state not in (%s,%s) and date_order between %s and %s'
-                #cr.execute(sql,(sale_team_id,issue_date_from,issue_date_to))
-                #order_ids = cr.fetchall()
-                #order_ids= []
-                print 'issue_date_from',issue_date_from,issue_date_to
-                if issue_date_from == issue_date_to:
-                    order_ids = sale_order_obj.search(cr, uid, [('delivery_id', '=', sale_team_id), ('shipped', '=', False), ('is_generate', '=', False), ('invoiced', '=', False), ('state', 'not in', ['done', 'cancel']), ('date_order', '>=', issue_date_from), ('date_order', '<=', issue_date_to)], context=context) 
-                else:
-                    order_ids = sale_order_obj.search(cr, uid, [('delivery_id', '=', sale_team_id), ('shipped', '=', False), ('is_generate', '=', False), ('invoiced', '=', False), ('state', 'not in', ['done', 'cancel']), ('date_order', '>=', issue_date_from), ('date_order', '<=', issue_date_to)], context=context) 
-                print 'order_idsorder_ids',order_ids
+                order_ids = sale_order_obj.search(cr, uid, [('delivery_id', '=', sale_team_id), ('shipped', '=', False), ('is_generate', '=', False), ('invoiced', '=', False), ('state', 'not in', ['done', 'cancel', 'reversed'])], context=context) 
                 cr.execute("delete from stock_requisition_order where  stock_line_id=%s", (stock_request_data.id,))
                 cr.execute("update stock_requisition_line set sale_req_quantity=0 where line_id=%s", (stock_request_data.id,))
-                order_list = str(tuple(order_ids))
-                order_list = eval(order_list)
-                if request_date and order_list:
-                        cr.execute("select sol.product_id,sum(product_uom_qty) as qty ,sol.product_uom from sale_order so,sale_order_line sol,product_product pp ,product_template pt,product_category pc where so.id=sol.order_id  and pp.id=sol.product_id and pp.product_tmpl_id =pt.id and pc.id=pt.categ_id and so.id in %s and pc.issue_from_optional_location =%s group by product_id,product_uom", (order_list,issue_from_optional_location,))
-                        sale_record = cr.fetchall()             
-                        if sale_record:
-                            for sale_data in sale_record:
-                                product_id = int(sale_data[0])
-                                sale_qty = int(sale_data[1])
-                                sale_product_uom = int(sale_data[2])
-                                product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-                                sequence=product.sequence
-                                cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (location_id, product_id,))
-                                qty_on_hand = cr.fetchone()
-                                if qty_on_hand:
-                                    qty_on_hand = qty_on_hand[0]
-                                else:
-                                    qty_on_hand = 0
-                                if sale_product_uom != product.product_tmpl_id.uom_id.id:                                                                          
-                                    cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (sale_product_uom,))
-                                    bigger_qty = cr.fetchone()[0]
-                                    bigger_qty = int(bigger_qty)
-                                    sale_qty = bigger_qty * sale_qty
-                                cr.execute("update stock_requisition_line set sale_req_quantity=sale_req_quantity+%s,qty_on_hand=%s,sequence=%s where product_id=%s and line_id=%s", (sale_qty, qty_on_hand, sequence,product_id, stock_request_data.id,))
-                                            
+#                 order_list = str(tuple(order_ids))
+#                 order_list = eval(order_list)
+#                 if request_date and order_list:
+#                         cr.execute("select sol.product_id,sum(product_uom_qty) as qty ,sol.product_uom from sale_order so,sale_order_line sol,product_product pp ,product_template pt,product_category pc where so.id=sol.order_id  and pp.id=sol.product_id and pp.product_tmpl_id =pt.id and pc.id=pt.categ_id and so.id in %s and pc.issue_from_optional_location =%s group by product_id,product_uom", (order_list,issue_from_optional_location,))
+#                         sale_record = cr.fetchall()             
+#                         if sale_record:
+#                             for sale_data in sale_record:
+#                                 product_id = int(sale_data[0])
+#                                 sale_qty = int(sale_data[1])
+#                                 sale_product_uom = int(sale_data[2])
+#                                 product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+#                                 sequence=product.sequence
+#                                 cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (location_id, product_id,))
+#                                 qty_on_hand = cr.fetchone()
+#                                 if qty_on_hand:
+#                                     qty_on_hand = qty_on_hand[0]
+#                                 else:
+#                                     qty_on_hand = 0
+#                                 if sale_product_uom != product.product_tmpl_id.uom_id.id:                                                                          
+#                                     cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (sale_product_uom,))
+#                                     bigger_qty = cr.fetchone()[0]
+#                                     bigger_qty = int(bigger_qty)
+#                                     sale_qty = bigger_qty * sale_qty
+#                                 cr.execute("update stock_requisition_line set sale_req_quantity=sale_req_quantity+%s,qty_on_hand=%s,sequence=%s where product_id=%s and line_id=%s", (sale_qty, qty_on_hand, sequence,product_id, stock_request_data.id,))
+#                                             
                 for line in order_ids:
                     cr.execute("select so.id from sale_order so,sale_order_line sol,product_product pp ,product_template pt,product_category pc where so.id=sol.order_id  and pp.id=sol.product_id and pp.product_tmpl_id =pt.id and pc.id=pt.categ_id and so.id = %s and pc.issue_from_optional_location =%s ", (line,issue_from_optional_location,))
                     sale_record = cr.fetchone()
