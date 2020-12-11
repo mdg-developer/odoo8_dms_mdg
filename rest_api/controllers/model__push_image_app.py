@@ -43,6 +43,7 @@ OUT__push_image_app__read_all__SUCCESS_CODE = 200       # editable
 OUT__push_image_app__read_all__SCHEMA = (                 # editable
     'id',
     'name',
+    'date',
 )
 #           ]
 #       }
@@ -71,6 +72,7 @@ OUT__push_image_app__read_one__SCHEMA = (                 # editable
     # simple fields (non relational):
     'id',
     'name',
+    'date',
 )
 
 # /api/push.image.app  POST  - Create one
