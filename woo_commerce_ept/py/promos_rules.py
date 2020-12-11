@@ -10,3 +10,10 @@ class PromotionsRules(osv.Model):
                 'is_sync_woo':fields.boolean('Is Sync Woo', default=False),
     }
     
+    def write(self, cr, uid, ids, vals, context=None):  
+        data = self.browse(cr,uid,ids[0])
+        if data.is_sync_woo == True and vals.get('main_group'): 
+            vals['is_sync_woo']=False
+        res = super(PromotionsRules, self).write(cr, uid, ids, vals, context=context)
+        return res 
+    
