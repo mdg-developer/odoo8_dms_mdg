@@ -12,4 +12,5 @@ import app_version
 import push_noti_app
 import stock
 import res_branch
+import push_image_app
 
