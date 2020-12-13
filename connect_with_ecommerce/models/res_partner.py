@@ -96,7 +96,7 @@ class res_partner(osv.osv):
                     state_data = state_obj.browse(cr, uid, state_value, context=context)
                     vals['state_id'] = state_data.id
             if woo_customer_id:
-                instances=self.pool.get('woo.instance.ept').search(cr, uid, [('order_auto_import','=',True),('state','=','confirmed')], context=context)
+                instances=self.pool.get('woo.instance.ept').search(cr, uid, [('state','=','confirmed')], context=context, limit=1)
                 if instances:
                     woo_customer_id = "%s_%s"%(instances[0],woo_customer_id) if woo_customer_id else False
                     vals['woo_customer_id'] = woo_customer_id
@@ -200,7 +200,7 @@ class res_partner(osv.osv):
 #                         sale_channel_data = sale_channel_obj.browse(cr, uid, sale_channel, context=context)
 #                         vals['sales_channel'] = sale_channel_data.id      
                 if woo_customer_id:
-                    instances=self.pool.get('woo.instance.ept').search(cr, uid, [('order_auto_import','=',True),('state','=','confirmed')], context=context)
+                    instances=self.pool.get('woo.instance.ept').search(cr, uid, [('state','=','confirmed')], context=context, limit=1)
                     if instances:
                         woo_customer_id = "%s_%s"%(instances[0],woo_customer_id) if woo_customer_id else False
                         vals['woo_customer_id'] = woo_customer_id
