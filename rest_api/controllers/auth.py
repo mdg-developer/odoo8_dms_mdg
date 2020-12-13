@@ -127,9 +127,9 @@ class ControllerREST(http.Controller):
         
         # Generate tokens
         access_token = generate_token()
-        expires_in = int(jdata.get('access_lifetime', False)) or access_token_expires_in
+        expires_in = int(jdata.get('access_lifetime', False)) or 600
         refresh_token = generate_token()
-        refresh_expires_in = int(jdata.get('refresh_lifetime', False)) or refresh_token_expires_in
+        refresh_expires_in = int(jdata.get('refresh_lifetime', False)) or 7200
         
         # Save all tokens in store
         _logger.info("Save OAuth2 tokens of user in Token Store...")
