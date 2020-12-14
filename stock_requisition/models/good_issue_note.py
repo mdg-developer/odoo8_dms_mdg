@@ -294,9 +294,10 @@ class good_issue_note(osv.osv):
         if result:
             for line in request_order_line:
                 order_ids = sale_order_obj.search(cr, uid, [('name', '=', line.name)], context=context)
-                current_order = sale_order_obj.browse(cr, uid, order_ids[0], context=context)
-                if current_order and current_order.woo_order_number:
-                    current_order.update_woo_order_status_action('delivered')                    
+                if order_ids:
+                    current_order = sale_order_obj.browse(cr, uid, order_ids[0], context=context)
+                    if current_order and current_order.woo_order_number:
+                        current_order.update_woo_order_status_action('delivered')                    
         return result 
                             
 class good_issue_line(osv.osv):  # #prod_pricelist_update_line
