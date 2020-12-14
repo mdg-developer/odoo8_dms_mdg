@@ -221,8 +221,8 @@ class res_partner(osv.osv):
                 old_vals['viber'] = partner_data.viber
                 old_vals['shop_name'] = partner_data.shop_name
                 old_vals['email'] = email
-                old_vals['outlet_type'] = outlettype_data.id
-                old_vals['sales_channel'] = sale_channel_data.id
+#                 old_vals['outlet_type'] = outlettype_data.id
+#                 old_vals['sales_channel'] = sale_channel_data.id
                 old_vals['branch_id'] = partner_data.branch_id.id
                 old_vals['gender'] = partner_data.gender
                 old_vals['birthday'] = partner_data.birthday
