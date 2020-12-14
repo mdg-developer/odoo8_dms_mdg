@@ -182,14 +182,14 @@ class res_partner(osv.osv):
                 vals['birthday'] = birthday
                 vals['temp_customer'] = name
 #                 if sale_channel == 'consumer':
-                outlettype = outlettype_obj.search(cr, uid, [('name', '=ilike', 'Consumer')],context=context)            
-                if outlettype:
-                    outlettype_data = outlettype_obj.browse(cr, uid, outlettype, context=context)
-                    vals['outlet_type'] = outlettype_data.id
-                sale_channel = sale_channel_obj.search(cr, uid, [('code', '=', 'CS')], context=context)
-                if sale_channel:
-                    sale_channel_data = sale_channel_obj.browse(cr, uid, sale_channel, context=context)
-                    vals['sales_channel'] = sale_channel_data.id  
+#                 outlettype = outlettype_obj.search(cr, uid, [('name', '=ilike', 'Consumer')],context=context)            
+#                 if outlettype:
+#                     outlettype_data = outlettype_obj.browse(cr, uid, outlettype, context=context)
+#                     vals['outlet_type'] = outlettype_data.id
+#                 sale_channel = sale_channel_obj.search(cr, uid, [('code', '=', 'CS')], context=context)
+#                 if sale_channel:
+#                     sale_channel_data = sale_channel_obj.browse(cr, uid, sale_channel, context=context)
+#                     vals['sales_channel'] = sale_channel_data.id  
 #                 if sale_channel == 'retailer':
 #                     outlettype = outlettype_obj.search(cr, uid, [('name', '=ilike', 'Verify Retailer')],context=context)            
 #                     if outlettype:
