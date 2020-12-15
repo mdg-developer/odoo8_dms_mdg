@@ -232,6 +232,7 @@ class res_partner(osv.osv):
                 vals['date_partnership'] = datetime.today()
                 result = partner_obj.write(cr, uid,partner_data.id, vals, context=context)                
                 old_vals['parent_id'] = partner_data.id
+                old_vals['customer'] = False
                 new_one = new_partner_obj.create(cr, uid, old_vals, context=context)                
                 if result:           
                     one_signal_values = {
