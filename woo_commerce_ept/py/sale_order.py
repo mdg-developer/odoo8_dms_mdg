@@ -703,6 +703,7 @@ class sale_order(models.Model):
         instances=[]
         woo_product_uom=None
         shipping_phone = None
+        pricelist_id=False
         current_point=0
         transaction_log_obj=self.env["woo.transaction.log"]
         if not instance:
@@ -821,7 +822,64 @@ class sale_order(models.Model):
                 partner_result=partner_result.get('value')
                 
                 fiscal_position=partner.property_account_position
-                pricelist_id=partner_result.get('pricelist_id',False)
+                 
+                woo_partner = self.env['res.partner'].search([('id','=',partner.id)]) 
+                if woo_partner:   
+                    if woo_partner.sales_channel:
+                        if woo_partner.sales_channel.code == 'CS' or woo_partner.sales_channel.code == 'RT':
+                            if woo_partner.sales_channel.code == 'CS':
+                                product_pricelist = self.env['product.pricelist'].sudo().search([('consumer','=',True)], limit=1)
+                                if product_pricelist:
+                                    pricelist_id = product_pricelist.id
+                                else:
+                                    message="Consumer pricelist is not found for %s."%(order.get('order_number'))
+                                    log=transaction_log_obj.search([('woo_instance_id','=',instance.id),('message','=',message)])
+                                    if not log:
+                                        transaction_log_obj.create(
+                                                                    {'message':message,
+                                                                     'mismatch_details':True,
+                                                                     'type':'sales',
+                                                                     'woo_instance_id':instance.id
+                                                                    })
+                                    continue
+                            if woo_partner.sales_channel.code == 'RT':
+                                product_pricelist = self.env['product.pricelist'].sudo().search([('retail','=',True)], limit=1)
+                                if product_pricelist:
+                                    pricelist_id = product_pricelist.id
+                                else:
+                                    message="Retail pricelist is not found for %s."%(order.get('order_number'))
+                                    log=transaction_log_obj.search([('woo_instance_id','=',instance.id),('message','=',message)])
+                                    if not log:
+                                        transaction_log_obj.create(
+                                                                    {'message':message,
+                                                                     'mismatch_details':True,
+                                                                     'type':'sales',
+                                                                     'woo_instance_id':instance.id
+                                                                    })
+                                    continue
+                        else:
+                            message="Customer %s's sale channel must be 'Consumer' or 'Retail' for %s."%(partner.name,order.get('order_number'))
+                            log=transaction_log_obj.search([('woo_instance_id','=',instance.id),('message','=',message)])
+                            if not log:
+                                transaction_log_obj.create(
+                                                            {'message':message,
+                                                             'mismatch_details':True,
+                                                             'type':'sales',
+                                                             'woo_instance_id':instance.id
+                                                            })
+                            continue
+                    else:                    
+                        message="Sale channel is not found for customer %s in %s."%(partner.name,order.get('order_number'))
+                        log=transaction_log_obj.search([('woo_instance_id','=',instance.id),('message','=',message)])
+                        if not log:
+                            transaction_log_obj.create(
+                                                        {'message':message,
+                                                         'mismatch_details':True,
+                                                         'type':'sales',
+                                                         'woo_instance_id':instance.id
+                                                        })
+                        continue
+#                 pricelist_id=partner_result.get('pricelist_id',False)
                 payment_term=partner_result.get('payment_term')                
                 
                 woo_order_vals=self.get_woo_order_vals(order, workflow, partner, instance, partner, shipping_address, pricelist_id, fiscal_position, payment_term, payment_gateway)
