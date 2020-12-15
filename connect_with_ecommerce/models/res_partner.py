@@ -180,7 +180,7 @@ class res_partner(osv.osv):
                 vals['partner_longitude'] = partner_longitude
                 vals['gender'] = gender
                 vals['birthday'] = birthday
-                vals['temp_customer'] = name
+#                 vals['temp_customer'] = name
 #                 if sale_channel == 'consumer':
 #                 outlettype = outlettype_obj.search(cr, uid, [('name', '=ilike', 'Consumer')],context=context)            
 #                 if outlettype:
