@@ -337,7 +337,7 @@ class res_partner(osv.osv):
             if delivery_data:
                 delivery_data.unlink()
                 
-    def edit_customer_profile(self, cr, uid, ids, customer_code=None, woo_customer_id=None, mobile=None, phone=None, name=None, shop_name=None, gender=None, birthday=None, image=None, sale_channel=None, context=None): 
+    def edit_customer_profile(self, cr, uid, ids, customer_code=None, woo_customer_id=None, mobile=None, email=None, phone=None, name=None, shop_name=None, gender=None, birthday=None, image=None, sale_channel=None, context=None): 
         
         vals = {}
         outlet_type = None
@@ -363,31 +363,14 @@ class res_partner(osv.osv):
         partner = partner_obj.search(cr, uid, domain, context=context)
         if partner:
             partner_data = partner_obj.browse(cr, uid, partner, context=context)
-            partner_id = partner_data.id
-            existing_partner = partner_obj.search(cr, uid, [('parent_id', '=', partner_id),
-                                                            ('type', '=', 'contact'),
-                                                            ('mobile', '=', mobile),
-                                                            ('phone', '=', phone),
-                                                            ('name', '=', name),
-                                                            ('shop_name', '=', shop_name),
-                                                            ('gender', '=', gender),
-                                                            ('birthday', '=', birthday),
-                                                            ('image', '=', image),
-                                                            ('outlet_type', '=', outlet_type),
-                                                            ], context=context)
-            if not existing_partner:
-                partner_values = {
-                                    'parent_id': partner_id,
-                                    'type': 'contact',
-                                    'mobile': mobile,
-                                    'phone': phone,
-                                    'name': name,
-                                    'shop_name': shop_name,
-                                    'gender': gender,
-                                    'birthday': birthday,
-                                    'image': image,
-                                    'outlet_type': outlet_type,
-                                }     
-                new_partner = partner_obj.create(cr, uid, partner_values, context=context)
-                return new_partner       
+            partner_id = partner_data.id            
+            partner_data.write({
+                'email': email,
+                'phone': phone,
+                'temp_customer': name,  
+                'shop_name': shop_name, 
+                'birthday': birthday, 
+                'gender': gender,           
+            })
+            return partner_id       
                 
