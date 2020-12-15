@@ -169,9 +169,9 @@ class res_partner(osv.osv):
                         state_data = state_obj.browse(cr, uid, state_value, context=context)
                         contact_state = state_data.id
                 
-                vals['name'] = shop_name if shop_name else name             
+#                 vals['name'] = name             
                 vals['phone'] = phone
-                vals['mobile'] = mobile
+#                 vals['mobile'] = mobile
                 vals['email'] = email
                 vals['sms'] = sms
                 vals['viber'] = viber
@@ -207,13 +207,13 @@ class res_partner(osv.osv):
                 
                 new_partner_obj = self.pool.get('res.partner')
                 old_vals = {}
-                old_vals['name'] = partner_data.name
+                old_vals['name'] = name
                 old_vals['street'] = street
                 old_vals['street2'] = street2
                 old_vals['township'] = contact_township
                 old_vals['city'] = contact_city
                 old_vals['state_id'] = contact_state
-                old_vals['mobile'] = partner_data.mobile
+                old_vals['mobile'] = mobile
                 old_vals['phone'] = partner_data.phone
                 old_vals['partner_latitude'] = partner_data.partner_latitude
                 old_vals['partner_longitude'] = partner_data.partner_longitude
