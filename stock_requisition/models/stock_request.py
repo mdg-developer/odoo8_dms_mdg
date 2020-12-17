@@ -50,9 +50,7 @@ class stock_requisition(osv.osv):
     def on_change_sale_team_id(self, cr, uid, ids, sale_team_id, pre_order, context=None):
         sale_order_obj = self.pool.get('sale.order')
         so_line_obj = self.pool.get('stock.requisition').browse(cr, uid, ids, context=context)
-        print 'so_line_obj', so_line_obj
         request_date = so_line_obj.request_date
-        print 'request_date', request_date
         values = {}
         data_line = []
         order_line = []
@@ -67,7 +65,7 @@ class stock_requisition(osv.osv):
             vehicle_id = sale_team.vehicle_id
             product_line = sale_team.sale_group_id.product_ids
             to_location_id = sale_team.issue_location_id
-            order_ids = sale_order_obj.search(cr, uid, [('delivery_id', '=', sale_team_id), ('shipped', '=', False), ('is_generate', '=', False), ('invoiced', '=', False), ('state', 'not in', ['done', 'cancel', 'reversed'])], context=context) 
+            order_ids = sale_order_obj.search(cr, uid, [('delivery_id', '=', sale_team_id), ('shipped', '=', False), ('is_generate', '=', False), ('invoiced', '=', False), ('state', 'not in', ['draft','done', 'cancel', 'reversed'])], context=context) 
             for line in product_line:                
                 product = self.pool.get('product.product').browse(cr, uid, line.id, context=context)   
                 cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (to_location_id.id, product.id,))
@@ -89,19 +87,20 @@ class stock_requisition(osv.osv):
                                         'addtional_req_quantity':addtional_req_quantity,
                                         'qty_on_hand':qty_on_hand,
                                           })
-            for line in order_ids:
-                order = sale_order_obj.browse(cr, uid, line, context=context)
-                date_order = order.date_order    
-                cr.execute("select (date_order+ '6 hour'::interval + '30 minutes'::interval)  from sale_order where id=%s", (order.id,))
-                sale_date = cr.fetchone()[0]
-                order_line.append({
-                                    'name':order.name,
-                                     'ref_no':order.tb_ref_no,
-                                    'amount':order.amount_total,
-                                    'date':sale_date,
-                                    'sale_team_id':order.section_id.id,
-                                    'state':order.state,
-                                              }) 
+            if so_line_obj.pre_order==True:       
+                for line in order_ids:
+                    order = sale_order_obj.browse(cr, uid, line, context=context)
+                    date_order = order.date_order    
+                    cr.execute("select (date_order+ '6 hour'::interval + '30 minutes'::interval)  from sale_order where id=%s", (order.id,))
+                    sale_date = cr.fetchone()[0]
+                    order_line.append({
+                                        'name':order.name,
+                                         'ref_no':order.tb_ref_no,
+                                        'amount':order.amount_total,
+                                        'date':sale_date,
+                                        'sale_team_id':order.section_id.id,
+                                        'state':order.state,
+                                                  }) 
             values = {
                  'from_location_id':location,
                  'to_location_id':to_location_id ,
@@ -224,7 +223,7 @@ class stock_requisition(osv.osv):
                 issue_from_optional_location=stock_request_data.issue_from_optional_location
                 if issue_from_optional_location==True:
                     cr.execute("update stock_requisition set to_location_id=%s where id =%s",(optional_issue_location_id,stock_request_data))
-                order_ids = sale_order_obj.search(cr, uid, [('delivery_id', '=', sale_team_id), ('shipped', '=', False), ('is_generate', '=', False), ('invoiced', '=', False), ('state', 'not in', ['done', 'cancel', 'reversed'])], context=context) 
+                order_ids = sale_order_obj.search(cr, uid, [('delivery_id', '=', sale_team_id), ('shipped', '=', False), ('is_generate', '=', False), ('invoiced', '=', False), ('state', 'not in', ['draft','done', 'cancel', 'reversed'])], context=context) 
                 cr.execute("delete from stock_requisition_order where  stock_line_id=%s", (stock_request_data.id,))
                 cr.execute("update stock_requisition_line set sale_req_quantity=0 where line_id=%s", (stock_request_data.id,))
 #                 order_list = str(tuple(order_ids))

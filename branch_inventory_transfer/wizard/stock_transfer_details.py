@@ -46,7 +46,7 @@ class stock_transfer_details(models.TransientModel):
                 'result_package_id': op.result_package_id.id,
                 'date': op.date, 
                 'owner_id': op.owner_id.id,
-                'bigger_uom_id' : op.product_id.report_uom_id.id or op.product_id.product_uom_id.id,
+                'bigger_uom_id' : op.product_id.product_tmpl_id.report_uom_id.id,
                 'bigger_qty' : bigger_qty,
             }
             if op.product_id:
