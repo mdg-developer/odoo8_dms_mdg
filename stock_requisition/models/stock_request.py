@@ -50,7 +50,6 @@ class stock_requisition(osv.osv):
     def on_change_sale_team_id(self, cr, uid, ids, sale_team_id, pre_order, context=None):
         sale_order_obj = self.pool.get('sale.order')
         so_line_obj = self.pool.get('stock.requisition').browse(cr, uid, ids, context=context)
-        request_date = so_line_obj.request_date
         values = {}
         data_line = []
         order_line = []
@@ -87,7 +86,7 @@ class stock_requisition(osv.osv):
                                         'addtional_req_quantity':addtional_req_quantity,
                                         'qty_on_hand':qty_on_hand,
                                           })
-            if so_line_obj.pre_order==True:       
+            if pre_order==True:       
                 for line in order_ids:
                     order = sale_order_obj.browse(cr, uid, line, context=context)
                     date_order = order.date_order    
