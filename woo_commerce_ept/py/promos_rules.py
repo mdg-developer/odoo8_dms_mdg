@@ -7,7 +7,7 @@ class PromotionsRules(osv.Model):
     _columns = {
                 'ecommerce':fields.boolean('For E-commerce', default=False),
                 'checking_main_group':fields.many2one('product.maingroup', 'Promotion Checking Main Group',track_visibility='always'),
-                'is_sync_woo':fields.boolean('Is Sync Woo', default=False),
+                'is_sync_woo':fields.boolean('Is Sync Woo', default=False, copy=False),
     }
     
     def write(self, cr, uid, ids, vals, context=None):  

@@ -21,14 +21,26 @@ class res_partner(models.Model):
                     instance = woo_instance_obj.search([('state','=','confirmed')],limit=1)
                     if instance:
                         wcapi = instance.connect_for_point_in_woo() 
+                        customer_wcapi = instance.connect_for_product_in_woo()
                         if wcapi:
-                            if channel.code == 'CS':
-                                data = "Consumer,,customer" 
-                            if channel.code == 'RT':
-                                data = "Retail,,Retailer"        
-                            response = wcapi.put('put-channel/%s'%(woo_customer_id),data)    
+                            if channel.code == 'CS':                                
+                                customer_data = {"role": "customer"}
+                                response = wcapi.put('update-role/%s/customer'%(woo_customer_id),"customer")  
+                            if channel.code == 'RT':                                
+                                customer_data = {"role": "Retailer"}   
+                                response = wcapi.put('update-role/%s/Retailer'%(woo_customer_id),"Retailer")                              
+                            customer_response = customer_wcapi.put('customers/%s'%(woo_customer_id),customer_data)   
                             if response.status_code not in [200,201]:
-                                message = "Error in syncing sale channel for woo customer id %s %s"%(woo_customer_id,response.content)                        
+                                message = "Error in syncing response sale channel for woo customer id %s %s"%(woo_customer_id,response.content)                        
+                                transaction_log_obj.create(
+                                                    {'message':message,
+                                                     'mismatch_details':True,
+                                                     'type':'sales',
+                                                     'woo_instance_id':instance.id
+                                                    })
+                                continue
+                            elif customer_response.status_code not in [200,201]:
+                                message = "Error in syncing customer_response sale channel for woo customer id %s %s"%(woo_customer_id,response.content)                        
                                 transaction_log_obj.create(
                                                     {'message':message,
                                                      'mismatch_details':True,
