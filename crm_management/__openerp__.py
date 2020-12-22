@@ -37,7 +37,8 @@ e.g YGN-IS-RETAIN-0001,YGN-IS-RETAIN-0002,
     'website': 'http://www.7thcomputing.com',
     'depends': ['base', 'crm','sale', 'address_management_system', 'crm_class', 'hr_branch', 'crm_demarcation','sale_management', 'crm_sale_channel', 'base_geolocalize', 'crm_partner_assign'
     ],
-    'data': [        
+    'data': [       
+        'views/sequence.xml', 
         'views/res_partner_view.xml',
         'views/lead_view.xml',
         'views/res_code_view.xml',

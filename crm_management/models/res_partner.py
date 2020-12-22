@@ -592,11 +592,19 @@ class res_partner_asset(osv.Model):
                         'note':fields.text('Note'),
                         'check_line':fields.one2many('res.partner.asset.check', 'asset_id', 'Customer Assets Check',
                               copy=True),
+                        'sr_no':fields.char('Asset Serial No',required=False,readonly=True),
+
   }
     _defaults = {
         'date': fields.datetime.now,
                     }
+    def create(self, cursor, user, vals, context=None):
+        id_code = self.pool.get('ir.sequence').get(cursor, user,
+                                                'partner.asset.code') or '/'
+        vals['sr_no'] = id_code
 
+        return super(res_partner_asset, self).create(cursor, user, vals, context=context)
+    
 class res_partner_asset_check(osv.Model):
 
     _description = 'Partner Asset Check'

@@ -523,6 +523,7 @@
 			<field name="model">res.partner.asset</field>
 			<field name="arch" type="xml">
 				<tree string="Asset">
+					<field name="sr_no" />
 					<field name="partner_id" />
 					<field name="name" />
 					<field name="asset_name_id" />
@@ -543,11 +544,12 @@
 				<form string="Asset Name">
 					<group>
 						<group>
+
+							<field name="sr_no" />
 							<field name="partner_id" />
 							<field name="township_id" />
 							<field name="name" />
 							<field name="asset_name_id" />
-
 							<field name="date" />
 							<field name="type" />
 							<field name="note" />
@@ -732,18 +734,21 @@
 		<menuitem id="config_view_customer_asset_check_action"
 			parent="base.menu_sales" action="open_view_customer_asset_check_action"
 			sequence="10" />
-		
-		<record id="inherit_view_crm_partner_assign_form_ecommerce2" model="ir.ui.view">
+
+		<record id="inherit_view_crm_partner_assign_form_ecommerce2"
+			model="ir.ui.view">
 			<field name="name">res.partner.form.ecommerce</field>
 			<field name="model">res.partner</field>
 			<field name="type">form</field>
-			<field name="inherit_id" ref="mdg_customization.inherit_view_crm_partner_assign_form" />
+			<field name="inherit_id"
+				ref="mdg_customization.inherit_view_crm_partner_assign_form" />
 			<field name="arch" type="xml">
-				<xpath expr="//form/sheet/group/field[@name='mobile']" position="after">
+				<xpath expr="//form/sheet/group/field[@name='mobile']"
+					position="after">
 					<field name="outlet_type" />
 				</xpath>
 			</field>
-		</record>  
+		</record>
 
 	</data>
 </openerp>
