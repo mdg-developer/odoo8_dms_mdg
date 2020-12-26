@@ -4,6 +4,8 @@ import json
 import logging
 import random
 from datetime import timedelta,datetime
+from openerp import api, workflow
+from openerp.tools.translate import _
 
 class res_partner(osv.osv):
     _inherit = 'res.partner'
@@ -373,4 +375,15 @@ class res_partner(osv.osv):
                 'gender': gender,           
             })
             return partner_id       
+        
+    @api.constrains('phone', 'mobile')
+    def _check_mobile_phone_format(self):
+        
+        for partner in self:
+            if partner.phone and not partner.phone.isdigit():
+                raise osv.except_osv(
+                        _('Error!'), _("Phone number must be only digit."))
+            if partner.mobile and not partner.mobile.isdigit():
+                raise osv.except_osv(
+                        _('Error!'), _("Mobile number must be only digit."))
                 
