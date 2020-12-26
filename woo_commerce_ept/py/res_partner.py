@@ -5,7 +5,7 @@ from pyfcm import FCMNotification
 class res_partner(models.Model):
     _inherit="res.partner"
     woo_company_name_ept=fields.Char("Company Name")
-    woo_customer_id=fields.Char("Woo Customer Id")
+    woo_customer_id=fields.Char("Woo Customer Id", copy=False)
     
     @api.multi
     def write(self, vals):
