@@ -542,7 +542,7 @@ class sale_order(models.Model):
             shipping_partner = self.env['res.partner'].search([('id','=',shipping_address.ids[0])])           
                         
             if shipping_partner.township.delivery_team_id:        
-                woo_warehouse = shipping_partner.township.delivery_team_id.issue_warehouse_id.id       
+                woo_warehouse = shipping_partner.township.delivery_team_id.warehouse_id.id       
                 delivery_id = shipping_partner.township.delivery_team_id.id
             elif shipping_partner.city.delivery_team_id:
                 delivery_id = shipping_partner.city.delivery_team_id.id
