@@ -2923,12 +2923,69 @@ class mobile_sale_order(osv.osv):
         return datas
     
     def get_assets(self, cr, uid, context=None, **kwargs):    
-        cr.execute("""select A.name as id ,(select name from asset_configuration where id = A.asset_name_id) as asset_name,A.partner_id,substring(encode(image::bytea, 'hex'),1,5) as image
-                    ,A.qty,A.date,B.name,A.type,A.id as asset_db_id
-                    from res_partner_asset A, asset_type B
-                    where A.asset_type = B.id
-                    and A.active=True""")
-        datas = cr.fetchall()
+        team_obj = self.pool.get('crm.case.section')
+        cr.execute('''select default_section_id from res_users where id =%s''',(uid,))   
+        sale_team_data=cr.fetchone() 
+        if sale_team_data:
+            sale_team_id =sale_team_data[0]
+        else:
+            sale_team_id=False
+        team_data=team_obj.browse(cr, uid, sale_team_id, context=context)     
+        section_id=  team_data.id                            
+        is_supervisor=team_data.is_supervisor           
+        if is_supervisor==True:
+            cr.execute('''            
+                    select A.name as id ,(select name from asset_configuration where id = A.asset_name_id) as asset_name,A.partner_id,substring(encode(image::bytea, 'hex'),1,5) as image
+                            ,A.qty,A.date,B.name,A.type,A.id as asset_db_id
+                            from res_partner_asset A, asset_type B
+                            where A.asset_type = B.id
+                            and A.active=True
+                    AND A.partner_id IN  (
+                   select partner_id from (
+                    (select distinct b.partner_id from res_partner_res_partner_category_rel a,
+                 sale_plan_day_line b
+                 , sale_plan_day p
+                where a.partner_id = b.partner_id
+                and b.line_id = p.id
+                and p.sale_team in (select id from crm_case_section where supervisor_team= %s)
+                )
+                UNION ALL
+                (select distinct b.partner_id from res_partner_res_partner_category_rel a,sale_plan_trip p,
+                 res_partner_sale_plan_trip_rel b
+                where a.partner_id = b.partner_id
+                and b.sale_plan_trip_id = p.id
+                and p.sale_team in (select id from crm_case_section where supervisor_team= %s)
+                )
+                )a group by partner_id
+                )
+             ''', (section_id,section_id,))
+            datas=cr.fetchall()            
+        else:
+            cr.execute('''            
+                           select A.name as id ,(select name from asset_configuration where id = A.asset_name_id) as asset_name,A.partner_id,substring(encode(image::bytea, 'hex'),1,5) as image
+                            ,A.qty,A.date,B.name,A.type,A.id as asset_db_id
+                            from res_partner_asset A, asset_type B
+                            where A.asset_type = B.id
+                            and A.active=True 
+                            AND A.partner_id IN  (
+                           select partner_id from (
+                            (select distinct b.partner_id from res_partner_res_partner_category_rel a,
+                             sale_plan_day_line b
+                             , sale_plan_day p
+                            where a.partner_id = b.partner_id
+                            and b.line_id = p.id
+                            and p.sale_team = %s)
+                            UNION ALL
+                            (select distinct b.partner_id from res_partner_res_partner_category_rel a,sale_plan_trip p,
+                             res_partner_sale_plan_trip_rel b
+                            where a.partner_id = b.partner_id
+                            and b.sale_plan_trip_id = p.id
+                            and p.sale_team = %s
+                            )
+                            )a group by partner_id
+                            )
+                     ''', (section_id,section_id,))                
+            datas=cr.fetchall()            
         return datas
         
     # Get Pending Delivery
@@ -3769,7 +3826,7 @@ class mobile_sale_order(osv.osv):
                         so_id = data[0][0]
                     else:
                         so_id = None
-                    cursor.execute('select count(id) from customer_payment where journal_id= %s and payment_code = %s and  notes = %s  and date = %s', (ar['journal_id'],ar['payment_code'],ar['notes'],ar['date'],))
+                    cursor.execute('select count(id) from customer_payment where journal_id= %s and payment_code = %s and  notes = %s  and date = %s', (ar['journal_id'],ar['payment_code'],payment_id,ar['date'],))
                     payment_data = cursor.fetchone()[0]
                     if payment_data==0:                              
                         rental_result = {                    
