@@ -580,7 +580,12 @@ class sale_order(models.Model):
                     payment_type = "credit"
                 else:
                     payment_type = "cash"     
-                                 
+                          
+            if delivery_id:
+                user_obj = self.env['res.users'].search([('default_section_id','=',delivery_id)])  
+                if user_obj:
+                    sales_person = user_obj.id
+                                         
             ordervals = {
                 'name' :name,                
                 'picking_policy' : workflow.picking_policy,
@@ -600,6 +605,7 @@ class sale_order(models.Model):
                 'auto_workflow_process_id':workflow.id,
                 'woo_instance_id':instance.id,
                 'section_id':delivery_id,
+                'user_id':sales_person,
                 'company_id':instance.company_id.id,  
                 'payment_gateway_id':payment_gateway and payment_gateway.id or False,
                 'woo_trans_id':woo_trans_id,
