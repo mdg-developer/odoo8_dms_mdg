@@ -137,7 +137,7 @@ class res_partner(osv.osv):
                     
                 if res.name:
                     tmp_vals['name']= res.name or None
-                    res.name = res.parent_id.temp_customer or None
+                    res.name = res.parent_id.temp_customer or 'null'
                     customer_vals['temp_customer']= tmp_vals['name']
                     
                 if res.shop_name:
