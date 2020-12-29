@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+	
+        <record model="ir.ui.view" id="res_user_form_branch">
+            <field name="name">User Branch</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='company_id']" position="after">
+                        <label for="branch_id" string="Branch"/>
+                        <field name="branch_id"/>
+                    </xpath>
+                    <xpath expr="//page[@string='Preferences']" position="after">
+                    	<page string="Analytic Account">
+                    		<separator string="Analytic Account"/>
+                        	<field name="analytic_ids"/>
+                    	</page>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+    </data>
+</openerp>

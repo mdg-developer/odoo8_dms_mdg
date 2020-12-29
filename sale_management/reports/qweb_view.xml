@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+	    <!-- Invoice -->
+	    <report 
+            id="account.account_invoices"
+            model="account.invoice"
+            string="Invoices"
+            report_type="qweb-pdf"
+            name="sale_management.report_invoice_inherit_document"
+            file="sale_management.report_invoice_inherit_document"  />
+	    
+		<!-- Denomination -->
+		<report id="report_denomination" model="sales.denomination" string="Denomination Report"
+			report_type="qweb-pdf" name="sale_management.sale_denomination" file="sale_management.sale_denomination"
+			attachment_use="True" attachment="('Sale Denomination')+'.pdf'" />
+	</data>
+</openerp>

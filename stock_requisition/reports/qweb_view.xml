@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- Good Issue Note -->
+		<report id="report_good_issue_note" model="good.issue.note" string="GIN Report"
+			report_type="qweb-pdf" name="stock_requisition.good_issue_note" file="stock_requisition.good_issue_note"
+			attachment_use="True" attachment="('Good Issue Note')+'.pdf'" />
+		
+		<!-- Stock Request -->
+		<report id="report_stock_request" model="stock.requisition" string="RFI Report"
+			report_type="qweb-pdf" name="stock_requisition.stock_request" file="stock_requisition.stock_request"
+			attachment_use="True" attachment="('Request For Issue')+'.pdf'" />
+	</data>
+</openerp>

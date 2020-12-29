@@ -1,0 +1,64 @@
+<openerp>
+	<data>
+	    
+		<record id="view_product_template_uom_form" model="ir.ui.view">
+			<field name="name">product.template.form</field>
+			<field name="model">product.template</field>
+			<field name="inherit_id" ref="product.product_template_form_view" />
+			<field name="arch" type="xml">
+				<field name="list_price" position="replace">
+				</field>
+				<field name="uom_id" position="replace">
+					<field name="uom_id" on_change="product.onchange_uom(uom_id,uom_po_id)"
+						groups="product.group_uom"/><!--  string="Smaller UoM"  -->
+					<field name="list_price" />
+					<field name='is_foc' />
+				</field>
+			</field>
+		</record>
+		<record id="inherit_product_template_tree_view" model="ir.ui.view">
+			<field name="name">product.template.product.tree</field>
+			<field name="model">product.template</field>
+			<field name="inherit_id" ref="product.product_template_tree_view" />
+			<field name="arch" type="xml">
+				<field name="name" position="before">
+					<field name="default_code"/>
+				</field>
+				<field name="type" position="before">
+					<field name="group"/>
+					<field name="division"/>
+					<field name="main_group"/>	
+					<field name="uom_id" string="Unit Of Measure" />				
+				</field>
+
+				<field name="type" position="after">					
+					<field name="list_price" string="Sale Price" />			
+				</field>
+				<field name="type" position="replace">
+					<field name="type"/>
+				</field>
+				<field name="categ_id" position="replace">
+					<field name="categ_id" string="Internal Category"/>
+				</field>
+				<field name="state" position="replace">
+					<field name="state" invisible="1" />
+				</field>
+			</field>
+		</record>
+		
+		<record id="inherit_view_stock_product_template_tree" model="ir.ui.view">
+			<field name="name">product.template.product.tree</field>
+			<field name="model">product.template</field>
+			<field name="inherit_id" ref="stock.view_stock_product_template_tree" />
+			<field name="arch" type="xml">
+				<field name="qty_available" position="replace">
+					<field name="qty_available" />
+				</field>
+				<field name="virtual_available" position="replace">
+					<field name="virtual_available"  />
+				</field>
+			</field>
+		</record>
+		
+	</data>
+</openerp>

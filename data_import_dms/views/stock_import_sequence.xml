@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data noupdate="1">
+
+		<!-- Sequences for sale.order -->
+		<record id="seq_type_stock_move_import" model="ir.sequence.type">
+			<field name="name">stock import</field>
+			<field name="code">stock.import</field>
+		</record>
+
+		<record id="seq_stock-move_import" model="ir.sequence">
+			<field name="name">stock import</field>
+			<field name="code">stock.import</field>
+			<field name="prefix">INOV/</field>
+			<field name="padding">4</field>
+			<field name="sequence" eval="False" />
+		</record>
+
+	</data>
+</openerp>

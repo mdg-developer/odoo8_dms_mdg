@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<!-- customize form for Account Invoice view -->
+		<record id="view_account_invoice_form3" model="ir.ui.view">
+			<field name="name">account invoice</field>
+			<field name="model">account.invoice</field>
+			<field name="inherit_id" ref="account.invoice_form" />
+			<field name="arch" type="xml">
+				<xpath
+					expr="//form/sheet/notebook/page/field/tree/field[@name='discount']"
+					position="replace">
+					<field name="net_total" />
+
+					<field string="Discount(%)" name="discount"
+						groups="sale.group_discount_per_so_line" on_change="onchange_discount_percent(discount,quantity, price_unit)" />
+				</xpath>
+				<xpath
+					expr="//form/sheet/notebook/page/field/tree/field[@name='discount']"
+					position="after">
+
+					<field name="discount_amt" groups="sale.group_discount_per_so_line" />
+
+					<field name="foc" groups="sale.group_discount_per_so_line"
+						on_change="foc_change(product_id,quantity,context)" />
+
+				</xpath>
+			</field>
+		</record>
+
+		<record id="view_account_invoice_form4" model="ir.ui.view">
+			<field name="name">account invoice</field>
+			<field name="model">account.invoice</field>
+			<field name="inherit_id" ref="account.invoice_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//form/sheet/notebook/page/group/field[@name='amount_tax']"
+					position="after">
+					<field name="discount_total" groups="sale.group_discount_per_so_line" />
+					<field name="additional_discount" groups="sale.group_discount_per_so_line"  attrs="{'readonly':[('state','!=','draft')]}"/>
+					<field name="deduct_amt" groups="sale.group_discount_per_so_line"  attrs="{'readonly':[('state','!=','draft')]}"/>
+				</xpath>
+			</field>
+		</record>
+
+		<!-- customize form for Account Invoice view -->
+		<record id="view_invoice_supplier_form3" model="ir.ui.view">
+			<field name="name">account invoice</field>
+			<field name="model">account.invoice</field>
+			<field name="inherit_id" ref="account.invoice_supplier_form" />
+			<field name="arch" type="xml">
+				<xpath
+					expr="//form/sheet/notebook/page/field/tree/field[@name='discount']"
+					position="replace">
+					<field name="net_total" />
+
+					<field string="Discount(%)" name="discount"
+						groups="sale.group_discount_per_so_line" on_change="onchange_discount_percent(discount,quantity, price_unit)" />
+				</xpath>
+				<xpath
+					expr="//form/sheet/notebook/page/field/tree/field[@name='discount']"
+					position="after">
+
+					<field name="discount_amt" groups="sale.group_discount_per_so_line" />
+					<field name="foc" groups="sale.group_discount_per_so_line"
+						on_change="foc_change(product_id,quantity,context)" />
+
+				</xpath>
+				<xpath expr="//form/sheet/notebook/page/group/field[@name='amount_tax']"
+					position="after">
+					<field name="discount_total" groups="sale.group_discount_per_so_line" />
+					<field name="additional_discount" groups="sale.group_discount_per_so_line"  attrs="{'readonly':[('state','!=','draft')]}"/>
+					<field name="deduct_amt" groups="sale.group_discount_per_so_line"  attrs="{'readonly':[('state','!=','draft')]}"/>
+				</xpath>
+			</field>
+		</record>
+
+	</data>
+</openerp>

@@ -1,0 +1,8 @@
+eclipse.preferences.version=1
+encoding//report/account_balance_sheet.py=utf-8
+encoding//report/common_report_header.py=utf-8
+encoding//wizard/account_report_balance_sheet.py=utf-8
+encoding//wizard/account_report_common.py=utf-8
+encoding//wizard/account_report_common_account.py=utf-8
+encoding//wizard/account_report_profit_loss.py=utf-8
+encoding/__openerp__.py=utf-8

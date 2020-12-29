@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+         <!-- Country -->
+        <record id="action_country_inherit" model="ir.actions.act_window">
+            <field name="name">Country</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.country</field>
+            <field name="view_type">form</field>
+            <field name="help">Display and manage the list of all countries that can be assigned to your partner records. You can create or delete countries to make sure the ones you are working on will be maintained.</field>
+        </record>
+        <menuitem action="action_country_inherit" id="menu_country_partner" parent="address_management_system.menu_address" sequence="1"/>
+    </data>
+</openerp>

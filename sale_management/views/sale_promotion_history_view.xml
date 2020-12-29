@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- === Sales Promotion History Form === -->
+
+		<record id="view_sales_promotion_history_form" model="ir.ui.view">
+			<field name="name">sales.promotion.historyform</field>
+			<field name="model">sales.promotion.history</field>
+			<field name="arch" type="xml">
+				<form string="Sales Promotion History" version="7.0">
+					<sheet>
+						<group>
+							<group>
+								<field name="date" />
+								<field name="section_id" />
+								<field name="promotion_id" />
+							</group>
+							<group>
+								<field name="partner_id" />
+								<field name="user_id" />
+								<field name="note" />
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="action_sales_promotion_history_view" model="ir.actions.act_window">
+			<field name="name">Monthly Promotion History</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">sales.promotion.history</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[]</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to create new sale promotion history.
+				</p>
+			</field>
+		</record>
+
+		<record id="view_sales_promotion_history_tree" model="ir.ui.view">
+			<field name="name">sales.promotion.history.tree</field>
+			<field name="model">sales.promotion.history</field>
+			<field name="arch" type="xml">
+				<tree string="Monthly Promotion History" version="7.0">
+					<field name="date" />
+					<field name="partner_id" />
+					<field name="section_id" />
+					<field name="promotion_id" />
+					<field name="user_id" />
+				</tree>
+			</field>
+		</record>
+
+		<menuitem id="menu_monthly_promotion_history" parent="promotions"
+			action="action_sales_promotion_history_view" sequence="4" />
+		
+	</data>
+</openerp>
+	    
+	    
+	    

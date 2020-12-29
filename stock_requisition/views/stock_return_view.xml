@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+
+		<!-- ============================== Content Form ============================== -->
+
+		<record id="stock_return_form" model="ir.ui.view">
+			<field name="name">Stock Return Form</field>
+			<field name="model">stock.return</field>
+			<field name="arch" type="xml">
+				<form string="Stock Return Form">
+					<header>
+
+						<button name="received" string="Received" class="oe_highlight"
+							type="object" states="draft"
+							groups="stock.group_stock_manager,stock.group_stock_user" />
+						<field name="state" widget="statusbar" />
+					</header>
+					<sheet>
+						<group>
+							<group>
+								<field name="name" />
+								<field name="sale_team_id" attrs="{'readonly':[('state','=','received')]}"
+									on_change="on_change_sale_team_id(sale_team_id)"/>
+								<field name="from_location"  readonly="1"/>
+								<field name="to_location"  readonly="1"/>
+								<field name="return_date" attrs="{'readonly':[('state','=','received')]}" />
+								<!-- <field name="branch_id" widget="selection" /> -->
+							</group>
+							<group>
+								<field name="returner" attrs="{'readonly':[('state','=','received')]}" />
+								<field name="wh_receiver" attrs="{'readonly':[('state','=','received')]}" />
+								<field name="company_id" attrs="{'readonly':[('state','=','received')]}"
+									invisible="1" />
+							</group>
+						</group>
+						<group>
+							<group>
+								<button name="retrieve_data" string="Retrieve" type="object"
+									widget="statinfo" class="oe_highlight" />
+
+							</group>
+							<group>
+
+							</group>
+						</group>
+						<group>
+							<notebook>
+								<page string="Stock List">
+									<field name="p_line" attrs="{'readonly':[('state','=','approve')]}">
+										<tree string="Stock Return Line" editable="bottom"
+											default_order="sequence asc">
+											<field name="sequence" invisible="1" />
+											<field name="product_id" attrs="{'readonly':True}" />
+											<field name="receive_quantity" string="Issued Qty"
+												attrs="{'readonly':True}" />
+											<field name="sale_quantity" string="Sales Qty" attrs="{'readonly':True}" />
+											<field name="foc_quantity" string="FOC Qty" attrs="{'readonly':True}" />
+											<!-- <field name="exchange_quantity" attrs="{'readonly':True}" 
+												/> -->
+											<field name="return_quantity" string="Return Qty(S)"
+												attrs="{'readonly':True}" />
+											<field name="product_uom" invisible="1" />
+											<field name="uom_ratio" invisible="1" />
+											<!-- <field name="qty_by_wh" /> -->
+											<field name="rec_small_quantity" string="Received Qty(S)" />
+											<field name="expiry_date" string="Expiry" attrs="{'readonly':True}" />
+											<field name="remark" string="Remark" />
+										</tree>
+									</field>
+								</page>
+							</notebook>
+
+						</group>
+
+					</sheet>
+					<div class="oe_chatter">
+						<field name="message_follower_ids" widget="mail_followers"
+							groups="base.group_user" />
+						<field name="message_ids" widget="mail_thread" />
+					</div>
+				</form>
+			</field>
+		</record>
+		<!-- filter -->
+
+		<record id="view_stock_return_filter" model="ir.ui.view">
+			<field name="name">Stock Return Filter</field>
+			<field name="model">stock.return</field>
+			<field name="arch" type="xml">
+				<search string="Search Stock Return">
+					<group expand="0" string="Group By...">
+						<filter string="Sales Team" icon="terp-partner" domain="[]"
+							context="{'group_by':'sale_team_id'}" />
+						<filter string="Return From" icon="terp-partner" domain="[]"
+							context="{'group_by':'return_from'}" />
+						<filter string="Date of Return" icon="terp-partner" domain="[]"
+							context="{'group_by':'return_date'}" />
+						<filter string="Pending" domain="[('state','=','draft')]"
+							name="state_filter" />
+
+					</group>
+				</search>
+			</field>
+		</record>
+		<!-- ============================== Content Tree ============================== -->
+		<record id="stock_return_tree" model="ir.ui.view">
+			<field name="name">stock_return_tree</field>
+			<field name="model">stock.return</field>
+			<field name="arch" type="xml">
+				<tree string="Contents">
+					<field name="sale_team_id" />
+					<field name="name" />
+					<field name="note_id" />
+					<field name="return_from" />
+					<field name="so_no" />
+					<field name="return_date" />
+					<field name="vehicle_id" />
+					<field name="state" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- Stock Requisition -->
+		<record id="action_stock_return" model="ir.actions.act_window">
+			<field name="name">Stock Return</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">stock.return</field>
+			<field name="context">{'search_default_state_filter': 1}</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="stock_return_tree" />
+			<field name="search_view_id" ref="view_stock_return_filter" />
+			<field name="domain">[]
+			</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to Register Stock Return Note .
+				</p>
+			</field>
+		</record>
+
+
+		<menuitem action='action_stock_return' id="menu_action_stock_return"
+			parent="stock.menu_stock_warehouse_mgmt" groups="stock.group_stock_manager" />
+
+	</data>
+</openerp>

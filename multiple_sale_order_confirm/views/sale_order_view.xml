@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<!-- Assign Multiple Employee -->
+	    <act_window id="multiple_confirm_sale_order" multi="True" name="Confirm Quotations" res_model="multi.sale.order.wiz" src_model="sale.order" view_mode="form" target="new" view_type="form"/>
+
+	</data>
+</openerp>

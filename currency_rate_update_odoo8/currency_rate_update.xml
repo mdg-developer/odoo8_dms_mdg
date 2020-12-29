@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+		<menuitem id="first_level_currency" name="Currency Rate Update"
+			parent="account.menu_finance_periodical_processing" />
+
+		<record id="currency_rate_update_form" model="ir.ui.view">
+			<field name="name">currency_rate_update_form</field>
+			<field name="model">currency.rate.update</field>
+			<field eval="25" name="priority"></field>
+			<field name="arch" type="xml">
+				<form string="Fine Sheet">
+					<header>
+						<button name="currency_rate_update" string="Execute" class="oe_highlight"
+							type="object" />
+						<field name="state" widget="statusbar" statusbar_visible="draft,confirm,done,fail"
+							statusbar_colors='{"fail":"red","done":"blue"}' />
+					</header>
+					<sheet>
+						<group>
+							<field name="name"></field>
+							<field name="from_date"></field>
+							<field name="to_date"></field>
+							<field name="currency_id"></field>
+							<field name="rate"></field>
+						</group>
+					</sheet>
+				</form>
+			</field>
+
+		</record>
+
+		<record id="currency_rate_update_tree" model="ir.ui.view">
+			<field name="name">currency_rate_update_tree</field>
+			<field name="model">currency.rate.update</field>
+			<field name="arch" type="xml">
+				<tree string="Students">
+					<field name="name"></field>
+					<field name="from_date"></field>
+					<field name="to_date"></field>
+					<field name="currency_id"></field>
+					<field name="rate"></field>
+				</tree>
+			</field>
+		</record>
+
+		<record id="action_currency_rate_update" model="ir.actions.act_window">
+			<field name="name">Currency Rate Update</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">currency.rate.update</field>
+			<field name="view_type">form</field>
+			<field name="view_model">tree,form</field>
+			<field name="view_id" ref="currency_rate_update_tree"></field>
+
+		</record>
+
+		<menuitem action="action_currency_rate_update" id="second_level_currency"
+			name="Currency Rate Update" parent='first_level_currency' />
+
+		<record id="view_currency_update_checkbox" model="ir.ui.view">
+			<field name="name">currency_update</field>
+			<field name="model">account.journal</field>
+			<field name="inherit_id" ref="account.view_account_journal_form" />
+			<field name="arch" type="xml">
+				<data>
+
+					<xpath
+						expr="//form/notebook/page[@string='Advanced Settings']/group/group/field[@name='group_invoice_lines']"
+						position="after">
+						<field name="update_currency" />
+					</xpath>
+				</data>
+			</field>
+		</record>
+		
+		<record id="view_currency_update_disable_checkbox" model="ir.ui.view">
+			<field name="name">currency_update</field>
+			<field name="model">account.move</field>
+			<field name="inherit_id" ref="account.view_move_form" />
+			<field name="arch" type="xml">
+				<data>
+
+					<xpath
+						expr="//field[@name='to_check']"
+						position="after">
+						<field name="update_currency_disable" />
+					</xpath>
+				</data>
+			</field>
+		</record>
+		
+<record id="view_currency_form_1" model="ir.ui.view">
+            <field name="name">res.currency.form1</field>
+            <field name="model">res.currency</field>
+            <field name="inherit_id" ref="base.view_currency_form" />
+            <field name="arch" type="xml">
+            
+            <xpath expr="//form/field/tree/field[@name='rate']" position="replace">
+            <field name="rate" />
+            <field name="multi_rate" on_change="on_change_rate(multi_rate)"/>
+            
+            </xpath>
+     	</field>
+</record>
+	</data>
+</openerp>

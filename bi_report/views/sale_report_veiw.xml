@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>      	
+     <record id="view_order_product_search_inherit" model="ir.ui.view">
+        <field name="name">sale.report.search</field>
+        <field name="model">sale.report</field>
+        <field name="inherit_id" ref="sale.view_order_product_search"/>
+        <field name="arch" type="xml">
+        	  <xpath expr="//search[@string='Sales Analysis']/group[@string='Group By']/filter[@string='Order Month']" position="after">
+        	  	<filter string="Order Year" context="{'group_by':'date:year'}"/>
+        	  	<filter string="Weekly" context="{'group_by':'date:week'}"/>
+        	  	<filter string="Daily" context="{'group_by':'date:day'}"/>
+        	  	<filter string="Branch" context="{'group_by':'branch_id'}"/>
+        	  	<filter string="Product" context="{'group_by':'product_id'}"/>
+        	  	<filter string="Township" context="{'group_by':'township_id'}"/>
+        	  	<filter string="District" context="{'group_by':'district'}"/>
+        	  	<filter string="Region" context="{'group_by':'state_id'}"/>
+        	  	<filter string="Demarcation" context="{'group_by':'demarcation_id'}"/>
+        	  	<filter string="Group" context="{'group_by':'group_id'}"/>
+        	  	<filter string="Main Group" context="{'group_by':'main_group_id'}"/>
+        	  	<filter string="Product Division" context="{'group_by':'division_id'}"/>
+        	  	<filter string="Order Reference" context="{'group_by':'tb_ref_no'}"/>
+        	  </xpath>           
+        </field>
+    </record>
+    </data>
+</openerp>

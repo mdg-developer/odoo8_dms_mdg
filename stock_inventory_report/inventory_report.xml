@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <report
+            id="action_inventory_report_by_warehouse"
+            model="stock.move"
+            string="Inventory Report"
+            report_type="qweb-pdf"
+            name="stock_inventory_report.inventory_report_by_warehouse"
+            file="stock_inventory_report.inventory_report_by_warehouse"
+            menu="False"
+        />
+
+        <report
+            id="action_inventory_report_by_category"
+            model="stock.move"
+            string="Inventory Report"
+            report_type="qweb-pdf"
+            name="stock_inventory_report.inventory_report_by_category"
+            file="stock_inventory_report.inventory_report_by_category"
+            menu="False"
+        />
+    </data>
+</openerp>
