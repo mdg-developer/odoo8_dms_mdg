@@ -239,6 +239,42 @@ class mobile_sale_order(osv.osv):
         except Exception, e:
             print 'False'
             return False
+        
+    def create_customer_feedback(self, cursor, user, vals, context=None):
+             try :
+                sync_obj = self.pool.get('customer.feedback')
+                str = "{" + vals + "}"
+                str = str.replace("'',", "',")  # null
+                str = str.replace(":',", ":'',")  # due to order_id
+                str = str.replace("}{", "}|{")
+                new_arr = str.split('|')
+                result = []           
+                for data in new_arr:
+                    x = ast.literal_eval(data)
+                    result.append(x)
+                feedback_line = []
+                for r in result:                
+                   feedback_line.append(r)  
+                if feedback_line:
+                    for sync_log in feedback_line:
+                        cursor.execute('select branch_id from crm_case_section where id=%s', (sync_log['saleteam_id'],))
+                        branch_id = cursor.fetchone()[0]
+                        print_result = {
+                            'sale_team_id':sync_log['saleteam_id'],
+                            'date':sync_log['date'],
+                            'customer_id':sync_log['customer_id'],
+                            'customer_code':sync_log['customer_code'],
+                            'feedback_type':sync_log['feedback_type'],
+                            'contents':sync_log['contents'],
+                            'branch_id':branch_id,
+                            'maingroup_id':sync_log['maingroup_id'],
+                            'latitude':sync_log['latitude'],
+                            'longitude':sync_log['longitude'],
+                            }
+                        sync_obj.create(cursor, user, print_result, context=context)
+                return True
+             except Exception, e:
+                return False        
 
 # NZO
     def create_exchange_product(self, cursor, user, vals, context=None):
@@ -1080,7 +1116,7 @@ class mobile_sale_order(osv.osv):
                     and rel.product_id = pp.id
                     and pu.id = pur.product_uom_id
                     and rel.sale_group_id=ccs.sale_group_id
-                    and crm.crm_case_section_id = %s
+                    and ccs.id = %s  
                   )A''' , (saleteam_id,))
         datas = cr.fetchall()
         cr.execute
