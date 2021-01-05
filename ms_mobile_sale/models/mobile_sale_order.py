@@ -885,14 +885,14 @@ class mobile_sale_order(osv.osv):
         cr.execute('''select  pp.id,pt.list_price , coalesce(replace(pt.description,',',';'), ' ') as description,pt.categ_id,pc.name as categ_name,pp.default_code,
                          pt.name,substring(replace(cast(pt.image_small as text),'/',''),1,5) as image_small,pt.main_group,pt.uom_ratio,
                          pp.product_tmpl_id,pt.is_foc,pp.sequence
-                        from crm_case_section_product_product_rel crm_real ,
+                        from product_sale_group_rel rel ,
                         crm_case_section ccs ,product_template pt, product_product pp , product_category pc
-                        where pp.id = crm_real.product_product_id
+                        where pp.id = rel.product_id
                         and pt.id = pp.product_tmpl_id
                         and pt.active = true
                         and pp.active = true
-                        and ccs.id = crm_real.crm_case_section_id
-                        and pc.id = pt.categ_id
+                        and ccs.sale_group_id = rel.sale_group_id
+                        and pc.id = pt.categ_id  
                         and ccs.id = %s ''', (section_id,))
         datas = cr.fetchall()
         return datas
@@ -906,11 +906,12 @@ class mobile_sale_order(osv.osv):
     # get promotion datas from database
     def get_products_categ_by_sale_team(self, cr, uid, section_id , context=None, **kwargs):
         cr.execute('''select distinct categ_id,categ_name from (
-                        select pp.product_tmpl_id,pt.list_price , pt.description,pt.categ_id,pc.name as categ_name from crm_case_section_product_product_rel crm_real ,
+                        select pp.product_tmpl_id,pt.list_price , pt.description,pt.categ_id,pc.name as categ_name 
+                        from product_sale_group_rel rel,
                         crm_case_section ccs ,product_template pt, product_product pp , product_category pc
-                        where pp.id = crm_real.product_product_id
+                        where pp.id = rel.product_id
                         and pt.id = pp.product_tmpl_id
-                        and ccs.id = crm_real.crm_case_section_id
+                        and ccs.sale_group_id = rel.sale_group_id
                         and pc.id = pt.categ_id
                         and ccs.id = %s
                         )A ''', (section_id,))
@@ -1069,17 +1070,18 @@ class mobile_sale_order(osv.osv):
 
     def get_product_uoms(self, cr, uid , saleteam_id, context=None, **kwargs):
         cr.execute('''
-                select distinct uom_id,uom_name,ratio,template_id,product_id from(
-                select  pu.id as uom_id,pu.name as uom_name ,floor(round(1/factor,2)) as ratio,
-                pur.product_template_id as template_id,pp.id as product_id
-                from product_uom pu , product_template_product_uom_rel pur ,
-                product_product pp,
-                crm_case_section_product_product_rel crm
-                where pp.product_tmpl_id = pur.product_template_id
-                and crm.product_product_id = pp.id
-                and pu.id = pur.product_uom_id
-                and crm.crm_case_section_id = %s
-                )A''' , (saleteam_id,))
+                 select distinct uom_id,uom_name,ratio,template_id,product_id from(
+                    select  pu.id as uom_id,pu.name as uom_name ,floor(round(1/factor,2)) as ratio,
+                    pur.product_template_id as template_id,pp.id as product_id
+                    from product_uom pu , product_template_product_uom_rel pur ,
+                    product_product pp,
+                    product_sale_group_rel rel,crm_case_section ccs
+                    where pp.product_tmpl_id = pur.product_template_id
+                    and rel.product_id = pp.id
+                    and pu.id = pur.product_uom_id
+                    and rel.sale_group_id=ccs.sale_group_id
+                    and crm.crm_case_section_id = %s
+                  )A''' , (saleteam_id,))
         datas = cr.fetchall()
         cr.execute
         return datas
@@ -1100,9 +1102,12 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()
         cr.execute
         return datas
+    
     def sale_team_return(self, cr, uid, section_id , saleTeamId, context=None, **kwargs):
-        cr.execute('''select DISTINCT cr.id,cr.complete_name,cr.warehouse_id,cr.name,sm.member_id,cr.code,pr.product_product_id,cr.location_id
-                    from crm_case_section cr, sale_member_rel sm,crm_case_section_product_product_rel pr where sm.section_id = cr.id and cr.id=pr.crm_case_section_id
+        cr.execute('''
+                    select DISTINCT cr.id,cr.complete_name,cr.warehouse_id,cr.name,sm.member_id,cr.code,pr.product_id,cr.location_id
+                    from crm_case_section cr, sale_member_rel sm,product_sale_group_rel pr 
+                    where sm.section_id = cr.id and cr.sale_group_id=pr.sale_group_id 
                     and sm.member_id =%s
                     and cr.id = %s
             ''', (section_id, saleTeamId,))
@@ -1698,14 +1703,80 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()
         return datas
 
-    def get_assets(self, cr, uid, context=None, **kwargs):
-        cr.execute("""select A.id,A.name,A.partner_id,substring(encode(image::bytea, 'hex'),1,5) as image
-                    ,A.qty,A.date,B.name,A.type
-                    from res_partner_asset A, asset_type B
-                    where A.asset_type = B.id""")
-        datas = cr.fetchall()
-        return datas
+#     def get_assets(self, cr, uid, context=None, **kwargs):
+#         cr.execute("""select A.id,A.name,A.partner_id,substring(encode(image::bytea, 'hex'),1,5) as image
+#                     ,A.qty,A.date,B.name,A.type
+#                     from res_partner_asset A, asset_type B
+#                     where A.asset_type = B.id""")
+#         datas = cr.fetchall()
+#         return datas
 
+    def get_assets(self, cr, uid, context=None, **kwargs):    
+        team_obj = self.pool.get('crm.case.section')
+        cr.execute('''select default_section_id from res_users where id =%s''',(uid,))   
+        sale_team_data=cr.fetchone() 
+        if sale_team_data:
+            sale_team_id =sale_team_data[0]
+        else:
+            sale_team_id=False
+        team_data=team_obj.browse(cr, uid, sale_team_id, context=context)     
+        section_id=  team_data.id                            
+        is_supervisor=team_data.is_supervisor           
+        if is_supervisor==True:
+            cr.execute('''            
+                    select A.name as id ,(select name from asset_configuration where id = A.asset_name_id) as asset_name,A.partner_id,substring(encode(image::bytea, 'hex'),1,5) as image
+                            ,A.qty,A.date,B.name,A.type,A.id as asset_db_id
+                            from res_partner_asset A, asset_type B
+                            where A.asset_type = B.id
+                            and A.active=True
+                    AND A.partner_id IN  (
+                   select partner_id from (
+                    (select distinct b.partner_id from res_partner_res_partner_category_rel a,
+                 sale_plan_day_line b
+                 , sale_plan_day p
+                where a.partner_id = b.partner_id
+                and b.line_id = p.id
+                and p.sale_team in (select id from crm_case_section where supervisor_team= %s)
+                )
+                UNION ALL
+                (select distinct b.partner_id from res_partner_res_partner_category_rel a,sale_plan_trip p,
+                 res_partner_sale_plan_trip_rel b
+                where a.partner_id = b.partner_id
+                and b.sale_plan_trip_id = p.id
+                and p.sale_team in (select id from crm_case_section where supervisor_team= %s)
+                )
+                )a group by partner_id
+                )
+             ''', (section_id,section_id,))
+            datas=cr.fetchall()            
+        else:
+            cr.execute('''            
+                           select A.name as id ,(select name from asset_configuration where id = A.asset_name_id) as asset_name,A.partner_id,substring(encode(image::bytea, 'hex'),1,5) as image
+                            ,A.qty,A.date,B.name,A.type,A.id as asset_db_id
+                            from res_partner_asset A, asset_type B
+                            where A.asset_type = B.id
+                            and A.active=True 
+                            AND A.partner_id IN  (
+                           select partner_id from (
+                            (select distinct b.partner_id from res_partner_res_partner_category_rel a,
+                             sale_plan_day_line b
+                             , sale_plan_day p
+                            where a.partner_id = b.partner_id
+                            and b.line_id = p.id
+                            and p.sale_team = %s)
+                            UNION ALL
+                            (select distinct b.partner_id from res_partner_res_partner_category_rel a,sale_plan_trip p,
+                             res_partner_sale_plan_trip_rel b
+                            where a.partner_id = b.partner_id
+                            and b.sale_plan_trip_id = p.id
+                            and p.sale_team = %s
+                            )
+                            )a group by partner_id
+                            )
+                     ''', (section_id,section_id,))                
+            datas=cr.fetchall()            
+        return datas
+    
     # Get Pending Delivery
     def get_delivery_datas(self, cr, uid, saleTeamId, soList, context=None, **kwargs):
 
