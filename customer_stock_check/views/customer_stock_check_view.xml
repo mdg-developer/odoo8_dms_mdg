@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<!-- Customer Stock Check Form -->
+		<record id="partner_stock_check_form" model="ir.ui.view">
+			<field name="name">partner.stock.check.form</field>
+			<field name="model">partner.stock.check</field>
+			<field name="arch" type="xml">
+				<form string="Customer Stock Check">
+					<sheet>
+						<group>
+							<group>
+								<field name="partner_id" domain="[('customer', '=', True)]"
+									on_change="on_change_partner_id(partner_id,context)" />
+								<field name="sale_team_id" />
+								<field name="user_id" />
+								<field name="township_id" />
+								<field name="outlet_type" />
+							</group>
+							<group>
+								<field name="date" />
+								<field name="check_datetime" />
+								<field name="customer_code" />
+								<field name="branch_id" />
+								<field name="latitude" />
+								<field name="longitude" />
+								<field name="distance_status" />
+							</group>
+						</group>
+						<div>
+							<group>
+								<button name="retrieve_stock" string="Retrieve" class="oe_highlight"
+									type="object" icon="terp-gtk-jump-to-ltr" />
+							</group>
+						</div>
+						<group>
+							<notebook>
+								<page string="Product Lines">
+									<field name="stock_check_line">
+										<tree string="Product Lines" editable="bottom"
+											default_order="sequence asc">
+											<field name="sequence" invisible="1" />
+											<field name="product_id" />
+											<field name="product_uom" />
+											<field name="available" />
+											<field name="product_uom_qty" />
+											<field name="facing" />
+											<field name="chiller" />
+										</tree>
+									</field>
+								</page>
+							</notebook>
+						</group>
+
+					</sheet>
+				</form>
+			</field>
+		</record>
+		<!-- Customer Stock Check Tree -->
+		<record id="partner_stock_check_tree" model="ir.ui.view">
+			<field name="name">partner.stock.check.tree</field>
+			<field name="model">partner.stock.check</field>
+			<field name="arch" type="xml">
+				<tree string="Customer Stock Check Tree">
+					<field name="partner_id" />
+					<field name="township_id" />
+					<field name="outlet_type" />
+					<field name="sale_team_id" />
+					<field name="user_id" />
+					<field name="branch_id" />
+					<field name="date" />
+					<field name="check_datetime" />
+				</tree>
+			</field>
+		</record>
+		<!-- Customer Stock Check Filter -->
+		<record id="view_partner_stock_check_filter" model="ir.ui.view">
+			<field name="name">Stock Check Filter</field>
+			<field name="model">partner.stock.check</field>
+			<field name="arch" type="xml">
+				<search string="Search Customer Stock Check">
+					<field name="partner_id" />
+					<field name="township_id" />
+					<field name="sale_team_id" />
+					<field name="user_id" />
+					<field name="branch_id" />
+					<group expand="0" string="Group By...">
+						<filter string="Customer Name" icon="terp-partner" domain="[]"
+							context="{'group_by':'partner_id'}" />
+						<filter string="Township" icon="terp-partner" domain="[]"
+							context="{'group_by':'township_id'}" />
+						<filter string="Sales Team" icon="terp-partner" domain="[]"
+							context="{'group_by':'sale_team_id'}" />
+						<filter string="Sale Person" icon="terp-partner" domain="[]"
+							context="{'group_by':'user_id'}" />
+						<filter string="Branch" icon="terp-partner" domain="[]"
+							context="{'group_by':'branch_id'}" />
+						<filter string="Check Date Day" context="{'group_by': 'date:day'}" />							
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<record id="action_partner_stock_check" model="ir.actions.act_window">
+			<field name="name">Customer Stock Check</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">partner.stock.check</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="partner_stock_check_tree" />
+			<field name="search_view_id" ref="view_partner_stock_check_filter" />
+			<field name="domain">[]</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to Check Customer Stock.
+				</p>
+			</field>
+		</record>
+
+		<!-- <menuitem id="menu_customer_stock_check" parent="menu_customization.menu_customer_customization_menu" -->
+		<!-- action="action_partner_stock_check" sequence="6" /> -->
+
+		<menuitem id="menu_main_customer_stock_check" name="Stock Check"
+			parent="base.menu_base_partner" sequence="3" />
+		<menuitem id="menu_customer_stock_check" parent="menu_main_customer_stock_check"
+			name="Stock Check" action="action_partner_stock_check" sequence="1" />
+
+	</data>
+</openerp>

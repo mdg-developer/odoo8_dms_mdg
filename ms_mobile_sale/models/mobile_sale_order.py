@@ -1211,7 +1211,9 @@ class mobile_sale_order(osv.osv):
         cr.execute('''
             select id,active,login,password,partner_id,branch_id ,
             (select uid from res_groups_users_rel where gid in (select id from res_groups
-            where name='Allow To Active') and uid= %s) allow_to_active
+            where name='Allow To Active') and uid= %s) allow_to_active,allow_collection_team,allow_product,allow_promotion,allow_customer,allow_sale_plan_day,
+            allow_sale_plan_trip,allow_stock_request,allow_stock_exchange,allow_visit_record,allow_pending_delivery,allow_credit_collection,allow_daily_order_report,
+            allow_daily_sale_report,allow_pre_sale,allow_direct_sale,allow_assets,allow_customer_location_update,allow_stock_check,allow_rental,allow_feedback,allow_customer_create,allow_customer_edit,allow_visit_photo_taken
             from res_users
             where id = %s
             ''', (user_id,user_id,))
@@ -2237,6 +2239,97 @@ class mobile_sale_order(osv.osv):
             print 'False'
             return False
 
+    # Stock Check From Mobile
+    def create_stock_check_from_mobile(self, cursor, user, vals, context=None):
+        print 'vals', vals
+
+        try : 
+            stock_check_obj = self.pool.get('partner.stock.check')
+            stock_check_line_obj = self.pool.get('partner.stock.check.line')
+            str = "{" + vals + "}"
+            str = str.replace(":''", ":'")  # change Order_id
+            str = str.replace("'',", "',")  # null
+            str = str.replace(":',", ":'',")  # due to order_id
+            str = str.replace(":'}", ":''}")
+            str = str.replace("}{", "}|{")
+            
+            new_arr = str.split('|')
+            result = []
+            for data in new_arr:
+                x = ast.literal_eval(data)
+                result.append(x)
+            stock = []
+            stock_line = []
+            for r in result:
+                print "length", len(r)
+                if len(r) >= 8:
+                    stock.append(r)                                    
+                else:
+                    stock_line.append(r)
+            if stock:
+                for sr in stock:                                    
+                    cursor.execute('select id ,township ,outlet_type from res_partner where customer_code = %s ', (sr['customer_code'],))
+                    customer_data = cursor.fetchone()
+                    if customer_data:
+                        customer_id = customer_data[0]
+                        township_id = customer_data[1]
+                        outlet_type = customer_data[2]
+
+                    else:
+                        customer_id = None
+                        township_id = None
+                        outlet_type = None
+                    
+                    if  sr['date']:
+                        check_date_time = sr['date'].replace('\\', '').replace('\\', '').replace('/', '-')
+                        date = datetime.strptime(check_date_time, '%Y-%m-%d %H:%M:%S') - timedelta(hours=6, minutes=30)
+                        check_date = date.date()
+                    cursor.execute("delete from partner_stock_check where check_datetime =%s and partner_id=%s", (date, customer_id,))
+                    mso_result = {
+                        'partner_id':customer_id,
+                        'sale_team_id':sr['sale_team_id'] ,
+                         'user_id':sr['user_id'] ,
+                        'township_id': township_id,
+                        'outlet_type':outlet_type,
+                        'date':check_date,
+                        'check_datetime':date,
+                        'customer_code':sr['customer_code'],
+                        'branch_id':sr['branch'],
+                                                    'latitude':sr['latitude'],
+                            'longitude':sr['longitude'],
+                    }
+                    stock_id = stock_check_obj.create(cursor, user, mso_result, context=context)
+                    
+                    for srl in stock_line:
+                        if (sr['st_id'] == srl['stock_check_no']):
+                            cursor.execute("select sequence from product_product where id =%s", (srl['product_id'],))
+                            product_data = cursor.fetchone()
+                            if  product_data:
+                                sequence = product_data[0]
+                            else:
+                                sequence = None
+                            if srl['avail'] == 'false':
+                                avaliable = False
+                            else:
+                                avaliable = True
+                        
+                            mso_line_res = {                                                            
+                                      'stock_check_ids':stock_id,
+                                      'sequence':sequence,
+                                      'product_id':(srl['product_id']),
+                                      'product_uom':int(srl['uom_id']),
+                                      'available':avaliable,
+                                      'product_uom_qty':(srl['qty']),
+                                      'facing':(srl['facing']),
+                                      'chiller':(srl['chiller']),
+                                      }
+                            stock_check_line_obj.create(cursor, user, mso_line_res, context=context)
+            print 'True'
+            return True       
+        except Exception, e:
+            print 'False'
+            return False    
+        
     def get_promos_outlet(self, cr, uid, context=None, **kwargs):
         cr.execute("""select promos_rules_id,outlettype_id from promos_rules_outlettype_rel""")
         datas = cr.fetchall()
@@ -2598,56 +2691,92 @@ class mobile_sale_order(osv.osv):
         except Exception, e:
             return False
 
-    def get_credit_invoice(self, cr, uid, partner_list, branch_id , saleTeam, invoiceList, context=None):
+    def get_credit_invoice(self, cr, uid, partner_list, branch_id , invoiceList, sale_team_id, context=None):    
         data_line = []
         if partner_list:
             partner_list = str(tuple(partner_list))
             partner_list = eval(partner_list)
-            
-            saleTeam = str(tuple(saleTeam))
-            saleTeam = eval(saleTeam)
 
             invoiceList = str(tuple(invoiceList))
             invoiceList = eval(invoiceList)
-            if invoiceList:
-                cr.execute('''
-                    select inv.id,inv.number,inv.partner_id,rp.name customer_name,
-                           rp.customer_code customer_code,inv.origin so_no,inv.date_invoice,
-                           inv.amount_total,inv.residual balance,inv.payment_type,
-                           inv.journal_id,crm.name,inv.date_due
-                    from account_invoice inv, res_partner rp, crm_case_section crm
-                    where inv.payment_type='credit'
-                    and inv.state='open'
-                    and inv.type = 'out_invoice'
-                    and inv.branch_id = %s
-                    and residual > 0
-                    and inv.partner_id = rp.id
-                    and inv.section_id = crm.id
-                    and inv.partner_id in %s
-                    and inv.id NOT IN %s
-                    and crm.name = %s'''
-                    , (branch_id, partner_list, invoiceList, saleTeam, ))
+            cr.execute('''select allow_collection_team from res_users where id= %s''',(uid,))
+            is_credit_team=cr.fetchone()[0]
+
+            if is_credit_team==True:
+                if invoiceList:        
+                    cr.execute(''' 
+                        select inv.id,inv.number,inv.partner_id,rp.name customer_name,
+                               rp.customer_code customer_code,inv.origin so_no,inv.date_invoice,
+                               inv.amount_total,inv.residual balance,inv.payment_type,
+                               inv.journal_id,crm.name,inv.date_due
+                        from account_invoice inv, res_partner rp, crm_case_section crm
+                        where inv.payment_type='credit' 
+                        and inv.state='open' 
+                        and inv.type = 'out_invoice'
+                        and inv.branch_id = %s 
+                        and residual > 0
+                        and inv.partner_id = rp.id
+                        and inv.section_id = crm.id
+                        and inv.partner_id in %s
+                        and inv.id NOT IN %s        
+                        '''
+                        , (branch_id, partner_list, invoiceList,))
+                else:
+                    cr.execute(''' 
+                        select inv.id,inv.number,inv.partner_id,rp.name customer_name,
+                               rp.customer_code customer_code,inv.origin so_no,inv.date_invoice,
+                               inv.amount_total,inv.residual balance,inv.payment_type,
+                               inv.journal_id,crm.name,inv.date_due
+                        from account_invoice inv, res_partner rp, crm_case_section crm
+                        where inv.payment_type='credit' 
+                        and inv.state='open' 
+                        and inv.type = 'out_invoice'
+                        and inv.branch_id = %s 
+                        and residual > 0
+                        and inv.partner_id = rp.id
+                        and inv.section_id = crm.id
+                        and inv.partner_id in %s
+                        '''
+                        , (branch_id, partner_list,))  
             else:
-                cr.execute('''
-                    select inv.id,inv.number,inv.partner_id,rp.name customer_name,
-                           rp.customer_code customer_code,inv.origin so_no,inv.date_invoice,
-                           inv.amount_total,inv.residual balance,inv.payment_type,
-                           inv.journal_id,crm.name,inv.date_due, so.tb_ref_no
-                    from account_invoice inv, res_partner rp, crm_case_section crm, sale_order so
-                    where inv.payment_type='credit'
-                    and inv.state='open'
-                    and inv.reference = so.name
-                    and inv.type = 'out_invoice'
-                    and inv.branch_id = %s
-                    and residual > 0
-                    and inv.partner_id = rp.id
-                    and inv.section_id = crm.id
-                    and inv.partner_id in %s
-                    and crm.name = %s
-                    '''
-                    , (branch_id, partner_list, saleTeam,))
-            data_line = cr.fetchall()
-        print 'Credit_Invoice', data_line
+                
+                if invoiceList:        
+                    cr.execute(''' 
+                        select inv.id,inv.number,inv.partner_id,rp.name customer_name,
+                               rp.customer_code customer_code,inv.origin so_no,inv.date_invoice,
+                               inv.amount_total,inv.residual balance,inv.payment_type,
+                               inv.journal_id,crm.name,inv.date_due
+                        from account_invoice inv, res_partner rp, crm_case_section crm
+                        where inv.payment_type='credit' 
+                        and inv.state='open' 
+                        and inv.type = 'out_invoice'
+                        and inv.branch_id = %s 
+                        and residual > 0
+                        and inv.partner_id = rp.id
+                        and inv.section_id = crm.id
+                        and inv.partner_id in %s
+                        and inv.id NOT IN %s        
+                        and inv.section_id = %s'''
+                        , (branch_id, partner_list, invoiceList, sale_team_id,))
+                else:
+                    cr.execute(''' 
+                        select inv.id,inv.number,inv.partner_id,rp.name customer_name,
+                               rp.customer_code customer_code,inv.origin so_no,inv.date_invoice,
+                               inv.amount_total,inv.residual balance,inv.payment_type,
+                               inv.journal_id,crm.name,inv.date_due
+                        from account_invoice inv, res_partner rp, crm_case_section crm
+                        where inv.payment_type='credit' 
+                        and inv.state='open' 
+                        and inv.type = 'out_invoice'
+                        and inv.branch_id = %s 
+                        and residual > 0
+                        and inv.partner_id = rp.id
+                        and inv.section_id = crm.id
+                        and inv.partner_id in %s
+                        and inv.section_id = %s'''
+                        , (branch_id, partner_list, sale_team_id,))            
+            data_line = cr.fetchall()                    
+        print 'data_lineeeeeeeeeeeeeee', data_line        
         return data_line
 
     def get_credit_invoice_line(self, cr, uid, partner_list, branch_id, invoiceList , context=None):
