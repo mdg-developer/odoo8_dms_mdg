@@ -1,6 +1,6 @@
 from openerp.osv import fields, osv
 from openerp.osv import orm
-from datetime import datetime
+from datetime import datetime, timedelta
 from openerp.tools.translate import _
 import ast
 import time
@@ -1623,30 +1623,39 @@ class mobile_sale_order(osv.osv):
                 result.append(x)
             rental_collection = []
             for r in result:
-                rental_collection.append(r)
+                rental_collection.append(r)  
             if rental_collection:
-                for ar in rental_collection:
+                for ar in rental_collection:            
                     cursor.execute('select id From res_partner where customer_code = %s ', (ar['partner_id'],))
                     data = cursor.fetchall()
                     if data:
                         partner_id = data[0][0]
                     else:
                         partner_id = None
-
+                    import datetime
+                    if ar['date']:
+                        date = datetime.datetime.strptime(ar['date'], '%d-%m-%Y %H:%M:%S %p') - timedelta(hours=6, minutes=30)
+                    from_date = datetime.datetime.strptime(ar['from_date'], '%d-%m-%Y')
+                    to_date = datetime.datetime.strptime(ar['to_date'], '%d-%m-%Y')
+                        #date = datetime.strptime( ar['date'], '%Y-%m-%d %H:%M:%S') - timedelta(hours=6, minutes=30)
+                    
                     rental_result = {
-
                         'partner_id':partner_id,
-                        'from_date':ar['from_date'],
-                        'date':ar['date'] ,
-                        'to_date':ar['to_date'],
-                        'image':ar['image'],
+                        'from_date':from_date.date(),
+                        'date':date,                       
+                        'to_date':to_date.date(),
+                        'image':ar['image1'],
+                        'image1':ar['image2'],
+                        'image2':ar['image3'],
+                        'image3':ar['image4'],
+                        'image4':ar['image5'],
+                        'note':ar['note'],
                         'company_id':ar['company_id'],
-                        'monthy_amt':ar['monthy_amt'],
-                        'month':'month',
+                        'month_cost':ar['monthy_amt'],
+                        'rental_month':ar['month'],
                         'latitude':ar['latitude'],
                         'longitude':ar['longitude'],
-                        'address':ar['address'],
-                        'month':ar['month'],
+                  #      'address':ar['address'],
                         'name':ar['name'],
                         'total_amt':ar['total_amt'],
                     }
@@ -1655,6 +1664,7 @@ class mobile_sale_order(osv.osv):
          except Exception, e:
             print 'False'
             return False
+        
     def get_credit_notes(self, cr, uid, sale_team_id , context=None, **kwargs):
         cr.execute('''
                   select ac.id,ac.description,ac.name,ac.used_date,

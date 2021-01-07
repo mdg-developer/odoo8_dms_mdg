@@ -41,16 +41,19 @@
 						</group>
 						<group>
 							<group>
+								<field name="month_cost" />
+								<field name="rental_month" />
 								<field name="total_amt" />
-							</group>
-							<!-- <group> -->
-							<!-- <field name="image" widget='image' class="oe_avatar" /> -->
-							<!-- </group> -->
+								<field name="latitude" />
+								<field name="longitude" />
+								<field name="distance_status" />
 
+
+
+							</group>
 						</group>
 						<notebook>
 							<page string="Photo">
-
 							</page>
 						</notebook>
 						<hr />
@@ -142,6 +145,9 @@
 					<group expand="0" string="Group By...">
 						<filter string="Customer" icon="terp-partner" domain="[]"
 							context="{'group_by':'partner_id'}" />
+						<filter string="Txn Date Day" context="{'group_by': 'date:day'}" />	
+						<filter string="Township" context="{'group_by':'township'}" />
+						<filter string="Branch" context="{'group_by':'branch_id'}" />
 					</group>
 				</search>
 			</field>
