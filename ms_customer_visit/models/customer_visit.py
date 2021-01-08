@@ -9,6 +9,10 @@ from openerp import tools, api
 from openerp.osv import osv, fields
 from openerp.osv.expression import get_unaccent_wrapper
 from openerp.tools.translate import _
+import requests
+baseUrlPrefix = "https://firebasestorage.googleapis.com/v0/b/rb-tablet-sale.appspot.com/o/customer_visit%2F"
+#baseUrlPrefix = "https://firebasestorage.googleapis.com/v0/b/odoo-8d694.appspot.com/o/customer_visit%2F"
+baseUrlPostFix = ".png?alt=media"
 class customer_visit(osv.osv):
     _name = "customer.visit"
     _description = "Customer Visit"
@@ -20,22 +24,40 @@ class customer_visit(osv.osv):
         'sale_plan_day_id':fields.many2one('sale.plan.day', 'Sale Plan Day'),
         'sale_plan_trip_id':fields.many2one('sale.plan.trip', 'Sale Plan Trip'),
         'tablet_id':fields.many2one('tablets.information', 'Tablet ID'),
-        'latitude':fields.float('Geo Latitude',digits=(16,5)),
-        'longitude':fields.float('Geo Longitude',digits=(16,5)),
-        'sale_team_id':fields.many2one('crm.case.section', 'Sale Team'),
-        'date':fields.datetime('Date'),
+        'latitude':fields.float('Geo Latitude', digits=(16, 5), readonly=True),
+        'longitude':fields.float('Geo Longitude', digits=(16, 5), readonly=True),
+       'sale_team_id':fields.many2one('crm.case.section', 'Sale Team'),
+       'date':fields.datetime('Date'),
         'visit_reason':fields.selection([
                 ('no_shopkeeper', 'No Shopkeeper'),
                 ('no_authorized_person', 'No Authorized Person'),
                 ('products_already_existed', 'Products Already Existed'),
                  ('sold_other_people_products', 'Sold Other People Products'),
-                 ('other_reason', 'Other Reasons')
+                 ('other_reason', 'Other Reasons'),
+                 ('Sold', 'Sold')
             ], 'Reason'),
                 'other_reason':fields.text('Remark'),
         'm_status':fields.selection([('pending', 'Pending'), ('approved', 'Approved'),
                                                       ('reject', 'Reject')], string='Status'),
-        'branch_id': fields.many2one('res.branch', 'Branch',required=True),
-                
+     'branch_id': fields.many2one('res.branch', 'Branch',required=True),
+    'distance_status':fields.char('Distance Status', readonly=True),
+        'township_id': fields.related(
+                   'customer_id', 'township',
+                   type='many2one',
+                   relation='res.township',
+                   string="Township",store=True),  
+        'is_sync':fields.boolean('Is Sync', default=False),    
+        'image1_reference':fields.char('Image1 Reference'),
+        'image2_reference':fields.char('Image2 Reference'),
+        'image3_reference':fields.char('Image3 Reference'),
+        'image4_reference':fields.char('Image4 Reference'),
+        'image5_reference':fields.char('Image5 Reference'),
+        'is_image1':fields.boolean('Is Image1', default=False),   
+        'is_image2':fields.boolean('Is Image2', default=False),    
+        'is_image3':fields.boolean('Is Image3', default=False),    
+        'is_image4':fields.boolean('Is Image4', default=False),    
+        'is_image5':fields.boolean('Is Image5', default=False),    
+ 
     }
     _defaults = {        
         'm_status' : 'pending',
@@ -194,8 +216,70 @@ class customer_visit(osv.osv):
     def _inverse_image_small4(self):
         for rec in self:
             rec.image4 = tools.image_resize_image_big(rec.image_small4)
+            
+    def go_image1(self, cr, uid, ids, context=None):
+        result =  {
+                  'name'     : 'Show Image1',
+                  'res_model': 'ir.actions.act_url',
+                  'type'     : 'ir.actions.act_url',
+                  'target'   : 'new',
+               }
+        for record in self.browse(cr,uid,ids,context=context):
+            result['url'] = baseUrlPrefix + record.image1_reference + baseUrlPostFix
+            
+        return result
+    
+    def go_image2(self, cr, uid, ids, context=None):
+        result =  {
+                  'name'     : 'Show Image2',
+                  'res_model': 'ir.actions.act_url',
+                  'type'     : 'ir.actions.act_url',
+                  'target'   : 'new',
+               }
+        for record in self.browse(cr,uid,ids,context=context):
+            result['url'] = baseUrlPrefix + record.image2_reference + baseUrlPostFix
+            
+        return result
+    
+    def go_image3(self, cr, uid, ids, context=None):
+        result =  {
+                  'name'     : 'Show Image3',
+                  'res_model': 'ir.actions.act_url',
+                  'type'     : 'ir.actions.act_url',
+                  'target'   : 'new',
+               }
+        for record in self.browse(cr,uid,ids,context=context):
+            result['url'] = baseUrlPrefix + record.image3_reference + baseUrlPostFix
+            
+        return result     
+                   
+    def go_image4(self, cr, uid, ids, context=None):
+        result =  {
+                  'name'     : 'Show Image4',
+                  'res_model': 'ir.actions.act_url',
+                  'type'     : 'ir.actions.act_url',
+                  'target'   : 'new',
+               }
+        for record in self.browse(cr,uid,ids,context=context):
+            result['url'] = baseUrlPrefix + record.image4_reference + baseUrlPostFix
+            
+        return result  
+     
+    def go_image5(self, cr, uid, ids, context=None):
+        result =  {
+                  'name'     : 'Show Image5',
+                  'res_model': 'ir.actions.act_url',
+                  'type'     : 'ir.actions.act_url',
+                  'target'   : 'new',
+               }
+        for record in self.browse(cr,uid,ids,context=context):
+            result['url'] = baseUrlPrefix + record.image5_reference + baseUrlPostFix
+            
+        return result               
     @api.model
     def _get_default_image(self, is_company, colorize=False):
+#         img_path = openerp.modules.get_module_resource(
+#             'base', 'static/src/img', 'company_image.png' if is_company else 'avatar.png')
         img_path = openerp.modules.get_module_resource(
             'base', 'static/src/img', 'company_image.png' if is_company else 'avatar.png')
         with open(img_path, 'rb') as f:
@@ -255,5 +339,36 @@ class customer_visit(osv.osv):
 
         return tools.image_resize_image_big(image.encode('base64'))
 
-         
+    def generate_image(self, cr, uid, ids, context=None):
+        if ids:
+            visit_data = self.browse(cr, uid, ids[0], context=context)
+            import base64
+            image1 =False
+            image2 =False
+            image3 =False
+            image4 =False
+            image5 =False
+            if visit_data.image1_reference:
+                    url =baseUrlPrefix + visit_data.image1_reference + baseUrlPostFix
+                    response = requests.get(url).content
+                    image1 = base64.b64encode(response)
+            if visit_data.image2_reference:
+                    url =baseUrlPrefix + visit_data.image2_reference + baseUrlPostFix
+                    response = requests.get(url).content
+                    image2 = base64.b64encode(response)                                                      
+            if visit_data.image3_reference:
+                    url =baseUrlPrefix + visit_data.image3_reference + baseUrlPostFix
+                    response = requests.get(url).content
+                    image3 = base64.b64encode(response)                                                                
+            if visit_data.image4_reference:
+                    url =baseUrlPrefix + visit_data.image4_reference + baseUrlPostFix
+                    response = requests.get(url).content
+                    image4 = base64.b64encode(response)                                                                        
+            if visit_data.image5_reference:
+                    url =baseUrlPrefix + visit_data.image5_reference + baseUrlPostFix
+                    response = requests.get(url).content
+                    image5 = base64.b64encode(response)    
+        return self.write(cr, uid, ids, {'image':image1,'image1':image2,'image2':image3,'image3':image4,'image4':image5})
+                   
+                                        
 customer_visit()

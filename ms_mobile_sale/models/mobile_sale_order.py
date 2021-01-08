@@ -401,57 +401,288 @@ class mobile_sale_order(osv.osv):
         except Exception, e:
             print 'False'
             return False
+        
+    def get_field_audit_question(self, cr, uid,context=None, **kwargs):
+        cr.execute('''select id,sequence,name,english_name from audit_question order by sequence asc                     ''')
+        datas = cr.fetchall()
+        return datas 
+    
+    def get_supervisor_sale_team(self, cr, uid,section_id,context=None, **kwargs):
+        cr.execute('''select id,name,branch_id as team_branch_id,(select name from res_branch where id =branch_id) as team_branch_name from crm_case_section 
+        where supervisor_team= %s
+                     ''', (section_id,))
+        datas = cr.fetchall()
+        return datas  
 
-    def create_visit(self, cursor, user, vals, context=None):
-
-        try:
-            print 'vals', vals
-            customer_visit_obj = self.pool.get('customer.visit')
+    def create_field_audit_record(self, cursor, user, vals, context=None):
+        print 'vals', vals
+        try : 
+            product_trans_obj = self.pool.get('field.audit')
+            customer_obj = self.pool.get('res.partner')
+            product_trans_line_obj = self.pool.get('field.audit.line')
             str = "{" + vals + "}"
+            str = str.replace(":''", ":'")  # change Order_id
+            str = str.replace("'',", "',")  # null
+            str = str.replace(":',", ":'',")  # due to order_id
+            str = str.replace(":'}", ":''}")
+            str = str.replace("}{", "}|{")
+            
+            new_arr = str.split('|')
+            result = []
+            for data in new_arr:
+                x = ast.literal_eval(data)
+                result.append(x)
+            field_trans = []
+            field_trans_line = []
+            for r in result:
+                print "length", len(r)
+                if len(r) <10:
+                    field_trans_line.append(r)                   
+                else:
+                    field_trans.append(r)
+            
+            if field_trans:
+                for pt in field_trans:
+                    customer_id = int(pt['customer_id'])
+                    customer_data=customer_obj.browse(cursor, user, customer_id , context=None)
+                    if customer_data:
+                        outlet_type_id=sales_channel_id=township_id=city_id=frequency_id=class_id=None
+                        outlet_type=customer_data.outlet_type
+                        sales_channel=customer_data.sales_channel
+                        township=customer_data.township
+                        city=customer_data.city
+                        address=customer_data.street
+                        frequency=customer_data.frequency_id
+                        class_id=customer_data.class_id
+                        if outlet_type:
+                            outlet_type_id=outlet_type.id
+                        if sales_channel:
+                            sales_channel_id=sales_channel.id
+                        if township:
+                            township_id=township.id
+                        if city:
+                            city_id=city.id
+                        if frequency:
+                            frequency_id=frequency.id
+                        if class_id:
+                            class_id=class_id.id
+                        
+                    if pt['createdDateTime']:
+                        date_time = pt['createdDateTime']
+                        trans_date = datetime.strptime(date_time, '%Y-%m-%d %I:%M:%S %p') - timedelta(hours=6, minutes=30)
+
+                    if pt['branch']:
+                        branch_name= pt['branch']
+                        cursor.execute("select id from res_branch where name=%s",(branch_name,))
+                        branch_data=cursor.fetchone()
+                        if branch_data:
+                            branch_id =branch_data[0]
+                        else:
+                            branch_id=None
+                            
+                    if pt['auditorName']:
+                        team_name= pt['auditorName']
+                        cursor.execute("select id from crm_case_section where name=%s",(team_name,))
+                        team_data=cursor.fetchone()
+                        if team_data:
+                            auditor_id =team_data[0]
+                        else:
+                            auditor_id=None
+
+                        
+                    mso_result = {
+                                'transaction_id':pt['customer_audit_id'],
+                                'partner_id':pt['customer_id'],
+                                'outlet_type': outlet_type_id,
+                                'township_id':township_id,
+                                'city_id':city_id,
+                                'address':address,
+                                'frequency_id':frequency_id,
+                                'class_id':class_id,
+                                'sales_channel':sales_channel_id,
+                                'customer_code':pt['customer_code'] ,
+                                'sale_team_id':pt['sale_team_id'],
+                                'date':trans_date,
+                                'latitude':pt['latitude'],
+                                'longitude':pt['longitude'],
+                                'branch_id':branch_id,
+                                'total_score':pt['total_score'],
+                                'total_missed':pt ['total_missed'],
+                                'shop_image':pt ['shop_image'],
+                                'auditor_image':pt ['saleman_image'],
+                                'auditor_team_id':auditor_id,
+                                }
+                    s_order_id = product_trans_obj.create(cursor, user, mso_result, context=context)
+                    cursor.execute("select sequence,id from audit_question")
+                    question_data=cursor.fetchall()    
+                    for question_ids in question_data:
+                        question_result = {
+                            'sequence':question_ids[0],
+                            'question_id':question_ids[1],
+                            'audit_id':s_order_id,
+                            }
+                        product_trans_line_obj.create(cursor, user, question_result, context=context)
+                    
+                    for ptl in field_trans_line:
+
+                        if ptl['customer_audit_id'] == pt['customer_audit_id']:
+                            cursor.execute("update field_audit_line set complete=True where audit_id =%s and question_id=%s",(s_order_id,ptl['auditline_id'],))
+            
+            print 'Truwwwwwwwwwwwwwwwwwwwwwe'
+            return True       
+        except Exception, e:
+            print 'False'
+            return False
+            
+#     def create_visit(self, cursor, user, vals, context=None):
+# 
+#         try:
+#             print 'vals', vals
+#             customer_visit_obj = self.pool.get('customer.visit')
+#             str = "{" + vals + "}"
+#             str = str.replace("'',", "',")  # null
+#             str = str.replace(":',", ":'',")  # due to order_id
+#             str = str.replace("}{", "}|{")
+#             str = str.replace(":'}{", ":''}")
+#             new_arr = str.split('|')
+#             result = []
+#             for data in new_arr:
+#                 x = ast.literal_eval(data)
+#                 result.append(x)
+#             customer_visit = []
+#             for r in result:
+#                 customer_visit.append(r)
+#             if customer_visit:
+#                 for vs in customer_visit:
+#                     cursor.execute('select branch_id from crm_case_section where id=%s', (vs['sale_team_id'],))
+#                     branch_id = cursor.fetchone()[0]
+#                     visit_result = {
+#                         'customer_code':vs['customer_code'],
+#                         'branch_id':branch_id,
+#                         'customer_id':vs['customer_id'],
+#                         'sale_plan_day_id':vs['sale_plan_day_id'],
+#                         'sale_plan_trip_id':vs['sale_plan_trip_id'] ,
+#                         'sale_plan_name':vs['sale_plan_name'],
+#                         'sale_team':vs['sale_team'],
+#                         'sale_team_id':vs['sale_team_id'],
+#                         'user_id':vs['user_id'],
+#                         'date':vs['date'],
+#                         'tablet_id':vs['tablet_id'],
+#                         'other_reason':vs['other_reason'],
+#                         'visit_reason':vs['visit_reason'],
+#                         'latitude':vs['latitude'],
+#                         'longitude':vs['longitude'],
+#                         'image':vs['image'],
+#                         'image1':vs['image1'],
+#                         'image2':vs['image2'],
+#                         'image3':vs['image3'],
+#                         'image4':vs['image4'],
+#                     }
+#                     customer_visit_obj.create(cursor, user, visit_result, context=context)
+#             return True
+#         except Exception, e:
+#             print e
+#             return False
+    def create_visit(self, cursor, user, vals, context=None):
+        
+        try:
+            # print 'vals', vals
+            customer_visit_obj = self.pool.get('customer.visit')
+            str = "{" + vals + "}"    
             str = str.replace("'',", "',")  # null
             str = str.replace(":',", ":'',")  # due to order_id
             str = str.replace("}{", "}|{")
             str = str.replace(":'}{", ":''}")
             new_arr = str.split('|')
             result = []
-            for data in new_arr:
-                x = ast.literal_eval(data)
+            for data in new_arr:            
+                x = ast.literal_eval(data)                
                 result.append(x)
             customer_visit = []
-            for r in result:
-                customer_visit.append(r)
+            for r in result:                
+                customer_visit.append(r)  
             if customer_visit:
                 for vs in customer_visit:
+
                     cursor.execute('select branch_id from crm_case_section where id=%s', (vs['sale_team_id'],))
                     branch_id = cursor.fetchone()[0]
-                    visit_result = {
-                        'customer_code':vs['customer_code'],
-                        'branch_id':branch_id,
-                        'customer_id':vs['customer_id'],
-                        'sale_plan_day_id':vs['sale_plan_day_id'],
-                        'sale_plan_trip_id':vs['sale_plan_trip_id'] ,
-                        'sale_plan_name':vs['sale_plan_name'],
-                        'sale_team':vs['sale_team'],
-                        'sale_team_id':vs['sale_team_id'],
-                        'user_id':vs['user_id'],
-                        'date':vs['date'],
-                        'tablet_id':vs['tablet_id'],
-                        'other_reason':vs['other_reason'],
-                        'visit_reason':vs['visit_reason'],
-                        'latitude':vs['latitude'],
-                        'longitude':vs['longitude'],
-                        'image':vs['image'],
-                        'image1':vs['image1'],
-                        'image2':vs['image2'],
-                        'image3':vs['image3'],
-                        'image4':vs['image4'],
-                    }
-                    customer_visit_obj.create(cursor, user, visit_result, context=context)
-            return True
-        except Exception, e:
-            print e
-            return False
+                    cursor.execute('select id from res_partner where customer_code=%s', (vs['customer_code'],))
+                    customer_id = cursor.fetchone()  
+                    is_image1 =False
+                    is_image2 =False
+                    is_image3 =False
+                    is_image4 =False
+                    is_image5 =False
+                    image1 =False
+                    image2 =False
+                    image3 =False
+                    image4 =False
+                    image5 =False
+                    if customer_id:  
+                        if vs['image1_reference']:
+                                is_image1 =True
+#                                 url =baseUrlPrefix + vs['image1_reference'] + baseUrlPostFix
+#                                 response = requests.get(url).content
+#                                 image1 = base64.b64encode(response)
+                        if vs['image2_reference']:
+                                is_image2=True
+#                                 url =baseUrlPrefix + vs['image2_reference'] + baseUrlPostFix
+#                                 response = requests.get(url).content
+#                                 image2 = base64.b64encode(response)                                                      
+                        if vs['image3_reference']:
+                                is_image3=True
+#                                 url =baseUrlPrefix + vs['image3_reference'] + baseUrlPostFix
+#                                 response = requests.get(url).content
+#                                 image3 = base64.b64encode(response)                                                                
+                        if vs['image4_reference']:
+                                is_image4=True  
+#                                 url =baseUrlPrefix + vs['image4_reference'] + baseUrlPostFix
+#                                 response = requests.get(url).content
+#                                 image4 = base64.b64encode(response)                                                                        
+                        if vs['image5_reference']:
+                                is_image5=True    
+#                                 url =baseUrlPrefix + vs['image5_reference'] + baseUrlPostFix
+#                                 response = requests.get(url).content
+#                                 image5 = base64.b64encode(response)                                                                                               
+                        visit_result = {
+                            'customer_code':vs['customer_code'],
+                            'branch_id':branch_id,
+                            'customer_id':customer_id[0],
+                            'sale_plan_day_id':vs['sale_plan_day_id'],
+                            'sale_plan_trip_id':vs['sale_plan_trip_id'] ,
+                          #  'sale_plan_name':vs['sale_plan_name'],
+                            # 'sale_team':vs['sale_team'],
+                            'sale_team_id':vs['sale_team_id'],
+                            'user_id':vs['user_id'],
+                            'date':vs['date'],
+                            'tablet_id':vs['tablet_id'],
+                            'other_reason':vs['other_reason'],
+                            'visit_reason':vs['visit_reason'],
+                            'latitude':vs['latitude'],
+                            'longitude':vs['longitude'],
+#                             'image':image1,
+#                             'image1':image2,
+#                             'image2':image3,
+#                             'image3':image4,
+#                             'image4':image5,
+                             'is_image1':is_image1,
+                              'is_image2':is_image2,
+                              'is_image3':is_image3,
+                              'is_image4':is_image4,
+                              'is_image5':is_image5,                                  
+                             'image1_reference':vs['image1_reference'],
+                            'image2_reference':vs['image2_reference'],
+                            'image3_reference':vs['image3_reference'],
+                            'image4_reference':vs['image4_reference'],
+                            'image5_reference':vs['image5_reference'],
 
+                        }
+                        visit_id=customer_visit_obj.create(cursor, user, visit_result, context=context)
+                        #customer_visit_obj.generate_image(cursor, user, [visit_id], context=context)
+                return True
+        except Exception, e:
+            print e            
+            return False
     def geo_location(self, cr, uid, ids, context=None):
         result = {
                  'name'     : 'Go to Report',

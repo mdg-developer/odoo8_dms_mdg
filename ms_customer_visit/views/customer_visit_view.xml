@@ -39,6 +39,12 @@
 							context="{'group_by':'date'}" />
 						<filter name="visit_reason" string="Reason" domain="[]"
 							context="{'group_by':'visit_reason'}" />
+						<filter name="date_day" string="Date Day" domain="[]"
+							context="{'group_by':'date:day'}" />
+						<filter name="township" string="Township" domain="[]"
+							context="{'group_by':'township_id'}" />
+						<filter name="branch" string="Branch" domain="[]"
+							context="{'group_by':'branch_id'}" />
 					</group>
 				</search>
 			</field>
@@ -66,20 +72,59 @@
 						<group>
 							<group>
 								<group>
-									<field name="customer_id" />
-									<field name="customer_code" />
-									<field name="tablet_id" />
-									<field name="latitude" digits="(14,5)" />
-									<field name="longitude" digits="(14,5)" />
-									<field name="branch_id"/>
+									<field name="customer_id" readonly="1" />
+									<field name="township_id" readonly="1" />
+									<field name="customer_code" readonly="1" />
+									<field name="tablet_id" readonly="1" />
+									<field name="latitude" readonly="1" />
+									<field name="longitude" readonly="1" />
+									<field name="distance_status" readonly="1" />
+									<field name="branch_id" readonly="1" />
+									<field name="is_image1" invisible="1" />
+									<field name="is_image2" invisible="1" />
+									<field name="is_image3" invisible="1" />
+									<field name="is_image4" invisible="1" />
+									<field name="is_image5" invisible="1" />
+									<field name="image1_reference" readonly="1" />
+									<field name="image2_reference" readonly="1" />
+									<field name="image3_reference" readonly="1" />
+									<field name="image4_reference" readonly="1" />
+									<field name="image5_reference" readonly="1" />
+									<div>
+										<button name="generate_image" string="Show Image View"
+											type="object" icon="terp-gtk-jump-to-ltr" />
+									</div>
 								</group>
 								<group>
-									<field name="date" />
-									<field name="user_id" />
-									<field name="sale_plan_day_id" />
-									<field name="sale_plan_trip_id" />
-									<field name="sale_team_id" />
-									<field name="visit_reason" />
+									<field name="date" readonly="1" />
+									<field name="user_id" readonly="1" />
+									<field name="sale_plan_day_id" readonly="1" />
+									<field name="sale_plan_trip_id" readonly="1" />
+									<field name="sale_team_id" readonly="1" />
+									<field name="visit_reason" readonly="1" />
+									<field name="is_sync" readonly="1" />
+									<field name="m_status" readonly="1" />
+
+									<button name="go_image1" string="Show Image1"
+										attrs="{'invisible':[('is_image1','!=',True)]}" type="object"
+										icon="terp-gtk-jump-to-ltr" />
+									<br />
+									<button name="go_image2" string="Show Image2"
+										attrs="{'invisible':[('is_image2','!=',True)]}" type="object"
+										icon="terp-gtk-jump-to-ltr" />
+									<br />
+									<button name="go_image3" string="Show Image3"
+										attrs="{'invisible':[('is_image3','!=',True)]}" type="object"
+										icon="terp-gtk-jump-to-ltr" />
+									<br />
+									<button name="go_image4" string="Show Image4"
+										attrs="{'invisible':[('is_image4','!=',True)]}" type="object"
+										icon="terp-gtk-jump-to-ltr" />
+									<br />
+									<button name="go_image5" string="Show Image5"
+										attrs="{'invisible':[('is_image5','!=',True)]}" type="object"
+										icon="terp-gtk-jump-to-ltr" />
+									<br />
 									<field name="other_reason" placeholder="Additional Reasons..." />
 								</group>
 							</group>
@@ -175,7 +220,7 @@
 			<field name="name">Customer Visit Tree</field>
 			<field name="model">customer.visit</field>
 			<field name="arch" type="xml">
-				<tree default_order="date desc"  string="Customer Visit">
+				<tree default_order="date desc" string="Customer Visit">
 					<field name="date" />
 					<field name="customer_id" />
 					<field name="customer_code" />
@@ -184,8 +229,6 @@
 					<field name="tablet_id" />
 					<field name="sale_team_id" />
 					<field name="visit_reason" />
-					<field name="latitude" digits="(14,5)" />
-					<field name="longitude" digits="(14,5)" />
 					<field name="other_reason" />
 				</tree>
 			</field>
