@@ -221,6 +221,7 @@ class crm_case_section(osv.osv):
                 'issue_location_id': fields.many2one('stock.location', 'Issue location', required=True),
                 #'issue_warehouse_id': fields.many2one('stock.warehouse', 'Issue Warehouse', required=True),
                 'issue_warehouse_id': fields.many2many('stock.warehouse', string='Issue Warehouse', required=True),
+                'temp_location_id': fields.many2one('stock.location', 'Temp location', required=True),
                 'receiver':fields.char('Receiver'),
                 'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account'),
                 'sale_channel_id':fields.many2many('sale.channel', 'sale_team_channel_rel', 'sale_team_id', 'sale_channel_id', string='Sale Channel'),
@@ -275,7 +276,16 @@ class crm_case_section(osv.osv):
                 string='Credit Outstanding'),                
                  'price_list_line': fields.one2many('price.list.line', 'team_id', 'Price List', copy=True),      
                'branch_id':fields.many2one('res.branch', 'Branch'),
-                           
+                'normal_return_location_id': fields.many2one('stock.location', 'Normal Return location', required=True),
+                'exp_location_id': fields.many2one('stock.location', 'Expiry location', required=True),
+                'near_exp_location_id': fields.many2one('stock.location', 'Near Expiry location', required=True),
+                'damage_location_id': fields.many2one('stock.location', 'Damage location', required=True),
+                'fresh_stock_not_good_location_id': fields.many2one('stock.location', 'Fresh stock minor damage location', required=True),
+                'optional_issue_location_id': fields.many2one('stock.location', 'Optional Issue Location'),
+                'is_supervisor':fields.boolean('Is Supervisor',default=False),
+                'supervisor_team': fields.many2one('crm.case.section', 'Supervisor Team'),                
+                'is_entry_team':fields.boolean('Is Entry Team',default=False),
+                            
         }
     _sql_constraints = [
         ('code_uniq', 'unique (code)', 'The code of the sales team must be unique !')
