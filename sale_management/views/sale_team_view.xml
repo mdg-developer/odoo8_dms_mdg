@@ -72,6 +72,7 @@
 					<field name="credit_sale" invisible="1" />
 				</field>
 				<field name="active" position="after">
+					<field name="is_supervisor" />
 					<field name="supervisor_team" domain="[('is_supervisor','=',True)]" />
 					<field name="is_entry_team" />
 				</field>

@@ -1411,7 +1411,7 @@ class mobile_sale_order(osv.osv):
     
     def sale_team_return(self, cr, uid, section_id , saleTeamId, context=None, **kwargs):
         cr.execute('''
-                    select DISTINCT cr.id,cr.complete_name,cr.warehouse_id,cr.name,sm.member_id,cr.code,pr.product_id,cr.location_id
+                    select DISTINCT cr.id,cr.complete_name,cr.warehouse_id,cr.name,sm.member_id,cr.code,pr.product_id,cr.location_id,cr.branch_id
                     from crm_case_section cr, sale_member_rel sm,product_sale_group_rel pr 
                     where sm.section_id = cr.id and cr.sale_group_id=pr.sale_group_id 
                     and sm.member_id =%s
