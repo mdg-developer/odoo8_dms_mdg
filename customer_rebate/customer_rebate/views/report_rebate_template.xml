@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="report_rebate_document">
+    <!-- <t t-call="report.external_layout"> -->
+    <xpath expr="//t[@t-call='report.external_layout']" position="replace">
+     <t t-call="customer_rebate.rebate_custom_layouts">
+        <div class="page">
+        	<div class="row" style="padding-top:-2s0pt;">
+							<div class="col-xs-4 pull-left" style="margin-top:30pt;">
+								<table class="table" style='border:solid;border-color:white;'>
+									<tr style="margin-top:-30pt;border:solid;border-color:white;">
+										<td style="font-size:20pt;" colspan="4">
+											<span t-if="o.state not in ['draft','sent']"/>
+											<span t-field="o.name" />
+										</td>
+									</tr>
+								</table>
+							</div>
+							<div class="col-xs-4 pull-right">
+								<table class="table" style='border:solid;border-color:white;'>
+									<tr>
+										<td style="margin-top:-10pt;">
+											<b>Customer address:</b>
+											<address t-field="o.partner_id"
+												t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}' />
+											<span t-field="o.partner_id.vat"
+												t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}' />
+											<div style="margin-top:-15pt;" t-field="o.partner_id.phone" />
+										</td>
+									</tr>
+								</table>
+
+							</div>
+						</div>
+						
+						<table class="table"
+							style='border:solid;border-color:white;margin-top:-20pt;'>
+							<tr style='border:solid;border-color:white;'>
+								<td>
+									<b>Sales Teams</b>
+									<br />
+									<span t-field="o.section_id.name" />
+								</td>
+								<td>
+									<b>Salesman</b>
+									<br />
+									<span t-field="o.user_id.name" />
+								</td>
+								<td></td>
+								<td>
+									<b>Order Date</b>
+									<br />
+									<span t-field="o.date_order" />
+								</td>
+							</tr>
+
+							<tr style='border:solid;border-color:white;'>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td>
+									<b>Due Date</b>
+									<br />
+									<span t-field="o.date" />
+								</td>
+							</tr>
+						</table>
+            
+            <table class="table table-condensed" style="border:1pt solid;">
+							<thead>
+								<tr style="background-color:#0052cc;color:#ffffff;" height="10pt;">
+									<th class="text-center" style="border:1pt solid;border-color:black;">No
+									</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Product
+									</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Quantity</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Promotion</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Refund (Amt)</th>
+								</tr>
+							</thead>
+							<tbody class="rebate_tbody">
+								<tr>
+									<td style="border:1pt solid;border-color:black;" align="center">
+										<t t-esc="1" />
+									</td>
+									<td class="text-right" style="border:1pt solid;border-color:black;">
+										<span t-field="o.product_id" />
+									</td>
+									<td style="border:1pt solid;border-color:black;" align="right">
+										<span t-field="o.qty" />
+									</td>
+									<td class="text-right" style="border:1pt solid;border-color:black;">
+										<span t-field="o.code" />
+									</td>
+									<td class="text-right" style="border:1pt solid;border-color:black;">
+										<span t-field="o.amt" />
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						
+						<div class="row" style="padding-top:200pt;">
+							<div class="col-xs-4 pull-left">
+								<table class="table" style='border:solid;border-color:white;'>
+									<tr style='border:solid;border-color:white;'>
+										<td style="margin-top:-10pt;" align="center">
+											<span>
+												Cash Paid By
+											</span>
+										</td>
+									</tr>
+									<tr style='border:solid;border-color:white;'>
+										<td style="margin-top:-10pt;" align="center">
+											<span>
+												(Customer Name)
+											</span>
+										</td>
+									</tr>
+								</table>
+							</div>
+
+							<div class="col-xs-8 pull-left">
+								<table class="table" style='border:solid;border-color:white;'>
+									<tr style='border:solid;border-color:white;'>
+										<td style="margin-top:-10pt;" align="center">
+											<span>
+												Cash Received By
+											</span>
+										</td>
+									</tr>
+									<tr style='border:solid;border-color:white;'>
+										<td style="margin-top:-10pt;" align="center">
+											<span>
+												(Salesman Name)
+											</span>
+										</td>
+									</tr>
+								</table>
+
+							</div>
+						</div>
+
+						<p t-if="o.remark">
+							<strong>Note :</strong>
+							<span t-field="o.remark" />
+						</p>
+        		</div>
+    		</t>
+    	</xpath>
+</template>
+
+<template id="report_rebate_template">
+    <t t-call="report.html_container">
+        <t t-foreach="doc_ids" t-as="doc_id">
+            <t t-raw="translate_doc(doc_id, doc_model, 'partner_id.lang', 'customer_rebate.report_rebate_document')"/>
+        </t>
+    </t>
+</template>
+</data>
+</openerp>

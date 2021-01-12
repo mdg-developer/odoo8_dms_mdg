@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- === Sales approval Form === -->
+
+		<record id="view_sales_approval_form" model="ir.ui.view">
+			<field name="name">sales.approval.form</field>
+			<field name="model">sales.approval</field>
+			<field name="arch" type="xml">
+				<form string="Sales Approval" version="7.0">
+					<header>
+						<button name="action_button_confirm" states="draft" string="Confirm"
+							type="object" groups="base.group_user" />
+						<button name="action_button_sumit" states="sumit"
+							string="Submit To Manager" class="oe_highlight" type="object"
+							groups="base.group_user" />
+						<button name="action_button_manager" states="manager_approve"
+							string="Manager Approve" type="object" groups="base.group_user"
+							class="oe_highlight" />
+						<button name="action_button_finance" states="finance_approve"
+							string="Finance Approve" type="object" groups="base.group_user"
+							class="oe_highlight" />
+						<button name="action_cancel" states="sumit,manager_approve,finance_approve"
+							type="object" string="Cancel" groups="base.group_user" class="oe_highlight" />
+						<field name="state" widget="statusbar"
+							statusbar_visible="draft,sumit,manager_approve,finance_approve,done,cancel"
+							statusbar_colors='{"cancel":"red","draft":"blue"}' />
+					</header>
+					<sheet>
+						<group>
+							<group>
+								<field name="date" attrs="{'readonly':[('state','=','done')]}" />
+								<field name="sale_team_id" attrs="{'readonly':[('state','=','done')]}" />
+								<field name="user_id" domain="[('default_section_id', '=',sale_team_id)]"
+									attrs="{'readonly':[('state','=','done')]}" />
+								<field name="partner_id"
+									domain="[('customer','=',True),('user_id', '=',user_id)]"
+									attrs="{'readonly':[('state','=','done')]}" />
+								<field name="name" attrs="{'readonly':[('state','=','done')]}" />
+								<field name="company_id" invisible="1" />
+							</group>
+							<group>
+								<field name="validate_date" attrs="{'readonly':[('state','=','done')]}" />
+								<field name="type" attrs="{'readonly':[('state','=','done')]}" />
+								<field name="ref_no" attrs="{'readonly':[('state','=','done')]}"
+									placeholder="SO00001" />
+								<field name="credit_note" attrs="{'readonly':[('state','=','done')]}"
+									invisible="1" />
+							</group>
+						</group>
+						<group>
+							<group>
+								<field name="credit_amt" attrs="{'readonly':[('state','=','done')]}" />
+							</group>
+
+						</group>
+						<notebook>
+							<page string="Product" attrs="{'readonly':[('state','=','done')]}">
+								<field name="approval_line">
+									<form string="Multi Product">
+										<group>
+											<group>
+												<field name="product_id" />
+												<field name="product_uom" />
+												<field name="product_uom_qty" />
+
+											</group>
+										</group>
+									</form>
+									<tree string="Multi Product" editable="bottom">
+										<field name="product_id" />
+										<field name="product_uom" />
+										<field name="product_uom_qty" />
+									</tree>
+								</field>
+
+								<field name="description" class="oe_inline" placeholder="Terms and Conditions..." />
+								<field name="note" class="oe_inline" placeholder="Note..." />
+
+							</page>
+
+						</notebook>
+					</sheet>
+					<div class="oe_chatter">
+						<field name="message_follower_ids" widget="mail_followers"
+							groups="base.group_user" />
+						<field name="message_ids" widget="mail_thread" />
+					</div>
+				</form>
+			</field>
+		</record>
+
+		<!-- filter -->
+		<record id="view_sales_approval_filter" model="ir.ui.view">
+			<field name="name">Send Approval Filter</field>
+			<field name="model">sales.approval</field>
+			<field name="arch" type="xml">
+				<search string="Search Sales Approval">
+					<separator />
+					<filter domain="[('state','=','draft')]" string="To Confirm"
+						name="draft" />
+					<filter
+						domain="[('state','in',('sumit','manager_approve','finance_approve'))]"
+						string="To Approve" name="approve" />
+					<separator />
+					<group expand="0" string="Group By...">
+						<filter string="Customer" icon="terp-partner" domain="[]"
+							context="{'group_by':'partner_id'}" />
+						<filter string="Sales Team" icon="terp-partner" domain="[]"
+							context="{'group_by':'sale_team_id'}" />
+						<filter string="State" icon="terp-partner" domain="[]"
+							context="{'group_by':'state'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_sales_approval_tree">
+			<field name="name">sales.approval.tree</field>
+			<field name="model">sales.approval</field>
+			<field name="arch" type="xml">
+				<tree string="Sales Approval">
+					<field name="date" />
+					<field name="sale_team_id" />
+					<field name="user_id" />
+					<field name="partner_id" />
+					<field name="name" />
+					<field name="state" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="action_sales_approval_view" model="ir.actions.act_window">
+			<field name="name">Request</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">sales.approval</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('state','in',('sumit','draft'))]</field>
+			<!-- <field name="context">{'search_default_draft':1}</field> -->
+			<field name="view_id" eval="view_sales_approval_tree" />
+			<field name="search_view_id" ref="view_sales_approval_filter" />
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to create new mobile sale approval
+				</p>
+			</field>
+		</record>
+
+		<record id="action_sales_approval_view1" model="ir.actions.act_window">
+			<field name="name">Approve</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">sales.approval</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('state','in',('sumit','manager_approve','finance_approve','done','cancel'))]
+			</field>
+			<field name="context">{'search_default_approve':1}</field>
+			<field name="view_id" eval="view_sales_approval_tree" />
+			<field name="search_view_id" ref="view_sales_approval_filter" />
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to create new mobile sale approval
+				</p>
+			</field>
+		</record>
+		<menuitem id="sales_approval" parent="base.menu_base_partner" name="Sales Approval"
+			sequence="14" />
+		<menuitem id="sales_approval_menu1" action="action_sales_approval_view"
+			parent="sales_approval" sequence="1" />
+		<menuitem id="sales_approval_menu2" action="action_sales_approval_view1"
+			parent="sales_approval" sequence="2" />
+	</data>
+</openerp>
+	    
+	    
+	    

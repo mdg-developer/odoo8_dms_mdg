@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data noupdate="0">
+		
+		<!-- <record id="group_allow_collection_team1" model="res.groups">
+			<field name="name">Allow Collection Team 1</field>
+			<field name="category_id" ref="base.module_category_sales_management" />
+			<field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+		</record> -->
+		<record id="base.group_allow_product" model="res.groups">
+			<field name="name">Allow Product</field>
+			<field name="category_id" ref="base.module_category_sales_management" />
+			<field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+		</record>
+		
+		<record id="base.group_allow_promotions" model="res.groups">
+			<field name="name">Allow Promotions</field>
+			<field name="category_id" ref="base.module_category_sales_management" />
+			<field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+		</record>
+		
+		<record id="base.group_allow_customers" model="res.groups">
+			<field name="name">Allow Customers</field>
+			<field name="category_id" ref="base.module_category_sales_management" />
+			<field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+		</record>
+		
+		<record id="base.group_allow_route_plan" model="res.groups">
+			<field name="name">Allow Route Plan</field>
+			<field name="category_id" ref="base.module_category_sales_management" />
+			<field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+		</record>
+		
+		<record id="base.group_allow_sale_plan_trip" model="res.groups">
+			<field name="name">Allow Sale Plan Trip</field>
+			<field name="category_id" ref="base.module_category_sales_management" />
+			<field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+		</record>
+		
+		<record id="base.group_allow_stock_request" model="res.groups">
+			<field name="name">Allow Stock Request</field>
+			<field name="category_id" ref="base.module_category_sales_management" />
+			<field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+		</record>
+		
+		<record id="base.group_allow_stock_exchange" model="res.groups">
+			<field name="name">Allow Stock Exchange</field>
+			<field name="category_id" ref="base.module_category_sales_management" />
+			<field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+		</record>
+		
+		<record id="base.group_allow_visit_record" model="res.groups">
+			<field name="name">Allow Visit Record</field>
+			<field name="category_id" ref="base.module_category_sales_management" />
+			<field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+		</record>
+		
+		<record id="base.group_allow_direct_sale_invoices" model="res.groups">
+			<field name="name">Allow Direct Sale Invoices</field>
+			<field name="category_id" ref="base.module_category_sales_management" />
+			<field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+		</record>
+		
+		<record id="base.group_allow_pre_sale_order" model="res.groups">
+			<field name="name">Allow Pre Sale Order</field>
+			<field name="category_id" ref="base.module_category_sales_management" />
+			<field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+		</record>
+		
+		<record id="base.group_allow_pending_delivery" model="res.groups">
+			<field name="name">Allow Pending Delivery</field>
+			<field name="category_id" ref="base.module_category_sales_management" />
+			<field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+		</record>
+		
+		<record id="base.group_allow_credit_collection" model="res.groups">
+			<field name="name">Allow Credit Collection</field>
+			<field name="category_id" ref="base.module_category_sales_management" />
+			<field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+		</record>
+		<record id="base.group_allow_collection_team" model="res.groups">
+			<field name="name">Allow Collection Team</field>
+			<field name="category_id" ref="base.module_category_sales_management" />
+			<field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+		</record>
+		<record id="base.group_allow_daily_order_report" model="res.groups">
+			<field name="name">Allow Daily Order Report</field>
+			<field name="category_id" ref="base.module_category_sales_management" />
+			<field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+		</record>
+		
+		<record id="base.group_allow_daily_sale_report" model="res.groups">
+			<field name="name">Allow Daily Sale Report</field>
+			<field name="category_id" ref="base.module_category_sales_management" />
+			<field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+		</record>
+		
+		<record id="base.group_allow_direct_sale" model="res.groups">
+			<field name="name">Allow Direct Sale</field>
+			<field name="category_id" ref="base.module_category_sales_management" />
+			<field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+		</record>
+		
+		<record id="base.group_allow_pre_sale" model="res.groups">
+			<field name="name">Allow Pre Sale</field>
+			<field name="category_id" ref="base.module_category_sales_management" />
+			<field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+		</record>
+		
+		<record id="base.group_allow_visit_record" model="res.groups">
+			<field name="name">Allow Visit Record</field>
+			<field name="category_id" ref="base.module_category_sales_management" />
+			<field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+		</record>
+		
+		<record id="base.group_allow_assets" model="res.groups">
+			<field name="name">Allow Assets</field>
+			<field name="category_id" ref="base.module_category_sales_management" />
+			<field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+		</record>
+
+	</data>
+</openerp>

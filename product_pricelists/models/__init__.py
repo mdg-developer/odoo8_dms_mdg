@@ -1,0 +1,2 @@
+import product_pricelist
+import product_pricelist_item

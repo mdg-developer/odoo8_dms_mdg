@@ -1,0 +1,14 @@
+/__init__.pyc
+/aged_open_invoices.pyc
+/aged_partner_balance.pyc
+/common_balance_reports.pyc
+/common_partner_balance_reports.pyc
+/common_partner_reports.pyc
+/common_reports.pyc
+/general_ledger.pyc
+/open_invoices.pyc
+/partner_balance.pyc
+/partners_ledger.pyc
+/print_journal.pyc
+/trial_balance.pyc
+/webkit_parser_header_fix.pyc

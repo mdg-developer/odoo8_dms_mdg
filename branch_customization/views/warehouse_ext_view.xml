@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<record id="stock_requisition_form_branch_inherit" model="ir.ui.view">
+			<field name="name">stock.requisition.form</field>
+			<field name="model">stock.requisition</field>
+			<field name="inherit_id" ref="stock_requisition.stock_requisition_form" />
+			<field name="arch" type="xml">
+				<field name="so_no" position="after">
+					<field name="branch_id" readonly="1" />
+				</field>
+			</field>
+		</record>
+
+		<record id="good_issue_note_form_branch_inherit" model="ir.ui.view">
+			<field name="name">good.issue.note.form</field>
+			<field name="model">good.issue.note</field>
+			<field name="inherit_id" ref="stock_requisition.good_issue_note_form" />
+			<field name="arch" type="xml">
+				<field name="from_location_id" position="after">
+					<field name="branch_id" readonly="1" />
+				</field>
+			</field>
+		</record>
+		<record id="stock_return_form_branch_inherit" model="ir.ui.view">
+			<field name="name">stock.return.form</field>
+			<field name="model">stock.return</field>
+			<field name="inherit_id" ref="stock_requisition.stock_return_form" />
+			<field name="arch" type="xml">
+				<field name="return_date" position="after">
+					<field name="branch_id" readonly="1" />
+				</field>
+			</field>
+		</record>
+
+		<record id="view_warehouse_form_branch_inherit" model="ir.ui.view">
+			<field name="name">stock.warehouse.form.inherit</field>
+			<field name="model">stock.warehouse</field>
+			<field name="inherit_id" ref="stock.view_warehouse" />
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//field[@name='code']" position="after">
+						<field name="branch_id" />
+					</xpath>
+				</data>
+			</field>
+		</record>
+
+		<record id="view_warehouse_tree_branch_inherit" model="ir.ui.view">
+			<field name="name">stock.warehouse.form.inherit</field>
+			<field name="model">stock.warehouse</field>
+			<field name="inherit_id" ref="stock.view_warehouse_tree" />
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//field[@name='partner_id']" position="after">
+						<field name="branch_id" />
+					</xpath>
+				</data>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_warehouse_search">
+			<field name="name">stock.warehouse.search</field>
+			<field name="model">stock.warehouse</field>
+			<field name="arch" type="xml">
+				<search string="Warehouse Search">
+					<group expand="0" string="Group By">
+						<filter string="Branch" icon="terp-go-home" context="{'group_by':'branch_id'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<record id="stock.action_warehouse_form" model="ir.actions.act_window">
+			<field name="name">Warehouses</field>
+			<field name="res_model">stock.warehouse</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="view_type">form</field>
+			<field name="view_id" ref="stock.view_warehouse_tree" />
+			<field name="search_view_id" ref="view_warehouse_search" />
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to define a new warehouse.
+				</p>
+			</field>
+		</record>
+	</data>
+</openerp>

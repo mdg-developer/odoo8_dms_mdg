@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<record id="accounting_report_xls_view" model="ir.ui.view">
+			<field name="name">General Ledger</field>
+			<field name="model">account.report.general.ledger</field>
+			<field name="inherit_id" ref="account.account_report_general_ledger_view_inherit" />
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//notebook/page[@string='Journals']" position="after">
+						<page string="Branch Filter" name="branch_page_id">
+ 							
+ 							<field name="branch_ids" />
+ 						</page>
+					</xpath>
+				</data>
+			</field>
+		</record>
+		
+		<record id="account_report_balance_branches_view" model="ir.ui.view">
+			<field name="name">Trial Balance</field>
+			<field name="model">account.balance.report</field>
+			<field name="inherit_id" ref="account.account_report_balance_view" />
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//notebook/page[@string='Filters']" position="after">
+						<page string="Branch Filter" name="branch_page_id">
+ 							
+ 							<field name="branch_ids" />
+ 						</page>
+					</xpath>
+				</data>
+			</field>
+		</record>
+		
+		<record id="account_report_balance_sheet_branches_view" model="ir.ui.view">
+			<field name="name">Balance Sheet</field>
+			<field name="model">account.balance.sheet.report</field>
+			<field name="inherit_id" ref="account.account_common_report_view" />
+			<field name="arch" type="xml">
+				<data>
+					
+					
+					<xpath expr="//field[@name='target_move']" position="after">
+                    <field name="account_report_id" domain="[('parent_id','=',False)]"/>
+                    <field name="enable_filter"/>
+                    <field name="debit_credit" attrs="{'invisible': [('enable_filter','=',True)]}"/>
+                </xpath>
+                <xpath expr="//notebook/page[@string='Filters']" position="after">
+                    <page string="Comparison" attrs="{'invisible': [('enable_filter','=',False)]}">
+                        <group>
+                            <field name="label_filter" attrs="{'required': [('enable_filter', '=', True)]}"/>
+                            <field name="fiscalyear_id_cmp"/><newline/>
+                            <field name="filter_cmp"/>
+                        </group>
+                        <group string="Dates" attrs="{'invisible':[('filter_cmp', '!=', 'filter_date')]}">
+                            <field name="date_from_cmp" attrs="{'required':[('filter_cmp', '=', 'filter_date')]}"/>
+                            <field name="date_to_cmp" attrs="{'required':[('filter_cmp', '=', 'filter_date')]}"/>
+                        </group>
+                        <group string="Periods" attrs="{'invisible':[('filter_cmp', '!=', 'filter_period')]}">
+                            <field name="period_from_cmp" domain="[('fiscalyear_id', '=', fiscalyear_id_cmp)]" attrs="{'required':[('filter_cmp', '=', 'filter_period')]}"/>
+                            <field name="period_to_cmp" domain="[('fiscalyear_id', '=', fiscalyear_id_cmp)]" attrs="{'required':[('filter_cmp', '=', 'filter_period')]}"/>
+                        </group>
+                   </page>
+                </xpath>
+                <xpath expr="//notebook/page[@string='Journals']" position="replace">
+                	<page string="Branch Filter" name="branch_page_id">
+ 							
+ 							<field name="branch_ids" />
+ 					</page>
+                </xpath>
+				</data>
+			</field>
+		</record>
+		<record id="action_account_report_bs_branches" model="ir.actions.act_window">
+             <field name="name">Balance Sheet</field>
+             <field name="res_model">account.balance.sheet.report</field>
+             <field name="type">ir.actions.act_window</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">form</field>
+             <field name="view_id" ref="account_report_balance_sheet_branches_view"/>
+             <field name="target">new</field>
+             <field name="context" eval="{'default_account_report_id':ref('account.account_financial_report_balancesheet0')}"/>
+        </record>
+        <menuitem icon="STOCK_PRINT" name="Balance Sheet" action="account_financial_report_branches.action_account_report_bs_branches" id="account.menu_account_report_bs" parent="account.final_accounting_reports"/>
+		
+		<record id="accounting_profit_and_loss_report_view" model="ir.ui.view">
+            <field name="name">Profit and Loss Report</field>
+            <field name="model">account.profit.loss.branch.report</field>
+            <field name="inherit_id" ref="account.account_common_report_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='target_move']" position="after">
+                    <field name="account_report_id" domain="[('parent_id','=',False)]"/>
+                    <field name="enable_filter"/>
+                    <field name="debit_credit" attrs="{'invisible': [('enable_filter','=',True)]}"/>
+                </xpath>
+                <xpath expr="//notebook/page[@string='Filters']" position="after">
+                    <page string="Comparison" attrs="{'invisible': [('enable_filter','=',False)]}">
+                        <group>
+                            <field name="label_filter" attrs="{'required': [('enable_filter', '=', True)]}"/>
+                            <field name="fiscalyear_id_cmp"/><newline/>
+                            <field name="filter_cmp"/>
+                        </group>
+                        <group string="Dates" attrs="{'invisible':[('filter_cmp', '!=', 'filter_date')]}">
+                            <field name="date_from_cmp" attrs="{'required':[('filter_cmp', '=', 'filter_date')]}"/>
+                            <field name="date_to_cmp" attrs="{'required':[('filter_cmp', '=', 'filter_date')]}"/>
+                        </group>
+                        <group string="Periods" attrs="{'invisible':[('filter_cmp', '!=', 'filter_period')]}">
+                            <field name="period_from_cmp" domain="[('fiscalyear_id', '=', fiscalyear_id_cmp)]" attrs="{'required':[('filter_cmp', '=', 'filter_period')]}"/>
+                            <field name="period_to_cmp" domain="[('fiscalyear_id', '=', fiscalyear_id_cmp)]" attrs="{'required':[('filter_cmp', '=', 'filter_period')]}"/>
+                        </group>
+                   </page>
+                </xpath>
+                <xpath expr="//notebook/page[@string='Journals']" position="replace">
+                	<page string="Branch Filter" name="branch_page_id">
+ 							
+ 							<field name="branch_ids" />
+ 					</page>
+                </xpath>
+            </field>
+        </record>
+        
+        <record id="action_account_report_pl_branch" model="ir.actions.act_window">
+             <field name="name">Profit and Loss</field>
+             <field name="res_model">account.profit.loss.branch.report</field>
+             <field name="type">ir.actions.act_window</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">form</field>
+             <field name="view_id" ref="accounting_profit_and_loss_report_view"/>
+             <field name="target">new</field>
+             <field name="context">{}</field>
+             <field name="context" eval="{'default_account_report_id':ref('account.account_financial_report_profitandloss0')}"/>
+        </record>
+        <menuitem icon="STOCK_PRINT" name="Profit And Loss" action="account_financial_report_branches.action_account_report_pl_branch" id="account.menu_account_report_pl" parent="account.final_accounting_reports"/>
+	</data>
+</openerp>

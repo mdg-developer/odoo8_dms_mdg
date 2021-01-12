@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- Denomination -->
+		<report id="report_denomination" model="sales.denomination" string="Denomination Report"
+			report_type="qweb-pdf" name="sale_management.sale_denomination" file="sale_management.sale_denomination"
+			attachment_use="True" attachment="('Sale Denomination')+'.pdf'" />
+		
+		<!-- Pre Sale Order-->
+		<report id="report_pre_sale_order" model="sale.order" string="Deliver Report"
+			report_type="qweb-pdf" name="sale_management.report_pre_sale_order_document" file="sale_management.report_pre_sale_order_document"
+			attachment_use="True" attachment="('Pre-Sales Order')+'.pdf'" />
+		
+		<!-- Picking Report-->	
+		<report string="Picking" id="stock.action_report_picking" model="stock.picking" 
+            report_type="qweb-pdf" name="sale_management.report_picking_inherit_document" 
+            file="sale_management.report_picking_inherit_document" />
+            
+        <!-- Supplier Invoice-->
+		<report id="report_invoice_with_price" model="account.invoice" string="Invoice With Price"
+			report_type="qweb-pdf" name="sale_management.report_invoice_with_price_document" file="sale_management.report_invoice_with_price_document"/>
+     
+        <!-- Supplier Invoice-->
+		<report id="report_invoice_credit_note_print" model="account.invoice" string="Credit Note" groups ='base.group_allow_credit_note'
+			report_type="qweb-pdf" name="sale_management.report_invoice_refund_credit_note" file="sale_management.report_invoice_refund_credit_note"/>
+		
+		<report id="report_invoice_debit_note_print" model="account.invoice" string="Debit Note" groups ='base.group_allow_debit_note'
+			report_type="qweb-pdf" name="sale_management.report_supplier_refund_debit_note" file="sale_management.report_supplier_refund_debit_note"/>
+	</data>
+</openerp>

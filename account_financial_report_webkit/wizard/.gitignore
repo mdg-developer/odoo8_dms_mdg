@@ -1,0 +1,10 @@
+/__init__.pyc
+/aged_open_invoices_wizard.pyc
+/aged_partner_balance_wizard.pyc
+/balance_common.pyc
+/general_ledger_wizard.pyc
+/open_invoices_wizard.pyc
+/partner_balance_wizard.pyc
+/partners_ledger_wizard.pyc
+/print_journal.pyc
+/trial_balance_wizard.pyc

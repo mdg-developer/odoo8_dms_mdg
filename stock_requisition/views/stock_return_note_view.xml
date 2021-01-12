@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+
+		<!-- ============================== Content Form ============================== -->
+
+		<record id="stock_return_note_form" model="ir.ui.view">
+			<field name="name">Stock Return Note Form</field>
+			<field name="model">stock.return.note</field>
+			<field name="arch" type="xml">
+				<form string="Stock Return Note Form">
+					<!-- <header> -->
+					<!-- <button name="confirm" string="Sale Manager Approve" class="oe_highlight" -->
+					<!-- type="object" states="draft" groups="stock.group_stock_manager" 
+						/> -->
+					<!-- <button name="approve" string="WH Manager Approve" class="oe_highlight" -->
+					<!-- type="object" states="confirm" groups="stock.group_stock_manager" 
+						/> -->
+					<!-- <button name="cancel" string="Cancel" class="oe_highlight" -->
+					<!-- type="object" states="confirm" groups="stock.group_stock_manager" 
+						/> -->
+					<!-- <field name="state" widget="statusbar" /> -->
+					<!-- </header> -->
+					<sheet>
+						<group>
+							<group>
+								<field name="request_gin_id" class="oe_inline" readonly="1" />
+								<field name="return_from" />
+								<field name="return_date" />
+							</group>
+							<group>
+								<field name="name" class="oe_inline" readonly="1" />
+								<field name="sale_order_inv_id" />
+								<field name="vehicle_id" />
+							</group>
+						</group>
+						<group>
+							<notebook>
+								<page>
+									<field name="p_line"> <!-- attrs="{'readonly':[('state','=','approve')]}" -->
+										<tree string="Stock Return Note(SRN)" editable="bottom">
+											<field name="product_id" on_change="on_change_product_id(product_id)" />
+											<field name="product_uom" />
+											<field name="issue_quantity" />
+											<field name="return_quantity" />
+											<field name="sales_quantity" />
+											<field name="foc_quantity" />
+											<field name="uom_ratio" />
+											<field name="actual_rec_quantity" />
+											<field name="batch_no" />
+											<field name="expiry_date" />
+											<field name="remark" />
+										</tree>
+									</field>
+								</page>
+							</notebook>
+
+						</group>
+
+					</sheet>
+					<!-- <div class="oe_chatter"> <field name="message_follower_ids" widget="mail_followers" 
+						groups="base.group_user" /> <field name="message_ids" widget="mail_thread" 
+						/> </div> -->
+				</form>
+			</field>
+		</record>
+
+		<!-- ============================== Content Tree ============================== -->
+		<record id="stock_return_note_tree" model="ir.ui.view">
+			<field name="name">stock_return_note_tree</field>
+			<field name="model">stock.return.note</field>
+			<field name="arch" type="xml">
+				<tree string="Contents">
+					<field name="request_gin_id" class="oe_inline" readonly="1" />
+					<field name="return_from" />
+					<field name="return_date" />
+					<field name="name" class="oe_inline" readonly="1" />
+					<field name="sale_order_inv_id" />
+					<field name="vehicle_id" />
+				</tree>
+			</field>
+		</record>
+
+
+		<record id="view_stock_return_note_filter" model="ir.ui.view">
+			<field name="name">Stock Return Note Filter</field>
+			<field name="model">stock.return.note</field>
+			<field name="arch" type="xml">
+				<search string="Search Stock Return Note">
+					<group expand="0" string="Group By...">
+						<filter string="Date of Return" icon="terp-partner" domain="[]"
+							context="{'group_by':'issue_date'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+		<!-- Stock Requisition -->
+		<record id="action_stock_return_note" model="ir.actions.act_window">
+			<field name="name">Stock Return Note(SRN)</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">stock.return.note</field>
+			<field name="context">{}</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="stock_return_note_tree" />
+			<field name="search_view_id" ref="view_stock_return_note_filter" />
+			<field name="domain">[]
+			</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to Register Stock Return Note.
+				</p>
+			</field>
+		</record>
+
+
+		<menuitem action='action_stock_return_note' id="menu_stock_return_note"
+			parent="stock.menu_stock_warehouse_mgmt" groups="stock.group_stock_manager"
+			sequence="13" />
+	</data>
+</openerp>

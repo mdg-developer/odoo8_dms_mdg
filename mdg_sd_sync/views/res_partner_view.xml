@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		
+		<record id="inherit_res_partner_sd_customer" model="ir.ui.view">
+			<field name="name">res.partner.form</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="crm_management.res_partner_form_view" />
+			<field name="arch" type="xml">					
+				<xpath expr="//field[@name='hamper']" position="after">		
+					<field name="sd_customer" on_change="on_change_sub_d_customer(sd_customer)"/>
+				</xpath>
+			</field>
+		</record>
+</data>
+</openerp>		
