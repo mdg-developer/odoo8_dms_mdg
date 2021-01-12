@@ -1,2 +1,0 @@
-import delivery_order
-import delivery_invoice

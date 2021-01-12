@@ -1,2 +1,0 @@
-import stock_transfer_request
-import stock_picking

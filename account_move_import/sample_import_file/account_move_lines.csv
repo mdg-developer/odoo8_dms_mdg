@@ -1,6 +1,0 @@
-name,partner,account,date_maturity,debit,credit,,Comments
-Balance Suppliers,,212114,,5000.00,0.00,,Balance suppliers Opening Entry
-open,Myanmar Lion Supplier,113100,2019-03-15,0.00,3500.00,,Open Invoice from supplier ASUSTeK
-PI14/0250,Nestle F&B Supplier,113100,2019-03-15,0.00,1500.00,,Open Invoice from supplier with reference '032/0029'
-,,,,,,,
-#,,,,5000.00,5000.00,,

@@ -1,3 +1,0 @@
-import customer_rebate_config
-import customer_rebate
-import bonus_plan

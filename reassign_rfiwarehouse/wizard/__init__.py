@@ -1,1 +1,0 @@
-import location_assign

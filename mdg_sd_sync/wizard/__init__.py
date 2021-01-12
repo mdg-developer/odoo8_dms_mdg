@@ -1,3 +1,0 @@
-import price_list_multi_sync
-import promotion_rule_multi_sync
-import product_template_multi_sync
