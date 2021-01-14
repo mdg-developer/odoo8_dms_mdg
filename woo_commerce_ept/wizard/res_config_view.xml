@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_res_config_woo_instance" model="ir.ui.view">
+            <field name="name">Configure Instance</field>
+            <field name="model">res.config.woo.instance</field>
+            <field name="arch" type="xml">
+                <form string="Configure Instance" class="oe_form_configuration">
+					<group>
+						<group>
+							<field name="name" required="1"/>
+							<field name='consumer_key' required="1"/>
+							<field name='consumer_secret' required="1"/>
+							<field name="woo_version" required="1"/>							
+						</group>
+						<group>                    		
+							<field name='host' required="1"/>														                    	
+							<field name='country_id' required="1"/>
+							<field name='verify_ssl'/>
+							<field name='is_image_url'/>							
+						</group>												
+					</group>
+					<group string="Administrator Info" attrs="{'invisible':[('is_image_url','=',True)]}">
+						<group>
+                   			<field name='admin_username' attrs="{'required':[('is_image_url','=',False)],'invisible':[('is_image_url','=',True)]}"/>
+                   		</group>
+                   		<group>
+                   			<field name='admin_password' password="1" attrs="{'required':[('is_image_url','=',False)],'invisible':[('is_image_url','=',True)]}"/>
+                   		</group>
+                    </group>                  					                                        
+                	<footer>
+                        <button string="Create" type="object" name="test_woo_connection" class="oe_highlight"/>
+                        or
+                        <button  class="oe_highlight" special="cancel" string="Cancel"/>
+                    </footer>                    
+                </form>
+            </field>
+        </record>                
+        <record id="res_config_action_woo_instance" model="ir.actions.act_window">
+            <field name="name">Instances</field>
+            <field name="res_model">res.config.woo.instance</field>
+            <field name="view_mode">form</field>
+            <field name="view_type">form</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="view_res_config_woo_instance"/>
+        </record>        
+
+        <record id="view_woo_config_settings" model="ir.ui.view">
+            <field name="name">WooCommerce Settings</field>
+            <field name="model">woo.config.settings</field>
+            <field name="arch" type="xml">
+                <form string="Configure WooCommerce" class="oe_form_configuration">
+                    <header>
+                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" type="object" name="cancel" class="oe_link"/>
+                    </header>
+                    <separator string="WooCommerce Instances"/>
+                    <group>
+                        <label for="id" string="WooCommerce Instances"/>
+                        <div>
+                            <div>
+                                <label for="woo_instance_id" string="Select Instance"/>
+                                <field name="woo_instance_id"
+                                    widget="selection"
+                                    attrs="{'required':[('woo_instance_id','!=',False)]}"
+                                    class="oe_inline"/>
+                                <button string="Create More Instance"
+                                    icon="gtk-go-forward"
+                                    name="%(res_config_action_woo_instance)d"
+                                    type="action"
+                                    class="oe_link"/>
+                            </div>
+                        </div>
+                    </group>
+                    <separator string="General Information" attrs="{'invisible': [('woo_instance_id', '=', False)]}"/>
+                    <group attrs="{'invisible': [('woo_instance_id', '=', False)]}">
+                        <label for="id" string="Options"/>
+                        <div name="general_config">
+                            <div>
+                                <label for="warehouse_id"/>
+                                <field name="warehouse_id"                            
+                                widget="selection" 
+                                attrs="{'required':[('woo_instance_id','!=',False)]}" class="oe_inline"/>
+                            </div> 
+                            <div>
+                                <!-- <label for="country_id"/> -->
+                                <field name="country_id" invisible="1" class="oe_inline"/>
+                            </div>
+                            <div>
+                                <label for="company_id"/>
+                                <field name="company_id" widget="selection" attrs="{'required':[('woo_instance_id','!=',False)]}" class="oe_inline"/>
+                            </div>
+                            <div>
+                                <label for="lang_id"/>
+                                <field name="lang_id" widget="selection" attrs="{'required':[('woo_instance_id','!=',False)]}" class="oe_inline"/>
+                            </div>
+                            <div id="fiscal_position">
+                            	<label for="fiscal_position_id"/>
+                            	<field name="fiscal_position_id" class="oe_inline"/>
+                            </div>
+                        </div>
+                    </group>  
+                    <separator string="Product Information" attrs="{'invisible': [('woo_instance_id', '=', False)]}"/>
+                    <group attrs="{'invisible': [('woo_instance_id', '=', False)]}">
+                        <label for="id" string="Products"/>
+                        <div name="product_config">                                               
+                            <div>  
+                            	<label for="shipment_charge_product_id"/>
+                                <field name="shipment_charge_product_id" attrs="{'required':[('woo_instance_id','!=',False)]}" class="oe_inline"/>
+                            </div>                         
+                            <div>
+                                <label for="discount_product_id"/>
+                                <field name="discount_product_id" attrs="{'required':[('woo_instance_id','!=',False)]}" class="oe_inline"/>
+                            </div>
+                            <div>
+                                <label for="fee_line_id"/>
+                                <field name="fee_line_id" attrs="{'required':[('woo_instance_id','!=',False)]}" class="oe_inline"/>
+                            </div>
+                            <div>
+		                        <label for="product_auto_import"/>
+		                        <field name="product_auto_import" class="oe_inline"/>
+		                    </div>                                     
+		                    <div attrs="{'invisible': [('product_auto_import', '=', False)]}">
+		                        <label for="id" string="I want to import product at every "/>
+		                        <field name="product_import_interval_number" attrs="{'required': [('product_auto_import', '=', True)]}" class="oe_inline"/>
+		                        <field name="product_import_interval_type" attrs="{'required': [('product_auto_import', '=', True)]}" class="oe_inline"/>
+		                        <field name="product_import_next_execution" attrs="{'required': [('product_auto_import', '=', True)]}" class="oe_inline"/>
+		                    </div>
+                        </div>
+                    </group>
+                    
+                    <separator string="Payment Information" attrs="{'invisible': [('woo_instance_id', '=', False)]}"/>
+                    <group attrs="{'invisible': [('woo_instance_id', '=', False)]}">
+                        <label for="id" string="Payment"/>
+                        <div name="payment_config">
+                            <div>
+                                <label for="pricelist_id"/>
+                                <field name="pricelist_id" domain="[('type','=','sale')]" attrs="{'required':[('woo_instance_id','!=',False)]}" class="oe_inline"/>
+                            </div>
+                            <div>
+                                <label for="payment_term_id"/>
+                                <field name="payment_term_id" attrs="{'required':[('woo_instance_id','!=',False)]}" class="oe_inline"/>
+                            </div>
+                        </div>
+                    </group>
+                    <separator string="Order Information" attrs="{'invisible': [('woo_instance_id', '=', False)]}"/>
+                    <group attrs="{'invisible': [('woo_instance_id', '=', False)]}">
+                        <label for="id" string="Orders"/>
+                        <div name="order_config">
+                        	<div>
+                                <label for="import_order_status_ids" />
+                                <field name="import_order_status_ids" widget="many2many_tags" options="{'no_create':True,'no_create_edit': True}" class="oe_inline"/>
+                            </div>
+                            <div>
+                                <label for="order_prefix" />
+                                <field name="order_prefix"  class="oe_inline"/>
+                            </div>
+                            <div groups="base.group_multi_salesteams">  
+                            	<label for="section_id"/>
+								<field name="section_id" options="{'no_create': True}" class="oe_inline" />                            	
+                            </div>
+                            <div>
+                                <label for="order_auto_import" />
+                                <field name="order_auto_import"  class="oe_inline"/>								
+                            </div>                                                        
+                            <div attrs="{'invisible': [('order_auto_import', '=', False)]}">
+                                <label for="id" string="I want to import order at every "/>
+                                <field name="order_import_interval_number" attrs="{'required': [('order_auto_import', '=', True)]}" class="oe_inline"/>
+                                <field name="order_import_interval_type" attrs="{'required': [('order_auto_import', '=', True)]}" class="oe_inline"/>
+                                <field name="order_import_next_execution" attrs="{'required': [('order_auto_import', '=', True)]}" class="oe_inline"/>
+                            </div>                            
+                            <div>
+                                <label for="order_auto_update"/>
+                                <field name="order_auto_update" class="oe_inline" help="If Ticked, WooCommerce Order will be automatically updated by system to WooCommerce."/>
+                            </div>
+                            <div attrs="{'invisible': [('order_auto_update', '=', False)]}">
+                                <label for="id" string="I want to Auto Update Order at every "/>
+                                <field name="order_update_interval_number" attrs="{'required': [('order_auto_update', '=', True)]}" class="oe_inline"/>
+                                <field name="order_update_interval_type" attrs="{'required': [('order_auto_update', '=', True)]}" class="oe_inline"/>
+                                <field name="order_update_next_execution" attrs="{'required': [('order_auto_update', '=', True)]}" class="oe_inline"/>                                
+                            </div>							
+                       </div>
+                    </group>
+                    <separator string="Stock Information" attrs="{'invisible': [('woo_instance_id', '=', False)]}"/>
+                    <group attrs="{'invisible': [('woo_instance_id', '=', False)]}">
+                        <label for="id" string="Stock"/>
+                        <div name="stock_config">
+                        	<div>
+                                <label for="stock_field" />
+                                <field name="stock_field" widget="selection" domain="[('model_id.model','=','product.product'),('name','in',['qty_available','virtual_available'])]" attrs="{'required':[('woo_instance_id','!=',False)]}" class="oe_inline"/>
+                            </div>
+                        	<div>
+                                <label for="stock_auto_export"/>
+                                <field name="stock_auto_export" class="oe_inline" help="If Ticked, Product Stock will be automatically updated by system to WooCommerce."/>
+                            </div>
+                            <div attrs="{'invisible': [('stock_auto_export', '=', False)]}">
+                                <label for="id" string="I want to Auto Update Stock at every "/>
+                                <field name="update_stock_interval_number" attrs="{'required': [('stock_auto_export', '=', True)]}" class="oe_inline"/>
+                                <field name="update_stock_interval_type" attrs="{'required': [('stock_auto_export', '=', True)]}" class="oe_inline"/>
+                                <field name="update_stock_next_execution" attrs="{'required': [('stock_auto_export', '=', True)]}" class="oe_inline"/>
+                            </div>                            
+                        </div>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_woo_config" model="ir.actions.act_window">
+            <field name="name">WooCommerce</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">woo.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+        </record>
+
+        <menuitem id="menu_woo_config" name="WooCommerce" parent="base.menu_config"
+            sequence="20" action="action_woo_config" groups="woo_commerce_ept.group_woo_manager_ept"/>
+    </data>
+</openerp>
