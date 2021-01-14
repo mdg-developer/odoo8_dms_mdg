@@ -1910,6 +1910,15 @@ class mobile_sale_order(osv.osv):
         cr.execute
         return datas
 
+
+    def get_stockcheck(self, cr, uid, sale_team_id , context=None, **kwargs):
+        cr.execute('''            
+                  select scl.id ,sc.outlet_type,scl.product_id,scl.product_uom_qty as quantity,scl.available,scl.facing, scl.chiller from stock_check_setting sc ,stock_check_setting_line scl where sc.id=scl.stock_setting_ids
+         ''')
+        datas = cr.fetchall()
+        return datas        
+    
+    
     def udpate_credit_notes_issue_status(self, cr, uid, sale_team_id , context=None, **kwargs):
         try:
             cr.execute('''update account_creditnote set m_Status='issued' where
