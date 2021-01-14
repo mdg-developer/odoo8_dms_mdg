@@ -9,13 +9,8 @@
 			<field name="inherit_id" ref="sale_promotions.view_promotion_rules_form" />
 			<field name="arch" type="xml">
 				<data>
-					<xpath expr="//field[@name='high_priority']" position="after">
-						<field name="ecommerce" />
-					</xpath>
-					<xpath expr="//field[@name='checking_main_group']" position="replace">
-					    <field name="checking_main_group" colspan="2" select="1" attrs="{'required':[('ecommerce','!=',True)]}"/>
-					</xpath>
 					<xpath expr="//field[@name='active']" position="after">
+					    <field name="ecommerce" />
 						<field name="is_sync_woo" />
 					</xpath>
 				</data>
@@ -29,7 +24,7 @@
 			<field name="inherit_id" ref="sale_promotions.view_promotion_rules_tree" />
 			<field name="arch" type="xml">
 				<data>
-					<xpath expr="//field[@name='is_sync_sd']" position="after">
+					<xpath expr="//field[@name='active']" position="after">
 						<field name="is_sync_woo" />
 					</xpath>					
 				</data>
