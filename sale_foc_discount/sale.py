@@ -283,11 +283,29 @@ class sale_order(osv.osv):
             if len(section_ids) == 1:
                 return int(section_ids[0][0])
         return None
+    
+    def _check_delivery_sale_order(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        for order in self.browse(cr, uid, ids, context=context):
+            res[order.id] = {
+                'delivery_sale_order': False,
+            }
+            
+            if order.date_order:
+                cr.execute("select ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date + 3 from sale_order where id=%s;",(order.id,))
+                sale_order = cr.fetchone()
+                if sale_order:
+                    res[order.id]['delivery_sale_order'] = True
+        return res
+    
 ## customize_model
     _columns={
               'is_add_discount':fields.boolean('Allow Discount',default=True),
               'deduct_amt':fields.float('Deduction Amount',store=True),
               'additional_discount':fields.float('Additional Discount(%)',store=True),
+              'ecommerce':fields.boolean("Ecommerce",default=False,readonly=True),             
+              'original_ecommerce_number':fields.char('Original Ecommerce Order No',readonly=True),              
+              'delivery_sale_order': fields.function(_check_delivery_sale_order,string='Delivery Sale Order'),
               'total_dis':fields.function(_amount_all_wrapper, digits_compute=dp.get_precision('Account'), string='Total Discount',
             store={
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
@@ -408,6 +426,11 @@ class sale_order(osv.osv):
             'branch_id': order.branch_id.id,
             'payment_type': order.payment_type,
             'mobile_order_ref': order.tb_ref_no,
+            'ecommerce': order.ecommerce,
+            'original_ecommerce_number': order.original_ecommerce_number,
+            'delivery_address': order.delivery_address,
+            'delivery_contact_no': order.delivery_contact_no,
+            'delivery_township_id': order.delivery_township_id.id,
         }
 
         # Care for deprecated _inv_get() hook - FIXME: to be removed after 6.1
