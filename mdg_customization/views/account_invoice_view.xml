@@ -142,6 +142,8 @@
 				<xpath expr="//field[@name='amount_total']" position="replace">
 					<field name="amount_total" sum="Total Amount" string="Amount" />
 					<field name="payment_type" />
+					<field name="payment_term" />
+					<field name="date_due" />
 					<field name="branch_id" />
 				</xpath>
 			</field>
