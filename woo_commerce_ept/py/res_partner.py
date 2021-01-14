@@ -1,6 +1,6 @@
 from openerp import models,fields,api
 import requests
-from pyfcm import FCMNotification
+# from pyfcm import FCMNotification
 
 class res_partner(models.Model):
     _inherit="res.partner"

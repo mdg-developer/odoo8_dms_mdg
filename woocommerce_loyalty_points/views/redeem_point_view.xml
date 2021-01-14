@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        
+        <record id="view_redeem_point_form" model="ir.ui.view">
+			<field name="name">redeem.point.form</field>
+			<field name="model">redeem.point</field>
+			<field name="arch" type="xml">
+				<form string="Redeem Point">	
+				    <header>
+				        <button name="approve" string="Approve" type="object" states="draft"/>
+				        <field name="state" widget="statusbar"/>
+				    </header>				
+					<sheet>
+						<group>
+							<group>
+								<field name="name" />
+								<field name="description" />	
+								<field name="point" />								
+							</group>
+							<group>
+							    <field name="start_date" />			
+								<field name="end_date" />
+							</group>
+						</group>						
+					</sheet>					
+				</form>
+			</field>
+		</record>
+		
+        <record model="ir.ui.view" id="view_redeem_point_tree">
+			<field name="name">redeem.point.tree</field>
+			<field name="model">redeem.point</field>
+			<field name="arch" type="xml">
+				<tree string="Redeem Point">
+					<field name="name" />
+					<field name="description" />	
+					<field name="point" />
+					<field name="start_date" />	
+					<field name="end_date" />	
+					<field name="state" />	
+				</tree>
+			</field>
+		</record>
+
+		<record id="action_redeem_point_view" model="ir.actions.act_window">
+			<field name="name">Redeem Point</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">redeem.point</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>			
+			<field name="view_id" eval="view_redeem_point_tree" />			
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to create redeem point.
+				</p>
+			</field>
+		</record>		
+        
+		<menuitem id="redeem_point_menu" action="action_redeem_point_view"
+			parent="woocommerce_loyalty_points.points_and_memberships_menu" sequence="3" />
+		
+    </data>
+</openerp>

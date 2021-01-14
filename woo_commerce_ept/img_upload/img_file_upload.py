@@ -2,7 +2,7 @@ import tempfile
 import base64
 import requests
 
-from .. python_magic_0_4_11 import magic
+# from .. python_magic_0_4_11 import magic
 from .. wordpress_xmlrpc import transports
 from .. wordpress_xmlrpc import base
 from .. wordpress_xmlrpc import compat

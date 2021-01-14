@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        
+        <record id="view_membership_config_form" model="ir.ui.view">
+			<field name="name">membership.config.form</field>
+			<field name="model">membership.config</field>
+			<field name="arch" type="xml">
+				<form string="Membership Configuration">					
+					<sheet>
+						<group>
+							<group>
+								<field name="name" />
+								<field name="points" />							
+							</group>
+							<group>
+							    <field name="start_date" />			
+								<field name="end_date" />
+							</group>
+						</group>						
+					</sheet>					
+				</form>
+			</field>
+		</record>
+		
+        <record model="ir.ui.view" id="view_membership_config_tree">
+			<field name="name">membership.config.tree</field>
+			<field name="model">membership.config</field>
+			<field name="arch" type="xml">
+				<tree string="Membership Configuration">
+					<field name="name" />
+					<field name="points" />	
+					<field name="start_date" />	
+					<field name="end_date" />	
+				</tree>
+			</field>
+		</record>
+
+		<record id="action_membership_config_view" model="ir.actions.act_window">
+			<field name="name">Membership Configuration</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">membership.config</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>			
+			<field name="view_id" eval="view_membership_config_tree" />			
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to create membership configuration.
+				</p>
+			</field>
+		</record>		
+        
+		<menuitem id="membership_config_menu" action="action_membership_config_view"
+			parent="woocommerce_loyalty_points.points_and_memberships_menu" sequence="2" />
+		
+    </data>
+</openerp>
