@@ -10,6 +10,10 @@
 					<group expand="0" string="Group By">
 						<filter name="customer_code" string="Customer Code" domain="[]"
 							context="{'group_by':'customer_code'}" />
+						<filter name="township_id" string="Township"
+							domain="[]" context="{'group_by':'township_id'}" />
+						<filter name="branch_id" string="Branch"
+							domain="[]" context="{'group_by':'branch_id'}" />
 						<filter name="sale_plan_day_id" string="Sale Plan Day"
 							domain="[]" context="{'group_by':'sale_plan_day_id'}" />
 						<filter name="sale_plan_trip_id" string="Sale Plan Trip"
@@ -33,6 +37,8 @@
 					<field name="city_id" />
 					<field name="township_id" />
 					<field name="sale_channel_id" />
+					<field name="branch_id" />
+					<field name="prefix" />
 					<field name="nextnumber" />
 					<field name="padding" />
 				</tree>
@@ -50,6 +56,8 @@
 							<field name="city_id" />
 							<field name="township_id" />
 							<field name="sale_channel_id" />
+							<field name="branch_id" />
+							<field name="prefix" />
 							<field name="nextnumber" />
 							<field name="padding" />
 						</group>

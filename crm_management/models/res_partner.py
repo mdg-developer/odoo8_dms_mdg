@@ -501,12 +501,23 @@ class res_partner(osv.osv):
                         cityId = resVal.city
                         townshipId = resVal.township
                         channelId = resVal.sales_channel
-                        if cityId and townshipId and channelId:
-                            codeId = codeObj.search(cr, uid, [('city_id', '=', cityId.id), ('township_id', '=', townshipId.id), ('sale_channel_id', '=', channelId.id)])
+                        branchId = resVal.branch_id
+                        woo_customer_id = resVal.woo_customer_id
+                        if branchId and townshipId and woo_customer_id:
+                            codeId = codeObj.search(cr, uid, [('branch_id', '=', branchId.id), ('township_id', '=', townshipId.id), ('prefix', '=', 'E')])
                             if codeId:
                                 code = codeObj.generateCode(cr, uid, codeId[0], context=context)
                             else:
-                                codeResult = {'city_id':cityId.id, 'township_id':townshipId.id, 'sale_channel_id':channelId.id, 'nextnumber':1, 'padding':6}
+                                codeResult = {'branch_id':branchId.id, 'township_id':townshipId.id, 'prefix': 'E', 'nextnumber':1, 'padding':5}
+                                codeId = codeObj.create(cr, uid, codeResult, context=context)
+                                code = codeObj.generateCode(cr, uid, codeId, context=context)
+                                
+                        if branchId and townshipId and not woo_customer_id:
+                            codeId = codeObj.search(cr, uid, [('branch_id', '=', branchId.id), ('township_id', '=', townshipId.id)])
+                            if codeId:
+                                code = codeObj.generateCode(cr, uid, codeId[0], context=context)
+                            else:
+                                codeResult = {'branch_id':branchId.id, 'township_id':townshipId.id, 'nextnumber':1, 'padding':5}
                                 codeId = codeObj.create(cr, uid, codeResult, context=context)
                                 code = codeObj.generateCode(cr, uid, codeId, context=context)
                 if code:
