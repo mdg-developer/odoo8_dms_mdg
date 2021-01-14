@@ -23,6 +23,7 @@
 						</h1>
 						<group>
 							<group>
+							    <field name="ref_no" />
 								<field name="sale_team_id" attrs="{'readonly':[('state','=','approve')]}"
 									on_change="on_change_sale_team_id(sale_team_id, pre_order)"/>
 								<field name="from_location_id"/>
@@ -106,6 +107,7 @@
 					<field name="state" />
 					<field name="request_date" string="Req Date" />
 					<field name="name" string="Ref No." />
+					<field name="ref_no" />
 					<field name="request_by" />
 					<field name="issue_to" />
 					<field name="from_location_id" string="Location" />

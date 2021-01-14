@@ -2403,6 +2403,7 @@ class mobile_sale_order(osv.osv):
                         receiver=None
 
                     mso_result = {
+#                         'ref_no':,
                         'request_date':sr['request_date'],
                         'request_by':sr['request_by'],
                         'issue_date':sr['issue_date'] ,
