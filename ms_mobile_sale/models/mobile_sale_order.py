@@ -3513,6 +3513,7 @@ class mobile_sale_order_line(osv.osv):
 
     _columns = {
         'product_id':fields.many2one('product.product', 'Products'),
+        'product_code': fields.char(related='product_id.default_code', string="Product Code"),
         'product_uos_qty':fields.float('Quantity'),
         'uom_id':fields.many2one('product.uom', 'UOM', readonly=False),
 #        'uom_id':fields.function(_get_uom_from_product, type='many2one', relation='product.uom', string='UOM'),

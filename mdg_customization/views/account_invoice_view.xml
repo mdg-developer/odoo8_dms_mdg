@@ -89,6 +89,10 @@
 				<xpath expr="//field[@name='account_id']" position="after">
 				    <field name="mobile_order_ref" />
 				</xpath>
+				<xpath expr="//form/sheet/notebook/page/field/tree/field[@name='product_id']"
+					position="after">
+					<field name="product_code" />
+				</xpath>
 			</field>
 		</record>
 

@@ -7,6 +7,10 @@ class account_invoice_line(models.Model):
     _description = "Invoice Line"
     _order = "invoice_id,sequence,id"
     
+    _columns = {              
+                'product_code': fields.char(related='product_id.default_code', string="Product Code"),
+            }
+    
     @api.multi    
     def product_id_change(self, product, uom_id, qty=0, name='', type='out_invoice',
             partner_id=False, fposition_id=False, price_unit=False, currency_id=False,

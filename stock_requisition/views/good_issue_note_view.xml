@@ -58,6 +58,7 @@
 											default_order="sequence asc"  attrs="{'readonly':[('state','=','issue')]}">
 											<field name="sequence" invisible="1" />
 											<field name="product_id" on_change="on_change_product_id(product_id)" />
+											<field name="product_code"/>
 											<field name="issue_quantity" string="Qty (S)"/>
 											<field name="product_uom"  string="UOM" invisible="0"/>
 											<field name="uom_ratio" invisible="1" />

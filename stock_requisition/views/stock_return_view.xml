@@ -53,6 +53,7 @@
 											default_order="sequence asc">
 											<field name="sequence" invisible="1" />
 											<field name="product_id" attrs="{'readonly':True}" />
+											<field name="product_code" />
 											<field name="receive_quantity" string="Issued Qty"
 												attrs="{'readonly':True}" />
 											<field name="sale_quantity" string="Sales Qty" attrs="{'readonly':True}" />

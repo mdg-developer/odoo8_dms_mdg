@@ -40,6 +40,7 @@
 									<field name="p_line" attrs="{'readonly':[('state','=','approve')]}">
 										<tree string="Good Issue Note Line" editable="bottom">
 											<field name="product_id" on_change="on_change_product_id(product_id)" />
+											<field name="product_code" />
 											<field name="issue_quantity" />
 											<field name="product_uom" />
 											<field name="uom_ratio" />

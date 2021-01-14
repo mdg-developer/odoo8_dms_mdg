@@ -36,6 +36,7 @@ class stock_return_from_mobile_line(osv.osv):
     _columns = {                
         'line_id':fields.many2one('stock.return.mobile', 'Line', ondelete='cascade', select=True),
         'product_id': fields.many2one('product.product', 'Product', required=True),
+        'product_code': fields.char(related='product_id.default_code', string="Product Code"),
         'return_quantity' : fields.float(string='Returned Qty', digits=(16, 0)),
         'sale_quantity' : fields.float(string='Sales Qty', digits=(16, 0)),
         'foc_quantity' : fields.float(string='FOC Qty', digits=(16, 0)),

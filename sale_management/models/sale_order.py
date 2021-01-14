@@ -550,5 +550,6 @@ class sale_order_line(osv.osv):
         return {'value': result, 'domain': domain}    
         
     _columns = { 
-               'sale_foc':fields.boolean('FOC')               
+               'sale_foc':fields.boolean('FOC'),
+               'product_code': fields.char(related='product_id.default_code', string="Product Code")               
                }      

@@ -119,6 +119,7 @@ class issue_requisition_line(osv.osv):  # #prod_pricelist_update_line
     _columns = {
         'line_id':fields.many2one('issue.requisition', 'Line', ondelete='cascade', select=True),
         'product_id': fields.many2one('product.product', 'Product', required=True),
+        'product_code': fields.char(related='product_id.default_code', string="Product Code"),
         'req_quantity' : fields.float(string='Qty', digits=(16, 0)),
         'product_uom': fields.many2one('product.uom', 'UOM', required=True),
                 'uom_ratio':fields.char('Packing Unit'),

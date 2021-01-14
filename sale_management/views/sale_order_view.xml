@@ -157,6 +157,9 @@
 					<field name="pre_order" />
 					<field name="is_generate" />
 				</field>
+				<xpath expr="//form/sheet/notebook/page/field/tree/field[@name='product_id']" position="after">
+					<field name="product_code" />
+				</xpath>
 			</field>
 		</record>
 
