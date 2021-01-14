@@ -294,7 +294,8 @@ class account_invoice(models.Model):
     _columns={'deduct_amt':fields.float('Deduction Amount'),
                      'additional_discount':fields.float('Additional Discount(%)'),
                   'discount_total':fields.float('Discount Total' ,digits=dp.get_precision('Account'),store=True, readonly=True, compute='_compute_amount', track_visibility='always'),
-                    
+                  'ecommerce':fields.boolean("Ecommerce",default=False,readonly=True),             
+                  'original_ecommerce_number':fields.char('Original Ecommerce Order No',readonly=True),  
                   }
     
     
