@@ -32,7 +32,14 @@ class exchange_product(osv.osv):
                     'customer_id', 'township',
                     type='many2one',
                     relation='res.township',
-                    string="Township",store=True)                
+                    string="Township",store=True),      
+            'total_value':fields.float('Value Of Out'),
+            'pricelist_id':fields.many2one('product.pricelist', string='Pricelist'),
+             'ams_total':fields.float('3AMS Total'),
+             'out_ams_percent':fields.float('% Out on AMS'),
+            'ams_buget_total':fields.float('Budget'),
+             'month_out_todate':fields.float('Month To Date Out'),
+            'balance_total':fields.float('Balance'),                          
     }
     
     _defaults = {        
@@ -289,6 +296,8 @@ class exchange_product_line_item(osv.osv):
                 'note':fields.char('Note'),
                 'exp_date':fields.date('Expired Date'),
                 'batchno':fields.char('Batch No'),
+                'total_price':fields.float('Value'),
+
                 }
 
     def onchange_product_id(self, cr, uid, ids, product_id, uom_id, context=None):

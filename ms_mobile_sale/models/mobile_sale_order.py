@@ -502,7 +502,7 @@ class mobile_sale_order(osv.osv):
             product_trans_line = []
             for r in result:
                 print "length", len(r)
-                if len(r) >=13:
+                if len(r) ==15:
                     product_trans_line.append(r)                   
                 else:
                     product_trans.append(r)
@@ -533,6 +533,15 @@ class mobile_sale_order(osv.osv):
                         exchange_date_time = pt['date']
                         exhange_date = datetime.strptime(exchange_date_time, '%Y-%m-%d %H:%M:%S') - timedelta(hours=6, minutes=30)
                         # check_date = date.date()                        
+                    if pt['pricelist_id']:
+                        price_list_name= pt['pricelist_id']
+                        cursor.execute("select id from product_pricelist where name=%s",(price_list_name,))
+                        pricelist_data=cursor.fetchone()
+                        if pricelist_data:
+                            pricelist_id =pricelist_data[0]
+                        else:
+                            pricelist_id=None
+                        
                     mso_result = {
                                 'transaction_id':pt['transaction_id'],
                                 'customer_id':pt['customer_id'],
@@ -544,7 +553,16 @@ class mobile_sale_order(osv.osv):
                                 'location_id':location_type_id,  # pt['location_id'],
                                 'location_type':pt['type'],
                                 'latitude':pt['mosLatitude'],
-                                'longitude':pt['mosLongitude']    
+                                'longitude':pt['mosLongitude'],
+                                'pricelist_id':pricelist_id,
+                                'total_value':pt['total_value'],
+                                'ams_total':pt ['ams_total'],
+                                'out_ams_percent':pt ['out_ams_percent'],
+                              'ams_buget_total':pt ['ams_buget_total'],
+                                'month_out_todate':pt ['month_out_todate'],
+                                'balance_total':pt ['balance_total'],
+
+
 
                                 }
                     s_order_id = product_trans_obj.create(cursor, user, mso_result, context=context)
@@ -564,6 +582,7 @@ class mobile_sale_order(osv.osv):
                                 
                                 cursor.execute('select uom_id from product_product pp,product_template pt where pp.product_tmpl_id=pt.id and pp.id=%s', (ptl['product_id'],))
                                 uom_id = cursor.fetchone()[0]
+                                total_price =ptl['total_price']
                                 mso_line_res = {                                                            
                                   'transaction_id':s_order_id,
                                   'product_id':ptl['product_id'],
@@ -574,6 +593,7 @@ class mobile_sale_order(osv.osv):
                                   'transaction_name':ptl['transaction_name'],
                                   'note':ptl['note'],
                                   'exp_date':exp_date,
+                                  'total_price':total_price,
                                   'batchno':ptl['batchno'],
                                 }
                                 product_trans_line_obj.create(cursor, user, mso_line_res, context=context)
