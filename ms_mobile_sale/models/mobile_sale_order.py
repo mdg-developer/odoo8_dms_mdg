@@ -2250,6 +2250,12 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()
         return datas    
     
+    def get_target_setting_with_customer(self, cr, uid, sale_team_id ,customer_id, context=None, **kwargs):
+
+        cr.execute('''select * from get_customer_target(%s)''', (customer_id,))
+        datas = cr.fetchall()
+        return datas       
+    
     def get_stockcheck(self, cr, uid, sale_team_id , context=None, **kwargs):
         cr.execute('''            
                   select scl.id ,sc.outlet_type,scl.product_id,scl.product_uom_qty as quantity,scl.available,scl.facing, scl.chiller from stock_check_setting sc ,stock_check_setting_line scl where sc.id=scl.stock_setting_ids
@@ -2389,15 +2395,81 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()        
         return datas
     
+#     def get_assets(self, cr, uid, context=None, **kwargs):    
+#         cr.execute("""select A.name as id ,(select name from asset_configuration where id = A.asset_name_id) as asset_name,A.partner_id,substring(encode(image::bytea, 'hex'),1,5) as image
+#                     ,A.qty,A.date,B.name,A.type,A.id as asset_db_id
+#                     from res_partner_asset A, asset_type B
+#                     where A.asset_type = B.id
+#                     and A.active=True""")
+#         datas = cr.fetchall()
+#         return datas
+
     def get_assets(self, cr, uid, context=None, **kwargs):    
-        cr.execute("""select A.name as id ,(select name from asset_configuration where id = A.asset_name_id) as asset_name,A.partner_id,substring(encode(image::bytea, 'hex'),1,5) as image
-                    ,A.qty,A.date,B.name,A.type,A.id as asset_db_id
-                    from res_partner_asset A, asset_type B
-                    where A.asset_type = B.id
-                    and A.active=True""")
-        datas = cr.fetchall()
+        team_obj = self.pool.get('crm.case.section')
+        cr.execute('''select default_section_id from res_users where id =%s''',(uid,))   
+        sale_team_data=cr.fetchone() 
+        if sale_team_data:
+            sale_team_id =sale_team_data[0]
+        else:
+            sale_team_id=False
+        team_data=team_obj.browse(cr, uid, sale_team_id, context=context)     
+        section_id=  team_data.id                            
+        is_supervisor=team_data.is_supervisor           
+        if is_supervisor==True:
+            cr.execute('''            
+                    select A.name as id ,(select name from asset_configuration where id = A.asset_name_id) as asset_name,A.partner_id,substring(encode(image::bytea, 'hex'),1,5) as image
+                            ,A.qty,A.date,B.name,A.type,A.id as asset_db_id
+                            from res_partner_asset A, asset_type B
+                            where A.asset_type = B.id
+                            and A.active=True
+                    AND A.partner_id IN  (
+                   select partner_id from (
+                    (select distinct b.partner_id from res_partner_res_partner_category_rel a,
+                 sale_plan_day_line b
+                 , sale_plan_day p
+                where a.partner_id = b.partner_id
+                and b.line_id = p.id
+                and p.sale_team in (select id from crm_case_section where supervisor_team= %s)
+                )
+                UNION ALL
+                (select distinct b.partner_id from res_partner_res_partner_category_rel a,sale_plan_trip p,
+                 res_partner_sale_plan_trip_rel b
+                where a.partner_id = b.partner_id
+                and b.sale_plan_trip_id = p.id
+                and p.sale_team in (select id from crm_case_section where supervisor_team= %s)
+                )
+                )a group by partner_id
+                )
+             ''', (section_id,section_id,))
+            datas=cr.fetchall()            
+        else:
+            cr.execute('''            
+                           select A.name as id ,(select name from asset_configuration where id = A.asset_name_id) as asset_name,A.partner_id,substring(encode(image::bytea, 'hex'),1,5) as image
+                            ,A.qty,A.date,B.name,A.type,A.id as asset_db_id
+                            from res_partner_asset A, asset_type B
+                            where A.asset_type = B.id
+                            and A.active=True 
+                            AND A.partner_id IN  (
+                           select partner_id from (
+                            (select distinct b.partner_id from res_partner_res_partner_category_rel a,
+                             sale_plan_day_line b
+                             , sale_plan_day p
+                            where a.partner_id = b.partner_id
+                            and b.line_id = p.id
+                            and p.sale_team = %s)
+                            UNION ALL
+                            (select distinct b.partner_id from res_partner_res_partner_category_rel a,sale_plan_trip p,
+                             res_partner_sale_plan_trip_rel b
+                            where a.partner_id = b.partner_id
+                            and b.sale_plan_trip_id = p.id
+                            and p.sale_team = %s
+                            )
+                            )a group by partner_id
+                            )
+                     ''', (section_id,section_id,))                
+            datas=cr.fetchall()            
         return datas
-        
+            
     # Get Pending Delivery
     def get_delivery_datas(self, cr, uid, saleTeamId, soList, context=None, **kwargs):
         
