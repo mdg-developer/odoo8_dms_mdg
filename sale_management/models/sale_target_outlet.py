@@ -29,10 +29,10 @@ class sale_target_outlet(osv.osv):
         month = now.month
         return time.strftime('%Y-%m-01')
 
-    def on_change_outlet_type(self, cr, uid, ids, outlet_type, pricelist_id, context=None):
+    def on_change_outlet_type(self, cr, uid, ids, pricelist_id, context=None):
         values = {}
         data_line = []
-        if outlet_type:
+        if pricelist_id:
             cr.execute("select pp.id from product_product pp ,product_template pt  where pp.product_tmpl_id=pt.id and pt.is_foc!=True and pt.type != 'service' and pt.active=True and pt.sale_ok=True ")
             product_line=cr.fetchall()
             print 'product_line ', product_line
@@ -41,7 +41,7 @@ class sale_target_outlet(osv.osv):
                 if product.product_tmpl_id.type != 'service' and product.is_foc != True:
                     cr.execute(
                         "select new_price from product_pricelist_item where price_version_id in ( select id from product_pricelist_version where pricelist_id=%s and active=True) and product_id=%s and product_uom_id=%s",
-                        (pricelist_id, product.id, product.product_tmpl_id.report_uom_id.id,))
+                        (pricelist_id, product.id, product.product_tmpl_id.uom_id.id,))
                     product_price = cr.fetchone()
                     if product_price:
                         product_price = product_price[0]
@@ -50,7 +50,7 @@ class sale_target_outlet(osv.osv):
                                              _('Please Check Price List For (%s)') % (product.name_template,))
                     sequence = product.sequence
                     data_line.append({'product_id': line,
-                                      'product_uom': product.product_tmpl_id.report_uom_id and product.product_tmpl_id.report_uom_id.id or False,
+                                      'product_uom': product.product_tmpl_id.uom_id and product.product_tmpl_id.uom_id.id or False,
                                       'price_unit': product_price,
                                       'product_uom_qty': 0.0,
                                       'sequence': sequence,
@@ -62,7 +62,7 @@ class sale_target_outlet(osv.osv):
 
     _columns = {
         'name': fields.char('Description'),
-        'outlet_type': fields.many2one('outlettype.outlettype', 'Outlet Type',required=True),
+        'outlet_type_ids': fields.many2many('outlettype.outlettype','target_outlets_rel', 'target_id','outlet_id','Outlet Types',required=True),
         'month': fields.selection([
             ('01', 'January'),
             ('02', 'February'),
@@ -94,9 +94,8 @@ class sale_target_outlet(osv.osv):
         'month': lambda *a: str(time.strftime('%m')),
         'year': lambda *a: str(time.strftime('%Y')),
         'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid,
-                                                                                                       'sales.target',
-                                                                                                       context=context),
-
+                                                                                                     context=context),
+        'pricelist_id':1, 
     }
 
 
@@ -151,7 +150,7 @@ class sale_target_outlet_line(osv.osv):
             if product.product_tmpl_id.type != 'service' and product.is_foc != True:
                 cr.execute(
                     "select new_price from product_pricelist_item where price_version_id in ( select id from product_pricelist_version where pricelist_id=%s and active=True) and product_id=%s and product_uom_id=%s",
-                    (pricelist_id, product.id, product.product_tmpl_id.report_uom_id.id,))
+                    (pricelist_id, product.id, product.product_tmpl_id.uom_id.id,))
                 product_price = cr.fetchone()
                 if product_price:
                     product_price = product_price[0]
@@ -160,7 +159,7 @@ class sale_target_outlet_line(osv.osv):
                                          _('Please Check Price List For (%s)') % (product.name_template,))
                 sequence = product.sequence
                 values = {
-                    'product_uom': product.product_tmpl_id.report_uom_id and product.product_tmpl_id.report_uom_id.id or False,
+                    'product_uom': product.product_tmpl_id.uom_id and product.product_tmpl_id.uom_id.id or False,
                     'price_unit': product_price,
                     'sequence': sequence,
 
@@ -173,7 +172,7 @@ class sale_target_outlet_line(osv.osv):
             product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
             cr.execute(
                 "select new_price from product_pricelist_item where price_version_id in ( select id from product_pricelist_version where pricelist_id=%s and active=True) and product_id=%s and product_uom_id=%s",
-                (pricelist_id, product.id, product.product_tmpl_id.report_uom_id.id,))
+                (pricelist_id, product.id, product.product_tmpl_id.uom_id.id,))
             product_price = cr.fetchone()[0]
             if product.product_tmpl_id.type != 'service' and product.is_foc != True:
                 values = {
@@ -191,7 +190,7 @@ class sale_target_outlet_line(osv.osv):
                                    digits_compute=dp.get_precision('Product Price')),
         'price_subtotal': fields.function(_amount_line, string='Amount',
                                           digits_compute=dp.get_precision('Product Price'), type='float', ),
-        'distribution_price': fields.integer('Distribution'),
+        'percentage_growth': fields.integer('Percentage Growth'),
 
     }
 
