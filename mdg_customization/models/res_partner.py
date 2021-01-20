@@ -1,6 +1,7 @@
 from openerp.osv import osv, fields
 from openerp import tools
 from openerp.tools.translate import _
+import logging
 TIME_SELECTION = [
         ('01', '01'),
         ('02', '02'),
@@ -77,7 +78,8 @@ class res_partner(osv.osv):
     
     def swap_contact(self, cr, uid, ids, val, context=None):
         
-        tmp_vals = customer_vals = {}
+        tmp_vals = {}
+        customer_vals = {}
         for res in self.browse(cr, uid, ids, context=context):
             
             if res.parent_id:
@@ -88,7 +90,7 @@ class res_partner(osv.osv):
                     #assign customer address into contact address     
                     res.image = res.parent_id.image     
                     #assign contact address into customer address
-                    customer_vals['image']= tmp_vals['image']   
+                    customer_vals['image']= tmp_vals['image']
                     
                 if res.street:
                     tmp_vals['street']= res.street
@@ -137,13 +139,14 @@ class res_partner(osv.osv):
                     
                 if res.name:
                     tmp_vals['name']= res.name or None
-                    res.name = res.parent_id.temp_customer or 'null'
+                    res.name = res.parent_id.temp_customer or 'null'  
+                    logging.warning("Check tmp vals name: %s", tmp_vals['name'])                       
                     customer_vals['temp_customer']= tmp_vals['name']
                     
                 if res.shop_name:
                     tmp_vals['shop_name']= res.shop_name or None
-                    res.shop_name = res.parent_id.name or None
-                    customer_vals['name']= tmp_vals['shop_name']
+                    res.shop_name = res.parent_id.shop_name or None
+                    customer_vals['shop_name']= tmp_vals['shop_name']
                     
                 if res.gender:
                     tmp_vals['gender']= res.gender or None
@@ -159,7 +162,7 @@ class res_partner(osv.osv):
                     tmp_vals['outlet_type']= res.outlet_type.id or None
                     res.outlet_type = res.parent_id.outlet_type.id or None
                     customer_vals['outlet_type']= tmp_vals['outlet_type']
-                
+                    
                 self.pool.get('res.partner').write(cr, uid, res.parent_id.id, customer_vals, context=context)                       
                 return True
                 
