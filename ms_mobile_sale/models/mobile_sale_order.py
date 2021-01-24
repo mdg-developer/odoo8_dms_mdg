@@ -4443,7 +4443,8 @@ class mobile_sale_order(osv.osv):
                 result.append(x)
             if result:
                 for ar in result:         
-                    check_date=None                   
+                    check_date=None    
+                    is_image =False               
                     if ar['check_date']:
                         date_time = ar['check_date']
                         check_date = datetime.strptime(date_time, '%Y-%m-%d %I:%M:%S %p') - timedelta(hours=6, minutes=30)
@@ -4455,6 +4456,8 @@ class mobile_sale_order(osv.osv):
                             team_id =team_data[0]
                         else:
                             team_id=None
+                    if ar['img_ref']:
+                        is_image =True
                     if ar['asset_id']:
                         cursor.execute("select id,asset_name_id from res_partner_asset where name=%s",(ar['asset_id'],))
                         asset_data=cursor.fetchone()
@@ -4473,6 +4476,8 @@ class mobile_sale_order(osv.osv):
                         'asset_id':asset_id,
                         'asset_name':asset_name_id,
                         'image':ar['asset_image'],
+                        'is_image':is_image,                                  
+                        'image_reference':ar['img_ref'],
                     }
                     rental_obj.create(cursor, user, rental_result, context=context)
             return True

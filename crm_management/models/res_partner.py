@@ -15,6 +15,10 @@ from datetime import date
 from dateutil import relativedelta
 
 DEFAULT_SERVER_DATE_FORMAT = "%Y-%m-%d"
+
+baseUrlPrefix = "https://firebasestorage.googleapis.com/v0/b/odoo-8d694.appspot.com/o/asset_check%2F"
+baseUrlPostFix = ".png?alt=media"
+
 def geo_find(addr):
     url = 'https://maps.googleapis.com/maps/api/geocode/json?sensor=false&address='
     url += urllib.quote(addr.encode('utf8'))
@@ -44,6 +48,7 @@ def geo_query_address(street=None, zip=None, city=None, state=None, country=None
                                               state,
                                               country])))
 
+
 class outlet_type(osv.osv):
     _name = 'outlettype.outlettype'
     
@@ -52,36 +57,40 @@ class outlet_type(osv.osv):
         cr.execute('delete from product_outlettype where outlettype_id=%s', (ids[0],))
         cr.execute('''select pp.id,pp.sequence from product_template pt,product_product pp where pt.id=pp.product_tmpl_id
             and pt.type!='service' and pt.sale_ok=True''')
-        product_data=cr.fetchall()
+        product_data = cr.fetchall()
         if product_data:                
             for val in product_data:
-                product_id=val[0]    
-                product_sequence =val[1]   
+                product_id = val[0]    
+                product_sequence = val[1]   
                 product_outlet_obj.create(cr, uid, {'outlettype_id': ids[0],
                                'sequence':product_sequence,
                               'product_id': product_id,
                               'type':'none',
                         }, context=context)        
+
     _columns = {
                 'name':fields.char('Outlet Name'),
-                'outlet_product_line':fields.one2many('product.outlettype','outlettype_id','Outlet'),
+                'outlet_product_line':fields.one2many('product.outlettype', 'outlettype_id', 'Outlet'),
                 }
 
     
 outlet_type()
 
+
 class product_outlet(osv.osv):
     _name = 'product.outlettype'
     _columns = {
-                'outlettype_id':fields.many2one('outlettype.outlettype','Outlet'),
-                'product_id':fields.many2one('product.product','Product'),
-                'sequence':fields.integer('Sequence'),         
+                'outlettype_id':fields.many2one('outlettype.outlettype', 'Outlet'),
+                'product_id':fields.many2one('product.product', 'Product'),
+                'sequence':fields.integer('Sequence'),
                 'type':fields.selection([('none', 'None'),
-                                   ('must_sell','Must Sell'), # used by cash statements
-                                   ('available', 'Available')],'Type', select=True),
+                                   ('must_sell', 'Must Sell'),  # used by cash statements
+                                   ('available', 'Available')], 'Type', select=True),
                 }
+
     
 product_outlet()
+
 
 class res_partner(osv.osv):
 
@@ -165,6 +174,7 @@ class res_partner(osv.osv):
                     res[partner.id] = str_day
                         
         return res  
+
     def _sale_order_count_week(self, cr, uid, ids, field_name, arg, context=None):
         
         res = {} 
@@ -194,53 +204,53 @@ class res_partner(osv.osv):
         return res           
     
     def _get_total_sale_data(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict(map(lambda x: (x,0), ids))
-        sale_obj=self.pool.get('sale.order')
+        res = dict(map(lambda x: (x, 0), ids))
+        sale_obj = self.pool.get('sale.order')
         month_begin = date.today().replace(day=1)
         to_date = month_begin.replace(day=calendar.monthrange(month_begin.year, month_begin.month)[1]).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
-        from_date=time.strftime('%Y-%m-01')
+        from_date = time.strftime('%Y-%m-01')
         # The current user may not have access rights for sale orders
         try:
             for partner in self.browse(cr, uid, ids, context):
-                sale_ids = sale_obj.search(cr, uid, [('date_order', '>', from_date), ('date_order', '<', to_date),('partner_id','=',partner.id)], context=context) 
+                sale_ids = sale_obj.search(cr, uid, [('date_order', '>', from_date), ('date_order', '<', to_date), ('partner_id', '=', partner.id)], context=context) 
                 res[partner.id] = len(sale_ids)
         except:
             pass
         return res
     
     def _get_total_invoice_data(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict(map(lambda x: (x,0), ids))
-        invoice_obj=self.pool.get('account.invoice')
+        res = dict(map(lambda x: (x, 0), ids))
+        invoice_obj = self.pool.get('account.invoice')
         month_begin = date.today().replace(day=1)
         to_date = month_begin.replace(day=calendar.monthrange(month_begin.year, month_begin.month)[1]).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
-        from_date=time.strftime('%Y-%m-01')
+        from_date = time.strftime('%Y-%m-01')
         # The current user may not have access rights for sale orders
         try:
             for partner in self.browse(cr, uid, ids, context):
-                invoice_ids = invoice_obj.search(cr, uid, [('date_invoice', '>=', from_date), ('date_invoice', '<=', to_date),('partner_id','=',partner.id)], context=context) 
+                invoice_ids = invoice_obj.search(cr, uid, [('date_invoice', '>=', from_date), ('date_invoice', '<=', to_date), ('partner_id', '=', partner.id)], context=context) 
                 res[partner.id] = len(invoice_ids)
         except:
             pass
         return res
     
     def _get_invoice_confirm(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict(map(lambda x: (x,0), ids))
-        invoice_obj=self.pool.get('account.invoice')
+        res = dict(map(lambda x: (x, 0), ids))
+        invoice_obj = self.pool.get('account.invoice')
         month_begin = date.today().replace(day=1)
         to_date = month_begin.replace(day=calendar.monthrange(month_begin.year, month_begin.month)[1]).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
-        from_date=time.strftime('%Y-%m-01')
+        from_date = time.strftime('%Y-%m-01')
         # The current user may not have access rights for sale orders
         try:
             for partner in self.browse(cr, uid, ids, context):
-                invoice_ids = invoice_obj.search(cr, uid, [('date_invoice', '>', from_date), ('date_invoice', '<', to_date),('partner_id','=',partner.id),('state','=','paid')], context=context) 
+                invoice_ids = invoice_obj.search(cr, uid, [('date_invoice', '>', from_date), ('date_invoice', '<', to_date), ('partner_id', '=', partner.id), ('state', '=', 'paid')], context=context) 
                 res[partner.id] = len(invoice_ids)
         except:
             pass
         return res 
 
     def _get_last_purchase_date(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict(map(lambda x: (x,0), ids))
-        last_order_date=False
+        res = dict(map(lambda x: (x, 0), ids))
+        last_order_date = False
         for data in self.browse(cr, uid, ids, context=context):
             cr.execute("select date_order::date from sale_order where partner_id =%s order by id desc", (data.id,))
             last_order = cr.fetchone()
@@ -253,7 +263,7 @@ class res_partner(osv.osv):
         return res 
 
     def _get_last_visit_date(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict(map(lambda x: (x,0), ids))
+        res = dict(map(lambda x: (x, 0), ids))
         for data in self.browse(cr, uid, ids, context=context):
             cr.execute("select date from customer_visit where customer_id=%s order by id desc", (data.id,))
             last_visit = cr.fetchone()
@@ -264,9 +274,10 @@ class res_partner(osv.osv):
             
             res[data.id] = last_visit_date
         return res 
+
     def _get_last_purchase_amount(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict(map(lambda x: (x,0), ids))
-        last_order_amount=False
+        res = dict(map(lambda x: (x, 0), ids))
+        last_order_amount = False
         for data in self.browse(cr, uid, ids, context=context):
             cr.execute("select amount_total from sale_order where partner_id =%s order by id desc", (data.id,))
             last_order = cr.fetchone()
@@ -279,8 +290,8 @@ class res_partner(osv.osv):
         return res
     
     def _get_all_invoice_amount(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict(map(lambda x: (x,0), ids))
-        amount_total=0.0
+        res = dict(map(lambda x: (x, 0), ids))
+        amount_total = 0.0
         for data in self.browse(cr, uid, ids, context=context):
             cr.execute("select sum(amount_total) from account_invoice where partner_id =%s", (data.id,))
             amount_total = cr.fetchone()
@@ -293,16 +304,16 @@ class res_partner(osv.osv):
         return res 
 
     def _get_monthly_invoice_amount(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict(map(lambda x: (x,0), ids))
-        m_amount_total=0.0
-        m_date='2016-09-20'
+        res = dict(map(lambda x: (x, 0), ids))
+        m_amount_total = 0.0
+        m_date = '2016-09-20'
         month_begin = date.today().replace(day=1)
-        #month_begin =m_date().replace(day=1)
+        # month_begin =m_date().replace(day=1)
         to_date = month_begin.replace(day=calendar.monthrange(month_begin.year, month_begin.month)[1]).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
-        from_date=time.strftime('%Y-%m-01') 
-        print 'from_date',from_date,to_date               
+        from_date = time.strftime('%Y-%m-01') 
+        print 'from_date', from_date, to_date               
         for data in self.browse(cr, uid, ids, context=context):
-            cr.execute("select sum(amount_total) from account_invoice where partner_id =%s and date_invoice between %s and %s ", (data.id,from_date,to_date,))
+            cr.execute("select sum(amount_total) from account_invoice where partner_id =%s and date_invoice between %s and %s ", (data.id, from_date, to_date,))
             amount_total = cr.fetchone()
             if amount_total:
                 m_amount_total = amount_total[0]
@@ -357,11 +368,11 @@ class res_partner(osv.osv):
             cr.execute("update res_partner set image_small=%s, image =%s,image_medium=%s where id = %s" , (line.image_five, line.image_five, line.image_five, line.id,))
         return True
 
-    def _default_country(self,cr, uid, ids,context=None, uid2=False):
+    def _default_country(self, cr, uid, ids, context=None, uid2=False):
         if not uid2:
             uid2 = uid
         cr.execute("select id from res_country where name ='Myanmar'")
-        country_id=cr.fetchone()[0]
+        country_id = cr.fetchone()[0]
         return country_id   
     
     def update_customer_target(self, cr, uid, ids, context=None):        
@@ -370,11 +381,11 @@ class res_partner(osv.osv):
             customer_target_obj.create_customer_target_data(cr, uid, partner.id, context=context)            
 
     _columns = {  
-                'customer_code':fields.char('Code', required=False,copy=False),
+                'customer_code':fields.char('Code', required=False, copy=False),
                 'outlet_type': fields.many2one('outlettype.outlettype', 'Outlet Type'),
                 'temp_customer':fields.char('Contact Person'),
                 'class_id':fields.many2one('sale.class', 'Class'),
-                'frequency_id':fields.many2one('plan.frequency','Frequency',required=False),
+                'frequency_id':fields.many2one('plan.frequency', 'Frequency', required=False),
                 'chiller':fields.boolean('Chiller'),
 		       	'hamper':fields.boolean('Hamper'),
 
@@ -421,19 +432,19 @@ class res_partner(osv.osv):
                 string='Last Purchase Date'),
                  'last_purchase_amount': fields.function(_get_last_purchase_amount,
                 type='float', readonly=True,
-                string='Last Purchase Amount'),                
+                string='Last Purchase Amount'),
                 'all_invoice_amount': fields.function(_get_all_invoice_amount,
                 type='float', readonly=True,
-                string='All Invoice Amount'),  
+                string='All Invoice Amount'),
                 'month_invoice_amount': fields.function(_get_monthly_invoice_amount,
                 type='float', readonly=True,
-                string='Month Invoice Amount'),  
+                string='Month Invoice Amount'),
                 'last_visit_date':fields.function(_get_last_visit_date,
                 type='datetime', readonly=True,
-                string='Lastest Visit Date'),                        
+                string='Lastest Visit Date'),
         'user_id': fields.many2one('res.users', 'Created By', help='The internal user that is in charge of communicating with this contact if any.'),
         'partner_latitude': fields.float('Geo Latitude', digits=(16, 8)),
-        'partner_longitude': fields.float('Geo Longitude', digits=(16, 8)),  
+        'partner_longitude': fields.float('Geo Longitude', digits=(16, 8)),
         'verify':fields.boolean('Is Verify', default=False),
         'verify_person_id':fields.many2one('res.users', 'Verify Person'),
  } 
@@ -446,8 +457,6 @@ class res_partner(osv.osv):
     _sql_constraints = [        
         ('customer_code_uniq', 'unique (customer_code)', 'Customer code must be unique !'),
     ]
-    
-     
     
     def geo_localize(self, cr, uid, ids, context=None):
         # Don't pass context to browse()! We need country names in english below
@@ -483,11 +492,13 @@ class res_partner(osv.osv):
         datas = cr.fetchall()
         cr.execute
         return datas
+
     def partner_id_from_sale_plan_trip(self, cr, uid, sale_team_id , context=None, **kwargs):
         cr.execute('select RP.id from sale_plan_trip SPT , res_partner_sale_plan_trip_rel RPT , res_partner RP where SPT.id = RPT.sale_plan_trip_id and RPT.res_partner_id = RP.id and SPT.sale_team =  %s ', (sale_team_id,))
         datas = cr.fetchall()
         cr.execute
         return datas
+
     def partner_id_from_section_id(self, cr, uid, section_id , context=None, **kwargs):
         cr.execute('select id from res_partner where section_id = %s ', (section_id,))
         datas = cr.fetchall()
@@ -559,65 +570,85 @@ class res_partner(osv.osv):
                                 code = codeObj.generateCode(cr, uid, codeId, context=context)
                 if code:
                     from datetime import datetime
-                    cr.execute("update res_partner set customer_code=%s ,date_partnership=now()::date ,mobile_customer=False ,write_uid =%s ,write_date =now() where id=%s",(code,uid,ids[0], ))
-                    cr.execute("select a.category_id from res_partner_res_partner_category_rel a , res_partner_category b where a.category_id = b.id and partner_id =%s",(ids[0], ))
-                    category_data=cr.fetchone()
+                    cr.execute("update res_partner set customer_code=%s ,date_partnership=now()::date ,mobile_customer=False ,write_uid =%s ,write_date =now() where id=%s", (code, uid, ids[0],))
+                    cr.execute("select a.category_id from res_partner_res_partner_category_rel a , res_partner_category b where a.category_id = b.id and partner_id =%s", (ids[0],))
+                    category_data = cr.fetchone()
                     if not category_data:
-                        cr.execute("INSERT INTO res_partner_res_partner_category_rel(category_id,partner_id) VALUES(%s,%s)",(2,ids[0],))
+                        cr.execute("INSERT INTO res_partner_res_partner_category_rel(category_id,partner_id) VALUES(%s,%s)", (2, ids[0],))
 
-                    #self.write(cr, uid, ids, {'customer_code':code,'date_partnership':datetime.now().date(),'mobile_customer':False}, context=context)
+                    # self.write(cr, uid, ids, {'customer_code':code,'date_partnership':datetime.now().date(),'mobile_customer':False}, context=context)
             return True
+
+
 res_partner()
+
 
 class res_partner_asset(osv.Model):
 
     _description = 'Partner Tags'
     _name = 'res.partner.asset'
     _columns = {
-                        'partner_id': fields.many2one('res.partner', 'Customer', select=True, ondelete='cascade',required=True),                        
+                        'partner_id': fields.many2one('res.partner', 'Customer', select=True, ondelete='cascade', required=True),
                         'township_id': fields.related(
                                             'partner_id', 'township',
                                             type='many2one',
                                             relation='res.township',
-                                            string="Township",store=True), 
-                        'name':fields.char('Asset No',required=False),
-                        'asset_name_id':fields.many2one('asset.configuration', 'Asset Name',required=False),
-                        'date':fields.date('Date',required=True),
+                                            string="Township", store=True),
+                        'name':fields.char('Asset No', required=False),
+                        'asset_name_id':fields.many2one('asset.configuration', 'Asset Name', required=False),
+                        'date':fields.date('Date', required=True),
                         'type':fields.selection ([('rent', 'Rent'), ('give', 'Giving')],
                                                     'Type', required=True, default='rent'),
-                        'asset_type':fields.many2one('asset.type', 'Asset Type',required=True),
-                       'qty':fields.integer('Qty',required=True),
+                        'asset_type':fields.many2one('asset.type', 'Asset Type', required=True),
+                       'qty':fields.integer('Qty', required=True),
                         'image': fields.binary("Image"),
-                        'active': fields.boolean("Active",default=True),
+                        'active': fields.boolean("Active", default=True),
                         'note':fields.text('Note'),
                         'check_line':fields.one2many('res.partner.asset.check', 'asset_id', 'Customer Assets Check',
                               copy=True),
-                        'sr_no':fields.char('Asset Serial No',required=False,readonly=True),
+                        'sr_no':fields.char('Asset Serial No', required=False, readonly=True),
 
   }
     _defaults = {
         'date': fields.datetime.now,
                     }
+
     def create(self, cursor, user, vals, context=None):
         id_code = self.pool.get('ir.sequence').get(cursor, user,
                                                 'partner.asset.code') or '/'
         vals['sr_no'] = id_code
 
         return super(res_partner_asset, self).create(cursor, user, vals, context=context)
+
     
 class res_partner_asset_check(osv.Model):
 
     _description = 'Partner Asset Check'
     _name = 'res.partner.asset.check'
+    
+    def go_image1(self, cr, uid, ids, context=None):
+        result =  {
+                  'name'     : 'Show Image',
+                  'res_model': 'ir.actions.act_url',
+                  'type'     : 'ir.actions.act_url',
+                  'target'   : 'new',
+               }
+        for record in self.browse(cr,uid,ids,context=context):
+            result['url'] = baseUrlPrefix + record.image_reference + baseUrlPostFix
+            
+        return result
+    
     _columns = {    
-                'partner_id': fields.many2one('res.partner', 'Customer', select=True, ondelete='cascade',required=False),                        
-                'status':fields.selection ([('New', 'New'), ('Good', 'Good'), ('Need Repair', 'Need Repair'),('Missing', 'Missing')],
+                'partner_id': fields.many2one('res.partner', 'Customer', select=True, ondelete='cascade', required=False),
+                'status':fields.selection ([('New', 'New'), ('Good', 'Good'), ('Need Repair', 'Need Repair'), ('Missing', 'Missing')],
                                                     'Type', required=False, default='New'),
-                'date':fields.datetime('Check Date Time',required=False),
-                'check_by':fields.many2one('crm.case.section', 'Check By', select=True, ondelete='cascade',required=False), 
-                'asset_id':fields.many2one('res.partner.asset', 'Parter Asset', select=True, ondelete='cascade',required=False),
-                'asset_name':fields.many2one('asset.configuration', 'Asset Name', select=True, ondelete='cascade',required=False),
+                'date':fields.datetime('Check Date Time', required=False),
+                'check_by':fields.many2one('crm.case.section', 'Check By', select=True, ondelete='cascade', required=False),
+                'asset_id':fields.many2one('res.partner.asset', 'Parter Asset', select=True, ondelete='cascade', required=False),
+                'asset_name':fields.many2one('asset.configuration', 'Asset Name', select=True, ondelete='cascade', required=False),
                 'image': fields.binary("Image"),
+                'image_reference':fields.char('Image Reference'),
+                'is_image':fields.boolean('Is Image', default=False),
         }
 
     
@@ -626,17 +657,18 @@ class asset_type(osv.Model):
     _description = 'Asset Type'
     _name = 'asset.type'
     _columns = {
-                'name':fields.char('Name',required=True),
+                'name':fields.char('Name', required=True),
                 }
+
     
 class asset_configuration(osv.Model):
 
     _description = 'Asset Configuration'
     _name = 'asset.configuration'
     _columns = {
-                'name':fields.char('Name',required=True),
-                'asset_type_id':fields.many2one('asset.type', 'Asset Type',required=True),
+                'name':fields.char('Name', required=True),
+                'asset_type_id':fields.many2one('asset.type', 'Asset Type', required=True),
                 'type':fields.selection ([('rent', 'Rent'), ('give', 'Giving')],
                                                     'Type', required=True, default='rent'),
-                'is_auto_fill':fields.boolean("Qty Auto Fill 1",default=False),
+                'is_auto_fill':fields.boolean("Qty Auto Fill 1", default=False),
                 }

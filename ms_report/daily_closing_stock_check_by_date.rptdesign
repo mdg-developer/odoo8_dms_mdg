@@ -1568,7 +1568,7 @@ where code = ?]]></xml-property>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select id,complete_name		
-from stock_location where usage='internal'
+from stock_location where usage in ('internal' ,'transit')
 --$warehouse$
 order by name]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>

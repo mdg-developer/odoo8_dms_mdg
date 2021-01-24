@@ -710,12 +710,19 @@
 							<field name="status" />
 							<field name="asset_id" />
 							<field name="asset_name" />
+							<field name="image_reference" readonly="1" />
+
+
 
 						</group>
 						<group>
 							<field name="date" />
 							<field name="check_by" />
 							<field name="image" widget='image' class="oe_avatar" />
+							<field name="is_image" invisible="1" />
+							<button name="go_image1" string="Show Image"
+								attrs="{'invisible':[('is_image','!=',True)]}" type="object"
+								icon="terp-gtk-jump-to-ltr" />
 
 						</group>
 					</group>

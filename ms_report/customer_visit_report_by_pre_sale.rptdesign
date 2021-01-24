@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.6.0.v201606072122</property>
     <list-property name="propertyBindings">
         <structure>
             <property name="name">queryText</property>
@@ -119,77 +119,66 @@ teamList = params["sale_team_id"].value.join(",");]]></method>
                     <property name="columnName">date</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">date</text-property>
-                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">date</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">time</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">time</text-property>
-                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">time</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">tablet_id</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">tablet_id</text-property>
-                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">tablet_id</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">name</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">name</text-property>
-                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">name</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">sale_team</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">sale_team</text-property>
-                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">sale_team</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">sale_plan_day</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">sale_plan_day</text-property>
-                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">sale_plan_day</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">reason</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">reason</text-property>
-                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">reason</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">township</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">township</text-property>
-                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">township</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">image</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">image</text-property>
-                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">image</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">difference</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">difference</text-property>
-                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">difference</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">remark</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">remark</text-property>
-                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">remark</text-property>
                 </structure>
             </list-property>
@@ -201,7 +190,6 @@ teamList = params["sale_team_id"].value.join(",");]]></method>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">1</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -212,7 +200,6 @@ teamList = params["sale_team_id"].value.join(",");]]></method>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">2</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -374,10 +361,10 @@ else
 cast (cv.date::timestamp
    at time zone 'UTC' at time zone 'asia/rangoon' as time) as time,ti.mac_address tablet_id,
 res.name,ccs.name sale_team,spd.name sale_plan_day,cv.visit_reason reason,rt.name township,
-case when cv.image is null then 'No'
-	 when cv.image is not null  then 'Yes'
+case when is_image1 = 'False' then 'No'
+	 when is_image1 = 'True'  then 'Yes'
 end as image,cv.date -LAG(cv.date)OVER (ORDER BY cv.date ) as difference,
-cv.other_reason remark,res.code,res.street
+cv.other_reason remark
 from customer_visit cv
 left join res_partner res on res.id = cv.customer_id 
 left join crm_case_section ccs on  ccs.id = cv.sale_team_id
@@ -392,44 +379,6 @@ order by cv.date]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
-  <DataSetParameters>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>1</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-        <design:inputAttributes>
-          <design:elementAttributes/>
-        </design:inputAttributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>2</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-        <design:inputAttributes>
-          <design:elementAttributes/>
-        </design:inputAttributes>
-      </design:ParameterDefinition>
-    </parameter>
-  </DataSetParameters>
   <design:ResultSets derivedMetaData="true">
     <design:resultSetDefinitions>
       <design:resultSetColumns>
