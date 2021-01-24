@@ -188,7 +188,7 @@ class mobile_sale_order(osv.osv):
                      A.zip,A.state_name,A.partner_latitude,A.partner_longitude,null,A.image_medium,A.credit_limit,
                      A.credit_allow,A.sales_channel,A.branch_id,A.pricelist_id,A.payment_term_id,A.outlet_type ,
                      A.city_id,A.township_id,A.country_id,A.state_id,A.unit,A.class_id,A.chiller,A.frequency_id,A.temp_customer,
-                     A.is_consignment,A.hamper,A.is_bank,A.is_cheque,A.old_code
+                     A.is_consignment,A.hamper,A.is_bank,A.is_cheque,A.old_code,A.verify
                      
                      from (
                      select RP.id,RP.name,'' as image,RP.is_company,null,
@@ -198,7 +198,7 @@ class mobile_sale_order(osv.osv):
                      substring(replace(cast(RP.image_medium as text),'/',''),1,5) as image_medium,RP.credit_limit,RP.credit_allow,
                      RP.sales_channel,RP.branch_id,RP.pricelist_id,RP.payment_term_id,RP.outlet_type,RP.city as city_id,RP.township as township_id,
                      RP.country_id,RP.state_id,RP.unit,RP.class_id,RP.chiller,RP.frequency_id,RP.temp_customer,RP.is_consignment,RP.hamper,
-                     RP.is_bank,RP.is_cheque,RP.old_code
+                     RP.is_bank,RP.is_cheque,RP.old_code,RP.verify
                      from outlettype_outlettype OT,
                                              res_partner RP ,res_country_state RS, res_city RC,res_township RT
                                             where RS.id = RP.state_id
@@ -250,7 +250,7 @@ class mobile_sale_order(osv.osv):
                      A.zip,A.state_name,A.partner_latitude,A.partner_longitude,A.sale_plan_day_id,A.image_medium,A.credit_limit,
                      A.credit_allow,A.sales_channel,A.branch_id,A.pricelist_id,A.payment_term_id,A.outlet_type ,
                      A.city_id,A.township_id,A.country_id,A.state_id,A.unit,A.class_id,A.chiller,A.frequency_id,A.temp_customer,
-                     A.is_consignment,A.hamper,A.is_bank,A.is_cheque,A.old_code
+                     A.is_consignment,A.hamper,A.is_bank,A.is_cheque,A.old_code,A.verify
                      from (
                      select RP.id,RP.name,'' as image,RP.is_company,RPS.line_id as sale_plan_day_id,
                      '' as image_small,RP.street,RP.street2,RC.name as city,RP.website,
@@ -259,7 +259,7 @@ class mobile_sale_order(osv.osv):
                      substring(replace(cast(RP.image_medium as text),'/',''),1,5) as image_medium,RP.credit_limit,RP.credit_allow,
                      RP.sales_channel,RP.branch_id,RP.pricelist_id,RP.payment_term_id,RP.outlet_type,RP.city as city_id,RP.township as township_id,
                      RP.country_id,RP.state_id,RP.unit,RP.class_id,RP.chiller,RP.frequency_id,RP.temp_customer,RP.is_consignment,RP.hamper,
-                     RP.is_bank,RP.is_cheque,RP.old_code
+                     RP.is_bank,RP.is_cheque,RP.old_code,RP.verify
                      from sale_plan_day SPD ,outlettype_outlettype OT,
                                             sale_plan_day_line RPS , res_partner RP ,res_country_state RS, res_city RC,res_township RT
                                             where SPD.id = RPS.line_id 
@@ -285,7 +285,7 @@ class mobile_sale_order(osv.osv):
             status = 'approve'
             cr.execute('''select id,sequence as seq,from_date ,to_date,active,name as p_name,
                         logic ,expected_logic_result ,special, special1, special2, special3 ,description,
-                        pr.promotion_count, pr.monthly_promotion ,code as p_code,manual,main_group
+                        pr.promotion_count, pr.monthly_promotion ,code as p_code,manual,main_group,pr.ecommerce
                         from promos_rules pr ,promos_rules_res_branch_rel pro_br_rel
                         where pr.active = true                     
                         and pr.id = pro_br_rel.promos_rules_id
@@ -304,7 +304,7 @@ class mobile_sale_order(osv.osv):
             status = 'draft'            
             cr.execute('''select id,sequence as seq,from_date ,to_date,active,name as p_name,
                         logic ,expected_logic_result ,special, special1, special2, special3 ,description,
-                        pr.promotion_count, pr.monthly_promotion,code as p_code,manual,main_group
+                        pr.promotion_count, pr.monthly_promotion,code as p_code,manual,main_group,pr.ecommerce
                         from promos_rules pr ,promos_rules_res_branch_rel pro_br_rel
                         where pr.active = true                     
                         and pr.id = pro_br_rel.promos_rules_id
@@ -796,7 +796,128 @@ class mobile_sale_order(osv.osv):
         except Exception, e:
             print 'False'
             return False
-    
+
+
+    def create_field_audit_record(self, cursor, user, vals, context=None):
+        print 'vals', vals
+        try : 
+            product_trans_obj = self.pool.get('field.audit')
+            customer_obj = self.pool.get('res.partner')
+            product_trans_line_obj = self.pool.get('field.audit.line')
+            str = "{" + vals + "}"
+            str = str.replace(":''", ":'")  # change Order_id
+            str = str.replace("'',", "',")  # null
+            str = str.replace(":',", ":'',")  # due to order_id
+            str = str.replace(":'}", ":''}")
+            str = str.replace("}{", "}|{")
+            
+            new_arr = str.split('|')
+            result = []
+            for data in new_arr:
+                x = ast.literal_eval(data)
+                result.append(x)
+            field_trans = []
+            field_trans_line = []
+            for r in result:
+                print "length", len(r)
+                if len(r) <10:
+                    field_trans_line.append(r)                   
+                else:
+                    field_trans.append(r)
+            
+            if field_trans:
+                for pt in field_trans:
+                    customer_id = int(pt['customer_id'])
+                    customer_data=customer_obj.browse(cursor, user, customer_id , context=None)
+                    if customer_data:
+                        outlet_type_id=sales_channel_id=township_id=city_id=frequency_id=class_id=None
+                        outlet_type=customer_data.outlet_type
+                        sales_channel=customer_data.sales_channel
+                        township=customer_data.township
+                        city=customer_data.city
+                        address=customer_data.street
+                        frequency=customer_data.frequency_id
+                        class_id=customer_data.class_id
+                        if outlet_type:
+                            outlet_type_id=outlet_type.id
+                        if sales_channel:
+                            sales_channel_id=sales_channel.id
+                        if township:
+                            township_id=township.id
+                        if city:
+                            city_id=city.id
+                        if frequency:
+                            frequency_id=frequency.id
+                        if class_id:
+                            class_id=class_id.id
+                        
+                    if pt['createdDateTime']:
+                        date_time = pt['createdDateTime']
+                        trans_date = datetime.strptime(date_time, '%Y-%m-%d %I:%M:%S %p') - timedelta(hours=6, minutes=30)
+
+                    if pt['branch']:
+                        branch_name= pt['branch']
+                        cursor.execute("select id from res_branch where name=%s",(branch_name,))
+                        branch_data=cursor.fetchone()
+                        if branch_data:
+                            branch_id =branch_data[0]
+                        else:
+                            branch_id=None
+                            
+                    if pt['auditorName']:
+                        team_name= pt['auditorName']
+                        cursor.execute("select id from crm_case_section where name=%s",(team_name,))
+                        team_data=cursor.fetchone()
+                        if team_data:
+                            auditor_id =team_data[0]
+                        else:
+                            auditor_id=None
+
+                        
+                    mso_result = {
+                                'transaction_id':pt['customer_audit_id'],
+                                'partner_id':pt['customer_id'],
+                                'outlet_type': outlet_type_id,
+                                'township_id':township_id,
+                                'city_id':city_id,
+                                'address':address,
+                                'frequency_id':frequency_id,
+                                'class_id':class_id,
+                                'sales_channel':sales_channel_id,
+                                'customer_code':pt['customer_code'] ,
+                                'sale_team_id':pt['sale_team_id'],
+                                'date':trans_date,
+                                'latitude':pt['latitude'],
+                                'longitude':pt['longitude'],
+                                'branch_id':branch_id,
+                                'total_score':pt['total_score'],
+                                'total_missed':pt ['total_missed'],
+                                'shop_image':pt ['shop_image'],
+                                'auditor_image':pt ['saleman_image'],
+                                'auditor_team_id':auditor_id,
+                                }
+                    s_order_id = product_trans_obj.create(cursor, user, mso_result, context=context)
+                    cursor.execute("select sequence,id from audit_question")
+                    question_data=cursor.fetchall()    
+                    for question_ids in question_data:
+                        question_result = {
+                            'sequence':question_ids[0],
+                            'question_id':question_ids[1],
+                            'audit_id':s_order_id,
+                            }
+                        product_trans_line_obj.create(cursor, user, question_result, context=context)
+                    
+                    for ptl in field_trans_line:
+
+                        if ptl['customer_audit_id'] == pt['customer_audit_id']:
+                            cursor.execute("update field_audit_line set complete=True where audit_id =%s and question_id=%s",(s_order_id,ptl['auditline_id'],))
+            
+            print 'Truwwwwwwwwwwwwwwwwwwwwwe'
+            return True       
+        except Exception, e:
+            print 'False'
+            return False
+            
     def create_mo(self, cursor, user, vals, context=None):
         print 'vals', vals
         try : 
@@ -876,11 +997,47 @@ class mobile_sale_order(osv.osv):
                 customer_visit.append(r)  
             if customer_visit:
                 for vs in customer_visit:
+
                     cursor.execute('select branch_id from crm_case_section where id=%s', (vs['sale_team_id'],))
                     branch_id = cursor.fetchone()[0]
                     cursor.execute('select id from res_partner where customer_code=%s', (vs['customer_code'],))
                     customer_id = cursor.fetchone()  
-                    if customer_id:                                                             
+                    is_image1 =False
+                    is_image2 =False
+                    is_image3 =False
+                    is_image4 =False
+                    is_image5 =False
+                    image1 =False
+                    image2 =False
+                    image3 =False
+                    image4 =False
+                    image5 =False
+                    if customer_id:  
+                        if vs['image1_reference']:
+                                is_image1 =True
+#                                 url =baseUrlPrefix + vs['image1_reference'] + baseUrlPostFix
+#                                 response = requests.get(url).content
+#                                 image1 = base64.b64encode(response)
+                        if vs['image2_reference']:
+                                is_image2=True
+#                                 url =baseUrlPrefix + vs['image2_reference'] + baseUrlPostFix
+#                                 response = requests.get(url).content
+#                                 image2 = base64.b64encode(response)                                                      
+                        if vs['image3_reference']:
+                                is_image3=True
+#                                 url =baseUrlPrefix + vs['image3_reference'] + baseUrlPostFix
+#                                 response = requests.get(url).content
+#                                 image3 = base64.b64encode(response)                                                                
+                        if vs['image4_reference']:
+                                is_image4=True  
+#                                 url =baseUrlPrefix + vs['image4_reference'] + baseUrlPostFix
+#                                 response = requests.get(url).content
+#                                 image4 = base64.b64encode(response)                                                                        
+                        if vs['image5_reference']:
+                                is_image5=True    
+#                                 url =baseUrlPrefix + vs['image5_reference'] + baseUrlPostFix
+#                                 response = requests.get(url).content
+#                                 image5 = base64.b64encode(response)                                                                                               
                         visit_result = {
                             'customer_code':vs['customer_code'],
                             'branch_id':branch_id,
@@ -897,14 +1054,26 @@ class mobile_sale_order(osv.osv):
                             'visit_reason':vs['visit_reason'],
                             'latitude':vs['latitude'],
                             'longitude':vs['longitude'],
-                            'image':vs['image'],
-                            'image1':vs['image1'],
-                            'image2':vs['image2'],
-                            'image3':vs['image3'],
-                            'image4':vs['image4'],
+#                             'image':image1,
+#                             'image1':image2,
+#                             'image2':image3,
+#                             'image3':image4,
+#                             'image4':image5,
+                             'is_image1':is_image1,
+                              'is_image2':is_image2,
+                              'is_image3':is_image3,
+                              'is_image4':is_image4,
+                              'is_image5':is_image5,                                  
+                             'image1_reference':vs['image1_reference'],
+                            'image2_reference':vs['image2_reference'],
+                            'image3_reference':vs['image3_reference'],
+                            'image4_reference':vs['image4_reference'],
+                            'image5_reference':vs['image5_reference'],
+
                         }
-                        customer_visit_obj.create(cursor, user, visit_result, context=context)
-            return True
+                        visit_id=customer_visit_obj.create(cursor, user, visit_result, context=context)
+                        #customer_visit_obj.generate_image(cursor, user, [visit_id], context=context)
+                return True
         except Exception, e:
             print e            
             return False
@@ -1012,6 +1181,7 @@ class mobile_sale_order(osv.osv):
                                             'partner_shipping_id':ms_ids.partner_id.id,
                                             # 'shipped':'f',
                                             'tb_ref_no':ms_ids.name,
+                                            'delivery_township_id':ms_ids.partner_id.township.id,
                                             'sale_plan_name':ms_ids.sale_plan_name,
                                             'payment_type':ms_ids.type,
                                             'section_id':sale_team_id,
@@ -1478,6 +1648,19 @@ class mobile_sale_order(osv.osv):
                 return res['res_id']
             except Exception, e:
                 return False
+            
+    def get_field_audit_question(self, cr, uid,context=None, **kwargs):
+        cr.execute('''select id,sequence,name,english_name from audit_question order by sequence asc                     ''')
+        datas = cr.fetchall()
+        return datas 
+    
+    def get_supervisor_sale_team(self, cr, uid,section_id,context=None, **kwargs):
+        cr.execute('''select id,name,branch_id as team_branch_id,(select name from res_branch where id =branch_id) as team_branch_name from crm_case_section 
+        where supervisor_team= %s
+                     ''', (section_id,))
+        datas = cr.fetchall()
+        return datas           
+    
                 
     # kzo Edit
     def get_products_by_sale_team(self, cr, uid, section_id , last_date, context=None, **kwargs):
@@ -1506,7 +1689,8 @@ class mobile_sale_order(osv.osv):
     def get_salePlanDays_by_sale_team(self, cr, uid, section_id , context=None, **kwargs):
         cr.execute('''select id,name,date,sale_team from sale_plan_day where sale_team=%s ''', (section_id,))
         datas = cr.fetchall()
-        cr.execute
+        print 'get_salePlanDays_by_sale_team',datas
+
         return datas
     
     # get promotion datas from database
@@ -1530,7 +1714,7 @@ class mobile_sale_order(osv.osv):
             status = 'approve'
             cr.execute('''select distinct id,sequence as seq,from_date ,to_date,active,name as p_name,
                         logic ,expected_logic_result ,special, special1, special2, special3 ,description,
-                        pr.promotion_count, pr.monthly_promotion ,code as p_code,manual,main_group
+                        pr.promotion_count, pr.monthly_promotion ,code as p_code,manual,main_group,pr.ecommerce
                         from promos_rules pr
                         left join promos_rules_res_branch_rel pro_br_rel on (pr.id = pro_br_rel.promos_rules_id)
                         left join promos_rules_product_rel pro_pp_rel on (pr.id=pro_pp_rel.promos_rules_id)
@@ -1555,7 +1739,7 @@ class mobile_sale_order(osv.osv):
             status = 'draft'            
             cr.execute('''select distinct id,sequence as seq,from_date ,to_date,active,name as p_name,
                         logic ,expected_logic_result ,special, special1, special2, special3 ,description,
-                        pr.promotion_count, pr.monthly_promotion,code as p_code,manual,main_group
+                        pr.promotion_count, pr.monthly_promotion,code as p_code,manual,main_group,pr.ecommerce
                         from promos_rules pr
                         left join promos_rules_res_branch_rel pro_br_rel on (pr.id = pro_br_rel.promos_rules_id)
                         left join promos_rules_product_rel pro_pp_rel on (pr.id=pro_pp_rel.promos_rules_id)
@@ -1677,7 +1861,7 @@ class mobile_sale_order(osv.osv):
         return list    
 
     def get_pricelist_datas(self, cr, uid , section_id, context=None, **kwargs):
-        cr.execute('''select ppl.id,ppl.name,ppl.type, ppl.active , cpr.is_default
+        cr.execute('''select ppl.id,ppl.name,ppl.type, ppl.active , cpr.is_default,consumer
                  from price_list_line cpr , product_pricelist ppl
                  where ppl.id = cpr.property_product_pricelist 
                  and ppl.active = true
@@ -2475,14 +2659,7 @@ class mobile_sale_order(osv.osv):
         is_supervisor=sale_team_data.is_supervisor    
         if is_supervisor==True:
             cr.execute('''            
-                    select tl.id ,target.partner_id,tl.product_id,1 as product_uom,tl.ach_qty,tl.target_qty,gap_qty as gap,month1,month2,month3,target.ams_total,target.ams_buget_total,target.month_out_todate,target.ams_balance
-                    from customer_target target ,customer_target_line tl,product_sale_group_rel rel,crm_case_section ccs
-                    where target.id= tl.line_id
-                    and rel.product_id=tl.product_id
-                    and rel.sale_group_id=ccs.sale_group_id
-                    and ccs.id =%s
-                    and tl.target_qty > 0
-                    and target.partner_id in (
+                    select ARRAY_AGG(partner_id) as  partner_id from (
                    select partner_id from (
                     (select distinct b.partner_id from res_partner_res_partner_category_rel a,
                  sale_plan_day_line b
@@ -2499,21 +2676,18 @@ class mobile_sale_order(osv.osv):
                 and p.sale_team in (select id from crm_case_section where supervisor_team= %s)
                 )
                 )a group by partner_id
-                )
-             ''', (sale_team_id,sale_team_id,sale_team_id))  
+                )b
+             ''', (sale_team_id,sale_team_id))
+            partner_data=cr.fetchone()
+            if partner_data:
+                partner_ids =partner_data[0]
+                cr.execute('''select * from get_customer_target_multi_customer(%s)''', (partner_ids,))
+                datas = cr.fetchall()
             
         else:
             cr.execute('''            
-                  
-                select tl.id ,target.partner_id,tl.product_id,1 as product_uom,tl.ach_qty,tl.target_qty,gap_qty as gap,month1,month2,month3,target.ams_total,target.ams_buget_total,target.month_out_todate,target.ams_balance
-                    from customer_target target ,customer_target_line tl,product_sale_group_rel rel,crm_case_section ccs
-                    where target.id= tl.line_id
-                    and rel.product_id=tl.product_id
-                    and rel.sale_group_id=ccs.sale_group_id
-                    and ccs.id =%s
-                    and tl.target_qty > 0
-                    and target.partner_id in (
-                    select partner_id from (
+                   select ARRAY_AGG(partner_id) as  partner_id from (
+                   select partner_id from (
                     (select distinct b.partner_id from res_partner_res_partner_category_rel a,
                      sale_plan_day_line b
                      , sale_plan_day p
@@ -2528,12 +2702,87 @@ class mobile_sale_order(osv.osv):
                     and p.sale_team = %s
                     )
                     )a group by partner_id
-                    )
-             ''', (sale_team_id,sale_team_id,sale_team_id))                
-            datas = cr.fetchall()
-            print 'target_dataaaaa',datas
+                    )b
+             ''', (sale_team_id,sale_team_id))                
+            partner_data=cr.fetchone()
+            if partner_data:
+                partner_ids =partner_data[0]
+                cr.execute('''select * from get_customer_target_multi_customer(%s)''', (partner_ids,))
+                datas = cr.fetchall()
         return datas    
     
+    def insert_target_setting(self, cr, uid, sale_team_id ,customer_id, context=None, **kwargs):
+        cr.execute("select * from insert_daily_customer_target_customer(%s)",(customer_id,))
+        return True
+    
+    def get_target_setting_with_customer(self, cr, uid, sale_team_id ,customer_id, context=None, **kwargs):
+        #cr.execute("select * from insert_daily_customer_target_customer(%s)",(customer_id,))
+#         sale_team_data = section.browse(cr, uid, sale_team_id, context=context)
+#         is_supervisor=sale_team_data.is_supervisor    
+#         if is_supervisor==True:
+#             cr.execute('''            
+#                     select tl.id ,target.partner_id,tl.product_id,1 as product_uom,tl.ach_qty,tl.target_qty,gap_qty as gap,month1,month2,month3,COALESCE(target.ams_total,0) as ams_total,COALESCE(target.ams_buget_total,0) as ams_buget_total,target.month_out_todate,COALESCE(target.ams_balance,0) as ams_balance
+#                     from customer_target target ,customer_target_line tl,product_sale_group_rel rel,crm_case_section ccs
+#                     where target.id= tl.line_id
+#                     and rel.product_id=tl.product_id
+#                     and rel.sale_group_id=ccs.sale_group_id
+#                     and ccs.id =%s
+#                     and target.partner_id =%s
+#                     and tl.target_qty > 0
+#                     and target.partner_id in (
+#                    select partner_id from (
+#                     (select distinct b.partner_id from res_partner_res_partner_category_rel a,
+#                  sale_plan_day_line b
+#                  , sale_plan_day p
+#                 where a.partner_id = b.partner_id
+#                 and b.line_id = p.id
+#                 and p.sale_team in (select id from crm_case_section where supervisor_team= %s)
+#                 )
+#                 UNION ALL
+#                 (select distinct b.partner_id from res_partner_res_partner_category_rel a,sale_plan_trip p,
+#                  res_partner_sale_plan_trip_rel b
+#                 where a.partner_id = b.partner_id
+#                 and b.sale_plan_trip_id = p.id
+#                 and p.sale_team in (select id from crm_case_section where supervisor_team= %s)
+#                 )
+#                 )a group by partner_id
+#                 )
+#              ''', (sale_team_id,customer_id,sale_team_id,sale_team_id))  
+#             
+#         else:
+#             cr.execute('''            
+#                   
+#                 select tl.id ,target.partner_id,tl.product_id,1 as product_uom,tl.ach_qty,tl.target_qty,gap_qty as gap,month1,month2,month3,COALESCE(target.ams_total,0) as ams_total,COALESCE(target.ams_buget_total,0) as ams_buget_total,target.month_out_todate,COALESCE(target.ams_balance,0) as ams_balance
+#                     from customer_target target ,customer_target_line tl,product_sale_group_rel rel,crm_case_section ccs
+#                     where target.id= tl.line_id
+#                     and rel.product_id=tl.product_id
+#                     and rel.sale_group_id=ccs.sale_group_id
+#                     and ccs.id =%s
+#                     and tl.target_qty > 0
+#                     and target.partner_id =%s
+#                     and target.partner_id in (
+#                     select partner_id from (
+#                     (select distinct b.partner_id from res_partner_res_partner_category_rel a,
+#                      sale_plan_day_line b
+#                      , sale_plan_day p
+#                     where a.partner_id = b.partner_id
+#                     and b.line_id = p.id
+#                     and p.sale_team = %s)
+#                     UNION ALL
+#                     (select distinct b.partner_id from res_partner_res_partner_category_rel a,sale_plan_trip p,
+#                      res_partner_sale_plan_trip_rel b
+#                     where a.partner_id = b.partner_id
+#                     and b.sale_plan_trip_id = p.id
+#                     and p.sale_team = %s
+#                     )
+#                     )a group by partner_id
+#                     )
+#              ''', (sale_team_id,customer_id,sale_team_id,sale_team_id))                
+#             datas = cr.fetchall()
+        cr.execute('''select * from get_customer_target(%s)''', (customer_id,))
+        datas = cr.fetchall()
+        return datas    
+        
     def get_stockcheck(self, cr, uid, sale_team_id , context=None, **kwargs):
         cr.execute('''            
                   select scl.id ,sc.outlet_type,scl.product_id,scl.product_uom_qty as quantity,scl.available,scl.facing, scl.chiller from stock_check_setting sc ,stock_check_setting_line scl where sc.id=scl.stock_setting_ids
@@ -2658,7 +2907,7 @@ class mobile_sale_order(osv.osv):
 #         datas = cr.fetchall()
 #         return datas
     def get_sale_team_channel(self, cr, uid, sale_team_id , context=None, **kwargs):
-        cr.execute("""select sale_team_id,sale_channel_id from sale_team_channel_rel rel,sale_channel c where rel.sale_team_id =%s  and c.id =rel.sale_channel_id order by c.name asc """, (sale_team_id,))
+        cr.execute("""select sale_team_id,sale_channel_id from sale_team_channel_rel rel,sale_channel c where rel.sale_team_id =%s  and c.id =rel.sale_channel_id order by c.create_date,c.name desc """, (sale_team_id,))
         datas = cr.fetchall()
         return datas
     
@@ -2669,16 +2918,74 @@ class mobile_sale_order(osv.osv):
         return datas
     
     def get_asset_type(self, cr, uid, context=None, **kwargs):    
-        cr.execute("""select id,name from asset_type""")
+        cr.execute("""select conf.id,conf.name,type.name as asset_type,is_auto_fill,type from asset_configuration conf ,asset_type type where conf.asset_type_id=type.id""")
         datas = cr.fetchall()        
         return datas
     
     def get_assets(self, cr, uid, context=None, **kwargs):    
-        cr.execute("""select A.id,A.name,A.partner_id,substring(encode(image::bytea, 'hex'),1,5) as image
-                    ,A.qty,A.date,B.name,A.type 
-                    from res_partner_asset A, asset_type B
-                    where A.asset_type = B.id""")
-        datas = cr.fetchall()
+        team_obj = self.pool.get('crm.case.section')
+        cr.execute('''select default_section_id from res_users where id =%s''',(uid,))   
+        sale_team_data=cr.fetchone() 
+        if sale_team_data:
+            sale_team_id =sale_team_data[0]
+        else:
+            sale_team_id=False
+        team_data=team_obj.browse(cr, uid, sale_team_id, context=context)     
+        section_id=  team_data.id                            
+        is_supervisor=team_data.is_supervisor           
+        if is_supervisor==True:
+            cr.execute('''            
+                    select A.name as id ,(select name from asset_configuration where id = A.asset_name_id) as asset_name,A.partner_id,substring(encode(image::bytea, 'hex'),1,5) as image
+                            ,A.qty,A.date,B.name,A.type,A.id as asset_db_id
+                            from res_partner_asset A, asset_type B
+                            where A.asset_type = B.id
+                            and A.active=True
+                    AND A.partner_id IN  (
+                   select partner_id from (
+                    (select distinct b.partner_id from res_partner_res_partner_category_rel a,
+                 sale_plan_day_line b
+                 , sale_plan_day p
+                where a.partner_id = b.partner_id
+                and b.line_id = p.id
+                and p.sale_team in (select id from crm_case_section where supervisor_team= %s)
+                )
+                UNION ALL
+                (select distinct b.partner_id from res_partner_res_partner_category_rel a,sale_plan_trip p,
+                 res_partner_sale_plan_trip_rel b
+                where a.partner_id = b.partner_id
+                and b.sale_plan_trip_id = p.id
+                and p.sale_team in (select id from crm_case_section where supervisor_team= %s)
+                )
+                )a group by partner_id
+                )
+             ''', (section_id,section_id,))
+            datas=cr.fetchall()            
+        else:
+            cr.execute('''            
+                           select A.name as id ,(select name from asset_configuration where id = A.asset_name_id) as asset_name,A.partner_id,substring(encode(image::bytea, 'hex'),1,5) as image
+                            ,A.qty,A.date,B.name,A.type,A.id as asset_db_id
+                            from res_partner_asset A, asset_type B
+                            where A.asset_type = B.id
+                            and A.active=True 
+                            AND A.partner_id IN  (
+                           select partner_id from (
+                            (select distinct b.partner_id from res_partner_res_partner_category_rel a,
+                             sale_plan_day_line b
+                             , sale_plan_day p
+                            where a.partner_id = b.partner_id
+                            and b.line_id = p.id
+                            and p.sale_team = %s)
+                            UNION ALL
+                            (select distinct b.partner_id from res_partner_res_partner_category_rel a,sale_plan_trip p,
+                             res_partner_sale_plan_trip_rel b
+                            where a.partner_id = b.partner_id
+                            and b.sale_plan_trip_id = p.id
+                            and p.sale_team = %s
+                            )
+                            )a group by partner_id
+                            )
+                     ''', (section_id,section_id,))                
+            datas=cr.fetchall()            
         return datas
         
     # Get Pending Delivery
@@ -2686,7 +2993,7 @@ class mobile_sale_order(osv.osv):
         
         sale_order_obj = self.pool.get('sale.order')
         list_val = None
-        list_val = sale_order_obj.search(cr, uid, [('pre_order', '=', True), ('is_generate', '=', True), ('delivery_id', '=', saleTeamId), ('shipped', '=', False), ('invoiced', '=', False) , ('tb_ref_no', 'not in', soList)], context=context)
+        list_val = sale_order_obj.search(cr, uid, [('pre_order', '=', True), ('is_generate', '=', True),('state', '=', 'manual'), ('delivery_id', '=', saleTeamId), ('shipped', '=', False), ('invoiced', '=', False) , ('tb_ref_no', 'not in', soList)], context=context)
         print 'list_val', list_val
         list = []
         try:
@@ -2694,15 +3001,17 @@ class mobile_sale_order(osv.osv):
                 for So_id in list_val:
                     print 'Sale Order Id', So_id
                     cr.execute('''select so.id,so.date_order,so.partner_id,so.amount_tax,so.amount_untaxed,
-                    so.payment_term,so.company_id,so.pricelist_id,so.user_id,so.amount_total,so.name as invoice_no,
+                    so.payment_term,so.company_id,so.pricelist_id,so.user_id,so.amount_total,replace(so.tb_ref_no,'/','') as invoice_no,
                     so.warehouse_id,so.shipped,so.sale_plan_day_id,so.sale_plan_name,so.so_longitude,so.payment_type,
                     so.due_date,so.sale_plan_trip_id,so.so_latitude,so.customer_code,so.name as so_refNo,so.total_dis,so.deduct_amt,so.coupon_code,
                     so.invoiced,so.branch_id,so.delivery_remark ,team.name,so.payment_term,so.due_date,so.rebate_later,
-                    rp.name customer_name,replace(so.note,',',';') as note
-                    from sale_order so, crm_case_section team,res_partner rp                                    
+                    rp.name customer_name,replace(so.note,',',';') as note,so.woo_order_id,so.ecommerce ,so.delivery_township_id ,rt.name as township_name,replace(so.delivery_address,',',';') delivery_address ,replace(so.delivery_contact_no,',',';') delivery_contact_no
+                    from sale_order so, crm_case_section team,res_partner rp,res_township rt                                  
                     where so.id= %s and so.state!= 'cancel'
                     and  team.id = so.section_id
-                    and  so.partner_id = rp.id''', (So_id,))
+                    and  so.partner_id = rp.id
+                    and rt.id =so.delivery_township_id
+                    ''', (So_id,))
                     result = cr.fetchall()
                     print 'Result Sale Order', result
                     list.append(result)
@@ -2773,12 +3082,13 @@ class mobile_sale_order(osv.osv):
                                   'miss':True,
                                   'delivery_date':datetime.now(),
                                   'due_date':deli['due_date'],
-                                  'state':'draft',
+                                  'state':'done',
                                   'delivery_team_id': delivery_team_id ,
                                  'latitude':deli['mosLatitude'],
                                   'longitude':deli['mosLongitude']    
                             }
-                        pending_id = pending_obj.create(cr, uid, delivery, context=context)                                            
+                        pending_obj.create(cr, uid, delivery, context=context)
+                        cr.execute('update sale_order set is_generate = false,is_missed=True, due_date = %s where id=%s', (deli['due_date'],So_id[0],))                                           
                     else:                            
                         So_id = soObj.search(cr, uid, [('pre_order', '=', True), ('shipped', '=', False), ('invoiced', '=', False)
                                                        , ('name', '=', so_ref_no)], context=context)
@@ -2795,7 +3105,7 @@ class mobile_sale_order(osv.osv):
                                   'longitude':deli['mosLongitude']                             
                             }
                         pending_id = pending_obj.create(cr, uid, delivery, context=context)                                                                                                                                 
-                    pending_ids.append(pending_id)
+                        pending_ids.append(pending_id)
             session = ConnectorSession(cr, uid, context)
             # jobid=pending_obj.create_automation_pending_delivery(cr, uid, pending_ids, context=context)       
             jobid = automation_pending_delivery.delay(session, pending_ids, priority=50)
@@ -3464,18 +3774,21 @@ class mobile_sale_order(osv.osv):
                     cursor.execute("select replace(%s, ',', '')::float as amount", (amount,))
                     amount_data = cursor.fetchone()[0]
                     amount = amount_data
-                    rental_result = {                    
-                        'payment_id':so_id,
-                        'journal_id':ar['journal_id'],
-                        'amount':amount,
-                        'date':ar['date'],
-                        'notes':ar['notes'],
-                        'cheque_no':ar['cheque_no'],
-                        'partner_id':parnter_id,
-                        'sale_team_id':ar['sale_team_id'],
-                        'payment_code':ar['payment_code'],
-                    }
-                    rental_obj.create(cursor, user, rental_result, context=context)
+                    cursor.execute('select count(id) from customer_payment where journal_id= %s and payment_code = %s and  notes = %s  and date = %s', (ar['journal_id'],ar['payment_code'],ar['notes'],ar['date'],))
+                    payment_data = cursor.fetchone()[0]
+                    if payment_data==0:                    
+                        rental_result = {                    
+                            'payment_id':so_id,
+                            'journal_id':ar['journal_id'],
+                            'amount':amount,
+                            'date':ar['date'],
+                            'notes':ar['notes'],
+                            'cheque_no':ar['cheque_no'],
+                            'partner_id':parnter_id,
+                            'sale_team_id':ar['sale_team_id'],
+                            'payment_code':ar['payment_code'],
+                        }
+                        rental_obj.create(cursor, user, rental_result, context=context)
             return True
         except Exception, e:
             print 'False'
@@ -3513,19 +3826,21 @@ class mobile_sale_order(osv.osv):
                         so_id = data[0][0]
                     else:
                         so_id = None
-                    
-                    rental_result = {                    
-                        'pre_order_id':so_id,
-                        'journal_id':ar['journal_id'],
-                        'amount':ar['amount'],
-                        'date':ar['date'],
-                        'notes':payment_id,
-                        'cheque_no':ar['cheque_no'],
-                        'partner_id':ar['partner_id'],
-                        'sale_team_id':ar['sale_team_id'],
-                        'payment_code':ar['payment_code'],
-                    }
-                    rental_obj.create(cursor, user, rental_result, context=context)
+                    cursor.execute('select count(id) from customer_payment where journal_id= %s and payment_code = %s and  notes = %s  and date = %s', (ar['journal_id'],ar['payment_code'],payment_id,ar['date'],))
+                    payment_data = cursor.fetchone()[0]
+                    if payment_data==0:                              
+                        rental_result = {                    
+                            'pre_order_id':so_id,
+                            'journal_id':ar['journal_id'],
+                            'amount':ar['amount'],
+                            'date':ar['date'],
+                            'notes':payment_id,
+                            'cheque_no':ar['cheque_no'],
+                            'partner_id':ar['partner_id'],
+                            'sale_team_id':ar['sale_team_id'],
+                            'payment_code':ar['payment_code'],
+                        }
+                        rental_obj.create(cursor, user, rental_result, context=context)
             return True
         except Exception, e:
             print 'False'
@@ -3683,7 +3998,7 @@ class mobile_sale_order(osv.osv):
                      A.zip,A.state_name,A.partner_latitude,A.partner_longitude,null,A.image_medium,A.credit_limit,
                      A.credit_allow,A.sales_channel,A.branch_id,A.pricelist_id,A.payment_term_id,A.outlet_type ,
                      A.city_id,A.township_id,A.country_id,A.state_id,A.unit,A.class_id,A.chiller,A.frequency_id,A.temp_customer,
-                     A.is_consignment,A.hamper,A.is_bank,A.is_cheque
+                     A.is_consignment,A.hamper,A.is_bank,A.is_cheque,A.verify
                      from (
 
                      select RP.id,RP.name,'' as image,RP.is_company,null,
@@ -3693,7 +4008,7 @@ class mobile_sale_order(osv.osv):
                      substring(replace(cast(RP.image_medium as text),'/',''),1,5) as image_medium,RP.credit_limit,RP.credit_allow,
                      RP.sales_channel,RP.branch_id,RP.pricelist_id,RP.payment_term_id,RP.outlet_type,RP.city as city_id,RP.township as township_id,
                      RP.country_id,RP.state_id,RP.unit,RP.class_id,RP.chiller,RP.frequency_id,RP.temp_customer,RP.is_consignment,
-                     RP.hamper,RP.is_bank,RP.is_cheque
+                     RP.hamper,RP.is_bank,RP.is_cheque,RP.verify
 
                      from  res_partner RP ,res_country_state RS, res_city RC,res_township RT,
                              outlettype_outlettype OT
@@ -4088,14 +4403,21 @@ class mobile_sale_order(osv.osv):
                     if data:
                         access_type_id = data[0][0]
                     else:
-                        access_type_id = None                            
+                        access_type_id = None        
+                    cursor.execute('select id from asset_configuration where name = %s ', (ar['name'],))
+                    data = cursor.fetchall()
+                    if data:
+                        asset_name_id = data[0][0]
+                    else:
+                        asset_name_id = None                                                
                         
                     rental_result = {                    
                         'partner_id':ar['partner_id'],
                         'qty':ar['qty'],
                         'image':ar['image'],
                         'date':ar['date'],
-                        'name':ar['name'],
+                        'name':ar['asset_id'],
+                        'asset_name_id':asset_name_id,
                         'asset_type':access_type_id,
                         'type':ar['type'],
                     }
@@ -4104,7 +4426,61 @@ class mobile_sale_order(osv.osv):
         except Exception, e:
             print 'False'
             return False         
+
+
+    def create_customer_asset_check(self, cursor, user, vals, context=None):
+        try:
+            rental_obj = self.pool.get('res.partner.asset.check')
+            str = "{" + vals + "}"
+            str = str.replace("'',", "',")  # null
+            str = str.replace(":',", ":'',")  # due to order_id
+            str = str.replace("}{", "}|{")
+            str = str.replace(":'}{", ":''}")
+            new_arr = str.split('|')
+            result = []
+            for data in new_arr:
+                x = ast.literal_eval(data)
+                result.append(x)
+            if result:
+                for ar in result:         
+                    check_date=None                   
+                    if ar['check_date']:
+                        date_time = ar['check_date']
+                        check_date = datetime.strptime(date_time, '%Y-%m-%d %I:%M:%S %p') - timedelta(hours=6, minutes=30)
+                    if ar['check_by']:
+                        team_name= ar['check_by']
+                        cursor.execute("select id from crm_case_section where name=%s",(team_name,))
+                        team_data=cursor.fetchone()
+                        if team_data:
+                            team_id =team_data[0]
+                        else:
+                            team_id=None
+                    if ar['asset_id']:
+                        cursor.execute("select id,asset_name_id from res_partner_asset where name=%s",(ar['asset_id'],))
+                        asset_data=cursor.fetchone()
+                        if asset_data:
+                            asset_id =asset_data[0]
+                            asset_name_id =asset_data[1]
+                        else:
+                            asset_id=None
+                            asset_name_id=None
+                        
+                    rental_result = {                    
+                        'partner_id':ar['customer_id'],
+                        'status':ar['status'],
+                        'date':check_date,
+                        'check_by':team_id,
+                        'asset_id':asset_id,
+                        'asset_name':asset_name_id,
+                        'image':ar['asset_image'],
+                    }
+                    rental_obj.create(cursor, user, rental_result, context=context)
+            return True
+        except Exception, e:
+            print 'False'
+            return False   
         
+             
     def dayplan_is_update(self, cr, uid, team_id, late_date , context=None, **kwargs):
             
             flag = False
@@ -4177,7 +4553,7 @@ class mobile_sale_order(osv.osv):
     def res_partners_team(self, cr, uid, section_id, late_date, context=None, **kwargs):
         
         lastdate = datetime.strptime(late_date, "%Y-%m-%d")
-        print 'DateTime', lastdate
+        print 'DateTimeTEAN', lastdate
         
         cr.execute('''                                
         select A.id,A.name,A.image,A.is_company, A.image_small,replace(A.street,',',';') street,replace(A.street2,',',';') street2,A.city,A.website,
@@ -4187,7 +4563,7 @@ class mobile_sale_order(osv.osv):
                      A.zip,A.state_name,A.partner_latitude,A.partner_longitude,null,A.image_medium,A.credit_limit,
                      A.credit_allow,A.sales_channel,A.branch_id,A.pricelist_id,A.payment_term_id,A.outlet_type ,
                      A.city_id,A.township_id,A.country_id,A.state_id,A.unit,A.class_id,A.chiller,A.frequency_id,A.temp_customer,
-                     A.is_consignment,A.hamper,A.is_bank,A.is_cheque
+                     A.is_consignment,A.hamper,A.is_bank,A.is_cheque,A.verify
                      
                      from (
                      select RP.id,RP.name,'' as image,RP.is_company,null,
@@ -4197,7 +4573,7 @@ class mobile_sale_order(osv.osv):
                      substring(replace(cast(RP.image_medium as text),'/',''),1,5) as image_medium,RP.credit_limit,RP.credit_allow,
                      RP.sales_channel,RP.branch_id,RP.pricelist_id,RP.payment_term_id,RP.outlet_type,RP.city as city_id,RP.township as township_id,
                      RP.country_id,RP.state_id,RP.unit,RP.class_id,RP.chiller,RP.frequency_id,RP.temp_customer,RP.is_consignment,RP.hamper,
-                     RP.is_bank,RP.is_cheque
+                     RP.is_bank,RP.is_cheque,RP.verify
                      from outlettype_outlettype OT,
                                              res_partner RP ,res_country_state RS, res_city RC,res_township RT
                                             where RS.id = RP.state_id
@@ -4219,7 +4595,7 @@ class mobile_sale_order(osv.osv):
         sale_team_data = section.browse(cr, uid, section_id, context=context)
         is_supervisor=sale_team_data.is_supervisor    
         lastdate = datetime.strptime(pull_date, "%Y-%m-%d")
-        print 'DateTime', lastdate
+        #print 'DateTimePARTNER', lastdate
         if is_supervisor==True:
             where ='and SPD.sale_team in (select id from crm_case_section where supervisor_team= %s)' % (section_id,)
         else:
@@ -4232,7 +4608,7 @@ class mobile_sale_order(osv.osv):
                      A.zip,A.state_name,A.partner_latitude,A.partner_longitude,A.sale_plan_day_id,A.image_medium,A.credit_limit,
                      A.credit_allow,A.sales_channel,A.branch_id,A.pricelist_id,A.payment_term_id,A.outlet_type ,
                      A.city_id,A.township_id,A.country_id,A.state_id,A.unit,A.class_id,A.chiller,A.frequency_id,A.temp_customer,
-                     A.is_consignment,A.hamper,A.is_bank,A.is_cheque
+                     A.is_consignment,A.hamper,A.is_bank,A.is_cheque,A.verify
                      from (
                      select RP.id,RP.name,'' as image,RP.is_company,RPS.line_id as sale_plan_day_id,
                      '' as image_small,RP.street,RP.street2,RC.name as city,RP.website,
@@ -4241,7 +4617,7 @@ class mobile_sale_order(osv.osv):
                      substring(replace(cast(RP.image_medium as text),'/',''),1,5) as image_medium,RP.credit_limit,RP.credit_allow,
                      RP.sales_channel,RP.branch_id,RP.pricelist_id,RP.payment_term_id,RP.outlet_type,RP.city as city_id,RP.township as township_id,
                      RP.country_id,RP.state_id,RP.unit,RP.class_id,RP.chiller,RP.frequency_id,RP.temp_customer,RP.is_consignment,RP.hamper,
-                     RP.is_bank,RP.is_cheque
+                     RP.is_bank,RP.is_cheque,RP.verify
                      from sale_plan_day SPD ,outlettype_outlettype OT,
                                             sale_plan_day_line RPS , res_partner RP ,res_country_state RS, res_city RC,res_township RT
                                             where SPD.id = RPS.line_id 
@@ -4259,6 +4635,7 @@ class mobile_sale_order(osv.osv):
                         where A.customer_code is not null
             '''%(where),(day_id,))
         datas = cr.fetchall()
+        #print 'sale_plan_data',datas
         return datas
     
 # kzo Edit add Sale Plan Trip and Day ID
@@ -4282,7 +4659,7 @@ class mobile_sale_order(osv.osv):
                      A.zip,A.state_name,A.partner_latitude,A.partner_longitude,A.sale_plan_trip_id,A.image_medium,
                      A.credit_limit,A.credit_allow,A.sales_channel,A.branch_id,A.pricelist_id,A.payment_term_id ,A.outlet_type,
                     A.city_id,A.township_id,A.country_id,A.state_id,A.unit,A.class_id,A.chiller,A.frequency_id,A.temp_customer,
-                    A.is_consignment,A.hamper,A.is_bank,A.is_cheque
+                    A.is_consignment,A.hamper,A.is_bank,A.is_cheque,A.verify
                       from (
                      select RP.id,RP.name,'' as image,RP.is_company,
                      '' as image_small,RP.street,RP.street2,RC.name as city,RP.website,
@@ -4292,7 +4669,7 @@ class mobile_sale_order(osv.osv):
                       ,substring(replace(cast(RP.image_medium as text),'/',''),1,5) as image_medium ,RP.credit_limit,RP.credit_allow,
                      RP.sales_channel,RP.branch_id,RP.pricelist_id,RP.payment_term_id,RP.outlet_type,RP.city as city_id,RP.township as township_id,
                      RP.country_id,RP.state_id,RP.unit,RP.class_id,RP.chiller,RP.frequency_id,RP.temp_customer ,RP.is_consignment,RP.hamper,
-                     RP.is_bank,RP.is_cheque
+                     RP.is_bank,RP.is_cheque,RP.verify
                      from sale_plan_trip SPT , res_partner_sale_plan_trip_rel RPT , res_partner RP ,res_country_state RS ,
                      res_city RC, res_township RT,outlettype_outlettype OT 
                      where SPT.id = RPT.sale_plan_trip_id 

@@ -286,6 +286,7 @@ class pre_sale_order(osv.osv):
                                                         'date_order':preObj_ids.date,
 														'due_date':preObj_ids.due_date,
                                                         'tb_ref_no':preObj_ids.name,
+                                                        'delivery_township_id':preObj_ids.partner_id.township.id,
                                                         'warehouse_id':warehouse_id,
                                                         'delivery_remark':preObj_ids.delivery_remark,
                                                         'so_latitude':preObj_ids.mso_latitude,
