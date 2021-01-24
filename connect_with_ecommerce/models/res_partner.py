@@ -233,6 +233,7 @@ class res_partner(osv.osv):
                 result = partner_obj.write(cr, uid,partner_data.id, vals, context=context)                
                 old_vals['parent_id'] = partner_data.id
                 old_vals['customer'] = False
+                old_vals['branch_id'] = partner_data.branch_id.id if partner_data.branch_id else None
                 new_one = new_partner_obj.create(cr, uid, old_vals, context=context)                
                 if result:           
                     one_signal_values = {
@@ -325,6 +326,7 @@ class res_partner(osv.osv):
                                         'township': township_id,
                                         'city': city_id,
                                         'state_id': state_id,
+                                        'branch_id': partner_data.branch_id.id if partner_data.branch_id else None
                                     }     
                     new_partner = partner_obj.create(cr, uid, partner_values, context=context)
                     return new_partner  

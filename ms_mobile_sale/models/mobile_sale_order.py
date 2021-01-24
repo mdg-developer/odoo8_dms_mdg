@@ -3251,7 +3251,50 @@ class mobile_sale_order(osv.osv):
                         cr.execute('''update sale_order set state ='cancel',cancel_user_id=%s where id = %s ''', (uid, So_id[0],))
                         cr.execute('select tb_ref_no from sale_order where id=%s', (So_id[0],))
                         ref_no = cr.fetchone()[0]
-                        cr.execute("update pre_sale_order set void_flag = 'voided' where name=%s", (ref_no,))                                                                                                                                                                                                                            
+                        cr.execute("update pre_sale_order set void_flag = 'voided' where name=%s", (ref_no,))        
+                        woo_instance_obj=self.pool.get('woo.instance.ept')
+                        instance=woo_instance_obj.search(cr, uid, [('state','=','confirmed')], context=context, limit=1)
+                        if instance:                
+                            woo_instance = woo_instance_obj.browse(cr, uid, instance[0], context=context)
+                            wcapi = woo_instance.connect_for_point_in_woo()   
+                        for sale in soObj.browse(cr, uid, So_id[0], context=context):                
+                            if sale.woo_order_number:
+                                update = sale.update_woo_order_status_action('cancelled')
+                                one_signal_values = {
+                                                        'partner_id': sale.partner_id.id,
+                                                        'contents': "Your order " + sale.name + " is cancelled.",
+                                                        'headings': "MDG Retailer"
+                                                    }     
+                                self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)
+                            if sale.getting_point > 0:
+                                getting_point = -sale.getting_point
+                                sale.write({'getting_point':getting_point})
+                                cr.execute("select COALESCE(sum(getting_point),0) from point_history where partner_id=%s", (sale.partner_id.id,))    
+                                point_data = cr.fetchall()
+                                if point_data:
+                                    history_point = point_data[0][0]
+                                vals = { 'partner_id': sale.partner_id.id,
+                                         'date': datetime.today(),
+                                         'order_id': sale.id,
+                                         'membership_id': sale.partner_id.membership_id.id,                                                      
+                                         'balance_point': history_point + sale.getting_point,
+                                         'getting_point': sale.getting_point,
+                                        }
+                                self.pool.get('point.history').create(cr, uid, vals, context=context)
+                                if wcapi:
+                                    order_response = wcapi.get('point')      
+                                    order_response_data = order_response.json()                
+                                    for order in order_response_data:
+                                        woo_order_number = order.get('number',False)     
+                                        if sale.woo_order_number == woo_order_number:
+                                            customer_id = order.get('customer_id',False) 
+                                            break
+                                    data = { 'user_id': customer_id,
+                                             'action': 'order_cancelled',
+                                             'order_id': sale.woo_order_number,
+                                             'amount': sale.getting_point,                                                                 
+                                            }                        
+                                    wcapi.post("point", data)                                                                                                                                                                                                                       
             return True  
                    
     def create_mobile_stock_return(self, cursor, user, vals, context=None):
