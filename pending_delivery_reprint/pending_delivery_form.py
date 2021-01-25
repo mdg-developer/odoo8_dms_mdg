@@ -57,6 +57,7 @@ def automatic_pending_delivery_stock_transfer(session,order_ids,delivery_date):
                             and account_move.ref=%s''', (date, date, date, pick_date.name,))    
     return True
 
+
 class pendingdelivery(osv.osv):
     _name = 'pending.delivery'
     _columns = {
@@ -114,29 +115,6 @@ class pendingdelivery(osv.osv):
                             delivery_remark = data[2]
                             payment_type= data[3]
                             payment_term=data[4]
-#                         cr.execute('select delivery_team_id from crm_case_section where id=%s', (section_id,))
-#                         delivery = cr.fetchone()
-#                         if delivery:
-#                             delivery_team_id = delivery[0]
-#                         else:
-#                             delivery_team_id = None
-                        # For DO
-#                         stockViewResult = soObj.action_view_delivery(cr, uid, So_id, context=context)    
-#                         if stockViewResult:
-#                             # stockViewResult is form result
-#                             # stocking id =>stockViewResult['res_id']
-#                             # click force_assign
-#                             stockPickingObj.force_assign(cr, uid, stockViewResult['res_id'], context=context)
-#                             # transfer
-#                             # call the transfer wizard
-#                             # change list
-#                             pickList = []
-#                             pickList.append(stockViewResult['res_id'])
-#                             wizResult = stockPickingObj.do_enter_transfer_details(cr, uid, pickList, context=context)
-#                             # pop up wizard form => wizResult
-#                             detailObj = stockDetailObj.browse(cr, uid, wizResult['res_id'], context=context)
-#                             if detailObj:
-#                                 detailObj.do_detailed_transfer()    
                         invoice_id = mobile_obj.create_invoices(cr, uid, [solist], context=context)
                         cr.execute('update account_invoice set is_pd_invoice=True,date_invoice = %s, branch_id =%s ,payment_type=%s,delivery_remark =%s ,section_id=%s,user_id=%s, payment_term = %s where id =%s', (delivery_date,branch_id,payment_type, delivery_remark, delivery_team_id, user_id,payment_term, invoice_id,))                                                
                                                      
@@ -149,9 +127,6 @@ class pendingdelivery(osv.osv):
                                 invoiceObj.credit_approve(cr, uid, [invoice_id], context=context)  
                             session = ConnectorSession(cr, uid, context)
                             jobid = automatic_pending_delivery_stock_transfer.delay(session, [solist], delivery_date, priority=20)
-                            if payment_type=='credit':
-                                queue_id=jobObj.search(cr, uid, [('uuid', '=', jobid)], context=context)
-                                jobObj.write(cr, uid, queue_id, {'is_credit_invoice':True}, context)      
                             runner = ConnectorRunner()
                             runner.run_jobs()                                                                 
             self.write(cr, uid, ids[0], {'state':'done'}, context=context)                        
