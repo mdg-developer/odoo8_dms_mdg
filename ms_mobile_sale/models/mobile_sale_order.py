@@ -4,8 +4,87 @@ from datetime import datetime, timedelta
 from openerp.tools.translate import _
 import ast
 import time
+import urllib
 from openerp import netsvc
+import pytz
 DEFAULT_SERVER_DATE_FORMAT = "%Y-%m-%d"
+from openerp.http import request
+from openerp.addons.connector.queue.job import job, related_action
+from openerp.addons.connector.session import ConnectorSession
+from openerp.addons.connector.exception import FailedJobError
+from openerp.addons.connector.jobrunner.runner import ConnectorRunner
+import requests
+import logging
+
+@job(default_channel='root.directpending')
+def automation_pending_delivery(session, delivery_mobile):
+    delivery_obj = session.pool['pending.delivery']    
+    context = session.context.copy()
+    cr = session.cr
+    uid = session.uid
+    for mobile in delivery_mobile: 
+        delivery_obj.action_convert_pending_delivery(cr, uid, [mobile], context=context)         
+    return True    
+    
+@job(default_channel='root.directpending')
+def automation_direct_order(session, list_mobile):
+    mobile_obj = session.pool['mobile.sale.order']
+    context = session.context.copy()
+    cr = session.cr
+    uid = session.uid
+    # list_mobile = mobile_obj.search(cr, uid, [('void_flag', '=', 'none'), ('m_status', '=', 'draft'), ('partner_id', '!=', None)])            
+    for mobile in list_mobile: 
+        mobile_obj.action_convert_so(cr, uid, [mobile], context=context)    
+    return True
+
+@job(default_channel='root.deliverytransfer')
+def automatic_direct_sale_transfer(session,order_ids,de_date):
+    context = session.context.copy()
+    cr = session.cr
+    uid = session.uid
+    context = {'lang': 'en_US', 'params': {'action': 458}, 'tz': 'Asia/Rangoon', 'uid': 1}    
+    soObj = session.pool.get('sale.order')
+    date_change = datetime.strptime(de_date, '%Y-%m-%d %H:%M:%S')
+    date = date_change.date()        
+    for order_data in soObj.browse(cr, uid, order_ids, context=context):
+        So_id = order_data.id
+        shipped=order_data.shipped
+        if shipped!=True:
+            stockPickingObj = session.pool.get('stock.picking')
+            stockDetailObj = session.pool.get('stock.transfer_details')
+            stockViewResult = soObj.action_view_delivery(cr, uid, So_id, context=context)
+            if stockViewResult:
+                # stockViewResult is form result
+                # stocking id =>stockViewResult['res_id']
+                # click force_assign
+                stockPickingObj.force_assign(cr, uid, stockViewResult['res_id'], context=context)
+                # transfer
+                # call the transfer wizard
+                # change list
+                pickList = []
+                pickList.append(stockViewResult['res_id'])
+                wizResult = stockPickingObj.do_enter_transfer_details(cr, uid, pickList, context=context)
+                # pop up wizard form => wizResult
+                detailObj = stockDetailObj.browse(cr, uid, wizResult['res_id'], context=context)
+                if detailObj:
+                    detailObj.do_detailed_transfer()
+                cr.execute('update stock_picking set date_done =%s where origin=%s', (date, order_data.name,))
+                cr.execute('update stock_move set date = %s where origin =%s', (date, order_data.name,))
+                picking_id = stockViewResult['res_id']
+                print 'picking_id', picking_id
+                pick_date = stockPickingObj.browse(cr, uid, picking_id, context=context)
+                cr.execute(
+                    "update account_move_line set date= %s from account_move move where move.id=account_move_line.move_id and move.ref= %s",
+                    (date, pick_date.name,))
+                cr.execute('''update account_move set period_id=p.id,date=%s
+                            from (
+                            select id,date_start,date_stop
+                            from account_period
+                            where date_start != date_stop
+                            ) p
+                            where p.date_start <= %s and  %s <= p.date_stop
+                            and account_move.ref=%s''', (date, date, date, pick_date.name,))    
+    return True
 
 class customer_payment(osv.osv):
     _name = "customer.payment"
@@ -104,6 +183,7 @@ class mobile_sale_order(osv.osv):
             strr = strr.replace("}{", "}|{")
             new_arr = strr.split('|')
             result = []
+            so_ids = []
             for data in new_arr:
                 x = ast.literal_eval(data)
                 result.append(x)
@@ -207,6 +287,8 @@ class mobile_sale_order(osv.osv):
                         'direct_credit':direct_credit
                     }
                     s_order_id = mobile_sale_order_obj.create(cursor, user, mso_result, context=context)
+                    so_ids.append(s_order_id);
+
                     for sol in sale_order_line:
                         if sol['so_name'] == so['name']:
                                 cursor.execute('select id From product_product where id  = %s ', (sol['product_id'],))
@@ -234,6 +316,10 @@ class mobile_sale_order(osv.osv):
                                 }
                                 mobile_sale_order_line_obj.create(cursor, user, mso_line_res, context=context)
                     sale_order_name_list.append(so['name'])
+            session = ConnectorSession(cursor, user, context)
+            jobid = automation_direct_order.delay(session, so_ids, priority=30)
+            runner = ConnectorRunner()
+            runner.run_jobs()                    
             print 'True'
             return True
         except Exception, e:
@@ -849,21 +935,26 @@ class mobile_sale_order(osv.osv):
                             cr.execute('update account_invoice set payment_type=%s ,branch_id =%s,delivery_remark =%s,date_invoice=%s where id =%s', ('cash', ms_ids.branch_id.id, ms_ids.delivery_remark,de_date, invoice_id,))
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                             if invoice_id and ms_ids.paid == True:
-                                invlist = []
-                                invlist.append(invoice_id)
-                                print 'invoice_id', invoice_id
-
-
-                                # call the api function
-                                # invObj contain => account.invoice(1,) like that
-                                invObj = invoiceObj.browse(cr, uid, invoice_id, context=context)
-                                print 'invoice_id', invObj
-                                invObj.action_date_assign()
-                                invObj.action_move_create()
-                                invObj.action_number()
+#                                 invlist = []
+#                                 invlist.append(invoice_id)
+#                                 print 'invoice_id', invoice_id
+# 
+# 
+#                                 # call the api function
+#                                 # invObj contain => account.invoice(1,) like that
+#                                 invObj = invoiceObj.browse(cr, uid, invoice_id, context=context)
+#                                 print 'invoice_id', invObj
+#                                 invObj.action_date_assign()
+#                                 invObj.action_move_create()
+#                                 invObj.action_number()
                                 # validate invoice
-                                invObj.invoice_validate()
-
+#                                 invObj.invoice_validate()
+                                self.pool['account.invoice'].signal_workflow(cr, uid, [invoice_id], 'invoice_open')                                
+                                new_session = ConnectorSession(cr, uid, context)
+                                jobid = automatic_direct_sale_transfer.delay(new_session, solist, ms_ids.date, priority=10)
+                                
+                                runner = ConnectorRunner()
+                                runner.run_jobs()        
                                 # register Payment
                                 # calling the register payment pop-up
 #                                 invoiceObj.invoice_pay_customer(cr, uid, invlist, context=context)
@@ -941,16 +1032,17 @@ class mobile_sale_order(osv.osv):
                             cr.execute('update account_invoice set payment_type=%s ,branch_id =%s,delivery_remark =%s ,date_invoice =%s where id =%s', ('cash', ms_ids.branch_id.id, ms_ids.delivery_remark,de_date, invoice_id,))
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                             if invoice_id and ms_ids.paid == True:
-                                invlist = []
-                                invlist.append(invoice_id)
-                                # call the api function
-                                # invObj contain => account.invoice(1,) like that
-                                invObj = invoiceObj.browse(cr, uid, invlist, context=context)
-                                invObj.action_date_assign()
-                                invObj.action_move_create()
-                                invObj.action_number()
-                                # validate invoice
-                                invObj.invoice_validate()
+#                                 invlist = []
+#                                 invlist.append(invoice_id)
+#                                 # call the api function
+#                                 # invObj contain => account.invoice(1,) like that
+#                                 invObj = invoiceObj.browse(cr, uid, invlist, context=context)
+#                                 invObj.action_date_assign()
+#                                 invObj.action_move_create()
+#                                 invObj.action_number()
+#                                 # validate invoice
+#                                 invObj.invoice_validate()
+                                self.pool['account.invoice'].signal_workflow(cr, uid, [invoice_id], 'invoice_open')
 
                                 # register Payment
                                 # calling the register payment pop-up
@@ -1010,16 +1102,17 @@ class mobile_sale_order(osv.osv):
                             cr.execute('update account_invoice set payment_type=%s ,branch_id =%s,delivery_remark =%s,date_invoice=%s  where id =%s', ('cash', ms_ids.branch_id.id, ms_ids.delivery_remark,de_date, invoice_id,))
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                             if invoice_id and ms_ids.paid == True:
-                                invlist = []
-                                invlist.append(invoice_id)
-                                # call the api function
-                                # invObj contain => account.invoice(1,) like that
-                                invObj = invoiceObj.browse(cr, uid, invoice_id, context=context)
-                                invObj.action_date_assign()
-                                invObj.action_move_create()
-                                invObj.action_number()
-                                # validate invoice
-                                invObj.invoice_validate()
+#                                 invlist = []
+#                                 invlist.append(invoice_id)
+#                                 # call the api function
+#                                 # invObj contain => account.invoice(1,) like that
+#                                 invObj = invoiceObj.browse(cr, uid, invoice_id, context=context)
+#                                 invObj.action_date_assign()
+#                                 invObj.action_move_create()
+#                                 invObj.action_number()
+#                                 # validate invoice
+#                                 invObj.invoice_validate()
+                                self.pool['account.invoice'].signal_workflow(cr, uid, [invoice_id], 'invoice_open')
 
                                 # register Payment
                                 # calling the register payment pop-up
@@ -1079,16 +1172,24 @@ class mobile_sale_order(osv.osv):
 #                             invoiceObj.write(cr,uid,invoice_id,{'account_id':account_id}, context)
                             cr.execute('update account_invoice set payment_type=%s , direct_credit =%s, branch_id =%s,delivery_remark =%s ,date_invoice=%s where id =%s', ('credit', ms_ids.direct_credit, ms_ids.branch_id.id, ms_ids.delivery_remark,de_date, invoice_id,))
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
-                            invlist = []
-                            invlist.append(invoice_id)
-                            # call the api function
-                            # invObj contain => account.invoice(1,) like that
-                            invObj = invoiceObj.browse(cr, uid, invoice_id, context=context)
-                            invObj.action_date_assign()
-                            invObj.action_move_create()
-                            invObj.action_number()
-                            # validate invoice
-                            invObj.invoice_validate()
+#                             invlist = []
+#                             invlist.append(invoice_id)
+#                             # call the api function
+#                             # invObj contain => account.invoice(1,) like that
+#                             invObj = invoiceObj.browse(cr, uid, invoice_id, context=context)
+#                             invObj.action_date_assign()
+#                             invObj.action_move_create()
+#                             invObj.action_number()
+#                             # validate invoice
+#                             invObj.invoice_validate()
+                            self.pool['account.invoice'].signal_workflow(cr, uid, [invoice_id], 'invoice_open')
+                            self.pool['account.invoice'].credit_approve(cr, uid, [invoice_id], context=context)                                 
+                            new_session_name = ConnectorSession(cr, uid, context)
+                            automatic_direct_sale_transfer.delay(new_session_name, solist, ms_ids.date, priority=10)
+#                             queue_id=self.pool['queue.job'].search(cr, uid, [('uuid', '=', jobid)], context=context)
+#                             self.pool['queue.job'].write(cr, uid, queue_id, {'is_credit_invoice':True}, context)   
+                            runner = ConnectorRunner()
+                            runner.run_jobs() 
                             # clicking the delivery order view button
                             stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)
                             if stockViewResult:
@@ -1123,16 +1224,19 @@ class mobile_sale_order(osv.osv):
 #                             invoiceObj.write(cr,uid,invoice_id,{'account_id':account_id}, context)
                             cr.execute('update account_invoice set payment_type=%s ,direct_credit =%s, branch_id =%s,delivery_remark =%s,date_invoice=%s  where id =%s', ('credit', ms_ids.direct_credit, ms_ids.branch_id.id, ms_ids.delivery_remark,de_date, invoice_id,))
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
-                            invlist = []
-                            invlist.append(invoice_id)
-                            # call the api function
-                            # invObj contain => account.invoice(1,) like that
-                            invObj = invoiceObj.browse(cr, uid, invoice_id, context=context)
-                            invObj.action_date_assign()
-                            invObj.action_move_create()
-                            invObj.action_number()
-                            # validate invoice
-                            invObj.invoice_validate()
+#                             invlist = []
+#                             invlist.append(invoice_id)
+#                             # call the api function
+#                             # invObj contain => account.invoice(1,) like that
+#                             invObj = invoiceObj.browse(cr, uid, invoice_id, context=context)
+#                             invObj.action_date_assign()
+#                             invObj.action_move_create()
+#                             invObj.action_number()
+#                             # validate invoice
+#                             invObj.invoice_validate()
+                            self.pool['account.invoice'].signal_workflow(cr, uid, [invoice_id], 'invoice_open')
+                            self.pool['account.invoice'].credit_approve(cr, uid, [invoice_id], context=context)                                 
+
                             # clicking the delivery order view button
                             stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)  # create delivery order with draft state
                             # cr.execute('update stock_move set location_id=%s where picking_id=%s',(ms_ids.location_id.id,stockViewResult['res_id'],))
@@ -1152,16 +1256,18 @@ class mobile_sale_order(osv.osv):
                             cr.execute('update account_invoice set payment_type=%s , direct_credit =%s, branch_id =%s,delivery_remark =%s ,date_invoice=%s where id =%s', ('credit', ms_ids.direct_credit, ms_ids.branch_id.id, ms_ids.delivery_remark,de_date,invoice_id,))
 
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
-                            invlist = []
-                            invlist.append(invoice_id)
-                            # call the api function
-                            # invObj contain => account.invoice(1,) like that
-                            invObj = invoiceObj.browse(cr, uid, invoice_id, context=context)
-                            invObj.action_date_assign()
-                            invObj.action_move_create()
-                            invObj.action_number()
-                            # validate invoice
-                            invObj.invoice_validate()
+#                             invlist = []
+#                             invlist.append(invoice_id)
+#                             # call the api function
+#                             # invObj contain => account.invoice(1,) like that
+#                             invObj = invoiceObj.browse(cr, uid, invoice_id, context=context)
+#                             invObj.action_date_assign()
+#                             invObj.action_move_create()
+#                             invObj.action_number()
+#                             # validate invoice
+#                             invObj.invoice_validate()
+                            self.pool['account.invoice'].signal_workflow(cr, uid, [invoice_id], 'invoice_open')
+                            self.pool['account.invoice'].credit_approve(cr, uid, [invoice_id], context=context)                                 
                             # clicking the delivery order view button
                             stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)
                             # cr.execute('update stock_move set location_id=%s where picking_id=%s',(ms_ids.location_id.id,stockViewResult['res_id'],))
@@ -1533,21 +1639,21 @@ class mobile_sale_order(osv.osv):
                 promo_line.append(r)
             if promo_line:
                 for pro_line in promo_line:
-
-                    cursor.execute('select id From mobile_sale_order where name  = %s ', (pro_line['promo_line_id'],))
-                    data = cursor.fetchall()
-                    if data:
-                        saleOrder_Id = data[0][0]
-                    else:
-                        saleOrder_Id = None
-
-                    promo_line_result = {
-                        'promo_line_id':saleOrder_Id,
-                        'pro_id':pro_line['pro_id'],
-                        'from_date':pro_line['from_date'],
-                        'to_date':pro_line['to_date'] ,
-                        }
-                    mso_promotion_line_obj.create(cursor, user, promo_line_result, context=context)
+                    if pro_line['promo_line_id']:
+                        cursor.execute('select id From mobile_sale_order where name  = %s ', (pro_line['promo_line_id'],))
+                        data = cursor.fetchall()
+                        if data:
+                            saleOrder_Id = data[0][0]
+                        else:
+                            saleOrder_Id = None
+    
+                        promo_line_result = {
+                            'promo_line_id':saleOrder_Id,
+                            'pro_id':pro_line['pro_id'],
+                            'from_date':pro_line['from_date'],
+                            'to_date':pro_line['to_date'] ,
+                            }
+                        mso_promotion_line_obj.create(cursor, user, promo_line_result, context=context)
             return True
         except Exception, e:
             return False
@@ -2161,7 +2267,8 @@ class mobile_sale_order(osv.osv):
             stockPickingObj = self.pool.get('stock.picking')
             stockDetailObj = self.pool.get('stock.transfer_details')
             partner_obj = self.pool.get('res.partner')
-
+            pending_obj = self.pool.get('pending.delivery')
+            pending_ids = []            
             str = "{" + saleorderList + "}"
             str = str.replace("'',", "',")  # null
             str = str.replace(":',", ":'',")  # due to order_id
@@ -2182,80 +2289,48 @@ class mobile_sale_order(osv.osv):
                     so_ref_no = deli['so_refNo'].replace('\\','').replace('\\','')
                     print       'so_ref_noso_ref_no',so_ref_no
                     if deli['miss'] == 't':
+                        So_id = soObj.search(cr, uid, [('pre_order', '=', True), ('shipped', '=', False), ('invoiced', '=', False)
+                                                       , ('name', '=', so_ref_no)], context=context)                           
+                        so_data = soObj.browse(cr, uid, So_id, context=context)
+                        delivery_team_id = so_data.delivery_id.id                        
+                        delivery = {                                                            
+                                  'order_id':So_id[0],
+                                  'miss':True,
+                                  'delivery_date':datetime.now(),
+                                  'due_date':deli['due_date'],
+                                  'state':'done',
+                                  'delivery_team_id': delivery_team_id ,
+                                 'latitude':deli['mosLatitude'],
+                                  'longitude':deli['mosLongitude']    
+                            }
+                        pending_obj.create(cr, uid, delivery, context=context)  
                         cr.execute('update sale_order set is_generate = false, due_date = %s where name=%s', (deli['due_date'], so_ref_no,))
                         cr.execute('select tb_ref_no from sale_order where name=%s',( so_ref_no,))
                         ref_no=cr.fetchone()[0]
-                        cr.execute("update pre_sale_order set void_flag = 'voided' where name=%s", ( ref_no,))
+                        cr.execute("update pre_sale_order set void_flag = 'voided' where name=%s", ( ref_no,))                                              
                     else:
                         So_id = soObj.search(cr, uid, [('pre_order', '=', True), ('shipped', '=', False), ('invoiced', '=', False)
                                                        , ('name', '=', so_ref_no)], context=context)
-                        if So_id:
-                            solist = So_id
-                            cr.execute('select branch_id,section_id,delivery_remark from sale_order where name=%s', (so_ref_no,))
-                            data = cr.fetchone()
-                            if data:
-                                branch_id = data[0]
-                                section_id = data[1]
-                                delivery_remark = data[2]
-
-                            cr.execute('select delivery_team_id from crm_case_section where id=%s', (section_id,))
-                            delivery = cr.fetchone()
-                            if delivery:
-                                delivery_team_id = delivery[0]
-                            else:
-                                delivery_team_id = None
-
-                            # For DO
-                            stockViewResult = soObj.action_view_delivery(cr, uid, So_id, context=context)
-                            if stockViewResult:
-                                # stockViewResult is form result
-                                # stocking id =>stockViewResult['res_id']
-                                # click force_assign
-                                stockPickingObj.force_assign(cr, uid, stockViewResult['res_id'], context=context)
-                                # transfer
-                                # call the transfer wizard
-                                # change list
-                                pickList = []
-                                pickList.append(stockViewResult['res_id'])
-                                wizResult = stockPickingObj.do_enter_transfer_details(cr, uid, pickList, context=context)
-                                # pop up wizard form => wizResult
-                                detailObj = stockDetailObj.browse(cr, uid, wizResult['res_id'], context=context)
-                                if detailObj:
-                                    detailObj.do_detailed_transfer()
-                                print 'testing---------------',
-                            # Create Invoice
-                            print 'Context', context
-                            invoice_id = self.create_invoices(cr, uid, solist, context=context)
-                            print ' invoice_id', invoice_id
-                            # id update partner form (temporay)
-#                             partner_data = invoiceObj.browse(cr, uid, invoice_id, context=context)
-#                             partner_id=partner_data.partner_id.id
-#                             partner_obj.write(cr,uid,partner_id,{'property_account_receivable':629}, context)
-#                             partner = partner_obj.browse(cr, uid, partner_id, context=context)
-#                             account_id=partner.property_account_receivable.id
-#                             invoiceObj.write(cr,uid,invoice_id,{'account_id':account_id}, context)
-                            cr.execute('update account_invoice set date_invoice = now()::date , branch_id =%s ,payment_type=%s,delivery_remark =%s ,section_id=%s,user_id=%s, payment_term = %s where id =%s',(branch_id, deli['payment_type'], delivery_remark, delivery_team_id, uid,deli['payment_term'],invoice_id))
-
-                            invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
-                            if invoice_id:
-                                invlist = []
-                                invlist.append(invoice_id)
-                                # call the api function
-                                # invObj contain => account.invoice(1,) like that
-                                print 'invoice_id', invoice_id
-
-                                invObj = invoiceObj.browse(cr, uid, invlist, context=context)
-
-                                #
-                                invObj.action_date_assign()
-                                invObj.action_move_create()
-                                invObj.action_number()
-                                # validate invoice
-                                invObj.invoice_validate()
-                                # pre_order =True
-                                invoiceObj.write(cr, uid, invoice_id, {'pre_order':True}, context)
-
-            return True
+                        so_data = soObj.browse(cr, uid, So_id, context=context)
+                        delivery_team_id = so_data.delivery_id.id                        
+                        delivery = {                                                            
+                                  'order_id':So_id[0],
+                                  'miss':False,
+                                  'due_date':deli['due_date'],
+                                  'delivery_date':datetime.now(),
+                                  'state':'draft',
+                                  'delivery_team_id': delivery_team_id ,
+                                  'latitude':deli['mosLatitude'],
+                                  'longitude':deli['mosLongitude']                             
+                            }
+                        pending_id = pending_obj.create(cr, uid, delivery, context=context)                                                                                                                                 
+                        pending_ids.append(pending_id)
+            session = ConnectorSession(cr, uid, context)
+            # jobid=pending_obj.create_automation_pending_delivery(cr, uid, pending_ids, context=context)       
+            jobid = automation_pending_delivery.delay(session, pending_ids, priority=50)
+            runner = ConnectorRunner()
+            runner.run_jobs()
+            return True      
 
     def cancel_deliver_order(self, cr, uid, saleorderList, context=None):
 
@@ -2403,7 +2478,7 @@ class mobile_sale_order(osv.osv):
                         receiver=None
 
                     mso_result = {
-#                         'ref_no':,
+                         'ref_no':sr['rfi_no'],
                         'request_date':sr['request_date'],
                         'request_by':sr['request_by'],
                         'issue_date':sr['issue_date'] ,
@@ -3195,7 +3270,7 @@ class mobile_sale_order(osv.osv):
     def product_qty_in_stock(self, cr, uid, warehouse_id , context=None, **kwargs):
             cr.execute("""
             select product_id,qty_on_hand,main_group,name_template,price,sequence from
-              (
+              (    
                 select product.id as product_id,sum(qty) as qty_on_hand,product_temp.main_group as main_group,
                          product.name_template as name_template,product_temp.list_price as price,product.sequence
                          from  stock_quant quant, product_product product, product_template product_temp
@@ -3203,9 +3278,12 @@ class mobile_sale_order(osv.osv):
                          and quant.product_id = product.id
                          and product.product_tmpl_id = product_temp.id
                          and product.active = true
+                       and main_group in (select principle_id from product_sale_group_principle_rel 
+                        where sale_group_id in (select sale_group_id from crm_case_section where id 
+                        in (select default_section_id from res_users where id =%s)))  
                          group by quant.product_id, main_group,name_template,product.id,price,product.sequence
             )A where qty_on_hand > 0  order by name_template
-            """, (warehouse_id,))
+            """, (warehouse_id,uid,))   
             datas = cr.fetchall()
             return datas
 
