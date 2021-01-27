@@ -1,2 +1,0 @@
-import landed_cost_template
-import stock_landed_cost

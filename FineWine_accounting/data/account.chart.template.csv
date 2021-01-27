@@ -1,2 +1,0 @@
-id,name,account_root_id:id,bank_account_view_id:id,property_account_receivable:id,property_account_payable:id,property_account_expense_categ:id,property_account_income_categ:id,currency_id:id
-l10n_mm,Fine Wine,0,111101,113100,212114,411100,311100,base.MMK
