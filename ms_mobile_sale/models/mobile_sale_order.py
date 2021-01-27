@@ -4365,10 +4365,10 @@ class mobile_sale_order(osv.osv):
 
     def product_qty_in_stock(self, cr, uid, warehouse_id , context=None, **kwargs):
             cr.execute("""
-            select product_id,qty_on_hand,main_group,name_template,price,sequence from
+            select product_id,qty_on_hand,main_group,name_template,price,sequence,uom_id,report_uom_id from
               (    
                 select product.id as product_id,sum(qty) as qty_on_hand,product_temp.main_group as main_group,
-                         product.name_template as name_template,product_temp.list_price as price,product.sequence
+                         product.name_template as name_template,product_temp.list_price as price,product.sequence,product_temp.uom_id,product_temp.report_uom_id
                          from  stock_quant quant, product_product product, product_template product_temp
                          where quant.location_id = %s
                          and quant.product_id = product.id
@@ -4377,7 +4377,7 @@ class mobile_sale_order(osv.osv):
                        and main_group in (select principle_id from product_sale_group_principle_rel 
                         where sale_group_id in (select sale_group_id from crm_case_section where id 
                         in (select default_section_id from res_users where id =%s)))  
-                         group by quant.product_id, main_group,name_template,product.id,price,product.sequence
+                         group by quant.product_id, main_group,name_template,product.id,price,product.sequence,product_temp.uom_id,product_temp.report_uom_id
             )A where qty_on_hand > 0  order by name_template
             """, (warehouse_id,uid,))   
             datas = cr.fetchall()        
