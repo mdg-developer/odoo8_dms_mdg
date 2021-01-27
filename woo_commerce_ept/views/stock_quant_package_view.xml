@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record model="ir.ui.view" id="view_quant_package_inherit_ept_form">
+            <field name="name">stock.quant.package.inherit.ept.form</field>
+            <field name="model">stock.quant.package</field>
+			<field name="inherit_id" ref="stock.view_quant_package_form"/>
+            <field name="arch" type="xml">
+				<field name="packaging_id" position="after">
+					<field name="tracking_no"/>
+					<field name="tracking_url"/>
+				</field>
+			</field>
+		</record>
+        <record id="quant_package_search_view" model="ir.ui.view">
+            <field name="name">stock.quant.package.search</field>
+            <field name="model">stock.quant.package</field>
+            <field eval="10" name="priority"/>
+            <field name="inherit_id" ref="stock.quant_package_search_view"/>
+            <field name="arch" type="xml">
+                <field name="name" string="Package Name" position="after">
+					<field name="tracking_no"/>
+                </field>
+			</field>
+		</record>
+        <record model="ir.ui.view" id="view_quant_package_tree_ept">
+            <field name="name">stock.quant.package.tree</field>
+            <field name="model">stock.quant.package</field>
+            <field eval="100" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Package" create="false">
+                    <field name="complete_name"/>
+                    <field name="ul_id"/>
+                    <field name="packaging_id"/>
+                    <field name="location_id"/>
+                    <field name="company_id"/>
+                    <field name="tracking_no"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_package_view_ept">
+            <field name="context">{}</field>
+            <field name="name">Packages</field>
+            <field name="res_model">stock.quant.package</field>
+            <field name="view_id" ref="view_quant_package_tree_ept"/>
+            <field name="domain">[('tracking_no','!=',False)]</field>
+            <field name="help" type="html">
+                <p>Packages are usually created by pack operations made on transfers and can contains several different products. You can then reuse a package to move its whole content somewhere else, or to pack it into another bigger package. A package can also be unpacked, allowing the disposal of its former content as single units again.
+                </p>
+            </field>
+        </record>
+
+	</data>
+</openerp>
+			

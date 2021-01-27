@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<record id="view_picking_form_purchase_order_inherit" model="ir.ui.view">
+			<field name="name">stock.pricking.form</field>
+			<field name="model">stock.picking</field>
+			<field name="inherit_id" ref="stock.view_picking_form" />
+			<field name="arch" type="xml">
+				<field name="picking_type_id" position="after">
+					<button name="change_location" width="50px"
+						string="⇒ Change Receipt Location" type="object"
+						attrs="{'invisible':[('state','in',('cancel','done'))]}" />
+					<!-- <field name="picking_type_id" on_change="onchange_picking_type_id(picking_type_id)"/> -->
+				</field>
+				<field name="date_done" position="after">
+					<field name="customer" invisible="1" />
+					<field name="supplier" invisible="1" />
+					<field name="partner_ref" attrs="{'invisible':[('customer','=',True)]}" />
+					<field name="bl_date" attrs="{'invisible':[('customer','=',True)]}" />
+					<field name="staffing_date" attrs="{'invisible':[('customer','=',True)]}" />
+					<field name="etd_date" attrs="{'invisible':[('customer','=',True)]}" />
+					<field name="eta_date" attrs="{'invisible':[('customer','=',True)]}" />
+					<field name="order_date" attrs="{'invisible':[('customer','=',True)]}" />
+					<field name="invoice_date" attrs="{'invisible':[('customer','=',True)]}" />
+				</field>
+			</field>
+		</record>
+
+		<record id="view_move_picking_tree_po" model="ir.ui.view">
+			<field name="name">stock.move.tree.inherit</field>
+			<field name="model">stock.move</field>
+			<field name="inherit_id" ref="stock.view_move_picking_tree" />
+			<field name="arch" type="xml">
+				<field name="product_uom_qty" position="after">
+
+					<field name="date_expected" />
+
+				</field>
+			</field>
+		</record>
+
+	</data>
+</openerp>	

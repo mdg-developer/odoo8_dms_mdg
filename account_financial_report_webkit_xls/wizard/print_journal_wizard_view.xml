@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>     
+          
+		<record id="view_print_journal_xls_inherit" model="ir.ui.view">
+			<field name="name">Print/Export Journals</field>
+			<field name="model">print.journal.webkit</field>
+			<field name="inherit_id" ref="account.account_common_report_view" />
+			<field name="arch" type="xml">
+				<data>					
+					<button name="check_report" position="after">						
+						<button icon="gtk-execute" name="xls_export" string="Export"
+							type="object" class="oe_highlight" context="{'xls_export':1}" />
+					</button>
+				</data>
+			</field>
+		</record>
+		
+    </data>
+</openerp>

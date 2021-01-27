@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+	    
+		<record id="view_rfi_generate_form" model="ir.ui.view">
+			<field name="name">RFI Generate Form</field>
+			<field name="model">rfi.generate</field>
+			<field name="arch" type="xml">
+				<form string="RFI Generate Form">
+					<separator colspan="4"/>
+					<group>
+						<group>						
+							<field name="is_generate" />						
+						</group>
+						<group>						    
+						</group>
+					</group>						
+					<footer>
+						<button name="generate_rfi" string="Confirm" type="object"
+							class="oe_highlight" />
+						or
+						<button string="Cancel" class="oe_link" special="cancel" />
+					</footer>
+				</form>
+			</field>
+		</record>
+
+		<record id="action_rfi_generate" model="ir.actions.act_window">
+			<field name="name">RFI Generate</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">rfi.generate</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="view_rfi_generate_form" />
+			<field name="target">new</field>
+			<field name="multi">True</field>
+		</record>
+
+		<record model="ir.values" id="sale_order_rfi_generate">
+			<field name="model_id" ref="sale.model_sale_order" />
+			<field name="name">RFI Generate</field>
+			<field name="key2">client_action_multi</field>
+			<field name="value"
+				eval="'ir.actions.act_window,' + str(ref('action_rfi_generate'))" />
+			<field name="key">action</field>
+			<field name="model">sale.order</field>
+		</record>
+		
+	</data>
+</openerp>

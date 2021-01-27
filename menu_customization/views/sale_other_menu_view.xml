@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+	   
+	   
+	    
+	    <menuitem id="product_disassembly.menu_open_view_product_disassembly_form" parent="menu_customization.menu_sales_rental_menu" 
+			action="product_disassembly.open_view_product_disassembly_form" sequence="5" />
+	    
+	    <!-- <menuitem id="ms_customer_visit.menu_visit_partner_form" parent="menu_customization.menu_sales_rental_menu"
+			action="ms_customer_visit.action_visit_partner_form1" sequence="2" /> -->
+	    
+	    
+	    <menuitem id="customer_feedback.menu_customer_feedback" name="Customer Feedback"
+			action="customer_feedback.action_customer-feedback" sequence="4"
+			parent="menu_customization.menu_sales_rental_menu" />
+	    
+	    
+	    
+	    <menuitem
+	        id="menu_other_meu_form_action"
+	        parent="product_uom_setting"
+            action="mrp.mrp_bom_form_action"          
+            sequence="3"/>
+	    
+	</data>
+</openerp>

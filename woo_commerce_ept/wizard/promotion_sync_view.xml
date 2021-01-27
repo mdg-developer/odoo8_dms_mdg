@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        
+        <record id="view_promotion_sync_form" model="ir.ui.view">
+            <field name="name">promotion_sync_form</field>
+            <field name="model">promotion.sync</field>
+            <field name="arch"  type="xml">
+                <form string="Promotion Sync">
+                    <group col="4" colspan="6">
+                       <span class="o_form_label">All selected promotion rules sync to Woocommerce</span>
+                    </group>
+                    <footer>
+                        <button name="promotion_sync_to_woo" string="Sync to Woocommerce" type="object" class="oe_highlight"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_promotion_sync" model="ir.actions.act_window">
+            <field name="name">Promotion Sync to Woo</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">promotion.sync</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>           
+        </record>        
+
+        <record model="ir.values" id="promotion_sync_value">
+            <field name="name">Promotion Sync to Woo</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_promotion_sync'))" />
+            <field name="key">action</field>
+            <field name="model">promos.rules</field>
+        </record>       
+
+    </data>
+</openerp>

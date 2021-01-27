@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<!-- for Branch -->
+		<record id="view_branch_form_new_inherit" model="ir.ui.view">
+			<field name="name">res.branch.form</field>
+			<field name="model">res.branch</field>
+			<field name="inherit_id" ref="hr_branch.view_branch_form_new" />
+			<field name="arch" type="xml">
+
+				<xpath expr="//form/sheet" position="inside">
+					<notebook>
+						<page string="Product">
+							<field name="p_line">
+								<tree string="Lines" editable="bottom" default_order="sequence asc">
+									<field name="product_id" />
+									<field name="assign" />
+									<field name="sequence" invisible="1" />
+								</tree>
+							</field>
+						</page>
+
+						<page string="Request Location">
+							<field name="request_line">
+								<tree string="Request Location" editable="bottom">
+									<field name="location_id" domain="[('usage','=','internal')]" />
+								</tree>
+							</field>
+						</page>
+						<page string="Requesting Warehouse">
+							<field name="requesting_line">
+								<tree string="Requesting Warehouse" editable="bottom">
+									<field name="location_id" domain="[('usage','=','internal')]" />
+									<field name="transit_location_id" domain="[('usage','=','internal')]" />
+								</tree>
+							</field>
+						</page>
+					</notebook>
+				</xpath>
+				<field name="address" position="after">
+					<button name="retrieve_data" string="Retrieve" type="object"
+						widget="statinfo" class="oe_highlight" />
+				</field>
+				<field name="active" position="after">
+					<field name="branch_location_id" domain="[('usage','=','internal')]" />
+				</field>
+			</field>
+		</record>
+	</data>
+</openerp>
+				

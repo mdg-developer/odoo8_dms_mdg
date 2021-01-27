@@ -1,0 +1,172 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+
+		<record id="view_sale_plan_for_trip_setting_form" model="ir.ui.view">
+			<field name="name">plan.setting.form</field>
+			<field name="model">sale.plan.trip.setting</field>
+			<field name="arch" type="xml">
+				<form string="Sale Plans Setting" version="7.0">
+					<header>
+						<button name="confirm" string="Generate" class="oe_highlight"
+							type="object" />
+						<!-- <button name="refresh" string="Refresh Customer" class="oe_highlight" -->
+						<!-- type="object" states="draft,confirm" /> -->
+						<field name="state" widget="statusbar" />
+					</header>
+					<group>
+						<group>
+							<field name="name" />
+							<field name="sale_team_id" on_change="on_change_sale_team_id(sale_team_id)" />
+							<field name="main_group" string="Main Group" widget="many2many_tags"
+								invisible="1" />
+							<field name="branch_id" string="Branch" required="1" />
+						</group>
+						<group>
+							<field name="date" />
+							<field name="from_date" />
+							<field name="to_date" />
+						</group>
+					</group>
+					<button name="refresh_customer" type="object" string="Refresh Customer"
+						class="oe_highlight" />
+					<notebook>
+						<page string="Plan Setting">
+							<field name="plan_line" >
+								<tree string="Plan Line" editable="bottom" default_order="id desc">
+									<field name="code" />
+									<field name="partner_id" />
+									<field name="township_id" />
+									<field name="class" />
+									<field name="frequency" />
+									<field name="purchase_date" />
+									<field name="day_1" />
+									<field name="day_2" />
+									<field name="day_3" />
+									<field name="day_4" />
+									<field name="day_5" />
+									<field name="day_6" />
+									<field name="day_7" />
+									<field name="day_8" />
+									<field name="day_9" />
+									<field name="day_10" />
+									<field name="day_11" />
+									<field name="day_12" />
+									<field name="day_13" />
+									<field name="day_14" />
+									<field name="day_15" />
+								</tree>
+							</field>
+							<group col="19">
+								<field name="partner_count" class="oe_inline" style="font-size:13pt;" />
+								<label for="day_count_1" string="Count" style="font-size:8pt;" />
+								<div>
+								&#x20;&#x20;&#x20;
+								</div>								
+								<div>
+									<field name="day_count_1" class="oe_inline"  style="margin-left:5pt; font-size:15pt;" />
+								</div>
+								<div>
+									<field name="day_count_2" class="oe_inline" style="margin-left:5pt; font-size:15pt;" />
+								</div>
+								<div>
+									<field name="day_count_3" class="oe_inline" style="margin-left:5pt; font-size:15pt;" />
+								</div>
+								<div>
+									<field name="day_count_4" class="oe_inline" style="margin-left:5pt; font-size:15pt;" />
+								</div>
+								<div>
+									<field name="day_count_5" class="oe_inline" style="margin-left:5pt; font-size:15pt;" />
+								</div>
+								<div>
+									<field name="day_count_6" class="oe_inline" style="margin-left:5pt; font-size:15pt;" />
+								</div>
+								<div>
+									<field name="day_count_7" class="oe_inline" style="margin-left:5pt; font-size:15pt;" />
+								</div>
+								<div>
+									<field name="day_count_8" class="oe_inline" style="margin-left:5pt; font-size:15pt;" />
+								</div>
+								<div>
+									<field name="day_count_9" class="oe_inline" style="margin-left:5pt; font-size:15pt;" />
+								</div>
+								<div>
+									<field name="day_count_10" class="oe_inline" style="margin-left:5pt; font-size:15pt;" />
+								</div>
+								<div>
+									<field name="day_count_11" class="oe_inline" style="margin-left:5pt; font-size:15pt;" />
+								</div>
+								<div>
+									<field name="day_count_12" class="oe_inline" style="margin-left:5pt; font-size:15pt;" />
+								</div>
+								<div>
+									<field name="day_count_13" class="oe_inline" style="margin-left:5pt; font-size:15pt;" />
+								</div>
+								<div>
+									<field name="day_count_14" class="oe_inline" style="margin-left:5pt; font-size:15pt;" />
+								</div>
+								<div>
+									<field name="day_count_15" class="oe_inline" style="margin-left:5pt; font-size:15pt;" />
+								</div>
+							</group>
+						</page>
+					</notebook>
+
+				</form>
+			</field>
+		</record>
+		<record id="plan_trip_setting_tree" model="ir.ui.view">
+			<field name="name">plan_setting_tree</field>
+			<field name="model">sale.plan.trip.setting</field>
+			<field name="arch" type="xml">
+				<tree string="Plan Setting Tree">
+					<field name="name" />
+					<field name="sale_team_id" />
+					<field name="date" />
+					<field name="from_date" />
+					<field name="to_date" />
+					<field name="partner_count"/>
+				</tree>
+			</field>
+		</record>
+
+		<record id="view_plan_trip_setting_filter" model="ir.ui.view">
+			<field name="name">Plan Setting Filterr</field>
+			<field name="model">sale.plan.trip.setting</field>
+			<field name="arch" type="xml">
+				<search string="Search Plan Setting">
+					<group expand="0" string="Group By...">
+						<filter string="Sale Team" icon="terp-partner" domain="[]"
+							context="{'group_by':'sale_team_id'}" />
+						<filter string="Date" icon="terp-partner" domain="[]"
+							context="{'group_by':'date'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+
+
+		<record id="action_sale_plan_trip_setting" model="ir.actions.act_window">
+			<field name="name">Sale Plan Trip Setting</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">sale.plan.trip.setting</field>
+			<field name="context">{}</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="plan_trip_setting_tree" />
+			<field name="search_view_id" ref="view_plan_trip_setting_filter" />
+			<field name="domain">[]
+			</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to Register Sale Plan Trip Setting.
+				</p>
+			</field>
+		</record>
+
+
+		<menuitem action='action_sale_plan_trip_setting' id="menu_sale_plan_trip_setting"
+			parent="base.menu_mobile_sale_sale_target_menu" sequence="4" />
+	</data>
+</openerp>
+		

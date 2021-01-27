@@ -1,0 +1,3 @@
+"id","name","code","parent_id:id","notprintable","sign"
+"0","VAT","0",,,"1"
+"4","Net VAT to be paid/reclaimed","5","0","FALSE","1"

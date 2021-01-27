@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+
+		<record model="ir.ui.view" id="inherit_view_product_maingroup_form">
+			<field name="name">prodcut.maingroup.form</field>
+			<field name="model">product.maingroup</field>
+			<field name="inherit_id" ref="product_product.view_product_maingroup_form" />
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//field[@name='name']" position="after">
+
+						<field name="property_account_receivable" />
+						<field name="property_account_receivable_control" />
+						<!-- <field name="property_account_payable" /> -->
+						<field name="property_account_receivable_clearing" />
+						<field name="property_account_difference" />
+						<field name="property_difference_receivable_account" />
+						<field name="property_difference_payable_account" />
+						<field name="property_donation_account" />
+						<field name="property_sampling_account" />
+						<field name="property_destruction_account" />
+						<field name="property_uses_account" />
+						
+						<field name="partner_id" />
+						<field name="pricelist_id" />
+						<!-- <field name="property_account_payable_clearing" /> -->
+
+						<!-- <field name="property_account_foc_cash" /> -->
+						<!-- <field name="property_account_foc_credit" /> -->
+						<!-- <field name="property_account_discount_cash" /> <field name="property_account_discount_credit" 
+							/> <field name="property_account_foc" /> <field name="property_account_discount" 
+							/> -->
+					 <field name="is_separate_transition" />
+							
+							
+					</xpath>
+				</data>
+			</field>
+		</record>
+
+		<record id="inherit_partner_form_new" model="ir.ui.view">
+			<field name="name">res.partner.form</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="base.view_partner_form" />
+			<field name="arch" type="xml">
+
+				<xpath expr="//field[@name='property_account_receivable']"
+					position="replace">
+
+				</xpath>
+
+				<xpath expr="//field[@name='property_account_payable']"
+					position="replace">
+
+				</xpath>
+			</field>
+		</record>
+
+		<record id="inherit_invoice_form_new" model="ir.ui.view">
+			<field name="name">account.invoice.form</field>
+			<field name="model">account.invoice</field>
+			<field name="inherit_id" ref="account.invoice_form" />
+			<field name="arch" type="xml">
+
+
+				<xpath expr="//field[@name='account_id']" position="attributes">
+					<attribute name="required">0</attribute>
+				</xpath>
+				<xpath expr="//field[@name='account_id']" position="replace">
+
+
+				</xpath>
+			</field>
+		</record>
+
+	</data>
+</openerp>
+		

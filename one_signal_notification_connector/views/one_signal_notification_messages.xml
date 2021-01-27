@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        
+        <record id="one_signal_notification_message_form_view" model="ir.ui.view">
+            <field name="name">Messages</field>
+            <field name="model">one.signal.notification.messages</field>
+            <field name="arch" type="xml">
+                <form string="Messages">
+                    <header>
+<!-- 					    <button name="send_message" type="object" class="oe_highlight" string="Send" attrs="{'invisible': [('status','!=','draft')]}"/> -->
+<!-- 					    <button name="send_message" type="object" class="oe_highlight" string="ReSend" attrs="{'invisible': [('status','!=','sent')]}"/> -->
+<!-- 					    <button name="action_retry" type="object" class="oe_highlight" string="Retry" attrs="{'invisible': [('status','!=','fail')]}"/> -->
+                        <field name="status" widget="statusbar"/>
+				    </header>
+                    <sheet>
+                        <group>
+                            <field name="company_id" required="1" groups="base.group_multi_company"/>
+                            <field name="app_id" required="1" domain="[('company_id','=', company_id)]"/>
+                            <field name="contents" required="1" />
+                            <field name="headings" />
+                            <field name="partner_id" />
+                            <field name="reason" readonly="1" attrs="{'invisible': [('status','=','draft')]}"/>
+                            <field name="external_id" readonly="1" attrs="{'invisible': [('status','in',['draft', 'fail'])]}"/>
+                            <field name="one_signal_notification_id" readonly="1" attrs="{'invisible': [('status','in',['draft', 'fail'])]}"/>
+                            <field name="recipients_count" readonly="1" attrs="{'invisible': [('status','in',['draft', 'fail'])]}"/>
+                            <field name="create_date" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <record id="one_signal_notification_message_tree_view" model="ir.ui.view">
+            <field name="name">Messages</field>
+            <field name="model">one.signal.notification.messages</field>
+            <field name="arch" type="xml">
+                <tree string="Messages" default_order="id desc" decoration-muted="status in ('sent')" decoration-info="status=='draft'" decoration-danger="status=='fail'" create="false" edit="false">
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="one_signal_notification_id"/>
+                    <field name="partner_id" />
+                    <field name="contents"/>
+                    <field name="headings"/> 
+                    <field name="create_date" />                  
+                    <field name="status"/>
+                </tree>
+            </field>
+        </record>
+                
+        <record id="one_signal_notification_message_action" model="ir.actions.act_window">
+			<field name="name">Messages</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">one.signal.notification.messages</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" eval="one_signal_notification_message_tree_view" />
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to create new message.
+				</p>
+			</field>
+		</record>	
+		
+
+    </data>
+</openerp>

@@ -1,0 +1,1094 @@
+
+    <base href=http://52.76.137.255:8069>
+    <!DOCTYPE html>
+    <html style="height: 0;">
+        <head>
+            <link href="/report/static/src/css/reset.min.css" rel="stylesheet"/>
+            <link href="/web/static/lib/bootstrap/css/bootstrap.css" rel="stylesheet"/>
+            <link href="/website/static/src/css/website.css" rel="stylesheet"/>
+            <link href="/web/static/lib/fontawesome/css/font-awesome.css" rel="stylesheet"/>
+            <style type="text/css">
+            
+    body {
+        color: #000 !important;
+    }
+    .border-black td {
+        border-top: 1px solid black !important;
+    }
+    .table-condensed > thead > tr > th {
+        border-bottom: 1px solid black !important;
+    }
+    .zero_min_height {
+        min-height: 0px !important;
+    }
+
+        </style>
+            
+        </head>
+        <body class="container" onload="subst()">
+            <div class="page" style="font-size:10pt;">
+					<table border="0" cellspacing="0" cellpadding="0" width="100%">
+						<tbody>
+							<tr>
+								<td>
+									<center>
+										<table width="100%" border="0" cellspacing="0" cellpadding="0" style="padding:0px 20px 20px 20px; margin:0; font-family: Arial,Helvetica, sans-serif;line-height: .1;">
+											<tr>
+												<td valign="top" align="left" style="padding:15px; width:50%; line-height:18px;">
+													<h4 align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/h4[1]">
+														<strong>MDG Co.,Ltd</strong>
+													</h4>
+													<h4 align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/h4[2]">
+														<strong>Sale to Cash Summary Report</strong>
+													</h4>
+
+													<table class="table table-condensed">
+														<tr data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/tr[1]">
+															<td style="border:0pt;font-size:10pt;">
+																<strong>Sales Group :</strong>
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong data-oe-model="crm.case.section" data-oe-id="23" data-oe-field="name" data-oe-type="char" data-oe-expression="o.sale_team_id.name">001NT1</strong>
+															</td>
+															<td style="border:0pt;font-size:8pt;">
+																<strong>Date :</strong>
+															</td>
+															<td style="border:0pt;font-size:8pt;">
+																<strong data-oe-model="sales.denomination" data-oe-id="97477" data-oe-field="date" data-oe-type="datetime" data-oe-expression="o.date">24/09/2020 16:37:12</strong>
+															</td>
+
+														</tr>
+
+														<tr data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/tr[2]">
+															<td style="border:0pt;font-size:10pt;">
+																<strong>Name :</strong>
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong data-oe-model="res.users" data-oe-id="176" data-oe-field="name" data-oe-type="char" data-oe-expression="o.user_id.name">tmwent1</strong>
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong>Branch :</strong>
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong data-oe-model="res.branch" data-oe-id="1" data-oe-field="name" data-oe-type="char" data-oe-expression="o.branch_id.name"></strong>
+															</td>
+
+														</tr>
+
+														<tr data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/tr[3]">
+															<td style="border:0pt;font-size:10pt;">
+																<strong>Receive From :</strong>
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong data-oe-model="sales.denomination" data-oe-id="97477" data-oe-field="receive_from" data-oe-type="char" data-oe-expression="o.receive_from"></strong>
+															</td>
+														</tr>
+														<tr data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/tr[4]">
+															<td style="border:0pt;font-size:8pt;">
+																<strong>Last Updated On :</strong>
+															</td>
+															<td style="border:0pt;font-size:8pt;">
+																<strong data-oe-model="sales.denomination" data-oe-id="97477" data-oe-field="write_date" data-oe-type="datetime" data-oe-expression="o.write_date">24/09/2020 16:37:11</strong>
+															</td>
+															<td style="border:0pt;font-size:8pt;">
+																<strong>Last Updated By :</strong>
+															</td>
+															<td style="border:0pt;font-size:8pt;">
+																<strong data-oe-model="sales.denomination" data-oe-id="97477" data-oe-field="write_uid" data-oe-type="many2one" data-oe-expression="o.write_uid">tmwent1</strong>
+															</td>
+														</tr>
+														<table class="table table-condensed" style="border:1pt solid;">
+															<h6 align="rignt" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[1]/h6[1]">
+																<span class="text-right">
+																	<u>
+																		<b>DSSR</b>
+																	</u>
+																</span>
+															</h6>
+															<thead data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[1]/thead[1]">
+																<tr>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Product</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Quantity</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Amount</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Remark</th>
+																</tr>
+															</thead>
+															<tbody class="invoice_tbody">
+																<tr>
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[1]/tbody[1]/tr[1]/td[1]">
+																		<span data-oe-model="product.product" data-oe-id="286" data-oe-field="name" data-oe-type="char" data-oe-expression="p.product_id.name">Nestle Nutrition Discount</span>
+																	</td>
+
+
+
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		
+																			<span data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[1]/tbody[1]/tr[1]/td[2]/t[1]/span[1]">-</span>
+																		
+																		
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[1]/tbody[1]/tr[1]/td[3]">
+																		<span data-oe-model="sales.denomination.product.line" data-oe-id="1839456" data-oe-field="amount" data-oe-type="float" data-oe-expression="p.amount">-1,050.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[1]/tbody[1]/tr[1]/td[4]"></td>
+																</tr><tr>
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[1]/tbody[1]/tr[1]/td[1]">
+																		<span data-oe-model="product.product" data-oe-id="404" data-oe-field="name" data-oe-type="char" data-oe-expression="p.product_id.name">C-R&amp;S-20g</span>
+																	</td>
+
+
+
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		
+																		
+																			<span data-oe-model="sales.denomination.product.line" data-oe-id="1839462" data-oe-field="product_uom_qty" data-oe-type="integer" data-oe-expression="p.product_uom_qty">5</span>
+																		
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[1]/tbody[1]/tr[1]/td[3]">
+																		<span data-oe-model="sales.denomination.product.line" data-oe-id="1839462" data-oe-field="amount" data-oe-type="float" data-oe-expression="p.amount">8,400.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[1]/tbody[1]/tr[1]/td[4]"></td>
+																</tr><tr>
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[1]/tbody[1]/tr[1]/td[1]">
+																		<span data-oe-model="product.product" data-oe-id="8" data-oe-field="name" data-oe-type="char" data-oe-expression="p.product_id.name">C-R&amp;S-350g</span>
+																	</td>
+
+
+
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		
+																		
+																			<span data-oe-model="sales.denomination.product.line" data-oe-id="1839463" data-oe-field="product_uom_qty" data-oe-type="integer" data-oe-expression="p.product_uom_qty">33</span>
+																		
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[1]/tbody[1]/tr[1]/td[3]">
+																		<span data-oe-model="sales.denomination.product.line" data-oe-id="1839463" data-oe-field="amount" data-oe-type="float" data-oe-expression="p.amount">176,550.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[1]/tbody[1]/tr[1]/td[4]"></td>
+																</tr><tr>
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[1]/tbody[1]/tr[1]/td[1]">
+																		<span data-oe-model="product.product" data-oe-id="82" data-oe-field="name" data-oe-type="char" data-oe-expression="p.product_id.name">C-WH-B-225g</span>
+																	</td>
+
+
+
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		
+																		
+																			<span data-oe-model="sales.denomination.product.line" data-oe-id="1839461" data-oe-field="product_uom_qty" data-oe-type="integer" data-oe-expression="p.product_uom_qty">18</span>
+																		
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[1]/tbody[1]/tr[1]/td[3]">
+																		<span data-oe-model="sales.denomination.product.line" data-oe-id="1839461" data-oe-field="amount" data-oe-type="float" data-oe-expression="p.amount">46,800.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[1]/tbody[1]/tr[1]/td[4]"></td>
+																</tr><tr>
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[1]/tbody[1]/tr[1]/td[1]">
+																		<span data-oe-model="product.product" data-oe-id="13" data-oe-field="name" data-oe-type="char" data-oe-expression="p.product_id.name">C-RM-350g</span>
+																	</td>
+
+
+
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		
+																		
+																			<span data-oe-model="sales.denomination.product.line" data-oe-id="1839458" data-oe-field="product_uom_qty" data-oe-type="integer" data-oe-expression="p.product_uom_qty">6</span>
+																		
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[1]/tbody[1]/tr[1]/td[3]">
+																		<span data-oe-model="sales.denomination.product.line" data-oe-id="1839458" data-oe-field="amount" data-oe-type="float" data-oe-expression="p.amount">40,500.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[1]/tbody[1]/tr[1]/td[4]"></td>
+																</tr><tr>
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[1]/tbody[1]/tr[1]/td[1]">
+																		<span data-oe-model="product.product" data-oe-id="15" data-oe-field="name" data-oe-type="char" data-oe-expression="p.product_id.name">C-R&amp;C-250g</span>
+																	</td>
+
+
+
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		
+																		
+																			<span data-oe-model="sales.denomination.product.line" data-oe-id="1839459" data-oe-field="product_uom_qty" data-oe-type="integer" data-oe-expression="p.product_uom_qty">43</span>
+																		
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[1]/tbody[1]/tr[1]/td[3]">
+																		<span data-oe-model="sales.denomination.product.line" data-oe-id="1839459" data-oe-field="amount" data-oe-type="float" data-oe-expression="p.amount">199,950.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[1]/tbody[1]/tr[1]/td[4]"></td>
+																</tr><tr>
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[1]/tbody[1]/tr[1]/td[1]">
+																		<span data-oe-model="product.product" data-oe-id="16" data-oe-field="name" data-oe-type="char" data-oe-expression="p.product_id.name">C-MV-250g</span>
+																	</td>
+
+
+
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		
+																		
+																			<span data-oe-model="sales.denomination.product.line" data-oe-id="1839454" data-oe-field="product_uom_qty" data-oe-type="integer" data-oe-expression="p.product_uom_qty">25</span>
+																		
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[1]/tbody[1]/tr[1]/td[3]">
+																		<span data-oe-model="sales.denomination.product.line" data-oe-id="1839454" data-oe-field="amount" data-oe-type="float" data-oe-expression="p.amount">108,750.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[1]/tbody[1]/tr[1]/td[4]"></td>
+																</tr><tr>
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[1]/tbody[1]/tr[1]/td[1]">
+																		<span data-oe-model="product.product" data-oe-id="201" data-oe-field="name" data-oe-type="char" data-oe-expression="p.product_id.name">C-NBO-50g</span>
+																	</td>
+
+
+
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		
+																		
+																			<span data-oe-model="sales.denomination.product.line" data-oe-id="1839465" data-oe-field="product_uom_qty" data-oe-type="integer" data-oe-expression="p.product_uom_qty">3</span>
+																		
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[1]/tbody[1]/tr[1]/td[3]">
+																		<span data-oe-model="sales.denomination.product.line" data-oe-id="1839465" data-oe-field="amount" data-oe-type="float" data-oe-expression="p.amount">8,100.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[1]/tbody[1]/tr[1]/td[4]"></td>
+																</tr><tr>
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[1]/tbody[1]/tr[1]/td[1]">
+																		<span data-oe-model="product.product" data-oe-id="523" data-oe-field="name" data-oe-type="char" data-oe-expression="p.product_id.name">C-Baby Rice-200g</span>
+																	</td>
+
+
+
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		
+																		
+																			<span data-oe-model="sales.denomination.product.line" data-oe-id="1839455" data-oe-field="product_uom_qty" data-oe-type="integer" data-oe-expression="p.product_uom_qty">13</span>
+																		
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[1]/tbody[1]/tr[1]/td[3]">
+																		<span data-oe-model="sales.denomination.product.line" data-oe-id="1839455" data-oe-field="amount" data-oe-type="float" data-oe-expression="p.amount">32,500.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[1]/tbody[1]/tr[1]/td[4]"></td>
+																</tr><tr>
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[1]/tbody[1]/tr[1]/td[1]">
+																		<span data-oe-model="product.product" data-oe-id="2" data-oe-field="name" data-oe-type="char" data-oe-expression="p.product_id.name">Lac1-350g</span>
+																	</td>
+
+
+
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		
+																		
+																			<span data-oe-model="sales.denomination.product.line" data-oe-id="1839452" data-oe-field="product_uom_qty" data-oe-type="integer" data-oe-expression="p.product_uom_qty">21</span>
+																		
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[1]/tbody[1]/tr[1]/td[3]">
+																		<span data-oe-model="sales.denomination.product.line" data-oe-id="1839452" data-oe-field="amount" data-oe-type="float" data-oe-expression="p.amount">132,300.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[1]/tbody[1]/tr[1]/td[4]"></td>
+																</tr><tr>
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[1]/tbody[1]/tr[1]/td[1]">
+																		<span data-oe-model="product.product" data-oe-id="451" data-oe-field="name" data-oe-type="char" data-oe-expression="p.product_id.name">Lac1-900g</span>
+																	</td>
+
+
+
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		
+																		
+																			<span data-oe-model="sales.denomination.product.line" data-oe-id="1839460" data-oe-field="product_uom_qty" data-oe-type="integer" data-oe-expression="p.product_uom_qty">4</span>
+																		
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[1]/tbody[1]/tr[1]/td[3]">
+																		<span data-oe-model="sales.denomination.product.line" data-oe-id="1839460" data-oe-field="amount" data-oe-type="float" data-oe-expression="p.amount">64,200.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[1]/tbody[1]/tr[1]/td[4]"></td>
+																</tr><tr>
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[1]/tbody[1]/tr[1]/td[1]">
+																		<span data-oe-model="product.product" data-oe-id="452" data-oe-field="name" data-oe-type="char" data-oe-expression="p.product_id.name">Lac2-900g</span>
+																	</td>
+
+
+
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		
+																		
+																			<span data-oe-model="sales.denomination.product.line" data-oe-id="1839453" data-oe-field="product_uom_qty" data-oe-type="integer" data-oe-expression="p.product_uom_qty">21</span>
+																		
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[1]/tbody[1]/tr[1]/td[3]">
+																		<span data-oe-model="sales.denomination.product.line" data-oe-id="1839453" data-oe-field="amount" data-oe-type="float" data-oe-expression="p.amount">308,700.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[1]/tbody[1]/tr[1]/td[4]"></td>
+																</tr><tr>
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[1]/tbody[1]/tr[1]/td[1]">
+																		<span data-oe-model="product.product" data-oe-id="5" data-oe-field="name" data-oe-type="char" data-oe-expression="p.product_id.name">Lac-Com</span>
+																	</td>
+
+
+
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		
+																		
+																			<span data-oe-model="sales.denomination.product.line" data-oe-id="1839464" data-oe-field="product_uom_qty" data-oe-type="integer" data-oe-expression="p.product_uom_qty">132</span>
+																		
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[1]/tbody[1]/tr[1]/td[3]">
+																		<span data-oe-model="sales.denomination.product.line" data-oe-id="1839464" data-oe-field="amount" data-oe-type="float" data-oe-expression="p.amount">244,200.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[1]/tbody[1]/tr[1]/td[4]"></td>
+																</tr><tr>
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[1]/tbody[1]/tr[1]/td[1]">
+																		<span data-oe-model="product.product" data-oe-id="328" data-oe-field="name" data-oe-type="char" data-oe-expression="p.product_id.name">Lac-Gro3-600g</span>
+																	</td>
+
+
+
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		
+																		
+																			<span data-oe-model="sales.denomination.product.line" data-oe-id="1839457" data-oe-field="product_uom_qty" data-oe-type="integer" data-oe-expression="p.product_uom_qty">20</span>
+																		
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[1]/tbody[1]/tr[1]/td[3]">
+																		<span data-oe-model="sales.denomination.product.line" data-oe-id="1839457" data-oe-field="amount" data-oe-type="float" data-oe-expression="p.amount">166,000.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[1]/tbody[1]/tr[1]/td[4]"></td>
+																</tr>
+															</tbody>
+														</table>
+
+														<h6 align="right" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/h6[1]">
+															<span>
+																<b>Sub Total:</b>
+															</span>
+															<b>
+																<span data-oe-model="sales.denomination" data-oe-id="97477" data-oe-field="product_amount" data-oe-type="float" data-oe-expression="o.product_amount">1,535,900.00</span>
+															</b>
+														</h6>
+														
+
+														
+
+														<h5 align="right" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/h5[1]">
+															<b>
+																<span>Grand Total :</span>
+																<span data-oe-model="sales.denomination" data-oe-id="97477" data-oe-field="dssr_ar_amount" data-oe-type="float" data-oe-expression="o.dssr_ar_amount">1,535,900.00</span>
+
+															</b>
+														</h5>
+
+														<table class="table table-condensed" style="border:1pt solid;">
+															<h6 align="rignt" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[3]/h6[1]">
+																<span class="text-right">
+																	<u>
+																		<b>Cash Denomination</b>
+																	</u>
+																</span>
+															</h6>
+															<thead data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[3]/thead[1]">
+																<tr>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Notes</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Quantity</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Total</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Remark</th>
+																</tr>
+															</thead>
+															<tbody class="invoice_tbody">
+																<tr data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[3]/tbody[1]/tr[1]">
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113705" data-oe-field="notes" data-oe-type="char" data-oe-expression="l.notes">1</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113705" data-oe-field="note_qty" data-oe-type="integer" data-oe-expression="l.note_qty"></span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113705" data-oe-field="amount" data-oe-type="float" data-oe-expression="l.amount">0.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center"></td>
+																</tr><tr data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[3]/tbody[1]/tr[1]">
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113706" data-oe-field="notes" data-oe-type="char" data-oe-expression="l.notes">5</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113706" data-oe-field="note_qty" data-oe-type="integer" data-oe-expression="l.note_qty"></span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113706" data-oe-field="amount" data-oe-type="float" data-oe-expression="l.amount">0.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center"></td>
+																</tr><tr data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[3]/tbody[1]/tr[1]">
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113707" data-oe-field="notes" data-oe-type="char" data-oe-expression="l.notes">10</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113707" data-oe-field="note_qty" data-oe-type="integer" data-oe-expression="l.note_qty"></span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113707" data-oe-field="amount" data-oe-type="float" data-oe-expression="l.amount">0.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center"></td>
+																</tr><tr data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[3]/tbody[1]/tr[1]">
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113708" data-oe-field="notes" data-oe-type="char" data-oe-expression="l.notes">20</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113708" data-oe-field="note_qty" data-oe-type="integer" data-oe-expression="l.note_qty"></span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113708" data-oe-field="amount" data-oe-type="float" data-oe-expression="l.amount">0.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center"></td>
+																</tr><tr data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[3]/tbody[1]/tr[1]">
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113709" data-oe-field="notes" data-oe-type="char" data-oe-expression="l.notes">50</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113709" data-oe-field="note_qty" data-oe-type="integer" data-oe-expression="l.note_qty">4</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113709" data-oe-field="amount" data-oe-type="float" data-oe-expression="l.amount">200.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center"></td>
+																</tr><tr data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[3]/tbody[1]/tr[1]">
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113710" data-oe-field="notes" data-oe-type="char" data-oe-expression="l.notes">100</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113710" data-oe-field="note_qty" data-oe-type="integer" data-oe-expression="l.note_qty">3</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113710" data-oe-field="amount" data-oe-type="float" data-oe-expression="l.amount">300.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center"></td>
+																</tr><tr data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[3]/tbody[1]/tr[1]">
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113711" data-oe-field="notes" data-oe-type="char" data-oe-expression="l.notes">200</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113711" data-oe-field="note_qty" data-oe-type="integer" data-oe-expression="l.note_qty">7</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113711" data-oe-field="amount" data-oe-type="float" data-oe-expression="l.amount">1,400.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center"></td>
+																</tr><tr data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[3]/tbody[1]/tr[1]">
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113712" data-oe-field="notes" data-oe-type="char" data-oe-expression="l.notes">500</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113712" data-oe-field="note_qty" data-oe-type="integer" data-oe-expression="l.note_qty">4</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113712" data-oe-field="amount" data-oe-type="float" data-oe-expression="l.amount">2,000.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center"></td>
+																</tr><tr data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[3]/tbody[1]/tr[1]">
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113713" data-oe-field="notes" data-oe-type="char" data-oe-expression="l.notes">1,000</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113713" data-oe-field="note_qty" data-oe-type="integer" data-oe-expression="l.note_qty">537</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113713" data-oe-field="amount" data-oe-type="float" data-oe-expression="l.amount">537,000.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center"></td>
+																</tr><tr data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[3]/tbody[1]/tr[1]">
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113714" data-oe-field="notes" data-oe-type="char" data-oe-expression="l.notes">5,000</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113714" data-oe-field="note_qty" data-oe-type="integer" data-oe-expression="l.note_qty">129</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113714" data-oe-field="amount" data-oe-type="float" data-oe-expression="l.amount">645,000.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center"></td>
+																</tr><tr data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[3]/tbody[1]/tr[1]">
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113715" data-oe-field="notes" data-oe-type="char" data-oe-expression="l.notes">10,000</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113715" data-oe-field="note_qty" data-oe-type="integer" data-oe-expression="l.note_qty">35</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113715" data-oe-field="amount" data-oe-type="float" data-oe-expression="l.amount">350,000.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center"></td>
+																</tr>
+															</tbody>
+														</table>
+														<h6 align="right" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/h6[3]">
+															<span>
+																<b>Sub Total:</b>
+															</span>
+															<b>
+																<span data-oe-model="sales.denomination" data-oe-id="97477" data-oe-field="total_amount" data-oe-type="float" data-oe-expression="o.total_amount">1,535,900.00</span>
+															</b>
+														</h6>
+
+
+														
+														
+														
+														
+														<h5 align="right" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/h5[2]">
+															<b>
+																<span>Grand Total :</span>
+																<span data-oe-model="sales.denomination" data-oe-id="97477" data-oe-field="trans_amount" data-oe-type="float" data-oe-expression="o.trans_amount">1,535,900.00</span>
+															</b>
+														</h5>
+														<h5 align="right" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/h5[3]">
+															<b>
+																<span>Different Amount:</span>
+																<span data-oe-model="sales.denomination" data-oe-id="97477" data-oe-field="sign_diff_amount" data-oe-type="char" data-oe-expression="o.sign_diff_amount">0.0</span>
+																</b>
+														</h5>
+														<h5 align="left" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/h5[4]">
+															<b>
+																<span>Note:</span>
+																<span data-oe-model="sales.denomination" data-oe-id="97477" data-oe-field="note" data-oe-type="text" data-oe-expression="o.note"></span>
+															</b>
+														</h5>
+														<table class="table table-condensed" style="border:0pt;" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[1]/table[1]/table[6]">
+															<thead>
+																<tr>
+																	<td style="margin-top:-5pt;" align="left">
+																		<b>
+																			<span>Paid By</span>
+																		</b>
+																	</td>
+																	<td style="margin-top:-5pt;" align="right">
+																		<b>
+																			<span>Received By</span>
+																		</b>
+																	</td>
+																</tr>
+															</thead>
+														</table>
+													</table>
+												</td>
+
+												<td valign="top" align="right" style="padding:15px; width:50%; line-height:18px;">
+													<h4 align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/h4[1]">
+														<strong>MDG Co.,Ltd</strong>
+													</h4>
+													<h4 align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/h4[2]">
+														<strong>Sale to Cash Summary Report</strong>
+													</h4>
+
+													<table class="table table-condensed">
+														<tr data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/tr[1]">
+															<td style="border:0pt;font-size:10pt;">
+																<strong>Sales Group :</strong>
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong data-oe-model="crm.case.section" data-oe-id="23" data-oe-field="name" data-oe-type="char" data-oe-expression="o.sale_team_id.name">001NT1</strong>
+															</td>
+															<td style="border:0pt;font-size:8pt;">
+																<strong>Date :</strong>
+															</td>
+															<td style="border:0pt;font-size:8pt;">
+																<strong data-oe-model="sales.denomination" data-oe-id="97477" data-oe-field="date" data-oe-type="datetime" data-oe-expression="o.date">24/09/2020 16:37:12</strong>
+															</td>
+														</tr>
+
+														<tr data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/tr[2]">
+															<td style="border:0pt;font-size:10pt;">
+																<strong>Name :</strong>
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong data-oe-model="res.users" data-oe-id="176" data-oe-field="name" data-oe-type="char" data-oe-expression="o.user_id.name">tmwent1</strong>
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong>Branch :</strong>
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong data-oe-model="res.branch" data-oe-id="1" data-oe-field="name" data-oe-type="char" data-oe-expression="o.branch_id.name"></strong>
+															</td>
+														</tr>
+
+														<tr data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/tr[3]">
+															<td style="border:0pt;font-size:10pt;">
+																<strong>Receive From :</strong>
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong data-oe-model="sales.denomination" data-oe-id="97477" data-oe-field="receive_from" data-oe-type="char" data-oe-expression="o.receive_from"></strong>
+															</td>
+														</tr>
+														<tr data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/tr[4]">
+															<td style="border:0pt;font-size:8pt;">
+																<strong>Last Updated On :</strong>
+															</td>
+															<td style="border:0pt;font-size:8pt;">
+																<strong data-oe-model="sales.denomination" data-oe-id="97477" data-oe-field="write_date" data-oe-type="datetime" data-oe-expression="o.write_date">24/09/2020 16:37:11</strong>
+															</td>
+															<td style="border:0pt;font-size:8pt;">
+																<strong>Last Updated By :</strong>
+															</td>
+															<td style="border:0pt;font-size:8pt;">
+																<strong data-oe-model="sales.denomination" data-oe-id="97477" data-oe-field="write_uid" data-oe-type="many2one" data-oe-expression="o.write_uid">tmwent1</strong>
+															</td>
+														</tr>
+														<table class="table table-condensed" style="border:1pt solid;">
+															<h6 align="left" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[1]/h6[1]">
+																<span class="text-right">
+																	<u>
+																		<b>DSSR</b>
+																	</u>
+																</span>
+															</h6>
+															<thead data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[1]/thead[1]">
+																<tr>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Product</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Quantity</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Amount</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Remark</th>
+																</tr>
+															</thead>
+															<tbody class="invoice_tbody">
+																<tr>
+
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[1]/tbody[1]/tr[1]/td[1]">
+																		<span data-oe-model="product.product" data-oe-id="286" data-oe-field="name" data-oe-type="char" data-oe-expression="p.product_id.name">Nestle Nutrition Discount</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		
+																			<span data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[1]/tbody[1]/tr[1]/td[2]/t[1]/span[1]">-</span>
+																		
+																		
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[1]/tbody[1]/tr[1]/td[3]">
+																		<span data-oe-model="sales.denomination.product.line" data-oe-id="1839456" data-oe-field="amount" data-oe-type="float" data-oe-expression="p.amount">-1,050.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[1]/tbody[1]/tr[1]/td[4]"></td>
+																</tr><tr>
+
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[1]/tbody[1]/tr[1]/td[1]">
+																		<span data-oe-model="product.product" data-oe-id="404" data-oe-field="name" data-oe-type="char" data-oe-expression="p.product_id.name">C-R&amp;S-20g</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		
+																		
+																			<span data-oe-model="sales.denomination.product.line" data-oe-id="1839462" data-oe-field="product_uom_qty" data-oe-type="integer" data-oe-expression="p.product_uom_qty">5</span>
+																		
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[1]/tbody[1]/tr[1]/td[3]">
+																		<span data-oe-model="sales.denomination.product.line" data-oe-id="1839462" data-oe-field="amount" data-oe-type="float" data-oe-expression="p.amount">8,400.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[1]/tbody[1]/tr[1]/td[4]"></td>
+																</tr><tr>
+
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[1]/tbody[1]/tr[1]/td[1]">
+																		<span data-oe-model="product.product" data-oe-id="8" data-oe-field="name" data-oe-type="char" data-oe-expression="p.product_id.name">C-R&amp;S-350g</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		
+																		
+																			<span data-oe-model="sales.denomination.product.line" data-oe-id="1839463" data-oe-field="product_uom_qty" data-oe-type="integer" data-oe-expression="p.product_uom_qty">33</span>
+																		
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[1]/tbody[1]/tr[1]/td[3]">
+																		<span data-oe-model="sales.denomination.product.line" data-oe-id="1839463" data-oe-field="amount" data-oe-type="float" data-oe-expression="p.amount">176,550.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[1]/tbody[1]/tr[1]/td[4]"></td>
+																</tr><tr>
+
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[1]/tbody[1]/tr[1]/td[1]">
+																		<span data-oe-model="product.product" data-oe-id="82" data-oe-field="name" data-oe-type="char" data-oe-expression="p.product_id.name">C-WH-B-225g</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		
+																		
+																			<span data-oe-model="sales.denomination.product.line" data-oe-id="1839461" data-oe-field="product_uom_qty" data-oe-type="integer" data-oe-expression="p.product_uom_qty">18</span>
+																		
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[1]/tbody[1]/tr[1]/td[3]">
+																		<span data-oe-model="sales.denomination.product.line" data-oe-id="1839461" data-oe-field="amount" data-oe-type="float" data-oe-expression="p.amount">46,800.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[1]/tbody[1]/tr[1]/td[4]"></td>
+																</tr><tr>
+
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[1]/tbody[1]/tr[1]/td[1]">
+																		<span data-oe-model="product.product" data-oe-id="13" data-oe-field="name" data-oe-type="char" data-oe-expression="p.product_id.name">C-RM-350g</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		
+																		
+																			<span data-oe-model="sales.denomination.product.line" data-oe-id="1839458" data-oe-field="product_uom_qty" data-oe-type="integer" data-oe-expression="p.product_uom_qty">6</span>
+																		
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[1]/tbody[1]/tr[1]/td[3]">
+																		<span data-oe-model="sales.denomination.product.line" data-oe-id="1839458" data-oe-field="amount" data-oe-type="float" data-oe-expression="p.amount">40,500.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[1]/tbody[1]/tr[1]/td[4]"></td>
+																</tr><tr>
+
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[1]/tbody[1]/tr[1]/td[1]">
+																		<span data-oe-model="product.product" data-oe-id="15" data-oe-field="name" data-oe-type="char" data-oe-expression="p.product_id.name">C-R&amp;C-250g</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		
+																		
+																			<span data-oe-model="sales.denomination.product.line" data-oe-id="1839459" data-oe-field="product_uom_qty" data-oe-type="integer" data-oe-expression="p.product_uom_qty">43</span>
+																		
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[1]/tbody[1]/tr[1]/td[3]">
+																		<span data-oe-model="sales.denomination.product.line" data-oe-id="1839459" data-oe-field="amount" data-oe-type="float" data-oe-expression="p.amount">199,950.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[1]/tbody[1]/tr[1]/td[4]"></td>
+																</tr><tr>
+
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[1]/tbody[1]/tr[1]/td[1]">
+																		<span data-oe-model="product.product" data-oe-id="16" data-oe-field="name" data-oe-type="char" data-oe-expression="p.product_id.name">C-MV-250g</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		
+																		
+																			<span data-oe-model="sales.denomination.product.line" data-oe-id="1839454" data-oe-field="product_uom_qty" data-oe-type="integer" data-oe-expression="p.product_uom_qty">25</span>
+																		
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[1]/tbody[1]/tr[1]/td[3]">
+																		<span data-oe-model="sales.denomination.product.line" data-oe-id="1839454" data-oe-field="amount" data-oe-type="float" data-oe-expression="p.amount">108,750.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[1]/tbody[1]/tr[1]/td[4]"></td>
+																</tr><tr>
+
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[1]/tbody[1]/tr[1]/td[1]">
+																		<span data-oe-model="product.product" data-oe-id="201" data-oe-field="name" data-oe-type="char" data-oe-expression="p.product_id.name">C-NBO-50g</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		
+																		
+																			<span data-oe-model="sales.denomination.product.line" data-oe-id="1839465" data-oe-field="product_uom_qty" data-oe-type="integer" data-oe-expression="p.product_uom_qty">3</span>
+																		
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[1]/tbody[1]/tr[1]/td[3]">
+																		<span data-oe-model="sales.denomination.product.line" data-oe-id="1839465" data-oe-field="amount" data-oe-type="float" data-oe-expression="p.amount">8,100.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[1]/tbody[1]/tr[1]/td[4]"></td>
+																</tr><tr>
+
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[1]/tbody[1]/tr[1]/td[1]">
+																		<span data-oe-model="product.product" data-oe-id="523" data-oe-field="name" data-oe-type="char" data-oe-expression="p.product_id.name">C-Baby Rice-200g</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		
+																		
+																			<span data-oe-model="sales.denomination.product.line" data-oe-id="1839455" data-oe-field="product_uom_qty" data-oe-type="integer" data-oe-expression="p.product_uom_qty">13</span>
+																		
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[1]/tbody[1]/tr[1]/td[3]">
+																		<span data-oe-model="sales.denomination.product.line" data-oe-id="1839455" data-oe-field="amount" data-oe-type="float" data-oe-expression="p.amount">32,500.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[1]/tbody[1]/tr[1]/td[4]"></td>
+																</tr><tr>
+
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[1]/tbody[1]/tr[1]/td[1]">
+																		<span data-oe-model="product.product" data-oe-id="2" data-oe-field="name" data-oe-type="char" data-oe-expression="p.product_id.name">Lac1-350g</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		
+																		
+																			<span data-oe-model="sales.denomination.product.line" data-oe-id="1839452" data-oe-field="product_uom_qty" data-oe-type="integer" data-oe-expression="p.product_uom_qty">21</span>
+																		
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[1]/tbody[1]/tr[1]/td[3]">
+																		<span data-oe-model="sales.denomination.product.line" data-oe-id="1839452" data-oe-field="amount" data-oe-type="float" data-oe-expression="p.amount">132,300.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[1]/tbody[1]/tr[1]/td[4]"></td>
+																</tr><tr>
+
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[1]/tbody[1]/tr[1]/td[1]">
+																		<span data-oe-model="product.product" data-oe-id="451" data-oe-field="name" data-oe-type="char" data-oe-expression="p.product_id.name">Lac1-900g</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		
+																		
+																			<span data-oe-model="sales.denomination.product.line" data-oe-id="1839460" data-oe-field="product_uom_qty" data-oe-type="integer" data-oe-expression="p.product_uom_qty">4</span>
+																		
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[1]/tbody[1]/tr[1]/td[3]">
+																		<span data-oe-model="sales.denomination.product.line" data-oe-id="1839460" data-oe-field="amount" data-oe-type="float" data-oe-expression="p.amount">64,200.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[1]/tbody[1]/tr[1]/td[4]"></td>
+																</tr><tr>
+
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[1]/tbody[1]/tr[1]/td[1]">
+																		<span data-oe-model="product.product" data-oe-id="452" data-oe-field="name" data-oe-type="char" data-oe-expression="p.product_id.name">Lac2-900g</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		
+																		
+																			<span data-oe-model="sales.denomination.product.line" data-oe-id="1839453" data-oe-field="product_uom_qty" data-oe-type="integer" data-oe-expression="p.product_uom_qty">21</span>
+																		
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[1]/tbody[1]/tr[1]/td[3]">
+																		<span data-oe-model="sales.denomination.product.line" data-oe-id="1839453" data-oe-field="amount" data-oe-type="float" data-oe-expression="p.amount">308,700.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[1]/tbody[1]/tr[1]/td[4]"></td>
+																</tr><tr>
+
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[1]/tbody[1]/tr[1]/td[1]">
+																		<span data-oe-model="product.product" data-oe-id="5" data-oe-field="name" data-oe-type="char" data-oe-expression="p.product_id.name">Lac-Com</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		
+																		
+																			<span data-oe-model="sales.denomination.product.line" data-oe-id="1839464" data-oe-field="product_uom_qty" data-oe-type="integer" data-oe-expression="p.product_uom_qty">132</span>
+																		
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[1]/tbody[1]/tr[1]/td[3]">
+																		<span data-oe-model="sales.denomination.product.line" data-oe-id="1839464" data-oe-field="amount" data-oe-type="float" data-oe-expression="p.amount">244,200.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[1]/tbody[1]/tr[1]/td[4]"></td>
+																</tr><tr>
+
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[1]/tbody[1]/tr[1]/td[1]">
+																		<span data-oe-model="product.product" data-oe-id="328" data-oe-field="name" data-oe-type="char" data-oe-expression="p.product_id.name">Lac-Gro3-600g</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		
+																		
+																			<span data-oe-model="sales.denomination.product.line" data-oe-id="1839457" data-oe-field="product_uom_qty" data-oe-type="integer" data-oe-expression="p.product_uom_qty">20</span>
+																		
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[1]/tbody[1]/tr[1]/td[3]">
+																		<span data-oe-model="sales.denomination.product.line" data-oe-id="1839457" data-oe-field="amount" data-oe-type="float" data-oe-expression="p.amount">166,000.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[1]/tbody[1]/tr[1]/td[4]"></td>
+																</tr>
+															</tbody>
+														</table>
+
+														<h6 align="right" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/h6[1]">
+															<span>
+																<b>Sub Total:</b>
+															</span>
+															<b>
+																<span data-oe-model="sales.denomination" data-oe-id="97477" data-oe-field="product_amount" data-oe-type="float" data-oe-expression="o.product_amount">1,535,900.00</span>
+															</b>
+														</h6>
+														
+
+														
+
+														<h5 align="right" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/h5[1]">
+															<b>
+																<span>Grand Total :</span>
+																<span data-oe-model="sales.denomination" data-oe-id="97477" data-oe-field="dssr_ar_amount" data-oe-type="float" data-oe-expression="o.dssr_ar_amount">1,535,900.00</span>
+
+															</b>
+														</h5>
+
+														<table class="table table-condensed" style="border:1pt solid;">
+															<h6 align="left" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[3]/h6[1]">
+																<span class="text-right">
+																	<u>
+																		<b>Cash Denomination</b>
+																	</u>
+																</span>
+															</h6>
+															<thead data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[3]/thead[1]">
+																<tr>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Notes</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Quantity</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Total</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Remark</th>
+																</tr>
+															</thead>
+															<tbody class="invoice_tbody">
+																<tr data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[3]/tbody[1]/tr[1]">
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113705" data-oe-field="notes" data-oe-type="char" data-oe-expression="l.notes">1</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113705" data-oe-field="note_qty" data-oe-type="integer" data-oe-expression="l.note_qty"></span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113705" data-oe-field="amount" data-oe-type="float" data-oe-expression="l.amount">0.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center"></td>
+																</tr><tr data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[3]/tbody[1]/tr[1]">
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113706" data-oe-field="notes" data-oe-type="char" data-oe-expression="l.notes">5</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113706" data-oe-field="note_qty" data-oe-type="integer" data-oe-expression="l.note_qty"></span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113706" data-oe-field="amount" data-oe-type="float" data-oe-expression="l.amount">0.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center"></td>
+																</tr><tr data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[3]/tbody[1]/tr[1]">
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113707" data-oe-field="notes" data-oe-type="char" data-oe-expression="l.notes">10</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113707" data-oe-field="note_qty" data-oe-type="integer" data-oe-expression="l.note_qty"></span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113707" data-oe-field="amount" data-oe-type="float" data-oe-expression="l.amount">0.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center"></td>
+																</tr><tr data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[3]/tbody[1]/tr[1]">
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113708" data-oe-field="notes" data-oe-type="char" data-oe-expression="l.notes">20</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113708" data-oe-field="note_qty" data-oe-type="integer" data-oe-expression="l.note_qty"></span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113708" data-oe-field="amount" data-oe-type="float" data-oe-expression="l.amount">0.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center"></td>
+																</tr><tr data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[3]/tbody[1]/tr[1]">
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113709" data-oe-field="notes" data-oe-type="char" data-oe-expression="l.notes">50</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113709" data-oe-field="note_qty" data-oe-type="integer" data-oe-expression="l.note_qty">4</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113709" data-oe-field="amount" data-oe-type="float" data-oe-expression="l.amount">200.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center"></td>
+																</tr><tr data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[3]/tbody[1]/tr[1]">
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113710" data-oe-field="notes" data-oe-type="char" data-oe-expression="l.notes">100</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113710" data-oe-field="note_qty" data-oe-type="integer" data-oe-expression="l.note_qty">3</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113710" data-oe-field="amount" data-oe-type="float" data-oe-expression="l.amount">300.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center"></td>
+																</tr><tr data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[3]/tbody[1]/tr[1]">
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113711" data-oe-field="notes" data-oe-type="char" data-oe-expression="l.notes">200</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113711" data-oe-field="note_qty" data-oe-type="integer" data-oe-expression="l.note_qty">7</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113711" data-oe-field="amount" data-oe-type="float" data-oe-expression="l.amount">1,400.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center"></td>
+																</tr><tr data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[3]/tbody[1]/tr[1]">
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113712" data-oe-field="notes" data-oe-type="char" data-oe-expression="l.notes">500</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113712" data-oe-field="note_qty" data-oe-type="integer" data-oe-expression="l.note_qty">4</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113712" data-oe-field="amount" data-oe-type="float" data-oe-expression="l.amount">2,000.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center"></td>
+																</tr><tr data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[3]/tbody[1]/tr[1]">
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113713" data-oe-field="notes" data-oe-type="char" data-oe-expression="l.notes">1,000</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113713" data-oe-field="note_qty" data-oe-type="integer" data-oe-expression="l.note_qty">537</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113713" data-oe-field="amount" data-oe-type="float" data-oe-expression="l.amount">537,000.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center"></td>
+																</tr><tr data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[3]/tbody[1]/tr[1]">
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113714" data-oe-field="notes" data-oe-type="char" data-oe-expression="l.notes">5,000</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113714" data-oe-field="note_qty" data-oe-type="integer" data-oe-expression="l.note_qty">129</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113714" data-oe-field="amount" data-oe-type="float" data-oe-expression="l.amount">645,000.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center"></td>
+																</tr><tr data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[3]/tbody[1]/tr[1]">
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113715" data-oe-field="notes" data-oe-type="char" data-oe-expression="l.notes">10,000</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113715" data-oe-field="note_qty" data-oe-type="integer" data-oe-expression="l.note_qty">35</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="right">
+																		<span data-oe-model="sales.denomination.note.line" data-oe-id="1113715" data-oe-field="amount" data-oe-type="float" data-oe-expression="l.amount">350,000.00</span>
+																	</td>
+																	<td style="border:1pt solid;border-color:black;" align="center"></td>
+																</tr>
+															</tbody>
+														</table>
+														<h6 align="right" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/h6[3]">
+															<span>
+																<b>Sub Total:</b>
+															</span>
+															<b>
+																<span data-oe-model="sales.denomination" data-oe-id="97477" data-oe-field="total_amount" data-oe-type="float" data-oe-expression="o.total_amount">1,535,900.00</span>
+															</b>
+														</h6>
+
+
+														
+														
+														
+														
+														<h5 align="right" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/h5[2]">
+															<b>
+																<span>Grand Total :</span>
+																<span data-oe-model="sales.denomination" data-oe-id="97477" data-oe-field="trans_amount" data-oe-type="float" data-oe-expression="o.trans_amount">1,535,900.00</span>
+
+															</b>
+														</h5>
+														<h5 align="right" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/h5[3]">
+															<b>
+																<span>Different Amount:</span>
+																<span data-oe-model="sales.denomination" data-oe-id="97477" data-oe-field="sign_diff_amount" data-oe-type="char" data-oe-expression="o.sign_diff_amount">0.0</span>
+																</b>
+														</h5>
+														<h5 align="left" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/h5[4]">
+															<b>
+																<span>Note:</span>
+																<span data-oe-model="sales.denomination" data-oe-id="97477" data-oe-field="note" data-oe-type="text" data-oe-expression="o.note"></span>
+															</b>
+														</h5>
+														<table class="table table-condensed" style="border:0pt;" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/tr[1]/td[2]/table[1]/table[6]">
+															<thead>
+																<tr>
+																	<td style="margin-top:-5pt;" align="left">
+																		<b>
+																			<span>Paid By</span>
+																		</b>
+																	</td>
+																	<td style="margin-top:-5pt;" align="right">
+																		<b>
+																			<span>Received By</span>
+																		</b>
+																	</td>
+																</tr>
+															</thead>
+														</table>
+													</table>
+												</td>
+											</tr>
+											<div class="oe_structure" data-oe-id="1500" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/t[1]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/center[1]/table[1]/div[1]"></div>
+										</table>
+									</center>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			
+   
+   
+  
+		
+				
+			
+        
+                
+        </body>
+    </html>

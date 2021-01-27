@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+    <record id="view_customer_visit_graph" model="ir.ui.view">
+         <field name="name">customer.visit.graph</field>
+         <field name="model">customer.visit.report</field>
+         <field name="arch" type="xml">
+             <graph string="Customer Visit Analysis" type="pivot" stacked="True">
+                 <field name="customer_id"  type="row"/>
+                 <field name="user_id"   type="col"/>
+             </graph>
+         </field>
+    </record>
+
+    <record id="filter_customer_visit" model="ir.filters">
+        <field name="name">By Customer</field>
+        <field name="model_id">customer.visit.report</field>
+        <field name="user_id" eval="False"/>
+        <field name="context">{'group_by': ['date:month', 'customer_id']}</field>
+    </record>
+
+    <record id="view_customer_visit_search" model="ir.ui.view">
+        <field name="name">customer.visit.search</field>
+        <field name="model">customer.visit.report</field>
+        <field name="arch" type="xml">
+            <search string="Customer Visit Analysis">
+                <field name="date"/>
+                <filter string="This Year" name="year" invisible="1" domain="[('date','&lt;=', time.strftime('%%Y-12-31')),('date','&gt;=',time.strftime('%%Y-01-01'))]"/>
+                <separator/>
+                <field name="customer_id"/>
+                <group expand="0" string="Extended Filters">
+                    <field name="customer_id"/>
+                    <field name="user_id"/>
+                </group>
+                <group expand="1" string="Group By">
+                    <filter string="Customer" name="Customer" context="{'group_by':'customer_id'}"/>
+                    <filter string="Salesman Name" name="Salesman Name" context="{'group_by':'user_id'}"/>
+                    <filter string="Sale Team" name="Sale Team" context="{'group_by':'sale_team_id'}"/>
+                    <filter string="Status" context="{'group_by':'m_status'}"/>
+                    <separator/>
+                    <filter string="Month" context="{'group_by':'date:month'}" help="Ordered date of the customer"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_customer_visit_report" model="ir.actions.act_window">
+        <field name="name">Customer Visit Analysis</field>
+        <field name="res_model">customer.visit.report</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">graph</field>
+        <field name="search_view_id" ref="view_customer_visit_search"/>
+        <field name="view_id" ref="view_customer_visit_graph"/>
+    </record>
+	
+    <menuitem action="action_customer_visit_report"  id="menu_customer_visit_report" parent="base.menu_mobile_sale_report_menu" sequence="3"/>
+
+</data>
+</openerp>

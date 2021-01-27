@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- === Sales Denomination Form === -->
+
+		<record id="view_sales_denomination_form" model="ir.ui.view">
+			<field name="name">sales.denomination.form</field>
+			<field name="model">sales.denomination</field>
+			<field name="arch" type="xml">
+				<form string="Sales Denomination" version="7.0">
+					<sheet>
+						<group>
+							<group>
+								<field name="name" />
+								<field name="sale_team_id" />
+								<field name="user_id"  domain="[('default_section_id', '=',sale_team_id)]"/>
+								<field name="date" />
+								<field name="company_id" invisible="1" />
+								<field name="receive_from" />
+							</group>
+							<group>
+								<field name="tablet_id" />
+								<field name="invoice_count" />
+								<field name="create_uid" />
+								<field name="create_date" />
+								<field name="write_uid" />
+								<field name="write_date" />
+							</group>
+						</group>
+						<group>
+							<group>
+								<button name="retrieve_data" string="Retrieve" type="object"
+									widget="statinfo" class="oe_highlight" />
+							</group>
+							<group>
+
+							</group>
+						</group>
+						<notebook>
+							<page string="Product">
+								<field name="denomination_product_line">
+									<form string="Multi Product">
+										<group>
+											<group>
+												<field name="product_id" />
+												<field name="product_uom_qty" />
+												<field name="amount" sum="Invoice Total" />
+												<field name="sequence" invisible="1" />
+											</group>
+										</group>
+									</form>
+									<tree string="Multi Product" editable="bottom" readonly="1"
+										default_order="sequence asc">
+										<field name="product_id" readonly="1" />
+										<field name="product_uom_qty" readonly="1" />
+										<field name="amount" sum="Invoice Total" readonly="1" />
+										<field name="sequence" invisible="1" />
+									</tree>
+								</field>
+								<group>
+									<group>
+									</group>
+									<group>
+										<field name="discount_total" readonly="1" />
+										<field name="discount_amount" readonly="1" />
+										<field name="invoice_sub_total" />
+									</group>
+								</group>
+							</page>
+						</notebook>
+						<notebook>
+							<page string="AR Collection">
+								<field name="denomination_ar_line">
+									<form string="AR Collection">
+										<field name="invoice_id" />
+										<field name="date" />
+										<field name="partner_id" />
+										<field name="payment_type" />
+										<field name="amount" sum="Invoice Total" />
+									</form>
+									<tree string="AR Collection" editable="bottom" readonly="1">
+										<field name="invoice_id" readonly="1" />
+										<field name="date" readonly="1" />
+										<field name="partner_id" readonly="1" />
+										<field name="payment_type" readonly="1" />
+										<field name="amount" sum="Invoice Total" readonly="1" />
+									</tree>
+								</field>
+							</page>
+						</notebook>
+						<notebook>
+							<page string="Notes" readonly="1">
+								<field name="denomination_note_line">
+									<form string="Notes">
+										<group>
+											<group>
+												<field name="notes" />
+												<field name="note_qty" style="text-align: center"
+													on_change="on_change_note_qty(notes,note_qty)" />
+												<field name="amount" sum="Invoice Total" />
+											</group>
+										</group>
+									</form>
+									<tree string="Notes" editable="bottom" readonly="1">
+										<field name="notes" readonly="1" />
+										<field name="note_qty" style="text-align: center"
+											on_change="on_change_note_qty(notes,note_qty)" />
+										<field name="amount" sum="Invoice Total" />
+
+									</tree>
+								</field>
+							</page>
+
+						</notebook>
+						<notebook>
+							<page string="Cheque" readonly="1">
+								<field name="denomination_cheque_line">
+									<form string="Cheque">
+										<group>
+											<group>
+												<field name="partner_id" />
+												<field name="journal_id" string="Bank" />
+												<field name="cheque_no" />
+												<field name="amount" sum="Invoice Total" />
+											</group>
+										</group>
+									</form>
+									<tree string="Cheque" editable="bottom" readonly="1">
+										<field name="partner_id" readonly="1" />
+										<field name="journal_id" string="Bank" readonly="1" />
+										<field name="cheque_no" readonly="1" />
+										<field name="amount" sum="Invoice Total" readonly="1" />
+									</tree>
+								</field>
+							</page>
+						</notebook>
+						<notebook>
+							<page string="Bank" readonly="1">
+								<field name="denomination_bank_line">
+									<form string="Bank">
+										<group>
+											<group>
+												<field name="partner_id" />
+												<field name="journal_id" string="Bank" />
+												<field name="amount" sum="Invoice Total" />
+											</group>
+										</group>
+									</form>
+									<tree string="Bank" editable="bottom" readonly="1">
+										<field name="partner_id" readonly="1" />
+										<field name="journal_id" string="Bank" readonly="1" />
+										<field name="amount" sum="Invoice Total" readonly="1" />
+									</tree>
+								</field>
+							</page>
+						</notebook>
+						<group>
+							<group>
+								<field name="note" class="oe_inline" placeholder="Note..." />
+							</group>
+							<group>
+								<field name="product_amount" />
+								<field name="ar_amount" />
+								<field name="dssr_ar_amount" />
+								<field name="total_amount" />
+								<field name="cheque_amount" />
+								<field name="bank_amount" />
+								<field name="trans_amount" />
+								<field name="sign_diff_amount" />
+							</group>
+						</group>
+
+					</sheet>
+
+				</form>
+			</field>
+		</record>
+
+		<!-- filter -->
+		<record id="view_sales_denomination_filter" model="ir.ui.view">
+			<field name="name">Send Denomination Filter</field>
+			<field name="model">sales.denomination</field>
+			<field name="arch" type="xml">
+				<search string="Search Sales denomination">
+					<group expand="0" string="Group By...">
+						<filter string="Salesman Name" icon="terp-partner" domain="[]"
+							context="{'group_by':'user_id'}" />
+						<filter string="Sales Team" icon="terp-partner" domain="[]"
+							context="{'group_by':'sale_team_id'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_sales_denomination_tree">
+			<field name="name">sales.denomination.tree</field>
+			<field name="model">sales.denomination</field>
+			<field name="arch" type="xml">
+				<tree string="Sales Denomination" default_order="name desc">
+					<field name="name" />
+					<field name="date" />
+					<field name="sale_team_id" />
+					<field name="user_id" />
+					<field name="dssr_ar_amount" invisible="1" />
+					<field name="trans_amount" invisible="1" />
+					<field name="diff_amount" invisible="1" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="action_sales_denomination_view" model="ir.actions.act_window">
+			<field name="name">Sales Denomination</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">sales.denomination</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" eval="view_sales_denomination_tree" />
+			<field name="search_view_id" ref="view_sales_denomination_filter" />
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to create new mobile sale denomination
+				</p>
+			</field>
+		</record>
+
+		<menuitem id="sales_denomination" action="action_sales_denomination_view"
+			parent="account.menu_finance_bank_and_cash" name="Cash Denomination"
+			sequence="15" />
+	</data>
+</openerp>
+	    
+	    
+	    

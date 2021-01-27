@@ -1,0 +1,764 @@
+
+    <base href=http://52.76.137.255:8069>
+    <!DOCTYPE html>
+    <html style="height: 0;">
+        <head>
+            <link href="/report/static/src/css/reset.min.css" rel="stylesheet"/>
+            <link href="/web/static/lib/bootstrap/css/bootstrap.css" rel="stylesheet"/>
+            <link href="/website/static/src/css/website.css" rel="stylesheet"/>
+            <link href="/web/static/lib/fontawesome/css/font-awesome.css" rel="stylesheet"/>
+            <style type="text/css">
+            
+    body {
+        color: #000 !important;
+    }
+    .border-black td {
+        border-top: 1px solid black !important;
+    }
+    .table-condensed > thead > tr > th {
+        border-bottom: 1px solid black !important;
+    }
+    .zero_min_height {
+        min-height: 0px !important;
+    }
+
+        </style>
+            
+        </head>
+        <body class="container" onload="subst()">
+            <div class="page">
+				
+					<div class="row">
+						<div class="col-xs-3">
+							<img src="data:image/png;base64,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" style="max-height: 45px;" data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/div[1]/div[1]/img[1]">
+						</div>
+						<div class="col-xs-9 text-right" style="margin-top:20px;" data-oe-model="res.company" data-oe-id="3" data-oe-field="rml_header1" data-oe-type="char" data-oe-expression="o.create_uid.company_id.rml_header1"></div>
+					</div>
+					<div class="row zero_min_height" data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/div[2]">
+						<div class="col-xs-12">
+							<div style="border-bottom: 1px solid black;"></div>
+						</div>
+					</div>
+					<div data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/div[3]">
+						<span data-oe-model="res.company" data-oe-id="3" data-oe-field="partner_id" data-oe-type="many2one" data-oe-expression="o.create_uid.company_id.partner_id">Myanmar Distribution Group</span>
+					</div>
+					<div data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/div[4]">
+						<span data-oe-model="res.company" data-oe-id="3" data-oe-field="street" data-oe-type="char" data-oe-expression="o.create_uid.company_id.street">16(E) East Race Course Road</span>
+						,
+						<span data-oe-model="res.country.state" data-oe-id="53" data-oe-field="name" data-oe-type="char" data-oe-expression="o.create_uid.company_id.state_id.name">Tamwe</span>
+						,
+						<span data-oe-model="res.city" data-oe-id="1" data-oe-field="name" data-oe-type="char" data-oe-expression="o.create_uid.company_id.city.name">Yangon</span>
+						,
+						<span data-oe-model="res.country" data-oe-id="146" data-oe-field="name" data-oe-type="char" data-oe-expression="o.create_uid.company_id.country_id.name">Myanmar</span>
+						.
+					</div>
+
+					<h4 data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/h4[1]">
+						<strong>
+							Good Issue Note
+						</strong>
+					</h4>
+
+					<table class="table table-condensed" data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[1]">
+						<tr>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>(GIN) Ref:No.:</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span data-oe-model="branch.good.issue.note" data-oe-id="11010" data-oe-field="name" data-oe-type="char" data-oe-expression="o.name">BGIN/2020/0009177</span>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>(RFI) Ref:No.:</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span data-oe-model="branch.good.issue.note" data-oe-id="11010" data-oe-field="request_id" data-oe-type="many2one" data-oe-expression="o.request_id">BRFI/2020/0006591</span>
+							</td>
+
+						</tr>
+
+						<tr>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Branch:</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span data-oe-model="res.branch" data-oe-id="333" data-oe-field="name" data-oe-type="char" data-oe-expression="o.branch_id.name">LSD-TTY-Pyit Taing Htaung</span>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Receiver:</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span data-oe-model="branch.good.issue.note" data-oe-id="11010" data-oe-field="receiver" data-oe-type="char" data-oe-expression="o.receiver">Pyit Taing Htaung</span>
+							</td>
+						</tr>
+						<tr>
+							<td style="border:0pt;font-size:10pt;">
+                                                                  <strong>Internal Reference :</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+                                                                   <span data-oe-model="branch.good.issue.note" data-oe-id="11010" data-oe-field="internal_reference" data-oe-type="char" data-oe-expression="o.internal_reference">LSD-TTY/SO-0658-0920-DN-0000026487</span>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Delivery Address And Ph :</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span data-oe-model="branch.good.issue.note" data-oe-id="11010" data-oe-field="address" data-oe-type="char" data-oe-expression="o.address">No(7) Tharyar Kone St, Oae Bo Shae Tsp</span>
+							</td>
+						</tr>
+						<tr>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Requesting Location:</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span data-oe-model="stock.location" data-oe-id="5491" data-oe-field="name" data-oe-type="char" data-oe-expression="o.from_location_id.location_id.name">TTYPT</span>
+								<b>/</b>
+								<span data-oe-model="stock.location" data-oe-id="5492" data-oe-field="name" data-oe-type="char" data-oe-expression="o.from_location_id.name">LSD-TTY-Pyit Taing Htaung-Sellable</span>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Request Warehouse:</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span data-oe-model="stock.location" data-oe-id="1695" data-oe-field="name" data-oe-type="char" data-oe-expression="o.to_location_id.location_id.name">CWH1</span>
+								<b>/</b>
+								<span data-oe-model="stock.location" data-oe-id="1696" data-oe-field="name" data-oe-type="char" data-oe-expression="o.to_location_id.name">MDGCWH1-Sellable</span>
+							</td>
+						</tr>
+						<tr>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Requested By:</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span data-oe-model="branch.good.issue.note" data-oe-id="11010" data-oe-field="request_by" data-oe-type="many2one" data-oe-expression="o.request_by">LSD SA: Yadanar Aye Lwin</span>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Approved By:</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span data-oe-model="branch.good.issue.note" data-oe-id="11010" data-oe-field="approve_by" data-oe-type="many2one" data-oe-expression="o.approve_by">LOG &amp; WH :Zin Bo Min</span>
+							</td>
+						</tr>
+
+						<tr>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Date Of Issue:</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span data-oe-model="branch.good.issue.note" data-oe-id="11010" data-oe-field="issue_date" data-oe-type="date" data-oe-expression="o.issue_date">24/09/2020</span>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Issuer:</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span data-oe-model="branch.good.issue.note" data-oe-id="11010" data-oe-field="issue_by" data-oe-type="char" data-oe-expression="o.issue_by">DBS</span>
+							</td>
+						</tr>
+
+						<tr>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Loading Date :</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span data-oe-model="branch.good.issue.note" data-oe-id="11010" data-oe-field="loading_date" data-oe-type="date" data-oe-expression="o.loading_date">24/09/2020</span>
+							</td>
+
+							<td style="border:0pt;font-size:10pt;">
+								<strong>ETA Date :</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span data-oe-model="branch.good.issue.note" data-oe-id="11010" data-oe-field="eta_date" data-oe-type="date" data-oe-expression="o.eta_date">25/09/2020</span>
+							</td>
+
+						</tr>
+						<tr>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Loading Time :</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span data-oe-model="branch.good.issue.note" data-oe-id="11010" data-oe-field="loading_time" data-oe-type="char" data-oe-expression="o.loading_time">11:37 AM -12:00 AM</span>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Dock No :</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+							   <span data-oe-model="branch.good.issue.note" data-oe-id="11010" data-oe-field="dock_no" data-oe-type="char" data-oe-expression="o.dock_no">D-8</span>
+							
+							</td>
+						</tr>
+						<tr>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Total CBM :</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span data-oe-model="branch.good.issue.note" data-oe-id="11010" data-oe-field="total_cbm" data-oe-type="float" data-oe-expression="o.total_cbm">9.24</span>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Total Viss :</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span data-oe-model="branch.good.issue.note" data-oe-id="11010" data-oe-field="total_viss" data-oe-type="float" data-oe-expression="o.total_viss">2,413.70</span>
+							</td>
+						</tr>
+						<tr>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Total Ctn Qty :</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span data-oe-model="branch.good.issue.note" data-oe-id="11010" data-oe-field="total_ctn" data-oe-type="float" data-oe-expression="o.total_ctn">652</span>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Total Pcs Qty :</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span data-oe-model="branch.good.issue.note" data-oe-id="11010" data-oe-field="total_qty" data-oe-type="float" data-oe-expression="o.total_qty">110</span>
+							</td>
+						</tr>
+
+						<tr>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Vehicle No:</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span data-oe-model="branch.good.issue.note" data-oe-id="11010" data-oe-field="vehicle_id" data-oe-type="many2one" data-oe-expression="o.vehicle_id">Toyota/Dyna 14' / 5M-8633</span>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Transport Cost :</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span data-oe-model="branch.good.issue.note" data-oe-id="11010" data-oe-field="transport_cost" data-oe-type="float" data-oe-expression="o.transport_cost">99,000</span>
+							</td>
+						</tr>
+						<tr>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Route :</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span data-oe-model="branch.good.issue.note" data-oe-id="11010" data-oe-field="route_id" data-oe-type="many2one" data-oe-expression="o.route_id">Yangon To Lower Myanmar Sub D</span>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Labor Cost :</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span data-oe-model="branch.good.issue.note" data-oe-id="11010" data-oe-field="labor_cost" data-oe-type="float" data-oe-expression="o.labor_cost">0</span>
+							</td>
+						</tr>
+						<tr>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Transporter Name :</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span data-oe-model="branch.good.issue.note" data-oe-id="11010" data-oe-field="supplier_id" data-oe-type="many2one" data-oe-expression="o.supplier_id">Ko Kyaw Myo Lwin</span>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Total TCL :</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span data-oe-model="branch.good.issue.note" data-oe-id="11010" data-oe-field="total_tcl" data-oe-type="float" data-oe-expression="o.total_tcl">99,000</span>
+							</td>
+						</tr>
+						<tr>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Last Updated on:</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span data-oe-model="branch.good.issue.note" data-oe-id="11010" data-oe-field="write_date" data-oe-type="datetime" data-oe-expression="o.write_date">24/09/2020 15:47:14</span>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Total Value :</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span data-oe-model="branch.good.issue.note" data-oe-id="11010" data-oe-field="total_value" data-oe-type="float" data-oe-expression="o.total_value">8,805,400</span>
+							</td>
+
+						</tr>
+						<tr>
+
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Checked By:</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span data-oe-model="branch.good.issue.note" data-oe-id="11010" data-oe-field="checked_by" data-oe-type="char" data-oe-expression="o.checked_by">Kaung Mon Oo</span>
+							</td>
+						</tr>
+					</table>
+
+					<table class="table table-condensed">
+						<thead data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/thead[1]">
+							<tr>
+								<th>Product</th>
+								<th>UOM</th>
+								<th>Issued(QTY)</th>
+								<th>Received(QTY)</th>
+								<th>Remark</th>
+							</tr>
+						</thead>
+						<tbody class="invoice_tbody">
+							<tr>
+                                                               
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[1]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631639" data-oe-field="product_id" data-oe-type="many2one" data-oe-expression="l.product_id">NRC-J-100g</span>
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[2]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631639" data-oe-field="product_uom" data-oe-type="many2one" data-oe-expression="l.product_uom">24-Carton</span>
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[3]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631639" data-oe-field="issue_quantity" data-oe-type="float" data-oe-expression="l.issue_quantity">3</span>
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[4]">
+
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[5]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631639" data-oe-field="remark" data-oe-type="char" data-oe-expression="l.remark"></span>
+								</td>
+                                                         
+							</tr><tr>
+                                                               
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[1]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631640" data-oe-field="product_id" data-oe-type="many2one" data-oe-expression="l.product_id">Milo-3in1-PPP-22g</span>
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[2]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631640" data-oe-field="product_uom" data-oe-type="many2one" data-oe-expression="l.product_uom">12-Carton</span>
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[3]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631640" data-oe-field="issue_quantity" data-oe-type="float" data-oe-expression="l.issue_quantity">10</span>
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[4]">
+
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[5]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631640" data-oe-field="remark" data-oe-type="char" data-oe-expression="l.remark"></span>
+								</td>
+                                                         
+							</tr><tr>
+                                                               
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[1]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631641" data-oe-field="product_id" data-oe-type="many2one" data-oe-expression="l.product_id">Milo-UHT-115ml</span>
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[2]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631641" data-oe-field="product_uom" data-oe-type="many2one" data-oe-expression="l.product_uom">12x4xBtl</span>
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[3]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631641" data-oe-field="issue_quantity" data-oe-type="float" data-oe-expression="l.issue_quantity">50</span>
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[4]">
+
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[5]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631641" data-oe-field="remark" data-oe-type="char" data-oe-expression="l.remark"></span>
+								</td>
+                                                         
+							</tr><tr>
+                                                               
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[1]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631642" data-oe-field="product_id" data-oe-type="many2one" data-oe-expression="l.product_id">Dairy-Gift Set-TBL</span>
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[2]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631642" data-oe-field="product_uom" data-oe-type="many2one" data-oe-expression="l.product_uom">8-Carton</span>
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[3]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631642" data-oe-field="issue_quantity" data-oe-type="float" data-oe-expression="l.issue_quantity">5</span>
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[4]">
+
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[5]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631642" data-oe-field="remark" data-oe-type="char" data-oe-expression="l.remark"></span>
+								</td>
+                                                         
+							</tr><tr>
+                                                               
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[1]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631643" data-oe-field="product_id" data-oe-type="many2one" data-oe-expression="l.product_id">Maggi-OS-210g</span>
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[2]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631643" data-oe-field="product_uom" data-oe-type="many2one" data-oe-expression="l.product_uom">24-Carton</span>
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[3]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631643" data-oe-field="issue_quantity" data-oe-type="float" data-oe-expression="l.issue_quantity">2</span>
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[4]">
+
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[5]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631643" data-oe-field="remark" data-oe-type="char" data-oe-expression="l.remark">Nestle Project Rich Sticker</span>
+								</td>
+                                                         
+							</tr><tr>
+                                                               
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[1]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631644" data-oe-field="product_id" data-oe-type="many2one" data-oe-expression="l.product_id">Maggi-SP-14g</span>
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[2]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631644" data-oe-field="product_uom" data-oe-type="many2one" data-oe-expression="l.product_uom">15-Carton</span>
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[3]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631644" data-oe-field="issue_quantity" data-oe-type="float" data-oe-expression="l.issue_quantity">2</span>
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[4]">
+
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[5]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631644" data-oe-field="remark" data-oe-type="char" data-oe-expression="l.remark"></span>
+								</td>
+                                                         
+							</tr><tr>
+                                                               
+							</tr><tr>
+                                                               
+							</tr><tr>
+                                                               
+							</tr><tr>
+                                                               
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[1]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631648" data-oe-field="product_id" data-oe-type="many2one" data-oe-expression="l.product_id">Lac-Com</span>
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[2]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631648" data-oe-field="product_uom" data-oe-type="many2one" data-oe-expression="l.product_uom">36-Carton</span>
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[3]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631648" data-oe-field="issue_quantity" data-oe-type="float" data-oe-expression="l.issue_quantity">50</span>
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[4]">
+
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[5]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631648" data-oe-field="remark" data-oe-type="char" data-oe-expression="l.remark"></span>
+								</td>
+                                                         
+							</tr><tr>
+                                                               
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[1]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631649" data-oe-field="product_id" data-oe-type="many2one" data-oe-expression="l.product_id">SKO-C-330ml</span>
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[2]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631649" data-oe-field="product_uom" data-oe-type="many2one" data-oe-expression="l.product_uom">24-Case</span>
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[3]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631649" data-oe-field="issue_quantity" data-oe-type="float" data-oe-expression="l.issue_quantity">50</span>
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[4]">
+
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[5]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631649" data-oe-field="remark" data-oe-type="char" data-oe-expression="l.remark"></span>
+								</td>
+                                                         
+							</tr><tr>
+                                                               
+							</tr><tr>
+                                                               
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[1]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631651" data-oe-field="product_id" data-oe-type="many2one" data-oe-expression="l.product_id">SKS-P-500ml</span>
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[2]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631651" data-oe-field="product_uom" data-oe-type="many2one" data-oe-expression="l.product_uom">12-Case</span>
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[3]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631651" data-oe-field="issue_quantity" data-oe-type="float" data-oe-expression="l.issue_quantity">30</span>
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[4]">
+
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[5]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631651" data-oe-field="remark" data-oe-type="char" data-oe-expression="l.remark"></span>
+								</td>
+                                                         
+							</tr><tr>
+                                                               
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[1]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631652" data-oe-field="product_id" data-oe-type="many2one" data-oe-expression="l.product_id">SKO-P-1.5ltr</span>
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[2]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631652" data-oe-field="product_uom" data-oe-type="many2one" data-oe-expression="l.product_uom">6-Case</span>
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[3]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631652" data-oe-field="issue_quantity" data-oe-type="float" data-oe-expression="l.issue_quantity">100</span>
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[4]">
+
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[5]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631652" data-oe-field="remark" data-oe-type="char" data-oe-expression="l.remark"></span>
+								</td>
+                                                         
+							</tr><tr>
+                                                               
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[1]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631653" data-oe-field="product_id" data-oe-type="many2one" data-oe-expression="l.product_id">SKG-P-1.5ltr</span>
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[2]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631653" data-oe-field="product_uom" data-oe-type="many2one" data-oe-expression="l.product_uom">6-Case</span>
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[3]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631653" data-oe-field="issue_quantity" data-oe-type="float" data-oe-expression="l.issue_quantity">100</span>
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[4]">
+
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[5]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631653" data-oe-field="remark" data-oe-type="char" data-oe-expression="l.remark"></span>
+								</td>
+                                                         
+							</tr><tr>
+                                                               
+							</tr><tr>
+                                                               
+							</tr><tr>
+                                                               
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[1]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631656" data-oe-field="product_id" data-oe-type="many2one" data-oe-expression="l.product_id">MM-TYS-S</span>
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[2]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631656" data-oe-field="product_uom" data-oe-type="many2one" data-oe-expression="l.product_uom">Carton</span>
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[3]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631656" data-oe-field="issue_quantity" data-oe-type="float" data-oe-expression="l.issue_quantity">240</span>
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[4]">
+
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[5]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631656" data-oe-field="remark" data-oe-type="char" data-oe-expression="l.remark"></span>
+								</td>
+                                                         
+							</tr><tr>
+                                                               
+							</tr><tr>
+                                                               
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[1]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631658" data-oe-field="product_id" data-oe-type="many2one" data-oe-expression="l.product_id">KM-KIM-B</span>
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[2]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631658" data-oe-field="product_uom" data-oe-type="many2one" data-oe-expression="l.product_uom">6-Carton</span>
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[3]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631658" data-oe-field="issue_quantity" data-oe-type="float" data-oe-expression="l.issue_quantity">5</span>
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[4]">
+
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[5]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631658" data-oe-field="remark" data-oe-type="char" data-oe-expression="l.remark"></span>
+								</td>
+                                                         
+							</tr><tr>
+                                                               
+							</tr><tr>
+                                                               
+							</tr><tr>
+                                                               
+							</tr><tr>
+                                                               
+							</tr><tr>
+                                                               
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[1]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631663" data-oe-field="product_id" data-oe-type="many2one" data-oe-expression="l.product_id">AMT Mug</span>
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[2]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631663" data-oe-field="product_uom" data-oe-type="many2one" data-oe-expression="l.product_uom">Unit(s)</span>
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[3]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631663" data-oe-field="issue_quantity" data-oe-type="float" data-oe-expression="l.issue_quantity">30</span>
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[4]">
+
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[5]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631663" data-oe-field="remark" data-oe-type="char" data-oe-expression="l.remark"></span>
+								</td>
+                                                         
+							</tr><tr>
+                                                               
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[1]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631664" data-oe-field="product_id" data-oe-type="many2one" data-oe-expression="l.product_id">Vigo Mug</span>
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[2]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631664" data-oe-field="product_uom" data-oe-type="many2one" data-oe-expression="l.product_uom">Unit(s)</span>
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[3]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631664" data-oe-field="issue_quantity" data-oe-type="float" data-oe-expression="l.issue_quantity">80</span>
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[4]">
+
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[5]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631664" data-oe-field="remark" data-oe-type="char" data-oe-expression="l.remark"></span>
+								</td>
+                                                         
+							</tr><tr>
+                                                               
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[1]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631665" data-oe-field="product_id" data-oe-type="many2one" data-oe-expression="l.product_id">Milo-3in1-28g</span>
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[2]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631665" data-oe-field="product_uom" data-oe-type="many2one" data-oe-expression="l.product_uom">24-Carton</span>
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[3]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631665" data-oe-field="issue_quantity" data-oe-type="float" data-oe-expression="l.issue_quantity">5</span>
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[4]">
+
+								</td>
+								<td data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[2]/tbody[1]/tr[1]/t[1]/td[5]">
+									<span data-oe-model="branch.good.issue.note.line" data-oe-id="631665" data-oe-field="remark" data-oe-type="char" data-oe-expression="l.remark"></span>
+								</td>
+                                                         
+							</tr>
+						</tbody>
+					</table>
+
+					<table class="table table-condensed">
+						<thead data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[3]/thead[1]">
+							<tr>
+								<th></th>
+								<th>Issued By</th>
+								<th>Approved By</th>
+								<th>Received By</th>
+                                                                <th>Received By</th>
+
+							</tr>
+						</thead>
+						<tbody class="invoice_tbody">
+
+							<tr data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[3]/tbody[1]/tr[1]">
+								<td>Name</td>
+								<td>
+									<p data-oe-model="branch.good.issue.note" data-oe-id="11010" data-oe-field="issue_by" data-oe-type="char" data-oe-expression="l.issue_by">DBS</p>
+								</td>
+								<td>
+									<p data-oe-model="branch.good.issue.note" data-oe-id="11010" data-oe-field="approve_by" data-oe-type="many2one" data-oe-expression="l.approve_by">LOG &amp; WH :Zin Bo Min</p>
+								</td>
+								<td>
+									<p data-oe-model="branch.good.issue.note" data-oe-id="11010" data-oe-field="receiver" data-oe-type="char" data-oe-expression="l.receiver">Pyit Taing Htaung</p>
+								</td>
+                                                                  <td>
+
+								</td>
+								<br>
+							</tr>
+							<tr data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[3]/tbody[1]/tr[2]">
+								<td>Position</td>
+								<td></td>
+                                                                <td></td> 
+							        <td>Transporter</td>
+								<td>Customer</td>
+                                                               
+							</tr>
+							<tr data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[3]/tbody[1]/tr[3]">
+								<td>Signature</td>
+								<td></td>
+								<td></td>
+								<td></td>
+                                                                <td></td>
+							</tr>
+							<tr data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[3]/tbody[1]/tr[4]">
+								<td>Date</td>
+								<td></td>
+								<td></td>
+								<td></td>
+<td></td>
+							</tr>
+						</tbody>
+					</table>
+					<table class="table table-condensed">
+						<thead data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[4]/thead[1]">
+							<tr>
+								<th>LOSS/DAMAGE/SHORTAGE</th>
+								<th></th>
+								<th></th>
+								<th></th>
+								<th></th>
+							</tr>
+							<tr>
+								<th>Item Description</th>
+								<th>Damage/Shortage</th>
+								<th>QTY CTN</th>
+								<th>QTY in Pcs</th>
+								<th>Remark</th>
+							</tr>
+						</thead>
+						<tbody class="invoice_tbody">
+							<tr data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[4]/tbody[1]/tr[1]">
+								<td>
+
+								</td>
+								<td>
+									damage
+								</td>
+								<td>
+
+								</td>
+								<td>
+
+								</td>
+								<td>
+
+								</td>
+								<br>
+							</tr>
+							<tr data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[4]/tbody[1]/tr[2]">
+								<td>
+
+								</td>
+								<td>
+									shortage
+								</td>
+								<td>
+
+								</td>
+								<td>
+
+								</td>
+								<td>
+
+								</td>
+								<br>
+							</tr>
+							<tr data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[4]/tbody[1]/tr[3]">
+								<td>
+
+								</td>
+								<td>
+									-
+								</td>
+								<td>
+
+								</td>
+								<td>
+
+								</td>
+								<td>
+
+								</td>
+								<br>
+							</tr>
+							<tr data-oe-id="2006" data-oe-model="ir.ui.view" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/t[1]/table[4]/tbody[1]/tr[4]">
+								<td>
+									<b>(We hereby certify the receipt of goods unloaded in above
+										condition.)
+									</b>
+								</td>
+								<td>
+
+								</td>
+								<td>
+
+								</td>
+								<td>
+
+								</td>
+								<td>
+
+								</td>
+							</tr>
+
+						</tbody>
+					</table>
+
+				
+			</div>
+		
+				
+			
+        
+                
+        </body>
+    </html>
