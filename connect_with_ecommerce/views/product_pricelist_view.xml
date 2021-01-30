@@ -34,7 +34,7 @@
 			<field name="model">product.pricelist.version</field>
 			<field name="inherit_id" ref="product.product_pricelist_version_form_view" />
 			<field name="arch" type="xml">
-				<field name="company_id" position="after">
+				<field name="active" position="after">
 					<field name="city_id" />
 					<field name="township_id" />
 					<field name="is_sync_woo" />

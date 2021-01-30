@@ -179,6 +179,7 @@
 				<xpath expr="//field[@name='currency_id']" position="after">
 				    <field name="branch_id" />
 				    <field name="sales_channel" />
+				    <field name="consumer" />
 				</xpath>
 			</field>
 		</record>
