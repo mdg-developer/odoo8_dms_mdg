@@ -1966,16 +1966,20 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()
         cr.execute
         return datas
+    
     def sale_team_return(self, cr, uid, section_id , saleTeamId, context=None, **kwargs):
-        cr.execute('''select DISTINCT cr.id,cr.complete_name,cr.warehouse_id,cr.name,sm.member_id,cr.code,rel.product_id,cr.location_id,cr.allow_foc,cr.allow_tax,cr.branch_id,state.name
-                    from crm_case_section cr, sale_member_rel sm,product_sale_group_rel rel,res_country_state state
+        cr.execute('''select DISTINCT cr.id,cr.complete_name,cr.warehouse_id,cr.name,sm.member_id,cr.code,rel.product_id,cr.location_id,cr.allow_foc,cr.allow_tax,cr.branch_id,state.name,cr_deli.name as delivery_team
+                    from crm_case_section cr, sale_member_rel sm,product_sale_group_rel rel,res_country_state state,crm_case_section cr_deli
                     where sm.section_id = cr.id and cr.sale_group_id=rel.sale_group_id  
-                    and state.id =cr.default_division and sm.member_id =%s
+                    and state.id =cr.default_division 
+                    and cr.delivery_team_id =cr_deli.id
+                    and sm.member_id =%s
                     and cr.id = %s
             ''', (section_id, saleTeamId,))
         datas = cr.fetchall()
         cr.execute
         return datas
+    
     
     def get_good_issue_note(self, cr, uid, section_id, context=None, **kwargs):
         cr.execute('''select count(*) from good_issue_note where issue_date::date=current_date and state ='issue' and sale_team_id=%s''', (section_id,))
