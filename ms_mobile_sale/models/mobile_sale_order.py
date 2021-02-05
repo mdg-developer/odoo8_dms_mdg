@@ -4460,6 +4460,7 @@ class mobile_sale_order(osv.osv):
                         
                     rental_result = {                    
                         'partner_id':ar['partner_id'],
+                        'code':ar['customer_code'],
                         'qty':ar['qty'],
                         'image':ar['image'],
                         'date':ar['date'],

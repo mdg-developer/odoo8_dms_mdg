@@ -588,13 +588,15 @@ class res_partner_asset(osv.Model):
     _description = 'Partner Tags'
     _name = 'res.partner.asset'
     _columns = {
-                        'partner_id': fields.many2one('res.partner', 'Customer', select=True, ondelete='cascade', required=True),
+                        'partner_id': fields.many2one('res.partner', 'Customer', select=True, ondelete='cascade', required=False),
+                        'code':fields.char('Customer Code', required=False, readonly=True),
                         'township_id': fields.related(
                                             'partner_id', 'township',
                                             type='many2one',
                                             relation='res.township',
                                             string="Township", store=True),
                         'name':fields.char('Asset No', required=False),
+                        
                         'asset_name_id':fields.many2one('asset.configuration', 'Asset Name', required=False),
                         'date':fields.date('Date', required=True),
                         'type':fields.selection ([('rent', 'Rent'), ('give', 'Giving')],

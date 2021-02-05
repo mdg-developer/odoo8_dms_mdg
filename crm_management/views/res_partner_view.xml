@@ -170,6 +170,7 @@
 									<group>
 										<group>
 											<field name="partner_id" invisible="1" />
+											<field name="code" />
 											<field name="name" />
 											<field name="date" />
 											<field name="type" />
@@ -184,6 +185,7 @@
 								</form>
 								<tree string="Asset">
 									<field name="partner_id" invisible="1" />
+									<field name="code" />
 									<field name="name" />
 									<field name="date" />
 									<field name="type" />
