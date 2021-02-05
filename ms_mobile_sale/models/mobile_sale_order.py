@@ -1568,12 +1568,14 @@ class mobile_sale_order(osv.osv):
             ''', (section_id, section_id,))
             datas = cr.fetchall()    
         return datas        
+    
     def get_sale_team_members_datas(self, cr, uid , member_id, saleteam_id, context=None, **kwargs):
         cr.execute('''select u.id as id,u.active as active,u.login as login,u.password as password,u.partner_id as partner_id,p.name as name from res_users u, res_partner p
                    where u.partner_id = p.id and u.id in(select member_id from crm_case_section cr, sale_member_rel sm where sm.section_id = cr.id and cr.id =%s)''', (saleteam_id,)) 
         datas = cr.fetchall()
         cr.execute
         return datas
+    
     def sale_team_return(self, cr, uid, section_id , saleTeamId, context=None, **kwargs):
         cr.execute('''select DISTINCT cr.id,cr.complete_name,cr.warehouse_id,cr.name,sm.member_id,cr.code,pr.product_product_id,cr.location_id,cr.allow_foc,cr.allow_tax,cr.branch_id,state.name,cr_deli.name as delivery_team
                     from crm_case_section cr, sale_member_rel sm,crm_case_section_product_product_rel pr,res_country_state state,crm_case_section cr_deli
@@ -3676,6 +3678,7 @@ class mobile_sale_order(osv.osv):
                         
                     rental_result = {                    
                         'partner_id':ar['partner_id'],
+                        'code':ar['customer_code'],
                         'qty':ar['qty'],
                         'image':ar['image'],
                         'date':ar['date'],

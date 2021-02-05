@@ -12,7 +12,8 @@
 					<xpath
 						expr="//form/sheet/div[@class='oe_title oe_left']/h1/field[@name='name']"
 						position="after">
-						<field name="customer_code" placeholder="Code" attrs="{'readonly':[('customer','=',True)]}"/>
+						<field name="customer_code" placeholder="Code"
+							attrs="{'readonly':[('customer','=',True)]}" />
 					</xpath>
 					<xpath expr="//field[@name='website']" position="after">
 						<field name="outlet_type"
@@ -31,12 +32,12 @@
 					<xpath expr="//field[@name='function']" position="before">
 						<field name="temp_customer" />
 					</xpath>
-                    <xpath expr="//field[@name='category_id']" position="replace">
+					<xpath expr="//field[@name='category_id']" position="replace">
 
-                        <field name="category_id" widget="many2many_tags"
-                            placeholder="Tags..." attrs="{'invisible':[('supplier','=',True)]}" />
-                    </xpath>
-					
+						<field name="category_id" widget="many2many_tags"
+							placeholder="Tags..." attrs="{'invisible':[('supplier','=',True)]}" />
+					</xpath>
+
 					<xpath expr="//field[@name='title']" position="replace">
 
 					</xpath>
@@ -44,7 +45,7 @@
 						<field name="title" invisible="1" />
 					</xpath>
 					<xpath expr="//field[@name='email']" position="after">
-                        <field name="class_id" attrs="{'invisible':[('supplier','=',True)]}" />
+						<field name="class_id" attrs="{'invisible':[('supplier','=',True)]}" />
 						<field name="frequency_id" attrs="{'invisible':[('customer','=',False)]}" />
 
 						<field name="old_code" />
@@ -52,13 +53,9 @@
 						<group>
 							<button name="generate_customercode" type="object" string="Generate Code" />
 						</group>
-						<!-- <group>
-
-						</group>
-						<group>
-							<field name="customer_target_id" widget="selection"/>
-							<button name="customer_target" type="object" string="Customer Target" />
-						</group> -->
+						<!-- <group> </group> <group> <field name="customer_target_id" widget="selection"/> 
+							<button name="customer_target" type="object" string="Customer Target" /> 
+							</group> -->
 					</xpath>
 
 					<xpath expr="//div[@name='buttons']" position="inside">
@@ -148,7 +145,8 @@
 								<group>
 									<field name="customer" readonly="1" />
 									<field name="supplier" />
-                                    <field name="mobile_customer" readonly="1" attrs="{'invisible':[('supplier','=',True)]}"  />
+									<field name="mobile_customer" readonly="1"
+										attrs="{'invisible':[('supplier','=',True)]}" />
 								</group>
 								<!-- <group> <field name="ref"/> <field name="lang"/> <field name="date"/> 
 									</group> -->
@@ -172,6 +170,7 @@
 									<group>
 										<group>
 											<field name="partner_id" invisible="1" />
+											<field name="code" />
 											<field name="name" />
 											<field name="date" />
 											<field name="type" />
@@ -186,6 +185,7 @@
 								</form>
 								<tree string="Asset">
 									<field name="partner_id" invisible="1" />
+									<field name="code" />
 									<field name="name" />
 									<field name="date" />
 									<field name="type" />
@@ -556,7 +556,7 @@
 					<group expand="0" string="Group By...">
 						<filter string="Customer" icon="terp-partner" domain="[]"
 							context="{'group_by':'partner_id'}" />
-						<filter string="Date Day" context="{'group_by': 'date:day'}" />	
+						<filter string="Date Day" context="{'group_by': 'date:day'}" />
 						<filter string="Township" context="{'group_by':'township_id'}" />
 						<filter string="Branch" context="{'group_by':'branch_id'}" />
 					</group>
@@ -613,7 +613,7 @@
 
 		<menuitem id="config_view_customer_asset_type_action" parent="config_asset_type_action"
 			action="open_view_customer_asset_type_action" />
-		
+
 		<record id="view_partner_asset_configuration_tree" model="ir.ui.view">
 			<field name="name">res.partner.asset.configuration</field>
 			<field name="model">asset.configuration</field>
@@ -657,7 +657,7 @@
 		</record>
 		<menuitem id="config_view_customer_asset_configuration_action"
 			parent="config_asset_type_action" action="open_view_customer_asset_configuration_action" />
-		
+
 		<!-- Asset Check -->
 		<record id="view_partner_asset_check_tree" model="ir.ui.view">
 			<field name="name">res.partner.asset.check</field>
@@ -709,6 +709,6 @@
 		<menuitem id="config_view_customer_asset_check_action"
 			parent="base.menu_sales" action="open_view_customer_asset_check_action"
 			sequence="10" />
-		
+
 	</data>
 </openerp>
