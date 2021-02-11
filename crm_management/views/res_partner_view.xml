@@ -527,6 +527,7 @@
 				<tree string="Asset">
 					<field name="sr_no" />
 					<field name="partner_id" />
+					<field name="code" />
 					<field name="name" />
 					<field name="asset_name_id" />
 					<field name="date" />
@@ -549,6 +550,7 @@
 
 							<field name="sr_no" />
 							<field name="partner_id" />
+							<field name="code" />
 							<field name="township_id" />
 							<field name="name" />
 							<field name="asset_name_id" />
