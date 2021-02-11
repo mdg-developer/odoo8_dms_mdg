@@ -3674,10 +3674,17 @@ class mobile_sale_order(osv.osv):
                     if data:
                         asset_name_id = data[0][0]
                     else:
-                        asset_name_id = None                                                
-                        
+                        asset_name_id = None       
+                                                                 
+                    cursor.execute('select id From res_partner where customer_code= %s ', (ar['customer_code'],))
+                    data = cursor.fetchall()                
+                    if data:
+                        partner_id = data[0][0]
+                    else:
+                        partner_id = None 
+                                                
                     rental_result = {                    
-                        'partner_id':ar['partner_id'],
+                        'partner_id':partner_id,
                         'code':ar['customer_code'],
                         'qty':ar['qty'],
                         'image':ar['image'],

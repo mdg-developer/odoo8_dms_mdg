@@ -502,6 +502,7 @@
 			<field name="arch" type="xml">
 				<tree string="Asset">
 					<field name="partner_id" />
+					<field name="code" />
 					<field name="name" />
 					<field name="asset_name_id" />
 					<field name="date" />
@@ -509,7 +510,6 @@
 					<field name="asset_type" />
 					<field name="qty" />
 					<field name="active" />
-
 				</tree>
 			</field>
 		</record>
@@ -522,6 +522,8 @@
 					<group>
 						<group>
 							<field name="partner_id" />
+							<field name="code" />
+							
 							<field name="township_id" />
 							<field name="name" />
 							<field name="asset_name_id" />
