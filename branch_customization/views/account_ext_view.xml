@@ -40,7 +40,7 @@
 			<field name="inherit_id" ref="account_creditnote.view_creditnote_form" />
 			<field name="arch" type="xml">
 				<field name="m_status" position="after">
-					<field name="branch_id" />
+					<field name="branch_id" attrs="{'readonly': [('state','not in',('draft'))]}"/>
 				</field>
 			</field>
 		</record>
