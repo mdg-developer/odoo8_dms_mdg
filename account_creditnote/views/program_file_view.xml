@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		
+		<!-- =============== Credit Note Form ============ -->
+
+		<record id="view_program_form" model="ir.ui.view">
+			<field name="name">Program</field>
+			<field name="model">program.form.design</field>
+			<field eval="25" name="priority" />
+			<field name="arch" type="xml">
+				<form string="Program" version="7.0">
+					<sheet>
+						<group>
+							<group>
+								<field name="name" />
+								<field name="description"  />
+
+								
+								<field name="from_date" />
+								
+								
+								<field name="term_and_condition" />
+								
+															
+							</group>
+							<group>
+								<field name="amount" />
+								<field name="principle_id" />
+								<field name="to_date" />
+							</group>							
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="view_program_tree" model="ir.ui.view">
+			<field name="name">Program</field>
+			<field name="model">program.form.design</field>
+			<field name="arch" type="xml">
+				<tree string="Program">
+					<field name="name" />
+					<field name="description"  />
+
+					<field name="principle_id" />
+					<field name="from_date" />
+					<field name="to_date" />
+					<field name="amount" />
+					<field name="term_and_condition" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="action_programdesign" model="ir.actions.act_window">
+			<field name="name">Program</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">program.form.design</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to create new Credit Note .
+				</p>
+			</field>
+		</record>
+		
+		<menuitem action="action_programdesign" id="menu_programform"
+			parent="account.menu_finance_receivables" sequence="101"/>
+			
+	</data>
+</openerp>
