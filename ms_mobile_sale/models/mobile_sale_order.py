@@ -3884,7 +3884,6 @@ class mobile_sale_order(osv.osv):
                         parnter_id = data[0][0]
                     else:
                         parnter_id = None
-
                     amount = ar['amount']
                     cursor.execute("select replace(%s, ',', '')::float as amount", (amount,))
                     amount_data = cursor.fetchone()[0]
@@ -3898,7 +3897,7 @@ class mobile_sale_order(osv.osv):
                             'amount':amount,
                             'date':ar['date'],
                             'notes':ar['notes'],
-                            'cheque_no':ar['cheque_no'],
+                            'cheque_no':ar['cheque_no'].replace('\\', ""),
                             'partner_id':parnter_id,
                             'sale_team_id':ar['sale_team_id'],
                             'payment_code':ar['payment_code'],
@@ -3927,7 +3926,7 @@ class mobile_sale_order(osv.osv):
 #                 rental_collection.append(r)  
             if result:
                 for ar in result:
-                    payment_id = ar['payment_id'].replace('\\', '').replace('\\', '')           
+                    payment_id = ar['payment_id'].replace('\\', '').replace('\\', '')   
                     cursor.execute('select tb_ref_no from sale_order where name = %s ', (payment_id,))
                     data = cursor.fetchall()
                     if data:
@@ -3950,7 +3949,7 @@ class mobile_sale_order(osv.osv):
                             'amount':ar['amount'],
                             'date':ar['date'],
                             'notes':payment_id,
-                            'cheque_no':ar['cheque_no'],
+                            'cheque_no':ar['cheque_no'].replace('\\', ""),
                             'partner_id':ar['partner_id'],
                             'sale_team_id':ar['sale_team_id'],
                             'payment_code':ar['payment_code'],
