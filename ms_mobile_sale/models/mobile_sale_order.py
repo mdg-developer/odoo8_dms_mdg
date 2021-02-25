@@ -1883,7 +1883,7 @@ class mobile_sale_order(osv.osv):
                 cursor.execute("select default_section_id from res_users where id=%s", (user_id,))
                 team_id = cursor.fetchone()[0]            
                 print 'team_id', team_id, de_date
-                cursor.execute("select id from customer_payment where date=%s and sale_team_id=%s and cheque_no !=''  ", (de_date, team_id,))
+                cursor.execute("select id from customer_payment where date=%s and sale_team_id=%s and payment_code='CHEQ'  ", (de_date, team_id,))
                 payment_ids = cursor.fetchall()
                 cursor.execute("select id from ar_payment where date=%s and sale_team_id=%s and payment_code='CHEQ' ", (de_date, team_id,))
                 ar_payment_ids = cursor.fetchall()

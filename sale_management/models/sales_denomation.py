@@ -298,7 +298,7 @@ class sale_denomination(osv.osv):
                   'amount':0,
                 }
                 notes_line_obj.create(cursor, user, note_line_res, context=context)
-            cursor.execute("select id from customer_payment where date=%s and sale_team_id=%s and cheque_no !=''  ", (de_date, team_id,))
+            cursor.execute("select id from customer_payment where date=%s and sale_team_id=%s and payment_code='CHEQ'  ", (de_date, team_id,))
             payment_ids = cursor.fetchall()
             cursor.execute("select id from ar_payment where date=%s and sale_team_id=%s and payment_code='CHEQ' ", (de_date, team_id,))
             ar_payment_ids = cursor.fetchall()
