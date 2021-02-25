@@ -2179,6 +2179,7 @@ class mobile_sale_order(osv.osv):
             cheque_product_obj = self.pool.get('sales.denomination.cheque.line')
             ar_coll_obj = self.pool.get('sales.denomination.ar.line')
             bank_transfer_obj = self.pool.get('sales.denomination.bank.line')
+            credit_note_obj = self.pool.get('sales.denomination.credit.note.line')
             ar_obj = self.pool.get('ar.payment')
             inv_Obj = self.pool.get('account.invoice')
             invoice_obj = self.pool.get('account.invoice.line')
@@ -2278,12 +2279,14 @@ class mobile_sale_order(osv.osv):
                 cursor.execute("select default_section_id from res_users where id=%s", (user_id,))
                 team_id = cursor.fetchone()[0]            
                 print 'team_id', team_id, de_date
-                cursor.execute("select id from customer_payment where date=%s and sale_team_id=%s and cheque_no !=''  ", (de_date, team_id,))
+                cursor.execute("select id from customer_payment where date=%s and sale_team_id=%s and payment_code='CHEQ' ", (de_date, team_id,))
                 payment_ids = cursor.fetchall()
                 cursor.execute("select id from ar_payment where date=%s and sale_team_id=%s and payment_code='CHEQ' ", (de_date, team_id,))
                 ar_payment_ids = cursor.fetchall()
                 cursor.execute("select id from customer_payment where date=%s and sale_team_id=%s and payment_code='BNK' ", (de_date, team_id,))
                 bank_ids = cursor.fetchall()
+                cursor.execute("select id from customer_payment where date=%s and sale_team_id=%s and payment_code='CN' ", (de_date, team_id,))
+                credit_note_ids = cursor.fetchall()
                 cursor.execute("select id from ar_payment where date=%s and sale_team_id=%s and payment_code='BNK' ", (de_date, team_id,))
                 ar_bank_ids = cursor.fetchall()                              
                 cursor.execute("select id from mobile_sale_order where due_date=%s and user_id=%s and m_status !='done' and void_flag != 'voided' and type='cash'", (de_date, user_id))
@@ -2448,6 +2451,19 @@ class mobile_sale_order(osv.osv):
                                       'amount': amount,
                                         'denomination_bank_ids':deno_id, }
                     bank_transfer_obj.create(cursor, user, data_id, context=context)
+            if  credit_note_ids:
+                for credit_note in credit_note_ids:
+                    credit_note_data = payment_obj.browse(cursor, user, credit_note, context=context)                  
+                    partner_id = credit_note_data.partner_id.id
+                    creditnote_id = self.pool.get('account.creditnote').search(cursor, user, [('name', '=', credit_note_data.cheque_no)], context=context)
+                    creditnote_obj = self.pool.get('account.creditnote').browse(cursor, user, creditnote_id, context=context) 
+                    credit_note_id = creditnote_obj.id
+                    amount = credit_note_data.amount                    
+                    data_id = {'partner_id':partner_id,
+                               'credit_note_id':credit_note_id,
+                               'amount': amount,
+                               'denomination_credit_note_ids':deno_id, }
+                    credit_note_obj.create(cursor, user, data_id, context=context)
             if  ar_bank_ids:
                 for bank in ar_bank_ids:
                     bank_data = ar_obj.browse(cursor, user, bank, context=context)                  

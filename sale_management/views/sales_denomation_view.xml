@@ -154,6 +154,26 @@
 								</field>
 							</page>
 						</notebook>
+						<notebook>
+							<page string="Credit Note" readonly="1">
+								<field name="denomination_credit_note_line">
+									<form string="Credit Note">
+										<group>
+											<group>
+												<field name="partner_id" />
+												<field name="credit_note_id" />
+												<field name="amount" sum="Invoice Total" />
+											</group>
+										</group>
+									</form>
+									<tree string="Credit Note" editable="bottom" readonly="1">
+										<field name="partner_id" />
+										<field name="credit_note_id" />
+										<field name="amount" sum="Credite Note Total" />
+									</tree>
+								</field>
+							</page>
+						</notebook>
 						<group>
 							<group>
 								<field name="note" class="oe_inline" placeholder="Note..." />
@@ -165,6 +185,7 @@
 								<field name="total_amount" />
 								<field name="cheque_amount" />
 								<field name="bank_amount" />
+								<field name="credit_note_amount" />
 								<field name="trans_amount" />
 								<field name="sign_diff_amount" />
 							</group>
