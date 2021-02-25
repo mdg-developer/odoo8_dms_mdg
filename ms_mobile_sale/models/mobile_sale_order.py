@@ -3909,7 +3909,7 @@ class mobile_sale_order(osv.osv):
             print 'False'
             return False
         
-     def create_pre_order_payment(self, cursor, user, vals, context=None):
+    def create_pre_order_payment(self, cursor, user, vals, context=None):
         try:
             rental_obj = self.pool.get('customer.payment')
             str = "{" + vals + "}"
@@ -3960,6 +3960,7 @@ class mobile_sale_order(osv.osv):
         except Exception, e:
             print 'False'
             return False         
+        
     def get_bom(self, cr, uid , context=None):        
         cr.execute('''select mbl.product_id as product,mbl.product_qty as from_qty,mbl.product_uom  as from_uom_id,mb.product_id as to_product,mb.product_qty,mb.product_uom from mrp_bom mb ,mrp_bom_line mbl
                     where mb.id=mbl.bom_id''')
