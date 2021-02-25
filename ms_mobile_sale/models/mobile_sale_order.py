@@ -2660,17 +2660,69 @@ class mobile_sale_order(osv.osv):
             return False
         
     def get_credit_notes(self, cr, uid, sale_team_id , context=None, **kwargs):
-        cr.execute('''            
-                  select ac.id,ac.description,ac.name,ac.used_date,
+        team_obj = self.pool.get('crm.case.section')
+        team_data=team_obj.browse(cr, uid, sale_team_id, context=context)     
+        section_id=  team_data.id                            
+        is_supervisor=team_data.is_supervisor           
+        if is_supervisor==True:
+            cr.execute('''            
+                    select ac.id,ac.description,ac.name as cr_no,ac.used_date,
                     ac.issued_date,ac.terms_and_conditions,ac.amount,ac.so_no,
-                    ac.m_status,ac.customer_id,ac.type,ac.sale_team_id,res.name,res.customer_code,ac.ref_no
-                 from account_creditnote ac,res_partner res
-                   where ac.customer_id = res.id
-                   and ac.m_status = 'new'
-                   and  ac.sale_team_id = %s
-         ''', (sale_team_id,))
-        datas = cr.fetchall()
-        cr.execute
+                    ac.m_status,ac.customer_id,ac.type,res.name as customer_name,res.customer_code,ac.ref_no,program.name as program,principal.name  as principal,ac.create_date,ac.approved_date
+                     from account_creditnote ac,res_partner res,program_form_design program,product_maingroup principal
+                    where ac.customer_id = res.id
+                    and program.id =ac.program_id 
+                    and ac.state = 'approved'
+                    and principal.id=ac.principle_id
+                    AND ac.customer_id IN  (
+                   select partner_id from (
+                    (select distinct b.partner_id from res_partner_res_partner_category_rel a,
+                 sale_plan_day_line b
+                 , sale_plan_day p
+                where a.partner_id = b.partner_id
+                and b.line_id = p.id
+                and p.sale_team in (select id from crm_case_section where supervisor_team= %s)
+                )
+                UNION ALL
+                (select distinct b.partner_id from res_partner_res_partner_category_rel a,sale_plan_trip p,
+                 res_partner_sale_plan_trip_rel b
+                where a.partner_id = b.partner_id
+                and b.sale_plan_trip_id = p.id
+                and p.sale_team in (select id from crm_case_section where supervisor_team= %s)
+                )
+                )a group by partner_id
+                )
+             ''', (section_id,section_id,))
+            datas=cr.fetchall()            
+        else:
+            cr.execute('''            
+                             select ac.id,ac.description,ac.name as cr_no,ac.used_date,
+                            ac.issued_date,ac.terms_and_conditions,ac.amount,ac.so_no,
+                            ac.m_status,ac.customer_id,ac.type,res.name as customer_name,res.customer_code,ac.ref_no,program.name as program,principal.name  as principal,ac.create_date,ac.approved_date
+                             from account_creditnote ac,res_partner res,program_form_design program,product_maingroup principal
+                            where ac.customer_id = res.id
+                            and program.id =ac.program_id 
+                            and ac.state = 'approved'
+                            and principal.id=ac.principle_id
+                            AND ac.customer_id IN  (
+                           select partner_id from (
+                            (select distinct b.partner_id from res_partner_res_partner_category_rel a,
+                             sale_plan_day_line b
+                             , sale_plan_day p
+                            where a.partner_id = b.partner_id
+                            and b.line_id = p.id
+                            and p.sale_team = %s)
+                            UNION ALL
+                            (select distinct b.partner_id from res_partner_res_partner_category_rel a,sale_plan_trip p,
+                             res_partner_sale_plan_trip_rel b
+                            where a.partner_id = b.partner_id
+                            and b.sale_plan_trip_id = p.id
+                            and p.sale_team = %s
+                            )
+                            )a group by partner_id
+                            )
+                     ''', (section_id,section_id,))                
+            datas=cr.fetchall()            
         return datas
     
     def get_target_setting(self, cr, uid, sale_team_id , context=None, **kwargs):
@@ -3837,7 +3889,7 @@ class mobile_sale_order(osv.osv):
                     cursor.execute("select replace(%s, ',', '')::float as amount", (amount,))
                     amount_data = cursor.fetchone()[0]
                     amount = amount_data
-                    cursor.execute('select count(id) from customer_payment where journal_id= %s and payment_code = %s and  notes = %s  and date = %s', (ar['journal_id'],ar['payment_code'],ar['notes'],ar['date'],))
+                    cursor.execute('select count(id) from customer_payment where journal_id= %s and payment_code = %s and  notes = %s  and date = %s and amount = %s ', (ar['journal_id'],ar['payment_code'],ar['notes'],ar['date'],amount,))
                     payment_data = cursor.fetchone()[0]
                     if payment_data==0:                    
                         rental_result = {                    
@@ -3857,7 +3909,7 @@ class mobile_sale_order(osv.osv):
             print 'False'
             return False
         
-    def create_pre_order_payment(self, cursor, user, vals, context=None):
+     def create_pre_order_payment(self, cursor, user, vals, context=None):
         try:
             rental_obj = self.pool.get('customer.payment')
             str = "{" + vals + "}"
@@ -3889,7 +3941,7 @@ class mobile_sale_order(osv.osv):
                         so_id = data[0][0]
                     else:
                         so_id = None
-                    cursor.execute('select count(id) from customer_payment where journal_id= %s and payment_code = %s and  notes = %s  and date = %s', (ar['journal_id'],ar['payment_code'],payment_id,ar['date'],))
+                    cursor.execute('select count(id) from customer_payment where journal_id= %s and payment_code = %s and  notes = %s  and date = %s and amount = %s ', (ar['journal_id'],ar['payment_code'],payment_id,ar['date'],ar['amount'],))
                     payment_data = cursor.fetchone()[0]
                     if payment_data==0:                              
                         rental_result = {                    
@@ -3907,7 +3959,7 @@ class mobile_sale_order(osv.osv):
             return True
         except Exception, e:
             print 'False'
-            return False  
+            return False         
     def get_bom(self, cr, uid , context=None):        
         cr.execute('''select mbl.product_id as product,mbl.product_qty as from_qty,mbl.product_uom  as from_uom_id,mb.product_id as to_product,mb.product_qty,mb.product_uom from mrp_bom mb ,mrp_bom_line mbl
                     where mb.id=mbl.bom_id''')
