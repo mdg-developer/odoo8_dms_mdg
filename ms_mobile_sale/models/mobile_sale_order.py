@@ -2659,9 +2659,16 @@ class mobile_sale_order(osv.osv):
             print 'False'
             return False
         
-    def get_credit_notes(self, cr, uid, sale_team_id , context=None, **kwargs):
+    def get_credit_notes(self, cr, uid, sale_team_id , noteList ,context=None, **kwargs):
         team_obj = self.pool.get('crm.case.section')
-        team_data=team_obj.browse(cr, uid, sale_team_id, context=context)     
+        team_data=team_obj.browse(cr, uid, sale_team_id, context=context)  
+        noteList = str(tuple(noteList))
+        noteList = eval(noteList)   
+        if noteList:
+            where ='and ac.id NOT IN %s ' % (noteList,)
+        else:
+            where =''
+            
         section_id=  team_data.id                            
         is_supervisor=team_data.is_supervisor           
         if is_supervisor==True:
@@ -2674,6 +2681,7 @@ class mobile_sale_order(osv.osv):
                     and program.id =ac.program_id 
                     and ac.state = 'approved'
                     and principal.id=ac.principle_id
+                    %s
                     AND ac.customer_id IN  (
                    select partner_id from (
                     (select distinct b.partner_id from res_partner_res_partner_category_rel a,
@@ -2681,18 +2689,19 @@ class mobile_sale_order(osv.osv):
                  , sale_plan_day p
                 where a.partner_id = b.partner_id
                 and b.line_id = p.id
-                and p.sale_team in (select id from crm_case_section where supervisor_team= %s)
+                and p.sale_team in (select id from crm_case_section where supervisor_team= %%s)
                 )
                 UNION ALL
                 (select distinct b.partner_id from res_partner_res_partner_category_rel a,sale_plan_trip p,
                  res_partner_sale_plan_trip_rel b
                 where a.partner_id = b.partner_id
                 and b.sale_plan_trip_id = p.id
-                and p.sale_team in (select id from crm_case_section where supervisor_team= %s)
+                and p.sale_team in (select id from crm_case_section where supervisor_team= %%s)
                 )
                 )a group by partner_id
                 )
-             ''', (section_id,section_id,))
+             '''%(where), (section_id,section_id,))
+
             datas=cr.fetchall()            
         else:
             cr.execute('''            
@@ -2704,6 +2713,7 @@ class mobile_sale_order(osv.osv):
                             and program.id =ac.program_id 
                             and ac.state = 'approved'
                             and principal.id=ac.principle_id
+                            %s
                             AND ac.customer_id IN  (
                            select partner_id from (
                             (select distinct b.partner_id from res_partner_res_partner_category_rel a,
@@ -2711,17 +2721,17 @@ class mobile_sale_order(osv.osv):
                              , sale_plan_day p
                             where a.partner_id = b.partner_id
                             and b.line_id = p.id
-                            and p.sale_team = %s)
+                            and p.sale_team = %%s)
                             UNION ALL
                             (select distinct b.partner_id from res_partner_res_partner_category_rel a,sale_plan_trip p,
                              res_partner_sale_plan_trip_rel b
                             where a.partner_id = b.partner_id
                             and b.sale_plan_trip_id = p.id
-                            and p.sale_team = %s
+                            and p.sale_team = %%s
                             )
                             )a group by partner_id
                             )
-                     ''', (section_id,section_id,))                
+                     '''%(where), (section_id,section_id,))                
             datas=cr.fetchall()            
         return datas
     
