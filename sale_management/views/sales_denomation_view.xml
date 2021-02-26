@@ -167,9 +167,9 @@
 										</group>
 									</form>
 									<tree string="Credit Note" editable="bottom" readonly="1">
-										<field name="partner_id" />
-										<field name="credit_note_id" />
-										<field name="amount" sum="Credite Note Total" />
+										<field name="partner_id" readonly="1"/>
+										<field name="credit_note_id" readonly="1"/>
+										<field name="amount" sum="Credite Note Total" readonly="1"/>
 									</tree>
 								</field>
 							</page>
