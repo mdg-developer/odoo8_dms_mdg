@@ -90,6 +90,14 @@ class good_issue_note(osv.osv):
         return self.write(cr, uid, ids, {'state': 'approve','approve_by':uid,'issue_date':issue_date})
     
     def cancel(self, cr, uid, ids, context=None):
+        req_obj = self.pool.get('stock.requisition')
+        sale_order_obj = self.pool.get('sale.order')
+        req_id = req_obj.search(cr, uid, [('good_issue_id', '=', ids[0])], context=context)
+        req_value = req_obj.browse(cr, uid, req_id, context=context)
+        for order in req_value.order_line:
+            so_name = order.name
+            order_id = sale_order_obj.search(cr, uid, [('name', '=', so_name)], context=context) 
+            sale_order_obj.write(cr, uid, order_id, {'is_generate':False})    
         return self.write(cr, uid, ids, {'state':'cancel' })
     
 #     def unlink(self, cr, uid, ids, context=None):

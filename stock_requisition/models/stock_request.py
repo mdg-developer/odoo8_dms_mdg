@@ -121,6 +121,7 @@ class stock_requisition(osv.osv):
                  'order_line': fields.one2many('stock.requisition.order', 'stock_line_id', 'Sale Order', copy=True),
                  'pre_order':fields.boolean('Pre Order'),
          'partner_id':fields.many2one('res.partner', string='Partner'),
+         'good_issue_id':fields.many2one('good.issue.note', 'GIN No' ,readonly=True),
 
 }
     _defaults = {
@@ -261,7 +262,7 @@ class stock_requisition(osv.osv):
                                                   'qty_on_hand':qty_on_hand,
                                                   'sequence':sequence,
                                                   }, context=context)
-        return self.write(cr, uid, ids, {'state':'approve' , 'approve_by':uid})    
+        return self.write(cr, uid, ids, {'state':'approve' , 'approve_by':uid,'good_issue_id':good_id})    
     
     def cancel(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state':'cancel' })    
