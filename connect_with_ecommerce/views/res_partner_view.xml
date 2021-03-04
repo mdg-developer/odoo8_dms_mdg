@@ -12,6 +12,7 @@
 					<field name="birthday" />
 					<field name="gender" />
 					<field name="shop_name" />
+					<field name="woo_register_date" readonly="1"/>
 				</xpath>
 				<xpath expr="//div[@name='buttons']" position="inside">
 					<button class="oe_inline oe_stat_button" type="action"

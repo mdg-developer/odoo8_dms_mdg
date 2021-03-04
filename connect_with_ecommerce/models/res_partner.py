@@ -27,6 +27,7 @@ class res_partner(osv.osv):
                 'credit_applications': fields.function(_get_total_credit_app_data,string='Credit Application'),
                 'mobile': fields.char('Main Phone No'),
                 'phone': fields.char('Secondary Phone No'),
+                'woo_register_date': fields.date('Woo Register Date'),
             }   
           
     def send_otp_code(self, cr, uid, ids, mobile_phone, context=None):
@@ -115,6 +116,7 @@ class res_partner(osv.osv):
             vals['customer'] = True
             vals['date_partnership'] = datetime.today()             
             vals['temp_customer'] = name
+            vals['woo_register_date'] = datetime.today()
 #             if sale_channel == 'consumer':
             outlettype = outlettype_obj.search(cr, uid, [('name', '=ilike', 'Site Registered')],context=context)            
             if outlettype:
@@ -180,6 +182,7 @@ class res_partner(osv.osv):
                 vals['partner_longitude'] = partner_longitude
                 vals['gender'] = gender
                 vals['birthday'] = birthday
+                vals['woo_register_date'] = datetime.today()
 #                 vals['temp_customer'] = name
 #                 if sale_channel == 'consumer':
 #                 outlettype = outlettype_obj.search(cr, uid, [('name', '=ilike', 'Consumer')],context=context)            
