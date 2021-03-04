@@ -22,7 +22,7 @@
 					<sheet>
 						<group>
 							<group>
-								<field name="name" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+								<field name="name" />
 								<field name="so_no"  placeholder="SO00001" invisible="1"/>
 <!-- 								<field name="ref_no" placeholder="A00001" /> -->
 								<field name="customer_id" attrs="{'readonly': [('state','not in',('draft'))]}"/>

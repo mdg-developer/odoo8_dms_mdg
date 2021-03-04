@@ -2695,6 +2695,7 @@ class mobile_sale_order(osv.osv):
                     where ac.customer_id = res.id
                     and program.id =ac.program_id 
                     and ac.state = 'approved'
+                    and ac.m_status='new'
                     and principal.id=ac.principle_id
                     %s
                     AND ac.customer_id IN  (
@@ -2727,6 +2728,7 @@ class mobile_sale_order(osv.osv):
                             where ac.customer_id = res.id
                             and program.id =ac.program_id 
                             and ac.state = 'approved'
+                            and ac.m_status='new'
                             and principal.id=ac.principle_id
                             %s
                             AND ac.customer_id IN  (
@@ -3928,6 +3930,10 @@ class mobile_sale_order(osv.osv):
                             'payment_code':ar['payment_code'],
                         }
                         rental_obj.create(cursor, user, rental_result, context=context)
+                        noteObj = self.pool.get('account.creditnote')
+                        note_id = noteObj.search(cursor, user,  [('name', '=',  ar['cheque_no'].replace('\\', ""))],context=None)
+                        note_data = noteObj.browse(cursor, user,  note_id, context=context)
+                        note_data.write({'m_state':'used'})                        
             return True
         except Exception, e:
             print 'False'
@@ -3980,6 +3986,10 @@ class mobile_sale_order(osv.osv):
                             'payment_code':ar['payment_code'],
                         }
                         rental_obj.create(cursor, user, rental_result, context=context)
+                        noteObj = self.pool.get('account.creditnote')
+                        note_id = noteObj.search(cursor, user,  [('name', '=',  ar['cheque_no'].replace('\\', ""))],context=None)
+                        note_data = noteObj.browse(cursor, user,  note_id, context=context)
+                        note_data.write({'m_state':'used'})
             return True
         except Exception, e:
             print 'False'
@@ -4498,6 +4508,11 @@ class mobile_sale_order(osv.osv):
                         'payment_code':ar['payment_code'].replace('\\', ""),
                     }
                     rental_obj.create(cursor, user, rental_result, context=context)
+                    noteObj = self.pool.get('account.creditnote')
+                    note_id = noteObj.search(cursor, user,  [('name', '=',  ar['cheque_no'].replace('\\', ""))],context=None)
+                    note_data = noteObj.browse(cursor, user,  note_id, context=context)
+                    note_data.write({'m_state':'used'})
+                                        
             return True
         except Exception, e:
             print 'False'
