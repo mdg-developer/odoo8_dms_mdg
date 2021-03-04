@@ -10,34 +10,34 @@ class account_creditnote(osv.osv):
                 'used_date': fields.date('Claimed Date',readonly=True),
                 'ref_no': fields.char('Approval No'),
                 'so_no': fields.char('Source Document'),
-                'customer_id':fields.many2one('res.partner', 'Customer', domain="[('customer','=',True)]"),
+                'customer_id':fields.many2one('res.partner', 'Customer', domain="[('customer','=',True)]" , required=True),
                 'customer_code': fields.related('customer_id', 'customer_code', type='char', string='Customer Code',readonly=True),                
                 'branch_id':fields.many2one('res.branch', 'Branch'),
                 'sale_team_id':fields.many2one('crm.case.section', 'Sales Team'),
                 'user_id':fields.many2one('res.users', 'Redeemed By'),
                 'description': fields.char('Description'),
                 'terms_and_conditions': fields.char('Terms and Conditions'),
-                'm_status':fields.selection([('new', 'New'), ('issued', 'Issued'),
-                                                      ('used', 'Used')], string='Status',default='new'),
+                'm_status':fields.selection([('new', 'New'),
+                                                      ('used', 'Used')], string='Used Status',default='new'),
                 'type':fields.selection({('cash', 'Cash Rebate')}, string='Type' , required=True),
                 'amount': fields.float('Amount'),                
-                'program_id':fields.many2one('program.form.design', 'Program'), 
-                'principle_id':fields.many2one('product.maingroup', 'Principle',readonly=False),
+                'program_id':fields.many2one('program.form.design', 'Program' , required=True), 
+                'principle_id':fields.many2one('product.maingroup', 'Principle',readonly=False , required=True),
                 
 #                 'principle_id': fields.related('program_id', 'principle_id', type='many2one', relation='product.maingroup',
 #                             string='Principle', store=True, readonly=True),
                 'redeemed_user_id':fields.many2one('res.users', 'Redeemedby'),
-                'approved_date': fields.date('Apporoved Date',readonly=True),
-                'approved_user_id':fields.many2one('res.users', 'Apporoved By',readonly=True),
+                'approved_date': fields.date('Approved Date',readonly=True),
+                'approved_user_id':fields.many2one('res.users', 'Approved By',readonly=True),
                 'from_date': fields.date('From Date'),
                 'to_date': fields.date('To Date'),
                 'invoice_number': fields.char('Invoice Number',readonly=True),
                 'state':fields.selection([
-            ('draft','Draft'),
-            ('approved','Approved'),
-            ('redeemed','Redeemed'),
-            ('claimed','Claimed'),
-            
+                    ('draft','Draft'),
+                    ('approved','Approved'),
+                    ('redeemed','Redeemed'),
+                    ('claimed','Claimed'),
+                    
         ], string='Status', index=True, readonly=True, default='draft', copy=False)
                 }
     _defaults = {
@@ -94,7 +94,7 @@ class account_creditnote(osv.osv):
         
         
     def set_to_redeemed(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state':'redeemed','user_id':uid,'issued_date':fields.date.context_today(self,cr,uid,context=context)}, context=context)
+        self.write(cr, uid, ids, {'state':'redeemed','issued_date':fields.date.context_today(self,cr,uid,context=context)}, context=context)
         return True 
     
     def set_to_claimed(self, cr, uid, ids, context=None):
