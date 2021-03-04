@@ -64,6 +64,8 @@ class res_partner(osv.osv):
      'section_id':fields.many2many('crm.case.section', 'sale_team_customer_rel', 'partner_id', 'sale_team_id', string='Sales Team'),
         'isexclusive':fields.boolean('Exclusive'),
         'ctax_registration_no':fields.char('C Tax Registration No'),
+        'address_title':fields.char('Address Title'),
+        'contact_note': fields.text('Note'),
     }
     _defaults = {
                'start_time':'01',

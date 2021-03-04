@@ -32,5 +32,44 @@
 				</field>
 			</field>
 		</record>
+		
+		<record id="view_warehouse_form_branch_inherit" model="ir.ui.view">
+			<field name="name">stock.warehouse.form.inherit</field>
+			<field name="model">stock.warehouse</field>
+			<field name="inherit_id" ref="stock.view_warehouse" />
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//field[@name='code']" position="after">
+						<field name="branch_id" />
+					</xpath>
+				</data>
+			</field>
+		</record>
+		
+		<record id="view_warehouse_tree_branch_inherit" model="ir.ui.view">
+			<field name="name">stock.warehouse.form.inherit</field>
+			<field name="model">stock.warehouse</field>
+			<field name="inherit_id" ref="stock.view_warehouse_tree" />
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//field[@name='lot_stock_id']" position="after">
+						<field name="branch_id" />
+					</xpath>
+				</data>
+			</field>
+		</record>
+		
+		<record model="ir.ui.view" id="view_warehouse_search">
+			<field name="name">stock.warehouse.search</field>
+			<field name="model">stock.warehouse</field>
+			<field name="arch" type="xml">
+				<search string="Warehouse Search">
+					<group expand="0" string="Group By">
+						<filter string="Branch" icon="terp-go-home" context="{'group_by':'branch_id'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+		
 	</data>
 </openerp>
