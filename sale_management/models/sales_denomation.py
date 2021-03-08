@@ -325,6 +325,8 @@ class sale_denomination(osv.osv):
             bank_ids = cursor.fetchall()
             cursor.execute("select id from customer_payment where date=%s and sale_team_id=%s and payment_code='CN' ", (de_date, team_id,))
             credit_note_ids = cursor.fetchall()
+            cursor.execute("select id from ar_payment where date=%s and sale_team_id=%s and payment_code='CN' ", (de_date, team_id,))
+            ar_credit_note_ids = cursor.fetchall()
             cursor.execute("select id from ar_payment where date=%s and sale_team_id=%s and payment_code='BNK' ", (de_date, team_id,))
             ar_bank_ids = cursor.fetchall()                              
             cursor.execute("select id from account_invoice where date_invoice=%s and section_id =%s and state='open' and payment_type='cash' ", (de_date, team_id,))
@@ -411,6 +413,19 @@ class sale_denomination(osv.osv):
             if  credit_note_ids:
                 for credit_note in credit_note_ids:
                     credit_note_data = payment_obj.browse(cursor, user, credit_note, context=context)                  
+                    partner_id = credit_note_data.partner_id.id
+                    creditnote_id = self.pool.get('account.creditnote').search(cursor, user, [('name', '=', credit_note_data.cheque_no)], context=context)
+                    creditnote_obj = self.pool.get('account.creditnote').browse(cursor, user, creditnote_id, context=context)
+                    credit_note_id = creditnote_obj.id
+                    amount = credit_note_data.amount
+                    data_id = {'partner_id':partner_id,
+                               'credit_note_id':credit_note_id,
+                               'amount': amount,
+                               'denomination_credit_note_ids':deno_id, }
+                    credit_note_obj.create(cursor, user, data_id, context=context)
+            if  ar_credit_note_ids:
+                for credit_note in ar_credit_note_ids:
+                    credit_note_data = ar_obj.browse(cursor, user, credit_note, context=context)                  
                     partner_id = credit_note_data.partner_id.id
                     creditnote_id = self.pool.get('account.creditnote').search(cursor, user, [('name', '=', credit_note_data.cheque_no)], context=context)
                     creditnote_obj = self.pool.get('account.creditnote').browse(cursor, user, creditnote_id, context=context)

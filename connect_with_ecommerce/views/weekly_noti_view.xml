@@ -10,7 +10,9 @@
 					<sheet>
 						<group>							
 							<group>
-								<field name="partner_id" domain="[('customer','=',True)]" required="1"/>
+								<field name="state_id"/>
+								<field name="city_id"/>
+								<field name="township_ids"/>
 								<field name="notified_days_ids" widget="many2many_tags" required="1"/>
 								<field name="message" required="1"/>
 							</group>
@@ -25,7 +27,8 @@
 			<field name="model">weekly.noti</field>
 			<field name="arch" type="xml">
 				<tree>
-					<field name="partner_id"/>
+					<field name="state_id"/>
+					<field name="city_id"/>					
 					<field name="notified_days_ids"/>
 					<field name="message"/>
 				</tree>
