@@ -2876,8 +2876,8 @@ class mobile_sale_order(osv.osv):
     
     def udpate_credit_notes_issue_status(self, cr, uid, sale_team_id , context=None, **kwargs):
         try:
-            cr.execute('''update account_creditnote set m_Status='issued' where
-                        sale_team_id = %s and m_status ='new'
+            cr.execute('''update account_creditnote set m_Status='new' where
+                        sale_team_id = %s 
              ''', (sale_team_id,))
             return True
         except Exception, e:
