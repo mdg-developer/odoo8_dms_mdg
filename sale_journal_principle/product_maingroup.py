@@ -53,6 +53,11 @@ class product_maingroup(osv.osv):
                 help="This account will be used to value price difference between purchase price and cost price."),
             'partner_id':fields.many2one('res.partner', 'Supplier', domain="[('supplier','=',True)]", required=True),
            'pricelist_id': fields.many2one('product.pricelist', 'FOC Price List', domain="[('type','=','sale')]" , required=True),
+           'property_trade_payable_account': fields.property(
+                type='many2one',
+                relation='account.account', domain="[('type','in', ('receivable','payable'))]",
+                string="Trade Payable Account",
+                help="This account will be used to value price difference between purchase price and cost price."),
         'is_separate_transition':fields.boolean('Is Separate Transition',default=False),
                  
                     
