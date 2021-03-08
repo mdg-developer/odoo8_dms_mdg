@@ -22,7 +22,7 @@ class account_creditnote(osv.osv):
                 'type':fields.selection({('cash', 'Cash Rebate')}, string='Type' , required=True),
                 'amount': fields.float('Amount'),                
                 'program_id':fields.many2one('program.form.design', 'Program' , required=True), 
-                'principle_id':fields.many2one('product.maingroup', 'Principle',readonly=False , required=True),
+                'principle_id':fields.many2one('product.maingroup', 'Principal',readonly=False , required=True),
                 
 #                 'principle_id': fields.related('program_id', 'principle_id', type='many2one', relation='product.maingroup',
 #                             string='Principle', store=True, readonly=True),
@@ -32,6 +32,8 @@ class account_creditnote(osv.osv):
                 'from_date': fields.date('From Date'),
                 'to_date': fields.date('To Date'),
                 'invoice_number': fields.char('Invoice Number',readonly=True),
+                'remark': fields.char('Remark',readonly=False),
+
                 'state':fields.selection([
                     ('draft','Draft'),
                     ('approved','Approved'),

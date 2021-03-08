@@ -251,7 +251,7 @@ class sale_denomination(osv.osv):
       'discount_amount':fields.float('Discount Amount', digits_compute=dp.get_precision('Product Price')),
       'discount_total':fields.float('Discount Total', digits_compute=dp.get_precision('Product Price')),
         'invoice_sub_total':fields.float('Sub Total',digits_compute=dp.get_precision('Product Price')),
-          'total_amount':fields.function(_deno_amount, string='Denomination Total', digits_compute=dp.get_precision('Product Price'),type='float'),
+          'total_amount':fields.function(_deno_amount, string='Cash Denomination Total', digits_compute=dp.get_precision('Product Price'),type='float'),
      'product_amount':fields.function(_invoice_amount, string='Invoice Total', digits_compute=dp.get_precision('Product Price'),type='float'),
      'cheque_amount':fields.function(_cheque_amount, string='Cheque Total', digits_compute=dp.get_precision('Product Price'),type='float'),
      'ar_amount':fields.function(_ar_amount,string= 'AR Total', digits_compute=dp.get_precision('Product Price'),type='float'),
