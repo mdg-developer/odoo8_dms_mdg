@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        
+        <record id="view_product_template_multi_delivery_form" model="ir.ui.view">
+            <field name="name">product_template_sync_form</field>
+            <field name="model">product.template.multi.delivery</field>
+            <field name="arch"  type="xml">
+                <form string="Show Customer Map">
+                    <group col="4" colspan="6">
+                       <span class="o_form_label">All selected product will assign selected delivery group</span>
+                    </group>
+                    <group col="4" >
+                        <field name="delivery_id"/>	
+                    </group>    
+                    <footer>
+                        <button name="product_template_assign_delivery" string="Assign" type="object" class="oe_highlight" groups="base.group_no_one"/>
+                        or
+						<button string="Close" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_product_template_multi_delivery" model="ir.actions.act_window">
+            <field name="name">Assign Delivery Group</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.template.multi.delivery</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            
+        </record>
+
+        
+
+        <record model="ir.values" id="product_template_multi_map_value">
+            <field name="name">Assign Delivery Group</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_product_template_multi_delivery'))" />
+            <field name="key">action</field>
+            <field name="model">product.template</field>
+        </record>
+
+       
+
+    </data>
+</openerp>

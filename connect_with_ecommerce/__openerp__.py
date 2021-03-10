@@ -31,7 +31,7 @@
                     "address_management_system",
                     "product",
                     "product_product",
-                    "woo_commerce_ept"
+                    "woo_commerce_ept",'sale_group'
                 ],
     'description': """
 Connect With Ecommerce    
@@ -54,6 +54,7 @@ Connect With Ecommerce
         'views/product_reorder_view.xml',
         'views/app_version_view.xml',
         'wizards/pricelist_multi_sync_woo_view.xml',
+        'wizards/product_template_multi_delivery_view.xml',
         'views/stock_view.xml',
         'views/res_branch_view.xml',
                 ],

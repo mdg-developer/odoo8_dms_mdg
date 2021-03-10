@@ -42,7 +42,9 @@ Sale Group
         'views/sales_rom_view.xml',
         'views/sales_csm_view.xml',
         'views/sales_nsm_view.xml',
-        'views/sale_team_view.xml',       
+        'views/sale_team_view.xml',  
+        'views/delivery_group_view.xml',
+        
     ],
     'installable': True,
     'auto_install': False,
