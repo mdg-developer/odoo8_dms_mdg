@@ -1183,7 +1183,7 @@ class mobile_sale_order(osv.osv):
 #                             # validate invoice
 #                             invObj.invoice_validate()
                             self.pool['account.invoice'].signal_workflow(cr, uid, [invoice_id], 'invoice_open')
-                            self.pool['account.invoice'].credit_approve(cr, uid, [invoice_id], context=context)                                 
+                            #self.pool['account.invoice'].credit_approve(cr, uid, [invoice_id], context=context)                                 
                             new_session_name = ConnectorSession(cr, uid, context)
                             automatic_direct_sale_transfer.delay(new_session_name, solist, ms_ids.date, priority=10)
 #                             queue_id=self.pool['queue.job'].search(cr, uid, [('uuid', '=', jobid)], context=context)
@@ -1235,7 +1235,7 @@ class mobile_sale_order(osv.osv):
 #                             # validate invoice
 #                             invObj.invoice_validate()
                             self.pool['account.invoice'].signal_workflow(cr, uid, [invoice_id], 'invoice_open')
-                            self.pool['account.invoice'].credit_approve(cr, uid, [invoice_id], context=context)                                 
+                            #self.pool['account.invoice'].credit_approve(cr, uid, [invoice_id], context=context)                                 
 
                             # clicking the delivery order view button
                             stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)  # create delivery order with draft state
@@ -1267,7 +1267,7 @@ class mobile_sale_order(osv.osv):
 #                             # validate invoice
 #                             invObj.invoice_validate()
                             self.pool['account.invoice'].signal_workflow(cr, uid, [invoice_id], 'invoice_open')
-                            self.pool['account.invoice'].credit_approve(cr, uid, [invoice_id], context=context)                                 
+                            #self.pool['account.invoice'].credit_approve(cr, uid, [invoice_id], context=context)                                 
                             # clicking the delivery order view button
                             stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)
                             # cr.execute('update stock_move set location_id=%s where picking_id=%s',(ms_ids.location_id.id,stockViewResult['res_id'],))
@@ -2025,14 +2025,14 @@ class mobile_sale_order(osv.osv):
         return datas        
     
     
-    def udpate_credit_notes_issue_status(self, cr, uid, sale_team_id , context=None, **kwargs):
-        try:
-            cr.execute('''update account_creditnote set m_Status='issued' where
-                        sale_team_id = %s and m_status ='new'
-             ''', (sale_team_id,))
-            return True
-        except Exception, e:
-            return False
+#     def udpate_credit_notes_issue_status(self, cr, uid, sale_team_id , context=None, **kwargs):
+#         try:
+#             cr.execute('''update account_creditnote set m_Status='issued' where
+#                         sale_team_id = %s and m_status ='new'
+#              ''', (sale_team_id,))
+#             return True
+#         except Exception, e:
+#             return False
 
     def create_partner_photo(self, cursor, user, vals, context=None):
 

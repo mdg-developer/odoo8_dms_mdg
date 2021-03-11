@@ -123,8 +123,8 @@ class pendingdelivery(osv.osv):
                             self.pool['account.invoice'].signal_workflow(cr, uid, [invoice_id], 'invoice_open')
                             # pre_order =True
                             invoiceObj.write(cr, uid, invoice_id, {'pre_order':True}, context)      
-                            if payment_type=='credit':
-                                invoiceObj.credit_approve(cr, uid, [invoice_id], context=context)  
+#                             if payment_type=='credit':
+#                                 invoiceObj.credit_approve(cr, uid, [invoice_id], context=context)  
                             session = ConnectorSession(cr, uid, context)
                             jobid = automatic_pending_delivery_stock_transfer.delay(session, [solist], delivery_date, priority=20)
                             runner = ConnectorRunner()

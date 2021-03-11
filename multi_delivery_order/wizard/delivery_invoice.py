@@ -57,8 +57,8 @@ def automatic_delivery_invoices(session, order_ids,date):
             if invoice_id:
                 invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                 invoiceObj.signal_workflow(cr, uid, [invoice_id], 'invoice_open')
-                if payment_type == 'credit':
-                    invoiceObj.credit_approve(cr, uid, [invoice_id], context=context)
+#                 if payment_type == 'credit':
+#                     invoiceObj.credit_approve(cr, uid, [invoice_id], context=context)
         session = ConnectorSession(cr, uid, context)
         jobid = automatic_delivery_transfer.delay(session, order_ids, date, priority=30)
         runner = ConnectorRunner()
@@ -201,8 +201,8 @@ class sale_order_invoice_delivery_transfer(osv.osv_memory):
                         if invoice_id:
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                             invoiceObj.signal_workflow(cr, uid, [invoice_id], 'invoice_open')  
-                            if payment_type =='credit':        
-                                invoiceObj.credit_approve(cr, uid, [invoice_id], context=context)                                 
+#                             if payment_type =='credit':        
+#                                 invoiceObj.credit_approve(cr, uid, [invoice_id], context=context)                                 
         return True          
             
                
