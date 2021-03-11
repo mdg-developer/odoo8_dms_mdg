@@ -31,6 +31,8 @@
 						        <field name="ecommerce_uom_id"/>
 						    </group>
 						    <group>	
+						        <field name="delivery_id"/>
+						        
 						        <!-- <field name="ecommerce_price"/> -->
 						    </group>
 					    </group>					    						

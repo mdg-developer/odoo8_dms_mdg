@@ -1,1 +1,2 @@
 import pricelist_multi_sync_woo
+import product_template_multi_delivery_group

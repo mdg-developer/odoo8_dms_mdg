@@ -100,7 +100,7 @@ class account_creditnote(osv.osv):
         return True 
     
     def set_to_claimed(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state':'claimed','used_date':fields.date.context_today(self,cr,uid,context=context)}, context=context)
+        #self.write(cr, uid, ids, {'state':'claimed','used_date':fields.date.context_today(self,cr,uid,context=context)}, context=context)
         
         mod_obj = self.pool.get('ir.model.data')
         wiz_view = mod_obj.get_object_reference(cr, uid, 'account_creditnote', 'redeemed_journal_view')
