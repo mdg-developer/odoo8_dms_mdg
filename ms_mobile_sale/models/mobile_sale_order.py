@@ -2478,7 +2478,7 @@ class mobile_sale_order(osv.osv):
                         receiver=None
 
                     mso_result = {
-                         'ref_no':sr['rfi_no'],
+                         'ref_no':sr['rfi_no'].replace('\\', ""),
                         'request_date':sr['request_date'],
                         'request_by':sr['request_by'],
                         'issue_date':sr['issue_date'] ,
@@ -2551,6 +2551,8 @@ class mobile_sale_order(osv.osv):
                             ori_req_quantity = int(srl['req_quantity'])
                             uom_id = (srl['product_uom'])
                             # print 'product_idddddddddddd',req_quantity
+                            if big_uom_id ==None:
+                                big_uom_id=small_uom_id
                             
                             cursor.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (big_uom_id,))
                             bigger_qty = cursor.fetchone()[0]
