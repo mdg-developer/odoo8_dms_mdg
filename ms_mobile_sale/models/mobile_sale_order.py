@@ -2457,9 +2457,15 @@ class mobile_sale_order(osv.osv):
                 for credit_note in credit_note_ids:
                     credit_note_data = payment_obj.browse(cursor, user, credit_note, context=context)                  
                     partner_id = credit_note_data.partner_id.id
-                    creditnote_id = self.pool.get('account.creditnote').search(cursor, user, [('name', '=', credit_note_data.cheque_no)], context=context)
-                    creditnote_obj = self.pool.get('account.creditnote').browse(cursor, user, creditnote_id, context=context) 
-                    credit_note_id = creditnote_obj.id
+                    cursor.execute('select id from account_creditnote where name = %s ', (credit_note_data.cheque_no,))
+                    data = cursor.fetchall()
+                    if data:
+                        credit_note_id = data[0][0]
+                    else:
+                        credit_note_id = None
+                    #creditnote_id = self.pool.get('account.creditnote').search(cursor, user, [('name', '=', credit_note_data.cheque_no)], context=context)
+                    #creditnote_obj = self.pool.get('account.creditnote').browse(cursor, user, creditnote_id, context=context) 
+                    #credit_note_id = creditnote_obj.id
                     amount = credit_note_data.amount                    
                     data_id = {'partner_id':partner_id,
                                'credit_note_id':credit_note_id,
@@ -2468,14 +2474,20 @@ class mobile_sale_order(osv.osv):
                     credit_note_obj.create(cursor, user, data_id, context=context)
             if  ar_credit_note_ids:
                 for credit_note in ar_credit_note_ids:
-                    credit_note_data = ar_obj.browse(cursor, user, credit_note, context=context)                  
-                    partner_id = credit_note_data.partner_id.id
-                    creditnote_id = self.pool.get('account.creditnote').search(cursor, user, [('name', '=', credit_note_data.cheque_no)], context=context)
-                    creditnote_obj = self.pool.get('account.creditnote').browse(cursor, user, creditnote_id, context=context) 
-                    credit_note_id = creditnote_obj.id
+                    ar_credit_note_data = ar_obj.browse(cursor, user, credit_note, context=context)                  
+                    partner_id = ar_credit_note_data.partner_id.id
+                    cursor.execute('select id from account_creditnote where name = %s ', (ar_credit_note_data.cheque_no,))
+                    data = cursor.fetchall()
+                    if data:
+                        ar_credit_note_id = data[0][0]
+                    else:
+                        ar_credit_note_id = None                    
+#                     creditnote_id = self.pool.get('account.creditnote').search(cursor, user, [('name', '=', credit_note_data.cheque_no)], context=context)
+#                     creditnote_obj = self.pool.get('account.creditnote').browse(cursor, user, creditnote_id, context=context) 
+#                     credit_note_id = creditnote_obj.id
                     amount = credit_note_data.amount                    
                     data_id = {'partner_id':partner_id,
-                               'credit_note_id':credit_note_id,
+                               'credit_note_id':ar_credit_note_id,
                                'amount': amount,
                                'denomination_credit_note_ids':deno_id, }
                     credit_note_obj.create(cursor, user, data_id, context=context)
@@ -2966,19 +2978,19 @@ class mobile_sale_order(osv.osv):
             print e
             return False
                 
-    def udpate_credit_notes_used_status(self, cr, uid, sale_team_id , usedList, context=None, **kwargs):
-        try:
-            crnote = tuple(usedList)
-            note_order_obj = self.pool.get('account.creditnote')
-            list_val = None
-            list_val = note_order_obj.search(cr, uid, [('sale_team_id', '=', sale_team_id), ('m_status', '=', 'issued'), ('name', 'in', usedList)])            
-            print'credit id', list_val
-            for note_id in list_val:
-                print'Note id', note_id
-                cr.execute("""update account_creditnote set m_status ='used' where id = %s""", (note_id,))
-            return True
-        except Exception, e:
-            return False
+#     def udpate_credit_notes_used_status(self, cr, uid, sale_team_id , usedList, context=None, **kwargs):
+#         try:
+#             crnote = tuple(usedList)
+#             note_order_obj = self.pool.get('account.creditnote')
+#             list_val = None
+#             list_val = note_order_obj.search(cr, uid, [('sale_team_id', '=', sale_team_id), ('m_status', '=', 'issued'), ('name', 'in', usedList)])            
+#             print'credit id', list_val
+#             for note_id in list_val:
+#                 print'Note id', note_id
+#                 cr.execute("""update account_creditnote set m_status ='used' where id = %s""", (note_id,))
+#             return True
+#         except Exception, e:
+#             return False
     
     def get_branch_datas(self, cr, uid , context=None):        
         cr.execute('''select id,name,branch_code from res_branch where active = true''')
@@ -3898,42 +3910,47 @@ class mobile_sale_order(osv.osv):
                 rental_collection.append(r)  
             if rental_collection:
                 for ar in rental_collection:
-                    cursor.execute('select id from mobile_sale_order where name = %s ', (ar['payment_id'],))
+                    cursor.execute('select id,void_flag from mobile_sale_order where name = %s ', (ar['payment_id'],))
                     data = cursor.fetchall()
                     if data:
                         so_id = data[0][0]
+                        void_flag =data[0][1]
                     else:
                         so_id = None
-                    
-                    cursor.execute('select id from res_partner where customer_code = %s ', (ar['partner_id'],))
-                    data = cursor.fetchall()
-                    if data:
-                        parnter_id = data[0][0]
-                    else:
-                        parnter_id = None
-                    amount = ar['amount']
-                    cursor.execute("select replace(%s, ',', '')::float as amount", (amount,))
-                    amount_data = cursor.fetchone()[0]
-                    amount = amount_data
-                    cursor.execute('select count(id) from customer_payment where journal_id= %s and payment_code = %s and  notes = %s  and date = %s and amount = %s ', (ar['journal_id'],ar['payment_code'],ar['notes'],ar['date'],amount,))
-                    payment_data = cursor.fetchone()[0]
-                    if payment_data==0:                    
-                        rental_result = {                    
-                            'payment_id':so_id,
-                            'journal_id':ar['journal_id'],
-                            'amount':amount,
-                            'date':ar['date'],
-                            'notes':ar['notes'],
-                            'cheque_no':ar['cheque_no'].replace('\\', ""),
-                            'partner_id':parnter_id,
-                            'sale_team_id':ar['sale_team_id'],
-                            'payment_code':ar['payment_code'],
-                        }
-                        rental_obj.create(cursor, user, rental_result, context=context)
-                        noteObj = self.pool.get('account.creditnote')
-                        note_id = noteObj.search(cursor, user,  [('name', '=',  ar['cheque_no'].replace('\\', ""))],context=None)
-                        note_data = noteObj.browse(cursor, user,  note_id, context=context)
-                        note_data.write({'m_state':'used'})                        
+                        void_flag =None
+
+                    if void_flag!='voided':
+                        cursor.execute('select id from res_partner where customer_code = %s ', (ar['partner_id'],))
+                        data = cursor.fetchall()
+                        if data:
+                            parnter_id = data[0][0]
+                        else:
+                            parnter_id = None
+                        amount = ar['amount']
+                        cursor.execute("select replace(%s, ',', '')::float as amount", (amount,))
+                        amount_data = cursor.fetchone()[0]
+                        amount = amount_data
+                        cursor.execute('select count(id) from customer_payment where journal_id= %s and payment_code = %s and  notes = %s  and date = %s and amount = %s ', (ar['journal_id'],ar['payment_code'],ar['notes'],ar['date'],amount,))
+                        payment_data = cursor.fetchone()[0]
+                        if payment_data==0:                    
+                            rental_result = {                    
+                                'payment_id':so_id,
+                                'journal_id':ar['journal_id'],
+                                'amount':amount,
+                                'date':ar['date'],
+                                'notes':ar['notes'],
+                                'cheque_no':ar['cheque_no'].replace('\\', ""),
+                                'partner_id':parnter_id,
+                                'sale_team_id':ar['sale_team_id'],
+                                'payment_code':ar['payment_code'],
+                            }
+                            rental_obj.create(cursor, user, rental_result, context=context)
+                            cheque_no =ar['cheque_no'].replace('\\', "")
+                            cursor.execute("update account_creditnote set m_status ='used' where name=%s",(cheque_no,))
+                            #noteObj = self.pool.get('account.creditnote')
+                            #note_id = noteObj.search(cursor, user,  [('name', '=',  ar['cheque_no'].replace('\\', ""))],context=None)
+                            #note_data = noteObj.browse(cursor, user,  note_id, context=context)
+                            #note_data.write({'m_state':'used'})                        
             return True
         except Exception, e:
             print 'False'
@@ -3986,10 +4003,12 @@ class mobile_sale_order(osv.osv):
                             'payment_code':ar['payment_code'],
                         }
                         rental_obj.create(cursor, user, rental_result, context=context)
-                        noteObj = self.pool.get('account.creditnote')
-                        note_id = noteObj.search(cursor, user,  [('name', '=',  ar['cheque_no'].replace('\\', ""))],context=None)
-                        note_data = noteObj.browse(cursor, user,  note_id, context=context)
-                        note_data.write({'m_state':'used'})
+                        cheque_no =ar['cheque_no'].replace('\\', "")
+                        cursor.execute("update account_creditnote set m_status ='used' where name=%s",(cheque_no,))                        
+#                         noteObj = self.pool.get('account.creditnote')
+#                         note_id = noteObj.search(cursor, user,  [('name', '=',  ar['cheque_no'].replace('\\', ""))],context=None)
+#                         note_data = noteObj.browse(cursor, user,  note_id, context=context)
+#                         note_data.write({'m_state':'used'})
             return True
         except Exception, e:
             print 'False'
@@ -4508,10 +4527,12 @@ class mobile_sale_order(osv.osv):
                         'payment_code':ar['payment_code'].replace('\\', ""),
                     }
                     rental_obj.create(cursor, user, rental_result, context=context)
-                    noteObj = self.pool.get('account.creditnote')
-                    note_id = noteObj.search(cursor, user,  [('name', '=',  ar['cheque_no'].replace('\\', ""))],context=None)
-                    note_data = noteObj.browse(cursor, user,  note_id, context=context)
-                    note_data.write({'m_state':'used'})
+                    cheque_no =ar['cheque_no'].replace('\\', "")
+                    cursor.execute("update account_creditnote set m_status ='used' where name=%s",(cheque_no,))                      
+#                     noteObj = self.pool.get('account.creditnote')
+#                     note_id = noteObj.search(cursor, user,  [('name', '=',  ar['cheque_no'].replace('\\', ""))],context=None)
+#                     note_data = noteObj.browse(cursor, user,  note_id, context=context)
+#                     note_data.write({'m_state':'used'})
                                         
             return True
         except Exception, e:
