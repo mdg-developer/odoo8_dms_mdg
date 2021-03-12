@@ -3075,7 +3075,7 @@ class mobile_sale_order(osv.osv):
                         select inv.id,inv.number,inv.partner_id,rp.name customer_name,
                                rp.customer_code customer_code,inv.origin so_no,inv.date_invoice,
                                inv.amount_total,inv.residual balance,inv.payment_type,
-                               inv.journal_id,crm.name,inv.date_due
+                               inv.journal_id,crm.name,inv.date_due,inv.mobile_order_ref
                         from account_invoice inv, res_partner rp, crm_case_section crm
                         where inv.payment_type='credit' 
                         and inv.state='open' 
@@ -3093,7 +3093,7 @@ class mobile_sale_order(osv.osv):
                         select inv.id,inv.number,inv.partner_id,rp.name customer_name,
                                rp.customer_code customer_code,inv.origin so_no,inv.date_invoice,
                                inv.amount_total,inv.residual balance,inv.payment_type,
-                               inv.journal_id,crm.name,inv.date_due
+                               inv.journal_id,crm.name,inv.date_due,inv.mobile_order_ref
                         from account_invoice inv, res_partner rp, crm_case_section crm
                         where inv.payment_type='credit' 
                         and inv.state='open' 
@@ -3112,7 +3112,7 @@ class mobile_sale_order(osv.osv):
                         select inv.id,inv.number,inv.partner_id,rp.name customer_name,
                                rp.customer_code customer_code,inv.origin so_no,inv.date_invoice,
                                inv.amount_total,inv.residual balance,inv.payment_type,
-                               inv.journal_id,crm.name,inv.date_due
+                               inv.journal_id,crm.name,inv.date_due,inv.mobile_order_ref
                         from account_invoice inv, res_partner rp, crm_case_section crm
                         where inv.payment_type='credit' 
                         and inv.state='open' 
@@ -3130,7 +3130,7 @@ class mobile_sale_order(osv.osv):
                         select inv.id,inv.number,inv.partner_id,rp.name customer_name,
                                rp.customer_code customer_code,inv.origin so_no,inv.date_invoice,
                                inv.amount_total,inv.residual balance,inv.payment_type,
-                               inv.journal_id,crm.name,inv.date_due
+                               inv.journal_id,crm.name,inv.date_due,inv.mobile_order_ref
                         from account_invoice inv, res_partner rp, crm_case_section crm
                         where inv.payment_type='credit' 
                         and inv.state='open' 
