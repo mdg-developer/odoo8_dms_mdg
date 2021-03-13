@@ -89,14 +89,41 @@ class account_creditnote(osv.osv):
                     cr.execute("""insert into account_move_line (partner_id,name,account_id,date_maturity,move_id,credit,debit,journal_id,date,company_id,period_id) 
                         values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s),
                               (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
-                              ( resVal.customer_id.id,resVal.name , resVal.principle_id.property_difference_receivable_account.id,   resVal.approved_date, move_id, 0.0, resVal.amount, journal_id[0], resVal.approved_date,company_id, period_id, 
+                              ( resVal.customer_id.id,resVal.name , resVal.principle_id.property_receivable_clearing_account.id,   resVal.approved_date, move_id, 0.0, resVal.amount, journal_id[0], resVal.approved_date,company_id, period_id, 
                                resVal.customer_id.id,resVal.name,resVal.principle_id.property_trade_payable_account.id,resVal.approved_date, move_id, resVal.amount, 0.0, journal_id[0], resVal.approved_date,company_id, period_id,))
             
         return True
         
         
     def set_to_redeemed(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state':'redeemed','issued_date':fields.date.context_today(self,cr,uid,context=context)}, context=context)
+        self.write(cr, uid, ids, {'state':'redeemed','user_id':uid,'issued_date':fields.date.context_today(self,cr,uid,context=context)}, context=context)
+        move_Obj = self.pool.get('account.move')
+        journal_obj = self.pool.get('account.journal')
+        journal_id = journal_obj.search(cr, uid, [('code', '=', 'CN')],context=None)
+        if ids:
+                for resVal in self.browse(cr, uid, ids, context=context):
+                    if not resVal.principle_id:
+                        raise osv.except_osv(_('Configuration Error!'), _('Please select the principle.'))
+                    account_move = {
+                                        'journal_id': journal_id[0],
+                                        'state': 'draft',
+                                        'date': resVal.issued_date,
+                                        'amount': resVal.amount,
+                                        'ref': resVal.name,
+                                        'partner_id': resVal.customer_id.id,
+                                        'branch_id': resVal.branch_id.id,
+                                        
+                                        }
+                    company_id = resVal.create_uid.company_id.id
+                    cr.execute("select * from account_period where %s >=date_start and %s <=date_stop", (resVal.approved_date, resVal.approved_date,))         
+                    period_id = cr.fetchone()[0]
+                    move_id = move_Obj.create(cr, uid, account_move, context=context)
+                    cr.execute("""insert into account_move_line (partner_id,name,account_id,date_maturity,move_id,credit,debit,journal_id,date,company_id,period_id) 
+                        values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s),
+                              (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
+                              ( resVal.customer_id.id,resVal.name , resVal.principle_id.property_trade_payable_account.id,resVal.approved_date, move_id, 0.0, resVal.amount, journal_id[0], resVal.approved_date,company_id, period_id, 
+                               resVal.customer_id.id,resVal.name,resVal.principle_id.property_account_receivable_clearing.id,resVal.approved_date, move_id, resVal.amount, 0.0, journal_id[0], resVal.approved_date,company_id, period_id,))
+        
         return True 
     
     def set_to_claimed(self, cr, uid, ids, context=None):

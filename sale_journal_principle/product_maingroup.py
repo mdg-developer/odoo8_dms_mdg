@@ -58,6 +58,11 @@ class product_maingroup(osv.osv):
                 relation='account.account', domain="[('type','in', ('receivable','payable'))]",
                 string="Trade Payable Account",
                 help="This account will be used to value price difference between purchase price and cost price."),
+           'property_receivable_clearing_account': fields.property(
+                type='many2one',
+                relation='account.account', domain="[('type','in', ('receivable','payable'))]",
+                string="A/R Receivable Clearing Account",
+               ), 
         'is_separate_transition':fields.boolean('Is Separate Transition',default=False),
                  
                     

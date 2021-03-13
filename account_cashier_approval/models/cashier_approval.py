@@ -336,7 +336,8 @@ class cashier_approval(osv.osv):
                                         'type':'receipt',
                                         'reference':invoice_num,
                                           'payment_option': "without_writeoff",
-                                         'company_id':invoice.company_id.id
+                                         'company_id':invoice.company_id.id,
+                                         'name':payment[9]
 
                                         }
                     # create register payment voucher
@@ -470,7 +471,7 @@ class cashier_approval(osv.osv):
                 inv_id = invoice_line_obj.create(cr, uid, data_id, context=context)
             
             self.generte_ar(cr, uid, ids, context=context)
-            self.generte_cr(cr, uid, ids, context=context) 
+            #self.generte_cr(cr, uid, ids, context=context) 
             self.generate_denomination(cr, uid, ids, context=context)   
             self.generate_denomination_product(cr, uid, ids, context=context)
             self.generate_payment(cr, uid, ids, context=context)
