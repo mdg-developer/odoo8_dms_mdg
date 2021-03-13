@@ -177,7 +177,10 @@
 											<field name="note" />
 										</group>
 										<group>
+
 											<field name="asset_type" />
+											<field name="asset_name_id" />
+
 											<field name="qty" />
 											<field name="image" widget='image' class="oe_avatar" />
 										</group>
@@ -190,7 +193,10 @@
 									<field name="date" />
 									<field name="type" />
 									<field name="asset_type" />
+									<field name="asset_name_id" />
 									<field name="qty" />
+									<field name="note" />
+
 								</tree>
 							</field>
 						</page>
@@ -535,6 +541,8 @@
 					<field name="asset_type" />
 					<field name="qty" />
 					<field name="active" />
+					<field name="note" />
+
 
 				</tree>
 			</field>

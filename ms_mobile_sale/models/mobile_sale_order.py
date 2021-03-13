@@ -2485,7 +2485,7 @@ class mobile_sale_order(osv.osv):
 #                     creditnote_id = self.pool.get('account.creditnote').search(cursor, user, [('name', '=', credit_note_data.cheque_no)], context=context)
 #                     creditnote_obj = self.pool.get('account.creditnote').browse(cursor, user, creditnote_id, context=context) 
 #                     credit_note_id = creditnote_obj.id
-                    amount = credit_note_data.amount                    
+                    amount = ar_credit_note_data.amount                    
                     data_id = {'partner_id':partner_id,
                                'credit_note_id':ar_credit_note_id,
                                'amount': amount,
@@ -4603,6 +4603,7 @@ class mobile_sale_order(osv.osv):
                         'asset_name_id':asset_name_id,
                         'asset_type':access_type_id,
                         'type':ar['type'],
+                        'note': ar['note'],
                     }
                     rental_obj.create(cursor, user, rental_result, context=context)
             return True
