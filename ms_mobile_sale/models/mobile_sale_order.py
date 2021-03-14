@@ -1966,16 +1966,20 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()
         cr.execute
         return datas
+    
     def sale_team_return(self, cr, uid, section_id , saleTeamId, context=None, **kwargs):
-        cr.execute('''select DISTINCT cr.id,cr.complete_name,cr.warehouse_id,cr.name,sm.member_id,cr.code,rel.product_id,cr.location_id,cr.allow_foc,cr.allow_tax,cr.branch_id,state.name
-                    from crm_case_section cr, sale_member_rel sm,product_sale_group_rel rel,res_country_state state
+        cr.execute('''select DISTINCT cr.id,cr.complete_name,cr.warehouse_id,cr.name,sm.member_id,cr.code,rel.product_id,cr.location_id,cr.allow_foc,cr.allow_tax,cr.branch_id,state.name,cr_deli.name as delivery_team
+                    from crm_case_section cr, sale_member_rel sm,product_sale_group_rel rel,res_country_state state,crm_case_section cr_deli
                     where sm.section_id = cr.id and cr.sale_group_id=rel.sale_group_id  
-                    and state.id =cr.default_division and sm.member_id =%s
+                    and state.id =cr.default_division 
+                    and cr.delivery_team_id =cr_deli.id
+                    and sm.member_id =%s
                     and cr.id = %s
             ''', (section_id, saleTeamId,))
         datas = cr.fetchall()
         cr.execute
         return datas
+    
     
     def get_good_issue_note(self, cr, uid, section_id, context=None, **kwargs):
         cr.execute('''select count(*) from good_issue_note where issue_date::date=current_date and state ='issue' and sale_team_id=%s''', (section_id,))
@@ -2175,6 +2179,7 @@ class mobile_sale_order(osv.osv):
             cheque_product_obj = self.pool.get('sales.denomination.cheque.line')
             ar_coll_obj = self.pool.get('sales.denomination.ar.line')
             bank_transfer_obj = self.pool.get('sales.denomination.bank.line')
+            credit_note_obj = self.pool.get('sales.denomination.credit.note.line')
             ar_obj = self.pool.get('ar.payment')
             inv_Obj = self.pool.get('account.invoice')
             invoice_obj = self.pool.get('account.invoice.line')
@@ -2274,12 +2279,16 @@ class mobile_sale_order(osv.osv):
                 cursor.execute("select default_section_id from res_users where id=%s", (user_id,))
                 team_id = cursor.fetchone()[0]            
                 print 'team_id', team_id, de_date
-                cursor.execute("select id from customer_payment where date=%s and sale_team_id=%s and cheque_no !=''  ", (de_date, team_id,))
+                cursor.execute("select id from customer_payment where date=%s and sale_team_id=%s and payment_code='CHEQ' ", (de_date, team_id,))
                 payment_ids = cursor.fetchall()
                 cursor.execute("select id from ar_payment where date=%s and sale_team_id=%s and payment_code='CHEQ' ", (de_date, team_id,))
                 ar_payment_ids = cursor.fetchall()
                 cursor.execute("select id from customer_payment where date=%s and sale_team_id=%s and payment_code='BNK' ", (de_date, team_id,))
                 bank_ids = cursor.fetchall()
+                cursor.execute("select id from customer_payment where date=%s and sale_team_id=%s and payment_code='CN' ", (de_date, team_id,))
+                credit_note_ids = cursor.fetchall()
+                cursor.execute("select id from ar_payment where date=%s and sale_team_id=%s and payment_code='CN' ", (de_date, team_id,))
+                ar_credit_note_ids = cursor.fetchall()
                 cursor.execute("select id from ar_payment where date=%s and sale_team_id=%s and payment_code='BNK' ", (de_date, team_id,))
                 ar_bank_ids = cursor.fetchall()                              
                 cursor.execute("select id from mobile_sale_order where due_date=%s and user_id=%s and m_status !='done' and void_flag != 'voided' and type='cash'", (de_date, user_id))
@@ -2444,6 +2453,44 @@ class mobile_sale_order(osv.osv):
                                       'amount': amount,
                                         'denomination_bank_ids':deno_id, }
                     bank_transfer_obj.create(cursor, user, data_id, context=context)
+            if  credit_note_ids:
+                for credit_note in credit_note_ids:
+                    credit_note_data = payment_obj.browse(cursor, user, credit_note, context=context)                  
+                    partner_id = credit_note_data.partner_id.id
+                    cursor.execute('select id from account_creditnote where name = %s ', (credit_note_data.cheque_no,))
+                    data = cursor.fetchall()
+                    if data:
+                        credit_note_id = data[0][0]
+                    else:
+                        credit_note_id = None
+                    #creditnote_id = self.pool.get('account.creditnote').search(cursor, user, [('name', '=', credit_note_data.cheque_no)], context=context)
+                    #creditnote_obj = self.pool.get('account.creditnote').browse(cursor, user, creditnote_id, context=context) 
+                    #credit_note_id = creditnote_obj.id
+                    amount = credit_note_data.amount                    
+                    data_id = {'partner_id':partner_id,
+                               'credit_note_id':credit_note_id,
+                               'amount': amount,
+                               'denomination_credit_note_ids':deno_id, }
+                    credit_note_obj.create(cursor, user, data_id, context=context)
+            if  ar_credit_note_ids:
+                for credit_note in ar_credit_note_ids:
+                    ar_credit_note_data = ar_obj.browse(cursor, user, credit_note, context=context)                  
+                    partner_id = ar_credit_note_data.partner_id.id
+                    cursor.execute('select id from account_creditnote where name = %s ', (ar_credit_note_data.cheque_no,))
+                    data = cursor.fetchall()
+                    if data:
+                        ar_credit_note_id = data[0][0]
+                    else:
+                        ar_credit_note_id = None                    
+#                     creditnote_id = self.pool.get('account.creditnote').search(cursor, user, [('name', '=', credit_note_data.cheque_no)], context=context)
+#                     creditnote_obj = self.pool.get('account.creditnote').browse(cursor, user, creditnote_id, context=context) 
+#                     credit_note_id = creditnote_obj.id
+                    amount = ar_credit_note_data.amount                    
+                    data_id = {'partner_id':partner_id,
+                               'credit_note_id':ar_credit_note_id,
+                               'amount': amount,
+                               'denomination_credit_note_ids':deno_id, }
+                    credit_note_obj.create(cursor, user, data_id, context=context)
             if  ar_bank_ids:
                 for bank in ar_bank_ids:
                     bank_data = ar_obj.browse(cursor, user, bank, context=context)                  
@@ -2639,18 +2686,82 @@ class mobile_sale_order(osv.osv):
             print 'False'
             return False
         
-    def get_credit_notes(self, cr, uid, sale_team_id , context=None, **kwargs):
-        cr.execute('''            
-                  select ac.id,ac.description,ac.name,ac.used_date,
+    def get_credit_notes(self, cr, uid, sale_team_id , noteList ,context=None, **kwargs):
+        team_obj = self.pool.get('crm.case.section')
+        team_data=team_obj.browse(cr, uid, sale_team_id, context=context)  
+        noteList = str(tuple(noteList))
+        noteList = eval(noteList)   
+        if noteList:
+            where ='and ac.id NOT IN %s ' % (noteList,)
+        else:
+            where =''
+            
+        section_id=  team_data.id                            
+        is_supervisor=team_data.is_supervisor           
+        if is_supervisor==True:
+            cr.execute('''            
+                    select ac.id,ac.description,ac.name as cr_no,ac.used_date,
                     ac.issued_date,ac.terms_and_conditions,ac.amount,ac.so_no,
-                    ac.m_status,ac.customer_id,ac.type,ac.sale_team_id,res.name,res.customer_code,ac.ref_no
-                 from account_creditnote ac,res_partner res
-                   where ac.customer_id = res.id
-                   and ac.m_status = 'new'
-                   and  ac.sale_team_id = %s
-         ''', (sale_team_id,))
-        datas = cr.fetchall()
-        cr.execute
+                    ac.m_status,ac.customer_id,ac.type,res.name as customer_name,res.customer_code,ac.ref_no,program.name as program,principal.name  as principal,ac.create_date,ac.approved_date
+                     from account_creditnote ac,res_partner res,program_form_design program,product_maingroup principal
+                    where ac.customer_id = res.id
+                    and program.id =ac.program_id 
+                    and ac.state = 'approved'
+                    and ac.m_status='new'
+                    and principal.id=ac.principle_id
+                    %s
+                    AND ac.customer_id IN  (
+                   select partner_id from (
+                    (select distinct b.partner_id from res_partner_res_partner_category_rel a,
+                 sale_plan_day_line b
+                 , sale_plan_day p
+                where a.partner_id = b.partner_id
+                and b.line_id = p.id
+                and p.sale_team in (select id from crm_case_section where supervisor_team= %%s)
+                )
+                UNION ALL
+                (select distinct b.partner_id from res_partner_res_partner_category_rel a,sale_plan_trip p,
+                 res_partner_sale_plan_trip_rel b
+                where a.partner_id = b.partner_id
+                and b.sale_plan_trip_id = p.id
+                and p.sale_team in (select id from crm_case_section where supervisor_team= %%s)
+                )
+                )a group by partner_id
+                )
+             '''%(where), (section_id,section_id,))
+
+            datas=cr.fetchall()            
+        else:
+            cr.execute('''            
+                             select ac.id,ac.description,ac.name as cr_no,ac.used_date,
+                            ac.issued_date,ac.terms_and_conditions,ac.amount,ac.so_no,
+                            ac.m_status,ac.customer_id,ac.type,res.name as customer_name,res.customer_code,ac.ref_no,program.name as program,principal.name  as principal,ac.create_date,ac.approved_date
+                             from account_creditnote ac,res_partner res,program_form_design program,product_maingroup principal
+                            where ac.customer_id = res.id
+                            and program.id =ac.program_id 
+                            and ac.state = 'approved'
+                            and ac.m_status='new'
+                            and principal.id=ac.principle_id
+                            %s
+                            AND ac.customer_id IN  (
+                           select partner_id from (
+                            (select distinct b.partner_id from res_partner_res_partner_category_rel a,
+                             sale_plan_day_line b
+                             , sale_plan_day p
+                            where a.partner_id = b.partner_id
+                            and b.line_id = p.id
+                            and p.sale_team = %%s)
+                            UNION ALL
+                            (select distinct b.partner_id from res_partner_res_partner_category_rel a,sale_plan_trip p,
+                             res_partner_sale_plan_trip_rel b
+                            where a.partner_id = b.partner_id
+                            and b.sale_plan_trip_id = p.id
+                            and p.sale_team = %%s
+                            )
+                            )a group by partner_id
+                            )
+                     '''%(where), (section_id,section_id,))                
+            datas=cr.fetchall()            
         return datas
     
     def get_target_setting(self, cr, uid, sale_team_id , context=None, **kwargs):
@@ -2792,8 +2903,8 @@ class mobile_sale_order(osv.osv):
     
     def udpate_credit_notes_issue_status(self, cr, uid, sale_team_id , context=None, **kwargs):
         try:
-            cr.execute('''update account_creditnote set m_Status='issued' where
-                        sale_team_id = %s and m_status ='new'
+            cr.execute('''update account_creditnote set m_Status='new' where
+                        sale_team_id = %s 
              ''', (sale_team_id,))
             return True
         except Exception, e:
@@ -2867,19 +2978,19 @@ class mobile_sale_order(osv.osv):
             print e
             return False
                 
-    def udpate_credit_notes_used_status(self, cr, uid, sale_team_id , usedList, context=None, **kwargs):
-        try:
-            crnote = tuple(usedList)
-            note_order_obj = self.pool.get('account.creditnote')
-            list_val = None
-            list_val = note_order_obj.search(cr, uid, [('sale_team_id', '=', sale_team_id), ('m_status', '=', 'issued'), ('name', 'in', usedList)])            
-            print'credit id', list_val
-            for note_id in list_val:
-                print'Note id', note_id
-                cr.execute("""update account_creditnote set m_status ='used' where id = %s""", (note_id,))
-            return True
-        except Exception, e:
-            return False
+#     def udpate_credit_notes_used_status(self, cr, uid, sale_team_id , usedList, context=None, **kwargs):
+#         try:
+#             crnote = tuple(usedList)
+#             note_order_obj = self.pool.get('account.creditnote')
+#             list_val = None
+#             list_val = note_order_obj.search(cr, uid, [('sale_team_id', '=', sale_team_id), ('m_status', '=', 'issued'), ('name', 'in', usedList)])            
+#             print'credit id', list_val
+#             for note_id in list_val:
+#                 print'Note id', note_id
+#                 cr.execute("""update account_creditnote set m_status ='used' where id = %s""", (note_id,))
+#             return True
+#         except Exception, e:
+#             return False
     
     def get_branch_datas(self, cr, uid , context=None):        
         cr.execute('''select id,name,branch_code from res_branch where active = true''')
@@ -3799,39 +3910,47 @@ class mobile_sale_order(osv.osv):
                 rental_collection.append(r)  
             if rental_collection:
                 for ar in rental_collection:
-                    cursor.execute('select id from mobile_sale_order where name = %s ', (ar['payment_id'],))
+                    cursor.execute('select id,void_flag from mobile_sale_order where name = %s ', (ar['payment_id'],))
                     data = cursor.fetchall()
                     if data:
                         so_id = data[0][0]
+                        void_flag =data[0][1]
                     else:
                         so_id = None
-                    
-                    cursor.execute('select id from res_partner where customer_code = %s ', (ar['partner_id'],))
-                    data = cursor.fetchall()
-                    if data:
-                        parnter_id = data[0][0]
-                    else:
-                        parnter_id = None
+                        void_flag =None
 
-                    amount = ar['amount']
-                    cursor.execute("select replace(%s, ',', '')::float as amount", (amount,))
-                    amount_data = cursor.fetchone()[0]
-                    amount = amount_data
-                    cursor.execute('select count(id) from customer_payment where journal_id= %s and payment_code = %s and  notes = %s  and date = %s', (ar['journal_id'],ar['payment_code'],ar['notes'],ar['date'],))
-                    payment_data = cursor.fetchone()[0]
-                    if payment_data==0:                    
-                        rental_result = {                    
-                            'payment_id':so_id,
-                            'journal_id':ar['journal_id'],
-                            'amount':amount,
-                            'date':ar['date'],
-                            'notes':ar['notes'],
-                            'cheque_no':ar['cheque_no'],
-                            'partner_id':parnter_id,
-                            'sale_team_id':ar['sale_team_id'],
-                            'payment_code':ar['payment_code'],
-                        }
-                        rental_obj.create(cursor, user, rental_result, context=context)
+                    if void_flag!='voided':
+                        cursor.execute('select id from res_partner where customer_code = %s ', (ar['partner_id'],))
+                        data = cursor.fetchall()
+                        if data:
+                            parnter_id = data[0][0]
+                        else:
+                            parnter_id = None
+                        amount = ar['amount']
+                        cursor.execute("select replace(%s, ',', '')::float as amount", (amount,))
+                        amount_data = cursor.fetchone()[0]
+                        amount = amount_data
+                        cursor.execute('select count(id) from customer_payment where journal_id= %s and payment_code = %s and  notes = %s  and date = %s and amount = %s ', (ar['journal_id'],ar['payment_code'],ar['notes'],ar['date'],amount,))
+                        payment_data = cursor.fetchone()[0]
+                        if payment_data==0:                    
+                            rental_result = {                    
+                                'payment_id':so_id,
+                                'journal_id':ar['journal_id'],
+                                'amount':amount,
+                                'date':ar['date'],
+                                'notes':ar['notes'],
+                                'cheque_no':ar['cheque_no'].replace('\\', ""),
+                                'partner_id':parnter_id,
+                                'sale_team_id':ar['sale_team_id'],
+                                'payment_code':ar['payment_code'],
+                            }
+                            rental_obj.create(cursor, user, rental_result, context=context)
+                            cheque_no =ar['cheque_no'].replace('\\', "")
+                            cursor.execute("update account_creditnote set m_status ='used' where name=%s",(cheque_no,))
+                            #noteObj = self.pool.get('account.creditnote')
+                            #note_id = noteObj.search(cursor, user,  [('name', '=',  ar['cheque_no'].replace('\\', ""))],context=None)
+                            #note_data = noteObj.browse(cursor, user,  note_id, context=context)
+                            #note_data.write({'m_state':'used'})                        
             return True
         except Exception, e:
             print 'False'
@@ -3855,7 +3974,7 @@ class mobile_sale_order(osv.osv):
 #                 rental_collection.append(r)  
             if result:
                 for ar in result:
-                    payment_id = ar['payment_id'].replace('\\', '').replace('\\', '')           
+                    payment_id = ar['payment_id'].replace('\\', '').replace('\\', '')   
                     cursor.execute('select tb_ref_no from sale_order where name = %s ', (payment_id,))
                     data = cursor.fetchall()
                     if data:
@@ -3869,7 +3988,7 @@ class mobile_sale_order(osv.osv):
                         so_id = data[0][0]
                     else:
                         so_id = None
-                    cursor.execute('select count(id) from customer_payment where journal_id= %s and payment_code = %s and  notes = %s  and date = %s', (ar['journal_id'],ar['payment_code'],payment_id,ar['date'],))
+                    cursor.execute('select count(id) from customer_payment where journal_id= %s and payment_code = %s and  notes = %s  and date = %s and amount = %s ', (ar['journal_id'],ar['payment_code'],payment_id,ar['date'],ar['amount'],))
                     payment_data = cursor.fetchone()[0]
                     if payment_data==0:                              
                         rental_result = {                    
@@ -3878,16 +3997,23 @@ class mobile_sale_order(osv.osv):
                             'amount':ar['amount'],
                             'date':ar['date'],
                             'notes':payment_id,
-                            'cheque_no':ar['cheque_no'],
+                            'cheque_no':ar['cheque_no'].replace('\\', ""),
                             'partner_id':ar['partner_id'],
                             'sale_team_id':ar['sale_team_id'],
                             'payment_code':ar['payment_code'],
                         }
                         rental_obj.create(cursor, user, rental_result, context=context)
+                        cheque_no =ar['cheque_no'].replace('\\', "")
+                        cursor.execute("update account_creditnote set m_status ='used' where name=%s",(cheque_no,))                        
+#                         noteObj = self.pool.get('account.creditnote')
+#                         note_id = noteObj.search(cursor, user,  [('name', '=',  ar['cheque_no'].replace('\\', ""))],context=None)
+#                         note_data = noteObj.browse(cursor, user,  note_id, context=context)
+#                         note_data.write({'m_state':'used'})
             return True
         except Exception, e:
             print 'False'
-            return False  
+            return False         
+        
     def get_bom(self, cr, uid , context=None):        
         cr.execute('''select mbl.product_id as product,mbl.product_qty as from_qty,mbl.product_uom  as from_uom_id,mb.product_id as to_product,mb.product_qty,mb.product_uom from mrp_bom mb ,mrp_bom_line mbl
                     where mb.id=mbl.bom_id''')
@@ -4401,6 +4527,13 @@ class mobile_sale_order(osv.osv):
                         'payment_code':ar['payment_code'].replace('\\', ""),
                     }
                     rental_obj.create(cursor, user, rental_result, context=context)
+                    cheque_no =ar['cheque_no'].replace('\\', "")
+                    cursor.execute("update account_creditnote set m_status ='used' where name=%s",(cheque_no,))                      
+#                     noteObj = self.pool.get('account.creditnote')
+#                     note_id = noteObj.search(cursor, user,  [('name', '=',  ar['cheque_no'].replace('\\', ""))],context=None)
+#                     note_data = noteObj.browse(cursor, user,  note_id, context=context)
+#                     note_data.write({'m_state':'used'})
+                                        
             return True
         except Exception, e:
             print 'False'
@@ -4453,9 +4586,16 @@ class mobile_sale_order(osv.osv):
                         asset_name_id = data[0][0]
                     else:
                         asset_name_id = None                                                
-                        
+                    cursor.execute('select id From res_partner where customer_code  = %s ', (ar['customer_code'],))
+                    data = cursor.fetchall()                
+                    if data:
+                        partner_id = data[0][0]
+                    else:
+                        partner_id = None 
+                                                
                     rental_result = {                    
-                        'partner_id':ar['partner_id'],
+                        'partner_id':partner_id,
+                        'code':ar['customer_code'],
                         'qty':ar['qty'],
                         'image':ar['image'],
                         'date':ar['date'],
@@ -4463,6 +4603,7 @@ class mobile_sale_order(osv.osv):
                         'asset_name_id':asset_name_id,
                         'asset_type':access_type_id,
                         'type':ar['type'],
+                        'note': ar['note'],
                     }
                     rental_obj.create(cursor, user, rental_result, context=context)
             return True
@@ -4486,7 +4627,8 @@ class mobile_sale_order(osv.osv):
                 result.append(x)
             if result:
                 for ar in result:         
-                    check_date=None                   
+                    check_date=None    
+                    is_image =False               
                     if ar['check_date']:
                         date_time = ar['check_date']
                         check_date = datetime.strptime(date_time, '%Y-%m-%d %I:%M:%S %p') - timedelta(hours=6, minutes=30)
@@ -4498,6 +4640,8 @@ class mobile_sale_order(osv.osv):
                             team_id =team_data[0]
                         else:
                             team_id=None
+                    if ar['img_ref']:
+                        is_image =True
                     if ar['asset_id']:
                         cursor.execute("select id,asset_name_id from res_partner_asset where name=%s",(ar['asset_id'],))
                         asset_data=cursor.fetchone()
@@ -4516,6 +4660,8 @@ class mobile_sale_order(osv.osv):
                         'asset_id':asset_id,
                         'asset_name':asset_name_id,
                         'image':ar['asset_image'],
+                        'is_image':is_image,                                  
+                        'image_reference':ar['img_ref'],
                     }
                     rental_obj.create(cursor, user, rental_result, context=context)
             return True
