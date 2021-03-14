@@ -3374,7 +3374,7 @@ class mobile_sale_order(osv.osv):
                                 one_signal_values = {
                                                         'partner_id': sale.partner_id.id,
                                                         'contents': "Your order " + sale.name + " is cancelled.",
-                                                        'headings': "MDG Retailer"
+                                                        'headings': "Burmart"
                                                     }     
                                 self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)
                             if sale.getting_point > 0:
