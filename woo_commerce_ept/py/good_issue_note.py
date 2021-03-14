@@ -27,7 +27,7 @@ class good_issue_note(osv.osv):
                         one_signal_values = {
                                              'partner_id': sale_order.partner_id.id,
                                              'contents': "Your order " + sale_order.name + " is being delivered.",
-                                             'headings': "MDG Retailer"
+                                             'headings': "Burmart"
                                             }   
                         print 'one_signal_values',one_signal_values
                         self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)    
