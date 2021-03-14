@@ -13,7 +13,7 @@ class stock_transfer_details(models.TransientModel):
                 one_signal_values = {
                                         'partner_id': sale_order.partner_id.id,
                                         'contents': "Your order " + sale_order.name + " is shipped.",
-                                        'headings': "MDG Retailer"
+                                        'headings': "Burmart"
                                     }     
                 self.env['one.signal.notification.messages'].create(one_signal_values)
         return res

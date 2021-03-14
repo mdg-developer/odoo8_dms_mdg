@@ -140,8 +140,8 @@ class res_partner(osv.osv):
             if result:           
                 one_signal_values = {
                                      'partner_id': result,
-                                     'contents': "Thank you for registration in MDG Retailer E-commerce.",
-                                     'headings': "MDG Retailer"
+                                     'contents': "Thank you for registration in Burmart E-commerce.",
+                                     'headings': "Burmart"
                                     }     
                 self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)     
             partner = partner_obj.search(cr, uid, [('id', '=', result)])
@@ -241,8 +241,8 @@ class res_partner(osv.osv):
                 if result:           
                     one_signal_values = {
                                          'partner_id': partner_data.id,
-                                         'contents': "Thank you for registration in MDG Retailer E-commerce.",
-                                         'headings': "MDG Retailer"
+                                         'contents': "Thank you for registration in Burmart E-commerce.",
+                                         'headings': "Burmart"
                                         }     
                     self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)  
                 return result 
