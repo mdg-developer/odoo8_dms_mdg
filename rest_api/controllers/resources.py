@@ -23,3 +23,4 @@ from . import model__push_noti_app
 from . import model__push_image_app
 from . import model__stock_requisition
 from . import model__good_issue_note
+from . import model__res_users
