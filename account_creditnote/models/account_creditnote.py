@@ -183,28 +183,29 @@ class account_creditnote(osv.osv):
                 vals['customer_code'] = partner_data.customer_code or None
         return super(account_creditnote, self).create(cursor, user, vals, context=context)
     
-    def write(self, cursor, user, ids, vals, context=None):  
-        data = self.browse(cursor, user, ids[0])
-        if vals.get('program_id'):
-            program_data = self.pool.get('program.form.design').browse(cursor, user, vals.get('program_id'), context=context)
-            if program_data:
-                vals['principle_id'] = program_data.principle_id.id if program_data.principle_id else None
-                vals['from_date'] = program_data.from_date
-                vals['to_date'] = program_data.to_date
-        elif data.program_id: 
-            program_data = self.pool.get('program.form.design').browse(cursor, user, data.program_id.id, context=context)
-            if program_data:
-                vals['principle_id'] = program_data.principle_id.id if program_data.principle_id else None
-                vals['from_date'] = program_data.from_date
-                vals['to_date'] = program_data.to_date
-        if vals.get('customer_id'):
-            partner_data = self.pool.get('res.partner').browse(cursor, user, vals.get('customer_id'), context=context)
-            if partner_data:
-                vals['customer_code'] = partner_data.customer_code or None
-        elif data.customer_id: 
-            partner_data = self.pool.get('res.partner').browse(cursor, user, data.customer_id.id, context=context)
-            if partner_data:
-                vals['customer_code'] = partner_data.customer_code or None
+    def write(self, cursor, user, ids, vals, context=None):
+        
+        for data in self.browse(cursor, user, ids, context):
+            if vals.get('program_id'):
+                program_data = self.pool.get('program.form.design').browse(cursor, user, vals.get('program_id'), context=context)
+                if program_data:
+                    vals['principle_id'] = program_data.principle_id.id if program_data.principle_id else None
+                    vals['from_date'] = program_data.from_date
+                    vals['to_date'] = program_data.to_date
+            elif data.program_id: 
+                program_data = self.pool.get('program.form.design').browse(cursor, user, data.program_id.id, context=context)
+                if program_data:
+                    vals['principle_id'] = program_data.principle_id.id if program_data.principle_id else None
+                    vals['from_date'] = program_data.from_date
+                    vals['to_date'] = program_data.to_date
+            if vals.get('customer_id'):
+                partner_data = self.pool.get('res.partner').browse(cursor, user, vals.get('customer_id'), context=context)
+                if partner_data:
+                    vals['customer_code'] = partner_data.customer_code or None
+            elif data.customer_id: 
+                partner_data = self.pool.get('res.partner').browse(cursor, user, data.customer_id.id, context=context)
+                if partner_data:
+                    vals['customer_code'] = partner_data.customer_code or None
         res = super(account_creditnote, self).write(cursor, user, ids, vals, context=context)
         return res  
      
