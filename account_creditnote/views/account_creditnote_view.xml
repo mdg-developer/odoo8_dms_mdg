@@ -28,8 +28,8 @@
 								<field name="name" />
 								<field name="so_no" placeholder="SO00001" invisible="1" />
 								<!-- <field name="ref_no" placeholder="A00001" /> -->
-								<field name="customer_id" attrs="{'readonly': [('state','not in',('draft'))]}" />
-								<field name="customer_code" attrs="{'readonly': [('state','not in',('draft'))]}" />
+								<field name="customer_id" attrs="{'readonly': [('state','not in',('draft'))]}" on_change="on_change_customer_id(customer_id)"/>
+								<field name="customer_code" />
 								<field name="sale_team_id" />
 								<field name="user_id" domain="[('default_section_id', '=',sale_team_id)]"/>
 								<field name="program_id" on_change="on_change_program_id(program_id)"

@@ -13,7 +13,7 @@ class account_creditnote(osv.osv):
                 'ref_no': fields.char('Approval No'),
                 'so_no': fields.char('Source Document'),
                 'customer_id':fields.many2one('res.partner', 'Customer', domain="[('customer','=',True)]" , required=True),
-                'customer_code': fields.related('customer_id', 'customer_code', type='char', string='Customer Code',readonly=True),                
+                'customer_code': fields.char(string='Customer Code',readonly=True),                
                 'branch_id':fields.many2one('res.branch', 'Branch'),
                 'sale_team_id':fields.many2one('crm.case.section', 'Sales Team',readonly=True),
                 'user_id':fields.many2one('res.users', 'Redeemed By',readonly=True),
@@ -63,6 +63,16 @@ class account_creditnote(osv.osv):
                      'to_date':program_data.to_date,
                      'amount':program_data.amount,
                      'terms_and_conditions': program_data.term_and_condition,
+                }
+        return {'value': values}  
+    
+    def on_change_customer_id(self, cr, uid,ids,partner_id, context=None):
+        values = {}
+        if partner_id:
+            partner_data = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
+            if partner_data:                
+                values = {
+                        'customer_code':partner_data.customer_code or None,
                 }
         return {'value': values}   
     
@@ -167,16 +177,34 @@ class account_creditnote(osv.osv):
                 vals['principle_id'] = program_data.principle_id.id if program_data.principle_id else None
                 vals['from_date'] = program_data.from_date
                 vals['to_date'] = program_data.to_date
+        if vals.get('customer_id'):
+            partner_data = self.pool.get('res.partner').browse(cursor, user, vals.get('customer_id'), context=context)
+            if partner_data:
+                vals['customer_code'] = partner_data.customer_code or None
         return super(account_creditnote, self).create(cursor, user, vals, context=context)
     
     def write(self, cursor, user, ids, vals, context=None):  
         data = self.browse(cursor, user, ids[0])
-        if data.program_id: 
+        if vals.get('program_id'):
+            program_data = self.pool.get('program.form.design').browse(cursor, user, vals.get('program_id'), context=context)
+            if program_data:
+                vals['principle_id'] = program_data.principle_id.id if program_data.principle_id else None
+                vals['from_date'] = program_data.from_date
+                vals['to_date'] = program_data.to_date
+        elif data.program_id: 
             program_data = self.pool.get('program.form.design').browse(cursor, user, data.program_id.id, context=context)
             if program_data:
                 vals['principle_id'] = program_data.principle_id.id if program_data.principle_id else None
                 vals['from_date'] = program_data.from_date
                 vals['to_date'] = program_data.to_date
+        if vals.get('customer_id'):
+            partner_data = self.pool.get('res.partner').browse(cursor, user, vals.get('customer_id'), context=context)
+            if partner_data:
+                vals['customer_code'] = partner_data.customer_code or None
+        elif data.customer_id: 
+            partner_data = self.pool.get('res.partner').browse(cursor, user, data.customer_id.id, context=context)
+            if partner_data:
+                vals['customer_code'] = partner_data.customer_code or None
         res = super(account_creditnote, self).write(cursor, user, ids, vals, context=context)
         return res  
      
