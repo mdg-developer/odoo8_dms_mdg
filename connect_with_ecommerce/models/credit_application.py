@@ -252,7 +252,7 @@ class credit_application_approval(models.TransientModel):
                                   'Authorization': 'Bearer {0}'.format(token)}                    
                         sms_url = 'https://mytelapigw.mytel.com.mm/msg-service/v1.3/smsmt/sent'
                         sms_payload = {
-                                       "source": "MDG",
+                                       "source": "Burmart",
                                        "dest": credit_app.mobile,
                                        "content": message 
                                 }                 
