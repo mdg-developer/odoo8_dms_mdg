@@ -34,7 +34,7 @@
 								<field name="user_id" domain="[('default_section_id', '=',sale_team_id)]"/>
 								<field name="program_id" on_change="on_change_program_id(program_id)"
 									attrs="{'readonly': [('state','not in',('draft'))]}" />
-								<field name="principle_id" attrs="{'readonly': [('state','not in',('draft'))]}" />
+								<field name="principle_id" readonly="1" />
 								<field name="type" attrs="{'readonly': [('state','not in',('draft'))]}" />
 								<field name="description" attrs="{'readonly': [('state','not in',('draft'))]}" />
 								<field name="terms_and_conditions" attrs="{'readonly': [('state','not in',('draft'))]}" />
@@ -42,21 +42,16 @@
 								<field name="remark" />
 							</group>
 							<group>
-								<field name="create_date" force_save="1"
-									attrs="{'readonly': [('state','not in',('draft'))]}" />
-								<field name="issued_date" force_save="1"
-									attrs="{'readonly': [('state','not in',('draft'))]}" />
-								<field name="invoice_number" force_save="1"
-									readonly="1"/>
-								<field name="used_date" force_save="1"
-									attrs="{'readonly': [('state','not in',('draft'))]}" />
+								<field name="create_date" readonly="1" />
+								<field name="issued_date" />
+								<field name="invoice_number" />
+								<field name="used_date" />
 								<field name="m_status"  />
-								<field name="approved_date" force_save="1"
-									attrs="{'readonly': [('state','not in',('draft'))]}" />
-								<field name="approved_user_id" force_save="1"
-									attrs="{'readonly': [('state','not in',('draft'))]}" />
-								<field name="from_date" attrs="{'readonly': [('state','not in',('draft'))]}" />
-								<field name="to_date" attrs="{'readonly': [('state','not in',('draft'))]}" />
+								<field name="approved_date" />
+								<field name="used_by" />
+								<field name="approved_user_id" />
+								<field name="from_date" readonly="1" />
+								<field name="to_date" readonly="1" />
 							</group>
 						</group>
 					</sheet>

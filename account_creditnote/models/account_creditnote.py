@@ -1,5 +1,7 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from dateutil.relativedelta import relativedelta
+from datetime import datetime
 
 class account_creditnote(osv.osv):
     _name = 'account.creditnote'
@@ -19,15 +21,16 @@ class account_creditnote(osv.osv):
                 'terms_and_conditions': fields.char('Terms and Conditions'),
                 'm_status':fields.selection([('new', 'New'),
                                              ('used', 'Used')], string='Used Status',default='new',readonly=True),
-                'type':fields.selection({('cash', 'Cash Rebate')}, string='Type' , required=True),
+                'type':fields.selection({('invoice_offset', 'Invoice Offset'),('cash', 'Cash Rebate')}, string='Type' , required=True, default='invoice_offset'),
                 'amount': fields.float('Amount'),                
                 'program_id':fields.many2one('program.form.design', 'Program' , required=True), 
-                'principle_id':fields.many2one('product.maingroup', 'Principal',readonly=False , required=True),
+                'principle_id':fields.many2one('product.maingroup', 'Principal'),
                 
 #                 'principle_id': fields.related('program_id', 'principle_id', type='many2one', relation='product.maingroup',
 #                             string='Principle', store=True, readonly=True),
                 'redeemed_user_id':fields.many2one('res.users', 'Redeemedby'),
                 'approved_date': fields.date('Approved Date',readonly=True),
+                'used_by': fields.date('Used By',readonly=True),
                 'approved_user_id':fields.many2one('res.users', 'Approved By',readonly=True),
                 'from_date': fields.date('From Date'),
                 'to_date': fields.date('To Date'),
@@ -64,7 +67,8 @@ class account_creditnote(osv.osv):
         return {'value': values}   
     
     def set_to_approved(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state':'approved','approved_user_id':uid,'approved_date':fields.date.context_today(self,cr,uid,context=context)}, context=None)
+        used_by = datetime.today() + relativedelta(months=+6)
+        self.write(cr, uid, ids, {'state':'approved','approved_user_id':uid,'approved_date':fields.date.context_today(self,cr,uid,context=context),'used_by':used_by}, context=None)
         move_Obj = self.pool.get('account.move')
         journal_obj = self.pool.get('account.journal')
         journal_id = journal_obj.search(cr, uid, [('code', '=', 'MIS')],context=None)
@@ -157,5 +161,23 @@ class account_creditnote(osv.osv):
         credit_no = self.pool.get('ir.sequence').get(cursor, user,
             'creditnote.code') or '/'
         vals['name'] = credit_no
-        return super(account_creditnote, self).create(cursor, user, vals, context=context)    
+        if vals.get('program_id'):
+            program_data = self.pool.get('program.form.design').browse(cursor, user, vals.get('program_id'), context=context)
+            if program_data:
+                vals['principle_id'] = program_data.principle_id.id if program_data.principle_id else None
+                vals['from_date'] = program_data.from_date
+                vals['to_date'] = program_data.to_date
+        return super(account_creditnote, self).create(cursor, user, vals, context=context)
+    
+    def write(self, cursor, user, ids, vals, context=None):  
+        data = self.browse(cursor, user, ids[0])
+        if data.program_id: 
+            program_data = self.pool.get('program.form.design').browse(cursor, user, data.program_id.id, context=context)
+            if program_data:
+                vals['principle_id'] = program_data.principle_id.id if program_data.principle_id else None
+                vals['from_date'] = program_data.from_date
+                vals['to_date'] = program_data.to_date
+        res = super(account_creditnote, self).write(cursor, user, ids, vals, context=context)
+        return res  
+     
 account_creditnote()     
