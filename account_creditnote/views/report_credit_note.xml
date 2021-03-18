@@ -40,6 +40,8 @@
 								<tr>
 									<td style="margin-top:-10pt;">
 										<b>Customer address:</b>
+										<br/>
+										<span t-field="o.customer_id.customer_code"/>
 										<address t-field="o.customer_id" t-field-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: true}"/>
 										<span t-field="o.customer_id.vat" t-field-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: true}"/>
 										<div style="margin-top:-15pt;" t-field="o.customer_id.phone"/>
@@ -47,51 +49,51 @@
 								</tr>
 							</table>	
 						</div>
-					</div>
+					</div>					
 					<table border="0" cellspacing="0" cellpadding="0" width="100%">
 					    <tbody>
-					        <tr style="line-height: 40px;">
-					            <td>Program</td>
+					        <tr style="line-height: 35px;">
+					            <td width="20%" style="padding-left:10px;">Program</td>
 					            <td><span t-field="o.program_id"/></td>
-					            <td>From Date</td>
+					            <td width="20%">From Date</td>
 					            <td><span t-field="o.from_date" t-field-options='{"format": "y-MM-d"}'/></td>
 					        </tr>
-					        <tr style="line-height: 40px;">
-					            <td>Description</td>
+					        <tr style="line-height: 35px;">
+					            <td width="20%" style="padding-left:10px;">Description</td>
 					            <td><span t-field="o.description"/></td>
-					            <td>To Date</td>
+					            <td width="20%">To Date</td>
 					            <td><span t-field="o.to_date" t-field-options='{"format": "y-MM-d"}'/></td>
 					        </tr>
-					        <tr style="line-height: 40px;">
-					            <td>Terms &amp; Conditions</td>
+					        <tr style="line-height: 35px;">
+					            <td width="20%" style="padding-left:10px;">Terms &amp; Conditions</td>
 					            <td><span t-field="o.terms_and_conditions"/></td>
-					            <td>Approved Date</td>
+					            <td width="20%">Approved Date</td>
 					            <td><span t-field="o.approved_date" t-field-options='{"format": "y-MM-d"}'/></td>
 					        </tr>
-					        <tr style="line-height: 40px;">
-					            <td>Principal</td>
+					        <tr style="line-height: 35px;">
+					            <td width="20%" style="padding-left:10px;">Principal</td>
 					            <td><span t-field="o.principle_id"/></td>
-					            <td>Type</td>
+					            <td width="20%">Type</td>
 					            <td><span t-field="o.type"/></td>
 					        </tr>
-					        <tr style="line-height: 40px;">
-					            <td>Branch</td>
+					        <tr style="line-height: 35px;">
+					            <td width="20%" style="padding-left:10px;">Branch</td>
 					            <td><span t-field="o.branch_id"/></td>
-					            <td>Used By</td>
+					            <td width="20%">Used By</td>
 					            <td><span t-field="o.used_by"/></td>
 					        </tr>
-					        <tr style="line-height: 40px;">
+					        <tr style="line-height: 35px;">
 					            <td></td>
 					            <td></td>
 					            <td style="font-size:11pt;"><b>Amount</b></td>
 					            <td style="font-size:11pt;"><b><span t-field="o.amount"/></b></td>
 					        </tr>
-					        <tr style="line-height: 40px;">
+					        <tr style="line-height: 35px;">
 					            <td></td>
 					            <td></td>
 					            <td colspan="2">------------------------------</td>
 					        </tr>
-					        <tr style="line-height: 40px;">
+					        <tr style="line-height: 35px;">
 					            <td></td>
 					            <td></td>
 					            <td colspan="2">(Customer Sign)</td>
@@ -135,6 +137,8 @@
 								<tr>
 									<td style="margin-top:-10pt;">
 										<b>Customer address:</b>
+										<br/>
+										<span t-field="o.customer_id.customer_code"/>
 										<address t-field="o.customer_id" t-field-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: true}"/>
 										<span t-field="o.customer_id.vat" t-field-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: true}"/>
 										<div style="margin-top:-15pt;" t-field="o.customer_id.phone"/>
@@ -145,48 +149,48 @@
 					</div>
 					<table border="0" cellspacing="0" cellpadding="0" width="100%">
 					    <tbody>
-					        <tr style="line-height: 40px;">
-					            <td>Program</td>
+					        <tr style="line-height: 35px;">
+					            <td width="20%" style="padding-left:10px;">Program</td>
 					            <td><span t-field="o.program_id"/></td>
-					            <td>From Date</td>
+					            <td width="20%">From Date</td>
 					            <td><span t-field="o.from_date" t-field-options='{"format": "y-MM-d"}'/></td>
 					        </tr>
-					        <tr style="line-height: 40px;">
-					            <td>Description</td>
+					        <tr style="line-height: 35px;">
+					            <td width="20%" style="padding-left:10px;">Description</td>
 					            <td><span t-field="o.description"/></td>
-					            <td>To Date</td>
+					            <td width="20%">To Date</td>
 					            <td><span t-field="o.to_date" t-field-options='{"format": "y-MM-d"}'/></td>
 					        </tr>
-					        <tr style="line-height: 40px;">
-					            <td>Terms &amp; Conditions</td>
+					        <tr style="line-height: 35px;">
+					            <td width="20%" style="padding-left:10px;">Terms &amp; Conditions</td>
 					            <td><span t-field="o.terms_and_conditions"/></td>
-					            <td>Approved Date</td>
+					            <td width="20%">Approved Date</td>
 					            <td><span t-field="o.approved_date" t-field-options='{"format": "y-MM-d"}'/></td>
 					        </tr>
-					        <tr style="line-height: 40px;">
-					            <td>Principal</td>
+					        <tr style="line-height: 35px;">
+					            <td width="20%" style="padding-left:10px;">Principal</td>
 					            <td><span t-field="o.principle_id"/></td>
-					            <td>Type</td>
+					            <td width="20%">Type</td>
 					            <td><span t-field="o.type"/></td>
 					        </tr>
-					        <tr style="line-height: 40px;">
-					            <td>Branch</td>
+					        <tr style="line-height: 35px;">
+					            <td width="20%" style="padding-left:10px;">Branch</td>
 					            <td><span t-field="o.branch_id"/></td>
-					            <td>Used By</td>
+					            <td width="20%">Used By</td>
 					            <td><span t-field="o.used_by"/></td>
 					        </tr>
-					        <tr style="line-height: 40px;">
+					        <tr style="line-height: 35px;">
 					            <td></td>
 					            <td></td>
 					            <td style="font-size:11pt;"><b>Amount</b></td>
 					            <td style="font-size:11pt;"><b><span t-field="o.amount"/></b></td>
 					        </tr>
-					        <tr style="line-height: 40px;">
+					        <tr style="line-height: 35px;">
 					            <td></td>
 					            <td></td>
 					            <td colspan="2">------------------------------</td>
 					        </tr>
-					        <tr style="line-height: 40px;">
+					        <tr style="line-height: 35px;">
 					            <td></td>
 					            <td></td>
 					            <td colspan="2">(Customer Sign)</td>
