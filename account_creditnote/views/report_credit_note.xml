@@ -88,12 +88,12 @@
 					            <td style="font-size:11pt;"><b>Amount</b></td>
 					            <td style="font-size:11pt;"><b><span t-field="o.amount"/></b></td>
 					        </tr>
-					        <tr style="line-height: 25px;">
+					        <tr style="line-height: 130px;">
 					            <td></td>
 					            <td></td>
-					            <td colspan="2">------------------------------</td>
+					            <td colspan="2">____________________</td>
 					        </tr>
-					        <tr style="line-height: 25px;">
+					        <tr>
 					            <td></td>
 					            <td></td>
 					            <td colspan="2">(Customer Sign)</td>
@@ -185,12 +185,12 @@
 					            <td style="font-size:11pt;"><b>Amount</b></td>
 					            <td style="font-size:11pt;"><b><span t-field="o.amount"/></b></td>
 					        </tr>
-					        <tr style="line-height: 25px;">
+					        <tr style="line-height: 130px;">
 					            <td></td>
 					            <td></td>
-					            <td colspan="2">------------------------------</td>
+					            <td colspan="2">____________________</td>
 					        </tr>
-					        <tr style="line-height: 25px;">
+					        <tr>
 					            <td></td>
 					            <td></td>
 					            <td colspan="2">(Customer Sign)</td>
