@@ -54,33 +54,33 @@
 					    <tbody>
 					        <tr style="line-height: 35px;">
 					            <td width="20%" style="padding-left:10px;">Program</td>
-					            <td><span t-field="o.program_id"/></td>
+					            <td width="30%"><span t-field="o.program_id"/></td>
 					            <td width="20%">From Date</td>
-					            <td><span t-field="o.from_date" t-field-options='{"format": "y-MM-d"}'/></td>
+					            <td width="30%"><span t-field="o.from_date" t-field-options='{"format": "y-MM-d"}'/></td>
 					        </tr>
 					        <tr style="line-height: 35px;">
 					            <td width="20%" style="padding-left:10px;">Description</td>
-					            <td><span t-field="o.description"/></td>
+					            <td width="30%"><span t-field="o.description"/></td>
 					            <td width="20%">To Date</td>
-					            <td><span t-field="o.to_date" t-field-options='{"format": "y-MM-d"}'/></td>
+					            <td width="30%"><span t-field="o.to_date" t-field-options='{"format": "y-MM-d"}'/></td>
 					        </tr>
 					        <tr style="line-height: 35px;">
 					            <td width="20%" style="padding-left:10px;">Terms &amp; Conditions</td>
-					            <td><span t-field="o.terms_and_conditions"/></td>
+					            <td width="30%"><span t-field="o.terms_and_conditions"/></td>
 					            <td width="20%">Approved Date</td>
-					            <td><span t-field="o.approved_date" t-field-options='{"format": "y-MM-d"}'/></td>
+					            <td width="30%"><span t-field="o.approved_date" t-field-options='{"format": "y-MM-d"}'/></td>
 					        </tr>
 					        <tr style="line-height: 35px;">
 					            <td width="20%" style="padding-left:10px;">Principal</td>
-					            <td><span t-field="o.principle_id"/></td>
+					            <td width="30%"><span t-field="o.principle_id"/></td>
 					            <td width="20%">Type</td>
-					            <td><span t-field="o.type"/></td>
+					            <td width="30%"><span t-field="o.type"/></td>
 					        </tr>
 					        <tr style="line-height: 35px;">
 					            <td width="20%" style="padding-left:10px;">Branch</td>
-					            <td><span t-field="o.branch_id"/></td>
+					            <td width="30%"><span t-field="o.branch_id"/></td>
 					            <td width="20%">Used By</td>
-					            <td><span t-field="o.used_by"/></td>
+					            <td width="30%"><span t-field="o.used_by"/></td>
 					        </tr>
 					        <tr style="line-height: 35px;">
 					            <td></td>
