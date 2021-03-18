@@ -56,19 +56,19 @@
 					            <td width="20%" style="padding-left:10px;"><b>Program</b></td>
 					            <td width="40%"><span t-field="o.program_id"/></td>
 					            <td width="20%"><b>From Date</b></td>
-					            <td width="20%"><span t-field="o.from_date" t-field-options='{"format": "y-MM-d"}'/></td>
+					            <td width="20%"><span t-field="o.from_date" t-field-options='{"format": "dd/MM/yyyy"}'/></td>
 					        </tr>
 					        <tr style="line-height: 25px;">
 					            <td width="20%" style="padding-left:10px;"><b>Description</b></td>
 					            <td width="40%"><span t-field="o.description"/></td>
 					            <td width="20%"><b>To Date</b></td>
-					            <td width="20%"><span t-field="o.to_date" t-field-options='{"format": "y-MM-d"}'/></td>
+					            <td width="20%"><span t-field="o.to_date" t-field-options='{"format": "dd/MM/yyyy"}'/></td>
 					        </tr>
 					        <tr style="line-height: 25px;">
 					            <td width="20%" style="padding-left:10px;"><b>Terms &amp; Conditions</b></td>
 					            <td width="40%"><span t-field="o.terms_and_conditions"/></td>
 					            <td width="20%"><b>Approved Date</b></td>
-					            <td width="20%"><span t-field="o.approved_date" t-field-options='{"format": "y-MM-d"}'/></td>
+					            <td width="20%"><span t-field="o.approved_date" t-field-options='{"format": "dd/MM/yyyy"}'/></td>
 					        </tr>
 					        <tr style="line-height: 25px;">
 					            <td width="20%" style="padding-left:10px;"><b>Principal</b></td>
@@ -79,27 +79,23 @@
 					        <tr style="line-height: 25px;">
 					            <td width="20%" style="padding-left:10px;"><b>Branch</b></td>
 					            <td width="40%"><span t-field="o.branch_id"/></td>
-					            <td width="20%"><b>Used By</b></td>
-					            <td width="20%"><span t-field="o.used_by"/></td>
+					            <td width="20%"><b>Use By</b></td>
+					            <td width="20%"><span t-field="o.used_by" t-field-options='{"format": "dd/MM/yyyy"}'/></td>
 					        </tr>
 					        <tr style="line-height: 30px;">
 					            <td></td>
 					            <td></td>
 					            <td style="font-size:15pt;"><b>Amount</b></td>
-					            <td style="font-size:15pt;"><b><t t-esc="'{0:,.0f}'.format(o.amount)"/></b></td>
-					        </tr>
-					        <tr style="line-height: 130px;">
-					            <td></td>
-					            <td></td>
-					            <td colspan="2">____________________</td>
-					        </tr>
-					        <tr style="padding-top:0px;">
-					            <td></td>
-					            <td></td>
-					            <td colspan="2">(Customer Sign)</td>
+					            <td style="font-size:15pt;"><b><t t-esc="'{0:,.0f}'.format(o.amount)"/> Ks</b></td>
 					        </tr>
 					    </tbody>
 					</table>
+					<br/><br/><br/><br/><br/>
+					<div style="padding-left:550px;padding-right:100px;">
+					    ____________________
+					    <br/><br/>
+					    (Customer Sign)
+					</div>
 					<hr style="border-top: dotted 1px;" />
 					<h5>Finance Copy</h5><br/>
 					<div class="row">
@@ -153,19 +149,19 @@
 					            <td width="20%" style="padding-left:10px;"><b>Program</b></td>
 					            <td width="40%"><span t-field="o.program_id"/></td>
 					            <td width="20%"><b>From Date</b></td>
-					            <td width="20%"><span t-field="o.from_date" t-field-options='{"format": "y-MM-d"}'/></td>
+					            <td width="20%"><span t-field="o.from_date" t-field-options='{"format": "dd/MM/yyyy"}'/></td>
 					        </tr>
 					        <tr style="line-height: 25px;">
 					            <td width="20%" style="padding-left:10px;"><b>Description</b></td>
 					            <td width="40%"><span t-field="o.description"/></td>
 					            <td width="20%"><b>To Date</b></td>
-					            <td width="20%"><span t-field="o.to_date" t-field-options='{"format": "y-MM-d"}'/></td>
+					            <td width="20%"><span t-field="o.to_date" t-field-options='{"format": "dd/MM/yyyy"}'/></td>
 					        </tr>
 					        <tr style="line-height: 25px;">
 					            <td width="20%" style="padding-left:10px;"><b>Terms &amp; Conditions</b></td>
 					            <td width="40%"><span t-field="o.terms_and_conditions"/></td>
 					            <td width="20%"><b>Approved Date</b></td>
-					            <td width="20%"><span t-field="o.approved_date" t-field-options='{"format": "y-MM-d"}'/></td>
+					            <td width="20%"><span t-field="o.approved_date" t-field-options='{"format": "dd/MM/yyyy"}'/></td>
 					        </tr>
 					        <tr style="line-height: 25px;">
 					            <td width="20%" style="padding-left:10px;"><b>Principal</b></td>
@@ -176,27 +172,23 @@
 					        <tr style="line-height: 25px;">
 					            <td width="20%" style="padding-left:10px;"><b>Branch</b></td>
 					            <td width="40%"><span t-field="o.branch_id"/></td>
-					            <td width="20%"><b>Used By</b></td>
-					            <td width="20%"><span t-field="o.used_by"/></td>
+					            <td width="20%"><b>Use By</b></td>
+					            <td width="20%"><span t-field="o.used_by" t-field-options='{"format": "dd/MM/yyyy"}'/></td>
 					        </tr>
 					        <tr style="line-height: 30px;">
 					            <td></td>
 					            <td></td>
 					            <td style="font-size:15pt;"><b>Amount</b></td>
-					            <td style="font-size:15pt;"><b><t t-esc="'{0:,.0f}'.format(o.amount)"/></b></td>
-					        </tr>
-					        <tr style="line-height: 130px;">
-					            <td></td>
-					            <td></td>
-					            <td colspan="2">____________________</td>
-					        </tr>
-					        <tr style="padding-top:0px;">
-					            <td></td>
-					            <td></td>
-					            <td colspan="2">(Customer Sign)</td>
+					            <td style="font-size:15pt;"><b><t t-esc="'{0:,.0f}'.format(o.amount)"/> Ks</b></td>
 					        </tr>
 					    </tbody>
 					</table>
+					<br/><br/><br/><br/><br/>
+					<div style="padding-left:550px;padding-right:100px;">
+					    ____________________
+					    <br/><br/>
+					    (Customer Sign)
+					</div>
 				</div>				
 			</t>			
 		</template>

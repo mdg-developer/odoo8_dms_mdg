@@ -30,7 +30,7 @@ class account_creditnote(osv.osv):
 #                             string='Principle', store=True, readonly=True),
                 'redeemed_user_id':fields.many2one('res.users', 'Redeemedby'),
                 'approved_date': fields.date('Approved Date',readonly=True),
-                'used_by': fields.date('Used By',readonly=True),
+                'used_by': fields.date('Use By',readonly=True),
                 'approved_user_id':fields.many2one('res.users', 'Approved By',readonly=True),
                 'from_date': fields.date('From Date'),
                 'to_date': fields.date('To Date'),
