@@ -36,7 +36,7 @@ class account_creditnote(osv.osv):
                 'to_date': fields.date('To Date'),
                 'invoice_number': fields.char('Invoice Number',readonly=True),
                 'remark': fields.char('Remark',readonly=False),
-
+                'company_id':fields.many2one('res.company', 'Company', default=lambda self: self.env.user.company_id),
                 'state':fields.selection([
                     ('draft','Draft'),
                     ('approved','Approved'),

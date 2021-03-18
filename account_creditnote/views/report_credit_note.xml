@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<template id="report_credit_note_document">
+			<t t-call="account_creditnote.credit_note_custom_layout">			    
+				<div class="page" style="font-size:9pt;">
+				    <h5>Customer Copy</h5><br/>
+				    <div class="row">
+						<div class="col-xs-6"></div>
+						<div class="col-xs-6 text-right" style="font-size:10pt;color:#4d94ff;"
+							t-field="o.company_id.rml_header1" />
+					</div>
+					<div class="row">
+						<div class="col-xs-4">
+							<img t-if="o.company_id.logo" t-att-src="'data:image/png;base64,%s' % o.company_id.logo"
+								style="max-height: 50pt;" />
+						</div>
+	
+						<div class="col-xs-4" align="center" style="margin-top:30pt;">
+							<span style="font-size:20pt;">CREDIT NOTE
+							</span>
+						</div>
+	
+						<div class="col-xs-4">
+						</div>
+					</div>	
+				    <div class="row" style="padding-top:-2s0pt;">
+						<div class="col-xs-8 pull-left">
+							<table class="table" style="border:solid;border-color:white;">
+								<tr>
+									<td style="margin-top:-10pt;">
+										<div t-field="o.company_id.partner_id" t-field-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: true}"/>
+										<div t-field="o.company_id.phone"/>
+									</td>
+								</tr>
+							</table>
+						</div>
+						<div class="col-xs-4 pull-right">
+							<table class="table" style="border:solid;border-color:white;">
+								<tr>
+									<td style="margin-top:-10pt;">
+										<b>Customer address:</b>
+										<address t-field="o.customer_id" t-field-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: true}"/>
+										<span t-field="o.customer_id.vat" t-field-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: true}"/>
+										<div style="margin-top:-15pt;" t-field="o.customer_id.phone"/>
+									</td>
+								</tr>
+							</table>	
+						</div>
+					</div>
+					<table border="0" cellspacing="0" cellpadding="0" width="100%">
+					    <tbody>
+					        <tr style="line-height: 40px;">
+					            <td>Program</td>
+					            <td><span t-field="o.program_id"/></td>
+					            <td>From Date</td>
+					            <td><span t-field="o.from_date" t-field-options='{"format": "y-MM-d"}'/></td>
+					        </tr>
+					        <tr style="line-height: 40px;">
+					            <td>Description</td>
+					            <td><span t-field="o.description"/></td>
+					            <td>To Date</td>
+					            <td><span t-field="o.to_date" t-field-options='{"format": "y-MM-d"}'/></td>
+					        </tr>
+					        <tr style="line-height: 40px;">
+					            <td>Terms &amp; Conditions</td>
+					            <td><span t-field="o.terms_and_conditions"/></td>
+					            <td>Approved Date</td>
+					            <td><span t-field="o.approved_date" t-field-options='{"format": "y-MM-d"}'/></td>
+					        </tr>
+					        <tr style="line-height: 40px;">
+					            <td>Principal</td>
+					            <td><span t-field="o.principle_id"/></td>
+					            <td>Type</td>
+					            <td><span t-field="o.type"/></td>
+					        </tr>
+					        <tr style="line-height: 40px;">
+					            <td>Branch</td>
+					            <td><span t-field="o.branch_id"/></td>
+					            <td>Used By</td>
+					            <td><span t-field="o.used_by"/></td>
+					        </tr>
+					        <tr style="line-height: 40px;">
+					            <td></td>
+					            <td></td>
+					            <td style="font-size:11pt;"><b>Amount</b></td>
+					            <td style="font-size:11pt;"><b><span t-field="o.amount"/></b></td>
+					        </tr>
+					        <tr style="line-height: 40px;">
+					            <td></td>
+					            <td></td>
+					            <td colspan="2">------------------------------</td>
+					        </tr>
+					        <tr style="line-height: 40px;">
+					            <td></td>
+					            <td></td>
+					            <td colspan="2">(Customer Sign)</td>
+					        </tr>
+					    </tbody>
+					</table>
+					<hr style="border-top: dotted 1px;" />
+					<h5>Finance Copy</h5><br/>
+					<div class="row">
+						<div class="col-xs-6"></div>
+						<div class="col-xs-6 text-right" style="font-size:10pt;color:#4d94ff;"
+							t-field="o.company_id.rml_header1" />
+					</div>
+					<div class="row">
+						<div class="col-xs-4">
+							<img t-if="o.company_id.logo" t-att-src="'data:image/png;base64,%s' % o.company_id.logo"
+								style="max-height: 50pt;" />
+						</div>
+	
+						<div class="col-xs-4" align="center" style="margin-top:30pt;">
+							<span style="font-size:20pt;">CREDIT NOTE
+							</span>
+						</div>
+	
+						<div class="col-xs-4">
+						</div>
+					</div>	
+				    <div class="row" style="padding-top:-2s0pt;">
+						<div class="col-xs-8 pull-left">
+							<table class="table" style="border:solid;border-color:white;">
+								<tr>
+									<td style="margin-top:-10pt;">
+										<div t-field="o.company_id.partner_id" t-field-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: true}"/>
+										<div t-field="o.company_id.phone"/>
+									</td>
+								</tr>
+							</table>
+						</div>
+						<div class="col-xs-4 pull-right">
+							<table class="table" style="border:solid;border-color:white;">
+								<tr>
+									<td style="margin-top:-10pt;">
+										<b>Customer address:</b>
+										<address t-field="o.customer_id" t-field-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: true}"/>
+										<span t-field="o.customer_id.vat" t-field-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: true}"/>
+										<div style="margin-top:-15pt;" t-field="o.customer_id.phone"/>
+									</td>
+								</tr>
+							</table>	
+						</div>
+					</div>
+					<table border="0" cellspacing="0" cellpadding="0" width="100%">
+					    <tbody>
+					        <tr style="line-height: 40px;">
+					            <td>Program</td>
+					            <td><span t-field="o.program_id"/></td>
+					            <td>From Date</td>
+					            <td><span t-field="o.from_date" t-field-options='{"format": "y-MM-d"}'/></td>
+					        </tr>
+					        <tr style="line-height: 40px;">
+					            <td>Description</td>
+					            <td><span t-field="o.description"/></td>
+					            <td>To Date</td>
+					            <td><span t-field="o.to_date" t-field-options='{"format": "y-MM-d"}'/></td>
+					        </tr>
+					        <tr style="line-height: 40px;">
+					            <td>Terms &amp; Conditions</td>
+					            <td><span t-field="o.terms_and_conditions"/></td>
+					            <td>Approved Date</td>
+					            <td><span t-field="o.approved_date" t-field-options='{"format": "y-MM-d"}'/></td>
+					        </tr>
+					        <tr style="line-height: 40px;">
+					            <td>Principal</td>
+					            <td><span t-field="o.principle_id"/></td>
+					            <td>Type</td>
+					            <td><span t-field="o.type"/></td>
+					        </tr>
+					        <tr style="line-height: 40px;">
+					            <td>Branch</td>
+					            <td><span t-field="o.branch_id"/></td>
+					            <td>Used By</td>
+					            <td><span t-field="o.used_by"/></td>
+					        </tr>
+					        <tr style="line-height: 40px;">
+					            <td></td>
+					            <td></td>
+					            <td style="font-size:11pt;"><b>Amount</b></td>
+					            <td style="font-size:11pt;"><b><span t-field="o.amount"/></b></td>
+					        </tr>
+					        <tr style="line-height: 40px;">
+					            <td></td>
+					            <td></td>
+					            <td colspan="2">------------------------------</td>
+					        </tr>
+					        <tr style="line-height: 40px;">
+					            <td></td>
+					            <td></td>
+					            <td colspan="2">(Customer Sign)</td>
+					        </tr>
+					    </tbody>
+					</table>
+				</div>				
+			</t>			
+		</template>
+
+		<template id="report_credit_note">
+			<t t-call="report.html_container">
+				<t t-foreach="doc_ids" t-as="doc_id">
+					<t
+						t-raw="translate_doc(doc_id, doc_model, 'user_id.name', 'account_creditnote.report_credit_note_document')" />
+				</t>
+			</t>
+		</template>
+	</data>
+</openerp>
