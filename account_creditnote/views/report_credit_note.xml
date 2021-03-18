@@ -34,6 +34,9 @@
 									</td>
 								</tr>
 							</table>
+							<h4 style="padding-left:10px;">
+		                		<span><b>Credit Note Number - <span t-field="o.name"/></b></span>	
+		                	</h4>
 						</div>
 						<div class="col-xs-4 pull-right">
 							<table class="table" style="border:solid;border-color:white;">
@@ -49,7 +52,7 @@
 								</tr>
 							</table>	
 						</div>
-					</div>					
+					</div>
 					<table border="0" cellspacing="0" cellpadding="0" width="100%">
 					    <tbody>
 					        <tr style="line-height: 25px;">
@@ -92,9 +95,11 @@
 					</table>
 					<br/><br/><br/><br/><br/>
 					<div style="padding-left:550px;padding-right:100px;">
-					    ____________________
-					    <br/><br/>
-					    (Customer Sign)
+					    <div align="center">
+					        ____________________
+					    	<br/><br/>
+					    	(Customer Sign)
+					    </div>					    
 					</div>
 					<hr style="border-top: dotted 1px;" />
 					<h5>Finance Copy</h5><br/>
@@ -127,6 +132,9 @@
 									</td>
 								</tr>
 							</table>
+							<h4 style="padding-left:10px;">
+		                		<span><b>Credit Note Number - <span t-field="o.name"/></b></span>	
+		                	</h4>
 						</div>
 						<div class="col-xs-4 pull-right">
 							<table class="table" style="border:solid;border-color:white;">
@@ -142,7 +150,7 @@
 								</tr>
 							</table>	
 						</div>
-					</div>
+					</div>	
 					<table border="0" cellspacing="0" cellpadding="0" width="100%">
 					    <tbody>
 					        <tr style="line-height: 25px;">
@@ -185,9 +193,11 @@
 					</table>
 					<br/><br/><br/><br/><br/>
 					<div style="padding-left:550px;padding-right:100px;">
-					    ____________________
-					    <br/><br/>
-					    (Customer Sign)
+					    <div align="center">
+					        ____________________
+					    	<br/><br/>
+					    	(Customer Sign)
+					    </div>
 					</div>
 				</div>				
 			</t>			
