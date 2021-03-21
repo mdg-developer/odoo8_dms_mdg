@@ -303,7 +303,7 @@ class sale_order(models.Model):
             if not odoo_product and not woo_variant:
                 woo_variant=sku and woo_product_obj.search([('default_code','=',sku),('woo_instance_id','=',instance.id)],limit=1)
                 if not woo_variant:
-                    odoo_product=sku and odoo_product_obj.search([('default_code','=',sku.rstrip('!'))],limit=1)
+                    odoo_product=sku and odoo_product_obj.search([('default_code','=',sku.split("!")[0])],limit=1)
 
             if not woo_variant and not odoo_product:
                 message="%s Product Code Not found for order %s"%(sku,order_number)
