@@ -303,7 +303,7 @@ class sale_order(models.Model):
             if not odoo_product and not woo_variant:
                 woo_variant=sku and woo_product_obj.search([('default_code','=',sku),('woo_instance_id','=',instance.id)],limit=1)
                 if not woo_variant:
-                    odoo_product=sku and odoo_product_obj.search([('default_code','=',sku.rstrip('!'))],limit=1)
+                    odoo_product=sku and odoo_product_obj.search([('default_code','=',sku.split("!")[0])],limit=1)
 
             if not woo_variant and not odoo_product:
                 message="%s Product Code Not found for order %s"%(sku,order_number)
@@ -460,7 +460,8 @@ class sale_order(models.Model):
             woo_product=woo_product_obj.search([('woo_instance_id','=',instance.id),('variant_id','=',variant_id)],limit=1)
             if woo_product:
                 return woo_product
-            woo_product=woo_product_obj.search([('woo_instance_id','=',instance.id),('default_code','=',line.get('sku').rstrip('!'))],limit=1)
+            product_code = line.get('sku').split("!")[0]
+            woo_product=woo_product_obj.search([('woo_instance_id','=',instance.id),('default_code','=',product_code)],limit=1)
             woo_product and woo_product.write({'variant_id':variant_id})
             if woo_product:
                 return woo_product
@@ -488,7 +489,8 @@ class sale_order(models.Model):
                 woo_product_tmpl_obj.sync_new_products(instance,parent_id,update_templates=True)                        
             woo_product=woo_product_obj.search([('woo_instance_id','=',instance.id),('variant_id','=',variant_id)],limit=1)
         else:
-            woo_product=woo_product_obj.search([('woo_instance_id','=',instance.id),('default_code','=',line.get('sku').rstrip('!'))],limit=1)
+            product_code = line.get('sku').split("!")[0]
+            woo_product=woo_product_obj.search([('woo_instance_id','=',instance.id),('default_code','=',product_code)],limit=1)
             if woo_product:
                 return woo_product
         return woo_product
