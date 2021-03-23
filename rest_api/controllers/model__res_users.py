@@ -43,6 +43,14 @@ OUT__res_users__read_all__SUCCESS_CODE = 200       # editable
 OUT__res_users__read_all__SCHEMA = (                 # editable
     'id',
     'name',
+    ('branch_id', (
+        'id',
+        'name',
+        ('default_warehouse_id', (
+            'id',
+            'name',
+        )),
+    )),
 )
 #           ]
 #       }
@@ -71,6 +79,14 @@ OUT__res_users__read_one__SCHEMA = (                 # editable
     # simple fields (non relational):
     'id',
     'name',
+    ('branch_id', (
+        'id',
+        'name',
+        ('default_warehouse_id', (
+            'id',
+            'name',
+        )),
+    )),
 )
 
 # /api/res.users  POST  - Create one
