@@ -46,7 +46,7 @@ OUT__res_users__read_all__SCHEMA = (                 # editable
     ('branch_id', (
         'id',
         'name',
-        ('default_warehouse_id', (
+        ('branch_warehouse_id', (
             'id',
             'name',
         )),
@@ -82,7 +82,7 @@ OUT__res_users__read_one__SCHEMA = (                 # editable
     ('branch_id', (
         'id',
         'name',
-        ('default_warehouse_id', (
+        ('branch_warehouse_id', (
             'id',
             'name',
         )),
