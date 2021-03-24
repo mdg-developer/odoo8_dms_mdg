@@ -43,6 +43,7 @@ OUT__good_issue_note__read_all__SUCCESS_CODE = 200       # editable
 OUT__good_issue_note__read_all__SCHEMA = (                 # editable
     'id',
     'name',
+    'state',
     ('request_id', (  # will return dictionary of inner fields
         'id',
         'name',
@@ -132,6 +133,7 @@ OUT__good_issue_note__read_one__SCHEMA = (                 # editable
     # simple fields (non relational):
     'id',
     'name',
+    'state',
     ('request_id', (  # will return dictionary of inner fields
         'id',
         'name',
