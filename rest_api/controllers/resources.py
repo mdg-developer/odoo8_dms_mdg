@@ -27,3 +27,5 @@ from . import model__res_users
 from . import model__product_product
 from . import model__good_issue_note_line
 from . import model__crm_case_section
+from . import model__stock_return
+from . import model__stock_return_line
