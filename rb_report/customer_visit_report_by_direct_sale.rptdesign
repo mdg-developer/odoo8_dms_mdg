@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.6.0.v201606072122</property>
     <list-property name="propertyBindings">
         <structure>
             <property name="name">queryText</property>
@@ -373,8 +373,8 @@ else
 cast (cv.date::timestamp
    at time zone 'UTC' at time zone 'asia/rangoon' as time) as time,ti.mac_address tablet_id,
 res.name,ccs.name sale_team,spd.name sale_plan_day,cv.visit_reason reason,rt.name township,
-case when cv.image = 'False' then 'No'
-	 when cv.image = 'True'  then 'Yes'
+case when is_image1 = 'False' then 'No'
+	 when is_image1 = 'True'  then 'Yes'
 end as image,cv.date -LAG(cv.date)OVER (ORDER BY cv.date ) as difference,
 cv.other_reason remark
 from customer_visit cv
