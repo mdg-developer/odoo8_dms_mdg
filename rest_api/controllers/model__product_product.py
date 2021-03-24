@@ -44,6 +44,7 @@ OUT__product_product__read_all__SCHEMA = (                 # editable
     'id',
     'name_template',
     'default_code',
+    'sequence',
     ('product_tmpl_id', (  # will return dictionary of inner fields
         'id',
         'viss_value',
@@ -93,6 +94,7 @@ OUT__product_product__read_one__SCHEMA = (                 # editable
     'id',
     'name_template',
     'default_code',
+    'sequence',
     ('product_tmpl_id', (  # will return dictionary of inner fields
         'id',
         'viss_value',
