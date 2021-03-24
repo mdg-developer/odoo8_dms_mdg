@@ -127,7 +127,7 @@ class ControllerREST(http.Controller):
         
         # Generate tokens
         access_token = generate_token()
-        expires_in = int(jdata.get('access_lifetime', False)) or 600
+        expires_in = int(jdata.get('access_lifetime', False)) or 6000
         refresh_token = generate_token()
         refresh_expires_in = int(jdata.get('refresh_lifetime', False)) or 7200
         
