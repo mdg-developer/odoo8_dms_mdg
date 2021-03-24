@@ -102,7 +102,23 @@ class res_users(osv.osv):
                             and issue_date between %s and %s''',(branch_id,from_date,to_date,branch_id,from_date,to_date,))
             note_record = cursor.dictfetchall() 
             if note_record:
-                return note_record 
+                return note_record
+        if branch_id and team_id and not from_date and not to_date:
+            cursor.execute('''select id
+                            from good_issue_note
+                            where state='approve'
+                            and branch_id=%s
+                            and sale_team_id=%s
+                            union
+                            select id
+                            from good_issue_note
+                            where state='issue'
+                            and branch_id=%s
+                            and issue_date=now()::date
+                            and sale_team_id=%s''',(branch_id,team_id,branch_id,team_id,))
+            note_record = cursor.dictfetchall() 
+            if note_record:
+                return note_record  
             
     def get_stock_return_lists(self, cursor, user, ids, branch_id=None, context=None):
         
@@ -158,4 +174,20 @@ class res_users(osv.osv):
                             and (return_date between %s and %s and to_return_date between %s and %s)''',(branch_id,team_id,from_date,to_date,from_date,to_date,branch_id,team_id,from_date,to_date,from_date,to_date,))
             return_record = cursor.dictfetchall() 
             if return_record:
-                return return_record                       
+                return return_record
+        if branch_id and team_id and not from_date and not to_date:
+            cursor.execute('''select id
+                            from stock_return
+                            where state='draft'
+                            and branch_id=%s
+                            and sale_team_id=%s
+                            union
+                            select id
+                            from stock_return
+                            where state='received'
+                            and branch_id=%s
+                            and sale_team_id=%s
+                            and now()::date between return_date and to_return_date''',(branch_id,team_id,branch_id,team_id,))
+            return_record = cursor.dictfetchall() 
+            if return_record:
+                return return_record                        
