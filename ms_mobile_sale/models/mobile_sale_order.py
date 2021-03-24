@@ -1529,31 +1529,59 @@ class mobile_sale_order(osv.osv):
 
     def sale_plan_day_return(self, cr, uid, section_id, pull_date , context=None, **kwargs):
 
-        lastdate = datetime.strptime(pull_date, "%Y-%m-%d")
-        print 'DateTime', lastdate
-
-        cr.execute('''
-            select p.id,p.date,p.sale_team,p.name,p.principal,p.week from sale_plan_day p
-            join  crm_case_section c on p.sale_team=c.id
-            where p.sale_team=%s and p.active = true
-            ''', (section_id,))
-        datas = cr.fetchall()
+#         lastdate = datetime.strptime(pull_date, "%Y-%m-%d")
+#         print 'DateTime', lastdate
+        team_obj = self.pool.get('crm.case.section')
+        team_data=team_obj.browse(cr, uid, section_id, context=context)     
+        section_id=  team_data.id                            
+        is_supervisor=team_data.is_supervisor    
+        if  is_supervisor==True:
+            cr.execute('''
+                select p.id,p.date,p.sale_team,p.name,p.principal,p.week from sale_plan_day p
+                join  crm_case_section c on p.sale_team=c.id
+                where  p.sale_team in (select id from crm_case_section where supervisor_team= %s) 
+                and p.active = true
+                ''', (section_id,))
+            datas = cr.fetchall()            
+        else:
+            cr.execute('''
+                select p.id,p.date,p.sale_team,p.name,p.principal,p.week from sale_plan_day p
+                join  crm_case_section c on p.sale_team=c.id
+                where p.sale_team=%s and p.active = true
+                ''', (section_id,))
+            datas = cr.fetchall()
         cr.execute
         return datas
+    
     def sale_plan_trip_return(self, cr, uid, section_id, pull_date , context=None, **kwargs):
+        team_obj = self.pool.get('crm.case.section')
+        team_data=team_obj.browse(cr, uid, section_id, context=context)     
+        section_id=  team_data.id                            
+        is_supervisor=team_data.is_supervisor   
+         
+        if  is_supervisor==True:
+            cr.execute('''
+                select distinct p.id,p.date,p.sale_team,p.name,p.principal from sale_plan_trip p
+                ,  crm_case_section c,res_partner_sale_plan_trip_rel d, res_partner e
+                where  p.sale_team=c.id
+                and p.sale_team in (select id from crm_case_section where supervisor_team= %s)
+                and p.active = true
+                and p.id = d.sale_plan_trip_id
+                and e.id = d.partner_id
+                ''', (section_id,))
+            datas = cr.fetchall()            
+        else:
 
-        lastdate = datetime.strptime(pull_date, "%Y-%m-%d")
-        print 'DateTime', lastdate
-        cr.execute('''
-            select distinct p.id,p.date,p.sale_team,p.name,p.principal from sale_plan_trip p
-            ,  crm_case_section c,res_partner_sale_plan_trip_rel d, res_partner e
-            where  p.sale_team=c.id
-            and p.sale_team= %s
-            and p.active = true
-            and p.id = d.sale_plan_trip_id
-            and e.id = d.partner_id
-            ''', (section_id,))
-        datas = cr.fetchall()
+            cr.execute('''
+                select distinct p.id,p.date,p.sale_team,p.name,p.principal from sale_plan_trip p
+                ,  crm_case_section c,res_partner_sale_plan_trip_rel d, res_partner e
+                where  p.sale_team=c.id
+                and p.sale_team= %s
+                and p.active = true
+                and p.id = d.sale_plan_trip_id
+                and e.id = d.partner_id
+                ''', (section_id,))
+            datas = cr.fetchall()
         return datas
 
         # kzo
@@ -3447,9 +3475,14 @@ class mobile_sale_order(osv.osv):
 
 # kzo Eidt
     def res_partners_return_day(self, cr, uid, section_id, day_id, pull_date  , context=None, **kwargs):
+        section = self.pool.get('crm.case.section')
+        sale_team_data = section.browse(cr, uid, section_id, context=context)
+        is_supervisor=sale_team_data.is_supervisor    
+        if is_supervisor==True:
+            where ='and SPD.sale_team in (select id from crm_case_section where supervisor_team= %s)' % (section_id,)
+        else:
+            where ='and SPD.sale_team = %s' % (section_id,)
 
-        lastdate = datetime.strptime(pull_date, "%Y-%m-%d")
-        print 'DateTime', lastdate
         cr.execute('''
                      select A.id,A.name,A.image,A.is_company, A.image_small,replace(A.street,',',';') street, replace(A.street2,',',';') street2,A.city,A.website,
                      replace(A.phone,',',';') phone,A.township, replace(A.mobile,',',';') mobile,A.email,A.company_id,A.customer,
@@ -3477,20 +3510,25 @@ class mobile_sale_order(osv.osv):
                                             and RP.active = true
                                             and RP.outlet_type = OT.id
                                             and RPS.partner_id = RP.id
-                                            and SPD.sale_team = %s
-                                            and RPS.sale_plan_day_id = %s
-
-
+                                            %s
+                                            and RPS.sale_plan_day_id = %%s
                         )A
                         where A.customer_code is not null
-            ''', (section_id, day_id,))
+            '''%(where),(day_id,))
         datas = cr.fetchall()
         return datas
 # kzo Edit add Sale Plan Trip and Day ID
     def res_partners_return_trip(self, cr, uid, section_id, day_id , pull_date, context=None, **kwargs):
-
+        section = self.pool.get('crm.case.section')
+        sale_team_data = section.browse(cr, uid, section_id, context=context)
+        is_supervisor=sale_team_data.is_supervisor    
         lastdate = datetime.strptime(pull_date, "%Y-%m-%d")
         print 'DateTime', lastdate
+        if is_supervisor==True:
+            where ='and SPT.sale_team in (select id from crm_case_section where supervisor_team= %s)' % (section_id,)
+        else:
+            where ='and SPT.sale_team = %s' % (section_id,)
+
         cr.execute('''
                     select A.id,A.name,A.image,A.is_company,
                      A.image_small,replace(A.street,',',';') street,replace(A.street2,',',';') street2,A.city,A.website,
@@ -3520,15 +3558,15 @@ class mobile_sale_order(osv.osv):
                      and  RP.city = RC.id
                      and RP.township = RT.id
                      and RP.active = true
-                     and SPT.sale_team = %s
-                     and RPT.sale_plan_trip_id = %s
+                     %s
+                     and RPT.sale_plan_trip_id = %%s
 
                         )A
                     where A.customer_code is not null
-            ''', (section_id, day_id,))
+            ''' %(where),(day_id,))
         datas = cr.fetchall()
         return datas
-
+    
     def get_promo_partner_category(self, cr, uid , context=None):
         cr.execute('''select * from promotion_rule_category_rel''')
         datas = cr.fetchall()
@@ -3542,14 +3580,28 @@ class mobile_sale_order(osv.osv):
         return datas
     
     def get_partner_category_rel(self, cr, uid,section_id , context=None):
-        cr.execute('''select a.* from res_partner_res_partner_category_rel a,
-                 res_partner_sale_plan_day_rel b
-                 , sale_plan_day p
-                where a.partner_id = b.partner_id
-                and b.sale_plan_day_id = p.id
-                and p.sale_team = %s
-                ''',(section_id,))
-        datas = cr.fetchall()
+        section = self.pool.get('crm.case.section')      
+        sale_team_data = section.browse(cr, uid, section_id, context=context)
+        is_supervisor=sale_team_data.is_supervisor    
+        if is_supervisor==True:
+            cr.execute('''select a.* from res_partner_res_partner_category_rel a,
+                     res_partner_sale_plan_day_rel b
+                     , sale_plan_day p
+                    where a.partner_id = b.partner_id
+                    and b.sale_plan_day_id = p.id
+                    and p.sale_team in (select id from crm_case_section where supervisor_team= %s)
+                    ''',(section_id,))
+            datas = cr.fetchall()            
+        else:         
+        
+            cr.execute('''select a.* from res_partner_res_partner_category_rel a,
+                     res_partner_sale_plan_day_rel b
+                     , sale_plan_day p
+                    where a.partner_id = b.partner_id
+                    and b.sale_plan_day_id = p.id
+                    and p.sale_team = %s
+                    ''',(section_id,))
+            datas = cr.fetchall()
         return datas
 
     def get_monthly_promotion_history(self, cr, uid, section_id , context=None, **kwargs):
