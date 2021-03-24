@@ -1670,6 +1670,8 @@ class mobile_sale_order(osv.osv):
             ar_obj = self.pool.get('ar.payment')
             inv_Obj=self.pool.get('account.invoice')
             invoice_obj = self.pool.get('account.invoice.line')
+            Order_obj = self.pool.get('sale.order')
+            Order_Lineobj = self.pool.get('sale.order.line')
             ar_amount=0.0
             product_amount=0.0
             deno_amount=0.0
@@ -1764,23 +1766,32 @@ class mobile_sale_order(osv.osv):
                 ar_bank_ids = cursor.fetchall()
                 cursor.execute("select id from mobile_sale_order where due_date=%s and user_id=%s and void_flag != 'voided'", (de_date, user_id))
                 m_mobile_ids = cursor.fetchall()
-                cursor.execute("select id from account_invoice where date_invoice=%s and section_id =%s and state='open' ", (de_date, team_id,))
-                invoice_ids = cursor.fetchall()
+#                 cursor.execute("select id from account_invoice where date_invoice=%s and section_id =%s and state='open' ", (de_date, team_id,))
+#                 invoice_ids = cursor.fetchall()
+                cursor.execute("select order_id from pending_delivery pd,sale_order so where pd.order_id =so.id and so.payment_type ='cash' and pd.delivery_date=%s and pd.delivery_team_id =%s and pd.state='draft'", (de_date, team_id,))
+                invoice_ids = cursor.fetchall()                       
+                if invoice_ids:
+                    for data_pro in invoice_ids:
+                        pre_mobile_ids.append(data_pro[0])                
+                
                 if invoice_ids:
                     for data_pro in invoice_ids:
                         pre_mobile_ids.append(data_pro[0])
                 if pre_mobile_ids:
-                    invoice_data = inv_Obj.search(cursor, user, [('id', 'in', tuple(pre_mobile_ids))], context=context)
+                    invoice_data = Order_obj.search(cursor, user, [('id', 'in', tuple(pre_mobile_ids))], context=context)
                     for invoice_id in invoice_data:
-                        invoice =inv_Obj.browse(cursor, user, invoice_id, context=context)
+                        invoice =Order_obj.browse(cursor, user, invoice_id, context=context)
                         deduct_amt= invoice.deduct_amt
                         amount_total= invoice.amount_untaxed
                         deduct_percent=invoice.additional_discount/100
                         discount_total +=  amount_total * deduct_percent
                         discount_amount+=deduct_amt
-                    line_ids = invoice_obj.search(cursor, user, [('invoice_id', 'in', pre_mobile_ids)], context=context)
-                    order_line_ids = invoice_obj.browse(cursor, user, line_ids, context=context)
-                    cursor.execute(' select product_id,sum(quantity) as quantity,sum(price_subtotal) as  sub_total from account_invoice_line where id in %s group by product_id', (tuple(order_line_ids.ids),))
+                        
+                    line_ids = Order_Lineobj.search(cursor, user, [('order_id', 'in', pre_mobile_ids)], context=context)         
+                        
+                    #line_ids = invoice_obj.search(cursor, user, [('invoice_id', 'in', pre_mobile_ids)], context=context)
+                    order_line_ids = Order_Lineobj.browse(cursor, user, line_ids, context=context)
+                    cursor.execute(' select product_id,sum(quantity) as quantity,sum((product_uom_qty* price_unit) -discount_amt) as  sub_total from sale_order_line where id in %s group by product_id', (tuple(order_line_ids.ids),))
                     order_line = cursor.fetchall()
                     for data in order_line:
                         product = self.pool.get('product.product').browse(cursor, user, data[0], context=context)
