@@ -25,3 +25,4 @@ from . import model__stock_requisition
 from . import model__good_issue_note
 from . import model__res_users
 from . import model__product_product
+from . import model__good_issue_note_line
