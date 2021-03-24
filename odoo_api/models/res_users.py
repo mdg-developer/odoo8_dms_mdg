@@ -15,6 +15,7 @@ class res_users(osv.osv):
                             select id
                             from good_issue_note
                             where state='issue'
+                            and branch_id=%s
                             and issue_date=now()::date''',(branch_id,))
             note_record = cursor.dictfetchall() 
             if note_record:
@@ -65,3 +66,40 @@ class res_users(osv.osv):
             data = cursor.dictfetchall() 
             if data:
                 return data     
+            
+    def get_good_issue_note_by_sales_team(self, cursor, user, ids, branch_id=None, team_id=None, from_date=None, to_date=None, context=None):
+        
+        if team_id and from_date and to_date:
+            cursor.execute('''select id
+                            from good_issue_note
+                            where state='approve'
+                            and branch_id=%s
+                            and sale_team_id=%s
+                            and issue_date between %s and %s
+                            union
+                            select id
+                            from good_issue_note
+                            where state='issue'
+                            and branch_id=%s
+                            and issue_date=now()::date
+                            and sale_team_id=%s
+                            and issue_date between %s and %s''',(branch_id,team_id,from_date,to_date,branch_id,team_id,from_date,to_date,))
+            note_record = cursor.dictfetchall() 
+            if note_record:
+                return note_record 
+        if not team_id and from_date and to_date:
+            cursor.execute('''select id
+                            from good_issue_note
+                            where state='approve'
+                            and branch_id=%s                            
+                            and issue_date between %s and %s
+                            union
+                            select id
+                            from good_issue_note
+                            where state='issue'
+                            and branch_id=%s
+                            and issue_date=now()::date                            
+                            and issue_date between %s and %s''',(branch_id,from_date,to_date,branch_id,from_date,to_date,))
+            note_record = cursor.dictfetchall() 
+            if note_record:
+                return note_record   
