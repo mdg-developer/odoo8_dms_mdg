@@ -151,9 +151,9 @@ teamList = teamList.replace(row["id"].toString(),row["name"]);
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select crm.id,crm.name
-from crm_case_section crm,section_users_rel rel
-where crm.id=rel.section_id
-and uid=?
+from crm_case_section crm,res_sale_teams_rel rel
+where crm.id=rel.team_id
+and rel.user_id=?
 order by crm.name]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
