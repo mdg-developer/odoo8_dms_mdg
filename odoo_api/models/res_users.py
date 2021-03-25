@@ -16,7 +16,7 @@ class res_users(osv.osv):
                             from good_issue_note
                             where state='issue'
                             and branch_id=%s
-                            and issue_date=now()::date''',(branch_id,))
+                            and issue_date=now()::date''',(branch_id,branch_id,))
             note_record = cursor.dictfetchall() 
             if note_record:
                 return note_record         
@@ -132,7 +132,7 @@ class res_users(osv.osv):
                             from stock_return
                             where state='received'
                             and branch_id=%s
-                            and now()::date between return_date and to_return_date''',(branch_id,))
+                            and now()::date between return_date and to_return_date''',(branch_id,branch_id,))
             return_record = cursor.dictfetchall() 
             if return_record:
                 return return_record   
