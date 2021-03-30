@@ -55,6 +55,26 @@ class res_users(osv.osv):
             if balance_record:
                 return balance_record  
             
+    def search_product_in_stock_lookup(self, cursor, user, ids, location_id=None, product_name=None, context=None):
+            
+        if location_id and product_name:
+            param_product_name = '%' + product_name + '%'
+            cursor.execute('''select loc.complete_name location_name,name_template product_name,sum(quant.qty) total_small_qty,
+                            round((sum(quant.qty)/round((1/factor),0))::numeric,0) total_bigger_qty
+                            from stock_quant quant,product_product pp,stock_location loc,product_template pt,product_uom uom
+                            where quant.product_id=pp.id
+                            and quant.location_id=loc.id
+                            and pp.product_tmpl_id=pt.id
+                            and pt.report_uom_id=uom.id
+                            and usage='internal'
+                            and loc.active=true
+                            and loc.id=%s
+                            and pp.id in (select id from product_product where name_template like %s)
+                            group by loc.complete_name,name_template,uom.factor''',(location_id,param_product_name,))
+            balance_record = cursor.dictfetchall() 
+            if balance_record:
+                return balance_record 
+            
     def get_all_locations(self, cursor, user, ids, warehouse_id=None, context=None):   
         
         if warehouse_id:
