@@ -62,7 +62,6 @@ OUT__stock_return__read_all__SCHEMA = (                 # editable
     )),
     'to_return_date',
     'issue_from_optional_location',
-    'is_seperate_srn',
     'returner',
     'wh_receiver',
     ('vehicle_id', (  # will return dictionary of inner fields
@@ -149,7 +148,6 @@ OUT__stock_return__read_one__SCHEMA = (                 # editable
     )),
     'to_return_date',
     'issue_from_optional_location',
-    'is_seperate_srn',
     'returner',
     'wh_receiver',
     ('vehicle_id', (  # will return dictionary of inner fields
