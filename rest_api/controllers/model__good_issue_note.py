@@ -91,6 +91,7 @@ OUT__good_issue_note__read_all__SCHEMA = (                 # editable
         ('product_id', (  # many2one
             'id',
             'name',
+            'sequence',
         )),
         'issue_quantity',
         'approved_quantity',
@@ -182,6 +183,7 @@ OUT__good_issue_note__read_one__SCHEMA = (                 # editable
         ('product_id', (  # many2one
             'id',
             'name',
+            'sequence',
         )),
         'issue_quantity',
         'approved_quantity',

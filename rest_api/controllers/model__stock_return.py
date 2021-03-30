@@ -74,6 +74,7 @@ OUT__stock_return__read_all__SCHEMA = (                 # editable
         ('product_id', (  # will return dictionary of inner fields
             'id',
             'name',
+            'sequence',
         )),
         ('from_location_id', (  # will return dictionary of inner fields
             'id',
@@ -161,6 +162,7 @@ OUT__stock_return__read_one__SCHEMA = (                 # editable
         ('product_id', (  # will return dictionary of inner fields
             'id',
             'name',
+            'sequence',
         )),
         ('from_location_id', (  # will return dictionary of inner fields
             'id',

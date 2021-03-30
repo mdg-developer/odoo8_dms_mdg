@@ -65,7 +65,21 @@ class res_users(osv.osv):
                             and location_id in (select view_location_id from stock_warehouse where id=%s)''',(warehouse_id,))
             data = cursor.dictfetchall() 
             if data:
-                return data     
+                return data 
+        
+    def search_location(self, cursor, user, ids, warehouse_id=None, location_name=None, context=None):   
+        
+        if warehouse_id and location_name:
+            param_location_name = '%' + location_name + '%'
+            cursor.execute('''select id,name
+                            from stock_location
+                            where active=true
+                            and usage='internal'
+                            and location_id in (select view_location_id from stock_warehouse where id=%s)
+                            and id in (select id from stock_location where name like %s)''',(warehouse_id,param_location_name,))
+            data = cursor.dictfetchall() 
+            if data:
+                return data    
             
     def get_good_issue_note_by_sales_team(self, cursor, user, ids, branch_id=None, sales_team=None, from_date=None, to_date=None, context=None):
         
