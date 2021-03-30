@@ -29,6 +29,9 @@
 					,
 					<span t-field="o.create_uid.company_id.country_id.name" />
 					.
+					<img t-if="o.name"
+						t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.name, 600, 100)"
+						align="right" style="width:300px;height:50px;" />
 				</div>
 				<h4>
 					<strong>
@@ -132,7 +135,7 @@
 							<th class="text-right">Actual Return Qty</th>
 							<th class="text-right">Closing Stock Qty</th>
 							<th class="text-right">Different Qty</th>
-							
+
 							<th>Expiry</th>
 							<th>Remark</th>
 						</tr>
@@ -177,19 +180,19 @@
 								<span t-field="l.onground_quantity" />
 							</td>
 							<td align="center">
-								<span t-field="l.actual_return_quantity"/>
+								<span t-field="l.actual_return_quantity" />
 							</td>
 							<td align="center">
-								<span t-field="l.closing_stock_qty"/>
+								<span t-field="l.closing_stock_qty" />
 							</td>
 							<td align="center">
-								<span t-field="l.different_qty"/>
+								<span t-field="l.different_qty" />
 							</td>
 							<td class="text-right">
-								<span t-field="l.expiry_date"/>
+								<span t-field="l.expiry_date" />
 							</td>
 							<td align="text-right">
-								<span t-field="l.remark"/>
+								<span t-field="l.remark" />
 							</td>
 						</tr>
 					</tbody>
