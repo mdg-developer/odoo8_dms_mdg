@@ -33,6 +33,8 @@ class res_users(osv.osv):
                             and pt.report_uom_id=uom.id
                             and usage='internal'
                             and loc.active=true
+                            and pp.active=true
+                            and pt.active=true
                             and loc.id=%s
                             group by loc.complete_name,name_template,uom.factor''',(location_id,))
             balance_record = cursor.dictfetchall() 
@@ -48,6 +50,8 @@ class res_users(osv.osv):
                             and pt.report_uom_id=uom.id
                             and usage='internal'
                             and loc.active=true
+                            and pp.active=true
+                            and pt.active=true
                             and quant.product_id=%s
                             and loc.location_id in (select view_location_id from stock_warehouse where id=%s)
                             group by loc.complete_name,name_template,uom.factor''',(warehouse_id,product_id,))
@@ -68,6 +72,8 @@ class res_users(osv.osv):
                             and pt.report_uom_id=uom.id
                             and usage='internal'
                             and loc.active=true
+                            and pp.active=true
+                            and pt.active=true
                             and loc.id=%s
                             and pp.id in (select id from product_product where name_template like %s)
                             group by loc.complete_name,name_template,uom.factor''',(location_id,param_product_name,))
