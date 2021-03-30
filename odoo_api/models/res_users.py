@@ -36,7 +36,8 @@ class res_users(osv.osv):
                             and pp.active=true
                             and pt.active=true
                             and loc.id=%s
-                            group by loc.complete_name,name_template,uom.factor''',(location_id,))
+                            group by loc.complete_name,name_template,uom.factor,pp.sequence
+                            order by pp.sequence''',(location_id,))
             balance_record = cursor.dictfetchall() 
             if balance_record:
                 return balance_record 
@@ -54,7 +55,8 @@ class res_users(osv.osv):
                             and pt.active=true
                             and quant.product_id=%s
                             and loc.location_id in (select view_location_id from stock_warehouse where id=%s)
-                            group by loc.complete_name,name_template,uom.factor''',(warehouse_id,product_id,))
+                            group by loc.complete_name,name_template,uom.factor,pp.sequence
+                            order by pp.sequence''',(warehouse_id,product_id,))
             balance_record = cursor.dictfetchall() 
             if balance_record:
                 return balance_record  
@@ -232,4 +234,15 @@ class res_users(osv.osv):
                             and now()::date between return_date and to_return_date''',(branch_id,param_sale_team,branch_id,param_sale_team,))
             return_record = cursor.dictfetchall() 
             if return_record:
-                return return_record                        
+                return return_record     
+            
+    def get_goods_receipt_lists(self, cursor, user, ids, branch_id=None, context=None):
+        
+        if branch_id:
+            cursor.execute('''select id
+                            from branch_good_issue_note
+                            where branch_id=%s
+                            and state in ('issue','partial_receive','receive')''',(branch_id,))
+            data = cursor.dictfetchall() 
+            if data:
+                return data                     
