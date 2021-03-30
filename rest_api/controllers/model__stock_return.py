@@ -43,6 +43,7 @@ OUT__stock_return__read_all__SUCCESS_CODE = 200       # editable
 OUT__stock_return__read_all__SCHEMA = (                 # editable
     'id',
     'name',
+    'state',
     ('sale_team_id', (  # will return dictionary of inner fields
         'id',
         'name',
@@ -129,6 +130,7 @@ OUT__stock_return__read_one__SCHEMA = (                 # editable
     # simple fields (non relational):
     'id',
     'name',
+    'state',
     ('sale_team_id', (  # will return dictionary of inner fields
         'id',
         'name',

@@ -51,6 +51,7 @@ OUT__good_issue_note_line__read_all__SCHEMA = (                 # editable
         'name_template',
     )),
     'issue_quantity',
+    'approved_quantity',
     ('product_uom', (  # will return dictionary of inner fields
         'id',
         'name',
@@ -93,6 +94,7 @@ OUT__good_issue_note_line__read_one__SCHEMA = (                 # editable
         'name_template',
     )),
     'issue_quantity',
+    'approved_quantity',
     ('product_uom', (  # will return dictionary of inner fields
         'id',
         'name',
