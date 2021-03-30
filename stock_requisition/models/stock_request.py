@@ -452,6 +452,7 @@ class stock_requisition(osv.osv):
                                                   'opening_qty': opening_qty,
                                                   'product_uom': product_uom,
                                                   'uom_ratio':uom_ratio,
+                                                 'approved_quantity':quantity,
                                                   'issue_quantity':quantity,
                                                   'qty_on_hand':qty_on_hand,
                                                   'sequence':sequence,                                                  

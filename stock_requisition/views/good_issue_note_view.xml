@@ -85,6 +85,7 @@
 											<field name="big_uom_id" invisible="1" />
 											<field name="opening_qty" invisible="1" />
 											<field name="opening_product_uom" invisible="1" />
+											<field name="approved_quantity" invisible="1"/>
 											<field name="issue_quantity" string="Qty" />
 											<field name="product_uom" string="UOM" />
 											<field name="uom_ratio" invisible="1" />

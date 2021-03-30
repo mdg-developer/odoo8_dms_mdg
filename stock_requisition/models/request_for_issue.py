@@ -98,6 +98,7 @@ class issue_requisition(osv.osv):
                                               'product_id': product_id,
                                               'product_uom': product_uom,
                                               'uom_ratio':uom_ratio,
+                                              'approved_quantity':quantity,
                                               'issue_quantity':quantity}, context=context)
                     
         return self.write(cr, uid, ids, {'state':'approve'})    

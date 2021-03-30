@@ -337,6 +337,7 @@ class good_issue_line(osv.osv):  # #prod_pricelist_update_line
         'line_id':fields.many2one('good.issue.note', 'Line', ondelete='cascade', select=True),
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'issue_quantity' : fields.float(string='Qty', digits=(16, 0)),
+        'approved_quantity' : fields.float(string='Approved Qty', digits=(16, 0)),
         'product_uom': fields.many2one('product.uom', 'Smaller UoM'),
                 'uom_ratio':fields.char('Packing Unit'),
                 'batch_no':fields.many2one('stock.production.lot','Batch No'),
