@@ -139,57 +139,57 @@ class res_users(osv.osv):
             if return_record:
                 return return_record   
             
-    def get_stock_return_by_sales_team(self, cursor, user, ids, branch_id=None, team_id=None, from_date=None, to_date=None, context=None):
-        
-        if branch_id and team_id and from_date and to_date:
+    def get_stock_return_by_sales_team(self, cursor, user, ids, branch_id=None, sales_team=None, from_date=None, to_date=None, context=None):
+                
+        if branch_id and sales_team and from_date and to_date:
+            param_sale_team = '%' + sales_team + '%'
             cursor.execute('''select id
                             from stock_return
                             where state='draft'
                             and branch_id=%s
-                            and sale_team_id=%s
+                            and sale_team_id in (select id from crm_case_section where name like %s)
                             and (return_date between %s and %s and to_return_date between %s and %s)
                             union
                             select id
                             from stock_return
                             where state='received'
                             and branch_id=%s
-                            and sale_team_id=%s
+                            and sale_team_id in (select id from crm_case_section where name like %s)
                             and now()::date between return_date and to_return_date
-                            and (return_date between %s and %s and to_return_date between %s and %s)''',(branch_id,team_id,from_date,to_date,from_date,to_date,branch_id,team_id,from_date,to_date,from_date,to_date,))
+                            and (return_date between %s and %s and to_return_date between %s and %s)''',(branch_id,param_sale_team,from_date,to_date,from_date,to_date,branch_id,param_sale_team,from_date,to_date,from_date,to_date,))
             return_record = cursor.dictfetchall() 
             if return_record:
                 return return_record   
-        if branch_id and not team_id and from_date and to_date:
+        if branch_id and not sales_team and from_date and to_date:
             cursor.execute('''select id
                             from stock_return
                             where state='draft'
                             and branch_id=%s
-                            and sale_team_id=%s
                             and (return_date between %s and %s and to_return_date between %s and %s)
                             union
                             select id
                             from stock_return
                             where state='received'
                             and branch_id=%s
-                            and sale_team_id=%s
                             and now()::date between return_date and to_return_date
-                            and (return_date between %s and %s and to_return_date between %s and %s)''',(branch_id,team_id,from_date,to_date,from_date,to_date,branch_id,team_id,from_date,to_date,from_date,to_date,))
+                            and (return_date between %s and %s and to_return_date between %s and %s)''',(branch_id,from_date,to_date,from_date,to_date,branch_id,from_date,to_date,from_date,to_date,))
             return_record = cursor.dictfetchall() 
             if return_record:
                 return return_record
-        if branch_id and team_id and not from_date and not to_date:
+        if branch_id and sales_team and not from_date and not to_date:
+            param_sale_team = '%' + sales_team + '%'
             cursor.execute('''select id
                             from stock_return
                             where state='draft'
                             and branch_id=%s
-                            and sale_team_id=%s
+                            and sale_team_id in (select id from crm_case_section where name like %s)
                             union
                             select id
                             from stock_return
                             where state='received'
                             and branch_id=%s
-                            and sale_team_id=%s
-                            and now()::date between return_date and to_return_date''',(branch_id,team_id,branch_id,team_id,))
+                            and sale_team_id in (select id from crm_case_section where name like %s)
+                            and now()::date between return_date and to_return_date''',(branch_id,param_sale_team,branch_id,param_sale_team,))
             return_record = cursor.dictfetchall() 
             if return_record:
                 return return_record                        
