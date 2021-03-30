@@ -58,7 +58,7 @@ class res_users(osv.osv):
     def get_all_locations(self, cursor, user, ids, warehouse_id=None, context=None):   
         
         if warehouse_id:
-            cursor.execute('''select id,complete_name as name
+            cursor.execute('''select id,name
                             from stock_location
                             where active=true
                             and usage='internal'
@@ -67,14 +67,15 @@ class res_users(osv.osv):
             if data:
                 return data     
             
-    def get_good_issue_note_by_sales_team(self, cursor, user, ids, branch_id=None, team_id=None, from_date=None, to_date=None, context=None):
+    def get_good_issue_note_by_sales_team(self, cursor, user, ids, branch_id=None, sales_team=None, from_date=None, to_date=None, context=None):
         
-        if branch_id and team_id and from_date and to_date:
+        if branch_id and sales_team and from_date and to_date:
+            param_sale_team = '%' + sales_team + '%'
             cursor.execute('''select id
                             from good_issue_note
                             where state='approve'
                             and branch_id=%s
-                            and sale_team_id=%s
+                            and sale_team_id in (select id from crm_case_section where name like %s)
                             and issue_date between %s and %s
                             union
                             select id
@@ -82,12 +83,12 @@ class res_users(osv.osv):
                             where state='issue'
                             and branch_id=%s
                             and issue_date=now()::date
-                            and sale_team_id=%s
-                            and issue_date between %s and %s''',(branch_id,team_id,from_date,to_date,branch_id,team_id,from_date,to_date,))
+                            and sale_team_id in (select id from crm_case_section where name like %s)
+                            and issue_date between %s and %s''',(branch_id,param_sale_team,from_date,to_date,branch_id,param_sale_team,from_date,to_date,))
             note_record = cursor.dictfetchall() 
             if note_record:
                 return note_record 
-        if branch_id and not team_id and from_date and to_date:
+        if branch_id and not sales_team and from_date and to_date:
             cursor.execute('''select id
                             from good_issue_note
                             where state='approve'
@@ -103,19 +104,20 @@ class res_users(osv.osv):
             note_record = cursor.dictfetchall() 
             if note_record:
                 return note_record
-        if branch_id and team_id and not from_date and not to_date:
+        if branch_id and sales_team and not from_date and not to_date:
+            param_sale_team = '%' + sales_team + '%'
             cursor.execute('''select id
                             from good_issue_note
                             where state='approve'
                             and branch_id=%s
-                            and sale_team_id=%s
+                            and sale_team_id in (select id from crm_case_section where name like %s)
                             union
                             select id
                             from good_issue_note
                             where state='issue'
                             and branch_id=%s
                             and issue_date=now()::date
-                            and sale_team_id=%s''',(branch_id,team_id,branch_id,team_id,))
+                            and sale_team_id in (select id from crm_case_section where name like %s)''',(branch_id,param_sale_team,branch_id,param_sale_team,))
             note_record = cursor.dictfetchall() 
             if note_record:
                 return note_record  
