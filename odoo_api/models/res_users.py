@@ -24,7 +24,7 @@ class res_users(osv.osv):
     def get_stock_balance(self, cursor, user, ids, warehouse_id=None, product_id=None, location_id=None, context=None):
         
         if location_id and not warehouse_id and not product_id:
-            cursor.execute('''select loc.complete_name location_name,name_template product_name,sum(quant.qty) total_small_qty,
+            cursor.execute('''select loc.name location_name,name_template product_name,sum(quant.qty) total_small_qty,
                             round((sum(quant.qty)/round((1/factor),0))::numeric,0) total_bigger_qty
                             from stock_quant quant,product_product pp,stock_location loc,product_template pt,product_uom uom
                             where quant.product_id=pp.id
@@ -36,13 +36,13 @@ class res_users(osv.osv):
                             and pp.active=true
                             and pt.active=true
                             and loc.id=%s
-                            group by loc.complete_name,name_template,uom.factor,pp.sequence
+                            group by loc.name,name_template,uom.factor,pp.sequence
                             order by pp.sequence''',(location_id,))
             balance_record = cursor.dictfetchall() 
             if balance_record:
                 return balance_record 
         if warehouse_id and product_id:
-            cursor.execute('''select loc.complete_name location_name,name_template product_name,sum(quant.qty) total_small_qty,
+            cursor.execute('''select loc.name location_name,name_template product_name,sum(quant.qty) total_small_qty,
                             round((sum(quant.qty)/round((1/factor),0))::numeric,0) total_bigger_qty
                             from stock_quant quant,product_product pp,stock_location loc,product_template pt,product_uom uom
                             where quant.product_id=pp.id
@@ -55,8 +55,8 @@ class res_users(osv.osv):
                             and pt.active=true
                             and quant.product_id=%s
                             and loc.location_id in (select view_location_id from stock_warehouse where id=%s)
-                            group by loc.complete_name,name_template,uom.factor,pp.sequence
-                            order by pp.sequence''',(warehouse_id,product_id,))
+                            group by loc.name,name_template,uom.factor,pp.sequence
+                            order by pp.sequence''',(product_id,warehouse_id,))
             balance_record = cursor.dictfetchall() 
             if balance_record:
                 return balance_record  
@@ -64,8 +64,8 @@ class res_users(osv.osv):
     def search_product_in_stock_lookup(self, cursor, user, ids, location_id=None, product_name=None, context=None):
             
         if location_id and product_name:
-            param_product_name = '%' + product_name + '%'
-            cursor.execute('''select loc.complete_name location_name,name_template product_name,sum(quant.qty) total_small_qty,
+            param_product_name = '%' + product_name.lower() + '%'
+            cursor.execute('''select loc.name location_name,name_template product_name,sum(quant.qty) total_small_qty,
                             round((sum(quant.qty)/round((1/factor),0))::numeric,0) total_bigger_qty
                             from stock_quant quant,product_product pp,stock_location loc,product_template pt,product_uom uom
                             where quant.product_id=pp.id
@@ -77,8 +77,8 @@ class res_users(osv.osv):
                             and pp.active=true
                             and pt.active=true
                             and loc.id=%s
-                            and pp.id in (select id from product_product where name_template like %s)
-                            group by loc.complete_name,name_template,uom.factor''',(location_id,param_product_name,))
+                            and pp.id in (select id from product_product where lower(name_template) like %s)
+                            group by loc.name,name_template,uom.factor''',(location_id,param_product_name,))
             balance_record = cursor.dictfetchall() 
             if balance_record:
                 return balance_record 
@@ -98,13 +98,13 @@ class res_users(osv.osv):
     def search_location(self, cursor, user, ids, warehouse_id=None, location_name=None, context=None):   
         
         if warehouse_id and location_name:
-            param_location_name = '%' + location_name + '%'
+            param_location_name = '%' + location_name.lower() + '%'
             cursor.execute('''select id,name
                             from stock_location
                             where active=true
                             and usage='internal'
                             and location_id in (select view_location_id from stock_warehouse where id=%s)
-                            and id in (select id from stock_location where name like %s)''',(warehouse_id,param_location_name,))
+                            and id in (select id from stock_location where lower(name) like %s)''',(warehouse_id,param_location_name,))
             data = cursor.dictfetchall() 
             if data:
                 return data    
@@ -112,12 +112,12 @@ class res_users(osv.osv):
     def get_good_issue_note_by_sales_team(self, cursor, user, ids, branch_id=None, sales_team=None, from_date=None, to_date=None, context=None):
         
         if branch_id and sales_team and from_date and to_date:
-            param_sale_team = '%' + sales_team + '%'
+            param_sale_team = '%' + sales_team.lower() + '%'
             cursor.execute('''select id
                             from good_issue_note
                             where state='approve'
                             and branch_id=%s
-                            and sale_team_id in (select id from crm_case_section where name like %s)
+                            and sale_team_id in (select id from crm_case_section where lower(name) like %s)
                             and issue_date between %s and %s
                             union
                             select id
@@ -125,7 +125,7 @@ class res_users(osv.osv):
                             where state='issue'
                             and branch_id=%s
                             and issue_date=now()::date
-                            and sale_team_id in (select id from crm_case_section where name like %s)
+                            and sale_team_id in (select id from crm_case_section where lower(name) like %s)
                             and issue_date between %s and %s''',(branch_id,param_sale_team,from_date,to_date,branch_id,param_sale_team,from_date,to_date,))
             note_record = cursor.dictfetchall() 
             if note_record:
@@ -147,19 +147,19 @@ class res_users(osv.osv):
             if note_record:
                 return note_record
         if branch_id and sales_team and not from_date and not to_date:
-            param_sale_team = '%' + sales_team + '%'
+            param_sale_team = '%' + sales_team.lower() + '%'
             cursor.execute('''select id
                             from good_issue_note
                             where state='approve'
                             and branch_id=%s
-                            and sale_team_id in (select id from crm_case_section where name like %s)
+                            and sale_team_id in (select id from crm_case_section where lower(name) like %s)
                             union
                             select id
                             from good_issue_note
                             where state='issue'
                             and branch_id=%s
                             and issue_date=now()::date
-                            and sale_team_id in (select id from crm_case_section where name like %s)''',(branch_id,param_sale_team,branch_id,param_sale_team,))
+                            and sale_team_id in (select id from crm_case_section where lower(name) like %s)''',(branch_id,param_sale_team,branch_id,param_sale_team,))
             note_record = cursor.dictfetchall() 
             if note_record:
                 return note_record  
@@ -184,19 +184,19 @@ class res_users(osv.osv):
     def get_stock_return_by_sales_team(self, cursor, user, ids, branch_id=None, sales_team=None, from_date=None, to_date=None, context=None):
                 
         if branch_id and sales_team and from_date and to_date:
-            param_sale_team = '%' + sales_team + '%'
+            param_sale_team = '%' + sales_team.lower() + '%'
             cursor.execute('''select id
                             from stock_return
                             where state='draft'
                             and branch_id=%s
-                            and sale_team_id in (select id from crm_case_section where name like %s)
+                            and sale_team_id in (select id from crm_case_section where lower(name) like %s)
                             and (return_date between %s and %s and to_return_date between %s and %s)
                             union
                             select id
                             from stock_return
                             where state='received'
                             and branch_id=%s
-                            and sale_team_id in (select id from crm_case_section where name like %s)
+                            and sale_team_id in (select id from crm_case_section where lower(name) like %s)
                             and now()::date between return_date and to_return_date
                             and (return_date between %s and %s and to_return_date between %s and %s)''',(branch_id,param_sale_team,from_date,to_date,from_date,to_date,branch_id,param_sale_team,from_date,to_date,from_date,to_date,))
             return_record = cursor.dictfetchall() 
@@ -219,18 +219,18 @@ class res_users(osv.osv):
             if return_record:
                 return return_record
         if branch_id and sales_team and not from_date and not to_date:
-            param_sale_team = '%' + sales_team + '%'
+            param_sale_team = '%' + sales_team.lower() + '%'
             cursor.execute('''select id
                             from stock_return
                             where state='draft'
                             and branch_id=%s
-                            and sale_team_id in (select id from crm_case_section where name like %s)
+                            and sale_team_id in (select id from crm_case_section where lower(name) like %s)
                             union
                             select id
                             from stock_return
                             where state='received'
                             and branch_id=%s
-                            and sale_team_id in (select id from crm_case_section where name like %s)
+                            and sale_team_id in (select id from crm_case_section where lower(name) like %s)
                             and now()::date between return_date and to_return_date''',(branch_id,param_sale_team,branch_id,param_sale_team,))
             return_record = cursor.dictfetchall() 
             if return_record:
