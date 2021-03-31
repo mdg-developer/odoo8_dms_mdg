@@ -241,8 +241,33 @@ class res_users(osv.osv):
         if branch_id:
             cursor.execute('''select id
                             from branch_good_issue_note
-                            where branch_id=%s
-                            and state in ('issue','partial_receive','receive')''',(branch_id,))
+                            where state='issue'
+                            and branch_id=%s
+                            union
+                            select id
+                            from branch_good_issue_note
+                            where state='receive'
+                            and branch_id=%s
+                            and receive_date=now()::date''',(branch_id,branch_id,))
             data = cursor.dictfetchall() 
             if data:
-                return data                     
+                return data   
+            
+    def search_goods_receipt(self, cursor, user, ids, branch_id=None, from_date=None, to_date=None, context=None):
+        
+        if branch_id and from_date and to_date:
+            cursor.execute('''select id
+                            from branch_good_issue_note
+                            where state='issue'
+                            and branch_id=%s
+                            and receive_date between %s and %s
+                            union
+                            select id
+                            from branch_good_issue_note
+                            where state='receive'
+                            and branch_id=%s
+                            and receive_date=now()::date
+                            and receive_date between %s and %s''',(branch_id,from_date,to_date,branch_id,from_date,to_date,))
+            data = cursor.dictfetchall() 
+            if data:
+                return data                    
