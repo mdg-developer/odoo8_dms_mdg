@@ -387,7 +387,13 @@ class GeneralLedgerXlsx(ReportXlsx):
                     cumul_balance = init_balance.get('init_balance') or 0.0
                     cumul_balance_curr = init_balance.get(
                         'init_balance_currency') or 0.0
+                        
+                    self.sheet.write_string(self.row_pos, 4,account.code or '' , self.format_header_one)
+                    self.sheet.set_column(4, 4, 20)
                     
+                    self.sheet.write_string(self.row_pos, 5,account.name or '' , self.format_header_one)
+                    self.sheet.set_column(5, 5, 20)
+                                        
                     self.sheet.write_string(self.row_pos, 11, _('Initial Balance'), self.format_header_one)                    
                     self.sheet.set_column(11, 11, 20)                     
                                      
