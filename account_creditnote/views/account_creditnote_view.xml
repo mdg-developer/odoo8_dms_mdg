@@ -47,6 +47,7 @@
 								<field name="invoice_number" />
 								<field name="used_date" />
 								<field name="m_status"  />
+								<field name="customer_branch_id"  />
 								<field name="approved_date" />
 								<field name="used_by" />
 								<field name="approved_user_id" />
@@ -75,6 +76,7 @@
 					<field name="used_date" />
 					<field name="principle_id" />
 					<field name="branch_id" />
+					<field name="customer_branch_id" />
 					<field name="from_date" />
 					<field name="to_date" />
 					<field name="create_date" />
@@ -95,6 +97,9 @@
 					<field name="principle_id" string="Principle" />
 					<field name="state" string="Status" />
 					<field name="branch_id" string="Branch" />
+					<field name="customer_branch_id" string="Customer Branch" />
+					
+					
 					<group expand="0" string="Group By">
 						<filter string="Customer" context="{'group_by':'customer_id'}" />
 						<filter string="Sales Team" context="{'group_by':'sale_team_id'}" />
@@ -103,6 +108,8 @@
 						<filter string="Status" icon="terp-stock_effects-object-colorize"
 							domain="[]" context="{'group_by':'state'}" />
 						<filter string="Branch" context="{'group_by':'branch_id'}" />
+						<filter string="Customer Branch" context="{'group_by':'customer_branch_id'}" />
+						
 					</group>
 				</search>
 			</field>

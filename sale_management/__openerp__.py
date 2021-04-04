@@ -59,6 +59,7 @@ Sale Management
         'views/sale_target_outlet_view.xml',
         'views/sale_target_nation_view.xml',
         'reports/qweb_view.xml',
+        'reports/report_stock_picking.xml',
         'reports/report_denomination.xml',
         'reports/custom_layout.xml',
         'reports/deliver_order_custom_layouts.xml',

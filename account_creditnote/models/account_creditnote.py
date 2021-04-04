@@ -15,6 +15,7 @@ class account_creditnote(osv.osv):
                 'customer_id':fields.many2one('res.partner', 'Customer', domain="[('customer','=',True)]" , required=True),
                 'customer_code': fields.char(string='Customer Code',readonly=True),                
                 'branch_id':fields.many2one('res.branch', 'Branch'),
+                'customer_branch_id':fields.many2one('res.branch', 'Customer Branch',readonly=True),
                 'sale_team_id':fields.many2one('crm.case.section', 'Sales Team',readonly=True),
                 'user_id':fields.many2one('res.users', 'Redeemed By',readonly=True),
                 'description': fields.char('Description'),
@@ -73,6 +74,7 @@ class account_creditnote(osv.osv):
             if partner_data:                
                 values = {
                         'customer_code':partner_data.customer_code or None,
+                        'customer_branch_id':partner_data.branch_id.id or None,
                 }
         return {'value': values}   
     
@@ -180,7 +182,10 @@ class account_creditnote(osv.osv):
         if vals.get('customer_id'):
             partner_data = self.pool.get('res.partner').browse(cursor, user, vals.get('customer_id'), context=context)
             if partner_data:
-                vals['customer_code'] = partner_data.customer_code or None
+                vals['customer_code'] = partner_data.customer_code or None 
+                vals['customer_branch_id'] = partner_data.branch_id.id or None 
+
+                
         return super(account_creditnote, self).create(cursor, user, vals, context=context)
     
     def write(self, cursor, user, ids, vals, context=None):
@@ -202,10 +207,12 @@ class account_creditnote(osv.osv):
                 partner_data = self.pool.get('res.partner').browse(cursor, user, vals.get('customer_id'), context=context)
                 if partner_data:
                     vals['customer_code'] = partner_data.customer_code or None
+                    vals['customer_branch_id'] = partner_data.branch_id.id or None 
             elif data.customer_id: 
                 partner_data = self.pool.get('res.partner').browse(cursor, user, data.customer_id.id, context=context)
                 if partner_data:
                     vals['customer_code'] = partner_data.customer_code or None
+                    vals['customer_branch_id'] = partner_data.branch_id.id or None 
         res = super(account_creditnote, self).write(cursor, user, ids, vals, context=context)
         return res  
      
