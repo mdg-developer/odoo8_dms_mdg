@@ -270,4 +270,38 @@ class res_users(osv.osv):
                             and receive_date between %s and %s''',(branch_id,from_date,to_date,branch_id,from_date,to_date,))
             data = cursor.dictfetchall() 
             if data:
-                return data                    
+                return data    
+            
+    def get_stock_transfer_lists(self, cursor, user, ids, context=None):
+        
+        cursor.execute('''select id
+                        from stock_picking
+                        where state in ('draft','assigned')
+                        and picking_type_id in (select id from stock_picking_type where code='internal')
+                        union
+                        select id
+                        from stock_picking
+                        where state='done'
+                        and picking_type_id in (select id from stock_picking_type where code='internal')
+                        and ((date_done at time zone 'utc' )at time zone 'asia/rangoon')::date=now()::date''')
+        data = cursor.dictfetchall() 
+        if data:
+            return data    
+        
+    def search_stock_transfer(self, cursor, user, ids, from_date=None, to_date=None, context=None):
+        
+        if from_date and to_date:
+            cursor.execute('''select id
+                            from stock_picking
+                            where state in ('draft','assigned')
+                            and picking_type_id in (select id from stock_picking_type where code='internal')
+                            union
+                            select id
+                            from stock_picking
+                            where state='done'
+                            and picking_type_id in (select id from stock_picking_type where code='internal')
+                            and ((date_done at time zone 'utc' )at time zone 'asia/rangoon')::date between %s and %s''',(from_date,to_date,))
+            data = cursor.dictfetchall() 
+            if data:
+                return data   
+                        

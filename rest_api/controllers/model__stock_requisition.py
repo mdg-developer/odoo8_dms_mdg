@@ -92,6 +92,8 @@ OUT__stock_requisition__read_all__SCHEMA = (                 # editable
         ('product_id', (  # many2one
             'id',
             'name',
+            'sequence',
+            'barcode_no',
         )),
         'req_quantity',
         ('product_uom', [(  # many2many
@@ -190,6 +192,8 @@ OUT__stock_requisition__read_one__SCHEMA = (                 # editable
         ('product_id', (  # many2one
             'id',
             'name',
+            'sequence',
+            'barcode_no',
         )),
         'req_quantity',
         ('product_uom', [(  # many2many

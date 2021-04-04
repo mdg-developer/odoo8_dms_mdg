@@ -31,3 +31,8 @@ from . import model__stock_return
 from . import model__stock_return_line
 from . import model__branch_good_issue_note
 from . import model__branch_good_issue_note_line
+from . import model__stock_picking
+from . import model__stock_move
+from . import model__product_uom
+from . import model__stock_location
+from . import model__stock_picking_type
