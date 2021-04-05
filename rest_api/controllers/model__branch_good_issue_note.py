@@ -63,6 +63,14 @@ OUT__branch_good_issue_note__read_all__SCHEMA = (                 # editable
             'name',
             'sequence',
             'barcode_no',
+            ('uom_id', (  # will return dictionary of inner fields
+                'id',
+                'name',
+            )),
+            ('report_uom_id', (  # will return dictionary of inner fields
+                'id',
+                'name',
+            )),
         )),
         'req_quantity',
         'issue_quantity',
@@ -125,6 +133,14 @@ OUT__branch_good_issue_note__read_one__SCHEMA = (                 # editable
             'name',
             'sequence',
             'barcode_no',
+            ('uom_id', (  # will return dictionary of inner fields
+                'id',
+                'name',
+            )),
+            ('report_uom_id', (  # will return dictionary of inner fields
+                'id',
+                'name',
+            )),
         )),
         'req_quantity',
         'issue_quantity',
