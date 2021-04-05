@@ -1022,7 +1022,7 @@ class sale_order(models.Model):
                     one_signal_values = {
                                          'partner_id': sale_order.partner_id.id,
                                          'contents': "Your order " + sale_order.name + " is created successfully.",
-                                         'headings': "MDG Retailer"
+                                         'headings': "RB"
                                         }                          
                     self.env['one.signal.notification.messages'].create(one_signal_values)    
             if import_order_ids:
@@ -1353,7 +1353,7 @@ class sale_order(models.Model):
                     one_signal_values = {
                                             'partner_id': sale.partner_id.id,
                                             'contents': "Your order " + sale.name + " is cancelled.",
-                                            'headings': "MDG Retailer"
+                                            'headings': "RB"
                                         }     
                     self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)
                 if sale.getting_point > 0:
@@ -1398,7 +1398,7 @@ class sale_order(models.Model):
                     one_signal_values = {
                                          'partner_id': sale.partner_id.id,
                                          'contents': "Your order " + sale.name + " is confirmed.",
-                                         'headings': "MDG Retailer"
+                                         'headings': "RB"
                                         }                          
                     self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)                  
         return result

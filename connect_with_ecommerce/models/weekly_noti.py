@@ -34,7 +34,7 @@ class WeeklyNotification(osv.osv):
                         one_signal_values = {
                                                 'partner_id': weekly_noti.partner_id.id,
                                                 'contents': weekly_noti.message,
-                                                'headings': "MDG Retailer"
+                                                'headings': "RB"
                                             }     
                         self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)
                 
