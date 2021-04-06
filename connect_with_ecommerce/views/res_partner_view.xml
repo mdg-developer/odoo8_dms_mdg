@@ -11,6 +11,7 @@
 				<xpath expr="//field[@name='email']" position="before">
 					<field name="birthday" />
 					<field name="gender" />
+					<field name="customer_type" />
 					<field name="shop_name" />
 				</xpath>
 				<xpath expr="//div[@name='buttons']" position="inside">
