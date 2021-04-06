@@ -38,7 +38,7 @@ class res_users(osv.osv):
                             and pp.active=true
                             and pt.active=true
                             and loc.id=%s
-                            group by loc.name,name_template,uom.factor,pp.sequence
+                            group by loc.name,name_template,uom.factor,pp.sequence,pt.uom_id,pt.report_uom_id
                             order by pp.sequence''',(location_id,))
             balance_record = cursor.dictfetchall() 
             if balance_record:
@@ -59,7 +59,7 @@ class res_users(osv.osv):
                             and pt.active=true
                             and quant.product_id=%s
                             and loc.location_id in (select view_location_id from stock_warehouse where id=%s)
-                            group by loc.name,name_template,uom.factor,pp.sequence
+                            group by loc.name,name_template,uom.factor,pp.sequence,pt.uom_id,pt.report_uom_id
                             order by pp.sequence''',(product_id,warehouse_id,))
             balance_record = cursor.dictfetchall() 
             if balance_record:
