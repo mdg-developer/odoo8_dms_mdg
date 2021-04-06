@@ -43,7 +43,9 @@ class res_users(osv.osv):
                 return balance_record 
         if warehouse_id and product_id:
             cursor.execute('''select loc.name location_name,name_template product_name,sum(quant.qty) total_small_qty,
-                            round((sum(quant.qty)/round((1/factor),0))::numeric,0) total_bigger_qty
+                            round((sum(quant.qty)/round((1/factor),0))::numeric,0) total_bigger_qty,
+                            (select uom.name from product_uom uom where uom.id=pt.uom_id) small_uom,
+                            (select uom.name from product_uom uom where uom.id=pt.report_uom_id) bigger_uom
                             from stock_quant quant,product_product pp,stock_location loc,product_template pt,product_uom uom
                             where quant.product_id=pp.id
                             and quant.location_id=loc.id
@@ -304,4 +306,26 @@ class res_users(osv.osv):
             data = cursor.dictfetchall() 
             if data:
                 return data   
+            
+    def get_inventory_count_lists(self, cursor, user, ids, context=None):
                         
+        cursor.execute('''select id
+                        from stock_inventory
+                        where state in ('confirm','done')''')
+        data = cursor.dictfetchall() 
+        if data:
+            return data  
+        
+    def create_inventory_adjustment(self, cursor, user, ids, location_id=None, date=None, subject=None, context=None):
+        
+        if location_id and date and subject:
+            inventory_obj = self.pool.get('stock.inventory')
+            values = {                                                            
+                        'location_id': location_id,
+                        'date': date,
+                        'subject': subject,
+                    }
+            inventory_id = inventory_obj.create(cursor, user, values, context=context)
+            inventory = inventory_obj.browse(cursor, user, inventory_id, context=context)
+            inventory.prepare_inventory()
+            return True       

@@ -36,3 +36,5 @@ from . import model__stock_move
 from . import model__product_uom
 from . import model__stock_location
 from . import model__stock_picking_type
+from . import model__stock_inventory
+from . import model__stock_inventory_line
