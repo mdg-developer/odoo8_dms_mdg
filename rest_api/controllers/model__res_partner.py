@@ -57,8 +57,6 @@ OUT__res_partner__read_all__SCHEMA = (                # editable
         'name',
         'code'
     )),   
-    'sms',
-    'viber',
     'email',
     'shop_name',
     'image', 
@@ -113,8 +111,6 @@ OUT__res_partner__read_one__SCHEMA = (                # editable
         'name',
         'code'
     )),    
-    'sms',
-    'viber',
     'email',
     'shop_name',      
     'image',   
