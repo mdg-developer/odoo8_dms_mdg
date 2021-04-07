@@ -25,7 +25,7 @@ class res_users(osv.osv):
         
         if location_id and not warehouse_id and not product_id:
             cursor.execute('''select loc.name location_name,name_template product_name,sum(quant.qty) total_small_qty,
-                            round((sum(quant.qty)/round((1/factor),0))::numeric,0) total_bigger_qty,
+                            round((sum(quant.qty)/round((1/factor),1))::numeric,0) total_bigger_qty,
                             (select uom.name from product_uom uom where uom.id=pt.uom_id) small_uom,
                             (select uom.name from product_uom uom where uom.id=pt.report_uom_id) bigger_uom
                             from stock_quant quant,product_product pp,stock_location loc,product_template pt,product_uom uom
@@ -45,7 +45,7 @@ class res_users(osv.osv):
                 return balance_record 
         if warehouse_id and product_id:
             cursor.execute('''select loc.name location_name,name_template product_name,sum(quant.qty) total_small_qty,
-                            round((sum(quant.qty)/round((1/factor),0))::numeric,0) total_bigger_qty,
+                            round((sum(quant.qty)/round((1/factor),1))::numeric,0) total_bigger_qty,
                             (select uom.name from product_uom uom where uom.id=pt.uom_id) small_uom,
                             (select uom.name from product_uom uom where uom.id=pt.report_uom_id) bigger_uom
                             from stock_quant quant,product_product pp,stock_location loc,product_template pt,product_uom uom
@@ -70,7 +70,9 @@ class res_users(osv.osv):
         if location_id and product_name:
             param_product_name = '%' + product_name.lower() + '%'
             cursor.execute('''select loc.name location_name,name_template product_name,sum(quant.qty) total_small_qty,
-                            round((sum(quant.qty)/round((1/factor),0))::numeric,0) total_bigger_qty
+                            round((sum(quant.qty)/round((1/factor),1))::numeric,0) total_bigger_qty,
+                            (select uom.name from product_uom uom where uom.id=pt.uom_id) small_uom,
+                            (select uom.name from product_uom uom where uom.id=pt.report_uom_id) bigger_uom
                             from stock_quant quant,product_product pp,stock_location loc,product_template pt,product_uom uom
                             where quant.product_id=pp.id
                             and quant.location_id=loc.id
@@ -82,7 +84,7 @@ class res_users(osv.osv):
                             and pt.active=true
                             and loc.id=%s
                             and pp.id in (select id from product_product where lower(name_template) like %s)
-                            group by loc.name,name_template,uom.factor''',(location_id,param_product_name,))
+                            group by loc.name,name_template,uom.factor,pt.uom_id,pt.report_uom_id''',(location_id,param_product_name,))
             balance_record = cursor.dictfetchall() 
             if balance_record:
                 return balance_record 
@@ -330,4 +332,17 @@ class res_users(osv.osv):
             inventory_id = inventory_obj.create(cursor, user, values, context=context)
             inventory = inventory_obj.browse(cursor, user, inventory_id, context=context)
             inventory.prepare_inventory()
-            return True       
+            return True 
+        
+    def get_product_count(self, cursor, user, ids, context=None):
+        
+        product_type = 'product'
+        cursor.execute('''select count(pp.*)
+                        from product_product pp,product_template pt
+                        where pp.product_tmpl_id=pt.id
+                        and pp.active=true
+                        and pt.active=true
+                        and type=%s;''',(product_type,))
+        data = cursor.fetchall() 
+        if data:
+            return data[0][0]   
