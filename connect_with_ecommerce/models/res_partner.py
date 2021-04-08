@@ -28,6 +28,8 @@ class res_partner(osv.osv):
                 'mobile': fields.char('Main Phone No'),
                 'phone': fields.char('Secondary Phone No'),
                 'customer_type': fields.selection([('shop', 'Shop'), ('consumer', 'Consumer')], 'Customer Type'),
+                'woo_register_date': fields.date('Woo Register Date'),
+                'woo_user_name': fields.char('Woo User Name'),
             }   
           
     def send_otp_code(self, cr, uid, ids, mobile_phone, context=None):
@@ -101,6 +103,13 @@ class res_partner(osv.osv):
                 if instances:
                     woo_customer_id = "%s_%s"%(instances[0],woo_customer_id) if woo_customer_id else False
                     vals['woo_customer_id'] = woo_customer_id
+                    woo_instance_obj = self.env['woo.instance.ept']
+                    instance = woo_instance_obj.search([('state','=','confirmed')],limit=1)
+                    if instance:
+                        wcapi = instance.connect_in_woo() 
+                        woo_customer = wcapi.get('customers/%s'%(woo_customer_id))
+                        woo_user_name = woo_customer.json()
+                        vals['woo_user_name'] = woo_user_name.get('first_name')
             if image:
                 vals['image'] = image
             if customer_type:
@@ -117,7 +126,8 @@ class res_partner(osv.osv):
             vals['email'] = email
             vals['customer'] = True
             vals['date_partnership'] = datetime.today()             
-            vals['temp_customer'] = name
+            vals['temp_customer'] = name            
+            vals['woo_register_date'] = datetime.today()
             if sale_channel == 'retailer':
                 sale_channel = sale_channel_obj.search(cr, uid, [('code', '=', 'RT')], context=context)
                 if sale_channel:
@@ -174,7 +184,8 @@ class res_partner(osv.osv):
                 vals['partner_latitude'] = partner_latitude
                 vals['partner_longitude'] = partner_longitude
                 vals['gender'] = gender
-                vals['birthday'] = birthday
+                vals['birthday'] = birthday                
+                vals['woo_register_date'] = datetime.today()
                 if customer_type:
                     vals['customer_type'] = customer_type
                 if sale_channel == 'retailer':
@@ -192,6 +203,13 @@ class res_partner(osv.osv):
                     if instances:
                         woo_customer_id = "%s_%s"%(instances[0],woo_customer_id) if woo_customer_id else False
                         vals['woo_customer_id'] = woo_customer_id
+                        woo_instance_obj = self.env['woo.instance.ept']
+                        instance = woo_instance_obj.search([('state','=','confirmed')],limit=1)
+                        if instance:
+                            wcapi = instance.connect_in_woo() 
+                            woo_customer = wcapi.get('customers/%s'%(woo_customer_id))
+                            woo_user_name = woo_customer.json()
+                            vals['woo_user_name'] = woo_user_name.get('first_name')
                 
                 new_partner_obj = self.pool.get('res.partner')
                 old_vals = {}
