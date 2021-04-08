@@ -30,6 +30,7 @@ class res_partner(osv.osv):
                 'customer_type': fields.selection([('shop', 'Shop'), ('consumer', 'Consumer')], 'Customer Type'),
                 'woo_register_date': fields.date('Woo Register Date'),
                 'woo_user_name': fields.char('Woo User Name'),
+                'channel': fields.selection([('retailer', 'Retailer'), ('consumer', 'Consumer')], 'Channel'),
             }   
           
     def send_otp_code(self, cr, uid, ids, mobile_phone, context=None):
@@ -126,16 +127,8 @@ class res_partner(osv.osv):
             vals['date_partnership'] = datetime.today()             
             vals['temp_customer'] = name            
             vals['woo_register_date'] = datetime.today()
-            if sale_channel == 'retailer':
-                sale_channel = sale_channel_obj.search(cr, uid, [('code', '=', 'RT')], context=context)
-                if sale_channel:
-                    sale_channel_data = sale_channel_obj.browse(cr, uid, sale_channel, context=context)
-                    vals['sales_channel'] = sale_channel_data.id  
-            if sale_channel == 'ecommerce':
-                sale_channel = sale_channel_obj.search(cr, uid, [('code', '=', 'ECOM')], context=context)
-                if sale_channel:
-                    sale_channel_data = sale_channel_obj.browse(cr, uid, sale_channel, context=context)
-                    vals['sales_channel'] = sale_channel_data.id                     
+            if sale_channel:
+                vals['sales_channel'] = sale_channel                 
                  
             result = partner_obj.create(cr, uid, vals, context=context)                    
             if result:           
@@ -184,16 +177,8 @@ class res_partner(osv.osv):
                 vals['woo_register_date'] = datetime.today()
                 if customer_type:
                     vals['customer_type'] = customer_type
-                if sale_channel == 'retailer':
-                    sale_channel = sale_channel_obj.search(cr, uid, [('code', '=', 'RT')], context=context)
-                    if sale_channel:
-                        sale_channel_data = sale_channel_obj.browse(cr, uid, sale_channel, context=context)
-                        vals['sales_channel'] = sale_channel_data.id  
-                if sale_channel == 'ecommerce':
-                    sale_channel = sale_channel_obj.search(cr, uid, [('code', '=', 'ECOM')], context=context)
-                    if sale_channel:
-                        sale_channel_data = sale_channel_obj.browse(cr, uid, sale_channel, context=context)
-                        vals['sales_channel'] = sale_channel_data.id    
+                if sale_channel:
+                    vals['sales_channel'] = sale_channel
                 if woo_customer_id:
                     instances=self.pool.get('woo.instance.ept').search(cr, uid, [('state','=','confirmed')], context=context, limit=1)
                     if instances:
