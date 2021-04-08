@@ -102,14 +102,11 @@ class res_partner(osv.osv):
                 instances=self.pool.get('woo.instance.ept').search(cr, uid, [('state','=','confirmed')], context=context, limit=1)
                 if instances:
                     woo_customer_id = "%s_%s"%(instances[0],woo_customer_id) if woo_customer_id else False
-                    vals['woo_customer_id'] = woo_customer_id
-                    woo_instance_obj = self.env['woo.instance.ept']
-                    instance = woo_instance_obj.search([('state','=','confirmed')],limit=1)
-                    if instance:
-                        wcapi = instance.connect_in_woo() 
-                        woo_customer = wcapi.get('customers/%s'%(woo_customer_id))
-                        woo_user_name = woo_customer.json()
-                        vals['woo_user_name'] = woo_user_name.get('first_name')
+                    vals['woo_customer_id'] = woo_customer_id                  
+                    wcapi = instances.connect_in_woo() 
+                    woo_customer = wcapi.get('customers/%s'%(woo_customer_id))
+                    woo_user_name = woo_customer.json()
+                    vals['woo_user_name'] = woo_user_name.get('first_name')
             if image:
                 vals['image'] = image
             if customer_type:
@@ -203,13 +200,10 @@ class res_partner(osv.osv):
                     if instances:
                         woo_customer_id = "%s_%s"%(instances[0],woo_customer_id) if woo_customer_id else False
                         vals['woo_customer_id'] = woo_customer_id
-                        woo_instance_obj = self.env['woo.instance.ept']
-                        instance = woo_instance_obj.search([('state','=','confirmed')],limit=1)
-                        if instance:
-                            wcapi = instance.connect_in_woo() 
-                            woo_customer = wcapi.get('customers/%s'%(woo_customer_id))
-                            woo_user_name = woo_customer.json()
-                            vals['woo_user_name'] = woo_user_name.get('first_name')
+                        wcapi = instances.connect_in_woo() 
+                        woo_customer = wcapi.get('customers/%s'%(woo_customer_id))
+                        woo_user_name = woo_customer.json()
+                        vals['woo_user_name'] = woo_user_name.get('first_name')
                 
                 new_partner_obj = self.pool.get('res.partner')
                 old_vals = {}
