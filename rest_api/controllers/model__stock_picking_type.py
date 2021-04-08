@@ -43,7 +43,6 @@ OUT__stock_picking_type__read_all__SUCCESS_CODE = 200       # editable
 OUT__stock_picking_type__read_all__SCHEMA = (                 # editable
     'id',
     'name',
-    'type',
     'code',
     ('warehouse_id', (  # will return dictionary of inner fields
         'id',
@@ -77,7 +76,6 @@ OUT__stock_picking_type__read_one__SCHEMA = (                 # editable
     # simple fields (non relational):
     'id',
     'name',
-    'type',
     'code',
     ('warehouse_id', (  # will return dictionary of inner fields
         'id',
