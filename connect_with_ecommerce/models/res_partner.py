@@ -102,8 +102,9 @@ class res_partner(osv.osv):
                 instances=self.pool.get('woo.instance.ept').search(cr, uid, [('state','=','confirmed')], context=context, limit=1)
                 if instances:
                     woo_customer_id = "%s_%s"%(instances[0],woo_customer_id) if woo_customer_id else False
-                    vals['woo_customer_id'] = woo_customer_id                  
-                    wcapi = instances.connect_in_woo() 
+                    vals['woo_customer_id'] = woo_customer_id
+                    instance = self.pool.get('woo.instance.ept').browse(cr, uid, instances[0], context=context)                  
+                    wcapi = instance.connect_in_woo() 
                     woo_customer = wcapi.get('customers/%s'%(woo_customer_id))
                     woo_user_name = woo_customer.json()
                     vals['woo_user_name'] = woo_user_name.get('first_name')
@@ -200,7 +201,8 @@ class res_partner(osv.osv):
                     if instances:
                         woo_customer_id = "%s_%s"%(instances[0],woo_customer_id) if woo_customer_id else False
                         vals['woo_customer_id'] = woo_customer_id
-                        wcapi = instances.connect_in_woo() 
+                        instance = self.pool.get('woo.instance.ept').browse(cr, uid, instances[0], context=context)                  
+                        wcapi = instance.connect_in_woo() 
                         woo_customer = wcapi.get('customers/%s'%(woo_customer_id))
                         woo_user_name = woo_customer.json()
                         vals['woo_user_name'] = woo_user_name.get('first_name')
