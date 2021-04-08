@@ -45,10 +45,6 @@ OUT__stock_picking__read_all__SCHEMA = (                 # editable
     'name',
     'state',
     'origin',
-    ('branch_id', (
-        'id',
-        'name',
-    )),
     'date_done',
     ('location_id', (
         'id',
@@ -59,6 +55,7 @@ OUT__stock_picking__read_all__SCHEMA = (                 # editable
         'name',
     )),
     ('move_lines', [(
+        'id',
         ('product_id', (
             'id',
             'name',
@@ -73,7 +70,7 @@ OUT__stock_picking__read_all__SCHEMA = (                 # editable
                 'name',
             )),
         )),
-        'product_uom_quantity',
+        'product_uom_qty',
         ('product_uom', (
             'id',
             'name',
@@ -120,10 +117,6 @@ OUT__stock_picking__read_one__SCHEMA = (                 # editable
     'name',
     'state',
     'origin',
-    ('branch_id', (
-        'id',
-        'name',
-    )),
     'date_done',
     ('location_id', (
         'id',
@@ -134,6 +127,7 @@ OUT__stock_picking__read_one__SCHEMA = (                 # editable
         'name',
     )),
     ('move_lines', [(
+        'id',
         ('product_id', (
             'id',
             'name',
@@ -148,7 +142,7 @@ OUT__stock_picking__read_one__SCHEMA = (                 # editable
                 'name',
             )),
         )),
-        'product_uom_quantity',
+        'product_uom_qty',
         ('product_uom', (
             'id',
             'name',
