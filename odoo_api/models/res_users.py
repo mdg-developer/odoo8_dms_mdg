@@ -25,7 +25,7 @@ class res_users(osv.osv):
         
         if location_id and not warehouse_id and not product_id:
             cursor.execute('''select loc.name location_name,name_template product_name,sum(quant.qty) total_small_qty,
-                            round((sum(quant.qty)/round((1/factor),1))::numeric,0) total_bigger_qty,
+                            round((sum(quant.qty)/(1/factor))::numeric,1) total_bigger_qty,
                             (select uom.name from product_uom uom where uom.id=pt.uom_id) small_uom,
                             (select uom.name from product_uom uom where uom.id=pt.report_uom_id) bigger_uom
                             from stock_quant quant,product_product pp,stock_location loc,product_template pt,product_uom uom
@@ -45,7 +45,7 @@ class res_users(osv.osv):
                 return balance_record 
         if warehouse_id and product_id:
             cursor.execute('''select loc.name location_name,name_template product_name,sum(quant.qty) total_small_qty,
-                            round((sum(quant.qty)/round((1/factor),1))::numeric,0) total_bigger_qty,
+                            round((sum(quant.qty)/(1/factor))::numeric,1) total_bigger_qty,
                             (select uom.name from product_uom uom where uom.id=pt.uom_id) small_uom,
                             (select uom.name from product_uom uom where uom.id=pt.report_uom_id) bigger_uom
                             from stock_quant quant,product_product pp,stock_location loc,product_template pt,product_uom uom
@@ -70,7 +70,7 @@ class res_users(osv.osv):
         if location_id and product_name:
             param_product_name = '%' + product_name.lower() + '%'
             cursor.execute('''select loc.name location_name,name_template product_name,sum(quant.qty) total_small_qty,
-                            round((sum(quant.qty)/round((1/factor),1))::numeric,0) total_bigger_qty,
+                            round((sum(quant.qty)/(1/factor))::numeric,1) total_bigger_qty,
                             (select uom.name from product_uom uom where uom.id=pt.uom_id) small_uom,
                             (select uom.name from product_uom uom where uom.id=pt.report_uom_id) bigger_uom
                             from stock_quant quant,product_product pp,stock_location loc,product_template pt,product_uom uom
