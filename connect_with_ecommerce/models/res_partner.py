@@ -27,6 +27,10 @@ class res_partner(osv.osv):
                 'credit_applications': fields.function(_get_total_credit_app_data,string='Credit Application'),
                 'mobile': fields.char('Main Phone No'),
                 'phone': fields.char('Secondary Phone No'),
+                'customer_type': fields.selection([('shop', 'Shop'), ('consumer', 'Consumer')], 'Customer Type'),
+                'woo_register_date': fields.date('Woo Register Date'),
+                'woo_user_name': fields.char('Woo User Name'),
+                'channel': fields.selection([('retailer', 'Retailer'), ('consumer', 'Consumer')], 'Channel'),
             }   
           
     def send_otp_code(self, cr, uid, ids, mobile_phone, context=None):
@@ -61,7 +65,7 @@ class res_partner(osv.osv):
                 return error_msg
 
 
-    def create_or_update_woo_customer(self, cr, uid, ids, mdg_customer=False, customer_code=None, name=None,street=None,street2=None,township=None,state=None,mobile=None,phone=None,gender=None,birthday=None,email=None,partner_latitude=None,partner_longitude=None,sms=None,viber=None,shop_name=None,woo_customer_id=None,image=None,sale_channel=None,context=None):
+    def create_or_update_woo_customer(self, cr, uid, ids, mdg_customer=False, customer_code=None, name=None,street=None,street2=None,township=None,state=None,mobile=None,phone=None,gender=None,birthday=None,email=None,partner_latitude=None,partner_longitude=None,sms=None,viber=None,shop_name=None,woo_customer_id=None,image=None,sale_channel=None,customer_type=None,context=None):
         vals = {}
         contact_township = contact_city = contact_state = None
         township_obj = self.pool.get('res.township')
@@ -98,12 +102,19 @@ class res_partner(osv.osv):
             if woo_customer_id:
                 instances=self.pool.get('woo.instance.ept').search(cr, uid, [('state','=','confirmed')], context=context, limit=1)
                 if instances:
-                    woo_customer_id = "%s_%s"%(instances[0],woo_customer_id) if woo_customer_id else False
-                    vals['woo_customer_id'] = woo_customer_id
+                    woo_customer = "%s_%s"%(instances[0],woo_customer_id) if woo_customer_id else False
+                    vals['woo_customer_id'] = woo_customer
+                    instance = self.pool.get('woo.instance.ept').browse(cr, uid, instances[0], context=context)                  
+                    wcapi = instance.connect_in_woo() 
+                    response = wcapi.get('customers/%s'%(woo_customer_id))
+                    response_data = response.json()
+                    woo_customers = response_data.get("customer",{})['first_name']   
+                    vals['woo_user_name'] = woo_customers    
+                    
             if image:
                 vals['image'] = image
-            vals['sms'] = sms
-            vals['viber'] = viber
+            if customer_type:
+                vals['customer_type'] = customer_type
             vals['shop_name'] = shop_name
             vals['partner_latitude'] = partner_latitude
             vals['partner_longitude'] = partner_longitude
@@ -114,32 +125,17 @@ class res_partner(osv.osv):
             vals['email'] = email
             vals['customer'] = True
             vals['date_partnership'] = datetime.today()             
-            vals['temp_customer'] = name
-#             if sale_channel == 'consumer':
-            outlettype = outlettype_obj.search(cr, uid, [('name', '=ilike', 'Site Registered')],context=context)            
-            if outlettype:
-                outlettype_data = outlettype_obj.browse(cr, uid, outlettype, context=context)
-                vals['outlet_type'] = outlettype_data.id
-            sale_channel = sale_channel_obj.search(cr, uid, [('code', '=', 'CS')], context=context)
+            vals['temp_customer'] = name            
+            vals['woo_register_date'] = datetime.today()
             if sale_channel:
-                sale_channel_data = sale_channel_obj.browse(cr, uid, sale_channel, context=context)
-                vals['sales_channel'] = sale_channel_data.id  
-#             if sale_channel == 'retailer':
-#                 outlettype = outlettype_obj.search(cr, uid, [('name', '=ilike', 'Verify Retailer')],context=context)            
-#                 if outlettype:
-#                     outlettype_data = outlettype_obj.browse(cr, uid, outlettype, context=context)
-#                     vals['outlet_type'] = outlettype_data.id
-#                 sale_channel = sale_channel_obj.search(cr, uid, [('code', '=', 'RT')], context=context)
-#                 if sale_channel:
-#                     sale_channel_data = sale_channel_obj.browse(cr, uid, sale_channel, context=context)
-#                     vals['sales_channel'] = sale_channel_data.id                     
+                vals['sales_channel'] = sale_channel                 
                  
             result = partner_obj.create(cr, uid, vals, context=context)                    
             if result:           
                 one_signal_values = {
                                      'partner_id': result,
-                                     'contents': "Thank you for registration in MDG Retailer E-commerce.",
-                                     'headings': "MDG Retailer"
+                                     'contents': "Thank you for registration in RB E-commerce.",
+                                     'headings': "RB"
                                     }     
                 self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)     
             partner = partner_obj.search(cr, uid, [('id', '=', result)])
@@ -173,37 +169,27 @@ class res_partner(osv.osv):
                 vals['phone'] = phone
 #                 vals['mobile'] = mobile
                 vals['email'] = email
-                vals['sms'] = sms
-                vals['viber'] = viber
                 vals['shop_name'] = shop_name
                 vals['partner_latitude'] = partner_latitude
                 vals['partner_longitude'] = partner_longitude
                 vals['gender'] = gender
-                vals['birthday'] = birthday
-#                 vals['temp_customer'] = name
-#                 if sale_channel == 'consumer':
-#                 outlettype = outlettype_obj.search(cr, uid, [('name', '=ilike', 'Consumer')],context=context)            
-#                 if outlettype:
-#                     outlettype_data = outlettype_obj.browse(cr, uid, outlettype, context=context)
-#                     vals['outlet_type'] = outlettype_data.id
-#                 sale_channel = sale_channel_obj.search(cr, uid, [('code', '=', 'CS')], context=context)
-#                 if sale_channel:
-#                     sale_channel_data = sale_channel_obj.browse(cr, uid, sale_channel, context=context)
-#                     vals['sales_channel'] = sale_channel_data.id  
-#                 if sale_channel == 'retailer':
-#                     outlettype = outlettype_obj.search(cr, uid, [('name', '=ilike', 'Verify Retailer')],context=context)            
-#                     if outlettype:
-#                         outlettype_data = outlettype_obj.browse(cr, uid, outlettype, context=context)
-#                         vals['outlet_type'] = outlettype_data.id
-#                     sale_channel = sale_channel_obj.search(cr, uid, [('code', '=', 'RT')], context=context)
-#                     if sale_channel:
-#                         sale_channel_data = sale_channel_obj.browse(cr, uid, sale_channel, context=context)
-#                         vals['sales_channel'] = sale_channel_data.id      
+                vals['birthday'] = birthday                
+                vals['woo_register_date'] = datetime.today()
+                if customer_type:
+                    vals['customer_type'] = customer_type
+                if sale_channel:
+                    vals['sales_channel'] = sale_channel
                 if woo_customer_id:
                     instances=self.pool.get('woo.instance.ept').search(cr, uid, [('state','=','confirmed')], context=context, limit=1)
                     if instances:
-                        woo_customer_id = "%s_%s"%(instances[0],woo_customer_id) if woo_customer_id else False
-                        vals['woo_customer_id'] = woo_customer_id
+                        woo_customer = "%s_%s"%(instances[0],woo_customer_id) if woo_customer_id else False
+                        vals['woo_customer_id'] = woo_customer
+                        instance = self.pool.get('woo.instance.ept').browse(cr, uid, instances[0], context=context)                  
+                        wcapi = instance.connect_in_woo() 
+                        response = wcapi.get('customers/%s'%(woo_customer_id))
+                        response_data = response.json()
+                        woo_customers = response_data.get("customer",{})['first_name']   
+                        vals['woo_user_name'] = woo_customers     
                 
                 new_partner_obj = self.pool.get('res.partner')
                 old_vals = {}
@@ -237,8 +223,8 @@ class res_partner(osv.osv):
                 if result:           
                     one_signal_values = {
                                          'partner_id': partner_data.id,
-                                         'contents': "Thank you for registration in MDG Retailer E-commerce.",
-                                         'headings': "MDG Retailer"
+                                         'contents': "Thank you for registration in RB E-commerce.",
+                                         'headings': "RB"
                                         }     
                     self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)  
                 return result 

@@ -37,6 +37,8 @@ OUT__res_partner__read_all__SUCCESS_CODE = 200      # editable
 OUT__res_partner__read_all__SCHEMA = (                # editable
     'id',
     'name',
+    'woo_register_date',
+    'woo_user_name',
     ('country_id', (
         'id',
         'name',
@@ -57,8 +59,6 @@ OUT__res_partner__read_all__SCHEMA = (                # editable
         'name',
         'code'
     )),   
-    'sms',
-    'viber',
     'email',
     'shop_name',
     'image', 
@@ -73,10 +73,7 @@ OUT__res_partner__read_all__SCHEMA = (                # editable
         'id',
         'name',
     )),    
-    ('sales_channel', (
-        'id',
-        'name',
-    )), 
+    'channel',
 )
 #           ]
 #       }
@@ -95,6 +92,8 @@ OUT__res_partner__read_one__SCHEMA = (                # editable
     # simple fields (non relational):
     'id',
     'name',
+    'woo_register_date',
+    'woo_user_name',
     ('country_id', (
         'code',
     )),
@@ -113,8 +112,6 @@ OUT__res_partner__read_one__SCHEMA = (                # editable
         'name',
         'code'
     )),    
-    'sms',
-    'viber',
     'email',
     'shop_name',      
     'image',   
@@ -129,10 +126,7 @@ OUT__res_partner__read_one__SCHEMA = (                # editable
         'id',
         'name',
     )),    
-    ('sales_channel', (
-        'id',
-        'name',
-    )),   
+    'channel',
 )
 
 # /api/res.partner  POST  - Create one

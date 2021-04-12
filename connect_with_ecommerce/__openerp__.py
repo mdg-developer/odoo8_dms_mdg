@@ -31,7 +31,8 @@
                     "address_management_system",
                     "product",
                     "product_product",
-                    "woo_commerce_ept"
+                    "woo_commerce_ept",
+                    "crm_management"
                 ],
     'description': """
 Connect With Ecommerce    
