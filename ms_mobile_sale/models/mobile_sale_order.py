@@ -2614,8 +2614,8 @@ class mobile_sale_order(osv.osv):
                                             'product_id':int(srl['product_id']),
                                             'product_uom':small_uom_id,
                                             'uom_ratio':packing_unit ,
-#                                             'big_uom_id':big_uom_id,
-#                                             'big_req_quantity':ori_req_quantity,
+                                             'big_uom_id':big_uom_id,
+                                             'big_req_quantity':ori_req_quantity,
                                             'qty_on_hand':qty_on_hand,
                                             'sequence':sequence,
                                                 }
@@ -2627,8 +2627,8 @@ class mobile_sale_order(osv.osv):
                                             'product_id':int(srl['product_id']),
                                             'product_uom':uom_id,
                                             'uom_ratio':packing_unit ,
-#                                             'big_uom_id':big_uom_id,
-#                                             'big_req_quantity':ori_req_quantity,
+                                             'big_uom_id':big_uom_id,
+                                             'big_req_quantity':ori_req_quantity,
                                             'qty_on_hand':qty_on_hand,
                                             'sequence':sequence,
                                                 }
