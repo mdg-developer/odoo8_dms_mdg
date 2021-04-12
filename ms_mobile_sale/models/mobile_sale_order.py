@@ -2608,7 +2608,7 @@ class mobile_sale_order(osv.osv):
                                 qty_on_hand = 0
                             
                         
-                            if int(srl['product_uom']) == int(big_uom_id):                                                                          
+                            if int(srl['product_uom']) != int(small_uom_id):                                                                          
                                 mso_line_res = {                                                            
                                             'line_id':stock_id,
                                             'remark':srl['remark'],
