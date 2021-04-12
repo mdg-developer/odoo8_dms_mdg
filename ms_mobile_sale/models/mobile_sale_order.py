@@ -2590,6 +2590,8 @@ class mobile_sale_order(osv.osv):
                             # print 'product_idddddddddddd',req_quantity
                             if small_uom_id !=uom_id:
                                 big_uom_id=uom_id
+                            else :
+                                big_uom_id =small_uom_id
                             
                             cursor.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (big_uom_id,))
                             bigger_qty = cursor.fetchone()[0]
