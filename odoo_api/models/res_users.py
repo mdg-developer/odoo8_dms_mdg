@@ -346,3 +346,21 @@ class res_users(osv.osv):
         data = cursor.fetchall() 
         if data:
             return data[0][0]   
+        
+    def add_product_in_stock_transfer(self, cursor, user, ids, picking_id=None, product_id=None, qty=None, uom_id=None, context=None):
+        
+        if picking_id and product_id and qty and uom_id:
+            product = self.pool.get('product.product').browse(cursor, user, product_id, context=context)
+            picking = self.pool.get('stock.picking').browse(cursor, user, picking_id, context=context)
+            values = {                                                            
+                        'picking_id': picking_id,
+                        'product_id': product_id,
+                        'product_uom_qty': qty,
+                        'product_uom': uom_id,
+                        'name': product.name_template,
+                        'location_id': picking.picking_type_id.default_location_src_id.id,
+                        'location_dest_id': picking.picking_type_id.default_location_dest_id.id,
+                    }
+            stock_move = self.pool.get('stock.move').create(cursor, user, values, context=context)
+            return stock_move
+        
