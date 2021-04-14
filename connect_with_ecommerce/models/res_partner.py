@@ -127,6 +127,10 @@ class res_partner(osv.osv):
             vals['date_partnership'] = datetime.today()             
             vals['temp_customer'] = name            
             vals['woo_register_date'] = datetime.today()
+            cr.execute("select split_part(max(rb_code), 'RB', 2)::int+1 rb_code from res_partner")
+            rb_code=cr.fetchone()      
+            if rb_code:    
+                vals['rb_code'] = 'RB' + "%06d" % (rb_code[0],)
             if sale_channel:
                 vals['sales_channel'] = sale_channel                 
                  
@@ -175,6 +179,10 @@ class res_partner(osv.osv):
                 vals['gender'] = gender
                 vals['birthday'] = birthday                
                 vals['woo_register_date'] = datetime.today()
+                cr.execute("select split_part(max(rb_code), 'RB', 2)::int+1 rb_code from res_partner")
+                rb_code=cr.fetchone()    
+                if rb_code: 
+                    vals['rb_code'] = 'RB' + "%06d" % (rb_code[0],)
                 if customer_type:
                     vals['customer_type'] = customer_type
                 if sale_channel:
