@@ -518,6 +518,7 @@ class sale_order(models.Model):
             woo_customer_ip=""
             getting_point = 0
             barcode_value = None
+            sales_person = None
             
             if instance.woo_version == 'old':
                 woo_order_number = result.get('order_number')
@@ -551,14 +552,14 @@ class sale_order(models.Model):
             instance=woo_instance_obj.search([('state','=','confirmed')], limit=1)
             if instance:
                 wcapi = instance.connect_for_point_in_woo()   
-                point_response = wcapi.get('point')      
-                point_response_data = point_response.json()                
-                for point in point_response_data:
-                    woo_order_id = point.get('order_id',False)     
-                    woo_point = point.get('amount',False)                      
-                    if woo_order_number == str(woo_order_id) and int(woo_point) > 0:
-                        getting_point = int(woo_point)                        
-                        break                
+#                 point_response = wcapi.get('point')      
+#                 point_response_data = point_response.json()                
+#                 for point in point_response_data:
+#                     woo_order_id = point.get('order_id',False)     
+#                     woo_point = point.get('amount',False)                      
+#                     if woo_order_number == str(woo_order_id) and int(woo_point) > 0:
+#                         getting_point = int(woo_point)                        
+#                         break                
                 
                 barcode_response = wcapi.get('post-barcode/%s'%(woo_order_number))    
                 if barcode_response.status_code in [200,201]:              
@@ -834,9 +835,9 @@ class sale_order(models.Model):
                  
                 woo_partner = self.env['res.partner'].search([('id','=',partner.id)]) 
                 if woo_partner:   
-                    if woo_partner.sales_channel:
-                        if woo_partner.sales_channel.code == 'CS' or woo_partner.sales_channel.code == 'RT':
-                            if woo_partner.sales_channel.code == 'CS':
+                    if woo_partner.channel:
+                        if woo_partner.channel == 'consumer' or woo_partner.channel == 'retailer':
+                            if woo_partner.channel == 'consumer':
                                 product_pricelist = self.env['product.pricelist'].sudo().search([('consumer','=',True)], limit=1)
                                 if product_pricelist:
                                     pricelist_id = product_pricelist.id
@@ -851,7 +852,7 @@ class sale_order(models.Model):
                                                                      'woo_instance_id':instance.id
                                                                     })
                                     continue
-                            if woo_partner.sales_channel.code == 'RT':
+                            if woo_partner.channel == 'retailer':
                                 product_pricelist = self.env['product.pricelist'].sudo().search([('retail','=',True)], limit=1)
                                 if product_pricelist:
                                     pricelist_id = product_pricelist.id
