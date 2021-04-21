@@ -65,7 +65,7 @@ class res_users(osv.osv):
             if balance_record:
                 return balance_record  
             
-    def search_product_in_stock_lookup(self, cursor, user, ids, location_id=None, product_name=None, context=None):
+    def search_product_in_stock_lookup(self, cursor, user, ids, location_id=None, product_name=None, barcode_no=None, context=None):
             
         if location_id and product_name:
             param_product_name = '%' + product_name.lower() + '%'
@@ -88,6 +88,26 @@ class res_users(osv.osv):
             balance_record = cursor.dictfetchall() 
             if balance_record:
                 return balance_record 
+        if location_id and barcode_no:
+            cursor.execute('''select loc.name location_name,name_template product_name,sum(quant.qty) total_small_qty,
+                            round((sum(quant.qty)/(1/factor))::numeric,1) total_bigger_qty,
+                            (select uom.name from product_uom uom where uom.id=pt.uom_id) small_uom,
+                            (select uom.name from product_uom uom where uom.id=pt.report_uom_id) bigger_uom
+                            from stock_quant quant,product_product pp,stock_location loc,product_template pt,product_uom uom
+                            where quant.product_id=pp.id
+                            and quant.location_id=loc.id
+                            and pp.product_tmpl_id=pt.id
+                            and pt.report_uom_id=uom.id
+                            and usage='internal'
+                            and loc.active=true
+                            and pp.active=true
+                            and pt.active=true
+                            and loc.id=%s
+                            and barcode_no=%s
+                            group by loc.name,name_template,uom.factor,pt.uom_id,pt.report_uom_id''',(location_id,barcode_no,))
+            balance_record = cursor.dictfetchall() 
+            if balance_record:
+                return balance_record
             
     def get_all_locations(self, cursor, user, ids, warehouse_id=None, context=None):   
         
