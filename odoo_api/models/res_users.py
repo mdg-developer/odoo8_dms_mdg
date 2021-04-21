@@ -377,7 +377,16 @@ class res_users(osv.osv):
                             and usage='internal';''',(branch_id,))
             data = cursor.dictfetchall() 
             if data:
-                return data          
+                return data
             
-        
+    def get_product_uom(self, cursor, user, ids, product_id=None, context=None):          
+            
+        if product_id:
+            cursor.execute('''select product_uom_id id
+                            from product_template_product_uom_rel rel,product_product pp 
+                            where rel.product_template_id=pp.product_tmpl_id
+                            and pp.id=%s;''',(product_id,))
+            data = cursor.dictfetchall() 
+            if data:
+                return data
         
