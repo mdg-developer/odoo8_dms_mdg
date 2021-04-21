@@ -364,3 +364,20 @@ class res_users(osv.osv):
             stock_move = self.pool.get('stock.move').create(cursor, user, values, context=context)
             return stock_move
         
+    def get_internal_locations(self, cursor, user, ids, branch_id=None, context=None):
+        
+        if branch_id:
+            cursor.execute('''select id
+                            from stock_location
+                            where location_id in (  select view_location_id
+                                                    from res_branch rb,stock_warehouse sw
+                                                    where rb.branch_warehouse_id=sw.id
+                                                    and rb.id=%s)
+                            and active=true
+                            and usage='internal';''',(branch_id,))
+            data = cursor.dictfetchall() 
+            if data:
+                return data          
+            
+        
+        
