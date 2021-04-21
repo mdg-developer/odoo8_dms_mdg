@@ -399,14 +399,25 @@ class res_users(osv.osv):
             if data:
                 return data
             
-    def get_product_uom(self, cursor, user, ids, product_id=None, context=None):          
+    def get_product_balance(self, cursor, user, ids, product_id=None, location_id=None, context=None):          
             
-        if product_id:
-            cursor.execute('''select product_uom_id id
-                            from product_template_product_uom_rel rel,product_product pp 
-                            where rel.product_template_id=pp.product_tmpl_id
-                            and pp.id=%s;''',(product_id,))
-            data = cursor.dictfetchall() 
-            if data:
-                return data
+        if product_id and location_id:
+            cursor.execute('''select sum(quant.qty) theoretical_qty,
+                            round((sum(quant.qty)/(1/factor))::numeric,1) bigger_qty,
+                            (select uom.name from product_uom uom where uom.id=pt.report_uom_id) bigger_uom
+                            from stock_quant quant,product_product pp,stock_location loc,product_template pt,product_uom uom
+                            where quant.product_id=pp.id
+                            and quant.location_id=loc.id
+                            and pp.product_tmpl_id=pt.id
+                            and pt.report_uom_id=uom.id
+                            and usage='internal'
+                            and loc.active=true
+                            and pp.active=true
+                            and pt.active=true
+                            and quant.product_id=%s
+                            and quant.location_id=%s
+                            group by uom.factor,pt.report_uom_id''',(product_id,location_id,))
+            balance_record = cursor.dictfetchall() 
+            if balance_record:
+                return balance_record
         
