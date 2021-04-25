@@ -75,7 +75,7 @@ class SmsMessage(models.Model):
     
     def retry_sms(self, cr, uid, context=None):    
         
-        message_obj = self.pool.get('sms.message').search(cr, uid, [('status', '!=', 'success')])
+        message_obj = self.pool.get('sms.message').search(cr, uid, ['|', ('status', '=', 'fail'),('status', '=', False)])
         if message_obj:
             message_data = self.browse(cr, uid, message_obj, context=context)         
             for message in message_data:       
