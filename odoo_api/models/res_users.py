@@ -93,17 +93,18 @@ class res_users(osv.osv):
                             round((sum(quant.qty)/(1/factor))::numeric,1) total_bigger_qty,
                             (select uom.name from product_uom uom where uom.id=pt.uom_id) small_uom,
                             (select uom.name from product_uom uom where uom.id=pt.report_uom_id) bigger_uom
-                            from stock_quant quant,product_product pp,stock_location loc,product_template pt,product_uom uom
+                            from stock_quant quant,product_product pp,stock_location loc,product_template pt,product_uom uom,product_multi_barcode barcode
                             where quant.product_id=pp.id
                             and quant.location_id=loc.id
                             and pp.product_tmpl_id=pt.id
                             and pt.report_uom_id=uom.id
+                            and pt.id=barcode.product_tmpl_id
                             and usage='internal'
                             and loc.active=true
                             and pp.active=true
                             and pt.active=true
                             and loc.id=%s
-                            and barcode_no=%s
+                            and barcode.name=%s
                             group by loc.name,name_template,uom.factor,pt.uom_id,pt.report_uom_id''',(location_id,barcode_no,))
             balance_record = cursor.dictfetchall() 
             if balance_record:

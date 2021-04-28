@@ -38,3 +38,4 @@ from . import model__stock_location
 from . import model__stock_picking_type
 from . import model__stock_inventory
 from . import model__stock_inventory_line
+from . import model__product_multi_barcode

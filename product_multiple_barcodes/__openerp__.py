@@ -4,7 +4,7 @@
     'author': 'seventh computing',
     'website': 'http://www.7thcomputing.com',
     'category' : 'Product',
-    'depends' : ["base", "product"],
+    'depends' : ["base", "product", "product_product"],
     'description': """
     Product Multiple Barcode
     """,
