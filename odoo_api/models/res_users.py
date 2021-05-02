@@ -432,4 +432,56 @@ class res_users(osv.osv):
             data = cursor.dictfetchall() 
             if data:
                 return data
+            
+    def scan_product_barcode_in_good_issue(self, cursor, user, ids, stock_issue_id=None, barcode_no=None, context=None):
+        
+        if stock_issue_id and barcode_no:
+            cursor.execute('''select line.id
+                            from good_issue_note_line line,product_product pp,product_multi_barcode barcode
+                            where line.product_id=pp.id
+                            and pp.product_tmpl_id=barcode.product_tmpl_id
+                            and line_id=%s
+                            and barcode.name=%s''',(stock_issue_id,barcode_no,))
+            data = cursor.dictfetchall() 
+            if data:
+                return data   
+            
+    def scan_product_barcode_in_stock_return(self, cursor, user, ids, stock_return_id=None, barcode_no=None, context=None):
+        
+        if stock_return_id and barcode_no:
+            cursor.execute('''select line.id
+                            from stock_return_line line,product_product pp,product_multi_barcode barcode
+                            where line.product_id=pp.id
+                            and pp.product_tmpl_id=barcode.product_tmpl_id
+                            and line_id=%s
+                            and barcode.name=%s''',(stock_return_id,barcode_no,))
+            data = cursor.dictfetchall() 
+            if data:
+                return data 
+            
+    def scan_product_barcode_in_goods_receipt(self, cursor, user, ids, goods_receipt_id=None, barcode_no=None, context=None):
+        
+        if goods_receipt_id and barcode_no:
+            cursor.execute('''select line.id
+                            from branch_good_issue_note_line line,product_product pp,product_multi_barcode barcode
+                            where line.product_id=pp.id
+                            and pp.product_tmpl_id=barcode.product_tmpl_id
+                            and line_id=%s
+                            and barcode.name=%s''',(goods_receipt_id,barcode_no,))
+            data = cursor.dictfetchall() 
+            if data:
+                return data    
+            
+    def scan_product_barcode_in_stock_transfer(self, cursor, user, ids, stock_transfer_id=None, barcode_no=None, context=None):
+        
+        if stock_transfer_id and barcode_no:
+            cursor.execute('''select sm.id
+                            from stock_move sm,product_product pp,product_multi_barcode barcode
+                            where sm.product_id=pp.id
+                            and pp.product_tmpl_id=barcode.product_tmpl_id
+                            and picking_id=%s
+                            and barcode.name=%s''',(stock_transfer_id,barcode_no,))
+            data = cursor.dictfetchall() 
+            if data:
+                return data  
         
