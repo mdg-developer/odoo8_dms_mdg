@@ -336,7 +336,7 @@ class res_users(osv.osv):
                         
         cursor.execute('''select id
                         from stock_inventory
-                        where state in ('confirm','done')''')
+                        where state in ('draft','confirm')''')
         data = cursor.dictfetchall() 
         if data:
             return data  
