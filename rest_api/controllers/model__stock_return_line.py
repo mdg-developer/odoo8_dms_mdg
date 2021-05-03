@@ -46,7 +46,7 @@ OUT__stock_return_line__read_all__SCHEMA = (                 # editable
         'id',
         'name',
         'sequence',
-        'barcode_no',
+        'barcode_no',            
         ('uom_id', (  # will return dictionary of inner fields
             'id',
             'name',
@@ -113,7 +113,7 @@ OUT__stock_return_line__read_one__SCHEMA = (                 # editable
         'id',
         'name',
         'sequence',
-        'barcode_no',
+        'barcode_no',            
         ('uom_id', (  # will return dictionary of inner fields
             'id',
             'name',

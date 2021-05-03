@@ -46,16 +46,31 @@ OUT__good_issue_note_line__read_all__SCHEMA = (                 # editable
         'id',
         'name',
     )),
-    ('product_id', (  # will return dictionary of inner fields
+    ('product_id', (  # many2one
         'id',
-        'name_template',
+        'name',
+        'sequence',
+        'barcode_no',
+        ('uom_id', (  # will return dictionary of inner fields
+            'id',
+            'name',
+        )),
+        ('report_uom_id', (  # will return dictionary of inner fields
+            'id',
+            'name',
+        )),
     )),
     'issue_quantity',
     'approved_quantity',
-    ('product_uom', (  # will return dictionary of inner fields
+    ('product_uom', [(  # many2many
         'id',
         'name',
-    )),
+    )]),
+    ('batch_no', [(  # many2many
+        'id',
+        'name',
+    )]),
+    'expiry_date',
     'qty_on_hand',
     'remark',
 )
@@ -89,16 +104,31 @@ OUT__good_issue_note_line__read_one__SCHEMA = (                 # editable
         'id',
         'name',
     )),
-    ('product_id', (  # will return dictionary of inner fields
+    ('product_id', (  # many2one
         'id',
-        'name_template',
+        'name',
+        'sequence',
+        'barcode_no',
+        ('uom_id', (  # will return dictionary of inner fields
+            'id',
+            'name',
+        )),
+        ('report_uom_id', (  # will return dictionary of inner fields
+            'id',
+            'name',
+        )),
     )),
     'issue_quantity',
     'approved_quantity',
-    ('product_uom', (  # will return dictionary of inner fields
+    ('product_uom', [(  # many2many
         'id',
         'name',
-    )),
+    )]),
+    ('batch_no', [(  # many2many
+        'id',
+        'name',
+    )]),
+    'expiry_date',
     'qty_on_hand',
     'remark',
 )

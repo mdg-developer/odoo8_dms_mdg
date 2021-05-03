@@ -43,7 +43,6 @@ OUT__stock_move__read_all__SUCCESS_CODE = 200       # editable
 OUT__stock_move__read_all__SCHEMA = (                 # editable
     'id',
     'name',
-    'state',
     ('picking_id', (
         'id',
         'name',
@@ -62,7 +61,7 @@ OUT__stock_move__read_all__SCHEMA = (                 # editable
             'name',
         )),
     )),
-    'product_uom_quantity',
+    'product_uom_qty',
     ('product_uom', (
         'id',
         'name',
@@ -77,6 +76,7 @@ OUT__stock_move__read_all__SCHEMA = (                 # editable
         'id',
         'name',
     )),
+    'state',
 )
 #           ]
 #       }
@@ -105,7 +105,6 @@ OUT__stock_move__read_one__SCHEMA = (                 # editable
     # simple fields (non relational):
     'id',
     'name',
-    'state',
     ('picking_id', (
         'id',
         'name',
@@ -124,7 +123,7 @@ OUT__stock_move__read_one__SCHEMA = (                 # editable
             'name',
         )),
     )),
-    'product_uom_quantity',
+    'product_uom_qty',
     ('product_uom', (
         'id',
         'name',
@@ -139,6 +138,7 @@ OUT__stock_move__read_one__SCHEMA = (                 # editable
         'id',
         'name',
     )),
+    'state',
 )
 
 # /api/stock.move  POST  - Create one
