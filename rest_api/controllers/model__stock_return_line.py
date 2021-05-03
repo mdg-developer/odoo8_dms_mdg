@@ -45,6 +45,16 @@ OUT__stock_return_line__read_all__SCHEMA = (                 # editable
     ('product_id', (  # will return dictionary of inner fields
         'id',
         'name',
+        'sequence',
+        'barcode_no',
+        ('uom_id', (  # will return dictionary of inner fields
+            'id',
+            'name',
+        )),
+        ('report_uom_id', (  # will return dictionary of inner fields
+            'id',
+            'name',
+        )),
     )),
     ('from_location_id', (  # will return dictionary of inner fields
         'id',
@@ -102,6 +112,16 @@ OUT__stock_return_line__read_one__SCHEMA = (                 # editable
     ('product_id', (  # will return dictionary of inner fields
         'id',
         'name',
+        'sequence',
+        'barcode_no',
+        ('uom_id', (  # will return dictionary of inner fields
+            'id',
+            'name',
+        )),
+        ('report_uom_id', (  # will return dictionary of inner fields
+            'id',
+            'name',
+        )),
     )),
     ('from_location_id', (  # will return dictionary of inner fields
         'id',
