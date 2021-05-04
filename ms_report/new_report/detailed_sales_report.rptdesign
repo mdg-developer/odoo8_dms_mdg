@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.6.0.v201606072122</property>
     <list-property name="propertyBindings">
         <structure>
             <property name="name">queryText</property>
@@ -1664,6 +1664,19 @@ and date_invoice between ? and ?
                         </tabular-hierarchy>
                     </property>
                 </tabular-dimension>
+                <tabular-dimension name="Group7" id="883">
+                    <property name="defaultHierarchy">NewTabularHierarchy7</property>
+                    <property name="hierarchies">
+                        <tabular-hierarchy name="NewTabularHierarchy7" id="884">
+                            <property name="levels">
+                                <tabular-level name="payment_type" id="885">
+                                    <property name="dataType">string</property>
+                                    <property name="columnName">payment_type</property>
+                                </tabular-level>
+                            </property>
+                        </tabular-hierarchy>
+                    </property>
+                </tabular-dimension>
             </property>
             <property name="measureGroups">
                 <tabular-measure-group name="Summary Field" id="351">
@@ -2088,6 +2101,32 @@ else&#13;
                                 </extended-item>
                             </property>
                         </extended-item>
+                        <extended-item extensionName="DimensionView" id="886">
+                            <property name="dimension">Group7</property>
+                            <property name="levels">
+                                <extended-item extensionName="LevelView" name="NewLevel View8" id="887">
+                                    <property name="level">Group7/payment_type</property>
+                                    <property name="member">
+                                        <extended-item extensionName="CrosstabCell" id="888">
+                                            <property name="content">
+                                                <data name="payment_type" id="891">
+                                                    <property name="fontFamily">"Arial"</property>
+                                                    <property name="resultSetColumn">payment_type</property>
+                                                </data>
+                                            </property>
+                                            <property name="borderTopStyle">solid</property>
+                                            <property name="borderTopWidth">thin</property>
+                                            <property name="borderLeftStyle">solid</property>
+                                            <property name="borderLeftWidth">thin</property>
+                                            <property name="borderBottomStyle">solid</property>
+                                            <property name="borderBottomWidth">thin</property>
+                                            <property name="borderRightStyle">solid</property>
+                                            <property name="borderRightWidth">thin</property>
+                                        </extended-item>
+                                    </property>
+                                </extended-item>
+                            </property>
+                        </extended-item>
                         <extended-item extensionName="DimensionView" id="816">
                             <property name="dimension">Group3</property>
                             <property name="levels">
@@ -2239,6 +2278,7 @@ else&#13;
                         </label>
                     </property>
                 </extended-item>
+                <extended-item extensionName="CrosstabCell" id="890"/>
                 <extended-item extensionName="CrosstabCell" id="835">
                     <property name="content">
                         <data id="870">
@@ -2342,6 +2382,24 @@ else&#13;
                             <property name="fontWeight">bold</property>
                             <property name="textAlign">center</property>
                             <text-property name="text">Voc. No</text-property>
+                        </label>
+                    </property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                </extended-item>
+                <extended-item extensionName="CrosstabCell" id="889">
+                    <property name="content">
+                        <label id="892">
+                            <property name="fontFamily">"Arial"</property>
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">center</property>
+                            <text-property name="text">Payment Type</text-property>
                         </label>
                     </property>
                     <property name="borderTopStyle">solid</property>
@@ -2470,6 +2528,11 @@ else&#13;
                         <value>Group4/status</value>
                     </simple-property-list>
                     <property name="aggregateFunction">sum</property>
+                </structure>
+                <structure>
+                    <property name="name">payment_type</property>
+                    <expression name="expression">dimension["Group7"]["payment_type"]</expression>
+                    <property name="dataType">string</property>
                 </structure>
             </list-property>
         </extended-item>
