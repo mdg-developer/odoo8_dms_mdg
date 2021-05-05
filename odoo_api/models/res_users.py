@@ -332,14 +332,22 @@ class res_users(osv.osv):
             if data:
                 return data   
             
-    def get_inventory_count_lists(self, cursor, user, ids, context=None):
-                        
-        cursor.execute('''select id
-                        from stock_inventory
-                        where state in ('draft','confirm')''')
-        data = cursor.dictfetchall() 
-        if data:
-            return data  
+    def get_inventory_count_lists(self, cursor, user, ids, branch_id=None, context=None):
+                     
+        if branch_id:   
+            cursor.execute('''select id
+                            from stock_inventory
+                            where state in ('draft','confirm')
+                            and location_id in (
+                                                    select loc.id
+                                                    from stock_location loc,stock_warehouse sw,res_branch rb
+                                                    where loc.location_id=sw.view_location_id
+                                                    and sw.id=rb.branch_warehouse_id
+                                                    and rb.id=%s
+                                                );''')
+            data = cursor.dictfetchall() 
+            if data:
+                return data  
         
     def create_inventory_adjustment(self, cursor, user, ids, location_id=None, date=None, subject=None, context=None):
         
