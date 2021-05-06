@@ -590,7 +590,7 @@ class sale_order(models.Model):
                     payment_type = "cash"     
                           
             if delivery_id:
-                user_obj = self.env['res.users'].search([('default_section_id','=',delivery_id)])  
+                user_obj = self.env['res.users'].search([('default_section_id','=',delivery_id)], limit=1)  
                 if user_obj:
                     sales_person = user_obj.id
                                          
