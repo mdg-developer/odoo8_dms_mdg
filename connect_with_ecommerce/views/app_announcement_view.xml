@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>    
+	<data>
+	    
+		<record id="view_app_announcement_form" model="ir.ui.view">
+			<field name="name">app.announcement.form</field>
+			<field name="model">app.announcement</field>
+			<field name="arch" type="xml">
+				<form>				
+					<sheet>					    
+						<group>							
+							<group>
+								<field name="from_date" />
+								<field name="image" />
+							</group>
+							<group>
+								<field name="to_date" />
+							</group>
+						</group>			
+					</sheet>									
+				</form>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_app_announcement_tree">
+			<field name="name">app.announcement.tree</field>
+			<field name="model">app.announcement</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="from_date"/>
+					<field name="to_date" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="action_app_announcement_view"
+			model="ir.actions.act_window">
+			<field name="name">Announcement</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">app.announcement</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" eval="view_app_announcement_tree"/>
+		</record>
+
+		<menuitem id="menu_app_announcement" sequence="22"
+			parent="sale_promotions.sales" name="Announcement"
+			action="action_app_announcement_view"/>
+
+	</data>
+</openerp>
