@@ -7,10 +7,6 @@
     <property name="imageDPI">120</property>
     <list-property name="libraries">
         <structure>
-            <property name="fileName">rb_report_library.rptlibrary</property>
-            <property name="namespace">rb_report_library</property>
-        </structure>
-        <structure>
             <property name="fileName">rb_testing_report_library.rptlibrary</property>
             <property name="namespace">rb_testing_report_library</property>
         </structure>
