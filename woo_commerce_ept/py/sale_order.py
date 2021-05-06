@@ -87,7 +87,7 @@ class sale_order(models.Model):
     delivery_address=fields.Text('Delivery Address')
     delivery_contact_no=fields.Char('Delivery Contact No')
     delivery_township_id=fields.Many2one("res.township","Delivery Township")
-        
+            
     @api.multi
     def create_or_update_woo_customer(self,woo_cust_id,vals,is_company=False,parent_id=False,type=False,instance=False):
         country_obj=self.env['res.country']
@@ -303,7 +303,7 @@ class sale_order(models.Model):
             if not odoo_product and not woo_variant:
                 woo_variant=sku and woo_product_obj.search([('default_code','=',sku),('woo_instance_id','=',instance.id)],limit=1)
                 if not woo_variant:
-                    odoo_product=sku and odoo_product_obj.search([('default_code','=',sku.rstrip('!'))],limit=1)
+                    odoo_product=sku and odoo_product_obj.search([('default_code','=',line.get('sku').split("!")[0])],limit=1)
 
             if not woo_variant and not odoo_product:
                 message="%s Product Code Not found for order %s"%(sku,order_number)
@@ -328,9 +328,10 @@ class sale_order(models.Model):
                                                                          ,False,True,time.strftime('%Y-%m-%d'),False,
                                                                          fiscal_position.id,False)
         product_data=product_data.get('value')
-                                
+                              
         delivery_product = discount_product = fees_product = False
         promotion_id = None
+        product_variant = None
         
         promotion = self.env['promos.rules'].search([('ecommerce', '=', True)], limit=1)
                     
@@ -410,11 +411,16 @@ class sale_order(models.Model):
             product_uom = self.env['product.uom'].search([('id', '=', woo_product_uom)])
             if product_uom:
                 product_data.update({'product_uom': product_uom.id})   
-                                                        
+                            
+        if line.get('meta'):
+            if line.get('meta')[0].get('key') and line.get('meta')[0].get('key') == 'pa_color':
+                product_variant = line.get('meta')[0].get('value')
+                                     
         product_data.update(
                             {
                             'name':sol_name,
                             'product_id':sol_product_id,
+                            'product_variant':product_variant,
                             'order_id':order.id,
                             'product_uom_qty':quantity,
                             'product_uos_qty':quantity,
@@ -444,11 +450,13 @@ class sale_order(models.Model):
         elif instance.woo_version == 'new':
             variant_id=line.get('variation_id',False) or line.get('product_id',False)
         woo_product=False
+        
         if variant_id:
             woo_product=woo_product_obj.search([('woo_instance_id','=',instance.id),('variant_id','=',variant_id)],limit=1)
             if woo_product:
                 return woo_product
-            woo_product=woo_product_obj.search([('woo_instance_id','=',instance.id),('default_code','=',line.get('sku').rstrip('!'))],limit=1)
+            
+            woo_product=woo_product_obj.search([('woo_instance_id','=',instance.id),('default_code','=',line.get('sku').split("!")[0])],limit=1)
             woo_product and woo_product.write({'variant_id':variant_id})
             if woo_product:
                 return woo_product
@@ -461,7 +469,6 @@ class sale_order(models.Model):
                                             })
                 return False           
             res = response.json()
-            
             parent_id = False
             if instance.woo_version == 'old':
                 result = res.get('product')
@@ -754,7 +761,7 @@ class sale_order(models.Model):
                 discount_label_wcapi = instance.connect_for_point_in_woo()   
                 discount_label_info = {"discount": "foc"}                              
                 discount_label_wcapi.put('put-discount-label-for-null/1',discount_label_info) 
-                
+            
             for order in order_ids: 
                 logging.warning("Check order: %s", order.get('order_number'))                                                            
                 if self.search([('woo_instance_id','=',instance.id),('woo_order_id','=',order.get('id')),('woo_order_number','=',order.get('order_number'))]):
@@ -833,7 +840,8 @@ class sale_order(models.Model):
                 
                 fiscal_position=partner.property_account_position
                  
-                woo_partner = self.env['res.partner'].search([('id','=',partner.id)]) 
+                woo_partner = self.env['res.partner'].search([('id','=',partner.id)])
+                
                 if woo_partner:   
                     if woo_partner.channel:
                         if woo_partner.channel == 'consumer' or woo_partner.channel == 'retailer':
@@ -1427,6 +1435,8 @@ class sale_order_line(models.Model):
     _inherit="sale.order.line"
     
     woo_line_id=fields.Char("woo Line")
+    product_variant=fields.Char('Product Variant')
+    
 class import_order_status(models.Model):
     _name="import.order.status"
     

@@ -433,7 +433,7 @@ class woo_product_template_ept(models.Model):
             updated_template=False                        
             for variation in result.get('variations'):                
                 variant_id = variation.get('id')
-                sku = variation.get('sku')                                               
+                sku = variation.get('sku').split("!")[0]                                            
                                 
                 woo_product = woo_product_obj.search([('variant_id','=',variant_id),('woo_instance_id','=',instance.id)],limit=1)
                 if not woo_product:
@@ -539,7 +539,7 @@ class woo_product_template_ept(models.Model):
                     if not instance.is_image_url:
                         woo_product.product_id.image = var_img if woo_product else None                        
             if not result.get('variations'):
-                sku=result.get('sku')
+                sku=result.get('sku').split("!")[0]
                 price = result.get('sale_price') or result.get('regular_price')
                 woo_product = woo_product_obj.search([('variant_id','=',woo_tmpl_id),('woo_instance_id','=',instance.id)],limit=1)
                 if not woo_product:
@@ -732,7 +732,7 @@ class woo_product_template_ept(models.Model):
             updated_template=False                        
             for variation in result.get('variations'):                
                 variant_id = variation.get('id')
-                sku = variation.get('sku')                                               
+                sku = variation.get('sku').split("!")[0]                                               
                                 
                 woo_product = woo_product_obj.search([('variant_id','=',variant_id),('woo_instance_id','=',instance.id)],limit=1)
                 if not woo_product:
@@ -838,7 +838,7 @@ class woo_product_template_ept(models.Model):
                     if not instance.is_image_url:
                         woo_product.product_id.image = var_img if woo_product else None                        
             if not result.get('variations'):
-                sku=result.get('sku')
+                sku=result.get('sku').split("!")[0]
                 price = result.get('sale_price') or result.get('regular_price')
                 woo_product = woo_product_obj.search([('variant_id','=',woo_tmpl_id),('woo_instance_id','=',instance.id)],limit=1)
                 if not woo_product:
