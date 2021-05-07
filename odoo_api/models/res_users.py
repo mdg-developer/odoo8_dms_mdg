@@ -344,7 +344,7 @@ class res_users(osv.osv):
                                                     where loc.location_id=sw.view_location_id
                                                     and sw.id=rb.branch_warehouse_id
                                                     and rb.id=%s
-                                                );''')
+                                                );''',(branch_id,))
             data = cursor.dictfetchall() 
             if data:
                 return data  
