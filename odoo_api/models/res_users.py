@@ -496,7 +496,7 @@ class res_users(osv.osv):
     def scan_product_barcode_in_inventory_count(self, cursor, user, ids, inventory_id=None, barcode_no=None, context=None):
         
         if inventory_id and barcode_no:
-            cursor.execute('''select inventory_id,barcode.name
+            cursor.execute('''select line.id
                             from stock_inventory_line line,product_product pp,product_multi_barcode barcode
                             where line.product_id=pp.id
                             and pp.product_tmpl_id=barcode.product_tmpl_id
