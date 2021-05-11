@@ -367,8 +367,6 @@ class res_users(osv.osv):
                 inventory_lines = inventory_line_obj.search(cursor, user, [('inventory_id', '=', inventory_id)],context=context)
                 if inventory_lines:
                     return inventory_lines.ids
-            else:
-                return True
         
     def get_product_count(self, cursor, user, ids, context=None):
         
