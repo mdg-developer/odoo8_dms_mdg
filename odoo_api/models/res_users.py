@@ -349,19 +349,26 @@ class res_users(osv.osv):
             if data:
                 return data  
         
-    def create_inventory_adjustment(self, cursor, user, ids, location_id=None, date=None, subject=None, context=None):
+    def create_inventory_adjustment(self, cursor, user, ids, location_id=None, date=None, subject=None, inventory_of=None, context=None):
         
-        if location_id and date and subject:
+        if location_id and date and subject and inventory_of:
             inventory_obj = self.pool.get('stock.inventory')
+            inventory_line_obj = self.pool.get('stock.inventory.line')
             values = {                                                            
                         'location_id': location_id,
                         'date': date,
                         'subject': subject,
+                        'inventory_of': inventory_of,
                     }
             inventory_id = inventory_obj.create(cursor, user, values, context=context)
             inventory = inventory_obj.browse(cursor, user, inventory_id, context=context)
             inventory.prepare_inventory()
-            return True 
+            if inventory_of == 'none':
+                inventory_lines = inventory_line_obj.search(cursor, user, [('inventory_id', '=', inventory_id)],context=context)
+                if inventory_lines:
+                    return inventory_lines.ids
+            else:
+                return True
         
     def get_product_count(self, cursor, user, ids, context=None):
         
