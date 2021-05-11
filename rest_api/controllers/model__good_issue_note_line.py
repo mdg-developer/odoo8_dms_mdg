@@ -73,6 +73,7 @@ OUT__good_issue_note_line__read_all__SCHEMA = (                 # editable
     'expiry_date',
     'qty_on_hand',
     'remark',
+    'checked',
 )
 #           ]
 #       }
@@ -131,6 +132,7 @@ OUT__good_issue_note_line__read_one__SCHEMA = (                 # editable
     'expiry_date',
     'qty_on_hand',
     'remark',
+    'checked',
 )
 
 # /api/good.issue.note.line  POST  - Create one
