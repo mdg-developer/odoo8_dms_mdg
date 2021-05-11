@@ -115,6 +115,7 @@ OUT__good_issue_note__read_all__SCHEMA = (                 # editable
         'expiry_date',
         'qty_on_hand',
         'remark',
+        'checked',
     )]),
 )
 #           ]
@@ -216,6 +217,7 @@ OUT__good_issue_note__read_one__SCHEMA = (                 # editable
         'expiry_date',
         'qty_on_hand',
         'remark',
+        'checked',
     )]),
 )
 
