@@ -1,5 +1,8 @@
 from openerp.osv import fields, osv
 from datetime import datetime
+import logging
+
+_logger = logging.getLogger(__name__)
 
 class res_users(osv.osv):
     _inherit = "res.users"
@@ -273,7 +276,7 @@ class res_users(osv.osv):
                             union
                             select id
                             from branch_good_issue_note
-                            where state='receive'
+                            where state in ('receive','partial_receive')
                             and branch_id=%s
                             and receive_date=now()::date''',(branch_id,branch_id,))
             data = cursor.dictfetchall() 
@@ -358,11 +361,13 @@ class res_users(osv.osv):
                         'location_id': location_id,
                         'date': date,
                         'subject': subject,
-                        'inventory_of': inventory_of,
+                        'filter': inventory_of,
                     }
             inventory_id = inventory_obj.create(cursor, user, values, context=context)
+            logging.warning("Created inventory_id: %s", inventory_id)
             inventory = inventory_obj.browse(cursor, user, inventory_id, context=context)
             inventory.prepare_inventory()
+            logging.warning("inventory_of: %s", inventory_of)
             if inventory_of == 'none':
                 inventory_lines = inventory_line_obj.search(cursor, user, [('inventory_id', '=', inventory_id)],context=context)
                 if inventory_lines:
