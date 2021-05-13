@@ -66,7 +66,7 @@
 						<div class="oe_subtotal_footer_separator oe_inline" 
 							groups="base.group_sale_supervisor,base.group_sale_manager,base.group_sale_admin,base.group_no_one">
 							<label string="Update Qty On Hand" class="oe_edit_only" />
-							<button name="updateQtyOnHand" states="draft" string="(Update)"
+							<button name="updateQtyOnHand" states="approve" string="(Update)"
 								type="object" class="oe_edit_only oe_link"
 								groups="base.group_sale_supervisor,base.group_sale_manager,base.group_sale_admin,base.group_no_one" />
 						</div>	
@@ -146,7 +146,7 @@
 							context="{'group_by':'to_location_id'}" />
 						<filter string="Date of Issue" icon="terp-partner" domain="[]"
 							context="{'group_by':'issue_date'}" />
-						<filter string="Pending" domain="[('state','=','draft')]"
+						<filter string="Pending" domain="[('state','=','approve')]"
 							name="state_filter" />
 					</group>
 				</search>
