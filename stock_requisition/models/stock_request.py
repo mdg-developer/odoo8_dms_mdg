@@ -457,6 +457,8 @@ class stock_requisition(osv.osv):
                                                   'qty_on_hand':qty_on_hand,
                                                   'sequence':sequence,                                                  
                                                   }, context=context)
+            good_obj.approve(cr, uid, good_id, context=context)  
+                            
         return self.write(cr, uid, ids, {'state':'approve' , 'approve_by':uid,'good_issue_id':good_id})    
     
     def cancel(self, cr, uid, ids, context=None):
