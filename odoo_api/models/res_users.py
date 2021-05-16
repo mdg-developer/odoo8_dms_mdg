@@ -372,6 +372,20 @@ class res_users(osv.osv):
                 inventory_lines = inventory_line_obj.search(cursor, user, [('inventory_id', '=', inventory_id)],context=context)
                 if inventory_lines:
                     return inventory_lines
+                else:
+                    cursor.execute('''select id,name
+                                    from stock_inventory
+                                    where id=%s''',(inventory_id,))
+                    inventory_data = cursor.dictfetchall() 
+                    if inventory_data:
+                        return inventory_data   
+            else:
+                cursor.execute('''select id,name
+                                from stock_inventory
+                                where id=%s''',(inventory_id,))
+                inventory_data = cursor.dictfetchall() 
+                if inventory_data:
+                    return inventory_data        
         
     def get_product_count(self, cursor, user, ids, context=None):
         

@@ -49,6 +49,7 @@ OUT__stock_inventory_line__read_all__SCHEMA = (                 # editable
     ('product_id', (  # will return dictionary of inner fields
         'id',
         'name',
+        'sequence',
     )),
     ('product_uom_id', (  # will return dictionary of inner fields
         'id',
@@ -99,6 +100,7 @@ OUT__stock_inventory_line__read_one__SCHEMA = (                 # editable
     ('product_id', (  # will return dictionary of inner fields
         'id',
         'name',
+        'sequence',
     )),
     ('product_uom_id', (  # will return dictionary of inner fields
         'id',
