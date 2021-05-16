@@ -31,6 +31,9 @@
 					,
 					<span t-field="o.create_uid.company_id.country_id.name" />
 					.
+					<img t-if="o.good_issue_id.name"
+						t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.good_issue_id.name, 600, 100)"
+						align="right" style="width:300px;height:50px;" />
 				</div>
 				<h4>
 					<strong>
