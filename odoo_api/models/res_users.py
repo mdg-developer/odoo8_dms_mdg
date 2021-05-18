@@ -450,7 +450,7 @@ class res_users(osv.osv):
                             and pt.active=true
                             and quant.product_id=%s
                             and quant.location_id=%s
-                            group by uom.factor,pt.report_uom_id''',(product_id,location_id,))
+                            group by uom.factor,pt.report_uom_id,pt.uom_id''',(product_id,location_id,))
             balance_record = cursor.dictfetchall() 
             if balance_record:
                 return balance_record
