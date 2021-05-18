@@ -437,7 +437,8 @@ class res_users(osv.osv):
         if product_id and location_id:
             cursor.execute('''select sum(quant.qty) theoretical_qty,
                             round((sum(quant.qty)/(1/factor))::numeric,1) bigger_qty,
-                            (select uom.name from product_uom uom where uom.id=pt.report_uom_id) bigger_uom
+                            (select uom.name from product_uom uom where uom.id=pt.report_uom_id) bigger_uom,
+                            (select uom.name from product_uom uom where uom.id=pt.uom_id) smaller_uom
                             from stock_quant quant,product_product pp,stock_location loc,product_template pt,product_uom uom
                             where quant.product_id=pp.id
                             and quant.location_id=loc.id
