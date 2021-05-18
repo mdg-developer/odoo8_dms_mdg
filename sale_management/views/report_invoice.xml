@@ -161,11 +161,12 @@
 									<th class="text-center" style="border:1pt solid;border-color:black;">Description
 									</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">Quantity</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">UOM</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">Unit Price</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">Total Price</th>
-									<th style="border:1pt solid;border-color:black;" class="text-center"
-										groups="sale.group_discount_per_so_line">Disc.(%)</th>
-									<th class="text-center" style="border:1pt solid;border-color:black;" groups="sale.group_discount_per_so_line">Disc.(Amt)</th>
+<!-- 									<th style="border:1pt solid;border-color:black;" class="text-center" -->
+<!-- 										groups="sale.group_discount_per_so_line">Disc.(%)</th> -->
+<!-- 									<th class="text-center" style="border:1pt solid;border-color:black;" groups="sale.group_discount_per_so_line">Disc.(Amt)</th> -->
 									<th class="text-center" style="border:1pt solid;border-color:black;">FOC</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">Total</th>
 								</tr>
@@ -181,8 +182,10 @@
 											(FOC)
 										</t>
 									</td>
-									<td style="border:1pt solid;border-color:black;" align="right">
-										<span t-field="l.quantity" />
+									<td style="border:1pt solid;border-color:black;" align="center">
+									    <t t-esc=" '%.0f' % l.quantity"/>
+									</td>
+									<td style="border:1pt solid;border-color:black;" align="center">
 										<span t-field="l.uos_id" groups="product.group_uom" />
 									</td>
 									<td class="text-right" style="border:1pt solid;border-color:black;">
@@ -191,13 +194,13 @@
 									<td class="text-right" style="border:1pt solid;border-color:black;">
 										<span t-field="l.net_total" />
 									</td>
-									<td class="text-right" groups="sale.group_discount_per_so_line"
-										style="border:1pt solid;border-color:black;">
-										<span t-field="l.discount" />
-									</td>
-									<td class="text-right" style="border:1pt solid;border-color:black;" groups="sale.group_discount_per_so_line">
-										<span t-field="l.discount_amt" />
-									</td>
+<!-- 									<td class="text-right" groups="sale.group_discount_per_so_line" -->
+<!-- 										style="border:1pt solid;border-color:black;"> -->
+<!-- 										<span t-field="l.discount" /> -->
+<!-- 									</td> -->
+<!-- 									<td class="text-right" style="border:1pt solid;border-color:black;" groups="sale.group_discount_per_so_line"> -->
+<!-- 										<span t-field="l.discount_amt" /> -->
+<!-- 									</td> -->
 									<td class="text-center" style="border:1pt solid;border-color:black;">
 										<t t-if="l.foc==True">
 											✓

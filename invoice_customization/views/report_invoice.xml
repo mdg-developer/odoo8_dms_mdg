@@ -148,8 +148,8 @@
 									<th t-if="o.partner_id.is_exclusive==False" class="text-center" style="border:1pt solid;border-color:black;">
 										Unit Price
 									</th>
-									<th style="border:1pt solid;border-color:black;" class="text-center"
-										groups="sale.group_discount_per_so_line">Disc Amt</th>									
+<!-- 									<th style="border:1pt solid;border-color:black;" class="text-center" -->
+<!-- 										groups="sale.group_discount_per_so_line">Disc Amt</th>									 -->
 									<th class="text-center" style="border:1pt solid;border-color:black;">Amount</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">FOC</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">Net Amount</th>
@@ -166,10 +166,10 @@
 											(FOC)
 										</t>
 									</td>
-									<td class="text-right" style="border:1pt solid;border-color:black;">
+									<td class="text-center" style="border:1pt solid;border-color:black;">
 										<span t-field="l.product_uom_qty" />
 									</td>
-									<td style="border:1pt solid;border-color:black;" align="right">										
+									<td style="border:1pt solid;border-color:black;" align="center">										
 										<span t-field="l.product_uom" />
 									</td>
 									<td  t-if="o.partner_id.is_exclusive==True" class="text-right" style="border:1pt solid;border-color:black;">
@@ -182,10 +182,10 @@
 											<span t-esc="'{0:,.2f}'.format(l.price_unit)" />
 										</t>
 									</td>
-									<td class="text-right" groups="sale.group_discount_per_so_line"
-										style="border:1pt solid;border-color:black;">
-										<span t-esc="'{0:,.2f}'.format(l.discount_amt)" />
-									</td>						
+<!-- 									<td class="text-right" groups="sale.group_discount_per_so_line" -->
+<!-- 										style="border:1pt solid;border-color:black;"> -->
+<!-- 										<span t-esc="'{0:,.2f}'.format(l.discount_amt)" /> -->
+<!-- 									</td>						 -->
 									<td class="text-right" style="border:1pt solid;border-color:black;">
 										<t t-if="o.partner_id.is_exclusive==True">
 											<span t-esc="'{0:,.2f}'.format((l.price_unit / 1.05) - l.discount_amt)" />
