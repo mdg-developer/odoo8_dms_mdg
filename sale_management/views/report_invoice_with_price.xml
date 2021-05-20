@@ -193,10 +193,10 @@
 										<span t-field="l.uos_id" groups="product.group_uom"/>
 									</td>
 									<td class="text-right" style="border:1pt solid;border-color:black;">
-										<span t-field="l.price_unit"/>
+										<t t-esc="'{0:,.0f}'.format(l.price_unit)"/>
 									</td>
 									<td class="text-right" style="border:1pt solid;border-color:black;">
-										<t t-esc=" '%.0f' % l.price_subtotal"/>
+										<t t-esc="'{0:,.0f}'.format(l.net_total)"/>
 									</td>
 									<td class="text-center" style="border:1pt solid;border-color:black;">
 										<t t-if="l.foc==True">
@@ -204,7 +204,7 @@
 										</t>
 									</td>
 									<td class="text-right" style="border:1pt solid;border-color:black;">
-										<span t-field="l.net_total"/>
+										<span t-field="l.price_subtotal"/>
 									</td>
 <!-- 									<td class="text-right" groups="sale.group_discount_per_so_line" style="border:1pt solid;border-color:black;"> -->
 <!-- 										<span t-field="l.discount"/> -->

@@ -166,10 +166,10 @@
 										<span t-field="l.product_uom" groups="product.group_uom" />
 									</td>
 									<td class="text-right" style="border:1pt solid;border-color:black;">
-									    <t t-esc=" '%.0f' % l.price_unit"/>
+									    <t t-esc="'{0:,.0f}'.format(l.price_unit)"/>
 									</td>
 									<td class="text-right" style="border:1pt solid;border-color:black;">
-									    <t t-esc=" '%.0f' % l.price_subtotal"/>
+									    <t t-esc="'{0:,.0f}'.format(l.price_subtotal)"/>
 									</td>
 <!-- 									<td class="text-right" groups="sale.group_discount_per_so_line" -->
 <!-- 										style="border:1pt solid;border-color:black;"> -->
