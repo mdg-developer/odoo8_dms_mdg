@@ -150,9 +150,9 @@
 									</th>
 <!-- 									<th style="border:1pt solid;border-color:black;" class="text-center" -->
 <!-- 										groups="sale.group_discount_per_so_line">Disc Amt</th>									 -->
-									<th class="text-center" style="border:1pt solid;border-color:black;">Amount</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Total(incl.tax)</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">FOC</th>
-									<th class="text-center" style="border:1pt solid;border-color:black;">Net Amount</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Total(excl.tax)</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -172,27 +172,31 @@
 									<td style="border:1pt solid;border-color:black;" align="center">										
 										<span t-field="l.product_uom" />
 									</td>
-									<td  t-if="o.partner_id.is_exclusive==True" class="text-right" style="border:1pt solid;border-color:black;">
-										<t>
-											<span t-esc="'{0:,.2f}'.format(l.price_unit / 1.05)" />
-										</t>
+									<td style="border:1pt solid;border-color:black;" align="right">										
+										<t t-esc=" '%.0f' % l.price_unit"/>
 									</td>
-									<td t-if="o.partner_id.is_exclusive==False" class="text-right" style="border:1pt solid;border-color:black;">
-										<t >
-											<span t-esc="'{0:,.2f}'.format(l.price_unit)" />
-										</t>
-									</td>
+<!-- 									<td  t-if="o.partner_id.is_exclusive==True" class="text-right" style="border:1pt solid;border-color:black;"> -->
+<!-- 										<t> -->
+<!-- 											<span t-esc="'{0:,.2f}'.format(l.price_unit / 1.05)" /> -->
+<!-- 										</t> -->
+<!-- 									</td> -->
+<!-- 									<td t-if="o.partner_id.is_exclusive==False" class="text-right" style="border:1pt solid;border-color:black;"> -->
+<!-- 										<t > -->
+<!-- 											<span t-esc="'{0:,.2f}'.format(l.price_unit)" /> -->
+<!-- 										</t> -->
+<!-- 									</td> -->
 <!-- 									<td class="text-right" groups="sale.group_discount_per_so_line" -->
 <!-- 										style="border:1pt solid;border-color:black;"> -->
 <!-- 										<span t-esc="'{0:,.2f}'.format(l.discount_amt)" /> -->
 <!-- 									</td>						 -->
 									<td class="text-right" style="border:1pt solid;border-color:black;">
-										<t t-if="o.partner_id.is_exclusive==True">
-											<span t-esc="'{0:,.2f}'.format((l.price_unit / 1.05) - l.discount_amt)" />
-										</t>
-										<t t-if="o.partner_id.is_exclusive==False">
-											<span t-esc="'{0:,.2f}'.format(l.price_unit - l.discount_amt)" />
-										</t>
+									    <t t-esc=" '%.0f' % l.price_subtotal"/>
+<!-- 										<t t-if="o.partner_id.is_exclusive==True"> -->
+<!-- 											<span t-esc="'{0:,.2f}'.format((l.price_unit / 1.05) - l.discount_amt)" /> -->
+<!-- 										</t> -->
+<!-- 										<t t-if="o.partner_id.is_exclusive==False"> -->
+<!-- 											<span t-esc="'{0:,.2f}'.format(l.price_unit - l.discount_amt)" /> -->
+<!-- 										</t> -->
 									</td>
 									<td class="text-center" style="border:1pt solid;border-color:black;">
 										<t t-if="l.sale_foc==True">
@@ -203,12 +207,13 @@
 											0.00
 										</t>
 										<t t-if="l.sale_foc==False">
-											<t t-if="o.partner_id.is_exclusive==True">
-												<span t-esc="'{0:,.2f}'.format(((l.price_unit / 1.05) - l.discount_amt) * (l.product_uom_qty))" />
-											</t>
-											<t t-if="o.partner_id.is_exclusive==False">
-												<span t-esc="'{0:,.2f}'.format((l.price_unit - l.discount_amt) * (l.product_uom_qty))" />
-											</t>
+										    <span t-field="l.net_total" />
+<!-- 											<t t-if="o.partner_id.is_exclusive==True"> -->
+<!-- 												<span t-esc="'{0:,.2f}'.format(((l.price_unit / 1.05) - l.discount_amt) * (l.product_uom_qty))" /> -->
+<!-- 											</t> -->
+<!-- 											<t t-if="o.partner_id.is_exclusive==False"> -->
+<!-- 												<span t-esc="'{0:,.2f}'.format((l.price_unit - l.discount_amt) * (l.product_uom_qty))" /> -->
+<!-- 											</t> -->
 										</t>
 									</td>
 								</tr>

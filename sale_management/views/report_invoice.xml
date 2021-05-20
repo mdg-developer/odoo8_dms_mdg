@@ -163,12 +163,12 @@
 									<th class="text-center" style="border:1pt solid;border-color:black;">Quantity</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">UOM</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">Unit Price</th>
-									<th class="text-center" style="border:1pt solid;border-color:black;">Total Price</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Total(incl.tax)</th>
 <!-- 									<th style="border:1pt solid;border-color:black;" class="text-center" -->
 <!-- 										groups="sale.group_discount_per_so_line">Disc.(%)</th> -->
 <!-- 									<th class="text-center" style="border:1pt solid;border-color:black;" groups="sale.group_discount_per_so_line">Disc.(Amt)</th> -->
 									<th class="text-center" style="border:1pt solid;border-color:black;">FOC</th>
-									<th class="text-center" style="border:1pt solid;border-color:black;">Total</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Total(excl.tax)</th>
 								</tr>
 							</thead>
 							<tbody class="invoice_tbody">
@@ -189,10 +189,10 @@
 										<span t-field="l.uos_id" groups="product.group_uom" />
 									</td>
 									<td class="text-right" style="border:1pt solid;border-color:black;">
-										<span t-field="l.price_unit" />
+										<t t-esc=" '%.0f' % l.price_unit"/>
 									</td>
 									<td class="text-right" style="border:1pt solid;border-color:black;">
-										<span t-field="l.net_total" />
+									    <t t-esc=" '%.0f' % l.net_total"/>
 									</td>
 <!-- 									<td class="text-right" groups="sale.group_discount_per_so_line" -->
 <!-- 										style="border:1pt solid;border-color:black;"> -->
@@ -212,7 +212,7 @@
 										</t>
 
 										<t t-if="l.foc==False">
-											<span t-field="l.price_subtotal" />
+										    <span t-field="l.price_subtotal" />
 										</t>
 									</td>
 								</tr>

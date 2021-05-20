@@ -156,9 +156,10 @@
 									<th class="text-center" style="border:1pt solid;border-color:black;">Quantity</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">UOM</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">Unit Price</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Total(incl.tax)</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">FOC</th>
 
-									<th class="text-center" style="border:1pt solid;border-color:black;">Total Price</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Total(excl.tax)</th>
 <!-- 									<th style="border:1pt solid;border-color:black;" class="text-center" groups="sale.group_discount_per_so_line">Disc.(%)</th> -->
 <!-- 									<th class="text-center" style="border:1pt solid;border-color:black;" groups="sale.group_discount_per_so_line">Disc.(Amt)</th> -->
 									<t t-if="o.type == 'in_invoice' or o.type == 'in_refund'">
@@ -193,6 +194,9 @@
 									</td>
 									<td class="text-right" style="border:1pt solid;border-color:black;">
 										<span t-field="l.price_unit"/>
+									</td>
+									<td class="text-right" style="border:1pt solid;border-color:black;">
+										<t t-esc=" '%.0f' % l.price_subtotal"/>
 									</td>
 									<td class="text-center" style="border:1pt solid;border-color:black;">
 										<t t-if="l.foc==True">
