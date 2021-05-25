@@ -55,9 +55,9 @@
 								<field name="approve_by" readonly="1" />
 								<field name="internal_ref" attrs="{'readonly':[('state','=','issue')]}" />
 								<field name="issue_by"
-									attrs="{'readonly':[('state','=','issue')],'required':[('state','=','approve')]}" />
+									attrs="{'readonly':[('state','=','issue')]}" />
 								<field name="receiver"
-									attrs="{'readonly':[('state','=','issue')],'required':[('state','=','approve')]}" />
+									attrs="{'readonly':[('state','=','issue')]}" />
 								<field name="company_id" attrs="{'readonly':[('state','=','issue')]}"
 									invisible="1" />														
 							</group>

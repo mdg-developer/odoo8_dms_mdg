@@ -217,6 +217,14 @@ class good_issue_note(osv.osv):
         sale_order_obj = self.pool.get('sale.order')
         if ids:
             note_value= note_obj.browse(cr, uid, ids[0], context=context)
+            if not note_value.issue_by: 
+                raise osv.except_osv(_('Warning'),
+                                     _('Please Insert Issuer Name'))
+                
+            if not note_value.receiver: 
+                raise osv.except_osv(_('Warning'),
+                                     _('Please Insert Receiver Name'))     
+                       
             issue_date = note_value.issue_date
             location_id = note_value.to_location_id.id
             from_location_id = note_value.from_location_id.id
@@ -350,7 +358,6 @@ class good_issue_line(osv.osv):  # #prod_pricelist_update_line
         'opening_qty':fields.float('Opening Qty',readonly=True, digits=(16, 0)),
         'opening_product_uom': fields.many2one('product.uom', 'Opening UoM',readonly=True, digits=(16, 0)),
         'checked' : fields.boolean(string='Checked', default=False),
-    }
-        
+    }      
    
     
