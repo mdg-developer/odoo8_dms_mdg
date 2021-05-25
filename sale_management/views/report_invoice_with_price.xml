@@ -156,10 +156,9 @@
 									<th class="text-center" style="border:1pt solid;border-color:black;">Quantity</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">UOM</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">Unit Price</th>
-									<th class="text-center" style="border:1pt solid;border-color:black;">Total(incl.tax)</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">FOC</th>
 
-									<th class="text-center" style="border:1pt solid;border-color:black;">Total(excl.tax)</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Total Price</th>
 <!-- 									<th style="border:1pt solid;border-color:black;" class="text-center" groups="sale.group_discount_per_so_line">Disc.(%)</th> -->
 <!-- 									<th class="text-center" style="border:1pt solid;border-color:black;" groups="sale.group_discount_per_so_line">Disc.(Amt)</th> -->
 									<t t-if="o.type == 'in_invoice' or o.type == 'in_refund'">
@@ -187,7 +186,7 @@
 										</t>
 									</td>
 									<td style="border:1pt solid;border-color:black;" align="center">
-									   	<t t-esc=" '%.0f' % l.quantity"/>
+										<t t-esc="'{0:,.0f}'.format(l.quantity)"/>
 									</td>
 									<td style="border:1pt solid;border-color:black;" align="center">
 										<span t-field="l.uos_id" groups="product.group_uom"/>
@@ -195,16 +194,13 @@
 									<td class="text-right" style="border:1pt solid;border-color:black;">
 										<t t-esc="'{0:,.0f}'.format(l.price_unit)"/>
 									</td>
-									<td class="text-right" style="border:1pt solid;border-color:black;">
-										<t t-esc="'{0:,.0f}'.format(l.net_total)"/>
-									</td>
 									<td class="text-center" style="border:1pt solid;border-color:black;">
 										<t t-if="l.foc==True">
 											✓
 										</t>
 									</td>
 									<td class="text-right" style="border:1pt solid;border-color:black;">
-										<span t-field="l.price_subtotal"/>
+										<span t-field="l.net_total"/>
 									</td>
 <!-- 									<td class="text-right" groups="sale.group_discount_per_so_line" style="border:1pt solid;border-color:black;"> -->
 <!-- 										<span t-field="l.discount"/> -->
