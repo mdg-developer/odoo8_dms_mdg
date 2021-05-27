@@ -13,13 +13,7 @@ class res_users(osv.osv):
             cursor.execute('''select id
                             from good_issue_note
                             where state='approve'
-                            and branch_id=%s
-                            union
-                            select id
-                            from good_issue_note
-                            where state='issue'
-                            and branch_id=%s
-                            and issue_date=now()::date''',(branch_id,branch_id,))
+                            and branch_id=%s''',(branch_id,))
             note_record = cursor.dictfetchall() 
             if note_record:
                 return note_record         
