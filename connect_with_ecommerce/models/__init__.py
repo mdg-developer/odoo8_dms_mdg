@@ -13,4 +13,4 @@ import push_noti_app
 import stock
 import res_branch
 import push_image_app
-
+import app_announcement
