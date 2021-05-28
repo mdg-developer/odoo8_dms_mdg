@@ -24,7 +24,7 @@ openerp.web_iframe = function (session) {
         },
         start: function() {
             this.$el.find('iframe').css({height: '100%', width: '100%', border: 0});
-            this.$el.find('iframe').attr({src: this.action.params.link+'&user_id='+this.session.uid});
+            this.$el.find('iframe').attr({src: this.action.params.link});
             this.$el.find('iframe').on("load", this.bind_events.bind(this));
             return this._super();
         },
