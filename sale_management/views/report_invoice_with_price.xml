@@ -200,7 +200,7 @@
 										</t>
 									</td>
 									<td class="text-right" style="border:1pt solid;border-color:black;">
-										<span t-field="l.net_total"/>
+										<span t-esc="'{0:,.0f}'.format(l.net_total)"/>
 									</td>
 <!-- 									<td class="text-right" groups="sale.group_discount_per_so_line" style="border:1pt solid;border-color:black;"> -->
 <!-- 										<span t-field="l.discount"/> -->
@@ -277,7 +277,7 @@
 											<strong>Net Amount</strong>
 										</td>
 										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
-											<span t-field="o.amount_total"/>
+											<span t-esc="'{0:,.0f}'.format(o.amount_total)"/>
 										</td>
 									</tr>
 								</table>
