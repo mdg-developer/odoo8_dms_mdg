@@ -274,13 +274,15 @@ class account_invoice(models.Model):
                 type=type[0]
             else:
                 type=None
-        if type=='out_invoice' and line.get('product_id', False) != False:      
-            if line['price']<0 or line['name']=='Discount' :
+        if type=='out_invoice' and line.get('product_id', False) != False or  line['name']=='Cash Discount':      
+            if line['price']<0 or line['name']=='Discount' or line['name']=='Cash Discount':
                 product = self.env['product.product'].browse(line.get('product_id', False))
                 print 'product>>>',product.id
                 print 'line.get>>>',line.get('product_id', False)
-                if origin and line['name']!='Discount':
-                    cr.execute("select avl.discount_amt from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s",(origin,product.id,))
+                if origin and line['name']!='Discount' and line['name']!='Cash Discount':
+                    cr.execute('''select avl.discount_amt + (av.deduct_amt/(select avl.count from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id  and av.origin=%s)) +((av.amount_untaxed * (av.additional_discount/100))/ (select avl.count from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id  and av.origin=%s)) 
+                        from account_invoice av,account_invoice_line avl  
+                        where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s''',(origin,origin,origin,product.id,))
 #                    discount_amt=cr.fetchone()[0]   
                     dis_amt = cr.fetchall()
                     if dis_amt:     
@@ -288,9 +290,11 @@ class account_invoice(models.Model):
                             if amt[0] is not None:                                 
                                 discount_amt = discount_amt + amt[0];                       
                     if discount_amt:     
-                            line['price'] = line['price']+discount_amt                
-                if  line['name']=='Discount':
+                            line['price'] = line['price']+discount_amt 
+                if  line['name']=='Discount': 
                     account_id = product.product_tmpl_id.main_group.property_account_discount.id
+                elif  line['name']=='Cash Discount':       
+                    account_id=self.company_id.discount_cash_account_id.id
                 else:
                     account_id = product.product_tmpl_id.main_group.property_account_receivable.id
                 print 'account_id>>>',account_id        
@@ -306,8 +310,8 @@ class account_invoice(models.Model):
                     'date': date,
                     'debit': line['price']>0 and line['price'],
                     'credit': line['price']<0 and -line['price'],
-                    'account_id': line['account_id'],
-                    #'account_id': account_id,
+                    #'account_id': line['account_id'],
+                    'account_id': account_id,
                     'analytic_lines': line.get('analytic_lines', []),
                     'amount_currency': line['price']>0 and abs(line.get('amount_currency', False)) or -abs(line.get('amount_currency', False)),
                     'currency_id': line.get('currency_id', False),
