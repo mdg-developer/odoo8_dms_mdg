@@ -65,7 +65,7 @@ class res_partner(osv.osv):
                 return error_msg
 
 
-    def create_or_update_woo_customer(self, cr, uid, ids, mdg_customer=False, customer_code=None, name=None,street=None,street2=None,township=None,state=None,mobile=None,phone=None,gender=None,birthday=None,email=None,partner_latitude=None,partner_longitude=None,sms=None,viber=None,shop_name=None,woo_customer_id=None,image=None,sale_channel=None,customer_type=None,context=None):
+    def create_or_update_woo_customer(self, cr, uid, ids, mdg_customer=False, customer_code=None, name=None,street=None,street2=None,township=None,city=None,state=None,mobile=None,phone=None,gender=None,birthday=None,email=None,partner_latitude=None,partner_longitude=None,sms=None,viber=None,shop_name=None,woo_customer_id=None,image=None,sale_channel=None,customer_type=None,context=None):
         vals = {}
         contact_township = contact_city = contact_state = None
         township_obj = self.pool.get('res.township')
@@ -84,16 +84,17 @@ class res_partner(osv.osv):
                 if township_value:
                     township_data = township_obj.browse(cr, uid, township_value, context=context)
                     vals['township']= township_data.id
-                    vals['branch_id'] = township_data.branch_id.id                 
-                    city = city_obj.search(cr, uid, [('id', '=', township_data.city.id)], context=context)
-                    if city:
-                        city_data = city_obj.browse(cr, uid, city, context=context)
-                        vals['city']= city_data.id
-                    if township_data.delivery_team_id:
-                        vals['delivery_team_id']= township_data.delivery_team_id.id
-                    else:
-                        if city_data.delivery_team_id:
-                            vals['delivery_team_id']= city_data.delivery_team_id.id
+                    vals['branch_id'] = township_data.branch_id.id 
+            if city:       
+                city_value = city_obj.search(cr, uid, [('name', '=ilike', city)], context=context)
+                if city_value:
+                    city_data = city_obj.browse(cr, uid, city_value, context=context)
+                    vals['city']= city_data.id      
+            if township_data.delivery_team_id:
+                vals['delivery_team_id']= township_data.delivery_team_id.id
+            else:
+                if city_data.delivery_team_id:
+                    vals['delivery_team_id']= city_data.delivery_team_id.id
             if state:                
                 state_value = state_obj.search(cr, uid, [('name', '=ilike', state)], context=context)
                 if state_value:
@@ -159,10 +160,11 @@ class res_partner(osv.osv):
                         township_data = township_obj.browse(cr, uid, township_value, context=context)
                         contact_township = township_data.id
                         vals['branch_id'] = township_data.branch_id.id 
-                        city = city_obj.search(cr, uid, [('id', '=', township_data.city.id)], context=context)
-                        if city:
-                            city_data = city_obj.browse(cr, uid, city, context=context)
-                            contact_city = city_data.id
+                if city:
+                    city_value = city_obj.search(cr, uid, [('name', '=ilike', city)], context=context, limit=1)
+                    if city_value:
+                        city_data = township_obj.browse(cr, uid, city_value, context=context)
+                        contact_city = city_data.id
                 if state:                
                     state_value = state_obj.search(cr, uid, [('name', '=ilike', state)], context=context, limit=1)
                     if state_value:
