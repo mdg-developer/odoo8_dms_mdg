@@ -280,17 +280,22 @@ class account_invoice(models.Model):
                 print 'product>>>',product.id
                 print 'line.get>>>',line.get('product_id', False)
                 if origin and line['name']!='Discount' and line['name']!='Cash Discount':
-                    cr.execute('''select avl.discount_amt + (av.deduct_amt/(select avl.count from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id  and av.origin=%s and avl.price_unit>0)) +((av.amount_untaxed * (av.additional_discount/100))/ (select avl.count from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id  and av.origin=%s and avl.price_unit>0)) 
+                    cr.execute('''select avl.discount_amt + (av.deduct_amt/(select avl.count from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id  and av.origin=%s  and avl.price_unit>0)) +((av.amount_untaxed * (av.additional_discount/100))/ (select avl.count from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id  and av.origin=%s and avl.price_unit>0)) 
                         from account_invoice av,account_invoice_line avl  
                         where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s''',(origin,origin,origin,product.id,))
 #                    discount_amt=cr.fetchone()[0]   
-                    dis_amt = cr.fetchall()
-                    if dis_amt:     
-                        for amt in dis_amt:
-                            if amt[0] is not None:                                 
-                                discount_amt = discount_amt + amt[0];                       
-                    if discount_amt:     
-                            line['price'] = line['price']+discount_amt 
+                    dis_amt = cr.fetchone()
+                    print 'dis_amtdis_amtdis_amtdis_amt',dis_amt
+                    if dis_amt is not None: 
+                        discount_amt = discount_amt + dis_amt[0]; 
+                    if discount_amt >0:     
+                            line['price'] = line['price']+discount_amt                         
+#                     if dis_amt:     
+#                         for amt in dis_amt:
+#                             if amt[0] is not None:                                 
+#                                 discount_amt = discount_amt + amt[0];                       
+#                     if discount_amt:     
+#                             line['price'] = line['price']+discount_amt 
                 if  line['name']=='Discount': 
                     account_id = product.product_tmpl_id.main_group.property_account_discount.id
                 elif  line['name']=='Cash Discount':       
