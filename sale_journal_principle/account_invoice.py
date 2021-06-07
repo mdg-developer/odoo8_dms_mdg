@@ -280,7 +280,7 @@ class account_invoice(models.Model):
                 print 'product>>>',product.id
                 print 'line.get>>>',line.get('product_id', False)
                 if origin and line['name']!='Discount' and line['name']!='Cash Discount':
-                    cr.execute('''select avl.discount_amt + (av.deduct_amt/(select avl.count from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id  and av.origin=%s)) +((av.amount_untaxed * (av.additional_discount/100))/ (select avl.count from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id  and av.origin=%s)) 
+                    cr.execute('''select avl.discount_amt + (av.deduct_amt/(select avl.count from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id  and av.origin=%s and avl.price_unit>0)) +((av.amount_untaxed * (av.additional_discount/100))/ (select avl.count from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id  and av.origin=%s and avl.price_unit>0)) 
                         from account_invoice av,account_invoice_line avl  
                         where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s''',(origin,origin,origin,product.id,))
 #                    discount_amt=cr.fetchone()[0]   
