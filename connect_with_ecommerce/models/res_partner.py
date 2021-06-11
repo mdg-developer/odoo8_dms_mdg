@@ -32,6 +32,7 @@ class res_partner(osv.osv):
                 'woo_user_name': fields.char('Woo User Name'),
                 'channel': fields.selection([('retailer', 'Retailer'), ('consumer', 'Consumer')], 'Channel'),
                 'sms': fields.boolean('SMS',default=False),
+                'viber': fields.boolean('Viber',default=False),
             }   
           
     def send_otp_code(self, cr, uid, ids, mobile_phone, context=None):

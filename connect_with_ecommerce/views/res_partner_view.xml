@@ -16,6 +16,7 @@
 					<field name="woo_register_date" readonly="1"/>
 					<field name="woo_user_name" readonly="1"/>
 					<field name="sms" />
+					<field name="viber" />
 				</xpath>
 				<xpath expr="//div[@name='buttons']" position="inside">
 					<button class="oe_inline oe_stat_button" type="action"
