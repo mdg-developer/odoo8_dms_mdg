@@ -828,11 +828,13 @@ where p.product_tmpl_id=t.id
 and t.main_group=pm.id
 and t.group=pg.id
 and t.categ_id=pc.id
+and p.active=true
+and t.active=true
 )pp on m.x_product_id=pp.id
 left join
 (
 select sl.name as complete_name,sl.id,sl.branch_id
-from stock_location sl
+from stock_location sl where active=true
 )ll on m.x_location_id=ll.id
 left join
 stock_warehouse as w on w.lot_stock_id=m.x_location_id
