@@ -3305,7 +3305,7 @@ class mobile_sale_order(osv.osv):
             print 'False'
             return False
 
-    def product_qty_in_stock(self, cr, uid, warehouse_id , context=None, **kwargs):
+    def product_qty_in_stock(self, cr, uid, warehouse_id ,team_id, context=None, **kwargs):
             cr.execute("""
             select product_id,qty_on_hand,main_group,name_template,price,sequence from
               (    
@@ -3318,10 +3318,12 @@ class mobile_sale_order(osv.osv):
                          and product.active = true
                        and main_group in (select principle_id from product_sale_group_principle_rel 
                         where sale_group_id in (select sale_group_id from crm_case_section where id 
-                        in (select default_section_id from res_users where id =%s)))  
+                        --in (select default_section_id from res_users where id =%s)
+                        =%s
+                        ))  
                          group by quant.product_id, main_group,name_template,product.id,price,product.sequence
             )A where qty_on_hand > 0  order by name_template
-            """, (warehouse_id,uid,))   
+            """, (warehouse_id,team_id,))   
             datas = cr.fetchall()
             return datas
 
