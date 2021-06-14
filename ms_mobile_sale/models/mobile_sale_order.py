@@ -3317,9 +3317,7 @@ class mobile_sale_order(osv.osv):
                          and product.product_tmpl_id = product_temp.id
                          and product.active = true
                        and main_group in (select principle_id from product_sale_group_principle_rel 
-                        where sale_group_id in (select sale_group_id from crm_case_section where id 
-                        --in (select default_section_id from res_users where id =%s)
-                        =%s
+                        where sale_group_id in (select sale_group_id from crm_case_section where id =%s
                         ))  
                          group by quant.product_id, main_group,name_template,product.id,price,product.sequence
             )A where qty_on_hand > 0  order by name_template
