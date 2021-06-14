@@ -15,7 +15,7 @@ class branch_stock_requisition(osv.osv):
         sd_uid,url,db,password = self.pool['cwh.connection'].get_connection_data(cr, uid, context=None)
         models = xmlrpclib.ServerProxy('{}/xmlrpc/2/object'.format(url))
         so_vals={}
-        so_vals['partner_id'] =1
+        so_vals['partner_id'] =8
                       
         so_vals['order_line']= []   
         if ids:
