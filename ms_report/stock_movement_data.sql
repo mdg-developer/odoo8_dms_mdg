@@ -35,9 +35,9 @@ AS $BODY$
 			   from stock_move s,
 			   stock_location fl,
 			   product_uom suom
-			   where s.state='done'
-			   and s.product_uom=suom.id
+			   where s.product_uom=suom.id
 			   and s.location_id=fl.id
+			   and s.state='done'
 			   and fl.usage!='supplier'
 			   and fl.usage!='customer'
 			   and fl.usage in ('internal','transit')
@@ -47,9 +47,9 @@ AS $BODY$
 			   from stock_move s,
 			   stock_location tl,
 			   product_uom suom
-			   where s.state='done'
-			   and s.product_uom=suom.id
+			   where s.product_uom=suom.id
 			   and s.location_dest_id=tl.id
+			   and s.state='done'
 			   and tl.usage!='supplier'
 			   and tl.usage!='customer'
 			   and tl.usage in ('internal','transit')
@@ -80,13 +80,13 @@ AS $BODY$
 			--    product_uom duom,
 		   	stock_location fl,
 		   	stock_location tl
-		   	where s.state='done'
-		   	and s.product_uom=suom.id
+		   	where s.product_uom=suom.id
 			--    and s.product_id=pp.id
 			--    and pp.product_tmpl_id=pt.id
 			--    and pt.uom_id=duom.id
 		   	and s.location_dest_id=tl.id
 		   	and s.location_id=fl.id
+			and s.state='done'
 		   	and tl.usage!='customer'
 		   	and tl.usage!='supplier'
 			and s.date between from_date and to_date
@@ -116,13 +116,13 @@ AS $BODY$
 				--    product_uom duom,
 				stock_location fl,
 				stock_location tl
-				where s.state='done'
-				and s.product_uom=suom.id
+				where s.product_uom=suom.id
 				--    and s.product_id=pp.id
 				--    and pp.product_tmpl_id=pt.id
 				--    and pt.uom_id=duom.id
 			   	and s.location_dest_id=tl.id
 			   	and s.location_id=fl.id
+				and s.state='done'
 			   	and fl.usage!='supplier'
 			   	and fl.usage!='customer'
 				and s.date between from_date and to_date
