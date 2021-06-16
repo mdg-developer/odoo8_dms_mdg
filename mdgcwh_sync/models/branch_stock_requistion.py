@@ -18,10 +18,11 @@ class branch_stock_requisition(osv.osv):
             models = xmlrpclib.ServerProxy('{}/xmlrpc/2/object'.format(url))
             so_vals={}
             so_vals['partner_id'] =7
-                          
+                         
             so_vals['order_line']= []   
             if ids:
                 req_value = requisition_obj.browse(cr, uid, ids[0], context=context)
+                so_vals['client_order_ref']= req_value.from_location_id.name or ''
                 so_create = False
                 for req_line_id in req_value.p_line:
                     request_line_data=product_line_obj.browse(cr, uid, req_line_id.id, context=context)
