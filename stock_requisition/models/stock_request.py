@@ -346,31 +346,18 @@ class stock_requisition(osv.osv):
                 data_line = []
                 req_list = str(tuple(req_line_id))
                 req_list = eval(req_list)
-                cr.execute('''select sum(req_quantity * floor(round(1/factor,2))) as req_quantity,l.product_id
-                            from stock_requisition_line l ,product_uom uom 
-                            where l.product_uom =uom.id and l.id in %s
-                            group by product_id ''', (req_list,))
+                cr.execute('''select l.req_quantity,l.product_id,l.product_uom
+                            from stock_requisition_line l 
+                            where l.id in %s
+                            ''', (req_list,))
                 req_record = cr.fetchall()             
                 if req_record:
                     for req_data in req_record:
                         product_id = int(req_data[1])
-                        print 'product_id',product_id
+                        product_uom = int(req_data[2])
                         sale_qty = float(req_data[0])
-                        cr.execute("""SELECT uom.id , floor(round(1/factor,2)) as ratio  FROM product_product pp 
-                          LEFT JOIN product_template pt ON (pp.product_tmpl_id=pt.id)
-                          LEFT JOIN product_template_product_uom_rel rel ON (rel.product_template_id=pt.id)
-                          LEFT JOIN product_uom uom ON (rel.product_uom_id=uom.id)
-                          WHERE pp.id = %s
-                          order by ratio desc""", (product_id,))
-                        uom_list = cr.fetchall() 
-                        for uom_data in uom_list:
-                            if  sale_qty >= uom_data[1]:
-                                req_quantity=int(sale_qty/uom_data[1])
-                                sale_qty=sale_qty % uom_data[1]
-                                data_line.append({'req_quantity':req_quantity,'product_uom':uom_data[0],'product_id':product_id})
-#                            else:
-#                                data_line.append({'req_quantity':sale_qty,'product_uom':uom_data[0],'product_id':product_id})
-                                                              
+                        data_line.append({'req_quantity':sale_qty,'product_uom':product_uom,'product_id':product_id})
+               
                 for req_line_value in data_line:
                     if (req_line_value['req_quantity']) != 0:
                         cr.execute('select qty_on_hand,uom_ratio,sequence from stock_requisition_line where line_id=%s and product_id=%s ', (ids[0],req_line_value['product_id'],))
