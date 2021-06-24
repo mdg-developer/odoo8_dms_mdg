@@ -44,7 +44,7 @@ class sale_denomination(osv.osv):
         'company_id': _get_default_company,
         }   
     
-    def on_change_date(self, cr, uid, ids, date, user_id, context=None):
+    def on_change_date(self, cr, uid, ids, date, user_id,sale_team_id, context=None):
         value = {}
         note = [{'notes':10000, 'note_qty':False}, {'notes':5000, 'note_qty':False}, {'notes':1000, 'note_qty':False}, {'notes':500, 'note_qty':False}, {'notes':100, 'note_qty':False}, {'notes':50, 'note_qty':False}, {'notes':10, 'note_qty':False}, {'notes':1, 'note_qty':False}]
         order_line_data = []
@@ -69,7 +69,10 @@ class sale_denomination(osv.osv):
             ar_obj = self.pool.get('ar.payment')
             if user_id:
                 cr.execute("select default_section_id from res_users where id= %s ", (user_id,))
-                team_id = cr.fetchone()[0]            
+                team_id = cr.fetchone()[0]
+                if not team_id:
+                    team_id= sale_team_id  
+                      
             mobile_ids = invoice_obj.search(cr, uid, [('date_invoice', '=', de_date), ('state', '=', 'open'), ('user_id', '=', user_id)], context=context)
             if team_id:
                 cr.execute("select id from customer_payment where date=%s and sale_team_id=%s and payment_code='CHEQ' ", (de_date, team_id,))
