@@ -33,6 +33,15 @@ class branch_stock_requisition(osv.osv):
                         [[('default_code', '=',request_line_data.product_id.default_code)]],
                         {'limit': 1})
                         if product_ids:
+                            loose = False
+                            if request_line_data.loss == True:
+                                route_id = models.execute_kw(
+                                db, sd_uid, password,
+                                'stock.location.route', 'search',
+                                [[('pickface_pcs_route', '=', True),('active','=',True)]],
+                                {'limit': 1})
+                                if route_id:
+                                    loose =route_id[0]
                             so_create = True
                             uom_id = False
                             #product_id=models.execute_kw(db, sd_uid, password, 'product.product', 'read', [product_ids])[0]
@@ -42,7 +51,8 @@ class branch_stock_requisition(osv.osv):
                             print 'product_id', product_id
                             print 'uom_id', uom_id[0]
                             so_vals['order_line'].append([0, False, {'name': request_line_data.product_id.name, 'product_id': product_id['id'],
-                                'product_uom_qty': request_line_data.req_quantity, 'product_uom': uom_id[0],'price_unit':product_id['lst_price']
+                                'product_uom_qty': request_line_data.req_quantity, 'product_uom': uom_id[0],'price_unit':product_id['lst_price'],
+                                'loose':loose
                                 }])
                 if so_create == True:
                     order_id = models.execute_kw(db, sd_uid, password, 'sale.order', 'create', [so_vals])
