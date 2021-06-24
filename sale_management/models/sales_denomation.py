@@ -75,16 +75,16 @@ class sale_denomination(osv.osv):
                       
             mobile_ids = invoice_obj.search(cr, uid, [('date_invoice', '=', de_date), ('state', '=', 'open'), ('user_id', '=', user_id)], context=context)
             if team_id:
-                cr.execute("select id from customer_payment where date=%s and sale_team_id=%s and payment_code='CHEQ' ", (de_date, team_id,))
+                cr.execute("select id from customer_payment where date=%s and sale_team_id=%s and payment_code='CHEQ' and create_uid= %s ", (de_date, team_id,user_id,))
                 payment_ids = cr.fetchall()
             if team_id:
-                cr.execute("select id from ar_payment where date=%s and sale_team_id=%s and payment_code='CHEQ' ", (de_date, team_id,))
+                cr.execute("select id from ar_payment where date=%s and sale_team_id=%s and payment_code='CHEQ' and create_uid= %s ", (de_date, team_id,user_id,))
                 ar_payment_ids = cr.fetchall()
             if team_id:
-                cr.execute("select id from customer_payment where date=%s and sale_team_id=%s and payment_code='BNK' ", (de_date, team_id,))
+                cr.execute("select id from customer_payment where date=%s and sale_team_id=%s and payment_code='BNK' and create_uid= %s ", (de_date, team_id,user_id,))
                 bank_ids = cr.fetchall()
             if team_id:
-                cr.execute("select id from ar_payment where date=%s and sale_team_id=%s and payment_code='BNK' ", (de_date, team_id,))
+                cr.execute("select id from ar_payment where date=%s and sale_team_id=%s and payment_code='BNK' and create_uid= %s ", (de_date, team_id,user_id,))
                 ar_bank_ids = cr.fetchall()                
                 
             if  user_id:
@@ -107,7 +107,7 @@ class sale_denomination(osv.osv):
                 discount_amount=0.0
                 product_amount=0.0
                 discount_total=0.0
-                cr.execute("select id from account_invoice where date_invoice=%s and section_id =%s and state='open' ", (de_date, team_id,))
+                cr.execute("select id from account_invoice where date_invoice=%s and section_id =%s and user_id =%s and state='open' ", (de_date, team_id,user_id,))
                 mobile_ids = cr.fetchall()       
                 for data_pro in mobile_ids:
                     pre_mobile_ids.append(data_pro[0])
