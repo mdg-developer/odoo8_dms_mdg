@@ -3,7 +3,7 @@ from openerp.osv import fields, osv
 import xlrd
 from xlrd import open_workbook
 from openerp.tools.translate import _
-from datetime import datetime
+import datetime
 import base64
 import logging
 from __builtin__ import True
@@ -30,7 +30,7 @@ class credit_note_import(osv.osv):
     
     _defaults = {
                     'state':'draft',
-                    'import_date':datetime.today(),
+                    'import_date':datetime.date.today(),
                 }
     
     def _check_file_ext(self, cursor, user, ids):
