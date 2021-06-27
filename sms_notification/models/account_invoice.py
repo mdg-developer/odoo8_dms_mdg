@@ -101,7 +101,7 @@ class account_invoice(osv.osv):
                                       'partner_id':invoice.partner_id.id,
                                       'name':invoice.number
                                 }
-                            message = self.pool.get('sms.message').create(cr,uid,vals);
+                            message = self.pool.get('sms.message').create(cr,uid,vals)
                             message_obj = self.pool.get('sms.message').browse(cr, uid, message, context=context)
                             if message_obj.status =='success':
                                 invoice.write({'invoice_due_pre_reminder_noti':datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")})                                                                                         
@@ -129,7 +129,7 @@ class account_invoice(osv.osv):
                                     'partner_id':invoice.partner_id.id,
                                     'name':invoice.number
                                 }   
-                            message = self.pool.get('sms.message').create(cr,uid,vals);
+                            message = self.pool.get('sms.message').create(cr,uid,vals)
                             message_obj = self.pool.get('sms.message').browse(cr, uid, message, context=context)
                             if message_obj.status == 'success':
                                 invoice.write({'collection_noti':datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")})                               
@@ -155,7 +155,7 @@ class account_invoice(osv.osv):
                                     'partner_id':invoice.partner_id.id,
                                     'name':invoice.number
                                 } 
-                            message = self.pool.get('sms.message').create(cr,uid,vals);
+                            message = self.pool.get('sms.message').create(cr,uid,vals)
                             message_obj = self.pool.get('sms.message').browse(cr, uid, message, context=context)
                             if message_obj.status == 'success':
                                 invoice.write({'overdue_noti':datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")})                            

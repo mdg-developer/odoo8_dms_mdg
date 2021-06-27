@@ -33,8 +33,8 @@ class SmsMessage(models.Model):
     def create(self, cursor, user, vals, context=None):     
         
         try: 
-            consumer_key = self.env['ir.config_parameter'].sudo().get_param('telenor_consumer_key')
-            consumer_secret = self.env['ir.config_parameter'].sudo().get_param('telenor_consumer_secret')
+            consumer_key = self.pool.get('ir.config_parameter').get_param(cursor, user, 'telenor_consumer_key')
+            consumer_secret = self.pool.get('ir.config_parameter').get_param(cursor, user, 'telenor_consumer_secret')
             auth_url = 'https://prod-apigw.mytelenor.com.mm/oauth/v1/userAuthorize?client_id=%s&response_type=code&scope=READ'%(consumer_key)
             scopes = ['READ']
             oauth = OAuth2Session(client=MobileApplicationClient(client_id=consumer_key), scope=scopes)
