@@ -13,6 +13,8 @@ from urlparse import urlparse
 from urlparse import parse_qs
 from requests.structures import CaseInsensitiveDict
 
+_logger = logging.getLogger(__name__)
+
 class SmsMessage(models.Model):
     """SMS message for every mobile number of sms."""
 
@@ -51,6 +53,7 @@ class SmsMessage(models.Model):
             token_data = "grant_type=authorization_code&client_id=%s&client_secret=%s&expires_in=86400&code=%s&redirect_uri=https://portal.mahamatealliance.com/oauth2/callback" %(consumer_key,consumer_secret,auth_code,)
             
             resp = requests.post(token_url, headers=token_headers, data=token_data)
+            logging.warning("Check sms status_code: %s", resp.status_code)   
             if resp.status_code == 200:
                 result = resp.json()
                 access_token = result['accessToken']
