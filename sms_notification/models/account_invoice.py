@@ -26,6 +26,18 @@ class account_invoice(osv.osv):
                 res[invoice.id] = 0
         return res 
     
+    def _calculate_date_due_value(self, cr, uid, ids, field_name, arg, context=None):
+        
+        res = {}
+        for invoice in self.browse(cr, uid, ids, context=context):
+            cr.execute("""select to_char(%s, 'DD/MM/YYYY')""", (invoice.date_due,))
+            data = cr.fetchone()  
+            if data:
+                res[invoice.id] = data[0]
+            else:
+                res[invoice.id] = None
+        return res 
+    
     def _calculate_cash_collection_date(self, cr, uid, ids, field_name, arg, context=None):
         
         res = {}       
@@ -70,6 +82,11 @@ class account_invoice(osv.osv):
                         cash_collection_date = next_date[0][0]
                 else:
                     cash_collection_date = cash_collection_date
+            cr.execute("""select to_char(%s, 'DD/MM/YYYY')""", (cash_collection_date,))
+            data = cr.fetchone()  
+            if data:
+                cash_collection_date_value = data[0]
+                invoice.write({'cash_collection_date_value':cash_collection_date_value})
             res[invoice.id] = cash_collection_date                
         return res 
     
@@ -79,6 +96,8 @@ class account_invoice(osv.osv):
         'invoice_due_pre_reminder_noti': fields.datetime('Invoice Due Pre-Reminder Notification'),
         'due_days': fields.function(_calculate_due_days, string='Calculate due days', type='integer'),
         'cash_collection_date': fields.function(_calculate_cash_collection_date, string='Calculate cash collection date', type='date'),
+        'date_due_value': fields.function(_calculate_date_due_value, string='Due Date Value', type='char'),
+        'cash_collection_date_value': fields.char('Cash Collection Date Value'),
     }         
                 
     def send_invoice_due_pre_reminder_sms(self, cr, uid, ids=None, context=None):    
