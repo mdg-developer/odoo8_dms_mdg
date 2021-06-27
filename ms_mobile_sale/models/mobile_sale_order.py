@@ -493,14 +493,14 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()
         return datas 
     
-    def send_credit_invoice_sms(self, cr, uid, customer_id, invoice_number, grand_total, due_date, context=None):    
+    def send_credit_invoice_sms(self, cr, uid, customer_id, invoice_date, invoice_number, grand_total, due_date, context=None):    
          
         message_body = None        
         customer_obj = self.pool.get('res.partner').browse(cr, uid, customer_id, context=context)        
         if customer_obj.sms == True:                                                     
             company_credit_invoice_msg = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.credit_invoice_msg
             if company_credit_invoice_msg:
-                message_body = (company_credit_invoice_msg) % (customer_obj.name,invoice_number, grand_total, due_date,)
+                message_body = (company_credit_invoice_msg) % (customer_obj.name,invoice_date,invoice_number, grand_total, due_date,customer_obj.company_id.phone)
                 text_message = message_body.encode("utf-16-be")
                 hex_message = text_message.encode('hex')
                 vals={
