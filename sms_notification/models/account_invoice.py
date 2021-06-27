@@ -95,9 +95,11 @@ class account_invoice(osv.osv):
                         if invoice.partner_id.sms == True:                         
                             template_data = self.pool.get('sms.template').browse(cr, uid, sms_template_obj, context=context)                   
                             message_body =  template_data.get_body_data(invoice)  
+                            text_message = message_body.encode("utf-16-be")
+                            hex_message = text_message.hex()
                             vals = {
                                       'phone':invoice.partner_id.mobile,
-                                      'message':message_body, 
+                                      'message':hex_message, 
                                       'partner_id':invoice.partner_id.id,
                                       'name':invoice.number
                                 }
@@ -123,9 +125,11 @@ class account_invoice(osv.osv):
                         if invoice.partner_id.sms == True:                         
                             template_data = self.pool.get('sms.template').browse(cr, uid, sms_template_obj, context=context)                   
                             message_body =  template_data.get_body_data(invoice)   
+                            text_message = message_body.encode("utf-16-be")
+                            hex_message = text_message.hex()
                             vals={
                                     'phone':invoice.partner_id.mobile,
-                                    'message':message_body, 
+                                    'message':hex_message, 
                                     'partner_id':invoice.partner_id.id,
                                     'name':invoice.number
                                 }   
@@ -149,9 +153,11 @@ class account_invoice(osv.osv):
                         if invoice.partner_id.sms == True:                         
                             template_data = self.pool.get('sms.template').browse(cr, uid, sms_template_obj, context=context)                   
                             message_body =  template_data.get_body_data(invoice) 
+                            text_message = message_body.encode("utf-16-be")
+                            hex_message = text_message.hex()
                             vals={
                                     'phone':invoice.partner_id.mobile,
-                                    'message':message_body, 
+                                    'message':hex_message, 
                                     'partner_id':invoice.partner_id.id,
                                     'name':invoice.number
                                 } 
