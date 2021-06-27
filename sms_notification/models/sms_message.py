@@ -51,7 +51,9 @@ class SmsMessage(models.Model):
             token_headers = CaseInsensitiveDict()
             token_headers["Content-Type"] = "application/x-www-form-urlencoded"
             token_data = "grant_type=authorization_code&client_id=%s&client_secret=%s&expires_in=86400&code=%s&redirect_uri=https://portal.mahamatealliance.com/oauth2/callback" %(consumer_key,consumer_secret,auth_code,)
-            
+            logging.warning("Check sms token_url: %s", token_url) 
+            logging.warning("Check sms token_headers: %s", token_headers) 
+            logging.warning("Check sms token_data: %s", token_data) 
             resp = requests.post(token_url, headers=token_headers, data=token_data)
             logging.warning("Check sms status_code: %s", resp.status_code)   
             if resp.status_code == 200:
