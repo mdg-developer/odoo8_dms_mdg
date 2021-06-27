@@ -76,16 +76,16 @@ class SmsMessage(models.Model):
                   },
                   {
                      "name": "UserName",
-                     "value": "B2BMHMate"
+                     "value": "B2BRBDCo"
                   },
                   {
                      "name": "Password",
-                     "value": "B2BMHMa"
+                     "value": "B2BRBD"
                   }
                ],
                "sender": {
                   "@type": "5",
-                  "name": "Mahamate"
+                  "name": "RBD MYANMAR"
                },
                "receiver": [
                   {
