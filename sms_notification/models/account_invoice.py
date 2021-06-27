@@ -30,7 +30,7 @@ class account_invoice(osv.osv):
         
         res = {}
         for invoice in self.browse(cr, uid, ids, context=context):
-            cr.execute("""select to_char(%s, 'DD/MM/YYYY')""", (invoice.date_due,))
+            cr.execute("""select to_char(%s::date, 'DD/MM/YYYY');""", (invoice.date_due,))
             data = cr.fetchone()  
             if data:
                 res[invoice.id] = data[0]
@@ -82,7 +82,7 @@ class account_invoice(osv.osv):
                         cash_collection_date = next_date[0][0]
                 else:
                     cash_collection_date = cash_collection_date
-            cr.execute("""select to_char(%s, 'DD/MM/YYYY')""", (cash_collection_date,))
+            cr.execute("""select to_char(%s::date, 'DD/MM/YYYY');""", (cash_collection_date,))
             data = cr.fetchone()  
             if data:
                 cash_collection_date_value = data[0]
