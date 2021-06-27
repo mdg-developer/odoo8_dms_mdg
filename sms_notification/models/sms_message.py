@@ -51,11 +51,7 @@ class SmsMessage(models.Model):
             token_headers = CaseInsensitiveDict()
             token_headers["Content-Type"] = "application/x-www-form-urlencoded"
             token_data = "grant_type=authorization_code&client_id=%s&client_secret=%s&expires_in=86400&code=%s&redirect_uri=https://cms.rbdmyanmar.com/oauth2/callback" %(consumer_key,consumer_secret,auth_code,)
-            logging.warning("Check sms token_url: %s", token_url) 
-            logging.warning("Check sms token_headers: %s", token_headers) 
-            logging.warning("Check sms token_data: %s", token_data) 
             resp = requests.post(token_url, headers=token_headers, data=token_data)
-            logging.warning("Check sms status_code: %s", resp.status_code)   
             if resp.status_code == 200:
                 result = resp.json()
                 access_token = result['accessToken']
@@ -95,9 +91,7 @@ class SmsMessage(models.Model):
                ]
             }
             """ %(vals.get('message'),vals.get('phone'),)
-            logging.warning("Check sms sms_data: %s", sms_data)   
             resp_sms = requests.post(sms_url, headers=sms_headers, data=sms_data)
-            logging.warning("Check sms resp_sms.status_code: %s", resp_sms.status_code)   
             if resp_sms.status_code in [200,201]:
                 vals['status']='success'                    
             else:
@@ -109,4 +103,78 @@ class SmsMessage(models.Model):
             vals['status']='fail' 
             vals['errorlog']=error_msg    
                
-        return super(SmsMessage, self).create(cursor, user, vals, context=context)                         
+        return super(SmsMessage, self).create(cursor, user, vals, context=context)     
+    
+    def retry_sms(self, cursor, user, context=None):    
+        
+        message_obj = self.pool.get('sms.message').search(cursor, user, ['|', ('status', '=', 'fail'),('status', '=', False)])
+        if message_obj:
+            message_data = self.browse(cursor, user, message_obj, context=context)         
+            for message in message_data:
+                try: 
+                    consumer_key = self.pool.get('ir.config_parameter').get_param(cursor, user, 'telenor_consumer_key')
+                    consumer_secret = self.pool.get('ir.config_parameter').get_param(cursor, user, 'telenor_consumer_secret')
+                    auth_url = 'https://prod-apigw.mytelenor.com.mm/oauth/v1/userAuthorize?client_id=%s&response_type=code&scope=READ'%(consumer_key)
+                    scopes = ['READ']
+                    oauth = OAuth2Session(client=MobileApplicationClient(client_id=consumer_key), scope=scopes)
+                    authorization_url, state = oauth.authorization_url(auth_url)
+                    response = oauth.get(authorization_url)
+                    response_url = response.url
+                    parsed = urlparse(response_url)
+                    code = parse_qs(parsed.query)['code']
+                    auth_code = code[0]
+                    
+                    token_url = "https://prod-apigw.mytelenor.com.mm/oauth/v1/token"
+                    token_headers = CaseInsensitiveDict()
+                    token_headers["Content-Type"] = "application/x-www-form-urlencoded"
+                    token_data = "grant_type=authorization_code&client_id=%s&client_secret=%s&expires_in=86400&code=%s&redirect_uri=https://cms.rbdmyanmar.com/oauth2/callback" %(consumer_key,consumer_secret,auth_code,)
+                    resp = requests.post(token_url, headers=token_headers, data=token_data)
+                    if resp.status_code == 200:
+                        result = resp.json()
+                        access_token = result['accessToken']
+                                
+                    sms_url = "https://prod-apigw.mytelenor.com.mm/v3/mm/en/communicationMessage/send"
+                    sms_headers = CaseInsensitiveDict()
+                    sms_headers["Authorization"] = "Bearer " + access_token
+                    sms_headers["Content-Type"] = "application/json"
+                    
+                    sms_data = """           
+                    {
+                       "type": "MULTILINGUAL",
+                       "content": "%s",
+                       "characteristic": [         
+                           {
+                             "name": "Udhi",
+                             "value": "1"
+                          },
+                          {
+                             "name": "UserName",
+                             "value": "B2BRBDCo"
+                          },
+                          {
+                             "name": "Password",
+                             "value": "B2BRBD"
+                          }
+                       ],
+                       "sender": {
+                          "@type": "5",
+                          "name": "RBD MYANMAR"
+                       },
+                       "receiver": [
+                          {
+                             "@type": "1",
+                             "phoneNumber": "%s"
+                          }
+                       ]
+                    }
+                    """ %(message.message,message.phone,)                    
+                    resp_sms = requests.post(sms_url, headers=sms_headers, data=sms_data)                    
+                    if resp_sms.status_code in [200,201]:
+                        message.write({'status':'success'})          
+                    else:
+                        message.write({'status':'fail'})   
+                except Exception as e:         
+                    error_msg = 'Error Message: %s' % (e) 
+                    logging.error(error_msg)  
+                    message.write({'status':'fail'})   
+                    message.write({'errorlog':error_msg})
