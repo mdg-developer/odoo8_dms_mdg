@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data noupdate="1">
+        <record id="sms_template_for_invoice_payment_register" model="sms.template">
+            <field name="name">SMS Notification to customer when Invoice payment register</field>
+            <field name="condition">invoice_paid</field>
+            <!-- <field name="condition" eval="invoice_paid"/> -->
+            <field name="auto_delete" eval="True"/>
+            <field name="sms_body_html"><![CDATA[
+              Hello ${object.partner_id.name}, Invoice paid:
+              Invoice Status: ${object.state},
+              Invoice number: ${object.number},
+              Invoice total: ${object.amount_total} ${object.currency_id.name},
+              Invoice date: ${object.date_invoice}
+                            ]]>
+            </field>
+        </record>
+    </data>
+</openerp>
