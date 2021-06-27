@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="add_preferences_users" model="ir.ui.view">
+            <field name="name">Inheritance In SMS</field>
+            <field name="model">base.config.settings</field>
+            <field name="inherit_id" ref="base_setup.view_general_configuration"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/group" position="after">
+                    <group>
+                        <label for="id" string="SMS"/>
+                        <div name="sms">
+                            <div name="sms gateway">
+                                <div>
+                                    <button name="%(gateway_config)d" string="Configure SMS Gateway Account" type="action" class="oe_link"/>
+                                </div>
+                                <div attrs="{'invisible':[('is_twilio_in_addon','=',False)]}" >
+                                    <field name="is_twilio_in_addon" attrs="{'invisible':True}"  />
+                                    <field name="module_twilio_gateway" class="oe_inline" />
+                                    <label for="module_twilio_gateway" />
+                                </div>
+                                <div attrs="{'invisible':[('is_plivo_in_addon','=',False)]}" > 
+                                    <field name="is_plivo_in_addon" attrs="{'invisible':True}"/>   
+                                    <field name="module_plivo_gateway" class="oe_inline"  />
+                                    <label for="module_plivo_gateway" />
+                                </div>
+                                <div attrs="{'invisible':[('is_clicksend_in_addon','=',False)]}" > 
+                                    <field name="is_clicksend_in_addon" attrs="{'invisible':True}"/>   
+                                    <field name="module_clicksend_gateway" class="oe_inline"  />
+                                    <label for="module_clicksend_gateway" />
+                                </div>
+                            </div>
+                        </div>  
+                    </group>
+                </xpath>
+            </field>
+        </record>          
+     
+    </data>
+</openerp>
