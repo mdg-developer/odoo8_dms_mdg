@@ -493,6 +493,26 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()
         return datas 
     
+    def send_credit_invoice_sms(self, cr, uid, customer_id, invoice_number, grand_total, due_date, context=None):    
+         
+        message_body = None        
+        customer_obj = self.pool.get('res.partner').browse(cr, uid, customer_id, context=context)        
+        if customer_obj.sms == True:                                                     
+            company_credit_invoice_msg = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.credit_invoice_msg
+            if company_credit_invoice_msg:
+                message_body = (company_credit_invoice_msg) % (customer_obj.name,invoice_number, grand_total, due_date,)
+                text_message = message_body.encode("utf-16-be")
+                hex_message = text_message.encode('hex')
+                vals={
+                        'phone':customer_obj.mobile,
+                        'message':hex_message, 
+                        'partner_id':customer_obj.id,
+                        'name':invoice_number,
+                        'text_message': message_body,
+                    } 
+                message = self.pool.get('sms.message').create(cr,uid,vals);
+                self.pool.get('sms.message').browse(cr, uid, message, context=context) 
+    
     def get_supervisor_sale_team(self, cr, uid,section_id,context=None, **kwargs):
         cr.execute('''select id,name,branch_id as team_branch_id,(select name from res_branch where id =branch_id) as team_branch_name from crm_case_section 
         where supervisor_team= %s
