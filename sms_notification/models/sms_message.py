@@ -50,7 +50,7 @@ class SmsMessage(models.Model):
             token_url = "https://prod-apigw.mytelenor.com.mm/oauth/v1/token"
             token_headers = CaseInsensitiveDict()
             token_headers["Content-Type"] = "application/x-www-form-urlencoded"
-            token_data = "grant_type=authorization_code&client_id=%s&client_secret=%s&expires_in=86400&code=%s&redirect_uri=https://portal.mahamatealliance.com/oauth2/callback" %(consumer_key,consumer_secret,auth_code,)
+            token_data = "grant_type=authorization_code&client_id=%s&client_secret=%s&expires_in=86400&code=%s&redirect_uri=https://cms.rbdmyanmar.com/oauth2/callback" %(consumer_key,consumer_secret,auth_code,)
             logging.warning("Check sms token_url: %s", token_url) 
             logging.warning("Check sms token_headers: %s", token_headers) 
             logging.warning("Check sms token_data: %s", token_data) 
