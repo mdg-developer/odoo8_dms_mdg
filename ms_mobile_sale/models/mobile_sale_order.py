@@ -1781,16 +1781,17 @@ class mobile_sale_order(osv.osv):
                 pre_sale_order_obj = self.pool.get('pre.sale.order.line')
                 payment_obj = self.pool.get('customer.payment')
                 print 'user_iddddddddddddd', user_id, type(user_id)
-                cursor.execute("select default_section_id from res_users where id=%s", (user_id,))
-                team_id = cursor.fetchone()[0]
+#                 cursor.execute("select default_section_id from res_users where id=%s", (user_id,))
+#                 team_id = cursor.fetchone()[0]
+                team_id =pt['sale_team_id']
                 print 'team_id', team_id,de_date
-                cursor.execute("select id from customer_payment where date=%s and sale_team_id=%s and cheque_no !=''  ", (de_date, team_id,))
+                cursor.execute("select id from customer_payment where date=%s and sale_team_id=%s and cheque_no !='' and create_uid= %s ", (de_date, team_id,user_id,))
                 payment_ids = cursor.fetchall()
-                cursor.execute("select id from ar_payment where date=%s and sale_team_id=%s and payment_code='CHEQ' ", (de_date, team_id,))
+                cursor.execute("select id from ar_payment where date=%s and sale_team_id=%s and payment_code='CHEQ' and create_uid= %s", (de_date, team_id,user_id,))
                 ar_payment_ids = cursor.fetchall()
-                cursor.execute("select id from customer_payment where date=%s and sale_team_id=%s and payment_code='BNK' ", (de_date, team_id,))
+                cursor.execute("select id from customer_payment where date=%s and sale_team_id=%s and payment_code='BNK' and create_uid= %s", (de_date, team_id,user_id,))
                 bank_ids = cursor.fetchall()
-                cursor.execute("select id from ar_payment where date=%s and sale_team_id=%s and payment_code='BNK' ", (de_date, team_id,))
+                cursor.execute("select id from ar_payment where date=%s and sale_team_id=%s and payment_code='BNK' and create_uid= %s", (de_date, team_id,user_id,))
                 ar_bank_ids = cursor.fetchall()
                 cursor.execute("select id from mobile_sale_order where due_date=%s and user_id=%s and void_flag != 'voided'", (de_date, user_id))
                 m_mobile_ids = cursor.fetchall()
