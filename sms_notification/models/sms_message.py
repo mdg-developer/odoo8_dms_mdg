@@ -95,9 +95,9 @@ class SmsMessage(models.Model):
                ]
             }
             """ %(vals.get('message'),vals.get('phone'),)
-            print ('sms_data',sms_data)
+            logging.warning("Check sms sms_data: %s", sms_data)   
             resp_sms = requests.post(sms_url, headers=sms_headers, data=sms_data)
-            print ('resp_sms.status_code',resp_sms.status_code)
+            logging.warning("Check sms resp_sms.status_code: %s", resp_sms.status_code)   
             if resp_sms.status_code in [200,201]:
                 vals['status']='success'                    
             else:
