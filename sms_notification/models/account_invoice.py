@@ -113,11 +113,18 @@ class account_invoice(osv.osv):
                     for sms_template_obj in sms_template_objs:
                         if invoice.partner_id.sms == True:                         
                             template_data = self.pool.get('sms.template').browse(cr, uid, sms_template_obj, context=context)                   
-                            message_body =  template_data.get_body_data(invoice)  
+                            message_body =  template_data.get_body_data(invoice)
+                            if '09-' in invoice.partner_id.mobile or '09' in invoice.partner_id.mobile:
+                                if '09-' in invoice.partner_id.mobile:
+                                    phone = '959' + str(invoice.partner_id.mobile.split('09-')[1])  
+                                else:
+                                    phone = '959' + str(invoice.partner_id.mobile.split('09')[1])  
+                            if '+959' in invoice.partner_id.mobile:
+                                phone = '959' + str(invoice.partner_id.mobile.split('+959')[1])   
                             text_message = message_body.encode("utf-16-be")
                             hex_message = text_message.encode('hex')
                             vals = {
-                                      'phone':invoice.partner_id.mobile,
+                                      'phone':str(phone),
                                       'message':hex_message, 
                                       'partner_id':invoice.partner_id.id,
                                       'name':invoice.number,
@@ -144,11 +151,18 @@ class account_invoice(osv.osv):
                     for sms_template_obj in sms_template_objs:
                         if invoice.partner_id.sms == True:                         
                             template_data = self.pool.get('sms.template').browse(cr, uid, sms_template_obj, context=context)                   
-                            message_body =  template_data.get_body_data(invoice)   
+                            message_body =  template_data.get_body_data(invoice)
+                            if '09-' in invoice.partner_id.mobile or '09' in invoice.partner_id.mobile:
+                                if '09-' in invoice.partner_id.mobile:
+                                    phone = '959' + str(invoice.partner_id.mobile.split('09-')[1])  
+                                else:
+                                    phone = '959' + str(invoice.partner_id.mobile.split('09')[1])  
+                            if '+959' in invoice.partner_id.mobile:
+                                phone = '959' + str(invoice.partner_id.mobile.split('+959')[1])      
                             text_message = message_body.encode("utf-16-be")
                             hex_message = text_message.encode('hex')
                             vals={
-                                    'phone':invoice.partner_id.mobile,
+                                    'phone':str(phone),
                                     'message':hex_message, 
                                     'partner_id':invoice.partner_id.id,
                                     'name':invoice.number,
@@ -173,11 +187,18 @@ class account_invoice(osv.osv):
                     for sms_template_obj in sms_template_objs:                        
                         if invoice.partner_id.sms == True:                         
                             template_data = self.pool.get('sms.template').browse(cr, uid, sms_template_obj, context=context)                   
-                            message_body =  template_data.get_body_data(invoice) 
+                            message_body =  template_data.get_body_data(invoice)
+                            if '09-' in invoice.partner_id.mobile or '09' in invoice.partner_id.mobile:
+                                if '09-' in invoice.partner_id.mobile:
+                                    phone = '959' + str(invoice.partner_id.mobile.split('09-')[1])  
+                                else:
+                                    phone = '959' + str(invoice.partner_id.mobile.split('09')[1])  
+                            if '+959' in invoice.partner_id.mobile:
+                                phone = '959' + str(invoice.partner_id.mobile.split('+959')[1])    
                             text_message = message_body.encode("utf-16-be")
                             hex_message = text_message.encode('hex')
                             vals={
-                                    'phone':invoice.partner_id.mobile,
+                                    'phone':str(phone),
                                     'message':hex_message, 
                                     'partner_id':invoice.partner_id.id,
                                     'name':invoice.number,
