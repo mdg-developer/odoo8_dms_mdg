@@ -1805,15 +1805,15 @@ class mobile_sale_order(osv.osv):
 #                 team_id = cursor.fetchone()[0]
                 team_id =pt['sale_team_id']
                 print 'team_id', team_id,de_date
-                cursor.execute("select id from customer_payment where date=%s and sale_team_id=%s and cheque_no !='' and create_uid= %s ", (de_date, team_id,user_id,))
+                cursor.execute("select id from customer_payment where date=%s and sale_team_id=%s and cheque_no !=''  ", (de_date, team_id,))
                 payment_ids = cursor.fetchall()
-                cursor.execute("select id from ar_payment where date=%s and sale_team_id=%s and payment_code='CHEQ' and create_uid= %s", (de_date, team_id,user_id,))
+                cursor.execute("select id from ar_payment where date=%s and sale_team_id=%s and payment_code='CHEQ' ", (de_date, team_id,))
                 ar_payment_ids = cursor.fetchall()
-                cursor.execute("select id from customer_payment where date=%s and sale_team_id=%s and payment_code='BNK' and create_uid= %s", (de_date, team_id,user_id,))
+                cursor.execute("select id from customer_payment where date=%s and sale_team_id=%s and payment_code='BNK' ", (de_date, team_id,))
                 bank_ids = cursor.fetchall()
-                cursor.execute("select id from ar_payment where date=%s and sale_team_id=%s and payment_code='BNK' and create_uid= %s", (de_date, team_id,user_id,))
+                cursor.execute("select id from ar_payment where date=%s and sale_team_id=%s and payment_code='BNK'", (de_date, team_id,))
                 ar_bank_ids = cursor.fetchall()
-                cursor.execute("select id from mobile_sale_order where due_date=%s and user_id=%s and void_flag != 'voided'", (de_date, user_id))
+                cursor.execute("select id from mobile_sale_order where due_date=%s and sale_team =%s and void_flag != 'voided'", (de_date, team_id,))
                 m_mobile_ids = cursor.fetchall()
 #                 cursor.execute("select id from account_invoice where date_invoice=%s and section_id =%s and state='open' ", (de_date, team_id,))
 #                 invoice_ids = cursor.fetchall()
@@ -1932,9 +1932,9 @@ class mobile_sale_order(osv.osv):
                     bank_transfer_obj.create(cursor, user, data_id, context=context)
             cursor.execute("""select m.date,a.id,m.partner_id,m.payment_amount
                                 from account_invoice as a,mobile_ar_collection as m
-                                where m.ref_no = a.number and  m.state='draft'  and
-                                m.user_id=%s and m.sale_team_id=%s and m.date = %s
-                    """, (user_id, team_id, de_date,))
+                                where m.ref_no = a.number and  m.state='draft'
+                                and m.sale_team_id=%s and m.date = %s
+                    """, (team_id, de_date,))
             vals = cursor.fetchall()
             print 'vals', vals
             for val in vals:

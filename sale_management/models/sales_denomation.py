@@ -73,26 +73,26 @@ class sale_denomination(osv.osv):
                 if not team_id:
                     team_id= sale_team_id  
                       
-            mobile_ids = invoice_obj.search(cr, uid, [('date_invoice', '=', de_date), ('state', '=', 'open'), ('user_id', '=', user_id)], context=context)
+            mobile_ids = invoice_obj.search(cr, uid, [('date_invoice', '=', de_date), ('state', '=', 'open')], context=context)
             if team_id:
-                cr.execute("select id from customer_payment where date=%s and sale_team_id=%s and payment_code='CHEQ' and create_uid= %s ", (de_date, team_id,user_id,))
+                cr.execute("select id from customer_payment where date=%s and sale_team_id=%s and payment_code='CHEQ' ", (de_date, team_id,))
                 payment_ids = cr.fetchall()
             if team_id:
-                cr.execute("select id from ar_payment where date=%s and sale_team_id=%s and payment_code='CHEQ' and create_uid= %s ", (de_date, team_id,user_id,))
+                cr.execute("select id from ar_payment where date=%s and sale_team_id=%s and payment_code='CHEQ' ", (de_date, team_id,))
                 ar_payment_ids = cr.fetchall()
             if team_id:
-                cr.execute("select id from customer_payment where date=%s and sale_team_id=%s and payment_code='BNK' and create_uid= %s ", (de_date, team_id,user_id,))
+                cr.execute("select id from customer_payment where date=%s and sale_team_id=%s and payment_code='BNK' ", (de_date, team_id,))
                 bank_ids = cr.fetchall()
             if team_id:
-                cr.execute("select id from ar_payment where date=%s and sale_team_id=%s and payment_code='BNK' and create_uid= %s ", (de_date, team_id,user_id,))
+                cr.execute("select id from ar_payment where date=%s and sale_team_id=%s and payment_code='BNK' ", (de_date, team_id,))
                 ar_bank_ids = cr.fetchall()                
                 
             if  user_id:
                 cr.execute("""select m.date,a.id,m.partner_id,m.payment_amount
                                 from account_invoice as a,mobile_ar_collection as m
-                                where m.ref_no = a.number and  m.state='draft'  and
-                                m.user_id=%s and m.sale_team_id=%s and m.date = %s  
-                    """, (user_id, team_id, de_date,))
+                                where m.ref_no = a.number and  m.state='draft'  
+                               and m.sale_team_id=%s and m.date = %s  
+                    """, ( team_id, de_date,))
                 vals = cr.fetchall()             
                 print 'vals',vals
                 for val in vals:
@@ -107,7 +107,7 @@ class sale_denomination(osv.osv):
                 discount_amount=0.0
                 product_amount=0.0
                 discount_total=0.0
-                cr.execute("select id from account_invoice where date_invoice=%s and section_id =%s and user_id =%s and state='open' ", (de_date, team_id,user_id,))
+                cr.execute("select id from account_invoice where date_invoice=%s and section_id =%s  and state='open' ", (de_date, team_id,))
                 mobile_ids = cr.fetchall()       
                 for data_pro in mobile_ids:
                     pre_mobile_ids.append(data_pro[0])
