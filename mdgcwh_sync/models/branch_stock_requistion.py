@@ -50,9 +50,9 @@ class branch_stock_requisition(osv.osv):
                                 if ctn_qty >0 :
                                     data_line.append({'req_quantity':ctn_qty,'product_uom':uom_id,'product_id':product_id,'uom_name':uom_name,'product_name':p_name,'loose':loose,'ctn_line':True})
                             else:
-                                data_line.append({'req_quantity':req_quantity,'product_uom':uom_id,'product_id':product_id,'uom_name':uom_name,'product_name':p_name,'loose':loose,'ctn_line':True})
+                                data_line.append({'req_quantity':req_qty,'product_uom':uom_id,'product_id':product_id,'uom_name':uom_name,'product_name':p_name,'loose':loose,'ctn_line':True})
                         else:
-                            data_line.append({'req_quantity':req_quantity,'product_uom':uom_id,'product_id':product_id,'uom_name':uom_name,'product_name':p_name,'loose':loose,'ctn_line':False})
+                            data_line.append({'req_quantity':req_qty,'product_uom':uom_id,'product_id':product_id,'uom_name':uom_name,'product_name':p_name,'loose':loose,'ctn_line':False})
                 #KM
                 for req_line_value in data_line:
                 #for req_line_id in req_value.p_line:
@@ -91,7 +91,7 @@ class branch_stock_requisition(osv.osv):
                                                          {'limit': 1})
                             so_vals['order_line'].append([0, False, {'name': req_line_value['product_name'], 'product_id': product_id['id'],
                                 'product_uom_qty': req_line_value['req_quantity'], 'product_uom': uom_id[0],'price_unit':product_id['lst_price'],
-                                'loose':req_line_value['loose'],'route_id':route
+                                'loose':req_line_value['loose'],'route_id':route,'ctn_pickface':req_line_value['ctn_line']
                                 }])
                 if so_create == True:
                     order_id = models.execute_kw(db, sd_uid, password, 'sale.order', 'create', [so_vals])
