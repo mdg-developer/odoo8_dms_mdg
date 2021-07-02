@@ -78,6 +78,7 @@ OUT__res_partner__read_all__SCHEMA = (                # editable
         'name',
     )),    
     'channel',
+    'customer_type',
 )
 #           ]
 #       }
@@ -135,6 +136,7 @@ OUT__res_partner__read_one__SCHEMA = (                # editable
         'name',
     )),    
     'channel',
+    'customer_type',
 )
 
 # /api/res.partner  POST  - Create one
