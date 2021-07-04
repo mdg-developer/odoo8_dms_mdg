@@ -116,9 +116,9 @@ class account_invoice(osv.osv):
                             message_body =  template_data.get_body_data(invoice)
                             if invoice.partner_id.mobile.startswith('09-') or invoice.partner_id.mobile.startswith('09'):
                                 if invoice.partner_id.mobile.startswith('09-'):
-                                    phone = '959' + str(invoice.partner_id.mobile.phone[3:])  
+                                    phone = '959' + str(invoice.partner_id.mobile[3:])  
                                 else:
-                                    phone = '959' + str(invoice.partner_id.mobile.phone[2:])
+                                    phone = '959' + str(invoice.partner_id.mobile[2:])
                             if invoice.partner_id.mobile.startswith('+959'):  
                                 phone = '959' + str(invoice.partner_id.mobile[4:])  
                             text_message = message_body.encode("utf-16-be")
@@ -154,9 +154,9 @@ class account_invoice(osv.osv):
                             message_body =  template_data.get_body_data(invoice)
                             if invoice.partner_id.mobile.startswith('09-') or invoice.partner_id.mobile.startswith('09'):
                                 if invoice.partner_id.mobile.startswith('09-'):
-                                    phone = '959' + str(invoice.partner_id.mobile.phone[3:])  
+                                    phone = '959' + str(invoice.partner_id.mobile[3:])  
                                 else:
-                                    phone = '959' + str(invoice.partner_id.mobile.phone[2:])
+                                    phone = '959' + str(invoice.partner_id.mobile[2:])
                             if invoice.partner_id.mobile.startswith('+959'):  
                                 phone = '959' + str(invoice.partner_id.mobile[4:])      
                             text_message = message_body.encode("utf-16-be")
@@ -190,9 +190,9 @@ class account_invoice(osv.osv):
                             message_body =  template_data.get_body_data(invoice)
                             if invoice.partner_id.mobile.startswith('09-') or invoice.partner_id.mobile.startswith('09'):
                                 if invoice.partner_id.mobile.startswith('09-'):
-                                    phone = '959' + str(invoice.partner_id.mobile.phone[3:])  
+                                    phone = '959' + str(invoice.partner_id.mobile[3:])  
                                 else:
-                                    phone = '959' + str(invoice.partner_id.mobile.phone[2:])
+                                    phone = '959' + str(invoice.partner_id.mobile[2:])
                             if invoice.partner_id.mobile.startswith('+959'):  
                                 phone = '959' + str(invoice.partner_id.mobile[4:])     
                             text_message = message_body.encode("utf-16-be")
