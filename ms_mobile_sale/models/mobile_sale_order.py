@@ -501,10 +501,17 @@ class mobile_sale_order(osv.osv):
             company_credit_invoice_msg = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.credit_invoice_msg
             if company_credit_invoice_msg:
                 message_body = (company_credit_invoice_msg) % (customer_obj.name,invoice_date,invoice_number, grand_total, due_date,customer_obj.company_id.phone)
+                if customer_obj.mobile.startswith('09-') or customer_obj.mobile.startswith('09'):
+                    if customer_obj.mobile.startswith('09-'):
+                        phone = '959' + str(customer_obj.mobile[3:])  
+                    else:
+                        phone = '959' + str(customer_obj.mobile[2:])
+                if customer_obj.mobile.startswith('+959'):  
+                    phone = '959' + str(customer_obj.mobile[4:])  
                 text_message = message_body.encode("utf-16-be")
                 hex_message = text_message.encode('hex')
                 vals={
-                        'phone':customer_obj.mobile,
+                        'phone':str(phone),
                         'message':hex_message, 
                         'partner_id':customer_obj.id,
                         'name':invoice_number,
