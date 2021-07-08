@@ -111,13 +111,11 @@
 						<tbody class="invoice_tbody">
 							<tr t-foreach="o.p_line" t-as="l">
 
-								<t t-if="(l.big_req_quantity)+(l.req_quantity)!=0">
+								<t t-if="(l.req_quantity)!=0">
 									<td>
 										<span t-field="l.product_id" />
 									</td>
 									<td align="center" >
-										<span t-field="l.big_req_quantity" />
-										/
 										<span t-field="l.req_quantity" />
 									</td>
 									<td align="right" style="padding-right: 5cm;">
