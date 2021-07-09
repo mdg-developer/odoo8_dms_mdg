@@ -101,14 +101,14 @@ class res_partner(osv.osv):
                 state_value = state_obj.search(cr, uid, [('name', '=ilike', state)], context=context)
                 if state_value:
                     state_data = state_obj.browse(cr, uid, state_value, context=context)
-                    vals['state_id'] = state_data.id
+                    vals['state_id'] = state_data.id               
+            if woo_customer_id:
+                instances=self.pool.get('woo.instance.ept').search(cr, uid, [('state','=','confirmed')], context=context, limit=1)
+                if instances:
+                    woo_customer = "%s_%s"%(instances[0],woo_customer_id) if woo_customer_id else False
+                    vals['woo_customer_id'] = woo_customer
             if woo_user_name:
-                vals['woo_user_name'] = woo_user_name    
-#             if woo_customer_id:
-#                 instances=self.pool.get('woo.instance.ept').search(cr, uid, [('state','=','confirmed')], context=context, limit=1)
-#                 if instances:
-#                     woo_customer = "%s_%s"%(instances[0],woo_customer_id) if woo_customer_id else False
-#                     vals['woo_customer_id'] = woo_customer
+                vals['woo_user_name'] = woo_user_name 
 #                     instance = self.pool.get('woo.instance.ept').browse(cr, uid, instances[0], context=context)                  
 #                     wcapi = instance.connect_in_woo() 
 #                     response = wcapi.get('customers/%s'%(woo_customer_id))
@@ -192,14 +192,14 @@ class res_partner(osv.osv):
                 if customer_type:
                     vals['customer_type'] = customer_type
                 if sale_channel:
-                    vals['channel'] = sale_channel
+                    vals['channel'] = sale_channel                   
+                if woo_customer_id:
+                    instances=self.pool.get('woo.instance.ept').search(cr, uid, [('state','=','confirmed')], context=context, limit=1)
+                    if instances:
+                        woo_customer = "%s_%s"%(instances[0],woo_customer_id) if woo_customer_id else False
+                        vals['woo_customer_id'] = woo_customer
                 if woo_user_name:
-                    vals['woo_user_name'] = woo_user_name    
-#                 if woo_customer_id:
-#                     instances=self.pool.get('woo.instance.ept').search(cr, uid, [('state','=','confirmed')], context=context, limit=1)
-#                     if instances:
-#                         woo_customer = "%s_%s"%(instances[0],woo_customer_id) if woo_customer_id else False
-#                         vals['woo_customer_id'] = woo_customer
+                    vals['woo_user_name'] = woo_user_name 
 #                         instance = self.pool.get('woo.instance.ept').browse(cr, uid, instances[0], context=context)                  
 #                         wcapi = instance.connect_in_woo() 
 #                         response = wcapi.get('customers/%s'%(woo_customer_id))
