@@ -30,7 +30,7 @@ import datetime
 _logger = logging.getLogger(__name__)
 header_fields = ['sale channel', 'postal code', 'region', 'class', 'outlet id code', 'outlet name',
                  'outlet type', 'address', 'ward', 'district', 'township', 'city/town', 'village/ village group',
-                 'telephone', 'contact person', 'rb code', 'selling brand', 'branch code', 'demarcation code', 'display',
+                 'telephone','mobile','contact person', 'rb code', 'selling brand', 'branch code', 'demarcation code', 'display',
                  'ka_tha', 'website', 'title', 'job position', 'old code', 'email', 'fax' , 'credit limit', 'credit allow',
                  'branch code','country','latitude','longitude','ctax no','exclusive','customer','supplier']
 
@@ -135,7 +135,7 @@ class partner(osv.osv):
                                 ln.append(str(l))
                             val = len(b3)
                     header_line = True
-                    credit_limit_i = credit_allow_i = website_i = title_i = job_position_i = old_code_i = email_i = fax_i = display_i = city_i = rb_code_i = postal_code_i = region_i = sale_channel_i = class_i = demarcation_i = customer_code_i = shop_name_i = shop_type_i = address_i = street_i = state_id_i = territory_i = township_i = village_i = phone_i = name_i = brand_i = branch_code_i = ka_tha_i = latitude_i = longitude_i = ctax_no_i = exclusive_i =  None
+                    credit_limit_i = credit_allow_i = website_i = title_i = job_position_i = old_code_i = email_i = fax_i = display_i = city_i = rb_code_i = postal_code_i = region_i = sale_channel_i = class_i = demarcation_i = customer_code_i = shop_name_i = shop_type_i = address_i = street_i = state_id_i = territory_i = township_i = village_i = phone_i =mobile_i= name_i = brand_i = branch_code_i = ka_tha_i = latitude_i = longitude_i = ctax_no_i = exclusive_i =  None
                     customer_i = supplier_i = None
                     column_cnt = 0
                     for cnt in range(len(ln)):
@@ -192,6 +192,8 @@ class partner(osv.osv):
                             village_i = i 
                         elif header_field == 'telephone':
                             phone_i = i 
+                        elif header_field == 'mobile':
+                            mobile_i = i                             
                         elif header_field == 'contact person':
                             name_i = i 
                         elif header_field == 'rb code':
@@ -224,7 +226,7 @@ class partner(osv.osv):
                             customer_i = i 
                         elif header_field == 'supplier':
                             supplier_i = i                            
-                    for f in [(credit_allow_i, 'credit allow'), (credit_limit_i, 'credit limit'), (website_i, 'website'), (title_i, 'title'), (job_position_i, 'job position'), (old_code_i, 'old code'), (email_i, 'email'), (fax_i, 'fax'), (display_i, 'display'), (postal_code_i, 'postal_code'), (city_i, 'city'), (rb_code_i, 'rb_code'), (region_i, 'region'), (sale_channel_i, 'sale_channel'), (class_i, 'class'), (demarcation_i, 'demarcation'), (customer_code_i, 'customer_code'), (shop_name_i, 'shop_name'), (shop_type_i, 'shop_type'), (address_i, 'address'), (street_i, 'street'), (territory_i, 'territory'), (township_i, 'township'), (village_i, 'village'), (phone_i, 'phone'), (name_i, 'name'), (brand_i, 'brand'), (branch_code_i, 'branch_code'), (ka_tha_i, 'ka_tha'),(latitude_i, 'latitude'),(longitude_i, 'longitude'),(exclusive_i, 'exclusive'),(ctax_no_i, 'ctax no')]:
+                    for f in [(credit_allow_i, 'credit allow'), (credit_limit_i, 'credit limit'), (website_i, 'website'), (title_i, 'title'), (job_position_i, 'job position'), (old_code_i, 'old code'), (email_i, 'email'), (fax_i, 'fax'), (display_i, 'display'), (postal_code_i, 'postal_code'), (city_i, 'city'), (rb_code_i, 'rb_code'), (region_i, 'region'), (sale_channel_i, 'sale_channel'), (class_i, 'class'), (demarcation_i, 'demarcation'), (customer_code_i, 'customer_code'), (shop_name_i, 'shop_name'), (shop_type_i, 'shop_type'), (address_i, 'address'), (street_i, 'street'), (territory_i, 'territory'), (township_i, 'township'), (village_i, 'village'), (phone_i, 'phone'),(mobile_i, 'mobile'),  (name_i, 'name'), (brand_i, 'brand'), (branch_code_i, 'branch_code'), (ka_tha_i, 'ka_tha'),(latitude_i, 'latitude'),(longitude_i, 'longitude'),(exclusive_i, 'exclusive'),(ctax_no_i, 'ctax no')]:
                         
                         if not isinstance(f[0], int):
                             err_log += '\n' + _("Invalid EXCEL file, Header '%s' is missing !") % f[1]
@@ -252,6 +254,7 @@ class partner(osv.osv):
                     import_vals['township'] = ln[township_i]
                     import_vals['village/ village group'] = ln[village_i]
                     import_vals['telephone'] = ln[phone_i]
+                    import_vals['mobile'] = ln[mobile_i]
                     import_vals['selling brand'] = ln[brand_i]
                     import_vals['contact person'] = ln[name_i]
                     import_vals['rb code'] = ln[rb_code_i]
@@ -289,7 +292,7 @@ class partner(osv.osv):
                 title_id = branch_id  = sale_channel_ids = township_ids = temp_id = demarcation_id = class_id = township_id = customize_id = sale_channel_id = branch_ids = city_id = sale_channel_id = city_id = shop_id = state_ids = shop_ids = state_id = partner_id = demarcation_ids = class_ids = division_code_ids = partner_ids = None
                 value = []
                 website = job_position = old_code = email = fax = title = region = postal_code = class_name = customer_code = shop_name = shop_type = address = street = territory = township =division= None
-                village = phone = brand = contact = city = sale_channel = branch_code = demarcation = ka_tha = display = class_val = latitude = longitude = ctax_registration_no = None
+                village = phone =mobile= brand = contact = city = sale_channel = branch_code = demarcation = ka_tha = display = class_val = latitude = longitude = ctax_registration_no = None
                 credit_limit = 0
                 credit_allow = customer = supplier = False
                 exclusive=False
@@ -368,6 +371,8 @@ class partner(osv.osv):
                     village = str(aml['village/ village group'])
                 if aml['telephone']:
                     phone = str(aml['telephone'])
+                if aml['mobile']:
+                    mobile = str(aml['mobile'])                    
                 if aml['selling brand']:
                     brand = str(aml['selling brand'])
                 if aml['contact person']:
@@ -439,6 +444,10 @@ class partner(osv.osv):
                     phone = phone.strip()
                     phone = phone.replace('.0', '')
                     
+                if mobile:
+                    mobile = mobile.strip()
+                    mobile = mobile.replace('.0', '')      
+                                  
                 if village:
                     village = village.strip()
                         
@@ -586,6 +595,7 @@ class partner(osv.osv):
                        'township':township_id,
                        'village':village,
                        'phone':phone,
+                       'mobile':mobile,
                        'brand':brand,
                        'name':shop_name,
                        'country_id':country_id,
