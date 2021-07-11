@@ -130,7 +130,7 @@
                     <tr t-foreach="o.p_line" t-as="l">
                         <td><span t-field="l.product_id"/></td>
                         <td><span t-field="l.issue_quantity"/></td>
-                                                <td>
+                        <td>
                             <span t-field="l.batch_no.name" />
                         </td>
                         <td>
