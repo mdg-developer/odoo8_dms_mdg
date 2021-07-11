@@ -1767,7 +1767,13 @@ class mobile_sale_order(osv.osv):
             if history:
                 print 'hidtory', history
                 for pt in history:
-                    print 'dateImmmm',datetime.today().strftime('%d-%m-%Y %H:%M:%S'  )
+                    print 'dateImmmm',datetime.today().strftime('%d-%m-%Y %H:%M:%S'  )                    
+                    de_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")          
+                    if  de_date:
+                        date = datetime.strptime(de_date, '%Y-%m-%d %H:%M:%S')
+                        deno_date = date.date()
+                    #current_date = datetime.now()  
+                    cursor.execute("delete from sales_denomination where ((date at time zone 'utc') at time zone 'asia/rangoon')::date=%s and sale_team_id=%s", (deno_date, pt['sale_team_id'],))
                     deno_result = {
                         'invoice_count':pt['invoice_count'],
                         'sale_team_id':pt['sale_team_id'],
