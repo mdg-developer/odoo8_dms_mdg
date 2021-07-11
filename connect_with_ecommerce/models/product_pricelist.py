@@ -35,16 +35,15 @@ class product_pricelist(osv.osv):
                 for version_id in pricelist_version_ids:
                     for version_item in self.pool['product.pricelist.item'].search(cr,uid,[('price_version_id','=',version_id)],context=None):
                         pricelist_item = pricelist_item_obj.browse(cr,uid,version_item)
-                        if pricelist_item.product_uom_id.id == pricelist_item.product_id.product_tmpl_id.ecommerce_uom_id.id:
-                            product_code = pricelist_item.product_id.product_tmpl_id.default_code
-                            price = pricelist_item.new_price
-                            pricelist_id = data.id
-                            if data.consumer == True:                            
-                                price_info = product_code + "," + str(int(price)) + "," + str(pricelist_id) + ',consumer'                        
-                                wcapi.put('dynamic-price-consumer',price_info) 
-                            if data.retail == True:
-                                price_info = product_code + "," + str(int(price)) + "," + str(pricelist_id) + ',retail'                      
-                                wcapi.put('dynamic-price-retailer',price_info)
+                        product_code = pricelist_item.product_id.product_tmpl_id.default_code
+                        price = pricelist_item.new_price
+                        pricelist_id = data.id
+                        if data.consumer == True:                            
+                            price_info = product_code + "," + str(int(price)) + ",,"                                           
+                            wcapi.put('dynamic-price-consumer',str(price_info)) 
+                        if data.retail == True and data.branch_id:
+                            price_info = product_code + "," + str(int(price)) + "," + str(data.branch_id.name)                      
+                            wcapi.put('insert-price-userrole',price_info)
             if data.is_sync_woo != True:
                 self.write(cr, uid, ids, {'is_sync_woo': True}, context=context)
             
