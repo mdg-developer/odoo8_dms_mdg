@@ -1772,14 +1772,15 @@ class mobile_sale_order(osv.osv):
                     if  de_date:
                         date = datetime.strptime(de_date, '%Y-%m-%d %H:%M:%S')
                         deno_date = date.date()
-                    #current_date = datetime.now()  
+                    current_date = datetime.now()  
                     cursor.execute("delete from sales_denomination where ((date at time zone 'utc') at time zone 'asia/rangoon')::date=%s and sale_team_id=%s", (deno_date, pt['sale_team_id'],))
                     deno_result = {
                         'invoice_count':pt['invoice_count'],
                         'sale_team_id':pt['sale_team_id'],
                         'company_id':pt['company_id'] ,
                         'note':pt['note'],
-                        'date': datetime.today().strftime('%Y-%m-%d %H:%M:%S' ),
+                        #'date': datetime.today().strftime('%Y-%m-%d %H:%M:%S' ),
+                        'date': current_date,
                         'tablet_id':pt['tablet_id'],
                         'user_id':pt['user_id'],
                         'denomination_note_line':False,
