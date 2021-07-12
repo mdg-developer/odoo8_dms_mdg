@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.6.0.v201606072122</property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
     <property name="units">in</property>
     <method name="initialize"><![CDATA[branchList = params["branch_id"].value.join(",");
 productList = params["product_id"].value.join(",");]]></method>
@@ -9,7 +9,7 @@ productList = params["product_id"].value.join(",");]]></method>
     <property name="imageDPI">96</property>
     <list-property name="libraries">
         <structure>
-            <property name="fileName">rb_report/rb_testing_report_library.rptlibrary</property>
+            <property name="fileName">rb_testing_report_library.rptlibrary</property>
             <property name="namespace">rb_testing_report_library</property>
         </structure>
     </list-property>
@@ -1437,6 +1437,7 @@ order by warehouse.name asc]]></xml-property>
             <property name="fontSize">14pt</property>
             <property name="fontWeight">bold</property>
             <property name="textAlign">center</property>
+            <property name="dataSet">company</property>
             <list-property name="boundDataColumns">
                 <structure>
                     <property name="name">name</property>
