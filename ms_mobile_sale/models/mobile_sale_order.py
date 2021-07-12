@@ -1779,8 +1779,8 @@ class mobile_sale_order(osv.osv):
                         'sale_team_id':pt['sale_team_id'],
                         'company_id':pt['company_id'] ,
                         'note':pt['note'],
-                        #'date': datetime.today().strftime('%Y-%m-%d %H:%M:%S' ),
-                        'date': current_date,
+                        'date': datetime.today().strftime('%Y-%m-%d %H:%M:%S' ),
+                        #'date': current_date,
                         'tablet_id':pt['tablet_id'],
                         'user_id':pt['user_id'],
                         'denomination_note_line':False,
@@ -1972,6 +1972,7 @@ class mobile_sale_order(osv.osv):
             print 'True'
             return True
         except Exception, e:
+            print 'eeeeeeeeeeeeeeee',e
             return False
 
     def create_ar_collection(self, cursor, user, vals, context=None):
