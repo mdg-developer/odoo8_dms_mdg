@@ -1797,6 +1797,7 @@ class mobile_sale_order(osv.osv):
                         'invoice_sub_total':0,
                     }
                     deno_id = history_obj.create(cursor, user, deno_result, context=context)
+                    deno_amount=0
                     for ptl in notes_line:
                                 deno_amount+= float(ptl['amount'])
                                 note_line_res = {
