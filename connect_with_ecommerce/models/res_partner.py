@@ -245,12 +245,12 @@ class res_partner(osv.osv):
                     self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)  
                 return result 
             
-    def create_or_update_delivery_address(self, cr, uid, ids, customer_code=None, woo_customer_id=None, name=None, contact_note=None, street=None,street2=None,township=None,state=None, delivery_address_id=None, image=None, type=None, address_title=None, context=None):
+    def create_or_update_delivery_address(self, cr, uid, ids, customer_code=None, woo_customer_id=None, name=None, contact_note=None, street=None,street2=None,township=None,city=None,state=None, delivery_address_id=None, image=None, type=None, address_title=None, context=None):
         
         vals = {}
         township_id = city_id = state_id = None
         partner_obj = self.pool.get('res.partner')
-        township_obj = self.pool.get('res.township')
+        township_obj = self.pool.get('res.township')        
         state_obj = self.pool.get('res.country.state')
         city_obj = self.pool.get('res.city')
         if delivery_address_id:
@@ -265,10 +265,11 @@ class res_partner(osv.osv):
                 if township_value:
                     township_data = township_obj.browse(cr, uid, township_value, context=context)
                     vals['township']= township_data.id
-                    city = city_obj.search(cr, uid, [('id', '=', township_data.city.id)], context=context)
-                    if city:
-                        city_data = city_obj.browse(cr, uid, city, context=context)
-                        vals['city']= city_data.id
+            if city:
+                city_value = city_obj.search(cr, uid, [('name', '=ilike', city)], context=context)
+                if city_value:
+                    city_data = city_obj.browse(cr, uid, city_value, context=context)
+                    vals['city']= city_data.id
             if state:                
                 state_value = state_obj.search(cr, uid, [('name', '=ilike', state)], context=context)
                 if state_value:
@@ -293,10 +294,11 @@ class res_partner(osv.osv):
                     if township_value:
                         township_data = township_obj.browse(cr, uid, township_value, context=context)
                         township_id = township_data.id
-                        city = city_obj.search(cr, uid, [('id', '=', township_data.city.id)], context=context)
-                        if city:
-                            city_data = city_obj.browse(cr, uid, city, context=context)
-                            city_id = city_data.id
+                if city:
+                    city_value = city_obj.search(cr, uid, [('name', '=ilike', city)], context=context)
+                    if city_value:
+                        city_data = city_obj.browse(cr, uid, city_value, context=context)
+                        city_id = city_data.id
                 if state:                
                     state_value = state_obj.search(cr, uid, [('name', '=ilike', state)], context=context)
                     if state_value:
