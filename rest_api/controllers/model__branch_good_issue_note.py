@@ -87,6 +87,7 @@ OUT__branch_good_issue_note__read_all__SCHEMA = (                 # editable
         'product_viss',
         'product_cbm',
         'remark',
+        'checked',
     )]),
 )
 #           ]
@@ -158,6 +159,7 @@ OUT__branch_good_issue_note__read_one__SCHEMA = (                 # editable
         'product_viss',
         'product_cbm',
         'remark',
+        'checked',
     )]),
 )
 
