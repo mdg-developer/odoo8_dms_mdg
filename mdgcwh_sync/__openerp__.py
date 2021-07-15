@@ -35,7 +35,8 @@ MDG SYC TO SD
     'data': [        
              
              'views/cwh_connection_view.xml',
-             
+             'views/product_template_view.xml',
+             'wizard/product_template_multi_sync_view.xml',
     ],
     'installable': True,
     'auto_install': False,
