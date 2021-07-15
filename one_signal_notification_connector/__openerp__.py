@@ -11,7 +11,7 @@
         'static/description/screen_shots.gif',
     ],
     'license': 'AGPL-3',
-    'depends': ['base'],
+    'depends': ['base','woo_commerce_ept'],
     'data': [        
         'views/one_signal_notification_view.xml',
         'views/res_users_view.xml',

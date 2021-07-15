@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.6.0.v201606072122</property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
     <property name="units">in</property>
     <method name="initialize"><![CDATA[branchList = params["branch_id"].value.join(",");
 teamList = params["sales_team_id"].value.join(",");]]></method>
@@ -9,7 +9,7 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
     <property name="imageDPI">96</property>
     <list-property name="libraries">
         <structure>
-            <property name="fileName">ms_report/birt_report/report_library.rptlibrary</property>
+            <property name="fileName">birt_report/report_library.rptlibrary</property>
             <property name="namespace">report_library</property>
         </structure>
     </list-property>
@@ -334,9 +334,10 @@ left join account_voucher avr on avr.id=avl.voucher_id
 left join account_move paidmove on paidmove.id= avr.move_id
 left join account_move_reconcile amr on amr.id=aml.reconcile_id 
 left join account_move_line payment_full on payment_full.reconcile_id=amr.id  and  payment_full.move_id =paidmove.id 
-where av.state !='cancel'
+where av.state not in ('draft','cancel')
 and aml.id not in (payment_full.id)
 and payment_full.move_id !=am.id
+and av.type='out_invoice'
 and paidmove.date between ? and ?
 --$branch_id$
 --$sale_team_id$
@@ -350,9 +351,10 @@ left join account_voucher avr on avr.id=avl.voucher_id
 left join account_move paidmove on paidmove.id= avr.move_id
 left join account_move_reconcile amp on amp.id=aml.reconcile_partial_id
 left join account_move_line payment_partial on payment_partial.reconcile_partial_id=amp.id and  payment_partial.move_id =paidmove.id 
- where av.state !='cancel'
+ where av.state not in ('draft','cancel')
 and aml.id not in (payment_partial.id)
-and payment_partial.move_id !=am.id
+--and payment_partial.move_id !=am.id
+and av.type='out_invoice'
 and paidmove.date between ? and ?
 --$branch_id$
 --$sale_team_id$

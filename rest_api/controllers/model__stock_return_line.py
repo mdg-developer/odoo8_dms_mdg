@@ -82,6 +82,7 @@ OUT__stock_return_line__read_all__SCHEMA = (                 # editable
     'miss_qty',
     'expiry_date',
     'remark',
+    'checked',
 )
 #           ]
 #       }
@@ -149,6 +150,7 @@ OUT__stock_return_line__read_one__SCHEMA = (                 # editable
     'miss_qty',
     'expiry_date',
     'remark',
+    'checked',
 )
 
 # /api/stock.return.line  POST  - Create one

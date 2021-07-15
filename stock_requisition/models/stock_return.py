@@ -1010,6 +1010,8 @@ class stock_return_line(osv.osv):  # #prod_pricelist_update_line
         'exchange_qty':fields.float('Exchange Qty'),
         'assembly_qty' :fields.float('Disassembly Qty'),
         'miss_qty' :fields.float('Missed Order Qty',readonly=False),
+        'checked' : fields.boolean(string='Checked', default=False),
+
 
     }
         

@@ -43,6 +43,7 @@ OUT__branch_good_issue_note__read_all__SUCCESS_CODE = 200       # editable
 OUT__branch_good_issue_note__read_all__SCHEMA = (                 # editable
     'id',
     'name',
+    'internal_reference',
     'grn_no',
     'state',
     'issue_date',
@@ -86,6 +87,7 @@ OUT__branch_good_issue_note__read_all__SCHEMA = (                 # editable
         'product_viss',
         'product_cbm',
         'remark',
+        'checked',
     )]),
 )
 #           ]
@@ -115,6 +117,7 @@ OUT__branch_good_issue_note__read_one__SCHEMA = (                 # editable
     # simple fields (non relational):
     'id',
     'name',
+    'internal_reference',
     'grn_no',
     'state',
     'issue_date',
@@ -156,6 +159,7 @@ OUT__branch_good_issue_note__read_one__SCHEMA = (                 # editable
         'product_viss',
         'product_cbm',
         'remark',
+        'checked',
     )]),
 )
 

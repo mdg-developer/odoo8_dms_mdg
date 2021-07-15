@@ -4054,7 +4054,7 @@ class mobile_sale_order(osv.osv):
         return datas
     
     def get_frequency(self, cr, uid , context=None):        
-        cr.execute('''select id,name from plan_frequency''')
+        cr.execute('''select id,name,frequency_count from plan_frequency''')
         datas = cr.fetchall()        
         return datas
     # Create New Customer from Tablet by kzo

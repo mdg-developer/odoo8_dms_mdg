@@ -111,6 +111,7 @@ OUT__stock_return__read_all__SCHEMA = (                 # editable
         'miss_qty',
         'expiry_date',
         'remark',
+        'checked',
     )]),
 )
 #           ]
@@ -208,6 +209,7 @@ OUT__stock_return__read_one__SCHEMA = (                 # editable
         'miss_qty',
         'expiry_date',
         'remark',
+        'checked',
     )]),
 )
 

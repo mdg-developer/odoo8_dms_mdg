@@ -70,6 +70,9 @@ OUT__branch_good_issue_note_line__read_all__SCHEMA = (                 # editabl
     'product_viss',
     'product_cbm',
     'remark',
+    'checked',
+
+    
 )
 #           ]
 #       }
@@ -125,6 +128,7 @@ OUT__branch_good_issue_note_line__read_one__SCHEMA = (                 # editabl
     'product_viss',
     'product_cbm',
     'remark',
+    'checked',
 )
 
 # /api/branch.good.issue.note.line  POST  - Create one

@@ -359,7 +359,7 @@ class product_nonsell_issue_line(osv.osv):
             raise except_orm(_('No PriceList!'), _('Please Insert PriceList.'))        
         if product_id and pricelist_id:
             product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-            cr.execute("select new_price  from product_pricelist_item where price_version_id in ( select id from product_pricelist_version where pricelist_id=%s) and product_id=%s and product_uom_id=%s", (pricelist_id, product.id, uom_id,))
+            cr.execute("select new_price  from product_pricelist_item where price_version_id in ( select id from product_pricelist_version where pricelist_id=%s and active=True) and product_id=%s and product_uom_id=%s", (pricelist_id, product.id, uom_id,))
             product_price = cr.fetchone()[0]
             values = {
                 'price_unit':product_price,
