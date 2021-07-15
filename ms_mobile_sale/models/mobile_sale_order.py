@@ -2891,18 +2891,21 @@ class mobile_sale_order(osv.osv):
                     cursor.execute("select replace(%s, ',', '')::float as amount", (amount,))
                     amount_data = cursor.fetchone()[0]
                     amount = amount_data
-                    rental_result = {
-                        'payment_id':so_id,
-                        'journal_id':ar['journal_id'],
-                        'amount':amount,
-                        'date':ar['date'],
-                        'notes':ar['notes'],
-                        'cheque_no':ar['cheque_no'],
-                        'partner_id':parnter_id,
-                        'sale_team_id':ar['sale_team_id'],
-                        'payment_code':ar['payment_code'],
-                    }
-                    rental_obj.create(cursor, user, rental_result, context=context)
+                    cursor.execute('select count(id) from customer_payment where journal_id= %s and payment_code = %s and  notes = %s  and date = %s and amount = %s ', (ar['journal_id'],ar['payment_code'],ar['notes'],ar['date'],amount,))
+                    payment_data = cursor.fetchone()[0]   
+                    if payment_data==0:                    
+                        rental_result = {
+                            'payment_id':so_id,
+                            'journal_id':ar['journal_id'],
+                            'amount':amount,
+                            'date':ar['date'],
+                            'notes':ar['notes'],
+                            'cheque_no':ar['cheque_no'],
+                            'partner_id':parnter_id,
+                            'sale_team_id':ar['sale_team_id'],
+                            'payment_code':ar['payment_code'],
+                        }
+                        rental_obj.create(cursor, user, rental_result, context=context)
             return True
         except Exception, e:
             print 'False'
