@@ -70,6 +70,9 @@ OUT__branch_good_issue_note_line__read_all__SCHEMA = (                 # editabl
     'product_viss',
     'product_cbm',
     'remark',
+    'checked',
+
+    
 )
 #           ]
 #       }
