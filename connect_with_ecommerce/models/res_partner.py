@@ -259,17 +259,17 @@ class res_partner(osv.osv):
             vals['contact_note'] = contact_note
             vals['address_title'] = address_title
             vals['street'] = street
-            vals['street2'] = street2
-            if township:
-                township_value = township_obj.search(cr, uid, [('name', '=ilike', township)], context=context)
-                if township_value:
-                    township_data = township_obj.browse(cr, uid, township_value, context=context)
-                    vals['township']= township_data.id
+            vals['street2'] = street2            
             if city:
                 city_value = city_obj.search(cr, uid, [('name', '=ilike', city)], context=context)
                 if city_value:
                     city_data = city_obj.browse(cr, uid, city_value, context=context)
                     vals['city']= city_data.id
+                    if township:
+                        township_value = township_obj.search(cr, uid, [('name', '=ilike', township),('city', '=', city_data.id)], context=context)
+                        if township_value:
+                            township_data = township_obj.browse(cr, uid, township_value, context=context)
+                            vals['township']= township_data.id
             if state:                
                 state_value = state_obj.search(cr, uid, [('name', '=ilike', state)], context=context)
                 if state_value:
@@ -288,17 +288,17 @@ class res_partner(osv.osv):
             partner = partner_obj.search(cr, uid, domain, context=context)
             if partner:
                 partner_data = partner_obj.browse(cr, uid, partner, context=context)
-                partner_id = partner_data.id
-                if township:
-                    township_value = township_obj.search(cr, uid, [('name', '=ilike', township)], context=context)
-                    if township_value:
-                        township_data = township_obj.browse(cr, uid, township_value, context=context)
-                        township_id = township_data.id
+                partner_id = partner_data.id                
                 if city:
                     city_value = city_obj.search(cr, uid, [('name', '=ilike', city)], context=context)
                     if city_value:
                         city_data = city_obj.browse(cr, uid, city_value, context=context)
                         city_id = city_data.id
+                        if township:
+                            township_value = township_obj.search(cr, uid, [('name', '=ilike', township),('city', '=', city_id)], context=context)
+                            if township_value:
+                                township_data = township_obj.browse(cr, uid, township_value, context=context)
+                                township_id = township_data.id
                 if state:                
                     state_value = state_obj.search(cr, uid, [('name', '=ilike', state)], context=context)
                     if state_value:
