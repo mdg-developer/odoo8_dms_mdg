@@ -2533,7 +2533,7 @@ class mobile_sale_order(osv.osv):
         if list_val:
             for val in list_val:
                 cr.execute('''select so.id,so.product_id,so.product_uom_qty,so.product_uom,so.price_unit,so.order_id,
-                            so.discount,so.discount_amt ,pp.sequence,floor(round(1/pu.factor,2)) as smaller_qty
+                            so.discount,so.discount_amt ,pp.sequence,floor(round(1/pu.factor,2)) as smaller_qty,promotion_id
                             from sale_order_line so,product_product pp,product_uom pu        
                              where so.id = %s 
                             and  so.product_id = pp.id
@@ -3312,7 +3312,7 @@ class mobile_sale_order(osv.osv):
         return datas
     
     def get_frequency(self, cr, uid , context=None):        
-        cr.execute('''select id,name from plan_frequency''')
+        cr.execute('''select id,name,frequency_count from plan_frequency''')
         datas = cr.fetchall()        
         return datas
     # Create New Customer from Tablet by kzo

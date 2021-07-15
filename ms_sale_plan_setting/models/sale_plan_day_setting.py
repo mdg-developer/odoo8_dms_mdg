@@ -4,6 +4,8 @@ class plan_frequency(osv.osv):
     _name = 'plan.frequency'
     _columns = {
               'name':fields.char('Name'),
+            'frequency_count': fields.integer('Frequency Count')
+
               }
 plan_frequency()    
 

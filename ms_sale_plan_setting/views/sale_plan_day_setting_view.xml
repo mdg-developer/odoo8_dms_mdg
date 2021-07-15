@@ -7,6 +7,8 @@
 			<field name="arch" type="xml">
 				<form>
 					<group>
+					
+						<field name="frequency_count" class="oe_inline" />
 						<field name="name" class="oe_inline" />
 					</group>
 				</form>
