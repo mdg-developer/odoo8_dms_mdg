@@ -61,6 +61,7 @@ class pendingdelivery(osv.osv):
     _name = 'pending.delivery'
     _columns = {
                 'delivery_date':fields.date('Delivery Date',readonly=True),
+                'confirm_date':fields.datetime('Delivery Date Time',readonly=True),
                 'due_date':fields.date('Order Date',readonly=True),          
                 'order_id':fields.many2one('sale.order','Order No',readonly=True),
                 'miss':fields.boolean('Miss',readonly=True),

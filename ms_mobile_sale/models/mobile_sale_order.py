@@ -3200,16 +3200,21 @@ class mobile_sale_order(osv.osv):
                             }
                         pending_obj.create(cr, uid, delivery, context=context)
                         cr.execute('update sale_order set is_generate = false,is_missed=True, due_date = %s where id=%s', (deli['due_date'],So_id[0],))                                           
-                    else:                            
+                    else:   
+                        confirm_date=False                         
                         So_id = soObj.search(cr, uid, [('pre_order', '=', True), ('shipped', '=', False), ('invoiced', '=', False)
                                                        , ('name', '=', so_ref_no)], context=context)
                         so_data = soObj.browse(cr, uid, So_id, context=context)
-                        delivery_team_id = so_data.delivery_id.id                        
+                        delivery_team_id = so_data.delivery_id.id        
+                        if  deli['confirm_date']:
+                            confirm_date=deli['confirm_date']
+                                        
                         delivery = {                                                            
                                   'order_id':So_id[0],
                                   'miss':False,
                                   'due_date':deli['due_date'],
                                   'delivery_date':datetime.now(),
+                                  'confirm_date':confirm_date,
                                   'state':'draft',
                                   'delivery_team_id': delivery_team_id ,
                                   'latitude':deli['mosLatitude'],
