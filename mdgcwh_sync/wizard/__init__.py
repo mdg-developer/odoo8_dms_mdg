@@ -1,0 +1,1 @@
+import product_template_multi_sync
