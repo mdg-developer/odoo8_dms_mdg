@@ -26,6 +26,7 @@
 								<field name="from_location"  readonly="1"/>
 								<field name="to_location"  readonly="1"/>
 								<field name="return_date" attrs="{'readonly':[('state','=','received')]}" />
+								<field name="to_return_date" attrs="{'readonly':[('state','=','received')]}" />
 								<!-- <field name="branch_id" widget="selection" /> -->
 							</group>
 							<group>

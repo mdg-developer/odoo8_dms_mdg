@@ -62,9 +62,12 @@ class stock_return(osv.osv):
             cr.execute('delete from stock_return_line where line_id=%s', (ids[0],))
             return_data = self.browse(cr, uid, ids, context=context)
             return_date = return_data.return_date
+            to_return_date = return_data.to_return_date
             # return_from=return_data.return_from.id            
             sale_team_id = return_data.sale_team_id.id
             note_id = return_data.note_id.id
+            from_location_id = return_data.from_location.id
+            
             #print 'sale_team_id', sale_team_id, ids                                               
 #             cr.execute("select id from good_issue_note where (issue_date+ '6 hour'::interval + '30 minutes'::interval)::date =%s and sale_team_id = %s" ,(return_date,sale_team_id,))
 #             note=cr.fetchone()
@@ -72,61 +75,129 @@ class stock_return(osv.osv):
 #             if note:
 #                 note_id=note[0]
             print 'rereturn_date',return_date,sale_team_id
-            note_ids = note_obj.search(cr, uid, [('sale_team_id', '=', sale_team_id), ('issue_date', '=', return_date)])
-            if  note_ids:        
-                cr.execute('select gin.from_location_id as location_id,product_id,sequence,sum(issue_quantity) as issue_quantity,product_uom  as small_uom_id from good_issue_note gin ,good_issue_note_line  ginl where gin.id = ginl.line_id and gin.id in %s group by product_id,from_location_id,sequence,product_uom', (tuple(note_ids),))
-                p_line = cr.fetchall()    
-                print 'p_line' ,p_line    
-            for note_line in p_line:
-                product_id = note_line[1]
-                sequence=note_line[2]
-                small_issue_quantity = note_line[3]
-                small_uom_id = note_line[4]
-                location_id= note_line[0]
-
-                receive_qty =  small_issue_quantity
-                cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (location_id, product_id,))
-                qty_on_hand = cr.fetchone()
-                if qty_on_hand:
-                    qty_on_hand=qty_on_hand[0]
-                else:
-                    qty_on_hand=0.0
-                stock_return_obj.create(cr, uid, {'line_id': ids[0],
-                                             'sequence':sequence,
-                                          'product_id': product_id,
-                                          'product_uom': small_uom_id,
-                                          'receive_quantity':qty_on_hand,
-                                          'return_quantity':0,
-                                          'sale_quantity':0,
-                                          'foc_quantity':0,
-                                          'rec_small_uom_id':small_uom_id,
-                                        }, context=context)
-            mobile_ids = mobile_obj.search(cr, uid, [('return_date', '=', return_date), ('sale_team_id', '=', sale_team_id)], context=context) 
-            return_mobile = mobile_obj.browse(cr, uid, mobile_ids, context=context)            
-            for mobile_line in return_mobile.p_line:
-                product_id = mobile_line.product_id.id
-                return_quantity = mobile_line.return_quantity
-                sale_quantity = mobile_line.sale_quantity
-                foc_quantity = mobile_line.foc_quantity
-                small_uom_id = mobile_line.product_uom.id             
-                last_qty         =foc_quantity+sale_quantity
-                product_search = stock_return_obj.search(cr, uid, [('product_id', '=', product_id), ('line_id', '=', ids[0])], context=context) 
-                if product_search:
-                    cr.execute("update stock_return_line set receive_quantity=receive_quantity+%s,return_quantity=%s,sale_quantity=%s,foc_quantity=%s where line_id=%s and product_id=%s", (last_qty,return_quantity, sale_quantity, foc_quantity, ids[0], product_id,))
-                else:
-                    product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-                    sequence=product.sequence
-                    stock_return_obj.create(cr, uid, {'line_id': ids[0],
-                                               'sequence':sequence,
-                                              'product_id': product_id,
-                                              'product_uom': small_uom_id,
-                                              'receive_quantity':0,
-                                              'return_quantity':return_quantity,
-                                              'sale_quantity':sale_quantity,
-                                              'foc_quantity':foc_quantity,
-                                              'rec_small_uom_id':small_uom_id,
-                                              }, context=context)
-            trans_ids = product_trans_obj.search(cr, uid, [('date', '=', return_date), ('void_flag', '=', 'none'), ('team_id', '=', sale_team_id)], context=context) 
+#             note_ids = note_obj.search(cr, uid, [('sale_team_id', '=', sale_team_id), ('issue_date', '>=', from_return_date), ('issue_date', '<=', return_date)])
+#             if  note_ids:        
+#                 cr.execute('select gin.from_location_id as location_id,product_id,sequence,sum(issue_quantity) as issue_quantity,product_uom  as small_uom_id from good_issue_note gin ,good_issue_note_line  ginl where gin.id = ginl.line_id and gin.id in %s group by product_id,from_location_id,sequence,product_uom', (tuple(note_ids),))
+#                 p_line = cr.fetchall()    
+#                 print 'p_line' ,p_line    
+#             for note_line in p_line:
+#                 product_id = note_line[1]
+#                 sequence=note_line[2]
+#                 small_issue_quantity = note_line[3]
+#                 small_uom_id = note_line[4]
+#                 location_id= note_line[0]
+# 
+#                 receive_qty =  small_issue_quantity
+#                 cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (location_id, product_id,))
+#                 qty_on_hand = cr.fetchone()
+#                 if qty_on_hand:
+#                     qty_on_hand=qty_on_hand[0]
+#                 else:
+#                     qty_on_hand=0.0
+#                 stock_return_obj.create(cr, uid, {'line_id': ids[0],
+#                                              'sequence':sequence,
+#                                           'product_id': product_id,
+#                                           'product_uom': small_uom_id,
+#                                           'receive_quantity':qty_on_hand,
+#                                           'return_quantity':0,
+#                                           'sale_quantity':0,
+#                                           'foc_quantity':0,
+#                                           'rec_small_uom_id':small_uom_id,
+#                                         }, context=context)
+#                 
+            mobile_ids = mobile_obj.search(cr, uid, [('return_date', '>=', return_date), ('return_date', '<=', to_return_date), ('sale_team_id', '=', sale_team_id)], context=context) 
+            for mobile_id in mobile_ids:
+                return_mobile = mobile_obj.browse(cr, uid, mobile_id, context=context)    
+                for mobile_line in return_mobile.p_line:
+                    product_id = mobile_line.product_id.id
+                    if to_return_date == mobile_line.line_id.return_date:
+                        return_quantity = mobile_line.return_quantity    
+                    sale_quantity = mobile_line.sale_quantity 
+                    foc_quantity = mobile_line.foc_quantity
+                    small_uom_id = mobile_line.product_uom.id             
+                    last_qty         =foc_quantity+sale_quantity
+                    cr.execute('''select coalesce (sum(transfer_in.qty),0.0) - coalesce (sum(transfer_out.qty),0.0) as opening
+                                    from
+                                    (
+                                        select distinct aa.location_id, aa.product_id 
+                                        from (
+                                            select s.location_id, s.product_id
+                                            from stock_move s
+                                            where s.state='done'        
+                                            and  s.location_id=%s        
+                                            and s.product_id =%s
+                                            and s.origin NOT LIKE %s
+                                            union
+                                            select s.location_dest_id as location_id,s.product_id 
+                                            from stock_move s
+                                            where s.state='done'        
+                                            and  s.location_dest_id=%s
+                                            and s.product_id =%s
+                                            and s.origin NOT LIKE %s
+                                             )aa
+                                     )tmp
+                                    left join 
+                                    (select s.product_id,s.location_dest_id,greatest(0,sum(s.product_qty)) as qty
+                                    from stock_move s,
+                                    stock_location fl,
+                                    stock_location tl
+                                    where s.state='done'
+                                    and s.location_dest_id=tl.id
+                                    and s.location_id=fl.id
+                                    and date_trunc('day', s.date::date) >= %s
+                                    and date_trunc('day', s.date::date) <= %s                                        
+                                    and  s.location_dest_id=%s
+                                    and s.product_id =%s
+                                    and s.origin NOT LIKE %s
+                                    and s.origin NOT LIKE  %s
+                                    and s.origin NOT LIKE  %s
+    
+                                    group by s.location_dest_id, s.product_id
+                                    ) transfer_in on transfer_in.product_id=tmp.product_id and transfer_in.location_dest_id=tmp.location_id
+                                    left join
+                                    (
+                                    select s.product_id,s.location_id,greatest(0,sum(s.product_qty)) as qty
+                                    from stock_move s,
+                                    stock_location fl,
+                                    stock_location tl
+                                    where s.state='done'
+                                    and s.location_dest_id=tl.id
+                                    and s.location_id=fl.id
+                                    and date_trunc('day', s.date::date) >= %s
+                                    and date_trunc('day', s.date::date) <= %s                                        
+                                    and  s.location_id=%s
+                                    and s.product_id =%s
+                                    and s.origin NOT LIKE %s
+                                    and s.origin NOT LIKE %s
+                                    and s.origin NOT LIKE %s
+    
+                                    group by s.location_id, s.product_id
+                                    ) transfer_out on transfer_out.product_id=tmp.product_id and transfer_out.location_id=tmp.location_id'''
+                      , (from_location_id, product_id, 'PD%', from_location_id, product_id, 'PD%', return_date, to_return_date, from_location_id, product_id, 'PD%', 'Reverse SO%','Reverse EC-SO%',return_date, to_return_date, from_location_id, product_id, 'PD%', 'SO%','EC-SO%',))                                
+                    in_qty_data = cr.fetchone()
+                    if in_qty_data:
+                        if in_qty_data is not None:
+                            in_stock_qty = in_qty_data[0]
+                        else:
+                            in_stock_qty = 0          
+                                            
+                    product_search = stock_return_obj.search(cr, uid, [('product_id', '=', product_id), ('line_id', '=', ids[0])], context=context) 
+                    if product_search:
+                        cr.execute("update stock_return_line set sale_quantity=sale_quantity + %s,foc_quantity=foc_quantity +%s where line_id=%s and product_id=%s", ( sale_quantity, foc_quantity, ids[0], product_id,))
+                    else:
+                        product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+                        sequence=product.sequence
+                        stock_return_obj.create(cr, uid, {'line_id': ids[0],
+                                                   'sequence':sequence,
+                                                  'product_id': product_id,
+                                                  'product_uom': small_uom_id,
+                                                  'receive_quantity':in_stock_qty,
+                                                  'return_quantity':return_quantity,
+                                                  'sale_quantity':sale_quantity,
+                                                  'foc_quantity':foc_quantity,
+                                                  'rec_small_uom_id':small_uom_id,
+                                                  }, context=context)
+            trans_ids = product_trans_obj.search(cr, uid, [('date', '>=', return_date), ('date', '<=', to_return_date), ('void_flag', '=', 'none'), ('team_id', '=', sale_team_id)], context=context) 
             for t_id in trans_ids:
                 trans_data = product_trans_obj.browse(cr, uid, t_id, context=context)
                 exchange_type=trans_data.exchange_type          
@@ -188,7 +259,8 @@ class stock_return(osv.osv):
          'so_no' : fields.char('Sales Order/Inv Ref;No.'),
          'returner' : fields.char('Returned By' ),
          'wh_receiver' : fields.char('WH Receiver'),
-         'return_date':fields.date('Date of Return', required=True),
+         'return_date':fields.date('From Date of Return', required=True),
+         'to_return_date':fields.date('To Date of Return', required=True),
          'vehicle_id':fields.many2one('fleet.vehicle', 'Vehicle No'),
 #         'branch_id':fields.many2one('res.branch', 'Branch'),
          'state': fields.selection([
@@ -208,7 +280,8 @@ class stock_return(osv.osv):
         'state' : 'draft',
          'company_id': _get_default_company,
          'branch_id': _get_default_branch,
-         'return_date' :fields.datetime.now
+         'return_date' :fields.datetime.now,
+         'to_return_date':fields.datetime.now,
     }     
     
     def create(self, cursor, user, vals, context=None):
@@ -237,7 +310,7 @@ class stock_return(osv.osv):
         note_obj = self.pool.get('good.issue.note') 
         return_obj = self.browse(cr, uid, ids, context=context)    
         origin = return_obj.name
-        return_date = return_obj.return_date   
+        return_date = return_obj.to_return_date
         main_location_id = return_obj.to_location.id    
         ven_location_id = return_obj.from_location.id    
         note_id = return_obj.note_id
