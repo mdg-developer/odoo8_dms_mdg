@@ -526,7 +526,7 @@ class sale_order(models.Model):
             getting_point = 0
             barcode_value = None
             sales_person = None
-            
+            term_id = False
             if instance.woo_version == 'old':
                 woo_order_number = result.get('order_number')
                 note = result.get('note') or result.get('customer_note')
@@ -588,7 +588,14 @@ class sale_order(models.Model):
                     payment_type = "credit"
                 else:
                     payment_type = "cash"     
-                          
+            if result.get('payment_type'):
+                payment_type = result.get('payment_type')
+                
+            if result.get('payment_terms'):
+                payment_terms = result.get('payment_terms')
+                terms = self.env['account.payment.term'].search([('name','=',payment_terms)], limit=1)
+                if terms:
+                    term_id =  terms.id            
             if delivery_id:
                 user_obj = self.env['res.users'].search([('default_section_id','=',delivery_id)], limit=1)  
                 if user_obj:
@@ -606,7 +613,8 @@ class sale_order(models.Model):
                 'state' : 'draft',
                 'pricelist_id' : pricelist_id or instance.pricelist_id.id or False,
                 'fiscal_position': fiscal_position and fiscal_position.id  or False,
-                'payment_term':payment_term or False, 
+                'payment_term':payment_term or False,
+                'payment_term':term_id or False, 
                 'note':note,       
                 'woo_order_id':result.get('id'),
                 'woo_order_number':woo_order_number,
