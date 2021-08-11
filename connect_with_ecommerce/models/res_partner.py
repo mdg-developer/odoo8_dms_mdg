@@ -78,7 +78,7 @@ class res_partner(osv.osv):
         res_branch_obj = self.pool.get('res.branch')
         state_obj = self.pool.get('res.country.state')
         if not mdg_customer:            
-            vals['name']= shop_name if shop_name else name
+            vals['name']= name#shop_name if shop_name else name
             vals['street']= street
             vals['street2']= street2             
             if city:       
@@ -132,12 +132,13 @@ class res_partner(osv.osv):
             vals['date_partnership'] = datetime.today()             
             vals['temp_customer'] = name            
             vals['woo_register_date'] = datetime.today()
+            
             cr.execute("select split_part(max(rb_code), 'RB', 2)::int+1 rb_code from res_partner")
             rb_code=cr.fetchone()      
             if rb_code:    
                 vals['rb_code'] = 'RB' + "%06d" % (rb_code[0],)
             if sale_channel:
-                vals['channel'] = sale_channel                 
+                vals['channel'] = sale_channel.lower()                 
                  
             result = partner_obj.create(cr, uid, vals, context=context)                    
             if result:           
@@ -192,7 +193,7 @@ class res_partner(osv.osv):
                 if customer_type:
                     vals['customer_type'] = customer_type
                 if sale_channel:
-                    vals['channel'] = sale_channel                   
+                    vals['channel'] = sale_channel.lower()                   
                 if woo_customer_id:
                     instances=self.pool.get('woo.instance.ept').search(cr, uid, [('state','=','confirmed')], context=context, limit=1)
                     if instances:
