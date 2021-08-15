@@ -66,6 +66,7 @@ For more information about us, visit www.emiprotechnologies.com \n
              'views/woo_coupons_view.xml',
              'wizard/woo_process_import_export_view.xml',
              'wizard/woo_cancel_order_wizard_view.xml',
+             'wizard/partner_sync_view.xml',
              'views/operations_view.xml',
              'views/sale_report_view.xml',             
              'security/ir.model.access.csv',

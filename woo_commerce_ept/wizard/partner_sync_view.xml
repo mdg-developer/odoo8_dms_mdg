@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        
+        <record id="view_partner_sync_form" model="ir.ui.view">
+            <field name="name">partner_sync_form</field>
+            <field name="model">partner.sync</field>
+            <field name="arch"  type="xml">
+                <form string="Partner Sync">
+                    <group col="4" colspan="6">
+                       <span class="o_form_label">All selected partner sync to Woocommerce</span>
+                    </group>
+                    <footer>
+                        <button name="partner_sync_to_woo" string="Sync to Woocommerce" type="object" class="oe_highlight"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_partner_sync" model="ir.actions.act_window">
+            <field name="name">Partner Sync to Woo</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">partner.sync</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>           
+        </record>        
+
+        <record model="ir.values" id="partner_sync_value">
+            <field name="name">Partner Sync to Woo</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_partner_sync'))" />
+            <field name="key">action</field>
+            <field name="model">res.partner</field>
+        </record>       
+
+    </data>
+</openerp>
