@@ -136,10 +136,14 @@ class sale_order(models.Model):
             state = state_obj.search(["|", ('code', '=', state_name), ('name', '=', state_name), ('country_id', '=', country.id)],limit=1)
         
         if city:  
+#             self.env.cr.execute("""select rc.id
+#                                 from res_township rt,res_city rc
+#                                 where rt.city=rc.id
+#                                 and lower(rt.name)=lower(%s)
             self.env.cr.execute("""select rc.id
-                                from res_township rt,res_city rc
-                                where rt.city=rc.id
-                                and lower(rt.name)=lower(%s)
+                                from res_city rc
+                                where 
+                                lower(rc.name)=lower(%s)
                                 """, (city,))    
             city_data = self.env.cr.fetchall()    
             if city_data:
@@ -170,7 +174,21 @@ class sale_order(models.Model):
                            'property_account_payable':property_account_payable.id,
                            'property_account_payable_clearing':property_account_payable_clearing.id,
                            })          
-        else:    
+        else: 
+            test = {'type':type,'parent_id':parent_id,'woo_customer_id':woo_customer_id or '',
+                                        'name':name,'state_id':state and state.id or False,'city':city,'township':township,
+                                        'street':address1,'street2':address2,
+                                        'phone':phone,'zip':zip,'email':email,
+                                        'country_id':country.id and country.id or False,'is_company':is_company,
+                                        'lang':instance.lang_id.code,
+                                        'property_product_pricelist':instance.pricelist_id.id,
+                                        'property_account_position':instance.fiscal_position_id.id and instance.fiscal_position_id.id or False,
+                                        'property_payment_term':instance.payment_term_id.id and instance.payment_term_id.id or False,
+                                        'woo_company_name_ept':company_name,
+                                        'property_account_payable':property_account_payable.id,
+                                        'property_account_payable_clearing':property_account_payable_clearing.id,                                        
+                                        }
+              
             partner=partner_obj.create({'type':type,'parent_id':parent_id,'woo_customer_id':woo_customer_id or '',
                                         'name':name,'state_id':state and state.id or False,'city':city,'township':township,
                                         'street':address1,'street2':address2,
