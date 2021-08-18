@@ -102,13 +102,13 @@ class sale_order(models.Model):
         first_name=vals.get('first_name')
         last_name=vals.get('last_name')
         
-        if not first_name and not last_name:
+        if not first_name: #and not last_name:
             return False
         
         city=vals.get('city')
         
-        name = "%s %s"%(first_name,last_name)
-        
+        #name = "%s %s"%(first_name,last_name)
+        name = "%s"%(first_name)
         company_name=vals.get("company")
         if company_name:
             is_company=True
@@ -175,20 +175,7 @@ class sale_order(models.Model):
                            'property_account_payable_clearing':property_account_payable_clearing.id,
                            })          
         else: 
-            test = {'type':type,'parent_id':parent_id,'woo_customer_id':woo_customer_id or '',
-                                        'name':name,'state_id':state and state.id or False,'city':city,'township':township,
-                                        'street':address1,'street2':address2,
-                                        'phone':phone,'zip':zip,'email':email,
-                                        'country_id':country.id and country.id or False,'is_company':is_company,
-                                        'lang':instance.lang_id.code,
-                                        'property_product_pricelist':instance.pricelist_id.id,
-                                        'property_account_position':instance.fiscal_position_id.id and instance.fiscal_position_id.id or False,
-                                        'property_payment_term':instance.payment_term_id.id and instance.payment_term_id.id or False,
-                                        'woo_company_name_ept':company_name,
-                                        'property_account_payable':property_account_payable.id,
-                                        'property_account_payable_clearing':property_account_payable_clearing.id,                                        
-                                        }
-              
+                          
             partner=partner_obj.create({'type':type,'parent_id':parent_id,'woo_customer_id':woo_customer_id or '',
                                         'name':name,'state_id':state and state.id or False,'city':city,'township':township,
                                         'street':address1,'street2':address2,
@@ -545,6 +532,8 @@ class sale_order(models.Model):
             barcode_value = None
             sales_person = None
             term_id = False
+            if not shipping_address:
+                shipping_address = partner
             if instance.woo_version == 'old':
                 woo_order_number = result.get('order_number')
                 note = result.get('note') or result.get('customer_note')
@@ -564,9 +553,9 @@ class sale_order(models.Model):
                 name=woo_order_number
             
             delivery_id = woo_warehouse = None
-            
-            shipping_partner = self.env['res.partner'].search([('id','=',shipping_address.ids[0])])           
-                        
+            #shipping_address_id = shipping_address.ids[0] or partner.ids[0]
+            #shipping_partner = self.env['res.partner'].search([('id','=',shipping_address.ids[0])])           
+            shipping_partner = self.env['res.partner'].search([('id','=',partner.ids[0])])            
             if shipping_partner.township.delivery_team_id:        
                 woo_warehouse = shipping_partner.township.delivery_team_id.warehouse_id.id       
                 delivery_id = shipping_partner.township.delivery_team_id.id
@@ -575,7 +564,9 @@ class sale_order(models.Model):
                
             woo_instance_obj=self.env['woo.instance.ept']
             instance=woo_instance_obj.search([('state','=','confirmed')], limit=1)
+            
             if instance:
+                woo_config =self.env['woo.config.settings'].search([('woo_instance_id','=',instance.id)],order="id desc", limit=1)
                 wcapi = instance.connect_for_point_in_woo()   
 #                 point_response = wcapi.get('point')      
 #                 point_response_data = point_response.json()                
@@ -618,7 +609,7 @@ class sale_order(models.Model):
                 user_obj = self.env['res.users'].search([('default_section_id','=',delivery_id)], limit=1)  
                 if user_obj:
                     sales_person = user_obj.id
-                                         
+            pricelist_id = woo_config.pricelist_id.id                             
             ordervals = {
                 'name' :name,                
                 'picking_policy' : workflow.picking_policy,
@@ -861,6 +852,9 @@ class sale_order(models.Model):
                                                     })
                     continue
                 shipping_address=order.get('shipping_address',False) and self.create_or_update_woo_customer(False,order.get('shipping_address'), False,partner.id,'delivery',instance) or partner
+                if not shipping_address:
+                    shipping_address = partner
+                    
                 partner_result=self.onchange_partner_id(partner.ids[0])
                 partner_result=partner_result.get('value')
                 
@@ -1020,7 +1014,11 @@ class sale_order(models.Model):
                     else:
                         actual_unit_price = float(line.get('subtotal')) / float(line.get('quantity'))
                     if tax_included and float(total_discount)>0.0:
-                        discount_value += calclulate_line_discount(line) if order_discount else 0.0                                                                            
+                        discount_value += calclulate_line_discount(line) if order_discount else 0.0 
+                    
+                    #if not pricelist_id:
+                    #woo_config =self.env['woo.config.settings'].sudo().search([('woo_instance_id','=',instance.id)],order="id desc", limit=1)
+                    #pricelist_id = woo_config.pricelist_id.id
                     self.create_woo_sale_order_line(line,tax_ids,product,woo_product_uom,line.get('quantity'),fiscal_position,partner,pricelist_id,product.name,sale_order,actual_unit_price)                  
     
                 shipping_product=instance.shipment_charge_product_id 
@@ -1160,6 +1158,8 @@ class sale_order(models.Model):
                                                     })
                     continue
                 shipping_address=order.get('shipping',False) and self.create_or_update_woo_customer(False,order.get('shipping'), False,partner.id,'delivery',instance) or partner                                                
+                if not shipping_address:
+                    shipping_address = partner
                 partner_result=self.onchange_partner_id(partner.ids[0])
                 partner_result=partner_result.get('value')
                 
