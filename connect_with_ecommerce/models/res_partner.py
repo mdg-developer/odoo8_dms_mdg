@@ -162,6 +162,10 @@ class res_partner(osv.osv):
             partner = partner_obj.search(cr, uid, [('customer_code', '=', customer_code)])
             if partner:
                 partner_data = partner_obj.browse(cr, uid, partner, context=context)
+                if image:
+                    if not partner_data.image:
+                        vals['image'] = image
+                    
 #                 vals['street'] = street
 #                 vals['street2'] = street2                
                 if city:
