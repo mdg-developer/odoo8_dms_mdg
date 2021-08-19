@@ -1,6 +1,8 @@
 from openerp.osv import osv, fields
 from openerp import tools
 from openerp.tools.translate import _
+import logging
+
 TIME_SELECTION = [
         ('01', '01'),
         ('02', '02'),
@@ -116,3 +118,92 @@ class res_partner(osv.osv):
             ids = self.search(cr, uid, args, context=context, limit=limit)
         return self.name_get(cr, uid, ids, context=context)
     
+    def swap_contact(self, cr, uid, ids, val, context=None):
+        
+        tmp_vals = {}
+        customer_vals = {}
+        for res in self.browse(cr, uid, ids, context=context):
+            
+            if res.parent_id:
+                                
+                if res.image:
+                    #copy contact address into tmp vals
+                    tmp_vals['image']= res.image   
+                    #assign customer address into contact address     
+                    res.image = res.parent_id.image     
+                    #assign contact address into customer address
+                    customer_vals['image']= tmp_vals['image']
+                    
+                if res.street:
+                    tmp_vals['street']= res.street
+                    res.street = res.parent_id.street
+                    customer_vals['street']= tmp_vals['street']
+                    
+                if res.street2:                    
+                    tmp_vals['street2']= res.street2
+                    res.street2 = res.parent_id.street2
+                    customer_vals['street2']= tmp_vals['street2']
+                    
+                if res.township:
+                    tmp_vals['township']= res.township.id or None
+                    res.township = res.parent_id.township.id or None
+                    customer_vals['township']= tmp_vals['township']
+                    
+                if res.city:
+                    tmp_vals['city']= res.city.id or None
+                    res.city = res.parent_id.city.id or None
+                    customer_vals['city']= tmp_vals['city']
+                    
+                if res.state_id:
+                    tmp_vals['state_id']= res.state_id.id or None
+                    res.state_id = res.parent_id.state_id.id or None
+                    customer_vals['state_id']= tmp_vals['state_id']
+                    
+                if res.zip:
+                    tmp_vals['zip']= res.zip
+                    res.zip = res.parent_id.zip
+                    customer_vals['zip']= tmp_vals['zip']
+                    
+                if res.country_id:
+                    tmp_vals['country_id']= res.country_id.id or None
+                    res.country_id = res.parent_id.country_id.id or None
+                    customer_vals['country_id']= tmp_vals['country_id']
+                    
+                if res.mobile:
+                    tmp_vals['mobile']= res.mobile or None
+                    res.mobile = res.parent_id.mobile or None
+                    customer_vals['mobile']= tmp_vals['mobile']
+                
+                if res.phone:
+                    tmp_vals['phone']= res.phone or None
+                    res.phone = res.parent_id.phone or None
+                    customer_vals['phone']= tmp_vals['phone']
+                    
+                if res.name:
+                    tmp_vals['name']= res.name or None
+                    res.name = res.parent_id.temp_customer or 'null'  
+                    logging.warning("Check tmp vals name: %s", tmp_vals['name'])                       
+                    customer_vals['temp_customer']= tmp_vals['name']
+                    
+                if res.shop_name:
+                    tmp_vals['shop_name']= res.shop_name or None
+                    res.shop_name = res.parent_id.shop_name or None
+                    customer_vals['shop_name']= tmp_vals['shop_name']
+                    
+                if res.gender:
+                    tmp_vals['gender']= res.gender or None
+                    res.gender = res.parent_id.gender or None
+                    customer_vals['gender']= tmp_vals['gender']
+                    
+                if res.birthday:
+                    tmp_vals['birthday']= res.birthday or None
+                    res.birthday = res.parent_id.birthday or None
+                    customer_vals['birthday']= tmp_vals['birthday']
+                
+                if res.outlet_type:
+                    tmp_vals['outlet_type']= res.outlet_type.id or None
+                    res.outlet_type = res.parent_id.outlet_type.id or None
+                    customer_vals['outlet_type']= tmp_vals['outlet_type']
+                    
+                self.pool.get('res.partner').write(cr, uid, res.parent_id.id, customer_vals, context=context)                       
+                return True
