@@ -120,10 +120,10 @@ class res_partner(osv.osv):
                 vals['image'] = image
             if customer_type:
                 vals['customer_type'] = customer_type.lower()
-                if customer_type == 'shop':
+                if customer_type.lower() == 'shop':
                     vals['channel'] = 'retailer'
                 else:
-                    vals['channel'] = customer_type
+                    vals['channel'] = customer_type.lower()
 
             vals['shop_name'] = shop_name
             vals['partner_latitude'] = partner_latitude
@@ -196,11 +196,11 @@ class res_partner(osv.osv):
                 if rb_code: 
                     vals['rb_code'] = 'RB' + "%06d" % (rb_code[0],)
                 if customer_type:
-                    vals['customer_type'] = customer_type
-                    if customer_type == 'shop':
+                    vals['customer_type'] = customer_type.lower() 
+                    if customer_type.lower() == 'shop':
                         vals['channel'] = 'retailer'
                     else:
-                        vals['channel'] = customer_type                    
+                        vals['channel'] = customer_type.lower()                     
 #                 if sale_channel:
 #                     vals['channel'] = sale_channel.lower()                   
                 if woo_customer_id:
