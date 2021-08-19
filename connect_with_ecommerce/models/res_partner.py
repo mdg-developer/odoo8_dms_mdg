@@ -119,7 +119,7 @@ class res_partner(osv.osv):
             if image:
                 vals['image'] = image
             if customer_type:
-                vals['customer_type'] = customer_type
+                vals['customer_type'] = customer_type.lower()
                 if customer_type == 'shop':
                     vals['channel'] = 'retailer'
                 else:
