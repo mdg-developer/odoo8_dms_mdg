@@ -120,6 +120,11 @@ class res_partner(osv.osv):
                 vals['image'] = image
             if customer_type:
                 vals['customer_type'] = customer_type
+                if customer_type == 'shop':
+                    vals['channel'] = 'retailer'
+                else:
+                    vals['channel'] = customer_type
+
             vals['shop_name'] = shop_name
             vals['partner_latitude'] = partner_latitude
             vals['partner_longitude'] = partner_longitude
@@ -137,8 +142,8 @@ class res_partner(osv.osv):
             rb_code=cr.fetchone()      
             if rb_code:    
                 vals['rb_code'] = 'RB' + "%06d" % (rb_code[0],)
-            if sale_channel:
-                vals['channel'] = sale_channel.lower()                 
+#             if sale_channel:
+#                 vals['channel'] = sale_channel.lower()                 
                  
             result = partner_obj.create(cr, uid, vals, context=context)                    
             if result:           
@@ -192,8 +197,12 @@ class res_partner(osv.osv):
                     vals['rb_code'] = 'RB' + "%06d" % (rb_code[0],)
                 if customer_type:
                     vals['customer_type'] = customer_type
-                if sale_channel:
-                    vals['channel'] = sale_channel.lower()                   
+                    if customer_type == 'shop':
+                        vals['channel'] = 'retailer'
+                    else:
+                        vals['channel'] = customer_type                    
+#                 if sale_channel:
+#                     vals['channel'] = sale_channel.lower()                   
                 if woo_customer_id:
                     instances=self.pool.get('woo.instance.ept').search(cr, uid, [('state','=','confirmed')], context=context, limit=1)
                     if instances:
