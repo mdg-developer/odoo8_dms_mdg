@@ -3207,7 +3207,9 @@ class mobile_sale_order(osv.osv):
                         so_data = soObj.browse(cr, uid, So_id, context=context)
                         delivery_team_id = so_data.delivery_id.id        
                         if  deli['confirm_date']:
-                            confirm_date=deli['confirm_date']
+                            #confirm_date=deli['confirm_date']
+                            cr.execute ("select timestamp%s - '7 hour'::interval + '30 minutes'::interval",(deli['confirm_date'],))
+                            confirm_date =cr.fetchone()[0]
                                         
                         delivery = {                                                            
                                   'order_id':So_id[0],
