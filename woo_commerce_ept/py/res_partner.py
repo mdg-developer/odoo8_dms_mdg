@@ -1,6 +1,6 @@
 from openerp import models,fields,api
 import requests
-# from pyfcm import FCMNotification
+from pyfcm import FCMNotification
 
 class res_partner(models.Model):
     _inherit="res.partner"
@@ -54,6 +54,29 @@ class res_partner(models.Model):
                                     push_service = FCMNotification(api_key=fcm_api_key)
                                     result = push_service.notify_topic_subscribers(topic_name="role_changes", message_body="You are now a retailer!")
         return result
+    
+    @api.multi
+    def send_telenor_sms(self, name, phone, message_body):
+        
+        if phone.startswith('09-') or phone.startswith('09'):
+            if phone.startswith('09-'):
+                phone = '959' + str(phone[3:])  
+            else:
+                phone = '959' + str(phone[2:])
+        if phone.startswith('+959'):  
+            phone = '959' + str(phone.mobile[4:])
+        
+        text_message = message_body.encode("utf-16-be")
+        hex_message = text_message.encode('hex')
+        vals={
+                'phone':str(phone),
+                'message':hex_message, 
+                'partner_id':self.id,
+                'name':name,
+                'text_message': message_body,
+            } 
+        sms_id = self.env['sms.message'].create(vals)
+        return {'status':sms_id.status} 
     
     @api.model
     def import_woo_customers(self,instance=False):        

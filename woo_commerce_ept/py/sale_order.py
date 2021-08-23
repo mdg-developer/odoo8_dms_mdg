@@ -851,7 +851,7 @@ class sale_order(models.Model):
                                                      'woo_instance_id':instance.id
                                                     })
                     continue
-                shipping_address=order.get('shipping_address',False) and self.create_or_update_woo_customer(False,order.get('shipping_address'), False,partner.id,'delivery',instance) or partner
+                shipping_address=False#order.get('shipping_address',False) and self.create_or_update_woo_customer(False,order.get('shipping_address'), False,partner.id,'delivery',instance) or partner
                 if not shipping_address:
                     shipping_address = partner
                     
