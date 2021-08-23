@@ -76,9 +76,9 @@ class res_partner(osv.osv):
         outlettype_obj = self.pool.get('outlettype.outlettype')
         sale_channel_obj = self.pool.get('sale.channel')
         res_branch_obj = self.pool.get('res.branch')
-        state_obj = self.pool.get('res.country.state')
+        state_obj = self.pool.get('res.country.state')        
         if not mdg_customer:            
-            vals['name']= name#shop_name if shop_name else name
+            vals['name']= shop_name if shop_name else name
             vals['street']= street
             vals['street2']= street2             
             if city:       

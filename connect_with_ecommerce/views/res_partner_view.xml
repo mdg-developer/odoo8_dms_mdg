@@ -12,7 +12,7 @@
 					<field name="birthday" />
 					<field name="gender" />
 					<field name="customer_type" />
-					<field name="shop_name" />
+<!-- 					<field name="shop_name" /> -->
 					<field name="woo_register_date" readonly="1"/>
 					<field name="woo_user_name" readonly="1"/>
 					<field name="sms" />
