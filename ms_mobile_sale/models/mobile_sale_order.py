@@ -2302,7 +2302,7 @@ class mobile_sale_order(osv.osv):
                     so.payment_term,so.company_id,so.pricelist_id,so.user_id,so.amount_total,so.name as invoice_no,
                     so.warehouse_id,so.shipped,so.sale_plan_day_id,so.sale_plan_name,so.so_longitude,so.payment_type,
                     so.due_date,so.sale_plan_trip_id,so.so_latitude,so.customer_code,so.name as so_refNo,so.total_dis,so.deduct_amt,so.coupon_code,
-                    so.invoiced,so.branch_id,so.delivery_remark ,team.name,so.payment_term,so.due_date
+                    so.invoiced,so.branch_id,so.delivery_remark ,team.name,so.payment_term,so.due_date,so.woo_order_id,so.ecommerce,replace(so.delivery_address,',',';') delivery_address ,replace(so.delivery_contact_no,',',';') delivery_contact_no
                     from sale_order so, crm_case_section team
                     where so.id= %s
                     and  team.id = so.section_id''', (So_id,))

@@ -175,6 +175,7 @@ class stock_requisition(osv.osv):
                 cr.execute("update stock_requisition_line set sale_req_quantity=0 where line_id=%s", (stock_request_data.id,))
                 order_list = str(tuple(order_ids))
                 order_list = eval(order_list)
+                print ' order_listorder_list',order_list
                 if request_date and order_list:
                         cr.execute("select sol.product_id,sum(product_uom_qty) as qty ,sol.product_uom from sale_order so,sale_order_line sol where so.id=sol.order_id and so.id in %s group by product_id,product_uom", (order_list,))
                         sale_record = cr.fetchall()             
@@ -191,6 +192,13 @@ class stock_requisition(osv.osv):
                                     qty_on_hand = qty_on_hand[0]
                                 else:
                                     qty_on_hand = 0
+                                if sale_product_uom != product.product_tmpl_id.uom_id.id:                                                                          
+                                    cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (sale_product_uom,))
+                                    bigger_qty = cr.fetchone()[0]
+                                    bigger_qty = int(bigger_qty)
+                                    sale_qty = bigger_qty * sale_qty
+                                cr.execute("update stock_requisition_line set sale_req_quantity=sale_req_quantity+%s,qty_on_hand=%s,sequence=%s where product_id=%s and line_id=%s", (sale_qty, qty_on_hand, sequence,product_id, stock_request_data.id,))
+                                                           
                 for line in order_ids:
                     order = sale_order_obj.browse(cr, uid, line, context=context)                
                     cr.execute("select (date_order+ '6 hour'::interval + '30 minutes'::interval)  from sale_order where id=%s", (order.id,))
@@ -277,7 +285,9 @@ class stock_requisition(osv.osv):
             sale_req_qty = req_line_value.sale_req_quantity
             add_req_qty = req_line_value.addtional_req_quantity
             product_id = req_line_value.product_id.id
-                                    
+            total_qty = sale_req_qty + add_req_qty
+            cr.execute("update stock_requisition_line set req_quantity=%s where product_id=%s and line_id=%s", (total_qty, product_id, ids[0],))
+
         return True    
 
             
