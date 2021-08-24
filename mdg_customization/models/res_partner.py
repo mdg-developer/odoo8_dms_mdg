@@ -185,10 +185,10 @@ class res_partner(osv.osv):
                     logging.warning("Check tmp vals name: %s", tmp_vals['name'])                       
                     customer_vals['temp_customer']= tmp_vals['name']
                     
-                if res.shop_name:
-                    tmp_vals['shop_name']= res.shop_name or None
-                    res.shop_name = res.parent_id.shop_name or None
-                    customer_vals['shop_name']= tmp_vals['shop_name']
+#                 if res.shop_name:
+#                     tmp_vals['shop_name']= res.shop_name or None
+#                     res.shop_name = res.parent_id.shop_name or None
+#                     customer_vals['shop_name']= tmp_vals['shop_name']
                     
                 if res.gender:
                     tmp_vals['gender']= res.gender or None

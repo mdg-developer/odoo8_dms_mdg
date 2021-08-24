@@ -223,7 +223,7 @@ class res_partner(osv.osv):
                 
                 new_partner_obj = self.pool.get('res.partner')
                 old_vals = {}
-                old_vals['name'] = name
+                old_vals['name'] = shop_name if shop_name else name#name
                 old_vals['street'] = street
                 old_vals['street2'] = street2
                 old_vals['township'] = contact_township
