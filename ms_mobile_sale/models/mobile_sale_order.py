@@ -1852,7 +1852,7 @@ class mobile_sale_order(osv.osv):
                         
                     #line_ids = invoice_obj.search(cursor, user, [('invoice_id', 'in', pre_mobile_ids)], context=context)
                     order_line_ids = Order_Lineobj.browse(cursor, user, line_ids, context=context)
-                    cursor.execute(' select product_id,sum(quantity) as quantity,sum((product_uom_qty* price_unit) -discount_amt) as  sub_total from sale_order_line where id in %s group by product_id', (tuple(order_line_ids.ids),))
+                    cursor.execute(' select product_id,sum(product_uom_qty) as quantity,sum((product_uom_qty* price_unit) -discount_amt) as  sub_total from sale_order_line where id in %s group by product_id', (tuple(order_line_ids.ids),))
                     order_line = cursor.fetchall()
                     for data in order_line:
                         product = self.pool.get('product.product').browse(cursor, user, data[0], context=context)
