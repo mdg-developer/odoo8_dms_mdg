@@ -37,4 +37,7 @@ class account_invoice(osv.osv):
         return result    
     _columns = {
               'sale_order_id':fields.function(_get_corresponding_sale_order, type='many2one', relation='sale.order', string='Sale Order'),
+             'is_pd_invoice':fields.boolean('Is Pending Delivery Invoice', default=False, readonly=True),
+            'pre_sale_order_id':fields.many2one('sale.order', 'Original Pre Sale Order No',readonly=True),
+            'order_team':fields.many2one('crm.case.section', 'Order Team',readonly=True),
               }

@@ -11,6 +11,11 @@
 			<field name="arch" type="xml">
 				<field name="internal_number" position="after">
 					<field name="sale_order_id" invisible="1" />
+					<field name="is_pd_invoice" />
+				</field>
+				<field name="journal_id" position="after">
+					<field name="pre_sale_order_id" attrs="{'invisible':[('type','!=','out_invoice')]}" />
+					<field name="order_team" attrs="{'invisible':[('type','!=','out_invoice')]}" />
 				</field>
 			</field>
 		</record>
