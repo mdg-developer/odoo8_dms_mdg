@@ -796,12 +796,28 @@ class cashier_approval(osv.osv):
                 where s.name=a.reference and m.name=s.tb_ref_no and m.id=c.pre_order_id  and c.journal_id = aj.id and s.payment_type='cash' and a.state='open' --and a.state='paid' 
                 and a.date_invoice >= %s and a.date_invoice <= %s  and a.section_id=%s and c.pre_order_id is not null 
                 --and c.id  not in (select customer_payment_id from cashier_customer_payment where customer_payment_id is not null)
-                """, (frm_date, to_date, team_id,))
+                 union all
+                select c.journal_id,c.amount,s.payment_type,s.partner_id,c.date,a.period_id,a.account_id,c.notes,a.id,c.id 
+                from sale_order s,account_invoice a ,customer_payment c,account_journal aj
+                where s.name=a.origin   
+                and c.notes=s.name
+                and c.journal_id = aj.id and s.payment_type='cash' and a.state='open' 
+                and a.date_invoice >= %s  and a.date_invoice <=  %s 
+                and a.section_id=%s and c.notes like %s
+                """, (frm_date, to_date, team_id,frm_date, to_date, team_id,'EC%',))
             else:
                 cr.execute("""select c.journal_id,c.amount,m.type,s.partner_id,c.date,a.period_id,a.account_id,c.notes,a.id,c.id from sale_order s,account_invoice a ,pre_sale_order m,customer_payment c
                 where s.name=a.reference and m.name=s.tb_ref_no and m.id=c.pre_order_id and s.payment_type='cash' and a.state='open' --and a.state='paid' 
                 and a.date_invoice = %s  and a.section_id=%s and c.pre_order_id is not null --and c.id  not in (select customer_payment_id from cashier_customer_payment where customer_payment_id is not null)
-                """, (frm_date, team_id,))
+                union all
+                select c.journal_id,c.amount,s.payment_type,s.partner_id,c.date,a.period_id,a.account_id,c.notes,a.id,c.id
+                from sale_order s,account_invoice a ,customer_payment c,account_journal aj
+                where s.name=a.origin   
+                and c.notes=s.name
+                and c.journal_id = aj.id and s.payment_type='cash' and a.state='open' 
+                and a.date_invoice = %s
+                and a.section_id=%s and c.notes like %s
+                """, (frm_date, team_id,frm_date, team_id,'EC%',))                
             vals = cr.fetchall()           
         
         for val in vals:
