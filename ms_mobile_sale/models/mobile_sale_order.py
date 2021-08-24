@@ -1832,7 +1832,7 @@ class mobile_sale_order(osv.osv):
                 m_mobile_ids = cursor.fetchall()
 #                 cursor.execute("select id from account_invoice where date_invoice=%s and section_id =%s and state='open' ", (de_date, team_id,))
 #                 invoice_ids = cursor.fetchall()
-                cursor.execute("select order_id from pending_delivery pd,sale_order so where pd.order_id =so.id and so.payment_type ='cash' and pd.delivery_date=%s and pd.delivery_team_id =%s", (de_date, team_id,))
+                cursor.execute("select order_id from pending_delivery pd,sale_order so where pd.order_id =so.id and so.payment_type ='cash' and miss !=True and pd.delivery_date=%s and pd.delivery_team_id =%s", (de_date, team_id,))
                 invoice_ids = cursor.fetchall()                       
                 if invoice_ids:
                     for data_pro in invoice_ids:
