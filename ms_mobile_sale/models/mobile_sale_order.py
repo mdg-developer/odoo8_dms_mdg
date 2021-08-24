@@ -2376,8 +2376,8 @@ class mobile_sale_order(osv.osv):
                                   'due_date':deli['due_date'],
                                   'state':'done',
                                   'delivery_team_id': delivery_team_id ,
-                                 'latitude':deli['mosLatitude'],
-                                  'longitude':deli['mosLongitude']    
+#                                  'latitude':deli['mosLatitude'],
+#                                   'longitude':deli['mosLongitude']    
                             }
                         pending_obj.create(cr, uid, delivery, context=context)  
                         cr.execute('update sale_order set is_generate = false, due_date = %s where name=%s', (deli['due_date'], so_ref_no,))
@@ -2396,8 +2396,8 @@ class mobile_sale_order(osv.osv):
                                   'delivery_date':datetime.now(),
                                   'state':'draft',
                                   'delivery_team_id': delivery_team_id ,
-                                  'latitude':deli['mosLatitude'],
-                                  'longitude':deli['mosLongitude']                             
+#                                   'latitude':deli['mosLatitude'],
+#                                   'longitude':deli['mosLongitude']                             
                             }
                         pending_id = pending_obj.create(cr, uid, delivery, context=context)                                                                                                                                 
                         pending_ids.append(pending_id)
