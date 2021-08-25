@@ -76,7 +76,7 @@ class res_partner(osv.osv):
         outlettype_obj = self.pool.get('outlettype.outlettype')
         sale_channel_obj = self.pool.get('sale.channel')
         res_branch_obj = self.pool.get('res.branch')
-        state_obj = self.pool.get('res.country.state')        
+        state_obj = self.pool.get('res.country.state')      
         if not mdg_customer:            
             vals['name']= shop_name if shop_name else name
             vals['street']= street
@@ -137,7 +137,14 @@ class res_partner(osv.osv):
             vals['date_partnership'] = datetime.today()             
             vals['temp_customer'] = name            
             vals['woo_register_date'] = datetime.today()
-            
+            outlettype = outlettype_obj.search(cr, uid, [('name', '=', 'Grocery')],context=context)            
+            if outlettype:
+                outlettype_data = outlettype_obj.browse(cr, uid, outlettype, context=context)
+                vals['outlet_type'] = outlettype_data.id
+            sale_channel = sale_channel_obj.search(cr, uid, [('code', '=', 'GT')], context=context)
+            if sale_channel:
+                sale_channel_data = sale_channel_obj.browse(cr, uid, sale_channel, context=context)
+                vals['sales_channel'] = sale_channel_data.id  
             cr.execute("select split_part(max(rb_code), 'RB', 2)::int+1 rb_code from res_partner")
             rb_code=cr.fetchone()      
             if rb_code:    
@@ -167,7 +174,7 @@ class res_partner(osv.osv):
                         vals['image'] = image
                     
 #                 vals['street'] = street
-#                 vals['street2'] = street2                
+#                 vals['street2'] = street2   
                 if city:
                     city_value = city_obj.search(cr, uid, [('name', '=ilike', city)], context=context, limit=1)
                     if city_value:
@@ -185,9 +192,9 @@ class res_partner(osv.osv):
                         state_data = state_obj.browse(cr, uid, state_value, context=context)
                         contact_state = state_data.id
                 
-#                 vals['name'] = name             
+                vals['name'] = shop_name if shop_name else name             
                 vals['phone'] = phone
-#                 vals['mobile'] = mobile
+                vals['mobile'] = mobile
                 vals['email'] = email
                 vals['shop_name'] = shop_name
                 vals['partner_latitude'] = partner_latitude
@@ -195,6 +202,7 @@ class res_partner(osv.osv):
                 vals['gender'] = gender
                 vals['birthday'] = birthday                
                 vals['woo_register_date'] = datetime.today()
+                vals['temp_customer'] = name    
                 cr.execute("select split_part(max(rb_code), 'RB', 2)::int+1 rb_code from res_partner")
                 rb_code=cr.fetchone()    
                 if rb_code: 
@@ -223,19 +231,19 @@ class res_partner(osv.osv):
                 
                 new_partner_obj = self.pool.get('res.partner')
                 old_vals = {}
-                old_vals['name'] = shop_name if shop_name else name#name
+                old_vals['name'] = name
                 old_vals['street'] = street
                 old_vals['street2'] = street2
                 old_vals['township'] = contact_township
                 old_vals['city'] = contact_city
                 old_vals['state_id'] = contact_state
-                old_vals['mobile'] = mobile
+                old_vals['mobile'] = partner_data.mobile
                 old_vals['phone'] = partner_data.phone
                 old_vals['partner_latitude'] = partner_data.partner_latitude
                 old_vals['partner_longitude'] = partner_data.partner_longitude
                 old_vals['sms'] = partner_data.sms
                 old_vals['viber'] = partner_data.viber
-                old_vals['shop_name'] = partner_data.shop_name
+#                 old_vals['shop_name'] = partner_data.shop_name
                 old_vals['email'] = email
 #                 old_vals['outlet_type'] = outlettype_data.id
 #                 old_vals['sales_channel'] = sale_channel_data.id
