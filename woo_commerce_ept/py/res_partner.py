@@ -52,7 +52,7 @@ class res_partner(models.Model):
                                 fcm_api_key = self.env['ir.config_parameter'].get_param('retail_fcm_api_key')
                                 if fcm_api_key and channel.code == 'RT':
                                     push_service = FCMNotification(api_key=fcm_api_key)
-                                    result = push_service.notify_topic_subscribers(topic_name="role_changes", message_body="You are now a retailer!")
+                                    result = push_service.notify_topic_subscribers(topic_name="role_changes", message_title="Burmart", message_body="You are now a retailer!")
         return result
     
     @api.model
