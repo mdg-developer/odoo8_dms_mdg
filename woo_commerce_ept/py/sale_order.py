@@ -609,7 +609,7 @@ class sale_order(models.Model):
                 user_obj = self.env['res.users'].search([('default_section_id','=',delivery_id)], limit=1)  
                 if user_obj:
                     sales_person = user_obj.id
-            pricelist_id = woo_config.pricelist_id.id                             
+            #pricelist_id = woo_config.pricelist_id.id                             
             ordervals = {
                 'name' :name,                
                 'picking_policy' : workflow.picking_policy,
@@ -866,7 +866,7 @@ class sale_order(models.Model):
                     if woo_partner.channel:
                         if woo_partner.channel == 'consumer' or woo_partner.channel == 'retailer':
                             if woo_partner.channel == 'consumer':
-                                product_pricelist = self.env['product.pricelist'].sudo().search([('consumer','=',True)], limit=1)
+                                product_pricelist = self.env['product.pricelist'].sudo().search([('consumer','=',True),('branch_id','=',woo_partner.branch_id.id)], limit=1)
                                 if product_pricelist:
                                     pricelist_id = product_pricelist.id
                                 else:
@@ -881,7 +881,7 @@ class sale_order(models.Model):
                                                                     })
                                     continue
                             if woo_partner.channel == 'retailer':
-                                product_pricelist = self.env['product.pricelist'].sudo().search([('retail','=',True)], limit=1)
+                                product_pricelist = self.env['product.pricelist'].sudo().search([('retail','=',True),('branch_id','=',woo_partner.branch_id.id)], limit=1)
                                 if product_pricelist:
                                     pricelist_id = product_pricelist.id
                                 else:
@@ -1018,7 +1018,7 @@ class sale_order(models.Model):
                     
                     #if not pricelist_id:
                     #woo_config =self.env['woo.config.settings'].sudo().search([('woo_instance_id','=',instance.id)],order="id desc", limit=1)
-                    #pricelist_id = woo_config.pricelist_id.id
+                    #pricelist_id = woo_config.pricelist_id.id                    
                     self.create_woo_sale_order_line(line,tax_ids,product,woo_product_uom,line.get('quantity'),fiscal_position,partner,pricelist_id,product.name,sale_order,actual_unit_price)                  
     
                 shipping_product=instance.shipment_charge_product_id 
