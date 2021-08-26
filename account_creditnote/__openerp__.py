@@ -36,8 +36,13 @@ Account Credit Note
     ],
     'data': [
        'views/account_creditnote_view.xml',
-       'views/code_sequence.xml'
-       
+       'views/program_file_view.xml',
+       'views/code_sequence.xml',
+       'wizard/redeemed_journal_wizard.xml',
+       'security/ir.model.access.csv',
+       'views/custom_layout.xml',
+       'views/report_credit_note.xml',
+       'views/qweb_view.xml',
     ],
     'installable': True,
     'auto_install': False,

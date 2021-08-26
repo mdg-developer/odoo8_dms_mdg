@@ -735,6 +735,8 @@
 			parent="base.menu_base_partner" sequence="13" />
 		<menuitem action="account_creditnote.action_creditnote" id="menu_creditnote_1"
 			parent="ms_mobile_sale_credit.ar_collection_menu" sequence="2" />
+		<menuitem action="account_creditnote.action_programdesign" id="menu_programform_1"
+			parent="ms_mobile_sale_credit.ar_collection_menu" sequence="3" />
 		<!-- Rout Plan Settings -->
 		<!-- <menuitem id="rout_plan_setting" name="Route Plan Setting" -->
 		<!-- parent="base.menu_base_config" /> -->
