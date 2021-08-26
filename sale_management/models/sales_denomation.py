@@ -74,8 +74,20 @@ class sale_denomination(osv.osv):
                 bank_data=self.pool.get('sales.denomination.bank.line').browse(cr, uid, line.id, context=context)
                 val1 += bank_data.amount                      
             res[order.id] = val1 # cur_obj.round(cr, uid, cur, val1)
-        return res           
-                
+        return res     
+          
+    def _credit_note_amount(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        if context is None:
+            context = {}                
+        for order in self.browse(cr, uid, ids, context=context):
+            val1 = 0.0            
+            for line in order.denomination_credit_note_line:
+                credit_note_data=self.pool.get('sales.denomination.credit.note.line').browse(cr, uid, line.id, context=context)
+                val1 += credit_note_data.amount                      
+            res[order.id] = val1 # cur_obj.round(cr, uid, cur, val1)
+        return res      
+                   
     def _dssr_ar_amount(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         if context is None:
@@ -101,15 +113,19 @@ class sale_denomination(osv.osv):
         deno_amount=self._deno_amount(cr, uid, ids, field_name, arg, context=context)
         cheque_amount=self._cheque_amount(cr, uid, ids, field_name, arg, context=context)
         bank_amount=self._bank_amount(cr, uid, ids, field_name, arg, context=context)
+        credit_note_amount=self._credit_note_amount(cr, uid, ids, field_name, arg, context=context)
+        
         for k, deno_amount in deno_amount.iteritems():
             deno_amount=deno_amount
         for k, cheque_amount in cheque_amount.iteritems():
             cheque_amount=cheque_amount
         for k, bank_amount in bank_amount.iteritems():
-            bank_amount=bank_amount                  
+            bank_amount=bank_amount       
+        for k, credit_note_amount in credit_note_amount.iteritems():
+            credit_note_amount=credit_note_amount                         
         val1=0.0
         for order in self.browse(cr, uid, ids, context=context):             
-            val1=deno_amount+cheque_amount+bank_amount
+            val1=deno_amount+cheque_amount+bank_amount+credit_note_amount
             res[order.id]= val1 
 
         return res      
@@ -222,6 +238,8 @@ class sale_denomination(osv.osv):
        'denomination_cheque_line':fields.one2many('sales.denomination.cheque.line', 'denomination_cheque_ids', string='Sale denomination Cheque Line', copy=True),
        'denomination_ar_line':fields.one2many('sales.denomination.ar.line', 'denomination_ar_ids', string='Sale denomination AR Line', copy=True),
        'denomination_bank_line':fields.one2many('sales.denomination.bank.line', 'denomination_bank_ids', string='Sale denomination Bank Line', copy=True),
+       'denomination_credit_note_line':fields.one2many('sales.denomination.credit.note.line', 'denomination_credit_note_ids', string='Sale denomination Credit Note Line', copy=True),
+       
         'note':fields.text('Note'),
    #   'total_amount':fields.float('Denomination Total',digits_compute=dp.get_precision('Product Price')),
 #       'product_amount':fields.float('Invoice Total', digits_compute=dp.get_precision('Product Price')),
@@ -261,6 +279,7 @@ class sale_denomination(osv.osv):
         cheque_product_obj = self.pool.get('sales.denomination.cheque.line')
         ar_coll_obj = self.pool.get('sales.denomination.ar.line')
         bank_transfer_obj = self.pool.get('sales.denomination.bank.line')
+        credit_note_obj = self.pool.get('sales.denomination.credit.note.line')
         ar_obj = self.pool.get('ar.payment')
         inv_Obj=self.pool.get('account.invoice')
         invoice_obj = self.pool.get('account.invoice.line')
@@ -289,6 +308,7 @@ class sale_denomination(osv.osv):
             cursor.execute ("delete from sales_denomination_cheque_line where denomination_cheque_ids =%s",(deno_id,))
             cursor.execute ("delete from sales_denomination_ar_line where denomination_ar_ids =%s",(deno_id,))
             cursor.execute ("delete from sales_denomination_bank_line where denomination_bank_ids =%s",(deno_id,))
+            cursor.execute ("delete from sales_denomination_credit_note_line where denomination_credit_note_ids =%s",(deno_id,))            
             cursor.execute ("delete from sales_denomination_note_line where denomination_note_ids =%s",(deno_id,))
             for ptl in notes_line:
                 note_line_res = {                                                            
@@ -304,6 +324,10 @@ class sale_denomination(osv.osv):
             ar_payment_ids = cursor.fetchall()
             cursor.execute("select id from customer_payment where date=%s and sale_team_id=%s and payment_code='BNK' ", (de_date, team_id,))
             bank_ids = cursor.fetchall()
+            cursor.execute("select id from customer_payment where date=%s and sale_team_id=%s and payment_code='CN' ", (de_date, team_id,))
+            credit_note_ids = cursor.fetchall()
+            cursor.execute("select id from ar_payment where date=%s and sale_team_id=%s and payment_code='CN' ", (de_date, team_id,))
+            ar_credit_note_ids = cursor.fetchall()            
             cursor.execute("select id from ar_payment where date=%s and sale_team_id=%s and payment_code='BNK' ", (de_date, team_id,))
             ar_bank_ids = cursor.fetchall()                              
             cursor.execute("select id from account_invoice where date_invoice=%s and section_id =%s and state='open' and payment_type='cash' ", (de_date, team_id,))
@@ -387,6 +411,32 @@ class sale_denomination(osv.osv):
                                       'amount': amount,
                                         'denomination_bank_ids':deno_id, }
                     bank_transfer_obj.create(cursor, user, data_id, context=context)
+            if  credit_note_ids:
+                for credit_note in credit_note_ids:
+                    credit_note_data = payment_obj.browse(cursor, user, credit_note, context=context)                  
+                    partner_id = credit_note_data.partner_id.id
+                    creditnote_id = self.pool.get('account.creditnote').search(cursor, user, [('name', '=', credit_note_data.cheque_no)], context=context)
+                    creditnote_obj = self.pool.get('account.creditnote').browse(cursor, user, creditnote_id, context=context)
+                    credit_note_id = creditnote_obj.id
+                    amount = credit_note_data.amount
+                    data_id = {'partner_id':partner_id,
+                               'credit_note_id':credit_note_id,
+                               'amount': amount,
+                               'denomination_credit_note_ids':deno_id, }
+                    credit_note_obj.create(cursor, user, data_id, context=context)
+            if  ar_credit_note_ids:
+                for credit_note in ar_credit_note_ids:
+                    credit_note_data = ar_obj.browse(cursor, user, credit_note, context=context)                  
+                    partner_id = credit_note_data.partner_id.id
+                    creditnote_id = self.pool.get('account.creditnote').search(cursor, user, [('name', '=', credit_note_data.cheque_no)], context=context)
+                    creditnote_obj = self.pool.get('account.creditnote').browse(cursor, user, creditnote_id, context=context)
+                    credit_note_id = creditnote_obj.id
+                    amount = credit_note_data.amount
+                    data_id = {'partner_id':partner_id,
+                               'credit_note_id':credit_note_id,
+                               'amount': amount,
+                               'denomination_credit_note_ids':deno_id, }
+                    credit_note_obj.create(cursor, user, data_id, context=context)                    
             if  ar_bank_ids:
                 for bank in ar_bank_ids:
                     bank_data = ar_obj.browse(cursor, user, bank, context=context)                  
@@ -668,4 +718,19 @@ class sale_denomination_bank_line(osv.osv):
         'amount': 0.0,
         }   
     
-sale_denomination_bank_line()    
+sale_denomination_bank_line()   
+
+class sale_denomination_credit_note_line(osv.osv):    
+    _name = 'sales.denomination.credit.note.line'
+     
+    _columns = {
+                'denomination_credit_note_ids': fields.many2one('sales.denomination', 'Sales Denomination'),
+                'partner_id':fields.many2one('res.partner', 'Customer', required=True),
+                'credit_note_id':fields.many2one('account.creditnote', "Credit Note No"),
+                'amount':fields.float('Amount', digits_compute=dp.get_precision('Product Price')),                
+                }
+    _defaults = {
+        'amount': 0.0,
+        }   
+     
+sale_denomination_credit_note_line()     

@@ -331,6 +331,49 @@
 																<span t-field="o.bank_amount" />
 															</b>
 														</h6>
+<table t-if="o.denomination_credit_note_line" class="table table-condensed"
+															style="border:1pt solid;">
+															<h6 align="rignt">
+																<span class="text-right">
+																	<U>
+																		<b>Credit Note</b>
+																	</U>
+																</span>
+															</h6>
+															<thead>
+																<tr>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Customer</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Credit Note No</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Amount</th>
+																</tr>
+															</thead>
+															<tbody class="invoice_tbody">
+																<tr t-foreach="o.denomination_credit_note_line" t-as="c">
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="c.partner_id" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="c.credit_note_id" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="right">
+																		<span t-field="c.amount" />
+																	</td>
+
+																</tr>
+															</tbody>
+
+														</table>
+														<h6 t-if="o.denomination_credit_note_line" align="right">
+															<span>
+																<b>Sub Total:</b>
+															</span>
+															<b>
+																<span t-field="o.credit_note_amount" />
+															</b>
+														</h6>														
 														<h5 align="right">
 															<b>
 																<span>Grand Total :</span>
@@ -685,6 +728,49 @@
 																<span t-field="o.bank_amount" />
 															</b>
 														</h6>
+														<table t-if="o.denomination_credit_note_line" class="table table-condensed"
+															style="border:1pt solid;">
+															<h6 align="left">
+																<span class="text-right">
+																	<U>
+																		<b>Credit Note</b>
+																	</U>
+																</span>
+															</h6>
+															<thead>
+																<tr>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Customer</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Credit Note No</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Amount</th>
+																</tr>
+															</thead>
+															<tbody class="invoice_tbody">
+																<tr t-foreach="o.denomination_credit_note_line" t-as="c">
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="c.partner_id" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="c.credit_note_id" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="right">
+																		<span t-field="c.amount" />
+																	</td>
+
+																</tr>
+															</tbody>
+
+														</table>
+														<h6 t-if="o.denomination_credit_note_line" align="right">
+															<span>
+																<b>Sub Total:</b>
+															</span>
+															<b>
+																<span t-field="o.credit_note_amount" />
+															</b>
+														</h6>														
 														<h5 align="right">
 															<b>
 																<span>Grand Total :</span>

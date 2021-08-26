@@ -13,7 +13,7 @@
 							<group>
 								<field name="name" />
 								<field name="sale_team_id" />
-								<field name="user_id"  domain="[('default_section_id', '=',sale_team_id)]"/>
+								<field name="user_id" domain="[('default_section_id', '=',sale_team_id)]" />
 								<field name="date" />
 								<field name="company_id" invisible="1" />
 								<field name="receive_from" />
@@ -150,6 +150,26 @@
 										<field name="partner_id" readonly="1" />
 										<field name="journal_id" string="Bank" readonly="1" />
 										<field name="amount" sum="Invoice Total" readonly="1" />
+									</tree>
+								</field>
+							</page>
+						</notebook>
+						<notebook>
+							<page string="Credit Note" readonly="1">
+								<field name="denomination_credit_note_line">
+									<form string="Credit Note">
+										<group>
+											<group>
+												<field name="partner_id" />
+												<field name="credit_note_id" />
+												<field name="amount" sum="Invoice Total" />
+											</group>
+										</group>
+									</form>
+									<tree string="Credit Note" editable="bottom" readonly="1">
+										<field name="partner_id" readonly="1" />
+										<field name="credit_note_id" readonly="1" />
+										<field name="amount" sum="Credite Note Total" readonly="1" />
 									</tree>
 								</field>
 							</page>
