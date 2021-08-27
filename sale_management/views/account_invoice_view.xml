@@ -96,11 +96,11 @@
 
 					</page>
 				</xpath>
-<!-- 				<xpath -->
-<!-- 					expr="/form/sheet/notebook/page[@string='Payments']/field/tree/field[@name='move_id']" -->
-<!-- 					position="after"> -->
-<!-- 					<field name="partner_id" /> -->
-<!-- 				</xpath> -->
+				<xpath
+					expr="/form/sheet/notebook/page[@string='Payments']/field/tree/field[@name='move_id']"
+					position="after">
+					<field name="partner_id" />
+				</xpath>
 			</field>
 		</record>
 		<record id="invoice_supplier_form_pending" model="ir.ui.view">
@@ -123,11 +123,11 @@
 								attrs="{'invisible': [('state', '=', 'draft')]}" />
 						</h1>
 					</xpath>
-<!-- 					<xpath -->
-<!-- 						expr="/form/sheet/notebook/page[@string='Payments']/field/tree/field[@name='move_id']" -->
-<!-- 						position="after"> -->
-<!-- 						<field name="partner_id" /> -->
-<!-- 					</xpath> -->
+					<xpath
+						expr="/form/sheet/notebook/page[@string='Payments']/field/tree/field[@name='move_id']"
+						position="after">
+						<field name="partner_id" />
+					</xpath>
 					<field name="fiscal_position" position="replace">
 					</field>
 

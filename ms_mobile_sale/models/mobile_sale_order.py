@@ -963,10 +963,14 @@ class mobile_sale_order(osv.osv):
                                     # get the voucher lines
                                     vlresult = voucherObj.recompute_voucher_lines(cr, uid, vlist, inv_data.partner_id.id, journal_id, inv_data.amount_total, 120, 'receipt', inv_data.date_invoice, context=None)
                                     if vlresult:
-                                        result = vlresult['value']['line_cr_ids'][0]
-                                        result['voucher_id'] = voucherId
+                                        #result = vlresult['value']['line_cr_ids'][0]
+                                        for v_line_data in vlresult['value']['line_cr_ids']:
+                                            if v_line_data['name']==inv_data.number:
+                                                result =v_line_data
+                                                result['voucher_id'] = voucherId
+                                                result['amount'] = inv_data.amount_total
+                                                voucherLineObj.create(cr, uid, result, context=context)
                                         # create the voucher lines
-                                        voucherLineObj.create(cr, uid, result, context=context)
                                     # invoice register payment done
                                     voucherObj.button_proforma_voucher(cr, uid, vlist , context=context)
                                     # invoice paid status is true
