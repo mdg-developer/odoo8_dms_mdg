@@ -865,7 +865,8 @@ class sale_order(models.Model):
                 if woo_partner:   
                     if woo_partner.channel:
                         if woo_partner.channel == 'consumer' or woo_partner.channel == 'retailer':
-                            if woo_partner.channel == 'consumer':
+                            if woo_partner.channel == 'consumer':                                
+                                logging.warning("customer branch: %s", woo_partner.branch_id.name)
                                 product_pricelist = self.env['product.pricelist'].sudo().search([('consumer','=',True),('branch_id','=',woo_partner.branch_id.id)], limit=1)
                                 if product_pricelist:
                                     pricelist_id = product_pricelist.id
@@ -1044,13 +1045,20 @@ class sale_order(models.Model):
                 if order_discount and discount_value:                                                                                                                            
                     self.create_woo_sale_order_line({},tax_ids,instance.discount_product_id,woo_product_uom,1,fiscal_position,partner,pricelist_id,instance.discount_product_id.name,sale_order,discount_value*-1)
                 fee_lines = order.get("fee_lines",[])
+                total_discount_amount = 0 
                 for fee_line in fee_lines:
-                    fee_value = fee_line.get("total")
-                    fee = fee_line.get("title")
-                    fee_line_tax_ids = []
-                    fee_line_tax_ids =  self.get_woo_tax_id_ept(instance,tax_datas,False)
-                    if fee_value:
-                        self.create_woo_sale_order_line({},fee_line_tax_ids,instance.fee_line_id,woo_product_uom,1,fiscal_position,partner,pricelist_id,fee,sale_order,fee_value)
+                    total_discount_amount += float(fee_line.get("total"))
+#                     fee_value = fee_line.get("total")
+#                     fee = fee_line.get("title")
+#                     fee_line_tax_ids = []
+#                     fee_line_tax_ids =  self.get_woo_tax_id_ept(instance,tax_datas,False)
+#                     if fee_value:
+#                         self.create_woo_sale_order_line({},fee_line_tax_ids,instance.fee_line_id,woo_product_uom,1,fiscal_position,partner,pricelist_id,fee,sale_order,fee_value)
+                
+                if abs(total_discount_amount) > 0:
+                    amount_total = sale_order.amount_untaxed - abs(total_discount_amount)
+                    self.env.cr.execute('update sale_order so set amount_total=%s,total_dis=%s where so.id=%s',(amount_total,abs(total_discount_amount),sale_order.id))
+                
                 if sale_order:           
                     one_signal_values = {
                                          'partner_id': sale_order.partner_id.id,
