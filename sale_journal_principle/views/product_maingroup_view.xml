@@ -22,9 +22,11 @@
 						<field name="property_sampling_account" />
 						<field name="property_destruction_account" />
 						<field name="property_uses_account" />
-						
+
 						<field name="partner_id" />
 						<field name="pricelist_id" />
+						<field name="property_trade_payable_account" />
+						<field name="property_receivable_clearing_account" />
 						<!-- <field name="property_account_payable_clearing" /> -->
 
 						<!-- <field name="property_account_foc_cash" /> -->
