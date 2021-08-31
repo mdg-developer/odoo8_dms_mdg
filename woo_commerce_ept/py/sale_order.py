@@ -593,15 +593,15 @@ class sale_order(models.Model):
                                                             })           
                         
             if result.get('payment_details'):                
-                if result.get('payment_details').get('method_title',False) == 'Credit Application Amount':
+                if result.get('payment_details').get('method_title',False) == 'Credit':
                     payment_type = "credit"
                 else:
                     payment_type = "cash"     
             if result.get('payment_type'):
                 payment_type = result.get('payment_type')
                 
-            if result.get('payment_terms'):
-                payment_terms = result.get('payment_terms')
+            if result.get('payment_term'):
+                payment_terms = result.get('payment_term')
                 terms = self.env['account.payment.term'].search([('name','=',payment_terms)], limit=1)
                 if terms:
                     term_id =  terms.id            
@@ -748,7 +748,7 @@ class sale_order(models.Model):
             wcapi = instance.connect_in_woo()
             order_ids = []
             tax_included  = wcapi.get('').json().get('store').get('meta').get('tax_included') or False
-            for order_status in instance.import_order_status_ids:
+            for order_status in instance.import_order_status_ids:                
                 response = wcapi.get('orders?status=%s&filter[limit]=1000'%(order_status.status))
                 if not isinstance(response,requests.models.Response):                
                     transaction_log_obj.create({'message': "Import Orders \nResponse is not in proper format :: %s"%(response),
@@ -767,12 +767,12 @@ class sale_order(models.Model):
                                         })
                     continue
                 order_response=response.json()
-                order_ids = order_ids + order_response.get('orders')
-                total_pages = response.headers.get('X-WC-TotalPages')
+                order_ids = order_ids + order_response.get('orders')                
+                total_pages = response.headers.get('X-WC-TotalPages')                
                 if total_pages >=2:
                     for page in range(2,int(total_pages)+1):            
                         order_ids = order_ids + self.import_all_woo_orders(wcapi,instance,transaction_log_obj,order_status,page)            
-            
+                
             import_order_ids=[]            
             if instance:
                 discount_label_wcapi = instance.connect_for_point_in_woo()   
