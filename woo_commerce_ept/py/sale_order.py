@@ -867,7 +867,7 @@ class sale_order(models.Model):
                         if woo_partner.channel == 'consumer' or woo_partner.channel == 'retailer':
                             if woo_partner.channel == 'consumer':                                
                                 logging.warning("customer branch: %s", woo_partner.branch_id.name)
-                                product_pricelist = self.env['product.pricelist'].sudo().search([('consumer','=',True),('branch_id','=',woo_partner.branch_id.id)], limit=1)
+                                product_pricelist = self.env['product.pricelist'].sudo().search([('consumer','=',True)], limit=1)
                                 if product_pricelist:
                                     pricelist_id = product_pricelist.id
                                 else:
