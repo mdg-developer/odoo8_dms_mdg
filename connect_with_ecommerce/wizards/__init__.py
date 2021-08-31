@@ -1,1 +1,2 @@
 import pricelist_multi_sync_woo
+import township_multi_sync_woo
