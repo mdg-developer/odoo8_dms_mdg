@@ -750,6 +750,7 @@ class mobile_sale_order(osv.osv):
         mso_promotion_line_obj = self.pool.get('mso.promotion.line')
         mso_inv_PromoLineObj = self.pool.get('account.invoice.promotion.line')        
         product_obj = self.pool.get('product.product')
+        noteObj = self.pool.get('account.creditnote')
         soResult = {}
         solResult = {}
         accountVResult = {}
@@ -927,73 +928,55 @@ class mobile_sale_order(osv.osv):
                                 # calling the register payment pop-up
                                 inv_data=self.pool['account.invoice'].browse(cr, uid, invoice_id,context=None)
                                 invoiceObj.invoice_pay_customer(cr, uid, invlist, context=context)
-                                cr.execute('''select id from account_journal  where name ='Cash' limit 1''')
-                                journal_data=cr.fetchone()
-                                if journal_data:
-                                    journal_id=journal_data[0]
-                                    cr.execute('select default_debit_account_id from account_journal where id=%s', (journal_id,))
-                                    data = cr.fetchall()
-                                    if data:
-                                        accountId = data[0]
-                                else:
-                                        raise osv.except_osv(_('Warning!'), _("Insert Journal for Cash Sale"))
-#                                 cr.execute('select id from account_account where lower(name)=%s and active= %s', ('cash', True,))  # which account shall I choose. It is needed.
-#                                 data = cr.fetchall()
-#                                 if data:
-#                                     accountId = data[0]
-                                print 'invvvvvv',inv_data
-                                if journal_id and accountId:  # cash journal and cash account. If there no journal id or no account id, account invoice is not make payment.
-                                    accountVResult = {
-                                                    'partner_id':inv_data.partner_id.id,
-                                                    'amount':inv_data.amount_total,
-                                                    'journal_id':journal_id,
-                                                    'date':inv_data.date_invoice,
-                                                    'period_id':inv_data.period_id.id,
-                                                    'account_id':accountId,
-                                                    'pre_line':True,
-                                                    'type':'receipt',
-                                                    'company_id':3
-                                                    }
-                                    # create register payment voucher
-                                    voucherId = voucherObj.create(cr, uid, accountVResult, context=context)
-                                     
-                                if voucherId:
-                                    vlist = []
-                                    vlist.append(voucherId)
-                                    # get the voucher lines
-                                    vlresult = voucherObj.recompute_voucher_lines(cr, uid, vlist, inv_data.partner_id.id, journal_id, inv_data.amount_total, 120, 'receipt', inv_data.date_invoice, context=None)
-                                    if vlresult:
-                                        #result = vlresult['value']['line_cr_ids'][0]
-                                        for v_line_data in vlresult['value']['line_cr_ids']:
-                                            if v_line_data['name']==inv_data.number:
-                                                result =v_line_data
-                                                result['voucher_id'] = voucherId
-                                                result['amount'] = inv_data.amount_total
-                                                voucherLineObj.create(cr, uid, result, context=context)
-                                        # create the voucher lines
-                                    # invoice register payment done
-                                    voucherObj.button_proforma_voucher(cr, uid, vlist , context=context)
-                                    # invoice paid status is true
-                                    invFlag = True
-                            # clicking the delivery order view button
-#                             stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)
-#                              
-#                             if stockViewResult:
-#                                 # cr.execute('update stock_move set location_id=%s where picking_id=%s',(ms_ids.location_id.id,stockViewResult['res_id'],))
-#                                 # stockViewResult is form result
-#                                 # stocking id =>stockViewResult['res_id']
-#                                 # click force_assign
-#                                 stockPickingObj.force_assign(cr, uid, stockViewResult['res_id'], context=context)
-#                                 # transfer
-#                                 # call the transfer wizard
-#                                 # change list
-#                                 pickList = []
-#                                 pickList.append(stockViewResult['res_id'])
-#                                 wizResult = stockPickingObj.do_enter_transfer_details(cr, uid, pickList, context=context)
-#                                 # pop up wizard form => wizResult
-#                                 detailObj = stockDetailObj.browse(cr, uid, wizResult['res_id'], context=context)
-#                                 if detailObj:
-#                                     detailObj.do_detailed_transfer()
+                                for payment_line in ms_ids.payment_line_ids:
+                                    journal_id=payment_line.journal_id.id
+                                    journal_name=payment_line.journal_id.name
+                                    payment_amount =payment_line.amount
+                                    if journal_name=='Credit Note': 
+                                        note_id = noteObj.search(cr, uid, [('name', '=',  payment_line.cheque_no)],context=None)
+                                        note_data = noteObj.browse(cr, uid, note_id, context=context)
+                                        accountId=note_data.principle_id.property_trade_payable_account.id                                        
+                                        note_data.write({'state':'redeemed','issued_date':inv_data.date_invoice,'invoice_number':inv_data.number,'sale_team_id':sale_team_id,'user_id':ms_ids.user_id.id})
+                                    else:
+                                        cr.execute('select default_debit_account_id from account_journal where id=%s', (journal_id,))
+                                        data = cr.fetchall()
+                                        if data:
+                                            accountId = data[0]
+                                                
+
+                                    if journal_id and accountId:  # cash journal and cash account. If there no journal id or no account id, account invoice is not make payment.
+                                        accountVResult = {
+                                                        'partner_id':inv_data.partner_id.id,
+                                                        'amount':payment_amount,
+                                                        'journal_id':journal_id,
+                                                        'date':inv_data.date_invoice,
+                                                        'period_id':inv_data.period_id.id,
+                                                        'account_id':accountId,
+                                                        'pre_line':True,
+                                                        'type':'receipt',
+                                                        'company_id':3
+                                                        }
+                                        # create register payment voucher
+                                        voucherId = voucherObj.create(cr, uid, accountVResult, context=context)
+                                         
+                                    if voucherId:
+                                        vlist = []
+                                        vlist.append(voucherId)
+                                        # get the voucher lines
+                                        vlresult = voucherObj.recompute_voucher_lines(cr, uid, vlist, inv_data.partner_id.id, journal_id, inv_data.amount_total, 120, 'receipt', inv_data.date_invoice, context=None)
+                                        if vlresult:
+                                            #result = vlresult['value']['line_cr_ids'][0]
+                                            for v_line_data in vlresult['value']['line_cr_ids']:
+                                                if v_line_data['name']==inv_data.number:
+                                                    result =v_line_data
+                                                    result['voucher_id'] = voucherId
+                                                    result['amount'] = payment_amount
+                                                    voucherLineObj.create(cr, uid, result, context=context)
+                                            # create the voucher lines
+                                        # invoice register payment done
+                                        voucherObj.button_proforma_voucher(cr, uid, vlist , context=context)
+
+
                                 new_session = ConnectorSession(cr, uid, context)
                                 jobid = automatic_direct_sale_transfer.delay(new_session, solist, ms_ids.date, priority=10)
                                 runner = ConnectorRunner()
