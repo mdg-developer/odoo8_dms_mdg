@@ -209,17 +209,7 @@ class account_invoice(models.Model):
                     cr.execute("update sale_order set state='done' where shipped=True and invoiced=True and name=%s", (self.origin,)) 
                     cr.execute("update sale_order set state='done' where shipped=True and invoiced=True and name=%s", (self.origin,)) 
                     cr.execute("update purchase_order set state='done' where shipped = True and  name=%s", (self.origin,))
-                    #change woo order status
-                    sale_order = self.env['sale.order'].search([('name', '=', self.origin)])                                          
-                    if sale_order and sale_order.woo_order_number:
-                        sale_order.update_woo_order_status_action('completed')
-                        one_signal_values = {
-                                        'partner_id': sale_order.partner_id.id,
-                                        'contents': "Your order " + sale_order.name + " is completed.",
-                                        'headings': "Burmart"
-                                    }     
-                        self.env['one.signal.notification.messages'].create(one_signal_values)   
-                     
+                                         
             if self.residual != 0.0:
                 if self.origin:
                     if self.payment_type == 'credit' and self.type == 'out_invoice':

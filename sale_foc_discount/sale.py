@@ -485,7 +485,16 @@ class sale_order(osv.osv):
             'delivery_contact_no': order.delivery_contact_no,
             'delivery_township_id': order.delivery_township_id.id,
         }
-
+                  
+        if order.woo_order_number:
+            order.update_woo_order_status_action('completed')
+            one_signal_values = {
+                            'partner_id': order.partner_id.id,
+                            'contents': "Your order " + order.name + " is completed.",
+                            'headings': "Burmart"
+                        }     
+            self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values)
+                    
         # Care for deprecated _inv_get() hook - FIXME: to be removed after 6.1
         invoice_vals.update(self._inv_get(cr, uid, order, context=context))
         return invoice_vals
