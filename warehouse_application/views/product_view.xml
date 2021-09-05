@@ -16,6 +16,9 @@
                         </div>
                     </div>
                 </xpath>
+                <xpath expr="//field[@name='company_id']" position="before">
+                    <field name="bypass_barcode" />
+                </xpath>
             </field>
         </record>
         

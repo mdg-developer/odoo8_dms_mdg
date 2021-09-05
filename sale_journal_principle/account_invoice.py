@@ -208,7 +208,8 @@ class account_invoice(models.Model):
                     cr.execute("update sale_order set invoiced=True where name=%s", (self.origin,))        
                     cr.execute("update sale_order set state='done' where shipped=True and invoiced=True and name=%s", (self.origin,)) 
                     cr.execute("update sale_order set state='done' where shipped=True and invoiced=True and name=%s", (self.origin,)) 
-                    cr.execute("update purchase_order set state='done' where shipped = True and  name=%s", (self.origin,)) 
+                    cr.execute("update purchase_order set state='done' where shipped = True and  name=%s", (self.origin,))
+                                         
             if self.residual != 0.0:
                 if self.origin:
                     if self.payment_type == 'credit' and self.type == 'out_invoice':

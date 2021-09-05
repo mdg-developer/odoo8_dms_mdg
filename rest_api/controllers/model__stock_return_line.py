@@ -55,6 +55,7 @@ OUT__stock_return_line__read_all__SCHEMA = (                 # editable
             'id',
             'name',
         )),
+        'bypass_barcode',
     )),
     ('from_location_id', (  # will return dictionary of inner fields
         'id',
@@ -123,6 +124,7 @@ OUT__stock_return_line__read_one__SCHEMA = (                 # editable
             'id',
             'name',
         )),
+        'bypass_barcode',
     )),
     ('from_location_id', (  # will return dictionary of inner fields
         'id',

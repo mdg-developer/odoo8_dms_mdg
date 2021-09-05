@@ -88,6 +88,7 @@ OUT__branch_good_issue_note__read_all__SCHEMA = (                 # editable
         'product_cbm',
         'remark',
         'checked',
+        'bypass_barcode',
     )]),
 )
 #           ]
@@ -144,6 +145,7 @@ OUT__branch_good_issue_note__read_one__SCHEMA = (                 # editable
                 'id',
                 'name',
             )),
+            'bypass_barcode',
         )),
         'req_quantity',
         'issue_quantity',
