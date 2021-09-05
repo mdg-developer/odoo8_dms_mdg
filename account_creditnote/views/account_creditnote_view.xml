@@ -28,10 +28,11 @@
 								<field name="name" />
 								<field name="so_no" placeholder="SO00001" invisible="1" />
 								<!-- <field name="ref_no" placeholder="A00001" /> -->
-								<field name="customer_id" attrs="{'readonly': [('state','not in',('draft'))]}" on_change="on_change_customer_id(customer_id)"/>
+								<field name="customer_id" attrs="{'readonly': [('state','not in',('draft'))]}"
+									on_change="on_change_customer_id(customer_id)" />
 								<field name="customer_code" />
 								<field name="sale_team_id" />
-								<field name="user_id" domain="[('default_section_id', '=',sale_team_id)]"/>
+								<field name="user_id" domain="[('default_section_id', '=',sale_team_id)]" />
 								<field name="program_id" on_change="on_change_program_id(program_id)"
 									attrs="{'readonly': [('state','not in',('draft'))]}" />
 								<field name="principle_id" readonly="1" />
@@ -46,8 +47,8 @@
 								<field name="issued_date" />
 								<field name="invoice_number" />
 								<field name="used_date" />
-								<field name="m_status"  />
-								<field name="customer_branch_id"  />
+								<field name="m_status" />
+								<field name="customer_branch_id" />
 								<field name="approved_date" />
 								<field name="used_by" />
 								<field name="approved_user_id" />
@@ -74,6 +75,8 @@
 					<field name="state" />
 					<field name="issued_date" />
 					<field name="used_date" />
+					<field name="invoice_number" />
+					<field name="program_id" />
 					<field name="principle_id" />
 					<field name="branch_id" />
 					<field name="customer_branch_id" />
@@ -91,6 +94,7 @@
 			<field name="model">account.creditnote</field>
 			<field name="arch" type="xml">
 				<search string="Search Credit Note">
+					<field name="name" string="Credit Note Number" />
 					<field name="customer_id" string="Customer" />
 					<field name="sale_team_id" string="Sales Team" />
 					<field name="program_id" string="Program" />
@@ -98,8 +102,6 @@
 					<field name="state" string="Status" />
 					<field name="branch_id" string="Branch" />
 					<field name="customer_branch_id" string="Customer Branch" />
-					
-					
 					<group expand="0" string="Group By">
 						<filter string="Customer" context="{'group_by':'customer_id'}" />
 						<filter string="Sales Team" context="{'group_by':'sale_team_id'}" />
@@ -109,7 +111,7 @@
 							domain="[]" context="{'group_by':'state'}" />
 						<filter string="Branch" context="{'group_by':'branch_id'}" />
 						<filter string="Customer Branch" context="{'group_by':'customer_branch_id'}" />
-						
+
 					</group>
 				</search>
 			</field>
