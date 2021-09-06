@@ -28,6 +28,8 @@ class OneSignalNotification(models.Model):
     external_id = fields.Char(string="One Signal External Id", required=False, )
     one_signal_notification_id = fields.Char(string="Notification Id", required=False, )
     recipients_count = fields.Integer(string="Recipients Count", required=False, )
+    has_read = fields.Boolean('Has read?', default=False)
+    woo_customer_id = fields.Char("Woo Customer Id", related='partner_id.woo_customer_id')
     
     def create(self, cursor, user, vals, context=None):       
         data={}
