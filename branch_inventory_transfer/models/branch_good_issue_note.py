@@ -396,50 +396,52 @@ class branch_good_issue_note(osv.osv):
             else:
                 raise osv.except_osv(_('Warning'),
                                      _('Picking Type has not for this transition'))
-            picking_id = picking_obj.create(cr, uid, {
-                                          'date': issue_date,
-                                          'origin':origin,
-                                          'picking_type_id':picking_type_id}, context=context)
-            note_line_id = product_line_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context)
-            if note_line_id and picking_id:
-                for note_id in note_value.p_line:
-                    note_line_value = product_line_obj.browse(cr, uid, note_id.id, context=context)
-                    product_id = note_line_value.product_id.id
-                    name = note_line_value.product_id.name_template
-                    product_uom = note_line_value.product_uom.id
-                    origin = origin
-                    quantity = note_line_value.issue_quantity   
-                    check_qty =note_line_value.issue_quantity 
-                    cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (location_id, product_id,))
-                    quantity_on_hand=cr.fetchone()
-                    if quantity_on_hand:
-                        qty_on_hand = quantity_on_hand[0]
-                    else:
-                        qty_on_hand = 0   
-                    product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)   
-                    if note_line_value.product_uom.id  != product.product_tmpl_id.uom_id.id  :                                                                  
-                        cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (note_line_value.product_uom.id,))
-                        bigger_qty = cr.fetchone()[0]
-                        bigger_qty = int(bigger_qty)
-                        if  bigger_qty:
-                            check_qty = quantity * bigger_qty 
-                    if check_qty > qty_on_hand:
-                            raise osv.except_osv(_('Warning'),
-                                     _('Please Check Qty On Hand For (%s)') % (product.name_template,))
-                    else:
-                        move_id = move_obj.create(cr, uid, {'picking_id': picking_id,
-                                                  'picking_type_id':picking_type_id,
-                                              'product_id': product_id,
-                                              'product_uom_qty': quantity,
-                                              'product_uos_qty': quantity,
-                                              'product_uom':product_uom,
-                                              'location_id':location_id,
-                                              'location_dest_id':from_location_id,
-                                              'name':name,
-                                               'origin':origin,
-                                              'state':'confirmed'}, context=context)     
-                        move_obj.action_done(cr, uid, move_id, context=context)  
-                        cr.execute('''update stock_move set date=((%s::date)::text || ' ' || date::time(0))::timestamp where state='done' and origin =%s''', (issue_date, origin,))
+            picking_ids = picking_obj.search(cr, uid,[('origin','=',origin),('state','=','done')],context=None)
+            if not picking_ids:
+                picking_id = picking_obj.create(cr, uid, {
+                                              'date': issue_date,
+                                              'origin':origin,
+                                              'picking_type_id':picking_type_id}, context=context)
+                note_line_id = product_line_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context)
+                if note_line_id and picking_id:
+                    for note_id in note_value.p_line:
+                        note_line_value = product_line_obj.browse(cr, uid, note_id.id, context=context)
+                        product_id = note_line_value.product_id.id
+                        name = note_line_value.product_id.name_template
+                        product_uom = note_line_value.product_uom.id
+                        origin = origin
+                        quantity = note_line_value.issue_quantity   
+                        check_qty =note_line_value.issue_quantity 
+                        cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (location_id, product_id,))
+                        quantity_on_hand=cr.fetchone()
+                        if quantity_on_hand:
+                            qty_on_hand = quantity_on_hand[0]
+                        else:
+                            qty_on_hand = 0   
+                        product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)   
+                        if note_line_value.product_uom.id  != product.product_tmpl_id.uom_id.id  :                                                                  
+                            cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (note_line_value.product_uom.id,))
+                            bigger_qty = cr.fetchone()[0]
+                            bigger_qty = int(bigger_qty)
+                            if  bigger_qty:
+                                check_qty = quantity * bigger_qty 
+                        if check_qty > qty_on_hand:
+                                raise osv.except_osv(_('Warning'),
+                                         _('Please Check Qty On Hand For (%s)') % (product.name_template,))
+                        else:
+                            move_id = move_obj.create(cr, uid, {'picking_id': picking_id,
+                                                      'picking_type_id':picking_type_id,
+                                                  'product_id': product_id,
+                                                  'product_uom_qty': quantity,
+                                                  'product_uos_qty': quantity,
+                                                  'product_uom':product_uom,
+                                                  'location_id':location_id,
+                                                  'location_dest_id':from_location_id,
+                                                  'name':name,
+                                                   'origin':origin,
+                                                  'state':'confirmed'}, context=context)     
+                            move_obj.action_done(cr, uid, move_id, context=context)  
+                            cr.execute('''update stock_move set date=((%s::date)::text || ' ' || date::time(0))::timestamp where state='done' and origin =%s''', (issue_date, origin,))
         #update status to BRFI >>> partial or complete
         self.update_status_to_rfi(cr, uid, ids, context=context)            
         return self.write(cr, uid, ids, {'state': 'issue'})       
@@ -476,38 +478,40 @@ class branch_good_issue_note(osv.osv):
             else:
                 raise osv.except_osv(_('Warning'),
                                      _('Picking Type has not for this transition'))
-            picking_id = picking_obj.create(cr, uid, {
-                                          'date': receive_date,
-                                          'origin':origin,
-                                          'picking_type_id':picking_type_id}, context=context)
-            note_line_id = product_line_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context)
-            if note_line_id and picking_id:
-                for note_id in note_value.p_line:
-                    note_line_value = product_line_obj.browse(cr, uid, note_id.id, context=context)
-                    product_id = note_line_value.product_id.id
-                    name = note_line_value.product_id.name_template
-                    product_uom = note_line_value.product_uom.id
-                    origin = origin
-                    quantity = note_line_value.receive_quantity 
-                    if note_line_value.diff_quantity < 0:
-                        raise osv.except_osv(_('Warning'),
-                                             _('Cannot Receive Over Qty')) 
+            picking_ids = picking_obj.search(cr, uid,[('origin','=',origin),('state','=','done')],context=None)
+            if not picking_ids:    
+                picking_id = picking_obj.create(cr, uid, {
+                                              'date': receive_date,
+                                              'origin':origin,
+                                              'picking_type_id':picking_type_id}, context=context)
+                note_line_id = product_line_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context)
+                if note_line_id and picking_id:
+                    for note_id in note_value.p_line:
+                        note_line_value = product_line_obj.browse(cr, uid, note_id.id, context=context)
+                        product_id = note_line_value.product_id.id
+                        name = note_line_value.product_id.name_template
+                        product_uom = note_line_value.product_uom.id
+                        origin = origin
+                        quantity = note_line_value.receive_quantity 
+                        if note_line_value.diff_quantity < 0:
+                            raise osv.except_osv(_('Warning'),
+                                                 _('Cannot Receive Over Qty')) 
+                                                   
                                                
-                                           
-                    move_id = move_obj.create(cr, uid, {'picking_id': picking_id,
-                                              'picking_type_id':picking_type_id,
-                                          'product_id': product_id,
-                                          'product_uom_qty': quantity,
-                                          'product_uos_qty': quantity,
-                                          'product_uom':product_uom,
-                                          'location_id':location_id,
-                                          'location_dest_id':from_location_id,
-                                          'name':name,
-                                           'origin':origin,
-                                          'state':'confirmed'}, context=context)     
-                    move_obj.action_done(cr, uid, move_id, context=context)  
-                    cr.execute('''update stock_move set date=((%s::date)::text || ' ' || date::time(0))::timestamp where state='done' and origin =%s''', (receive_date, origin,))
-        
+                        move_id = move_obj.create(cr, uid, {'picking_id': picking_id,
+                                                  'picking_type_id':picking_type_id,
+                                              'product_id': product_id,
+                                              'product_uom_qty': quantity,
+                                              'product_uos_qty': quantity,
+                                              'product_uom':product_uom,
+                                              'location_id':location_id,
+                                              'location_dest_id':from_location_id,
+                                              'name':name,
+                                               'origin':origin,
+                                              'state':'confirmed'}, context=context)     
+                        move_obj.action_done(cr, uid, move_id, context=context)  
+                        cr.execute('''update stock_move set date=((%s::date)::text || ' ' || date::time(0))::timestamp where state='done' and origin =%s''', (receive_date, origin,))
+            
             if note_value.total_diff_qty>0:
                 state='partial_receive'
         return self.write(cr, uid, ids, {'state': state, 'grn_no':grn_code}) 
@@ -532,33 +536,35 @@ class branch_good_issue_note(osv.osv):
             else:
                 raise osv.except_osv(_('Warning'),
                                      _('Picking Type has not for this transition'))
-            picking_id = picking_obj.create(cr, uid, {
-                                          'date': issue_date,
-                                          'origin':origin,
-                                          'picking_type_id':picking_type_id}, context=context)
-            note_line_id = product_line_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context)
-            if note_line_id and picking_id:
-                for note_id in note_value.p_line:
-                    note_line_value = product_line_obj.browse(cr, uid, note_id.id, context=context)
-                    product_id = note_line_value.product_id.id
-                    name = note_line_value.product_id.name_template
-                    product_uom = note_line_value.product_uom.id
-                    origin = origin
-                    quantity = note_line_value.issue_quantity                        
-                    move_id = move_obj.create(cr, uid, {'picking_id': picking_id,
-                                              'picking_type_id':picking_type_id,
-                                          'product_id': product_id,
-                                          'product_uom_qty': quantity,
-                                          'product_uos_qty': quantity,
-                                          'product_uom':product_uom,
-                                          'location_id':location_id,
-                                          'location_dest_id':from_location_id,
-                                          'name':name,
-                                           'origin':origin,
-                                          'state':'confirmed'}, context=context)     
-                    move_obj.action_done(cr, uid, move_id, context=context)  
-                    cr.execute('''update stock_move set date=((%s::date)::text || ' ' || date::time(0))::timestamp where state='done' and origin =%s''', (issue_date, origin,))
-                
+            picking_ids = picking_obj.search(cr, uid,[('origin','=',origin),('state','=','done')],context=None)
+            if not picking_ids:            
+                picking_id = picking_obj.create(cr, uid, {
+                                              'date': issue_date,
+                                              'origin':origin,
+                                              'picking_type_id':picking_type_id}, context=context)
+                note_line_id = product_line_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context)
+                if note_line_id and picking_id:
+                    for note_id in note_value.p_line:
+                        note_line_value = product_line_obj.browse(cr, uid, note_id.id, context=context)
+                        product_id = note_line_value.product_id.id
+                        name = note_line_value.product_id.name_template
+                        product_uom = note_line_value.product_uom.id
+                        origin = origin
+                        quantity = note_line_value.issue_quantity                        
+                        move_id = move_obj.create(cr, uid, {'picking_id': picking_id,
+                                                  'picking_type_id':picking_type_id,
+                                              'product_id': product_id,
+                                              'product_uom_qty': quantity,
+                                              'product_uos_qty': quantity,
+                                              'product_uom':product_uom,
+                                              'location_id':location_id,
+                                              'location_dest_id':from_location_id,
+                                              'name':name,
+                                               'origin':origin,
+                                              'state':'confirmed'}, context=context)     
+                        move_obj.action_done(cr, uid, move_id, context=context)  
+                        cr.execute('''update stock_move set date=((%s::date)::text || ' ' || date::time(0))::timestamp where state='done' and origin =%s''', (issue_date, origin,))
+                    
         return self.write(cr, uid, ids, {'state': 'issue'})
     
     def transfer_other_location_gin(self,cr,uid,id,default_val,context=None):
