@@ -181,6 +181,20 @@
 						</tr>
 						<tr>
 							<td style="border:0pt;font-size:10pt;">
+								<strong>Total POSM Qty :</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.total_posm_qty" />
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Total POSM Viss :</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.total_posm_viss" />
+							</td>
+						</tr>
+						<tr>
+							<td style="border:0pt;font-size:10pt;">
 								<strong>Total Ctn Qty :</strong>
 							</td>
 							<td style="border:0pt;font-size:10pt;">
@@ -258,6 +272,12 @@
 							</td>
 							<td style="border:0pt;font-size:10pt;">
 								<span t-field="o.checked_by" />
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>POSM Remark :</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.posm_remark" />
 							</td>
 						</tr>
 					</table>

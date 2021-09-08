@@ -381,6 +381,7 @@ class branch_stock_requisition(osv.osv):
                                       'sequence':request_line_data.sequence,
                                       'product_value':request_line_data.product_value,
                                       'product_loss':request_line_data.loss,
+                                       'is_foc':request_line_data.is_foc,
                                         'product_viss':request_line_data.viss_value,
                                         'product_cbm':request_line_data.cbm_value,
                                       }, context=context) 
@@ -446,6 +447,7 @@ class branch_stock_requisition(osv.osv):
                                       'sequence':request_line_data.sequence,
                                       'product_value':request_line_data.product_value,
                                       'product_loss':request_line_data.loss,
+                                      'is_foc':request_line_data.is_foc,
                                         'product_viss':request_line_data.viss_value,
                                         'product_cbm':request_line_data.cbm_value,
                                         'remark':request_line_data.remark,
@@ -856,6 +858,7 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
         'gin_diff_quantity':fields.function(_gin_diff_quantity_value, string='Diff(Qty)', digits=(16, 0), type='float', readonly=True,copy=False),
         'diff_quantity':fields.function(_diff_quantity_value, string='Diff(Qty)', digits=(16, 0), type='float', readonly=True),
         'loss' : fields.boolean(string='Loose'),
+         'is_foc': fields.boolean(string='Foc'),
        # 'product_value' : fields.float(string='Value', digits=(16, 0), readonly=True),
         'product_value':fields.function(_cal_product_value, string='Value', type='float', digits=(16, 0)),
         'viss_value':fields.function(_cal_viss_value, string='Viss', digits=(16, 4), type='float'),

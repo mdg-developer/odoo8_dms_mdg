@@ -56,11 +56,13 @@ class branch_good_issue_note(osv.osv):
         if context is None:
             context = {}               
         for order in self.browse(cr, uid, ids, context=context):
-            val1 = 0.0            
+            val1 = 0.0
+            posm_viss=0
+            posm_viss= order.total_posm_viss        
             for line in order.p_line:
                 req_data = self.pool.get('branch.good.issue.note.line').browse(cr, uid, line.id, context=context)
                 val1 += req_data.product_viss                     
-            res[order.id] = val1
+            res[order.id] = val1 + posm_viss
         return res            
 
     def _qty_ctn_total(self, cr, uid, ids, field_name, arg, context=None):
@@ -71,7 +73,8 @@ class branch_good_issue_note(osv.osv):
             val1 = 0.0            
             for line in order.p_line:
                 req_data = self.pool.get('branch.good.issue.note.line').browse(cr, uid, line.id, context=context)
-                if req_data.product_loss!=True:
+                product = self.pool.get('product.product').browse(cr, uid, req_data.product_id.id, context=context)   
+                if req_data.product_loss!=True and product.product_tmpl_id.is_posm!=True:
                     val1 += req_data.issue_quantity                    
             res[order.id] = val1
         return res   
@@ -88,6 +91,21 @@ class branch_good_issue_note(osv.osv):
                     val1 += req_data.issue_quantity                     
             res[order.id] = val1
         return res    
+    
+  
+    def _qty_posm_total(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        if context is None:
+            context = {}               
+        for order in self.browse(cr, uid, ids, context=context):
+            val1 = 0.0            
+            for line in order.p_line:
+                req_data = self.pool.get('branch.good.issue.note.line').browse(cr, uid, line.id, context=context)
+                product = self.pool.get('product.product').browse(cr, uid, req_data.product_id.id, context=context)   
+                if product.product_tmpl_id.is_posm==True:
+                    val1 += req_data.issue_quantity                     
+            res[order.id] = val1
+        return res   
     
     def _cbm_amount(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
@@ -199,6 +217,9 @@ class branch_good_issue_note(osv.osv):
                but waiting for the scheduler to run on the order date.", select=True),
     'total_ctn':fields.function(_qty_ctn_total, string='Total Ctn Qty', digits=(16, 0), type='float'),
     'total_qty':fields.function(_qty_pcs_total, string='Total Pcs Qty', digits=(16, 0), type='float'),
+    'total_posm_qty':fields.function(_qty_posm_total, string='Total POSM Qty', digits=(16, 0), type='float'),
+    'total_posm_viss':fields.float("POSM Viss",copy=False),
+    'posm_remark':fields.char("POSM Remark",copy=False),
     'total_viss':fields.function(_viss_amount, string='Total Viss', digits_compute=dp.get_precision('Product Price'), type='float'),
     'total_cbm':fields.function(_cbm_amount, string='Total CBM', digits_compute=dp.get_precision('Product Price'), type='float'),
     'bal_viss':fields.function(_bal_viss_amount, string='Bal Viss', digits_compute=dp.get_precision('Product Price'), type='float'),
@@ -279,7 +300,7 @@ class branch_good_issue_note(osv.osv):
                 
                 
                 grn_ids = self.search(cr, uid, [('request_id', '=', gin_value.request_id.id),('state','=','approve')], context=context)
-                gin_line_ids = ginline_obj.search(cr, uid, [('line_id', 'in', grn_ids), ('product_id', '=', line.product_id.id),('product_uom','=',line.product_uom.id),('product_loss','=',line.loss)], context=context)
+                gin_line_ids = ginline_obj.search(cr, uid, [('line_id', 'in', grn_ids), ('product_id', '=', line.product_id.id),('product_uom','=',line.product_uom.id),('product_loss','=',line.loss),('is_foc','=',line.is_foc)], context=context)
                 
                 for gin_line in ginline_obj.browse(cr,uid,gin_line_ids,context=context):
                     issue_qty += gin_line.issue_quantity
@@ -735,6 +756,8 @@ class branch_good_issue_note_line(osv.osv):
         'sequence':fields.integer('Sequence'),
         'product_value':fields.function(_cal_product_value, string='Value', digits=(16, 0), type='float'),
         'product_loss' : fields.boolean(string='Loose'),
+        'is_foc' : fields.boolean(string='Foc'),
+        
 #         'product_viss' : fields.float(string='Viss', digits=(16, 0)),
 #         'product_cbm' : fields.float(string='CBM', digits=(16, 0)),
         'product_viss':fields.function(_cal_viss_value, string='Viss', digits_compute=dp.get_precision('Cost Price'), type='float'),

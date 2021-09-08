@@ -57,10 +57,10 @@
 								<field name="truck_type_id" attrs="{'readonly':[('state','!=','draft')]}" />
 								<field name="max_viss" />
 								<field name="max_cbm" />
-								<field name="total_viss" invisible="1"/>
+								<field name="total_viss" invisible="1" />
 								<field name="total_viss_store" />
 								<field name="total_cbm" />
-								<field name="total_cbm_store"  invisible="1"/>
+								<field name="total_cbm_store" invisible="1" />
 								<field name="bal_viss" />
 								<field name="bal_cbm" />
 								<field name="pricelist_id" />
@@ -112,6 +112,7 @@
 												readonly="True" />
 											<field name="product_value" />
 											<field name="loss" />
+											<field name="is_foc" />
 											<field name="viss_value" />
 											<field name="cbm_value" />
 											<field name="remark" />
