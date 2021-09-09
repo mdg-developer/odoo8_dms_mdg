@@ -56,6 +56,18 @@
 								<field name="to_date" readonly="1" />
 							</group>
 						</group>
+						<group>
+							<notebook>
+								<page string="Principal">
+									<field name="p_line" attrs="{'readonly': [('state','not in',('draft'))]}">
+										<tree string="Principal Line" editable="bottom">
+											<field name="principle_id" />
+											<field name="amount" sum="Total"/>
+										</tree>
+									</field>
+								</page>
+							</notebook>
+						</group>
 					</sheet>
 				</form>
 			</field>

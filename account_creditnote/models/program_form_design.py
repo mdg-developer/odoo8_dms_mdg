@@ -5,7 +5,7 @@ class program_form_design(osv.osv):
     _columns = {
                 'name': fields.char('Name' ,readonly=False),
                 'description': fields.char('Description' ,readonly=False),
-                'principle_id':fields.many2one('product.maingroup', 'Principle'),                
+                'principle_id':fields.many2one('product.maingroup', 'Principal'),                
                 'from_date': fields.date('From Date'),
                 'to_date': fields.date('To Date'),
                 'term_and_condition': fields.text('Terms and Conditions'),                
