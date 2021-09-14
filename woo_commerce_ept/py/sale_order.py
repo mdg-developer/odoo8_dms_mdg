@@ -1032,13 +1032,16 @@ class sale_order(models.Model):
                     fee_line_tax_ids =  self.get_woo_tax_id_ept(instance,tax_datas,False)
                     if fee_value:
                         self.create_woo_sale_order_line({},fee_line_tax_ids,instance.fee_line_id,woo_product_uom,1,fiscal_position,partner,pricelist_id,fee,sale_order,fee_value)
-                if sale_order:           
-                    one_signal_values = {
-                                         'partner_id': sale_order.partner_id.id,
-                                         'contents': "Your order " + sale_order.name + " is created successfully.",
-                                         'headings': "Burmart"
-                                        }                          
-                    self.env['one.signal.notification.messages'].create(one_signal_values)    
+                if sale_order:
+                    noti_message = "Your order " + sale_order.name + " is created successfully."
+                    messages =self.env['one.signal.notification.messages'].search([('contents','=', noti_message)])
+                    if not messages:           
+                        one_signal_values = {
+                                             'partner_id': sale_order.partner_id.id,
+                                             'contents': noti_message,
+                                             'headings': "Burmart"
+                                            }                          
+                        self.env['one.signal.notification.messages'].create(one_signal_values)    
             if import_order_ids:
                 self.env['sale.workflow.process.ept'].auto_workflow_process(ids=import_order_ids)
         return True
