@@ -68,6 +68,21 @@
 				</xpath>				
 			</field>
 		</record>  
+		
+		<record id="view_woo_partner_tree_inherit_woo_user_name" model="ir.ui.view">
+			<field name="name">res.partner.tree.inherit</field>
+			<field name="model">res.partner</field>
+			<field name="type">form</field>
+			<field name="inherit_id" ref="woo_commerce_ept.view_woo_partner_tree" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='woo_customer_id']" position="before">
+					<field name="woo_user_name" />
+				</xpath>	
+				<xpath expr="//field[@name='name']" position="after">
+					<field name="customer_code" />
+				</xpath>				
+			</field>
+		</record>  
 		     
 	</data>
 </openerp>
