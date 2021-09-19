@@ -97,7 +97,7 @@ class account_creditnote(osv.osv):
                         for line_data in resVal.p_line:   
                             check_amount +=line_data.amount 
                         if check_amount !=resVal.amount:
-                            raise osv.except_osv(_('Configuration Error!'), _('Principal Total Amount is not same with line total'))
+                            raise osv.except_osv(_('Configuration Error!'), _('Principal Total Amount is not same with line total.CN No is %s.') % (resVal.name,))
                          
                         for line_data in resVal.p_line:   
                             account_move = {
