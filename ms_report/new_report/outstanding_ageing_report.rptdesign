@@ -923,7 +923,7 @@ left join account_voucher avr on avr.id=avl.voucher_id
 left join account_move paidmove on paidmove.id= avr.move_id
 left join account_move_reconcile amr on amr.id=aml.reconcile_id 
 left join account_move_line payment_full on payment_full.reconcile_id=amr.id  and  payment_full.move_id =paidmove.id 
-where av.state !='cancel'
+where av.state not in ('draft''cancel')
 and aml.id not in (payment_full.id)
 and payment_full.move_id !=am.id
 and av.type='out_invoice'
@@ -944,7 +944,7 @@ left join account_voucher avr on avr.id=avl.voucher_id
 left join account_move paidmove on paidmove.id= avr.move_id
 left join account_move_reconcile amp on amp.id=aml.reconcile_partial_id
 left join account_move_line payment_partial on payment_partial.reconcile_partial_id=amp.id and  payment_partial.move_id =paidmove.id 
- where av.state !='cancel'
+ where av.state not in ('draft','cancel')
 and aml.id not in (payment_partial.id)
 and payment_partial.move_id !=am.id
 and av.amount_total !=av.residual
@@ -960,7 +960,8 @@ where  A.move_id =am.id
 and am.journal_id = aj.id
 and A.section_id =crm.id
 and A.partner_id =rp.id
-and A.number=ai.number) as residual,
+and A.number=ai.number
+and ai.residual>0) as residual,
 case when amount_total<0 then 'Yes' when amount_total>0 then 'No' end as credit_memo,sc.name sales_rep_name,rp.street ship_to_address1,rp.name bill_to_name,rp.street address1,ai.origin
 from account_invoice ai
 left join res_partner rp on (ai.partner_id=rp.id)

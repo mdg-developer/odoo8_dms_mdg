@@ -33,6 +33,8 @@ class res_partner(osv.osv):
     def send_otp_code(self, cr, uid, ids, mobile_phone, context=None):
         
         if mobile_phone:
+            data = None     
+            error_msg = None       
             try: 
                 headers = {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}            
                 sms_user= 'mdgpro'
@@ -40,8 +42,8 @@ class res_partner(osv.osv):
                 url='https://mpg-ids.mytel.com.mm/auth/realms/eis/protocol/openid-connect/token'
                 payload = {'grant_type': 'client_credentials'}
                 response = requests.post(url,headers=headers,auth=(sms_user, password), data=payload, verify=False)
-                number = random.randint(1000,9999)         
-                message = 'Dear customer,your OTP for registration is ' + str(number) + '.Use this code to register your account.'
+                number = random.randint(1000,9999)  
+                message = 'Valued Customer, your OTP Code is ' + str(number) + '. Please use this for your Burmart account.'       
                 if response.status_code == 200:                
                     content = json.loads(response.content)
                     token = content['access_token'] 
@@ -55,12 +57,22 @@ class res_partner(osv.osv):
                             }                 
                     response = requests.post(sms_url,  json = sms_payload, headers = header,verify=False)                
                     if response.status_code == 200:
-                        return number              
+                        sms_status = 'success'  
+                        data = number    
+                    else:
+                        sms_status = 'fail'   
             except Exception as e:         
                 error_msg = 'Error Message: %s' % (e) 
-                logging.error(error_msg)  
-                return error_msg
-
+                logging.error(error_msg)
+                sms_status = 'fail'                 
+                data = error_msg            
+            if error_msg:
+                error_log = error_msg
+            else:
+                error_log = None
+            cr.execute("""insert into sms_message(name,phone,message,error_log,status) 
+                        values(%s,%s,%s,%s,%s)""",('Burmart OTP',mobile_phone,message,error_log,sms_status,))  
+            return data            
 
     def create_or_update_woo_customer(self, cr, uid, ids, mdg_customer=False, customer_code=None, name=None,street=None,street2=None,township=None,state=None,mobile=None,phone=None,gender=None,birthday=None,email=None,partner_latitude=None,partner_longitude=None,sms=None,viber=None,shop_name=None,woo_customer_id=None,image=None,sale_channel=None,context=None):
         vals = {}
