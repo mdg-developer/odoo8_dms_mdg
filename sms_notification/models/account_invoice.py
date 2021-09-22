@@ -262,3 +262,39 @@ class account_invoice(osv.osv):
                             message_obj = self.pool.get('sms.message').browse(cr, uid, message, context=context)
                             if message_obj.status == 'success':
                                 invoice.write({'overdue_noti':datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")})                            
+
+
+    def send_paid_sms(self, cr, uid,invoice_id, context=None):    
+        
+        if invoice_id:
+            invoice_data = self.browse(cr, uid, invoice_id, context=context)         
+            for invoice in invoice_data:            
+                if invoice.payment_type:           
+                    sms_template_objs = self.pool.get('sms.template').search(cr, uid, [('condition', '=', 'invoice_paid'),
+                                                                                       ('globally_access','=',False)],limit=1)
+                    
+                    for sms_template_obj in sms_template_objs:
+                        if invoice.partner_id.sms == True:                         
+                            template_data = self.pool.get('sms.template').browse(cr, uid, sms_template_obj, context=context)                   
+                            message_body =  template_data.get_body_data(invoice)
+                            if invoice.partner_id.mobile.startswith('09-') or invoice.partner_id.mobile.startswith('09'):
+                                if invoice.partner_id.mobile.startswith('09-'):
+                                    phone = '959' + str(invoice.partner_id.mobile[3:])  
+                                else:
+                                    phone = '959' + str(invoice.partner_id.mobile[2:])
+                            if invoice.partner_id.mobile.startswith('+959'):  
+                                phone = '959' + str(invoice.partner_id.mobile[4:])      
+                            text_message = message_body.encode("utf-16-be")
+                            hex_message = text_message.encode('hex')
+                            vals={
+                                    'phone':str(phone),
+                                    'message':hex_message, 
+                                    'partner_id':invoice.partner_id.id,
+                                    'name':invoice.number,
+                                    'text_message': message_body,
+                                }   
+                            message = self.pool.get('sms.message').create(cr,uid,vals)
+                            message_obj = self.pool.get('sms.message').browse(cr, uid, message, context=context)
+                            #if message_obj.status == 'success':
+                            # invoice.write({'collection_noti':datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")})                               
+                                                             

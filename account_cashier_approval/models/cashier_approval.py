@@ -256,7 +256,9 @@ class cashier_approval(osv.osv):
         import datetime
         invoiceObj = self.pool.get('account.invoice')
         datas = self.read(cr, uid, ids, ['date', 'to_date', 'user_id', 'sale_team_id'], context=None)
-        if datas:       
+        if datas:   
+            for data in datas:
+                to_date = data['to_date']    
             cr.execute("select selected,invoice_id from cashier_approval_invoice_line where cashier_id=%s", (ids[0],))    
             invoice_data = cr.fetchall()
             for data in invoice_data:
@@ -275,12 +277,23 @@ class cashier_approval(osv.osv):
                     invoice = invoiceObj.browse(cr, uid, invoice_id, context=context)
                     number = invoice.number
                     cr.execute("update mobile_ar_collection set unselected=True where ref_no=%s", (number,))         
+                else:
+                    invoice = invoiceObj.browse(cr, uid, invoice_id, context=context)
+                    cr.execute("""select to_char(%s::date, 'DD/MM/YYYY');""", (to_date,))
+                    date=cr.fetchone()[0]
+                    invoice.write({'paid_date':date})  
+                    invoice.send_paid_sms(cr, uid, invoice_id, context)
             cr.execute("select id from cashier_customer_payment where selected=True and cashier_id=%s", (ids[0],)) 
             selected_data = cr.fetchone()
             if not selected_data:
                 raise osv.except_osv(_('Warning'),
                                      _('Please Select At Lease One Record.'))   
             self.create_journal_ms(cr, uid, ids, context)
+            invoice = invoiceObj.browse(cr, uid, invoice_id, context=context)
+            #cr.execute("""select to_char(%s::date, 'DD/MM/YYYY');""", (to_date,))
+           # date=cr.fetchone()[0]
+            #invoice.write({'paid_date':date})  
+            invoice.send_paid_sms(invoice_id)            
         self.write(cr, uid, ids, {'state':'done', 'approve_by':uid,'approve_date':datetime.datetime.now()}, context=context)
         return True   
     
