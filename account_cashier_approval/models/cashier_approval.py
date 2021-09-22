@@ -289,11 +289,17 @@ class cashier_approval(osv.osv):
                 raise osv.except_osv(_('Warning'),
                                      _('Please Select At Lease One Record.'))   
             self.create_journal_ms(cr, uid, ids, context)
-            invoice = invoiceObj.browse(cr, uid, invoice_id, context=context)
-            cr.execute("""select to_char(%s::date, 'DD/MM/YYYY');""", (to_date,))
-            date=cr.fetchone()[0]
-            invoice.write({'paid_date':date})  
-            invoice.send_paid_sms(invoice_id)            
+            cr.execute("""select amount,invoice_id from cashier_customer_payment where cashier_id=%s  and selected=True""", (ids[0],)) 
+            payment_data = cr.fetchall()
+            if payment_data:
+                for payment in payment_data:  
+                    payment_invoice_id=payment[1] 
+                    payment_amt=payment[0]           
+                    invoice = invoiceObj.browse(cr, uid, payment_invoice_id, context=context)
+                    cr.execute("""select to_char(%s::date, 'DD/MM/YYYY');""", (to_date,))
+                    date=cr.fetchone()[0]
+                    invoice.write({'paid_date1':date,'paid_amount':payment_amt})  
+                    invoice.send_paid_sms(payment_invoice_id)            
         self.write(cr, uid, ids, {'state':'done', 'approve_by':uid,'approve_date':datetime.datetime.now()}, context=context)
         return True   
     
