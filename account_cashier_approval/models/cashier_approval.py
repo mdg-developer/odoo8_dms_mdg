@@ -290,9 +290,9 @@ class cashier_approval(osv.osv):
                                      _('Please Select At Lease One Record.'))   
             self.create_journal_ms(cr, uid, ids, context)
             invoice = invoiceObj.browse(cr, uid, invoice_id, context=context)
-            #cr.execute("""select to_char(%s::date, 'DD/MM/YYYY');""", (to_date,))
-           # date=cr.fetchone()[0]
-            #invoice.write({'paid_date':date})  
+            cr.execute("""select to_char(%s::date, 'DD/MM/YYYY');""", (to_date,))
+            date=cr.fetchone()[0]
+            invoice.write({'paid_date':date})  
             invoice.send_paid_sms(invoice_id)            
         self.write(cr, uid, ids, {'state':'done', 'approve_by':uid,'approve_date':datetime.datetime.now()}, context=context)
         return True   
