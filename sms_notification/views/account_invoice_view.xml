@@ -13,7 +13,7 @@
 					<field name="collection_noti" readonly="1" />
 					<field name="overdue_noti" readonly="1" />
 					<field name="paid_date" readonly="1" />
-					<field name="paid_date1" readonly="1" />
+					<field name="paid_date_tmp" readonly="1" />
 					<field name="paid_amount" readonly="1" />
 
 

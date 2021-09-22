@@ -298,7 +298,7 @@ class cashier_approval(osv.osv):
                     invoice = invoiceObj.browse(cr, uid, payment_invoice_id, context=context)
                     cr.execute("""select to_char(%s::date, 'DD/MM/YYYY');""", (to_date,))
                     date=cr.fetchone()[0]
-                    invoice.write({'paid_date1':date,'paid_amount':payment_amt})  
+                    invoice.write({'paid_date_tmp':date,'paid_amount':payment_amt})  
                     invoice.send_paid_sms(payment_invoice_id)            
         self.write(cr, uid, ids, {'state':'done', 'approve_by':uid,'approve_date':datetime.datetime.now()}, context=context)
         return True   

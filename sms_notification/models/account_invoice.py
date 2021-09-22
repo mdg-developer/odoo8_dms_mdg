@@ -151,7 +151,7 @@ class account_invoice(osv.osv):
         'date_due_value': fields.function(_calculate_date_due_value, string='Due Date Value', type='char'),
         'cash_collection_date_value': fields.char('Cash Collection Date Value'),
         'paid_date': fields.function(_calculate_paid_date, string='Paid Date', type='char'),
-        'paid_date1': fields.char('Paid Date'),
+        'paid_date_tmp': fields.char('Paid Date'),
         'paid_amount': fields.float('Paid Amount'),
         
         
