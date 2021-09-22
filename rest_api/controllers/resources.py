@@ -22,3 +22,4 @@ from . import model__app_version
 from . import model__push_noti_app
 from . import model__push_image_app
 from . import model__app_announcement
+from . import model__one_signal_notification_messages

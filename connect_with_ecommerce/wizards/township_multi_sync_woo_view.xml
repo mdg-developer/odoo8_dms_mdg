@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        
+        <record id="view_township_multi_sync_woo_form" model="ir.ui.view">
+            <field name="name">township_sync_woo_form</field>
+            <field name="model">township.multi.sync.woo</field>
+            <field name="arch"  type="xml">
+                <form>
+                    <group col="4" colspan="6">
+                       <span class="o_form_label">All selected townships sync to Woo</span>
+                    </group>
+                    <footer>
+                        <button name="towship_sync_woo" string="Sync to Woo" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_township_multi_sync_woo" model="ir.actions.act_window">
+            <field name="name">Township Sync to Woo</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">township.multi.sync.woo</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>            
+        </record>        
+
+        <record model="ir.values" id="township_multi_sync_to_woo_value">
+            <field name="name">Township Sync to Woo</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_township_multi_sync_woo'))" />
+            <field name="key">action</field>
+            <field name="model">res.township</field>
+        </record>       
+
+    </data>
+</openerp>

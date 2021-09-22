@@ -2,6 +2,8 @@ from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
 from openerp.osv.fields import _column
 import xmlrpclib
+from openerp.tools.translate import _
+from openerp.osv.orm import except_orm
 
 class product_pricelist(osv.osv):
     _inherit = "product.pricelist"
@@ -35,10 +37,12 @@ class product_pricelist(osv.osv):
                 for version_id in pricelist_version_ids:
                     for version_item in self.pool['product.pricelist.item'].search(cr,uid,[('price_version_id','=',version_id)],context=None):
                         pricelist_item = pricelist_item_obj.browse(cr,uid,version_item)
-                        product_code = pricelist_item.product_id.product_tmpl_id.default_code
+                        product_code = pricelist_item.product_id.default_code
+                        if not product_code:
+                            raise except_orm(_('UserError'), _("Please define product code for %s!") % (pricelist_item.product_id.name_template,))
                         price = pricelist_item.new_price
                         pricelist_id = data.id
-                        if data.consumer == True:                            
+                        if data.consumer == True:                                                    
                             price_info = product_code + "," + str(int(price)) + ",,"                                           
                             wcapi.put('dynamic-price-consumer',str(price_info)) 
                         if data.retail == True and data.branch_id:

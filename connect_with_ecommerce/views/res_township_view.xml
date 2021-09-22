@@ -12,6 +12,7 @@
 					<field name="branch_id"/>
 					<field name="pick_up"/>
 					<field name="description"/>
+					<field name="is_sync_woo"/>
 				</field>
 			</field>
 		</record>
@@ -26,6 +27,7 @@
 					<field name="delivery_team_id" />
 					<field name="branch_id"/>
 					<field name="pick_up"/>
+					<field name="is_sync_woo"/>
 				</field>
 			</field>
 		</record>

@@ -92,11 +92,11 @@ class res_partner(osv.osv):
                             township_data = township_obj.browse(cr, uid, township_value, context=context)
                             vals['township']= township_data.id
                             vals['branch_id'] = township_data.branch_id.id      
-            if township_data.delivery_team_id:
-                vals['delivery_team_id']= township_data.delivery_team_id.id
-            else:
-                if city_data.delivery_team_id:
-                    vals['delivery_team_id']= city_data.delivery_team_id.id
+                            if township_data.delivery_team_id:
+                                vals['delivery_team_id']= township_data.delivery_team_id.id
+                            else:
+                                if city_data.delivery_team_id:
+                                    vals['delivery_team_id']= city_data.delivery_team_id.id
             if state:                
                 state_value = state_obj.search(cr, uid, [('name', '=ilike', state)], context=context)
                 if state_value:
@@ -231,7 +231,7 @@ class res_partner(osv.osv):
                 
                 new_partner_obj = self.pool.get('res.partner')
                 old_vals = {}
-                old_vals['name'] = name
+                old_vals['name'] = partner_data.temp_customer
                 old_vals['street'] = street
                 old_vals['street2'] = street2
                 old_vals['township'] = contact_township

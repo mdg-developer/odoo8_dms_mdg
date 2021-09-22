@@ -593,15 +593,15 @@ class sale_order(models.Model):
                                                             })           
                         
             if result.get('payment_details'):                
-                if result.get('payment_details').get('method_title',False) == 'Credit Application Amount':
+                if result.get('payment_details').get('method_title',False) == 'Credit':
                     payment_type = "credit"
                 else:
                     payment_type = "cash"     
             if result.get('payment_type'):
                 payment_type = result.get('payment_type')
                 
-            if result.get('payment_terms'):
-                payment_terms = result.get('payment_terms')
+            if result.get('payment_term'):
+                payment_terms = result.get('payment_term')
                 terms = self.env['account.payment.term'].search([('name','=',payment_terms)], limit=1)
                 if terms:
                     term_id =  terms.id            
@@ -609,7 +609,7 @@ class sale_order(models.Model):
                 user_obj = self.env['res.users'].search([('default_section_id','=',delivery_id)], limit=1)  
                 if user_obj:
                     sales_person = user_obj.id
-            pricelist_id = woo_config.pricelist_id.id                             
+            #pricelist_id = woo_config.pricelist_id.id                             
             ordervals = {
                 'name' :name,                
                 'picking_policy' : workflow.picking_policy,
@@ -748,7 +748,7 @@ class sale_order(models.Model):
             wcapi = instance.connect_in_woo()
             order_ids = []
             tax_included  = wcapi.get('').json().get('store').get('meta').get('tax_included') or False
-            for order_status in instance.import_order_status_ids:
+            for order_status in instance.import_order_status_ids:                
                 response = wcapi.get('orders?status=%s&filter[limit]=1000'%(order_status.status))
                 if not isinstance(response,requests.models.Response):                
                     transaction_log_obj.create({'message': "Import Orders \nResponse is not in proper format :: %s"%(response),
@@ -767,12 +767,12 @@ class sale_order(models.Model):
                                         })
                     continue
                 order_response=response.json()
-                order_ids = order_ids + order_response.get('orders')
-                total_pages = response.headers.get('X-WC-TotalPages')
+                order_ids = order_ids + order_response.get('orders')                
+                total_pages = response.headers.get('X-WC-TotalPages')                
                 if total_pages >=2:
                     for page in range(2,int(total_pages)+1):            
                         order_ids = order_ids + self.import_all_woo_orders(wcapi,instance,transaction_log_obj,order_status,page)            
-            
+                
             import_order_ids=[]            
             if instance:
                 discount_label_wcapi = instance.connect_for_point_in_woo()   
@@ -865,7 +865,8 @@ class sale_order(models.Model):
                 if woo_partner:   
                     if woo_partner.channel:
                         if woo_partner.channel == 'consumer' or woo_partner.channel == 'retailer':
-                            if woo_partner.channel == 'consumer':
+                            if woo_partner.channel == 'consumer':                                
+                                logging.warning("customer branch: %s", woo_partner.branch_id.name)
                                 product_pricelist = self.env['product.pricelist'].sudo().search([('consumer','=',True)], limit=1)
                                 if product_pricelist:
                                     pricelist_id = product_pricelist.id
@@ -881,7 +882,7 @@ class sale_order(models.Model):
                                                                     })
                                     continue
                             if woo_partner.channel == 'retailer':
-                                product_pricelist = self.env['product.pricelist'].sudo().search([('retail','=',True)], limit=1)
+                                product_pricelist = self.env['product.pricelist'].sudo().search([('retail','=',True),('branch_id','=',woo_partner.branch_id.id)], limit=1)
                                 if product_pricelist:
                                     pricelist_id = product_pricelist.id
                                 else:
@@ -1018,7 +1019,7 @@ class sale_order(models.Model):
                     
                     #if not pricelist_id:
                     #woo_config =self.env['woo.config.settings'].sudo().search([('woo_instance_id','=',instance.id)],order="id desc", limit=1)
-                    #pricelist_id = woo_config.pricelist_id.id
+                    #pricelist_id = woo_config.pricelist_id.id                    
                     self.create_woo_sale_order_line(line,tax_ids,product,woo_product_uom,line.get('quantity'),fiscal_position,partner,pricelist_id,product.name,sale_order,actual_unit_price)                  
     
                 shipping_product=instance.shipment_charge_product_id 
@@ -1044,13 +1045,20 @@ class sale_order(models.Model):
                 if order_discount and discount_value:                                                                                                                            
                     self.create_woo_sale_order_line({},tax_ids,instance.discount_product_id,woo_product_uom,1,fiscal_position,partner,pricelist_id,instance.discount_product_id.name,sale_order,discount_value*-1)
                 fee_lines = order.get("fee_lines",[])
+                total_discount_amount = 0 
                 for fee_line in fee_lines:
-                    fee_value = fee_line.get("total")
-                    fee = fee_line.get("title")
-                    fee_line_tax_ids = []
-                    fee_line_tax_ids =  self.get_woo_tax_id_ept(instance,tax_datas,False)
-                    if fee_value:
-                        self.create_woo_sale_order_line({},fee_line_tax_ids,instance.fee_line_id,woo_product_uom,1,fiscal_position,partner,pricelist_id,fee,sale_order,fee_value)
+                    total_discount_amount += float(fee_line.get("total"))
+#                     fee_value = fee_line.get("total")
+#                     fee = fee_line.get("title")
+#                     fee_line_tax_ids = []
+#                     fee_line_tax_ids =  self.get_woo_tax_id_ept(instance,tax_datas,False)
+#                     if fee_value:
+#                         self.create_woo_sale_order_line({},fee_line_tax_ids,instance.fee_line_id,woo_product_uom,1,fiscal_position,partner,pricelist_id,fee,sale_order,fee_value)
+                
+                if abs(total_discount_amount) > 0:
+                    amount_total = sale_order.amount_untaxed - abs(total_discount_amount)
+                    self.env.cr.execute('update sale_order so set amount_total=%s,total_dis=%s where so.id=%s',(amount_total,abs(total_discount_amount),sale_order.id))
+                
                 if sale_order:           
                     one_signal_values = {
                                          'partner_id': sale_order.partner_id.id,

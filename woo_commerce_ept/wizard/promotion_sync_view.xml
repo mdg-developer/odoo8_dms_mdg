@@ -12,6 +12,8 @@
                     </group>
                     <footer>
                         <button name="promotion_sync_to_woo" string="Sync to Woocommerce" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
                     </footer>
                 </form>
             </field>
