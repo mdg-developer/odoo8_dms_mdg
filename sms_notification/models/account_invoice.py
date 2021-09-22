@@ -90,6 +90,58 @@ class account_invoice(osv.osv):
             res[invoice.id] = cash_collection_date                
         return res 
     
+    def _calculate_paid_date(self, cr, uid, ids, field_name, arg, context=None):
+        
+        res = {}
+        for invoice in self.browse(cr, uid, ids, context=context):
+            paid_date=[]
+            if invoice.state=='paid':
+                cr.execute("""
+                    select max(A.date)::date as payment_date
+                    from (
+                    select  av.origin,av.section_id,payment_full.move_id ,payment_full.id move_line_id,av.number,av.partner_id,av.date_invoice,paidmove.date,aml.reconcile_id,aml.id,payment_full.ref,coalesce(payment_full.credit,0) as payment_amount
+                    ,avl.amount_original invoice_amount,(avl.amount_unreconciled-avl.amount) as balance
+                    from account_invoice av 
+                    left join account_move am  on av.move_id =am.id
+                    left join account_move_line aml on aml.move_id=am.id and aml.reconcile_id is not null
+                    left join account_voucher_line avl on avl.move_line_id=aml.id and avl.amount >0
+                    left join account_voucher avr on avr.id=avl.voucher_id 
+                    left join account_move paidmove on paidmove.id= avr.move_id
+                    left join account_move_reconcile amr on amr.id=aml.reconcile_id 
+                    left join account_move_line payment_full on payment_full.reconcile_id=amr.id  and  payment_full.move_id =paidmove.id 
+                    where aml.id not in (payment_full.id)
+                    and payment_full.move_id !=am.id
+                    and av.id= %s
+                    union all 
+                    select av.origin,av.section_id,payment_partial.move_id,payment_partial.id move_line_id,av.number,av.partner_id,av.date_invoice,paidmove.date,aml.reconcile_id,aml.id,payment_partial.ref,coalesce(payment_partial.credit,0) as payment_amount,avl.amount_original invoice_amount,(avl.amount_unreconciled-avl.amount) as balance
+                    from account_invoice av 
+                    left join account_move am  on av.move_id =am.id
+                    left join account_move_line aml on aml.move_id=am.id and aml.reconcile_partial_id is not null
+                    left join account_voucher_line avl on avl.move_line_id=aml.id and avl.amount >0
+                    left join account_voucher avr on avr.id=avl.voucher_id 
+                    left join account_move paidmove on paidmove.id= avr.move_id
+                    left join account_move_reconcile amp on amp.id=aml.reconcile_partial_id
+                    left join account_move_line payment_partial on payment_partial.reconcile_partial_id=amp.id and  payment_partial.move_id =paidmove.id 
+                    where aml.id not in (payment_partial.id)
+                    and payment_partial.move_id !=am.id
+                    and av.id=  %s
+                    )A,account_move am,account_journal aj,crm_case_section crm,res_partner rp
+                    where  A.move_id =am.id
+                    and am.journal_id = aj.id
+                    and A.section_id =crm.id
+                    and A.partner_id =rp.id            
+                """, (invoice.id,invoice.id,))
+                paid_data = cr.fetchone() 
+                if paid_data:
+                    cr.execute("""select to_char(%s::date, 'DD/MM/YYYY');""", (paid_data[0],))
+                    paid_date = cr.fetchone()[0]  
+            
+            if paid_date:
+                res[invoice.id] = paid_date
+            else:
+                res[invoice.id] = None
+        return res    
+     
     _columns = {        
         'overdue_noti': fields.datetime('Overdue Reminder Notification'),
         'collection_noti': fields.datetime('Collection Reminder Notification'),
@@ -98,6 +150,8 @@ class account_invoice(osv.osv):
         'cash_collection_date': fields.function(_calculate_cash_collection_date, string='Calculate cash collection date', type='date'),
         'date_due_value': fields.function(_calculate_date_due_value, string='Due Date Value', type='char'),
         'cash_collection_date_value': fields.char('Cash Collection Date Value'),
+        'paid_date': fields.function(_calculate_paid_date, string='Paid Date', type='char'),
+        
     }         
                 
     def send_invoice_due_pre_reminder_sms(self, cr, uid, ids=None, context=None):    
