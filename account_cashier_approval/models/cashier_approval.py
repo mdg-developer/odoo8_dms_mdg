@@ -277,12 +277,6 @@ class cashier_approval(osv.osv):
                     invoice = invoiceObj.browse(cr, uid, invoice_id, context=context)
                     number = invoice.number
                     cr.execute("update mobile_ar_collection set unselected=True where ref_no=%s", (number,))         
-                else:
-                    invoice = invoiceObj.browse(cr, uid, invoice_id, context=context)
-                    cr.execute("""select to_char(%s::date, 'DD/MM/YYYY');""", (to_date,))
-                    date=cr.fetchone()[0]
-                    invoice.write({'paid_date':date})  
-                    invoice.send_paid_sms(cr, uid, invoice_id, context)
             cr.execute("select id from cashier_customer_payment where selected=True and cashier_id=%s", (ids[0],)) 
             selected_data = cr.fetchone()
             if not selected_data:
