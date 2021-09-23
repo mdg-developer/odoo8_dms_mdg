@@ -272,10 +272,9 @@ class account_invoice(osv.osv):
         if invoice_id:
             invoice_data = self.browse(cr, uid, invoice_id, context=context)         
             for invoice in invoice_data:            
-                if invoice.payment_type:           
+                if invoice.payment_type == 'credit':          
                     sms_template_objs = self.pool.get('sms.template').search(cr, uid, [('condition', '=', 'invoice_paid'),
                                                                                        ('globally_access','=',False)],limit=1)
-                    
                     for sms_template_obj in sms_template_objs:
                         if invoice.partner_id.sms == True:                         
                             template_data = self.pool.get('sms.template').browse(cr, uid, sms_template_obj, context=context)                   

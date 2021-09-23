@@ -513,7 +513,7 @@ class res_partner(osv.osv):
                                 code = codeObj.generateCode(cr, uid, codeId, context=context)
                                 
                         if branchId and townshipId and not woo_customer_id:
-                            codeId = codeObj.search(cr, uid, [('branch_id', '=', branchId.id), ('township_id', '=', townshipId.id)])
+                            codeId = codeObj.search(cr, uid, [('branch_id', '=', branchId.id), ('township_id', '=', townshipId.id), ('prefix', '!=', 'E')])
                             if codeId:
                                 code = codeObj.generateCode(cr, uid, codeId[0], context=context)
                             else:
