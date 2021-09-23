@@ -9,7 +9,7 @@
 			<field name="inherit_id" ref="hr_branch.view_branch_tree_new"/>
 			<field name="arch" type="xml">
 				<field name="active" position="before">
-					<field name="city_id" />
+					<field name="city_ids" widget="many2many_tags"/>
 				</field>
 			</field>
 		</record>
@@ -21,7 +21,7 @@
 			<field name="inherit_id" ref="hr_branch.view_branch_form_new"/>
 			<field name="arch" type="xml">
 				<field name="active" position="after">
-					<field name="city_id" />
+					<field name="city_ids" widget="many2many_tags"/>
 				</field>
 			</field>
 		</record>

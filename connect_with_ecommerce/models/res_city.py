@@ -17,10 +17,10 @@ class res_city(osv.osv):
             city_data = city_obj.search(cr, uid, [('name', '=', city_name)], context=context)            
             if city_data:
                 cr.execute('''select lot_stock_id
-                            from res_branch rb,stock_warehouse sw
+                            from res_branch rb,stock_warehouse sw,res_branch_city_rel rel
                             where rb.id=sw.branch_id
-                            and rb.active=true
-                            and city_id=%s
+                            and sw.branch_id=rel.branch_id
+                            and rel.city_id=%s
                             and main_location=true''',(city_data[0],))
                 location_record = cr.fetchall()                    
                 if location_record:
