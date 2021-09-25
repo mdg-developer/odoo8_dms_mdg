@@ -70,8 +70,12 @@ class res_partner(osv.osv):
                 error_log = error_msg
             else:
                 error_log = None
-            cr.execute("""insert into sms_message(name,phone,message,error_log,status) 
-                        values(%s,%s,%s,%s,%s)""",('Burmart OTP',mobile_phone,message,error_log,sms_status,))  
+            cr.execute("SELECT now()::timestamp;")    
+            current_datetime_data = cr.fetchall()
+            for time_data in current_datetime_data:
+                current_datetime = time_data[0]                     
+            cr.execute("""insert into sms_message(name,phone,message,error_log,status,create_date,create_uid) 
+                        values(%s,%s,%s,%s,%s,%s,%s)""",('Burmart OTP',mobile_phone,message,error_log,sms_status,current_datetime,1,))  
             return data            
 
     def create_or_update_woo_customer(self, cr, uid, ids, mdg_customer=False, customer_code=None, name=None,street=None,street2=None,township=None,state=None,mobile=None,phone=None,gender=None,birthday=None,email=None,partner_latitude=None,partner_longitude=None,sms=None,viber=None,shop_name=None,woo_customer_id=None,image=None,sale_channel=None,context=None):
