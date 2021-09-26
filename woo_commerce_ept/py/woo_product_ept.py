@@ -975,7 +975,19 @@ class woo_product_template_ept(models.Model):
                         full_name_wcapi = instance.connect_for_point_in_woo() 
                         full_name_data = woo_product.name_template                                 
                         full_name_wcapi.post('product-fullname/%s'%(template.woo_tmpl_id),full_name_data)
-            
+            if template.product_tmpl_id.barcode_ids:
+                self.env.cr.execute('''select STRING_AGG(name, ',') barcode
+                                    from product_multi_barcode 
+                                    where product_tmpl_id=%s;''', (template.product_tmpl_id.id,))
+                product_barcodes_data = self.env.cr.fetchone()                
+                if product_barcodes_data:
+                    product_barcodes = product_barcodes_data[0]
+                    
+                    woo_instance_obj=self.env['woo.instance.ept']
+                    instance=woo_instance_obj.search([('state','=','confirmed')], limit=1)
+                    if instance:
+                        product_barcode_wcapi = instance.connect_for_point_in_woo() 
+                        product_barcode_wcapi.put('add-product-multi-barcode/%s'%(template.woo_tmpl_id),product_barcodes)
             data = {'title':template.product_tmpl_id.short_name,'enable_html_description':True,'enable_html_short_description':True,'description':template.description or '',
                     'weight':template.product_tmpl_id.weight,'short_description':template.short_description or '','taxable':template.taxable and 'true' or 'false'}
             
@@ -1983,7 +1995,20 @@ class woo_product_template_ept(models.Model):
                 if instance:
                     full_name_wcapi = instance.connect_for_point_in_woo() 
                     full_name_data = variant.product_id.name_template                                 
-                    full_name_wcapi.post('product-fullname/%s'%(woo_tmpl_id),full_name_data)     
+                    full_name_wcapi.post('product-fullname/%s'%(woo_tmpl_id),full_name_data)    
+            if variant.product_id.product_tmpl_id.barcode_ids:
+                self.env.cr.execute('''select STRING_AGG(name, ',') barcode
+                                    from product_multi_barcode 
+                                    where product_tmpl_id=%s;''', (variant.product_id.product_tmpl_id.id,))
+                product_barcodes_data = self.env.cr.fetchone()                
+                if product_barcodes_data:
+                    product_barcodes = product_barcodes_data[0]
+                    
+                    woo_instance_obj=self.env['woo.instance.ept']
+                    instance=woo_instance_obj.search([('state','=','confirmed')], limit=1)
+                    if instance:
+                        product_barcode_wcapi = instance.connect_for_point_in_woo() 
+                        product_barcode_wcapi.put('add-product-multi-barcode/%s'%(woo_tmpl_id),product_barcodes)
             tmpl_images = response.get('images')
             offset = 0
             for tmpl_image in tmpl_images:
