@@ -73,6 +73,14 @@ OUT__product_product__read_all__SCHEMA = (                 # editable
         'image_medium',
         'carton_image',
     )),
+    ('barcode_ids', [(
+        'id',
+        'name',
+        ('product_tmpl_id', (  # will return dictionary of inner fields
+            'id',
+            'name',
+        )),
+    )]),
 )
 #           ]
 #       }
@@ -131,6 +139,14 @@ OUT__product_product__read_one__SCHEMA = (                 # editable
         'image_medium',
         'carton_image',
     )),
+    ('barcode_ids', [(
+        'id',
+        'name',
+        ('product_tmpl_id', (  # will return dictionary of inner fields
+            'id',
+            'name',
+        )),
+    )]),
 )
 
 # /api/product.product  POST  - Create one
