@@ -81,7 +81,7 @@
 					        </tr>
 					        <tr style="line-height: 25px;">
 					            <td width="20%" style="padding-left:10px;"><b>Branch</b></td>
-					            <td width="40%"><span t-field="o.branch_id"/></td>
+					            <td width="40%"><span t-field="o.customer_branch_id"/></td>
 					            <td width="20%"><b>Use By</b></td>
 					            <td width="20%"><span t-field="o.used_by" t-field-options='{"format": "dd/MM/yyyy"}'/></td>
 					        </tr>
@@ -179,7 +179,7 @@
 					        </tr>
 					        <tr style="line-height: 25px;">
 					            <td width="20%" style="padding-left:10px;"><b>Branch</b></td>
-					            <td width="40%"><span t-field="o.branch_id"/></td>
+					            <td width="40%"><span t-field="o.customer_branch_id"/></td>
 					            <td width="20%"><b>Use By</b></td>
 					            <td width="20%"><span t-field="o.used_by" t-field-options='{"format": "dd/MM/yyyy"}'/></td>
 					        </tr>
