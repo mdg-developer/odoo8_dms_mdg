@@ -16,5 +16,5 @@ import operations
 import woo_payment_gateway
 import woo_coupons_ept
 import promos_rules
-import good_issue_note
+# import good_issue_note
 import woo_order_discount
