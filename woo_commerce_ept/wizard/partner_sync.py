@@ -45,5 +45,17 @@ class partner_sync(osv.osv_memory):
                         raise except_orm(_('Error'), _("Error in syncing response customer for woo customer id %s %s") % (partner.woo_customer_id,customer_response.content,)) 
                 else:
                     raise except_orm(_('Error'), _("Parent is not set Payment Term"))
+                if customer_wcapi and partner.name:
+                    woo_customer_id = partner.woo_customer_id.split("_")[1]
+                    customer_name = partner.name          
+                    customer_response = customer_wcapi.put('add_user_shop/%s'%(woo_customer_id),customer_name)
+                    if customer_response.status_code not in [200,201]:
+                        raise except_orm(_('Error'), _("Error in syncing response customer for woo customer id %s %s") % (partner.woo_customer_id,customer_response.content,))
+                if customer_wcapi:
+                    woo_customer_id = partner.woo_customer_id.split("_")[1]
+                    contact_person_name = partner.temp_customer          
+                    contact_person_response = customer_wcapi.put('add_user_contact_name/%s'%(woo_customer_id),contact_person_name)
+                    if contact_person_response.status_code not in [200,201]:
+                        raise except_orm(_('Error'), _("Error in syncing response customer for woo customer id %s %s") % (partner.woo_customer_id,contact_person_response.content,)) 
         return True
     
