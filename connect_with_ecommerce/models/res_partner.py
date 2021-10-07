@@ -395,7 +395,7 @@ class res_partner(osv.osv):
             })
             return partner_id  
         
-    def send_delivered_noti(self, cr, uid, ids, sale_order_number, context=None):
+    def send_delivered_noti(self, cr, uid, sale_order_number, context=None, **kwargs):
         
         if sale_order_number:            
             sale_order_obj = self.pool.get('sale.order').search(cr, uid, [('woo_order_id', '=', sale_order_number)],context=context)
