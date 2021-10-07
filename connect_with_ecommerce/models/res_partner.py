@@ -202,7 +202,7 @@ class res_partner(osv.osv):
                 current_datetime = time_data[0]                     
             cr.execute("""insert into sms_message(name,phone,message,text_message,error_log,status,create_date,create_uid) 
                         values(%s,%s,%s,%s,%s,%s,%s,%s)""",('RB OTP',mobile_phone,message,message,error_log,sms_status,current_datetime,1,))  
-            return {"result": data}   
+            return {"result": str(data)}   
 
     def create_or_update_woo_customer(self, cr, uid, ids, mdg_customer=False, customer_code=None, name=None,street=None,street2=None,township=None,city=None,state=None,mobile=None,phone=None,gender=None,birthday=None,email=None,partner_latitude=None,partner_longitude=None,sms=None,viber=None,shop_name=None,woo_customer_id=None,image=None,sale_channel=None,customer_type=None,woo_user_name=None,context=None):
         vals = {}
