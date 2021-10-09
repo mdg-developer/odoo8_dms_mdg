@@ -1388,7 +1388,7 @@ class sale_order(models.Model):
                 wcapi = woo_instance.connect_for_point_in_woo()   
             for sale in self.browse(cr, uid, ids, context=context):                
                 if sale.woo_order_number:
-                    update = sale.update_woo_order_status_action('cancelled')
+                    update = sale.update_woo_order_status_action('cancelled')                    
                     one_signal_values = {
                                             'partner_id': sale.partner_id.id,
                                             'contents': "Your order " + sale.name + " is cancelled.",
@@ -1430,16 +1430,16 @@ class sale_order(models.Model):
     def action_button_confirm(self, cr, uid, ids, context=None):
         result = super(sale_order, self).action_button_confirm(cr, uid, ids, context=context)
         self.write(cr, uid, ids, {'state':'manual'})
-        if result:
-            for sale in self.browse(cr, uid, ids, context=context):                
-                if sale.woo_order_number:    
-                    update = sale.update_woo_order_status_action('processing')         
-                    one_signal_values = {
-                                         'partner_id': sale.partner_id.id,
-                                         'contents': "Your order " + sale.name + " is confirmed.",
-                                         'headings': "Burmart"
-                                        }                          
-                    self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)                  
+#         if result:
+#             for sale in self.browse(cr, uid, ids, context=context):                
+#                 if sale.woo_order_number:    
+#                     update = sale.update_woo_order_status_action('processing')         
+#                     one_signal_values = {
+#                                          'partner_id': sale.partner_id.id,
+#                                          'contents': "Your order " + sale.name + " is confirmed.",
+#                                          'headings': "Burmart"
+#                                         }                          
+#                     self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)                  
         return result
 
     #update woo order status when update 'is_generate' and 'shipped' 
