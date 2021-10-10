@@ -36,7 +36,9 @@ class promotion_sync(osv.osv_memory):
                     promotion_info = str(promo_id.id) + "," + promo_id.name + ","
                     if promo_id.main_group:
                         promotion_info += promo_id.main_group.name
-                    cr.execute("select ((%s at time zone 'utc' )at time zone 'asia/rangoon')::date,((%s at time zone 'utc' )at time zone 'asia/rangoon')::date", (promo_id.from_date,promo_id.to_date,))    
+                    cr.execute('''select ((from_date at time zone 'utc' )at time zone 'asia/rangoon')::date,((to_date at time zone 'utc' )at time zone 'asia/rangoon')::date
+                                from promos_rules
+                                where id=%s;''', (promo_id.id,))    
                     date_data = cr.fetchall()
                     if date_data:
                         promotion_info += "," + str(date_data[0][0]) + "," + str(date_data[0][1])
