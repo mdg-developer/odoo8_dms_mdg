@@ -26,7 +26,7 @@ class good_issue_note(osv.osv):
                     if sale_order.woo_order_number:
                         one_signal_values = {
                                              'partner_id': sale_order.partner_id.id,
-                                             'contents': "Your order " + sale_order.name + " is being delivered.",
+                                             'contents': "Your order " + sale_order.name + " is on the way.",
                                              'headings': "Burmart"
                                             }   
                         print 'one_signal_values',one_signal_values

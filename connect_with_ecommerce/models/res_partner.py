@@ -393,5 +393,22 @@ class res_partner(osv.osv):
                 'birthday': birthday, 
                 'gender': gender,           
             })
-            return partner_id       
-                
+            return partner_id  
+        
+    def send_delivered_noti(self, cr, uid, sale_order_number, context=None, **kwargs):
+        
+        if sale_order_number:            
+            sale_order_obj = self.pool.get('sale.order').search(cr, uid, [('woo_order_id', '=', sale_order_number)],context=context)
+            if sale_order_obj:
+                sale_order = self.pool.get('sale.order').browse(cr, uid, sale_order_obj, context=context)
+                if sale_order and sale_order.woo_order_number:                
+                    one_signal_values = {
+                                            'partner_id': sale_order.partner_id.id,
+                                            'contents': "Your order " + sale_order.name + " is shipped.",
+                                            'headings': "Burmart"
+                                        }     
+                    self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)
+                    sale_order.update_woo_order_status_action('completed')      
+                    return True
+        else:
+            return False         

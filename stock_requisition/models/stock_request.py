@@ -462,6 +462,18 @@ class stock_requisition(osv.osv):
         return self.write(cr, uid, ids, {'state':'approve' , 'approve_by':uid,'good_issue_id':good_id})    
     
     def cancel(self, cr, uid, ids, context=None):
+        requisition = self.browse(cr, uid, ids[0], context=context)
+        if requisition.order_line:
+            cr.execute('''select so.id
+                        from stock_requisition_order req,sale_order so
+                        where req.name=so.name
+                        and stock_line_id=%s
+                        and (so.woo_order_number is not null or so.original_ecommerce_number is not null);''', (requisition.id,))    
+            sale_order_data = cr.fetchall()
+            if sale_order_data:
+                for order in sale_order_data:
+                    sale_order = self.pool.get('sale.order').browse(cr, uid, order[0], context=context)
+                    sale_order.update_woo_order_status_action('processing') 
         return self.write(cr, uid, ids, {'state':'cancel' })    
 
     def update_data(self, cr, uid, ids, context=None):
