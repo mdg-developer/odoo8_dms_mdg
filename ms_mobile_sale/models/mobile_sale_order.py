@@ -1152,9 +1152,19 @@ class mobile_sale_order(osv.osv):
                     cr.execute("select company_id from res_users where id=%s", (ms_ids.user_id.id,))
                     company_id = cr.fetchone()[0]
                     date = datetime.strptime(ms_ids.date, '%Y-%m-%d %H:%M:%S')
-                    de_date = date.date()    
+                    de_date = date.date()  
+                    original_ecommerce_number =None
+                    ecommerce =False  
                     if  ms_ids.pre_sale_order_id:
                         pre_sale_order_id=ms_ids.pre_sale_order_id.id
+                        cr.execute("select id,ecommerce,woo_order_id from sale_order where id = %s ",(pre_sale_order_id,))
+                        sale_order_data=cr.fetchone()
+                        if sale_order_data:
+                            ecommerce =sale_order_data[1]
+                            woo_order_id =sale_order_data[2]
+                            if ecommerce == True :
+                                original_ecommerce_number = woo_order_id
+                                ecommerce = True                              
                     else:
                         pre_sale_order_id= False
                     if ms_ids.order_team:
@@ -1201,7 +1211,8 @@ class mobile_sale_order(osv.osv):
                                              'credit_history_ids':[],
                                              'pre_sale_order_id':pre_sale_order_id,
                                              'order_team':order_team,
-
+                                             'original_ecommerce_number':original_ecommerce_number,
+                                             'ecommerce':ecommerce,
 
                                         }
                     soId = soObj.create(cr, uid, soResult, context=context)
@@ -3191,6 +3202,7 @@ class mobile_sale_order(osv.osv):
                         delivery = {                                                            
                                   'order_id':So_id[0],
                                   'miss':True,
+                                'is_revised':False,
                                   'delivery_date':datetime.now(),
                                   'due_date':deli['due_date'],
                                   'state':'done',
@@ -3214,6 +3226,7 @@ class mobile_sale_order(osv.osv):
                         delivery = {                                                            
                                   'order_id':So_id[0],
                                   'miss':False,
+                                  'is_revised':False,
                                   'due_date':deli['due_date'],
                                   'delivery_date':datetime.now(),
                                   'confirm_date':confirm_date,
@@ -3366,7 +3379,11 @@ class mobile_sale_order(osv.osv):
                                                    , ('name', '=', so_ref_no)], context=context)
                     if So_id:
                         print 'Sale Order Id', So_id[0]
-                        cr.execute('''update sale_order set state ='cancel',cancel_user_id=%s where id = %s ''', (uid, So_id[0],))
+                        if deli['is_revised'] == 't':
+                            is_revised =True
+                        else :
+                            is_revised=False
+                        cr.execute('''update sale_order set state ='cancel',cancel_user_id=%s,is_revised=%s where id = %s ''', (uid,is_revised, So_id[0],))
                         cr.execute('select tb_ref_no from sale_order where id=%s', (So_id[0],))
                         ref_no = cr.fetchone()[0]
                         cr.execute("update pre_sale_order set void_flag = 'voided' where name=%s", (ref_no,))        

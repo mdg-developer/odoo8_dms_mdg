@@ -65,6 +65,7 @@ class pendingdelivery(osv.osv):
                 'due_date':fields.date('Order Date',readonly=True),          
                 'order_id':fields.many2one('sale.order','Order No',readonly=True),
                 'miss':fields.boolean('Miss',readonly=True),
+                'is_revised':fields.boolean('Is Revised',readonly=True,default=False),
                 'state':fields.selection([('draft', 'Draft'),
                                                 ('done', 'Complete')], string='Status',readonly=True),     
                 'delivery_team_id':fields.many2one('crm.case.section','Delivery Team',readonly=True),
