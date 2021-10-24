@@ -6,6 +6,7 @@ import base64
 import requests
 import hashlib
 from openerp.osv.orm import except_orm
+import logging
 
 class woo_product_template_ept(models.Model):
     _name="woo.product.template.ept"
@@ -1195,7 +1196,39 @@ class woo_product_template_ept(models.Model):
                     update_response_images = update_response.get('images')
                     variant_image_url = update_response_images and update_response_images[0].get('src')
                     variant_image_id = update_response_images and update_response_images[0].get('id')
-                    variant.write({'response_url':variant_image_url,'woo_image_id':variant_image_id})                                                 
+                    variant.write({'response_url':variant_image_url,'woo_image_id':variant_image_id}) 
+                woo_tmpl_id = template.woo_tmpl_id                        
+                if variant.product_id.product_tmpl_id.ecommerce_uom_id:
+                    woo_instance_obj=self.env['woo.instance.ept']
+                    instance=woo_instance_obj.search([('state','=','confirmed')], limit=1)
+                    if instance:
+                        uom_wcapi = instance.connect_for_point_in_woo() 
+                        uom_data = variant.product_id.product_tmpl_id.ecommerce_uom_id.name                    
+                        uom_response = uom_wcapi.post('insert-uom/%s'%(woo_tmpl_id),uom_data)
+                        logging.warning("Check woo_tmpl_id: %s", woo_tmpl_id)
+                        logging.warning("Check uom_data: %s", uom_data)
+                        logging.warning("Check uom_response.status_code: %s", uom_response.status_code)
+                if variant.product_id.product_tmpl_id.barcode_no:
+                    woo_instance_obj=self.env['woo.instance.ept']
+                    instance=woo_instance_obj.search([('state','=','confirmed')], limit=1)
+                    if instance:
+                        barcode_wcapi = instance.connect_for_point_in_woo() 
+                        barcode_data = variant.product_id.product_tmpl_id.barcode_no                                    
+                        barcode_wcapi.post('insert-barcode/%s'%(woo_tmpl_id),barcode_data) 
+                if variant.product_id.product_tmpl_id.uom_ratio:
+                    woo_instance_obj=self.env['woo.instance.ept']
+                    instance=woo_instance_obj.search([('state','=','confirmed')], limit=1)
+                    if instance:
+                        packing_size_wcapi = instance.connect_for_point_in_woo() 
+                        packing_size_data = variant.product_id.product_tmpl_id.uom_ratio                                 
+                        packing_size_wcapi.post('insert-packsize/%s'%(woo_tmpl_id),packing_size_data) 
+                if variant.product_id.name_template:
+                    woo_instance_obj=self.env['woo.instance.ept']
+                    instance=woo_instance_obj.search([('state','=','confirmed')], limit=1)
+                    if instance:
+                        full_name_wcapi = instance.connect_for_point_in_woo() 
+                        full_name_data = variant.product_id.name_template                                 
+                        full_name_wcapi.post('product-fullname/%s'%(woo_tmpl_id),full_name_data)                                                
         return True
 
     @api.model
@@ -1961,8 +1994,11 @@ class woo_product_template_ept(models.Model):
                 instance=woo_instance_obj.search([('state','=','confirmed')], limit=1)
                 if instance:
                     uom_wcapi = instance.connect_for_point_in_woo() 
-                    uom_data = variant.product_id.product_tmpl_id.ecommerce_uom_id.id                    
-                    uom_wcapi.post('insert-uom/%s'%(woo_tmpl_id),uom_data)                
+                    uom_data = variant.product_id.product_tmpl_id.ecommerce_uom_id.name                    
+                    uom_response = uom_wcapi.post('insert-uom/%s'%(woo_tmpl_id),uom_data)
+                    logging.warning("Check woo_tmpl_id: %s", woo_tmpl_id)
+                    logging.warning("Check uom_data: %s", uom_data)
+                    logging.warning("Check uom_response.status_code: %s", uom_response.status_code)
             if variant.product_id.product_tmpl_id.barcode_no:
                 woo_instance_obj=self.env['woo.instance.ept']
                 instance=woo_instance_obj.search([('state','=','confirmed')], limit=1)
