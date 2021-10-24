@@ -373,27 +373,18 @@ class sale_order(models.Model):
             discount_wcapi = instance.connect_for_point_in_woo() 
             discount_response = discount_wcapi.get('order-discount')                  
             discount_response_data = discount_response.json()   
-            logging.warning("Check discount_response_data: %s", discount_response_data)    
             if discount_response_data:             
                 for discount in discount_response_data:
                     woo_order_number = discount.get('order_id',False)      
-                    logging.warning("Check woo_order_number: %s", woo_order_number)          
-                    logging.warning("Check order.woo_order_id: %s", order.woo_order_id)                     
                     if woo_order_number == order.woo_order_id:           
-                        logging.warning("Check price: %s", float(price))                                      
                         if float(price) < 0 or float(price) == 0:                                                      
-                            odoo_discount_id = discount.get('odoo_discount_id',False)      
-                            logging.warning("Check odoo_discount_id: %s", odoo_discount_id)    
-                            logging.warning("Check fees_product: %s", fees_product) 
+                            odoo_discount_id = discount.get('odoo_discount_id',False)     
                             if odoo_discount_id and fees_product == True:                               
                                 woo_discount = self.env['woo.order.discount'].sudo().search([('api_id','=',discount.get('id',False)),
                                                                                              ('order_id','=',discount.get('order_id',False))])
-                                logging.warning("Check woo_discount: %s", woo_discount) 
                                 if not woo_discount:
                                     odoo_promotion = self.env['promos.rules'].search([('ecommerce','=',True),
                                                                                       ('id','=',odoo_discount_id)])
-                                    logging.warning("Check odoo_promotion: %s", odoo_promotion)    
-                                    logging.warning("Check odoo_promotion.main_group: %s", odoo_promotion.main_group)                               
                                     if odoo_promotion and odoo_promotion.main_group:                                                           
                                         self.env.cr.execute('''select pp.id product_id,name_template product_name
                                                             from product_product pp,product_template pt
@@ -405,7 +396,6 @@ class sale_order(models.Model):
                                                             and lower(name_template) like %s
                                                             limit 1''',(odoo_promotion.main_group.id,'%discount',))
                                         product_record = self.env.cr.dictfetchall() 
-                                        logging.warning("Check product_record: %s", product_record)
                                         if product_record:                           
                                             for p_data in product_record:                            
                                                 product_id = p_data.get('product_id')
@@ -413,7 +403,6 @@ class sale_order(models.Model):
                                                 sol_product_id = product_id
                                                 sol_name = product_name
                                                 promotion_id = odoo_promotion.id
-                                                logging.warning("Check promotion_id: %s", promotion_id)
                                                 woo_discount_vals = {
                                                                         "api_id": discount.get('id',False),
                                                                         "order_id": discount.get('order_id',False),
@@ -421,7 +410,6 @@ class sale_order(models.Model):
                                                                         "odoo_discount_id": promotion_id,
                                                                     }
                                                 self.env['woo.order.discount'].sudo().create(woo_discount_vals)
-                                                logging.warning("Check woo_discount_vals: %s", woo_discount_vals)
                                                 break 
                                         break
         
