@@ -44,31 +44,25 @@ class res_partner(osv.osv):
             data = None     
             error_msg = None       
             try: 
-                headers = {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}            
-                sms_user= 'mdgpro'
-                password= 'fcdaa533-e23d-4f9e-8480-416454b2dfc2'
-                url='https://mpg-ids.mytel.com.mm/auth/realms/eis/protocol/openid-connect/token'
-                payload = {'grant_type': 'client_credentials'}
-                response = requests.post(url,headers=headers,auth=(sms_user, password), data=payload, verify=False)
+                boom_sms_key = self.pool.get('ir.config_parameter').get_param(cr, uid, 'boom_sms_key', default=False, context=context)
                 number = random.randint(1000,9999)  
-                message = 'Valued Customer, your OTP Code is ' + str(number) + '. Please use this for your Burmart account.'       
+                message = 'Valued Customer, your OTP Code is ' + str(number) + '. Please use this for your Burmart account.'
+                headers = {
+                           'Accept': 'application/json',
+                           'Authorization' : 'Bearer {0}'.format(boom_sms_key),
+                           }
+                url = 'https://boomsms.net/api/sms/json'
+                data = {
+                        'from' : 'Burmart',
+                        'text' : message,
+                        'to'   : mobile_phone,
+                        }
+                response = requests.post(url,json=data, headers=headers, timeout=60)
                 if response.status_code == 200:                
-                    content = json.loads(response.content)
-                    token = content['access_token'] 
-                    header = {'Content-Type': 'application/json',
-                              'Authorization': 'Bearer {0}'.format(token)}                    
-                    sms_url = 'https://mytelapigw.mytel.com.mm/msg-service/v1.3/smsmt/sent'
-                    sms_payload = {
-                                   "source": "Burmart",
-                                   "dest": mobile_phone,
-                                   "content": message 
-                            }                 
-                    response = requests.post(sms_url,  json = sms_payload, headers = header,verify=False)                
-                    if response.status_code == 200:
-                        sms_status = 'success'  
-                        data = number    
-                    else:
-                        sms_status = 'fail'   
+                    sms_status = 'success'  
+                    data = number    
+                else:
+                    sms_status = 'fail'   
             except Exception as e:         
                 error_msg = 'Error Message: %s' % (e) 
                 logging.error(error_msg)
@@ -77,11 +71,11 @@ class res_partner(osv.osv):
             if error_msg:
                 error_log = error_msg
             else:
-                error_log = None
+                error_log = None            
             cr.execute("SELECT now()::timestamp;")    
             current_datetime_data = cr.fetchall()
             for time_data in current_datetime_data:
-                current_datetime = time_data[0]                     
+                current_datetime = time_data[0] 
             cr.execute("""insert into sms_message(name,phone,message,error_log,status,create_date,create_uid) 
                         values(%s,%s,%s,%s,%s,%s,%s)""",('Burmart OTP',mobile_phone,message,error_log,sms_status,current_datetime,1,))  
             return data            
