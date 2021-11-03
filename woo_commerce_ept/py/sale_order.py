@@ -1379,6 +1379,38 @@ class sale_order(models.Model):
                             transaction_log_obj.create({'message':message,'mismatch_details':True,'type':'sales','woo_instance_id':instance.id})
         return True
     
+    def update_sale_order_point(self, cr, uid, ids, context=None):
+        
+        for order in self.browse(cr, uid, ids, context=context):
+            if order.woo_order_number or order.original_ecommerce_number:
+                woo_instance_obj = self.pool.get('woo.instance.ept')
+                instance_obj = woo_instance_obj.search(cr, uid, [('state', '=', 'confirmed')], limit=1)
+                if instance_obj:
+                    instance = woo_instance_obj.browse(cr, uid, instance_obj, context=context)
+                    wcapi = instance.connect_for_product_in_woo()   
+                    if order.woo_order_number: 
+                        woo_order_id = order.woo_order_id
+                        order_response = wcapi.get('orders/%s'%(woo_order_id))                    
+                        order_res = order_response.json()                   
+                        order_meta_data = order_res.get('meta_data')
+                        if order_meta_data:
+                            for order_meta in order_meta_data:
+                                if order_meta.get('key') == 'ywpar_points_from_cart':                       
+                                    getting_point = int(order_meta.get('value'))
+                                    order.write({'getting_point': getting_point})   
+                                    cr.execute("select COALESCE(sum(getting_point),0) from point_history where partner_id=%s", (order.partner_id.id,))    
+                                    point_data = cr.fetchall()
+                                    if point_data:
+                                        history_point = point_data[0][0]
+                                    point_vals = {  'partner_id': order.partner_id.id,
+                                                    'date': datetime.today(),
+                                                    'order_id': order.id,
+                                                    'membership_id': order.partner_id.membership_id.id,                                                      
+                                                    'balance_point': history_point + order.getting_point,
+                                                    'getting_point': order.getting_point,
+                                                }
+                                    self.pool.get('point.history').create(cr, uid, point_vals, context=context)      
+    
     #Add cancel_woo_order_action into order cancel action
     def action_cancel(self, cr, uid, ids, context=None):
         customer_id = None

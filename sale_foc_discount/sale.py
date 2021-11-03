@@ -32,6 +32,7 @@ from openerp import workflow
 from openerp.exceptions import except_orm, Warning, RedirectWarning
 from openerp.tools import float_compare
 import openerp.addons.decimal_precision as dp
+import logging
 #from celery.worker.strategy import default
 class sale_order_line(osv.osv):
 
@@ -494,6 +495,7 @@ class sale_order(osv.osv):
                             'headings': "Burmart"
                         }     
             self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values)
+            order.update_sale_order_point()
                     
         # Care for deprecated _inv_get() hook - FIXME: to be removed after 6.1
         invoice_vals.update(self._inv_get(cr, uid, order, context=context))
