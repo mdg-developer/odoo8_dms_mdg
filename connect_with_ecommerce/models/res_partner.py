@@ -57,7 +57,7 @@ class res_partner(osv.osv):
                         'text' : message,
                         'to'   : mobile_phone,
                         }
-                response = requests.post(url,json=data, headers=headers, timeout=60)
+                response = requests.post(url,json=data, headers=headers, timeout=60, verify=False)
                 if response.status_code == 200:                
                     sms_status = 'success'  
                     data = number    
