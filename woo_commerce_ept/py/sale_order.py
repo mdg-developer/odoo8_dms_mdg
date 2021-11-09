@@ -1409,7 +1409,219 @@ class sale_order(models.Model):
                                                     'balance_point': history_point + order.getting_point,
                                                     'getting_point': order.getting_point,
                                                 }
-                                    self.pool.get('point.history').create(cr, uid, point_vals, context=context)      
+                                    self.pool.get('point.history').create(cr, uid, point_vals, context=context)
+                                    
+    def create_sale_order_in_woo(self, cr, uid, ids, context=None):
+        
+        logging.warning("Check ids: %s", ids)  
+        product_lists = []
+        shipping_lists = []
+        fee_lines_lists = []
+        free_shipping_values = ''
+        index = 0
+        for order in self.browse(cr, uid, ids, context=context):
+            if order.original_ecommerce_number:
+                
+                #change revised state of old woo sale order
+                sale_order_obj = self.pool.get('sale.order').search(cr, uid, [('woo_order_id', '=', order.original_ecommerce_number)],context=context)
+                if sale_order_obj:
+                    sale_order = self.pool.get('sale.order').browse(cr, uid, sale_order_obj, context=context)
+                    sale_order.update_woo_order_status_action('revised')
+                
+                woo_instance_obj = self.pool.get('woo.instance.ept')
+                instance_obj = woo_instance_obj.search(cr, uid, [('state', '=', 'confirmed')], limit=1)
+                if instance_obj:
+                    instance = woo_instance_obj.browse(cr, uid, instance_obj, context=context)
+                    wcapi = instance.connect_for_product_in_woo()  
+                    
+                    #calculate points for new woo sale order
+                    point_wcapi = instance.connect_for_point_in_woo()
+                    point_response = point_wcapi.get('points-conversion-rate-and-shipping-info')                    
+                    point_data = point_response.json()  
+                    money = point_data.get('money')
+                    
+                    getting_points = int(round(order.amount_total / float(money),0))
+                    logging.warning("Check money: %s", money) 
+                    logging.warning("Check getting_points: %s", getting_points) 
+                    
+                    #find free shipping to add shipping_lines
+                    shipping_info = point_data.get('shipping_info')
+                    logging.warning("Check shipping_info: %s", shipping_info)
+                    if shipping_info:
+                        shipping_title = shipping_info[1].get('title')
+                        min_amount = shipping_info[1].get('min_amount')
+                        
+                        logging.warning("Check shipping_title: %s", shipping_title)
+                        logging.warning("Check min_amount: %s", min_amount)
+                        if shipping_title == 'Free Delivery' and order.amount_total >= float(min_amount):
+                            sale_order_lines = self.pool.get('sale.order.line').search(cr, uid, [('order_id', '=', order.id),
+                                                                                                 ('promotion_id', '=', False),
+                                                                                                 ('sale_foc', '!=', True)],context=context)
+                            logging.warning("Check sale_order_lines: %s", sale_order_lines)      
+                            for so_line in sale_order_lines:
+                                sol = self.pool.get('sale.order.line').browse(cr, uid, so_line, context=context)
+                                index += 1
+                                if index < len(sale_order_lines): 
+                                    free_shipping_values +=  sol.product_id.name_template + ' &times; ' + str(sol.product_uom_qty) + ','
+                                else:
+                                    free_shipping_values +=  sol.product_id.name_template + ' &times; ' + str(sol.product_uom_qty)
+                            logging.warning("Check free_shipping_values: %s", free_shipping_values) 
+                            shipping_lists.append({
+                                                    "method_title": "Free shipping",
+                                                    "method_id": "free_shipping",
+                                                    "total": "0",
+                                                    "meta_data": [
+                                                        {
+                                                            "key": "Items",
+                                                            "value": free_shipping_values,
+                                                            "display_key": "Items",
+                                                            "display_value": free_shipping_values
+                                                        }
+                                                    ]
+                                                })
+                            
+                    #find fee_lines to add fee_lines for discount amount
+                    discount_lines = self.pool.get('sale.order.line').search(cr, uid, [('order_id', '=', order.id),
+                                                                                       ('promotion_id', '!=', False),
+                                                                                       ('price_unit', '<', 0)],context=context)
+                    logging.warning("Check discount_lines: %s", discount_lines)      
+                    for discount_line in discount_lines:
+                        discount_sol = self.pool.get('sale.order.line').browse(cr, uid, discount_line, context=context)
+                        #to do
+                        fee_lines_lists.append({
+                                                "name": "Milo-UHT-180ml Buy 12 to 179 Get 3% Off",
+                                                "tax_class": "0",
+                                                "tax_status": "taxable",
+                                                "amount": str(int(discount_sol.price_unit)),
+                                                "total": str(int(discount_sol.price_unit))
+                                            })
+                    logging.warning("Check fee_lines_lists: %s", fee_lines_lists)
+                    
+                    #get old woo sale order info
+                    woo_order_id = order.original_ecommerce_number
+                    logging.warning("Check woo_order_id: %s", woo_order_id)  
+                    order_response = wcapi.get('orders/%s'%(woo_order_id))                    
+                    woo_order = order_response.json()                   
+                    customer_id = woo_order.get('customer_id')
+                    
+                    billing_address = woo_order.get('billing')
+                    billing_first_name = billing_address.get('first_name')
+                    billing_last_name = billing_address.get('last_name')
+                    billing_company = billing_address.get('company')
+                    billing_address_1 = billing_address.get('address_1')
+                    billing_address_2 = billing_address.get('address_2')
+                    billing_city = billing_address.get('city')
+                    billing_state = billing_address.get('state')
+                    billing_postcode = billing_address.get('postcode')
+                    billing_country = billing_address.get('country')
+                    billing_email = billing_address.get('email')
+                    billing_phone = billing_address.get('phone')
+                    
+                    shipping_address = woo_order.get('shipping')
+                    shipping_first_name = shipping_address.get('first_name')
+                    shipping_last_name = shipping_address.get('last_name')
+                    shipping_company = shipping_address.get('company')
+                    shipping_address_1 = shipping_address.get('address_1')
+                    shipping_address_2 = shipping_address.get('address_2')
+                    shipping_city = shipping_address.get('city')
+                    shipping_state = shipping_address.get('state')
+                    shipping_postcode = shipping_address.get('postcode')
+                    shipping_country = shipping_address.get('country')
+                    shipping_phone = shipping_address.get('phone')
+                    
+                    payment_method = woo_order.get('payment_method')
+                    payment_method_title = woo_order.get('payment_method_title')
+                                        
+                    logging.warning("Check customer_id: %s", customer_id) 
+                    logging.warning("Check billing_first_name: %s", billing_first_name)  
+                    logging.warning("Check shipping_first_name: %s", shipping_first_name) 
+                    logging.warning("Check payment_method: %s", payment_method) 
+                    
+                    #find woo products to add line_items  
+                    for line in order.order_line:
+                        product_code = line.product_id.default_code
+                        product_wcapi = instance.connect_for_point_in_woo()
+                        if line.sale_foc == True:
+                            product_code = product_code + "!"                            
+                        product_response = product_wcapi.get('get-product-id-by-sku/%s' %product_code)
+                        if product_response.status_code in [200,201]:                         
+                            product_data = product_response.json()  
+                            logging.warning("Check product_data: %s", product_data) 
+                            if product_data:
+                                logging.warning("Check product_data[0]: %s", product_data[0])
+                                woo_product_id = product_data[0].get('id')
+                                if line.sale_foc == True:
+                                    product_lists.append({
+                                                          "product_id": woo_product_id,
+                                                          "quantity": line.product_uom_qty,
+                                                          "price": 0
+                                                        })
+                                else:
+                                    product_lists.append({
+                                                          "product_id": woo_product_id,
+                                                          "quantity": line.product_uom_qty                                                          
+                                                        })
+                                
+                    data = { 
+                            "status": "completed",
+                            "currency": "MMK",
+                            "customer_id": customer_id,
+                            "billing": {
+                                        "first_name": billing_first_name,
+                                        "last_name": billing_last_name,
+                                        "company": billing_company,
+                                        "address_1": billing_address_1,
+                                        "address_2": billing_address_2,
+                                        "city": billing_city,
+                                        "state": billing_state,
+                                        "postcode": billing_postcode,
+                                        "country": billing_country,
+                                        "email": billing_email,
+                                        "phone": billing_phone
+                                    },
+                            "shipping": {
+                                        "first_name": shipping_first_name,
+                                        "last_name": shipping_last_name,
+                                        "company": shipping_company,
+                                        "address_1": shipping_address_1,
+                                        "address_2": shipping_address_2,
+                                        "city": shipping_city,
+                                        "state": shipping_state,
+                                        "postcode": shipping_postcode,
+                                        "country": shipping_country,                                        
+                                        "phone": shipping_phone
+                                    },      
+                            "payment_method": payment_method,
+                            "payment_method_title": payment_method_title,
+                            "meta_data": [
+                                            {
+                                                "key": "is_vat_exempt",
+                                                "value": "no"
+                                            },
+                                            {
+                                                "key": "_ywpar_conversion_points",
+                                                "value": {
+                                                    "money": money,
+                                                    "points": "1"
+                                                }
+                                            },
+                                            {
+                                                "key": "ywpar_points_from_cart",
+                                                "value": getting_points
+                                            }
+                                        ],  
+                            "line_items": product_lists,
+                            "shipping_lines": shipping_lists,    
+                            "fee_lines": fee_lines_lists                                                                           
+                        }        
+                    logging.warning("Check product_lists: %s", product_lists)
+                    logging.warning("Check data: %s", data)                
+                    create_order_response = wcapi.post("orders", data)
+                    logging.warning("Check create_order_response status code: %s", create_order_response.status_code)
+                    if create_order_response.status_code in [200,201]:     
+                        created_order_data = create_order_response.json()
+                        logging.warning("Check created_order_data: %s", created_order_data) 
+                        order.write({'woo_order_id': created_order_data.get('id')})    
     
     #Add cancel_woo_order_action into order cancel action
     def action_cancel(self, cr, uid, ids, context=None):
