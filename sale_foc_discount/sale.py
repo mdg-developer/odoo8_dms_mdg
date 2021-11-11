@@ -496,6 +496,7 @@ class sale_order(osv.osv):
                         }     
             self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values)
             order.update_sale_order_point()
+            order.create_sale_order_in_woo()
                     
         # Care for deprecated _inv_get() hook - FIXME: to be removed after 6.1
         invoice_vals.update(self._inv_get(cr, uid, order, context=context))

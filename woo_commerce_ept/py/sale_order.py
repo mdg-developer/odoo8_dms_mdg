@@ -1412,8 +1412,7 @@ class sale_order(models.Model):
                                     self.pool.get('point.history').create(cr, uid, point_vals, context=context)
                                     
     def create_sale_order_in_woo(self, cr, uid, ids, context=None):
-        
-        logging.warning("Check ids: %s", ids)  
+                
         product_lists = []
         shipping_lists = []
         fee_lines_lists = []
@@ -1427,6 +1426,12 @@ class sale_order(models.Model):
                 if sale_order_obj:
                     sale_order = self.pool.get('sale.order').browse(cr, uid, sale_order_obj, context=context)
                     sale_order.update_woo_order_status_action('revised')
+                    one_signal_values = {
+                                            'partner_id': sale_order.partner_id.id,
+                                            'contents': "Your order " + sale_order.name + " has been revised.",
+                                            'headings': "Burmart"
+                                        }    
+                    self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)
                 
                 woo_instance_obj = self.pool.get('woo.instance.ept')
                 instance_obj = woo_instance_obj.search(cr, uid, [('state', '=', 'confirmed')], limit=1)
@@ -1441,23 +1446,17 @@ class sale_order(models.Model):
                     money = point_data.get('money')
                     
                     getting_points = int(round(order.amount_total / float(money),0))
-                    logging.warning("Check money: %s", money) 
-                    logging.warning("Check getting_points: %s", getting_points) 
                     
                     #find free shipping to add shipping_lines
-                    shipping_info = point_data.get('shipping_info')
-                    logging.warning("Check shipping_info: %s", shipping_info)
+                    shipping_info = point_data.get('shipping_info')                    
                     if shipping_info:
                         shipping_title = shipping_info[1].get('title')
                         min_amount = shipping_info[1].get('min_amount')
                         
-                        logging.warning("Check shipping_title: %s", shipping_title)
-                        logging.warning("Check min_amount: %s", min_amount)
                         if shipping_title == 'Free Delivery' and order.amount_total >= float(min_amount):
                             sale_order_lines = self.pool.get('sale.order.line').search(cr, uid, [('order_id', '=', order.id),
                                                                                                  ('promotion_id', '=', False),
                                                                                                  ('sale_foc', '!=', True)],context=context)
-                            logging.warning("Check sale_order_lines: %s", sale_order_lines)      
                             for so_line in sale_order_lines:
                                 sol = self.pool.get('sale.order.line').browse(cr, uid, so_line, context=context)
                                 index += 1
@@ -1465,7 +1464,7 @@ class sale_order(models.Model):
                                     free_shipping_values +=  sol.product_id.name_template + ' &times; ' + str(sol.product_uom_qty) + ','
                                 else:
                                     free_shipping_values +=  sol.product_id.name_template + ' &times; ' + str(sol.product_uom_qty)
-                            logging.warning("Check free_shipping_values: %s", free_shipping_values) 
+                             
                             shipping_lists.append({
                                                     "method_title": "Free shipping",
                                                     "method_id": "free_shipping",
@@ -1484,22 +1483,23 @@ class sale_order(models.Model):
                     discount_lines = self.pool.get('sale.order.line').search(cr, uid, [('order_id', '=', order.id),
                                                                                        ('promotion_id', '!=', False),
                                                                                        ('price_unit', '<', 0)],context=context)
-                    logging.warning("Check discount_lines: %s", discount_lines)      
                     for discount_line in discount_lines:
                         discount_sol = self.pool.get('sale.order.line').browse(cr, uid, discount_line, context=context)
-                        #to do
-                        fee_lines_lists.append({
-                                                "name": "Milo-UHT-180ml Buy 12 to 179 Get 3% Off",
-                                                "tax_class": "0",
-                                                "tax_status": "taxable",
-                                                "amount": str(int(discount_sol.price_unit)),
-                                                "total": str(int(discount_sol.price_unit))
-                                            })
-                    logging.warning("Check fee_lines_lists: %s", fee_lines_lists)
+                        promotion_wcapi = instance.connect_for_point_in_woo()
+                        promotion_response = promotion_wcapi.get('get-valid-promotion/%s' %discount_sol.promotion_id.id)
+                        if promotion_response.status_code in [200,201]:                  
+                            promotion_data = promotion_response.json()                             
+                            if promotion_data != False:
+                                fee_lines_lists.append({
+                                                        "name": promotion_data,
+                                                        "tax_class": "0",
+                                                        "tax_status": "taxable",
+                                                        "amount": str(int(discount_sol.price_unit)),
+                                                        "total": str(int(discount_sol.price_unit))
+                                                    })
                     
                     #get old woo sale order info
                     woo_order_id = order.original_ecommerce_number
-                    logging.warning("Check woo_order_id: %s", woo_order_id)  
                     order_response = wcapi.get('orders/%s'%(woo_order_id))                    
                     woo_order = order_response.json()                   
                     customer_id = woo_order.get('customer_id')
@@ -1532,23 +1532,20 @@ class sale_order(models.Model):
                     payment_method = woo_order.get('payment_method')
                     payment_method_title = woo_order.get('payment_method_title')
                                         
-                    logging.warning("Check customer_id: %s", customer_id) 
-                    logging.warning("Check billing_first_name: %s", billing_first_name)  
-                    logging.warning("Check shipping_first_name: %s", shipping_first_name) 
-                    logging.warning("Check payment_method: %s", payment_method) 
-                    
-                    #find woo products to add line_items  
-                    for line in order.order_line:
+                    #find woo products to add line_items 
+                    product_lines = self.pool.get('sale.order.line').search(cr, uid, [('order_id', '=', order.id),
+                                                                                      ('service_product', '=', False)],context=context)
+                    for p_line in product_lines:
+                        line = self.pool.get('sale.order.line').browse(cr, uid, p_line, context=context) 
                         product_code = line.product_id.default_code
                         product_wcapi = instance.connect_for_point_in_woo()
                         if line.sale_foc == True:
-                            product_code = product_code + "!"                            
+                            product_code = product_code + "!" 
+                                       
                         product_response = product_wcapi.get('get-product-id-by-sku/%s' %product_code)
                         if product_response.status_code in [200,201]:                         
                             product_data = product_response.json()  
-                            logging.warning("Check product_data: %s", product_data) 
-                            if product_data:
-                                logging.warning("Check product_data[0]: %s", product_data[0])
+                            if product_data:                                
                                 woo_product_id = product_data[0].get('id')
                                 if line.sale_foc == True:
                                     product_lists.append({
@@ -1614,14 +1611,24 @@ class sale_order(models.Model):
                             "shipping_lines": shipping_lists,    
                             "fee_lines": fee_lines_lists                                                                           
                         }        
-                    logging.warning("Check product_lists: %s", product_lists)
-                    logging.warning("Check data: %s", data)                
                     create_order_response = wcapi.post("orders", data)
                     logging.warning("Check create_order_response status code: %s", create_order_response.status_code)
                     if create_order_response.status_code in [200,201]:     
-                        created_order_data = create_order_response.json()
-                        logging.warning("Check created_order_data: %s", created_order_data) 
-                        order.write({'woo_order_id': created_order_data.get('id')})    
+                        created_order_data = create_order_response.json()                        
+                        order.write({'woo_order_id': created_order_data.get('id'),
+                                     'woo_order_number': created_order_data.get('number')})
+                        one_signal_values = {
+                                            'partner_id': order.partner_id.id,
+                                            'contents': "Your order " + order.name + " is created successfully.",
+                                            'headings': "Burmart"
+                                        }     
+                        self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)
+                        one_signal_values = {
+                                            'partner_id': order.partner_id.id,
+                                            'contents': "Your order " + order.name + " is completed.",
+                                            'headings': "Burmart"
+                                        }     
+                        self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)    
     
     #Add cancel_woo_order_action into order cancel action
     def action_cancel(self, cr, uid, ids, context=None):
