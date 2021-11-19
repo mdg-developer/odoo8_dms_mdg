@@ -1503,7 +1503,9 @@ class sale_order(models.Model):
                     order_response = wcapi.get('orders/%s'%(woo_order_id))                    
                     woo_order = order_response.json()                   
                     customer_id = woo_order.get('customer_id')
-                    
+                    old_order_id = woo_order.get('id')
+                    old_order_number = woo_order.get('number')
+                                        
                     billing_address = woo_order.get('billing')
                     billing_first_name = billing_address.get('first_name')
                     billing_last_name = billing_address.get('last_name')
@@ -1542,7 +1544,7 @@ class sale_order(models.Model):
                         if line.sale_foc == True:
                             product_code = product_code + "!" 
                                        
-                        product_response = product_wcapi.get('get-product-id-by-sku/%s' %product_code)
+                        product_response = product_wcapi.put('get-product-id-by-sku',product_code)
                         if product_response.status_code in [200,201]:                         
                             product_data = product_response.json()  
                             if product_data:                                
@@ -1605,13 +1607,21 @@ class sale_order(models.Model):
                                             {
                                                 "key": "ywpar_points_from_cart",
                                                 "value": getting_points
-                                            }
+                                            },
+                                            {
+                                                "key": "parent_order_id",
+                                                "value": old_order_id
+                                            },
+                                            {
+                                                "key": "parent_order",
+                                                "value": old_order_number
+                                            }                                          
                                         ],  
                             "line_items": product_lists,
                             "shipping_lines": shipping_lists,    
-                            "fee_lines": fee_lines_lists                                                                           
+                            "fee_lines": fee_lines_lists,                                                                                                       
                         }        
-                    create_order_response = wcapi.post("orders", data)
+                    create_order_response = wcapi.post("orders", data)                    
                     logging.warning("Check create_order_response status code: %s", create_order_response.status_code)
                     if create_order_response.status_code in [200,201]:     
                         created_order_data = create_order_response.json()                        
