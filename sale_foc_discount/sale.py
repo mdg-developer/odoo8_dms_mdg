@@ -487,7 +487,7 @@ class sale_order(osv.osv):
             'delivery_township_id': order.delivery_township_id.id,
         }
                   
-        if order.woo_order_number:
+        if order.woo_order_number or order.original_ecommerce_number:
             order.update_woo_order_status_action('completed')
             one_signal_values = {
                             'partner_id': order.partner_id.id,
@@ -496,6 +496,7 @@ class sale_order(osv.osv):
                         }     
             self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values)
             order.update_sale_order_point()
+            logging.warning("Creating sale order in woo")
             order.create_sale_order_in_woo()
                     
         # Care for deprecated _inv_get() hook - FIXME: to be removed after 6.1
