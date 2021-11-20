@@ -3202,7 +3202,7 @@ class mobile_sale_order(osv.osv):
                         delivery = {                                                            
                                   'order_id':So_id[0],
                                   'miss':True,
-                                'is_revised':False,
+                                  'is_revised':False,
                                   'delivery_date':datetime.now(),
                                   'due_date':deli['due_date'],
                                   'state':'done',
@@ -3379,7 +3379,7 @@ class mobile_sale_order(osv.osv):
                                                    , ('name', '=', so_ref_no)], context=context)
                     if So_id:
                         print 'Sale Order Id', So_id[0]
-                        if deli['is_revised'] == 't':
+                        if deli['revised'] == 'true':
                             is_revised =True
                         else :
                             is_revised=False
