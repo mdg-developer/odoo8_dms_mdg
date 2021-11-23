@@ -153,6 +153,9 @@
 					<thead>
 						<tr>
 							<th>Product</th>
+							<th class="text-center">Order Qty</th>
+							<th class="text-center">Ecommerce Qty</th>
+							<th class="text-center">Total Request Qty</th>							
 							<th class="text-center">Qty</th>
 							<th class="text-center">UOM</th>
 							<th>Batch No</th>
@@ -165,6 +168,15 @@
 						<tr t-foreach="o.p_line.sorted(key=lambda b: b.sequence)" t-as="l">
 							<td>
 								<span t-field="l.product_id" />
+							</td>
+							<td align="center">								
+								<span t-field="l.order_qty" />
+							</td>
+							<td align="center">								
+								<span t-field="l.ecommerce_qty" />
+							</td>
+							<td align="center">								
+								<span t-field="l.total_request_qty" />
 							</td>
 							<td align="center">
 								<!-- <span t-field="l.big_issue_quantity" /> / -->
