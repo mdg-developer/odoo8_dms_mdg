@@ -103,6 +103,9 @@ OUT__good_issue_note__read_all__SCHEMA = (                 # editable
             )),
             'bypass_barcode',
         )),
+        'order_qty',
+        'ecommerce_qty',
+        'total_request_qty',
         'issue_quantity',
         'approved_quantity',
         ('product_uom', [(  # many2many
@@ -206,6 +209,9 @@ OUT__good_issue_note__read_one__SCHEMA = (                 # editable
             )),
             'bypass_barcode',
         )),
+        'order_qty',
+        'ecommerce_qty',
+        'total_request_qty',
         'issue_quantity',
         'approved_quantity',
         ('product_uom', [(  # many2many
