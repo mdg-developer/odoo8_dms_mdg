@@ -16,6 +16,7 @@ import datetime
 import math
 from datetime import datetime, date, time
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as OE_DATETIMEFORMAT
+import logging
 
 class sub_d_customer(osv.osv):  
     _name = 'sub.d.customer'
@@ -46,6 +47,30 @@ class stock_requisition(osv.osv):
         sub_d_customer_id = self.pool.get('sub.d.customer').search(cr, uid, [('name', '=', 'None')], context=context)   
         if sub_d_customer_id:    
             return sub_d_customer_id[0]  
+        
+    def get_order_qty(self, cr, uid, product_id=None, order_ids=None, context=None):
+        
+        if product_id and order_ids:                       
+            cr.execute("""select COALESCE(sum(product_uom_qty), 0)
+                        from sale_order_line sol,sale_order so
+                        where sol.order_id=so.id
+                        and order_id in %s
+                        and product_id=%s
+                        and woo_order_id is null""", (tuple(order_ids), product_id,))                    
+            qty = cr.fetchone()[0]            
+            return qty 
+        
+    def get_ecommerce_qty(self, cr, uid, product_id=None, order_ids=None, context=None):
+        
+        if product_id and order_ids:     
+            cr.execute("""select COALESCE(sum(product_uom_qty), 0)
+                        from sale_order_line sol,sale_order so
+                        where sol.order_id=so.id
+                        and order_id in %s
+                        and product_id=%s
+                        and woo_order_id is not null""", (tuple(order_ids), product_id,))    
+            qty = cr.fetchone()[0]            
+            return qty         
     
     def on_change_sale_team_id(self, cr, uid, ids, sale_team_id, pre_order, context=None):
         sale_order_obj = self.pool.get('sale.order')
@@ -73,7 +98,11 @@ class stock_requisition(osv.osv):
                     qty_on_hand = qty_on_hand[0]
                 else:
                     qty_on_hand = 0
-                if product.product_tmpl_id.type=='product':                                               
+                if product.product_tmpl_id.type=='product': 
+                    order_qty = self.get_order_qty(cr, uid, product_id=line.id, order_ids=order_ids)
+                    logging.warning("Check order_qty: %s", order_qty)
+                    ecommerce_qty = self.get_ecommerce_qty(cr, uid, product_id=line.id, order_ids=order_ids)
+                    logging.warning("Check ecommerce_qty: %s", ecommerce_qty)                                              
                     data_line.append({
                                       'sequence':product.sequence,
                                         'product_id':line.id,
@@ -85,6 +114,8 @@ class stock_requisition(osv.osv):
                                         'sale_req_quantity':sale_req_quantity,
                                         'addtional_req_quantity':addtional_req_quantity,
                                         'qty_on_hand':qty_on_hand,
+                                        'order_qty': order_qty,
+                                        'ecommerce_qty': ecommerce_qty,                                        
                                           })
             if pre_order==True:       
                 for line in order_ids:
@@ -564,6 +595,8 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
         'addtional_req_quantity' : fields.float(string='Small Add Qty', digits=(16, 0)),
         'qty_on_hand':fields.float(string='Qty On Hand', digits=(16, 0)),
         'sequence':fields.integer('Sequence'),
+        'order_qty' : fields.float(string='Order Qty', digits=(16, 0)),
+        'ecommerce_qty' : fields.float(string='Ecommerce Qty', digits=(16, 0)),        
     }
         
 class stock_requisition_order(osv.osv):  # #prod_pricelist_update_line
