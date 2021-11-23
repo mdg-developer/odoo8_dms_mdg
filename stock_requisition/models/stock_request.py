@@ -377,7 +377,7 @@ class stock_requisition(osv.osv):
                 data_line = []
                 req_list = str(tuple(req_line_id))
                 req_list = eval(req_list)
-                cr.execute('''select sum(req_quantity * floor(round(1/factor,2))) as req_quantity,l.product_id
+                cr.execute('''select sum(req_quantity * floor(round(1/factor,2))) as req_quantity,l.product_id,sum(order_qty) order_qty,sum(ecommerce_qty) ecommerce_qty,sum(total_request_qty) total_request_qty
                             from stock_requisition_line l ,product_uom uom 
                             where l.product_uom =uom.id and l.id in %s
                             group by product_id ''', (req_list,))
@@ -387,6 +387,9 @@ class stock_requisition(osv.osv):
                         product_id = int(req_data[1])
                         print 'product_id',product_id
                         sale_qty = float(req_data[0])
+                        order_qty = req_data[2]
+                        ecommerce_qty = req_data[3]
+                        total_request_qty = req_data[4]
                         cr.execute("""SELECT uom.id , floor(round(1/factor,2)) as ratio  FROM product_product pp 
                           LEFT JOIN product_template pt ON (pp.product_tmpl_id=pt.id)
                           LEFT JOIN product_template_product_uom_rel rel ON (rel.product_template_id=pt.id)
@@ -398,7 +401,7 @@ class stock_requisition(osv.osv):
                             if  sale_qty >= uom_data[1]:
                                 req_quantity=int(sale_qty/uom_data[1])
                                 sale_qty=sale_qty % uom_data[1]
-                                data_line.append({'req_quantity':req_quantity,'product_uom':uom_data[0],'product_id':product_id})
+                                data_line.append({'req_quantity':req_quantity,'order_qty':order_qty,'ecommerce_qty':ecommerce_qty,'total_request_qty':total_request_qty,'product_uom':uom_data[0],'product_id':product_id})
 #                            else:
 #                                data_line.append({'req_quantity':sale_qty,'product_uom':uom_data[0],'product_id':product_id})
                                                               
@@ -410,7 +413,10 @@ class stock_requisition(osv.osv):
                         product_uom = req_line_value['product_uom']
                         qty_on_hand = line_data[0]
                         uom_ratio = line_data[1]
-                        quantity = req_line_value['req_quantity']
+                        order_qty = req_line_value['order_qty']
+                        ecommerce_qty = req_line_value['ecommerce_qty']
+                        total_request_qty = req_line_value['total_request_qty']
+                        quantity = req_line_value['req_quantity']                        
                         sequence=line_data[2]
                         quantity_on_hand=quantity
                         product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)   
@@ -484,6 +490,9 @@ class stock_requisition(osv.osv):
                                                   'product_uom': product_uom,
                                                   'uom_ratio':uom_ratio,
                                                  'approved_quantity':quantity,
+                                                 'order_qty':order_qty,
+                                                 'ecommerce_qty':ecommerce_qty,
+                                                 'total_request_qty':total_request_qty,
                                                   'issue_quantity':quantity,
                                                   'qty_on_hand':qty_on_hand,
                                                   'sequence':sequence,                                                  
