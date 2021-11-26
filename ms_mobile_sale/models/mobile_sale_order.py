@@ -215,6 +215,28 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()
         return datas  
     
+    def get_inventory_adjustment_lines(self, cr, uid, location_id, context=None, **kwargs):
+        
+        if location_id:        
+            cr.execute('''                                
+                        select pm.name principal,categ.name category,name_template sku_name,
+                        (select name from product_uom where id=pt.report_uom_id) bigger_uom,
+                        (select name from product_uom where id=pt.uom_id) smaller_uom,
+                        COALESCE(sum(qty),0) total_pcs,
+                        round((COALESCE(sum(qty),0)/(1/factor))::numeric,1) ctn_qty,
+                        COALESCE(sum(qty),0) pcs_qty
+                        from stock_quant sq,product_product pp,product_template pt,product_category categ,product_maingroup pm,product_uom uom
+                        where sq.product_id=pp.id
+                        and pp.product_tmpl_id=pt.id
+                        and pt.categ_id=categ.id
+                        and pt.main_group=pm.id
+                        and pt.report_uom_id=uom.id
+                        and location_id=%s        
+                        group by pm.name,categ.name,name_template,pt.report_uom_id,pt.uom_id,uom.factor
+                            ''', (location_id,))
+            datas = cr.fetchall()
+            return datas
+    
     def send_credit_invoice_sms(self, cr, uid, customer_id, invoice_number, grand_total, due_date, context=None):    
          
         message_body = None        
