@@ -224,7 +224,7 @@ class mobile_sale_order(osv.osv):
                         (select name from product_uom where id=pt.uom_id) smaller_uom,
                         COALESCE(sum(qty),0) total_pcs,
                         round((COALESCE(sum(qty),0)/(1/factor))::numeric,1) ctn_qty,
-                        COALESCE(sum(qty),0) pcs_qty
+                        COALESCE(sum(qty),0) pcs_qty,product_id
                         from stock_quant sq,product_product pp,product_template pt,product_category categ,product_maingroup pm,product_uom uom
                         where sq.product_id=pp.id
                         and pp.product_tmpl_id=pt.id
@@ -232,7 +232,7 @@ class mobile_sale_order(osv.osv):
                         and pt.main_group=pm.id
                         and pt.report_uom_id=uom.id
                         and location_id=%s        
-                        group by pm.name,categ.name,name_template,pt.report_uom_id,pt.uom_id,uom.factor
+                        group by pm.name,categ.name,name_template,pt.report_uom_id,pt.uom_id,uom.factor,product_id
                             ''', (location_id,))
             datas = cr.fetchall()
             return datas
