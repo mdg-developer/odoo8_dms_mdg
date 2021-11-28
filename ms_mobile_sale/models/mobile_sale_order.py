@@ -554,6 +554,53 @@ class mobile_sale_order(osv.osv):
             print e
             return False 
         
+    def create_inventory_adjustment(self, cursor, user, vals, context=None):
+             
+        logging.warning("create_inventory_adjustment vals: %s", vals)
+        try : 
+            inventory_obj = self.pool.get('stock.inventory')            
+            inventory_line_obj = self.pool.get('stock.inventory.line')            
+            str = "{" + vals + "}"
+            str = str.replace(":''", ":'")  
+            str = str.replace("'',", "',")  
+            str = str.replace(":',", ":'',")  
+            str = str.replace("}{", "}|{")
+            new_arr = str.split('|')
+            result = []            
+            for data in new_arr:
+                x = ast.literal_eval(data)
+                result.append(x)
+            inventory = []
+            inventory_line = []
+            for r in result:
+                logging.warning("length: %s", len(r))                
+                if len(r) == 3:
+                    inventory.append(r)
+                else:
+                    inventory_line.append(r)
+            logging.warning("inventory: %s", inventory)
+            if inventory:
+                for inv in inventory:                   
+                    inventory_result = {
+                        'subject': inv['subject'],
+                        'location_id': inv['location_id'],  
+                        'date': inv['date'],                      
+                    }
+                    inventory_id = inventory_obj.create(cursor, user, inventory_result, context=context)
+                    logging.warning("created inventory_id: %s", inventory_id)
+                    logging.warning("inventory_line: %s", inventory_line)
+                    for line in inventory_line:                                                                                         
+                        inventory_line_res = {                                                            
+                            'inventory_id': inventory_id,
+                            'product_id': line['product_id'],
+                            'location_id':  inv['location_id'],
+                            'product_qty':  line['qty'],                         
+                        }
+                        inventory_line_obj.create(cursor, user, inventory_line_res, context=context) 
+            return True     
+        except Exception, e:            
+            return False
+        
     def create_tablet_sync_log_form(self, cursor, user, vals, context=None):
              try :
                 sync_obj = self.pool.get('tablet.sync.log')
