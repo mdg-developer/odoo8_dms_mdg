@@ -50,14 +50,14 @@ class stock_requisition(osv.osv):
         
     def get_order_qty(self, cr, uid, product_id=None, order_ids=None, context=None):
         
-        if product_id and order_ids:                       
+        if product_id and order_ids:                              
             cr.execute("""select COALESCE(sum(product_uom_qty), 0)
                         from sale_order_line sol,sale_order so
                         where sol.order_id=so.id
                         and order_id in %s
                         and product_id=%s
                         and woo_order_id is null""", (tuple(order_ids), product_id,))                    
-            qty = cr.fetchone()[0]            
+            qty = cr.fetchone()[0]                
             return qty 
         
     def get_ecommerce_qty(self, cr, uid, product_id=None, order_ids=None, context=None):
@@ -81,7 +81,7 @@ class stock_requisition(osv.osv):
         big_req_quantity = 0
         req_quantity = 0   
         sale_req_quantity = 0
-        addtional_req_quantity = 0
+        addtional_req_quantity = 0        
         if sale_team_id:
             sale_team = self.pool.get('crm.case.section').browse(cr, uid, sale_team_id, context=context)
             issue_to = sale_team.receiver
@@ -89,6 +89,8 @@ class stock_requisition(osv.osv):
             vehicle_id = sale_team.vehicle_id
             product_line = sale_team.sale_group_id.product_ids
             to_location_id = sale_team.issue_location_id
+            order_qty = 0
+            ecommerce_qty = 0
             order_ids = sale_order_obj.search(cr, uid, [('delivery_id', '=', sale_team_id), ('shipped', '=', False), ('is_generate', '=', False), ('invoiced', '=', False), ('state', 'not in', ['draft','done', 'cancel', 'reversed'])], context=context) 
             for line in product_line:                
                 product = self.pool.get('product.product').browse(cr, uid, line.id, context=context)   
@@ -99,16 +101,14 @@ class stock_requisition(osv.osv):
                 else:
                     qty_on_hand = 0
                 if product.product_tmpl_id.type=='product': 
-                    order_qty = self.get_order_qty(cr, uid, product_id=line.id, order_ids=order_ids)
-                    logging.warning("Check order_qty: %s", order_qty)
-                    ecommerce_qty = self.get_ecommerce_qty(cr, uid, product_id=line.id, order_ids=order_ids)
-                    logging.warning("Check ecommerce_qty: %s", ecommerce_qty)                                              
+                    order_qty = self.get_order_qty(cr, uid, product_id=line.id, order_ids=order_ids)                    
+                    ecommerce_qty = self.get_ecommerce_qty(cr, uid, product_id=line.id, order_ids=order_ids)                                                           
                     data_line.append({
                                       'sequence':product.sequence,
                                         'product_id':line.id,
                                          'product_uom': product.product_tmpl_id.uom_id and product.product_tmpl_id.uom_id.id or False,
                                         'uom_ratio': product.product_tmpl_id.uom_ratio,
-                                        'req_quantity':big_req_quantity,
+                                        'req_quantity':order_qty+ecommerce_qty,
                                         'big_uom_id':product.product_tmpl_id.big_uom_id and product.product_tmpl_id.big_uom_id.id or False,
                                         'big_req_quantity':req_quantity,
                                         'sale_req_quantity':sale_req_quantity,
@@ -415,7 +415,7 @@ class stock_requisition(osv.osv):
                         uom_ratio = line_data[1]
                         order_qty = req_line_value['order_qty']
                         ecommerce_qty = req_line_value['ecommerce_qty']
-                        total_request_qty = req_line_value['total_request_qty']
+                        total_request_qty = req_line_value['req_quantity']
                         quantity = req_line_value['req_quantity']                        
                         sequence=line_data[2]
                         quantity_on_hand=quantity
