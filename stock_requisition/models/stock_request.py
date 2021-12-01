@@ -50,18 +50,20 @@ class stock_requisition(osv.osv):
         
     def get_order_qty(self, cr, uid, product_id=None, order_ids=None, context=None):
         
-        if product_id and order_ids:                              
+        qty = 0
+        if product_id and order_ids:                             
             cr.execute("""select COALESCE(sum(product_uom_qty), 0)
                         from sale_order_line sol,sale_order so
                         where sol.order_id=so.id
                         and order_id in %s
                         and product_id=%s
                         and woo_order_id is null""", (tuple(order_ids), product_id,))                    
-            qty = cr.fetchone()[0]                
-            return qty 
-        
+            qty = cr.fetchone()[0]                   
+        return qty
+                
     def get_ecommerce_qty(self, cr, uid, product_id=None, order_ids=None, context=None):
         
+        qty = 0
         if product_id and order_ids:     
             cr.execute("""select COALESCE(sum(product_uom_qty), 0)
                         from sale_order_line sol,sale_order so
@@ -70,7 +72,7 @@ class stock_requisition(osv.osv):
                         and product_id=%s
                         and woo_order_id is not null""", (tuple(order_ids), product_id,))    
             qty = cr.fetchone()[0]            
-            return qty         
+        return qty
     
     def on_change_sale_team_id(self, cr, uid, ids, sale_team_id, pre_order, context=None):
         sale_order_obj = self.pool.get('sale.order')
@@ -81,18 +83,18 @@ class stock_requisition(osv.osv):
         big_req_quantity = 0
         req_quantity = 0   
         sale_req_quantity = 0
-        addtional_req_quantity = 0        
+        addtional_req_quantity = 0 
+        order_qty = 0
+        ecommerce_qty = 0                         
         if sale_team_id:
             sale_team = self.pool.get('crm.case.section').browse(cr, uid, sale_team_id, context=context)
             issue_to = sale_team.receiver
             location = sale_team.location_id
             vehicle_id = sale_team.vehicle_id
             product_line = sale_team.sale_group_id.product_ids
-            to_location_id = sale_team.issue_location_id
-            order_qty = 0
-            ecommerce_qty = 0
+            to_location_id = sale_team.issue_location_id            
             order_ids = sale_order_obj.search(cr, uid, [('delivery_id', '=', sale_team_id), ('shipped', '=', False), ('is_generate', '=', False), ('invoiced', '=', False), ('state', 'not in', ['draft','done', 'cancel', 'reversed'])], context=context) 
-            for line in product_line:                
+            for line in product_line:                              
                 product = self.pool.get('product.product').browse(cr, uid, line.id, context=context)   
                 cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (to_location_id.id, product.id,))
                 qty_on_hand = cr.fetchone()
