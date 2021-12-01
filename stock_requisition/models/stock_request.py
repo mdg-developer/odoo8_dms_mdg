@@ -409,7 +409,7 @@ class stock_requisition(osv.osv):
                                                               
                 for req_line_value in data_line:
                     if (req_line_value['req_quantity']) != 0:
-                        cr.execute('select qty_on_hand,uom_ratio,sequence from stock_requisition_line where line_id=%s and product_id=%s ', (ids[0],req_line_value['product_id'],))
+                        cr.execute('select qty_on_hand,uom_ratio,sequence,req_quantity from stock_requisition_line where line_id=%s and product_id=%s ', (ids[0],req_line_value['product_id'],))
                         line_data = cr.fetchone()  
                         product_id = req_line_value['product_id']
                         product_uom = req_line_value['product_uom']
@@ -417,7 +417,7 @@ class stock_requisition(osv.osv):
                         uom_ratio = line_data[1]
                         order_qty = req_line_value['order_qty']
                         ecommerce_qty = req_line_value['ecommerce_qty']
-                        total_request_qty = req_line_value['req_quantity']
+                        total_request_qty = line_data[3]
                         quantity = req_line_value['req_quantity']                        
                         sequence=line_data[2]
                         quantity_on_hand=quantity
