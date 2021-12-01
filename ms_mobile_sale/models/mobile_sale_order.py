@@ -217,6 +217,8 @@ class mobile_sale_order(osv.osv):
     
     def get_inventory_adjustment_lines(self, cr, uid, location_id, context=None, **kwargs):
         
+        logging.warning("get_inventory_adjustment_lines: %s", location_id)
+        logging.warning("type(location_id)", type(location_id))
         if location_id:        
             cr.execute('''                                
                         select pm.name principal,categ.name category,name_template sku_name,
@@ -224,17 +226,19 @@ class mobile_sale_order(osv.osv):
                         (select name from product_uom where id=pt.uom_id) smaller_uom,
                         COALESCE(sum(qty),0) total_pcs,
                         round((COALESCE(sum(qty),0)/(1/factor))::numeric,1) ctn_qty,
-                        COALESCE(sum(qty),0) pcs_qty,product_id
+                        COALESCE(sum(qty),0) pcs_qty,product_id,
+                        (select floor(round(1/factor,2)) from product_uom where id=pt.report_uom_id) bigger_uom_ratio
                         from stock_quant sq,product_product pp,product_template pt,product_category categ,product_maingroup pm,product_uom uom
                         where sq.product_id=pp.id
                         and pp.product_tmpl_id=pt.id
                         and pt.categ_id=categ.id
                         and pt.main_group=pm.id
                         and pt.report_uom_id=uom.id
-                        and location_id=%s        
+                        and location_id=%s
                         group by pm.name,categ.name,name_template,pt.report_uom_id,pt.uom_id,uom.factor,product_id
-                            ''', (location_id,))
+                    ''', (location_id,))
             datas = cr.fetchall()
+            logging.warning("get_inventory_adjustment_lines datas: %s", datas)
             return datas
     
     def send_credit_invoice_sms(self, cr, uid, customer_id, invoice_number, grand_total, due_date, context=None):    
@@ -1730,6 +1734,7 @@ class mobile_sale_order(osv.osv):
                 return False
             
     def get_field_audit_question(self, cr, uid,context=None, **kwargs):
+        logging.warning("get_field_audit_question")
         cr.execute('''select id,sequence,name,english_name from audit_question order by sequence asc                     ''')
         datas = cr.fetchall()
         return datas 
