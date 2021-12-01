@@ -40,6 +40,14 @@ class res_partner(osv.osv):
                 'viber': fields.boolean('Viber',default=False),
             }   
           
+    def check_maintenance_mode(self, cr, uid, ids, context=None):
+        
+        maintenance_mode = self.pool.get('ir.config_parameter').get_param(cr, uid, 'maintenance_mode')
+        if maintenance_mode:
+            return maintenance_mode.lower()
+        else:
+            return "false"
+        
     def send_otp_code(self, cr, uid, ids, mobile_phone, context=None):
         
         if mobile_phone:        
