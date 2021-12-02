@@ -16,6 +16,7 @@ import datetime
 import math
 from datetime import datetime, date, time
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as OE_DATETIMEFORMAT
+import logging
 
 class sub_d_customer(osv.osv):  
     _name = 'sub.d.customer'
@@ -46,6 +47,32 @@ class stock_requisition(osv.osv):
         sub_d_customer_id = self.pool.get('sub.d.customer').search(cr, uid, [('name', '=', 'None')], context=context)   
         if sub_d_customer_id:    
             return sub_d_customer_id[0]  
+        
+    def get_order_qty(self, cr, uid, product_id=None, order_ids=None, context=None):
+        
+        qty = 0
+        if product_id and order_ids:                             
+            cr.execute("""select COALESCE(sum(product_uom_qty), 0)
+                        from sale_order_line sol,sale_order so
+                        where sol.order_id=so.id
+                        and order_id in %s
+                        and product_id=%s
+                        and woo_order_id is null""", (tuple(order_ids), product_id,))                    
+            qty = cr.fetchone()[0]                   
+        return qty
+                
+    def get_ecommerce_qty(self, cr, uid, product_id=None, order_ids=None, context=None):
+        
+        qty = 0
+        if product_id and order_ids:     
+            cr.execute("""select COALESCE(sum(product_uom_qty), 0)
+                        from sale_order_line sol,sale_order so
+                        where sol.order_id=so.id
+                        and order_id in %s
+                        and product_id=%s
+                        and woo_order_id is not null""", (tuple(order_ids), product_id,))    
+            qty = cr.fetchone()[0]            
+        return qty
     
     def on_change_sale_team_id(self, cr, uid, ids, sale_team_id, pre_order, context=None):
         sale_order_obj = self.pool.get('sale.order')
@@ -56,16 +83,18 @@ class stock_requisition(osv.osv):
         big_req_quantity = 0
         req_quantity = 0   
         sale_req_quantity = 0
-        addtional_req_quantity = 0
+        addtional_req_quantity = 0 
+        order_qty = 0
+        ecommerce_qty = 0                         
         if sale_team_id:
             sale_team = self.pool.get('crm.case.section').browse(cr, uid, sale_team_id, context=context)
             issue_to = sale_team.receiver
             location = sale_team.location_id
             vehicle_id = sale_team.vehicle_id
             product_line = sale_team.sale_group_id.product_ids
-            to_location_id = sale_team.issue_location_id
+            to_location_id = sale_team.issue_location_id            
             order_ids = sale_order_obj.search(cr, uid, [('delivery_id', '=', sale_team_id), ('shipped', '=', False), ('is_generate', '=', False), ('invoiced', '=', False), ('state', 'not in', ['draft','done', 'cancel', 'reversed'])], context=context) 
-            for line in product_line:                
+            for line in product_line:                              
                 product = self.pool.get('product.product').browse(cr, uid, line.id, context=context)   
                 cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (to_location_id.id, product.id,))
                 qty_on_hand = cr.fetchone()
@@ -73,18 +102,22 @@ class stock_requisition(osv.osv):
                     qty_on_hand = qty_on_hand[0]
                 else:
                     qty_on_hand = 0
-                if product.product_tmpl_id.type=='product':                                               
+                if product.product_tmpl_id.type=='product': 
+                    order_qty = self.get_order_qty(cr, uid, product_id=line.id, order_ids=order_ids)                    
+                    ecommerce_qty = self.get_ecommerce_qty(cr, uid, product_id=line.id, order_ids=order_ids)                                                           
                     data_line.append({
                                       'sequence':product.sequence,
                                         'product_id':line.id,
                                          'product_uom': product.product_tmpl_id.uom_id and product.product_tmpl_id.uom_id.id or False,
                                         'uom_ratio': product.product_tmpl_id.uom_ratio,
-                                        'req_quantity':big_req_quantity,
+                                        'req_quantity':order_qty+ecommerce_qty,
                                         'big_uom_id':product.product_tmpl_id.big_uom_id and product.product_tmpl_id.big_uom_id.id or False,
                                         'big_req_quantity':req_quantity,
                                         'sale_req_quantity':sale_req_quantity,
                                         'addtional_req_quantity':addtional_req_quantity,
                                         'qty_on_hand':qty_on_hand,
+                                        'order_qty': order_qty,
+                                        'ecommerce_qty': ecommerce_qty,                                        
                                           })
             if pre_order==True:       
                 for line in order_ids:
@@ -346,7 +379,7 @@ class stock_requisition(osv.osv):
                 data_line = []
                 req_list = str(tuple(req_line_id))
                 req_list = eval(req_list)
-                cr.execute('''select sum(req_quantity * floor(round(1/factor,2))) as req_quantity,l.product_id
+                cr.execute('''select sum(req_quantity * floor(round(1/factor,2))) as req_quantity,l.product_id,sum(order_qty) order_qty,sum(ecommerce_qty) ecommerce_qty,sum(total_request_qty) total_request_qty
                             from stock_requisition_line l ,product_uom uom 
                             where l.product_uom =uom.id and l.id in %s
                             group by product_id ''', (req_list,))
@@ -356,6 +389,9 @@ class stock_requisition(osv.osv):
                         product_id = int(req_data[1])
                         print 'product_id',product_id
                         sale_qty = float(req_data[0])
+                        order_qty = req_data[2]
+                        ecommerce_qty = req_data[3]
+                        total_request_qty = req_data[4]
                         cr.execute("""SELECT uom.id , floor(round(1/factor,2)) as ratio  FROM product_product pp 
                           LEFT JOIN product_template pt ON (pp.product_tmpl_id=pt.id)
                           LEFT JOIN product_template_product_uom_rel rel ON (rel.product_template_id=pt.id)
@@ -367,19 +403,22 @@ class stock_requisition(osv.osv):
                             if  sale_qty >= uom_data[1]:
                                 req_quantity=int(sale_qty/uom_data[1])
                                 sale_qty=sale_qty % uom_data[1]
-                                data_line.append({'req_quantity':req_quantity,'product_uom':uom_data[0],'product_id':product_id})
+                                data_line.append({'req_quantity':req_quantity,'order_qty':order_qty,'ecommerce_qty':ecommerce_qty,'total_request_qty':total_request_qty,'product_uom':uom_data[0],'product_id':product_id})
 #                            else:
 #                                data_line.append({'req_quantity':sale_qty,'product_uom':uom_data[0],'product_id':product_id})
                                                               
                 for req_line_value in data_line:
                     if (req_line_value['req_quantity']) != 0:
-                        cr.execute('select qty_on_hand,uom_ratio,sequence from stock_requisition_line where line_id=%s and product_id=%s ', (ids[0],req_line_value['product_id'],))
+                        cr.execute('select qty_on_hand,uom_ratio,sequence,req_quantity from stock_requisition_line where line_id=%s and product_id=%s ', (ids[0],req_line_value['product_id'],))
                         line_data = cr.fetchone()  
                         product_id = req_line_value['product_id']
                         product_uom = req_line_value['product_uom']
                         qty_on_hand = line_data[0]
                         uom_ratio = line_data[1]
-                        quantity = req_line_value['req_quantity']
+                        order_qty = req_line_value['order_qty']
+                        ecommerce_qty = req_line_value['ecommerce_qty']
+                        total_request_qty = line_data[3]
+                        quantity = req_line_value['req_quantity']                        
                         sequence=line_data[2]
                         quantity_on_hand=quantity
                         product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)   
@@ -453,6 +492,9 @@ class stock_requisition(osv.osv):
                                                   'product_uom': product_uom,
                                                   'uom_ratio':uom_ratio,
                                                  'approved_quantity':quantity,
+                                                 'order_qty':order_qty,
+                                                 'ecommerce_qty':ecommerce_qty,
+                                                 'total_request_qty':total_request_qty,
                                                   'issue_quantity':quantity,
                                                   'qty_on_hand':qty_on_hand,
                                                   'sequence':sequence,                                                  
@@ -564,6 +606,8 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
         'addtional_req_quantity' : fields.float(string='Small Add Qty', digits=(16, 0)),
         'qty_on_hand':fields.float(string='Qty On Hand', digits=(16, 0)),
         'sequence':fields.integer('Sequence'),
+        'order_qty' : fields.float(string='Order Qty', digits=(16, 0)),
+        'ecommerce_qty' : fields.float(string='Ecommerce Qty', digits=(16, 0)),        
     }
         
 class stock_requisition_order(osv.osv):  # #prod_pricelist_update_line

@@ -215,6 +215,32 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()
         return datas  
     
+    def get_inventory_adjustment_lines(self, cr, uid, location_id, context=None, **kwargs):
+        
+        logging.warning("get_inventory_adjustment_lines: %s", location_id)
+        logging.warning("type(location_id)", type(location_id))
+        if location_id:        
+            cr.execute('''                                
+                        select pm.name principal,categ.name category,name_template sku_name,
+                        (select name from product_uom where id=pt.report_uom_id) bigger_uom,
+                        (select name from product_uom where id=pt.uom_id) smaller_uom,
+                        COALESCE(sum(qty),0) total_pcs,
+                        round((COALESCE(sum(qty),0)/(1/factor))::numeric,1) ctn_qty,
+                        COALESCE(sum(qty),0) pcs_qty,product_id,
+                        (select floor(round(1/factor,2)) from product_uom where id=pt.report_uom_id) bigger_uom_ratio
+                        from stock_quant sq,product_product pp,product_template pt,product_category categ,product_maingroup pm,product_uom uom
+                        where sq.product_id=pp.id
+                        and pp.product_tmpl_id=pt.id
+                        and pt.categ_id=categ.id
+                        and pt.main_group=pm.id
+                        and pt.report_uom_id=uom.id
+                        and location_id=%s
+                        group by pm.name,categ.name,name_template,pt.report_uom_id,pt.uom_id,uom.factor,product_id
+                    ''', (location_id,))
+            datas = cr.fetchall()
+            logging.warning("get_inventory_adjustment_lines datas: %s", datas)
+            return datas
+    
     def send_credit_invoice_sms(self, cr, uid, customer_id, invoice_number, grand_total, due_date, context=None):    
          
         message_body = None        
@@ -531,6 +557,53 @@ class mobile_sale_order(osv.osv):
             print 'False'
             print e
             return False 
+        
+    def create_inventory_adjustment(self, cursor, user, vals, context=None):
+             
+        logging.warning("create_inventory_adjustment vals: %s", vals)
+        try : 
+            inventory_obj = self.pool.get('stock.inventory')            
+            inventory_line_obj = self.pool.get('stock.inventory.line')            
+            str = "{" + vals + "}"
+            str = str.replace(":''", ":'")  
+            str = str.replace("'',", "',")  
+            str = str.replace(":',", ":'',")  
+            str = str.replace("}{", "}|{")
+            new_arr = str.split('|')
+            result = []            
+            for data in new_arr:
+                x = ast.literal_eval(data)
+                result.append(x)
+            inventory = []
+            inventory_line = []
+            for r in result:
+                logging.warning("length: %s", len(r))                
+                if len(r) == 3:
+                    inventory.append(r)
+                else:
+                    inventory_line.append(r)
+            logging.warning("inventory: %s", inventory)
+            if inventory:
+                for inv in inventory:                   
+                    inventory_result = {
+                        'subject': inv['subject'],
+                        'location_id': inv['location_id'],  
+                        'date': inv['date'],                      
+                    }
+                    inventory_id = inventory_obj.create(cursor, user, inventory_result, context=context)
+                    logging.warning("created inventory_id: %s", inventory_id)
+                    logging.warning("inventory_line: %s", inventory_line)
+                    for line in inventory_line:                                                                                         
+                        inventory_line_res = {                                                            
+                            'inventory_id': inventory_id,
+                            'product_id': line['product_id'],
+                            'location_id':  inv['location_id'],
+                            'product_qty':  line['qty'],                         
+                        }
+                        inventory_line_obj.create(cursor, user, inventory_line_res, context=context) 
+            return True     
+        except Exception, e:            
+            return False
         
     def create_tablet_sync_log_form(self, cursor, user, vals, context=None):
              try :
@@ -1661,6 +1734,7 @@ class mobile_sale_order(osv.osv):
                 return False
             
     def get_field_audit_question(self, cr, uid,context=None, **kwargs):
+        logging.warning("get_field_audit_question")
         cr.execute('''select id,sequence,name,english_name from audit_question order by sequence asc                     ''')
         datas = cr.fetchall()
         return datas 

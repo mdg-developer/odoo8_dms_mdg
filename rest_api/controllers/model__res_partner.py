@@ -52,6 +52,11 @@ OUT__res_partner__read_all__SCHEMA = (                # editable
         'name',
         'code'
     )),
+    ('city', (
+        'id',
+        'name',
+        'code'
+    )),
     ('state_id', (
         'id',
         'name',
@@ -104,6 +109,11 @@ OUT__res_partner__read_one__SCHEMA = (                # editable
     'street',
     'street2',    
     ('township', (
+        'id',
+        'name',
+        'code'
+    )),
+    ('city', (
         'id',
         'name',
         'code'

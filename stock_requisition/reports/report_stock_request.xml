@@ -143,6 +143,8 @@
 					<thead>
 						<tr>
 							<th>Product</th>
+							<th>Order Qty</th>
+							<th>Ecommerce Qty</th>
                             <th class="text-center">Qty</th>
                             <th class="text-center">UOM</th>
 							<th class="text-center">Qty on Hand(S)</th>
@@ -156,6 +158,12 @@
                             <t t-if="(l.req_quantity)!=0">
 								<td>
 									<span t-field="l.product_id" />
+								</td>
+								<td align="center">                                    
+									<span t-field="l.order_qty" />
+								</td>
+								<td align="center">                                    
+									<span t-field="l.ecommerce_qty" />
 								</td>
 								<td align="center">
                                     <!-- <span t-field="l.big_req_quantity" />

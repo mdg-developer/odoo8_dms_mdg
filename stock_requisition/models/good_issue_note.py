@@ -358,6 +358,9 @@ class good_issue_line(osv.osv):  # #prod_pricelist_update_line
         'opening_qty':fields.float('Opening Qty',readonly=True, digits=(16, 0)),
         'opening_product_uom': fields.many2one('product.uom', 'Opening UoM',readonly=True, digits=(16, 0)),
         'checked' : fields.boolean(string='Checked', default=False),
+        'order_qty':fields.float('Order Qty',readonly=True, digits=(16, 0)),
+        'ecommerce_qty':fields.float('Ecommerce Qty',readonly=True, digits=(16, 0)),
+        'total_request_qty':fields.float('Total Request Qty',readonly=True, digits=(16, 0)),
     }      
    
     
