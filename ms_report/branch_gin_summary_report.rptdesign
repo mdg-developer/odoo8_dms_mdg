@@ -85,6 +85,12 @@
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="report_ds" id="21">
             <list-property name="columnHints">
                 <structure>
+                    <property name="columnName">principal</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">principal</text-property>
+                    <text-property name="heading">principal</text-property>
+                </structure>
+                <structure>
                     <property name="columnName">state</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">state</text-property>
@@ -316,156 +322,161 @@
                 <list-property name="resultSet">
                     <structure>
                         <property name="position">1</property>
-                        <property name="name">state</property>
+                        <property name="name">principal</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">2</property>
-                        <property name="name">rfi_no</property>
+                        <property name="name">state</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">3</property>
-                        <property name="name">gin_no</property>
+                        <property name="name">rfi_no</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">4</property>
-                        <property name="name">grn_no</property>
+                        <property name="name">gin_no</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">5</property>
-                        <property name="name">internal_ref</property>
+                        <property name="name">grn_no</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">6</property>
+                        <property name="name">internal_ref</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">7</property>
                         <property name="name">branch_id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">7</property>
+                        <property name="position">8</property>
                         <property name="name">branch_name</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">8</property>
+                        <property name="position">9</property>
                         <property name="name">issue_by</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">9</property>
+                        <property name="position">10</property>
                         <property name="name">receiver</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">10</property>
+                        <property name="position">11</property>
                         <property name="name">vehicle</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">11</property>
+                        <property name="position">12</property>
                         <property name="name">cbm_value</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">12</property>
+                        <property name="position">13</property>
                         <property name="name">viss_value</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">13</property>
+                        <property name="position">14</property>
                         <property name="name">transport_cost</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">14</property>
+                        <property name="position">15</property>
                         <property name="name">requesting_location</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">15</property>
+                        <property name="position">16</property>
                         <property name="name">request_warehouse</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">16</property>
+                        <property name="position">17</property>
                         <property name="name">reverse_user</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">17</property>
+                        <property name="position">18</property>
                         <property name="name">request_by</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">18</property>
+                        <property name="position">19</property>
                         <property name="name">approve_by</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">19</property>
+                        <property name="position">20</property>
                         <property name="name">issue_date</property>
                         <property name="dataType">date</property>
                     </structure>
                     <structure>
-                        <property name="position">20</property>
+                        <property name="position">21</property>
                         <property name="name">receive_date</property>
                         <property name="dataType">date</property>
                     </structure>
                     <structure>
-                        <property name="position">21</property>
+                        <property name="position">22</property>
                         <property name="name">product</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">22</property>
+                        <property name="position">23</property>
                         <property name="name">req_quantity</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">23</property>
+                        <property name="position">24</property>
                         <property name="name">issue_quantity</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">24</property>
+                        <property name="position">25</property>
                         <property name="name">receive_quantity</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">25</property>
+                        <property name="position">26</property>
                         <property name="name">product_uom</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">26</property>
+                        <property name="position">27</property>
                         <property name="name">sequence</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">27</property>
+                        <property name="position">28</property>
                         <property name="name">small_req_quantity</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">28</property>
+                        <property name="position">29</property>
                         <property name="name">product_quantity</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">29</property>
+                        <property name="position">30</property>
                         <property name="name">product_rec_quantity</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">30</property>
+                        <property name="position">31</property>
                         <property name="name">base_uom</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">31</property>
+                        <property name="position">32</property>
                         <property name="name">remark</property>
                         <property name="dataType">string</property>
                     </structure>
@@ -485,223 +496,230 @@ else
             <list-property name="resultSet">
                 <structure>
                     <property name="position">1</property>
+                    <property name="name">principal</property>
+                    <property name="nativeName">principal</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
                     <property name="name">state</property>
                     <property name="nativeName">state</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">2</property>
+                    <property name="position">3</property>
                     <property name="name">rfi_no</property>
                     <property name="nativeName">rfi_no</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">3</property>
+                    <property name="position">4</property>
                     <property name="name">gin_no</property>
                     <property name="nativeName">gin_no</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">4</property>
+                    <property name="position">5</property>
                     <property name="name">grn_no</property>
                     <property name="nativeName">grn_no</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">5</property>
+                    <property name="position">6</property>
                     <property name="name">internal_ref</property>
                     <property name="nativeName">internal_ref</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">6</property>
+                    <property name="position">7</property>
                     <property name="name">branch_id</property>
                     <property name="nativeName">branch_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">7</property>
+                    <property name="position">8</property>
                     <property name="name">branch_name</property>
                     <property name="nativeName">branch_name</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">8</property>
+                    <property name="position">9</property>
                     <property name="name">issue_by</property>
                     <property name="nativeName">issue_by</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">9</property>
+                    <property name="position">10</property>
                     <property name="name">receiver</property>
                     <property name="nativeName">receiver</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">10</property>
+                    <property name="position">11</property>
                     <property name="name">vehicle</property>
                     <property name="nativeName">vehicle</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">11</property>
+                    <property name="position">12</property>
                     <property name="name">cbm_value</property>
                     <property name="nativeName">cbm_value</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">12</property>
+                    <property name="position">13</property>
                     <property name="name">viss_value</property>
                     <property name="nativeName">viss_value</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">13</property>
+                    <property name="position">14</property>
                     <property name="name">transport_cost</property>
                     <property name="nativeName">transport_cost</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">14</property>
+                    <property name="position">15</property>
                     <property name="name">requesting_location</property>
                     <property name="nativeName">requesting_location</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">15</property>
+                    <property name="position">16</property>
                     <property name="name">request_warehouse</property>
                     <property name="nativeName">request_warehouse</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">16</property>
+                    <property name="position">17</property>
                     <property name="name">reverse_user</property>
                     <property name="nativeName">reverse_user</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">17</property>
+                    <property name="position">18</property>
                     <property name="name">request_by</property>
                     <property name="nativeName">request_by</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">18</property>
+                    <property name="position">19</property>
                     <property name="name">approve_by</property>
                     <property name="nativeName">approve_by</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">19</property>
+                    <property name="position">20</property>
                     <property name="name">issue_date</property>
                     <property name="nativeName">issue_date</property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                 </structure>
                 <structure>
-                    <property name="position">20</property>
+                    <property name="position">21</property>
                     <property name="name">receive_date</property>
                     <property name="nativeName">receive_date</property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                 </structure>
                 <structure>
-                    <property name="position">21</property>
+                    <property name="position">22</property>
                     <property name="name">product</property>
                     <property name="nativeName">product</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">22</property>
+                    <property name="position">23</property>
                     <property name="name">req_quantity</property>
                     <property name="nativeName">req_quantity</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">23</property>
+                    <property name="position">24</property>
                     <property name="name">issue_quantity</property>
                     <property name="nativeName">issue_quantity</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">24</property>
+                    <property name="position">25</property>
                     <property name="name">receive_quantity</property>
                     <property name="nativeName">receive_quantity</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">25</property>
+                    <property name="position">26</property>
                     <property name="name">product_uom</property>
                     <property name="nativeName">product_uom</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">26</property>
+                    <property name="position">27</property>
                     <property name="name">sequence</property>
                     <property name="nativeName">sequence</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">27</property>
+                    <property name="position">28</property>
                     <property name="name">small_req_quantity</property>
                     <property name="nativeName">small_req_quantity</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">28</property>
+                    <property name="position">29</property>
                     <property name="name">product_quantity</property>
                     <property name="nativeName">product_quantity</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">29</property>
+                    <property name="position">30</property>
                     <property name="name">product_rec_quantity</property>
                     <property name="nativeName">product_rec_quantity</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">30</property>
+                    <property name="position">31</property>
                     <property name="name">base_uom</property>
                     <property name="nativeName">base_uom</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">31</property>
+                    <property name="position">32</property>
                     <property name="name">remark</property>
                     <property name="nativeName">remark</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select gin.state,sq.name as rfi_no, gin.name as gin_no,gin.grn_no,gin.internal_reference as internal_ref ,gin.branch_id ,rb.name as  branch_name,
+            <xml-property name="queryText"><![CDATA[select pm.name as principal,gin.state,sq.name as rfi_no, gin.name as gin_no,gin.grn_no,gin.internal_reference as internal_ref ,gin.branch_id ,rb.name as  branch_name,
 issue_by ,gin.receiver,(select name from fleet_vehicle where id = gin.vehicle_id) as vehicle,
 CASE WHEN pt.uom_id=ginl.product_uom THEN  round (ginl.issue_quantity * (pt.cbm_value/(select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=pt.report_uom_id)),4)
               ELSE round(ginl.issue_quantity * pt.cbm_value,4)
@@ -717,13 +735,14 @@ CASE WHEN pt.uom_id=ginl.product_uom THEN round ( ginl.issue_quantity * (pt.viss
 gin.issue_date,gin.receive_date,pp.name_template as product,req_quantity,issue_quantity,receive_quantity,uom.name as product_uom,pp.sequence,
 round(req_quantity*(select floor(round(1/factor,2)) from product_uom where id=ginl.product_uom),0)  as small_req_quantity,
 round(issue_quantity*(select floor(round(1/factor,2)) from product_uom where id=ginl.product_uom),0)  as product_quantity,round(receive_quantity*(select floor(round(1/factor,2)) from product_uom where id=ginl.product_uom),0)  as product_rec_quantity,(select name from product_uom where id =pt.uom_id) as base_uom,ginl.remark
-from branch_good_issue_note gin,branch_good_issue_note_line ginl ,branch_stock_requisition sq,res_branch rb,product_product pp,product_template pt,product_uom uom
+from branch_good_issue_note gin,branch_good_issue_note_line ginl ,branch_stock_requisition sq,res_branch rb,product_product pp,product_template pt,product_uom uom,product_maingroup  pm
 where gin.id =ginl.line_id
 and sq.id =gin.request_id
 and rb.id =gin.branch_id
 and ginl.product_id =pp.id
 and ginl.product_uom =uom.id 
 and pt.id =pp.product_tmpl_id
+and pt.main_group =pm.id
 ---and ginl.issue_quantity>0
 and gin.issue_date between ? and ?
 --$branch_id$
@@ -1392,6 +1411,12 @@ group by state
                     <expression name="expression" type="javascript">dataSetRow["transport_cost"]</expression>
                     <property name="dataType">decimal</property>
                 </structure>
+                <structure>
+                    <property name="name">principal</property>
+                    <text-property name="displayName">principal</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["principal"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
             </list-property>
             <column id="977"/>
             <column id="953"/>
@@ -1411,6 +1436,7 @@ group by state
             <column id="990"/>
             <column id="969"/>
             <column id="1073"/>
+            <column id="1091"/>
             <column id="970"/>
             <column id="1043"/>
             <column id="1039"/>
@@ -1679,6 +1705,19 @@ group by state
                         <property name="borderTopWidth">thin</property>
                         <label id="1074">
                             <text-property name="text">Date Of Receipt</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1088">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="1092">
+                            <text-property name="text">Principall</text-property>
                         </label>
                     </cell>
                     <cell id="880">
@@ -2075,6 +2114,19 @@ group by state
                             <property name="resultSetColumn">receive_date</property>
                         </data>
                     </cell>
+                    <cell id="1089">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="1093">
+                            <property name="resultSetColumn">principal</property>
+                        </data>
+                    </cell>
                     <cell id="923">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -2282,6 +2334,7 @@ group by state
                     <cell id="989"/>
                     <cell id="948"/>
                     <cell id="1072"/>
+                    <cell id="1090"/>
                     <cell id="949"/>
                     <cell id="1042"/>
                     <cell id="1038"/>
