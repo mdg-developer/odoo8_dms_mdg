@@ -1766,7 +1766,7 @@ class mobile_sale_order(osv.osv):
         return datas
 
     def get_productMainGroup(self, cr, uid, section_id, context=None, **kwargs):
-        cr.execute('''select id,name from product_maingroup''')
+        cr.execute('''select id,name,skip_checking from product_maingroup''')
         datas = cr.fetchall()
         cr.execute
         return datas
