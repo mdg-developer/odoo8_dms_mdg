@@ -56,7 +56,7 @@ class stock_requisition(osv.osv):
                         from
                         (
                             select case when sol.product_uom != pt.uom_id then
-                            (select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=pt.uom_id)*product_uom_qty
+                            (select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=sol.product_uom)*product_uom_qty
                             else product_uom_qty end as qty
                             from sale_order_line sol,sale_order so,product_product pp,product_template pt
                             where sol.order_id=so.id
@@ -77,7 +77,7 @@ class stock_requisition(osv.osv):
                         from
                         (
                             select case when sol.product_uom != pt.uom_id then
-                            (select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=pt.uom_id)*product_uom_qty
+                            (select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=sol.product_uom)*product_uom_qty
                             else product_uom_qty end as qty
                             from sale_order_line sol,sale_order so,product_product pp,product_template pt
                             where sol.order_id=so.id
