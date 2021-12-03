@@ -51,7 +51,7 @@ class stock_requisition(osv.osv):
     def get_order_qty(self, cr, uid, product_id=None, order_ids=None, context=None):
         
         qty = 0
-        if product_id and order_ids:                             
+        if product_id and order_ids:                                 
             cr.execute("""select COALESCE(sum(qty), 0) quantity
                         from
                         (
@@ -546,9 +546,15 @@ class stock_requisition(osv.osv):
             sale_req_qty = req_line_value.sale_req_quantity
             add_req_qty = req_line_value.addtional_req_quantity
             product_id = req_line_value.product_id.id
-            total_qty = sale_req_qty + add_req_qty
-            cr.execute("update stock_requisition_line set req_quantity=%s where product_id=%s and line_id=%s", (total_qty, product_id, ids[0],))
-
+            total_qty = sale_req_qty + add_req_qty            
+            cr.execute("""select array_agg(so.id)
+                        from stock_requisition_order req,sale_order so
+                        where req.name=so.name
+                        and stock_line_id=%s""", (req_value.id,))                    
+            order_ids = cr.fetchone()[0]             
+            order_qty = self.get_order_qty(cr, uid, product_id=product_id, order_ids=order_ids)                    
+            ecommerce_qty = self.get_ecommerce_qty(cr, uid, product_id=product_id, order_ids=order_ids)                       
+            cr.execute("update stock_requisition_line set req_quantity=%s,order_qty=%s,ecommerce_qty=%s where product_id=%s and line_id=%s", (total_qty, order_qty, ecommerce_qty, product_id, ids[0],))
         return True    
 
             
