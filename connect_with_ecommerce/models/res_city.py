@@ -32,7 +32,7 @@ class res_city(osv.osv):
                             location_ids.append(loc[0])
                         logging.warning("Check location for out of stock: %s", location_ids)
                         if location_ids:                                
-                            cr.execute('''select A.default_code product_code,case when B.qty is null then 'Out of Stock' end as label
+                            cr.execute('''select A.default_code product_code,case when B.qty is null or B.qty = 0 then 'Out of Stock' end as label
                                         from
                                         (   select default_code
                                             from product_product pp,product_template pt
@@ -40,7 +40,7 @@ class res_city(osv.osv):
                                             and pp.active=true
                                             and pt.active=true
                                             and type!='service'
-                                            and default_code is not null
+                                            and default_code is not null     
                                         )A
                                         left join
                                         (
@@ -51,7 +51,7 @@ class res_city(osv.osv):
                                             and location_id in %s
                                             group by default_code
                                         )B on (A.default_code=B.default_code)
-                                        where qty is null''',(tuple(location_ids),))
+                                        where qty is null or qty=0''',(tuple(location_ids),))
                             product_record = cr.dictfetchall()                    
                             if product_record:
                                 return product_record                  
