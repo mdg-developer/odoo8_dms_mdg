@@ -52,12 +52,20 @@ class stock_requisition(osv.osv):
         
         qty = 0
         if product_id and order_ids:                             
-            cr.execute("""select COALESCE(sum(product_uom_qty), 0)
-                        from sale_order_line sol,sale_order so
-                        where sol.order_id=so.id
-                        and order_id in %s
-                        and product_id=%s
-                        and woo_order_id is null""", (tuple(order_ids), product_id,))                    
+            cr.execute("""select COALESCE(sum(qty), 0) quantity
+                        from
+                        (
+                            select case when sol.product_uom != pt.uom_id then
+                            (select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=pt.uom_id)*product_uom_qty
+                            else product_uom_qty end as qty
+                            from sale_order_line sol,sale_order so,product_product pp,product_template pt
+                            where sol.order_id=so.id
+                            and sol.product_id=pp.id
+                            and pp.product_tmpl_id=pt.id
+                            and order_id in %s
+                            and product_id=%s
+                            and woo_order_id is null
+                        )A""", (tuple(order_ids), product_id,))                    
             qty = cr.fetchone()[0]                   
         return qty
                 
@@ -65,12 +73,20 @@ class stock_requisition(osv.osv):
         
         qty = 0
         if product_id and order_ids:     
-            cr.execute("""select COALESCE(sum(product_uom_qty), 0)
-                        from sale_order_line sol,sale_order so
-                        where sol.order_id=so.id
-                        and order_id in %s
-                        and product_id=%s
-                        and woo_order_id is not null""", (tuple(order_ids), product_id,))    
+            cr.execute("""select COALESCE(sum(qty), 0) quantity
+                        from
+                        (
+                            select case when sol.product_uom != pt.uom_id then
+                            (select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=pt.uom_id)*product_uom_qty
+                            else product_uom_qty end as qty
+                            from sale_order_line sol,sale_order so,product_product pp,product_template pt
+                            where sol.order_id=so.id
+                            and sol.product_id=pp.id
+                            and pp.product_tmpl_id=pt.id
+                            and order_id in %s
+                            and product_id=%s
+                            and woo_order_id is not null
+                        )A""", (tuple(order_ids), product_id,))    
             qty = cr.fetchone()[0]            
         return qty
     
