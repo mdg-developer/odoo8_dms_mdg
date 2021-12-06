@@ -419,6 +419,11 @@ class stock_requisition(osv.osv):
                             if  sale_qty >= uom_data[1]:
                                 req_quantity=int(sale_qty/uom_data[1])
                                 sale_qty=sale_qty % uom_data[1]
+                                product_obj = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+                                if len(uom_list) > 1 and product_obj.uom_id.id == uom_data[0]:
+                                    order_qty = 0
+                                    ecommerce_qty = 0
+                                    total_request_qty = 0
                                 data_line.append({'req_quantity':req_quantity,'order_qty':order_qty,'ecommerce_qty':ecommerce_qty,'total_request_qty':total_request_qty,'product_uom':uom_data[0],'product_id':product_id})
 #                            else:
 #                                data_line.append({'req_quantity':sale_qty,'product_uom':uom_data[0],'product_id':product_id})
@@ -432,8 +437,11 @@ class stock_requisition(osv.osv):
                         qty_on_hand = line_data[0]
                         uom_ratio = line_data[1]
                         order_qty = req_line_value['order_qty']
-                        ecommerce_qty = req_line_value['ecommerce_qty']
-                        total_request_qty = line_data[3]
+                        ecommerce_qty = req_line_value['ecommerce_qty']     
+                        if req_line_value['order_qty'] + req_line_value['ecommerce_qty'] == 0:      
+                            total_request_qty = 0
+                        else:               
+                            total_request_qty = line_data[3]
                         quantity = req_line_value['req_quantity']                        
                         sequence=line_data[2]
                         quantity_on_hand=quantity
