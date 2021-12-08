@@ -178,7 +178,7 @@ class mobile_sale_order(osv.osv):
         if location_id:        
             cr.execute('''                                
                         select principal,category,sku_name,bigger_uom,smaller_uom,total_pcs,ctn_qty,
-                        total_pcs-(total_pcs/bigger_uom_ratio)*bigger_uom_ratio pcs_qty,
+                        total_pcs-(total_pcs::int/bigger_uom_ratio::int)*bigger_uom_ratio pcs_qty,
                         product_id,bigger_uom_ratio
                         from
                         (
@@ -186,7 +186,7 @@ class mobile_sale_order(osv.osv):
                             (select name from product_uom where id=pt.report_uom_id) bigger_uom,
                             (select name from product_uom where id=pt.uom_id) smaller_uom,
                             COALESCE(sum(qty),0) total_pcs,
-                            round((COALESCE(sum(qty),0)/(1/factor))::numeric,1) ctn_qty,
+                            COALESCE(sum(qty),0)::int/(1/factor)::int ctn_qty,    
                             COALESCE(sum(qty),0) pcs_qty,product_id,
                             (select floor(round(1/factor,2)) from product_uom where id=pt.report_uom_id) bigger_uom_ratio
                             from stock_quant sq,product_product pp,product_template pt,product_category categ,product_maingroup pm,product_uom uom
