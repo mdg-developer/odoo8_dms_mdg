@@ -82,6 +82,7 @@ OUT__res_partner__read_all__SCHEMA = (                # editable
         'id',
         'name',
     )), 
+    'is_email_generated',
 )
 #           ]
 #       }
@@ -143,6 +144,7 @@ OUT__res_partner__read_one__SCHEMA = (                # editable
         'id',
         'name',
     )),   
+    'is_email_generated',
 )
 
 # /api/res.partner  POST  - Create one

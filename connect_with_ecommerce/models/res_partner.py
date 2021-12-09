@@ -28,6 +28,7 @@ class res_partner(osv.osv):
                 'mobile': fields.char('Main Phone No'),
                 'phone': fields.char('Secondary Phone No'),
                 'woo_register_date': fields.date('Woo Register Date'),
+                'is_email_generated':fields.boolean('Is email generated' , default=False),
             }   
           
     def check_maintenance_mode(self, cr, uid, ids, context=None):
@@ -265,7 +266,7 @@ class res_partner(osv.osv):
                     self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)  
                 return result          
 
-    def create_or_update_woo_customer_with_city(self, cr, uid, ids, mdg_customer=False, customer_code=None, name=None,street=None,street2=None,township=None,city=None,state=None,mobile=None,phone=None,gender=None,birthday=None,email=None,partner_latitude=None,partner_longitude=None,sms=None,viber=None,shop_name=None,woo_customer_id=None,image=None,sale_channel=None,context=None):
+    def create_or_update_woo_customer_with_city(self, cr, uid, ids, mdg_customer=False, customer_code=None, name=None,street=None,street2=None,township=None,city=None,state=None,mobile=None,phone=None,gender=None,birthday=None,email=None,partner_latitude=None,partner_longitude=None,sms=None,viber=None,shop_name=None,woo_customer_id=None,image=None,sale_channel=None,is_email_generated=None,context=None):
         vals = {}
         contact_township = contact_city = contact_state = None
         township_obj = self.pool.get('res.township')
@@ -321,6 +322,7 @@ class res_partner(osv.osv):
             vals['date_partnership'] = datetime.today()             
             vals['temp_customer'] = name
             vals['woo_register_date'] = datetime.today()
+            vals['is_email_generated'] = is_email_generated
 #             if sale_channel == 'consumer':
             outlettype = outlettype_obj.search(cr, uid, [('name', '=ilike', 'Site Registered')],context=context)            
             if outlettype:
@@ -389,6 +391,7 @@ class res_partner(osv.osv):
                 vals['gender'] = gender
                 vals['birthday'] = birthday
                 vals['woo_register_date'] = datetime.today()
+                vals['is_email_generated'] = is_email_generated
 #                 vals['temp_customer'] = name
 #                 if sale_channel == 'consumer':
 #                 outlettype = outlettype_obj.search(cr, uid, [('name', '=ilike', 'Consumer')],context=context)            
