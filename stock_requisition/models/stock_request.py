@@ -418,12 +418,7 @@ class stock_requisition(osv.osv):
                         for uom_data in uom_list:
                             if  sale_qty >= uom_data[1]:
                                 req_quantity=int(sale_qty/uom_data[1])
-                                sale_qty=sale_qty % uom_data[1]
-                                product_obj = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-                                if len(uom_list) > 1 and product_obj.uom_id.id == uom_data[0]:
-                                    order_qty = 0
-                                    ecommerce_qty = 0
-                                    total_request_qty = 0
+                                sale_qty=sale_qty % uom_data[1]                                
                                 data_line.append({'req_quantity':req_quantity,'order_qty':order_qty,'ecommerce_qty':ecommerce_qty,'total_request_qty':total_request_qty,'product_uom':uom_data[0],'product_id':product_id})
 #                            else:
 #                                data_line.append({'req_quantity':sale_qty,'product_uom':uom_data[0],'product_id':product_id})
@@ -437,11 +432,8 @@ class stock_requisition(osv.osv):
                         qty_on_hand = line_data[0]
                         uom_ratio = line_data[1]
                         order_qty = req_line_value['order_qty']
-                        ecommerce_qty = req_line_value['ecommerce_qty']     
-                        if req_line_value['order_qty'] + req_line_value['ecommerce_qty'] == 0:      
-                            total_request_qty = 0
-                        else:               
-                            total_request_qty = line_data[3]
+                        ecommerce_qty = req_line_value['ecommerce_qty']    
+                        total_request_qty = line_data[3]
                         quantity = req_line_value['req_quantity']                        
                         sequence=line_data[2]
                         quantity_on_hand=quantity
@@ -523,6 +515,19 @@ class stock_requisition(osv.osv):
                                                   'qty_on_hand':qty_on_hand,
                                                   'sequence':sequence,                                                  
                                                   }, context=context)
+            cr.execute('''select product_id,count(*)
+                        from good_issue_note_line 
+                        where line_id=%s
+                        group by product_id
+                        HAVING count(*) > 1;''', (good_id,))    
+            gin_line_data = cr.fetchall()
+            if gin_line_data:
+                for gin_line in gin_line_data:
+                    gin_product = self.pool.get('product.product').browse(cr, uid, gin_line[0], context=context)
+                    small_uom = gin_product.uom_id.id
+                    gin_line_id = good_line_obj.search(cr, uid, [('line_id', '=', good_id),('product_id', '=', gin_product.id),('product_uom', '=', small_uom)], context=context)
+                    gin_line_value = good_line_obj.browse(cr, uid, gin_line_id, context=context)
+                    cr.execute("update good_issue_note_line set order_qty=0,ecommerce_qty=0,total_request_qty=0 where id=%s", (gin_line_value.id,))
             good_obj.approve(cr, uid, good_id, context=context)  
                             
         return self.write(cr, uid, ids, {'state':'approve' , 'approve_by':uid,'good_issue_id':good_id})    
