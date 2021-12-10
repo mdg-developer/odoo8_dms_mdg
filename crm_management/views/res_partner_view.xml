@@ -619,6 +619,8 @@
 			<field name="arch" type="xml">
 				<tree string="Asset Type">
 					<field name="name" />
+					<field name="active" />
+
 				</tree>
 			</field>
 		</record>
@@ -630,6 +632,8 @@
 				<form string="Asset Type">
 					<group>
 						<field name="name" />
+						<field name="active" />
+
 					</group>
 				</form>
 			</field>
@@ -660,6 +664,7 @@
 					<field name="asset_type_id" />
 					<field name="type" />
 					<field name="is_auto_fill" />
+					<field name="active" />
 
 				</tree>
 			</field>
@@ -678,6 +683,8 @@
 						<group>
 							<field name="type" />
 							<field name="is_auto_fill" />
+							<field name="active" />
+
 						</group>
 					</group>
 				</form>

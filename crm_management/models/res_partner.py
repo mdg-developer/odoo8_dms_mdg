@@ -660,6 +660,8 @@ class asset_type(osv.Model):
     _name = 'asset.type'
     _columns = {
                 'name':fields.char('Name', required=True),
+                'active':fields.boolean("Active", default=False),
+
                 }
 
     
@@ -673,4 +675,6 @@ class asset_configuration(osv.Model):
                 'type':fields.selection ([('rent', 'Rent'), ('give', 'Giving')],
                                                     'Type', required=True, default='rent'),
                 'is_auto_fill':fields.boolean("Qty Auto Fill 1", default=False),
+                'active':fields.boolean("Active", default=False),
+
                 }
