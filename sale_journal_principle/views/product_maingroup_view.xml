@@ -36,7 +36,20 @@
 						<field name="is_separate_transition" />
 						<field name="property_trade_payable_account" />
 						<field name="property_receivable_clearing_account" />
-
+						<field name="skip_checking" />
+					</xpath>
+				</data>
+			</field>
+		</record>
+		
+		<record model="ir.ui.view" id="view_product_maingroup_tree_inherit">
+			<field name="name">prodcut.maingroup.tree</field>
+			<field name="model">product.maingroup</field>
+			<field name="inherit_id" ref="product_product.view_product_maingroup_tree" />
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//field[@name='name']" position="after">
+						<field name="skip_checking" />
 					</xpath>
 				</data>
 			</field>

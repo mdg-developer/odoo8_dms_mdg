@@ -64,6 +64,7 @@ class product_maingroup(osv.osv):
                 string="A/R Receivable Clearing Account",
                ), 
         'is_separate_transition':fields.boolean('Is Separate Transition',default=False),
+        'skip_checking':fields.boolean('Skip Checking in Tablet',default=False),
                  
                     
                     }

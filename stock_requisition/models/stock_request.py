@@ -51,13 +51,21 @@ class stock_requisition(osv.osv):
     def get_order_qty(self, cr, uid, product_id=None, order_ids=None, context=None):
         
         qty = 0
-        if product_id and order_ids:                             
-            cr.execute("""select COALESCE(sum(product_uom_qty), 0)
-                        from sale_order_line sol,sale_order so
-                        where sol.order_id=so.id
-                        and order_id in %s
-                        and product_id=%s
-                        and woo_order_id is null""", (tuple(order_ids), product_id,))                    
+        if product_id and order_ids:                                 
+            cr.execute("""select COALESCE(sum(qty), 0) quantity
+                        from
+                        (
+                            select case when sol.product_uom != pt.uom_id then
+                            (select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=sol.product_uom)*product_uom_qty
+                            else product_uom_qty end as qty
+                            from sale_order_line sol,sale_order so,product_product pp,product_template pt
+                            where sol.order_id=so.id
+                            and sol.product_id=pp.id
+                            and pp.product_tmpl_id=pt.id
+                            and order_id in %s
+                            and product_id=%s
+                            and woo_order_id is null
+                        )A""", (tuple(order_ids), product_id,))                    
             qty = cr.fetchone()[0]                   
         return qty
                 
@@ -65,12 +73,20 @@ class stock_requisition(osv.osv):
         
         qty = 0
         if product_id and order_ids:     
-            cr.execute("""select COALESCE(sum(product_uom_qty), 0)
-                        from sale_order_line sol,sale_order so
-                        where sol.order_id=so.id
-                        and order_id in %s
-                        and product_id=%s
-                        and woo_order_id is not null""", (tuple(order_ids), product_id,))    
+            cr.execute("""select COALESCE(sum(qty), 0) quantity
+                        from
+                        (
+                            select case when sol.product_uom != pt.uom_id then
+                            (select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=sol.product_uom)*product_uom_qty
+                            else product_uom_qty end as qty
+                            from sale_order_line sol,sale_order so,product_product pp,product_template pt
+                            where sol.order_id=so.id
+                            and sol.product_id=pp.id
+                            and pp.product_tmpl_id=pt.id
+                            and order_id in %s
+                            and product_id=%s
+                            and woo_order_id is not null
+                        )A""", (tuple(order_ids), product_id,))    
             qty = cr.fetchone()[0]            
         return qty
     
@@ -402,7 +418,7 @@ class stock_requisition(osv.osv):
                         for uom_data in uom_list:
                             if  sale_qty >= uom_data[1]:
                                 req_quantity=int(sale_qty/uom_data[1])
-                                sale_qty=sale_qty % uom_data[1]
+                                sale_qty=sale_qty % uom_data[1]                                
                                 data_line.append({'req_quantity':req_quantity,'order_qty':order_qty,'ecommerce_qty':ecommerce_qty,'total_request_qty':total_request_qty,'product_uom':uom_data[0],'product_id':product_id})
 #                            else:
 #                                data_line.append({'req_quantity':sale_qty,'product_uom':uom_data[0],'product_id':product_id})
@@ -416,7 +432,7 @@ class stock_requisition(osv.osv):
                         qty_on_hand = line_data[0]
                         uom_ratio = line_data[1]
                         order_qty = req_line_value['order_qty']
-                        ecommerce_qty = req_line_value['ecommerce_qty']
+                        ecommerce_qty = req_line_value['ecommerce_qty']    
                         total_request_qty = line_data[3]
                         quantity = req_line_value['req_quantity']                        
                         sequence=line_data[2]
@@ -499,6 +515,19 @@ class stock_requisition(osv.osv):
                                                   'qty_on_hand':qty_on_hand,
                                                   'sequence':sequence,                                                  
                                                   }, context=context)
+            cr.execute('''select product_id,count(*)
+                        from good_issue_note_line 
+                        where line_id=%s
+                        group by product_id
+                        HAVING count(*) > 1;''', (good_id,))    
+            gin_line_data = cr.fetchall()
+            if gin_line_data:
+                for gin_line in gin_line_data:
+                    gin_product = self.pool.get('product.product').browse(cr, uid, gin_line[0], context=context)
+                    small_uom = gin_product.uom_id.id
+                    gin_line_id = good_line_obj.search(cr, uid, [('line_id', '=', good_id),('product_id', '=', gin_product.id),('product_uom', '=', small_uom)], context=context)
+                    gin_line_value = good_line_obj.browse(cr, uid, gin_line_id, context=context)
+                    cr.execute("update good_issue_note_line set order_qty=0,ecommerce_qty=0,total_request_qty=0 where id=%s", (gin_line_value.id,))
             good_obj.approve(cr, uid, good_id, context=context)  
                             
         return self.write(cr, uid, ids, {'state':'approve' , 'approve_by':uid,'good_issue_id':good_id})    
@@ -530,9 +559,15 @@ class stock_requisition(osv.osv):
             sale_req_qty = req_line_value.sale_req_quantity
             add_req_qty = req_line_value.addtional_req_quantity
             product_id = req_line_value.product_id.id
-            total_qty = sale_req_qty + add_req_qty
-            cr.execute("update stock_requisition_line set req_quantity=%s where product_id=%s and line_id=%s", (total_qty, product_id, ids[0],))
-
+            total_qty = sale_req_qty + add_req_qty            
+            cr.execute("""select array_agg(so.id)
+                        from stock_requisition_order req,sale_order so
+                        where req.name=so.name
+                        and stock_line_id=%s""", (req_value.id,))                    
+            order_ids = cr.fetchone()[0]             
+            order_qty = self.get_order_qty(cr, uid, product_id=product_id, order_ids=order_ids)                    
+            ecommerce_qty = self.get_ecommerce_qty(cr, uid, product_id=product_id, order_ids=order_ids)                       
+            cr.execute("update stock_requisition_line set req_quantity=%s,order_qty=%s,ecommerce_qty=%s where product_id=%s and line_id=%s", (total_qty, order_qty, ecommerce_qty, product_id, ids[0],))
         return True    
 
             
