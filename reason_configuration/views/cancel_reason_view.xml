@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+	    
+		<record model="ir.ui.view" id="view_cancel_reason_tree">
+			<field name="name">cancel.reason.tree</field>
+			<field name="model">cancel.reason</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Cancel Reason">
+					<field name="name" />
+					<field name="active" />					
+				</tree>
+			</field>
+		</record>
+		
+		<record model="ir.ui.view" id="view_cancel_reason_form">
+			<field name="name">cancel.reason.form</field>
+			<field name="model">cancel.reason</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form>					
+					<sheet>
+						<group>
+							<group>
+								<field name="name" />								
+							</group>
+							<group>
+								<field name="active" />								
+							</group>
+						</group>						
+					</sheet>
+				</form>
+			</field>
+		</record>
+		
+		<record model="ir.actions.act_window" id="action_cancel_reason_form">
+			<field name="name">Cancel Reason</field>
+			<field name="res_model">cancel.reason</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<menuitem parent="sale_promotions.sales" id="menu_cancel_reason"
+			action="action_cancel_reason_form" sequence="22" />
+
+	</data>
+</openerp>
