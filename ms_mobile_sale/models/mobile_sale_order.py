@@ -395,9 +395,7 @@ class mobile_sale_order(osv.osv):
             if inventory:
                 for inv in inventory:     
                     company = self.pool.get('res.company').search(cursor, user, [], limit=1, context=context)
-                    logging.warning("company: %s", company)   
-                    company_data = inventory_obj.browse(cursor, user, company, context=context) 
-                    logging.warning("company.id: %s", company_data.id)   
+                    company_data = inventory_obj.browse(cursor, user, company, context=context)
                     inventory_date = datetime.strptime(inv['date'], '%Y-%m-%d').date()      
                     inventory_result = {
                         'subject': inv['subject'],
@@ -409,18 +407,14 @@ class mobile_sale_order(osv.osv):
                         'request_by': inv['saleTeamName'],           
                     }                    
                     inventory_id = inventory_obj.create(cursor, user, inventory_result, context=context)
-                    logging.warning("created inventory_id: %s", inventory_id)                     
                     inventory_data = inventory_obj.browse(cursor, user, inventory_id, context=context)   
-                    logging.warning("created inventory_data: %s", inventory_data)                  
                     vals = inventory_obj._get_inventory_lines(cursor, user, inventory_data, context=context)
-                    logging.warning("created vals: %s", vals)                       
                     for product_line in vals: 
                         product_obj = self.pool.get('product.product')
                         dom = [('product_id', '=', product_line.get('product_id')), ('inventory_id.state', '=', 'confirm'),
                                ('location_id', '=', product_line.get('location_id')), ('partner_id', '=', product_line.get('partner_id')),
                                ('package_id', '=', product_line.get('package_id')), ('prod_lot_id', '=', product_line.get('prod_lot_id'))]
-                        res = inventory_line_obj.search(cursor, user, dom, context=context)
-                        logging.warning("created res: %s", res)                      
+                        res = inventory_line_obj.search(cursor, user, dom, context=context)                                            
                         if res:
                             location = self.pool['stock.location'].browse(cursor, user, product_line.get('location_id'), context=context)
                             product = product_obj.browse(cursor, user, product_line.get('product_id'), context=context)
