@@ -3041,7 +3041,7 @@ class mobile_sale_order(osv.osv):
         return datas
     
     def get_asset_type(self, cr, uid, context=None, **kwargs):    
-        cr.execute("""select conf.id,conf.name,type.name as asset_type,is_auto_fill,type from asset_configuration conf ,asset_type type where conf.asset_type_id=type.id""")
+        cr.execute("""select conf.id,conf.name,type.name as asset_type,is_auto_fill,type,conf.active,type.active from asset_configuration conf ,asset_type type where conf.asset_type_id=type.id""")
         datas = cr.fetchall()        
         return datas
     
