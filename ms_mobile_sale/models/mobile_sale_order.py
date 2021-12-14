@@ -396,7 +396,7 @@ class mobile_sale_order(osv.osv):
                 for inv in inventory:     
                     company = self.pool.get('res.company').search(cursor, user, [], limit=1, context=context)
                     logging.warning("company: %s", company)   
-                    company_data = inventory_obj.browse(cursor, 1, company, context=context) 
+                    company_data = inventory_obj.browse(cursor, user, company, context=context) 
                     logging.warning("company.id: %s", company_data.id)   
                     inventory_date = datetime.strptime(inv['date'], '%Y-%m-%d').date()      
                     inventory_result = {
@@ -408,30 +408,30 @@ class mobile_sale_order(osv.osv):
                         'state': 'draft',
                         'request_by': inv['saleTeamName'],           
                     }                    
-                    inventory_id = inventory_obj.create(cursor, 1, inventory_result, context=context)
+                    inventory_id = inventory_obj.create(cursor, user, inventory_result, context=context)
                     logging.warning("created inventory_id: %s", inventory_id)                     
-                    inventory_data = inventory_obj.browse(cursor, 1, inventory_id, context=context)   
+                    inventory_data = inventory_obj.browse(cursor, user, inventory_id, context=context)   
                     logging.warning("created inventory_data: %s", inventory_data)                  
-                    vals = inventory_obj._get_inventory_lines(cursor, 1, inventory_data, context=context)
+                    vals = inventory_obj._get_inventory_lines(cursor, user, inventory_data, context=context)
                     logging.warning("created vals: %s", vals)                       
                     for product_line in vals: 
                         product_obj = self.pool.get('product.product')
                         dom = [('product_id', '=', product_line.get('product_id')), ('inventory_id.state', '=', 'confirm'),
                                ('location_id', '=', product_line.get('location_id')), ('partner_id', '=', product_line.get('partner_id')),
                                ('package_id', '=', product_line.get('package_id')), ('prod_lot_id', '=', product_line.get('prod_lot_id'))]
-                        res = inventory_line_obj.search(cursor, 1, dom, context=context)
+                        res = inventory_line_obj.search(cursor, user, dom, context=context)
                         logging.warning("created res: %s", res)                      
                         if res:
-                            location = self.pool['stock.location'].browse(cursor, 1, product_line.get('location_id'), context=context)
-                            product = product_obj.browse(cursor, 1, product_line.get('product_id'), context=context)
+                            location = self.pool['stock.location'].browse(cursor, user, product_line.get('location_id'), context=context)
+                            product = product_obj.browse(cursor, user, product_line.get('product_id'), context=context)
                             error_message = "You cannot have two inventory adjustements in state 'in Progess' with the same product("+ product.name+ "), same location("+ location.name +"), same package, same owner and same lot. Please first validate the first inventory adjustement with this product before creating another one."
                             logging.warning("error_message: %s", error_message) 
                             return error_message                  
-                    inventory_obj.prepare_inventory(cursor, 1, [inventory_id], context=context)                                          
+                    inventory_obj.prepare_inventory(cursor, user, [inventory_id], context=context)                                          
                     for line in inventory_line:                             
-                        note_line_id = inventory_line_obj.search(cursor, 1, [('inventory_id', '=',  inventory_id),
+                        note_line_id = inventory_line_obj.search(cursor, user, [('inventory_id', '=',  inventory_id),
                                                                                 ('product_id', '=',  int(line['product_id']))],context=None)
-                        note_line_data = inventory_line_obj.browse(cursor, 1, note_line_id, context=context)
+                        note_line_data = inventory_line_obj.browse(cursor, user, note_line_id, context=context)
                         note_line_data.write({"product_qty": line['total_pcs_qty']})                                                                                 
             return True     
         except Exception, e:            
