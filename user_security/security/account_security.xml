@@ -32,5 +32,10 @@
 			<field name="category_id" ref="base.module_category_accounting_and_finance" />
 
 		</record>
+
+		<record id="base.group_gin_issue" model="res.groups">
+			<field name="name">GIN Issuer</field>
+			<field name="category_id" ref="base.module_category_hidden" />
+		</record>
 	</data>
 </openerp>
