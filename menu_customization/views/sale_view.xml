@@ -400,9 +400,23 @@
 			<field name="search_view_id" ref="sale.view_sales_order_filter" />
 			<field name="context">{'state':'cancel'}
 			</field>
-			<field name="domain">[('state','=','cancel')]
+			<field name="domain">[('state','=','cancel'),('is_revised','=',False)]
 			</field>
 		</record>
+		
+		<record id="revise_customized_action_orders1" model="ir.actions.act_window">
+			<field name="name">Revised Orders</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">sale.order</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form,calendar,graph</field>
+			<field name="search_view_id" ref="sale.view_sales_order_filter" />
+			<field name="context">{'state':'cancel'}
+			</field>
+			<field name="domain">[('state','=','cancel'),('is_revised','=',True)]
+			</field>
+		</record>
+		
 		<!-- Sale Order -->
 		<record id="action_orders" model="ir.actions.act_window">
 			<field name="name">Sales Orders</field>
@@ -437,6 +451,10 @@
 		<menuitem action="cancel_customized_action_orders1" id="menu_cancel_customized_sale_order"
 			parent="base.menu_sales" sequence="2"
 			groups="base.group_sale_salesman,base.group_sale_manager" />
+		
+		<menuitem action="revise_customized_action_orders1" id="menu_revise_customized_sale_order"
+			parent="base.menu_sales" sequence="3"
+			groups="base.group_sale_salesman,base.group_sale_manager" />
 
 		<record id="account.action_invoice_tree1" model="ir.actions.act_window">
 			<field name="name">Customer Invoices</field>
@@ -468,7 +486,7 @@
 			</field>
 		</record>
 		<menuitem action="account.action_invoice_tree1" id="menu_sale_action_invoice_tree1"
-			parent="base.menu_sales" name="Sales Invoices" sequence="3" />
+			parent="base.menu_sales" name="Sales Invoices" sequence="4" />
 
 		<!-- Sales Team Sequence -->
 		<record id="crm_case_section_salesteams_act_inherit" model="ir.actions.act_window">

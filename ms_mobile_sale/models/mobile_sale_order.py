@@ -163,8 +163,8 @@ class mobile_sale_order(osv.osv):
       'rebate_later':fields.boolean('Rebate Later', readonly=True),
       'order_saleperson': fields.many2one('res.users', 'Order Saleperson'),
       'pre_sale_order_id': fields.many2one('sale.order', 'Pre Sale Order'),
-
-      
+      'revise_reason_id': fields.many2one('revise.reason', 'Revise Reason'),
+      'cancel_reason_id': fields.many2one('cancel.reason', 'Cancel Reason'),
    #     'journal_id'  : fields.many2one('account.journal', 'Journal' ,domain=[('type','in',('cash','bank'))]),   
     }
     _order = 'id desc'
@@ -425,6 +425,16 @@ class mobile_sale_order(osv.osv):
                     else:
                         rebate = False
                             
+                    if so['revise_reason_id'] != 'null' and so['revise_reason_id']: 
+                        revise_reason_id = so['revise_reason_id']
+                    else:
+                        revise_reason_id = None
+                        
+                    if so['cancel_reason_id'] != 'null' and so['cancel_reason_id']: 
+                        cancel_reason_id = so['cancel_reason_id']
+                    else:
+                        cancel_reason_id = None
+                        
                     mso_result = {
                         'customer_code':so['customer_code'],
                         'sale_plan_day_id':so['sale_plan_day_id'],
@@ -464,6 +474,8 @@ class mobile_sale_order(osv.osv):
                         'rebate_later':rebate,
                         'order_saleperson':order_saleperson,
                         'pre_sale_order_id':pre_sale_order_id,
+                        'revise_reason_id':revise_reason_id,
+                        'cancel_reason_id':cancel_reason_id,
                     }
                     s_order_id = mobile_sale_order_obj.create(cursor, user, mso_result, context=context)
                     so_ids.append(s_order_id);
@@ -1213,7 +1225,8 @@ class mobile_sale_order(osv.osv):
                                              'order_team':order_team,
                                              'original_ecommerce_number':original_ecommerce_number,
                                              'ecommerce':ecommerce,
-
+                                             'revise_reason_id':ms_ids.revise_reason_id.id if ms_ids.revise_reason_id else None,
+                                             'cancel_reason_id':ms_ids.cancel_reason_id.id if ms_ids.cancel_reason_id else None,
                                         }
                     soId = soObj.create(cr, uid, soResult, context=context)
                     if soId:
@@ -1694,6 +1707,18 @@ class mobile_sale_order(osv.osv):
 
     def get_productMainGroup(self, cr, uid, section_id, context=None, **kwargs):
         cr.execute('''select id,name,skip_checking from product_maingroup''')
+        datas = cr.fetchall()
+        cr.execute
+        return datas
+    
+    def get_revise_reason(self, cr, uid, section_id, context=None, **kwargs):
+        cr.execute('''select id,name from revise_reason where active=True''')
+        datas = cr.fetchall()
+        cr.execute
+        return datas
+    
+    def get_cancel_reason(self, cr, uid, section_id, context=None, **kwargs):
+        cr.execute('''select id,name from cancel_reason where active=True''')
         datas = cr.fetchall()
         cr.execute
         return datas

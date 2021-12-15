@@ -321,7 +321,9 @@ class account_invoice(models.Model):
                      'additional_discount':fields.float('Additional Discount'),
                   'discount_total':fields.float('Discount Total' , digits=dp.get_precision('Account'), store=True, readonly=True, compute='_compute_amount', track_visibility='always'),
                   'ecommerce':fields.boolean("Ecommerce",default=False,readonly=True),             
-                  'original_ecommerce_number':fields.char('Original Ecommerce Order No',readonly=True),       
+                  'original_ecommerce_number':fields.char('Original Ecommerce Order No',readonly=True),
+                  'revise_reason_id': fields.many2one('revise.reason', 'Revise Reason'),
+                  'cancel_reason_id': fields.many2one('cancel.reason', 'Cancel Reason'),       
                   }
     
 class account_move_line(osv.osv):

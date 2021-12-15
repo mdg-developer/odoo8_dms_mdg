@@ -356,7 +356,9 @@ class sale_order(osv.osv):
             },
             multi='sums', help="The amount without tax.", track_visibility='always'),
         'ecommerce':fields.boolean("Ecommerce",default=False,readonly=True),             
-        'original_ecommerce_number':fields.char('Original Ecommerce Order No',readonly=True),     
+        'original_ecommerce_number':fields.char('Original Ecommerce Order No',readonly=True),   
+        'revise_reason_id': fields.many2one('revise.reason', 'Revise Reason'),
+        'cancel_reason_id': fields.many2one('cancel.reason', 'Cancel Reason'),  
         }
     _default={
               'amount_untaxed':0.0,
@@ -485,6 +487,8 @@ class sale_order(osv.osv):
             'delivery_address': order.delivery_address,
             'delivery_contact_no': order.delivery_contact_no,
             'delivery_township_id': order.delivery_township_id.id,
+            'revise_reason_id': order.revise_reason_id.id if order.revise_reason_id else None,
+            'cancel_reason_id': order.cancel_reason_id.id if order.cancel_reason_id else None,
         }
                   
         if order.woo_order_number or order.original_ecommerce_number:
@@ -494,7 +498,7 @@ class sale_order(osv.osv):
                             'contents': "Your order " + order.name + " is completed.",
                             'headings': "Burmart"
                         }     
-            self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values)
+#             self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values)
             order.update_sale_order_point()
             logging.warning("Creating sale order in woo")
             order.create_sale_order_in_woo()
