@@ -428,12 +428,7 @@ class mobile_sale_order(osv.osv):
                     if so['revise_reason_id'] != 'null' and so['revise_reason_id']: 
                         revise_reason_id = so['revise_reason_id']
                     else:
-                        revise_reason_id = None
-                        
-                    if so['cancel_reason_id'] != 'null' and so['cancel_reason_id']: 
-                        cancel_reason_id = so['cancel_reason_id']
-                    else:
-                        cancel_reason_id = None
+                        revise_reason_id = None                                           
                         
                     mso_result = {
                         'customer_code':so['customer_code'],
@@ -474,8 +469,7 @@ class mobile_sale_order(osv.osv):
                         'rebate_later':rebate,
                         'order_saleperson':order_saleperson,
                         'pre_sale_order_id':pre_sale_order_id,
-                        'revise_reason_id':revise_reason_id,
-                        'cancel_reason_id':cancel_reason_id,
+                        'revise_reason_id':revise_reason_id                       
                     }
                     s_order_id = mobile_sale_order_obj.create(cursor, user, mso_result, context=context)
                     so_ids.append(s_order_id);
@@ -1707,20 +1701,17 @@ class mobile_sale_order(osv.osv):
 
     def get_productMainGroup(self, cr, uid, section_id, context=None, **kwargs):
         cr.execute('''select id,name,skip_checking from product_maingroup''')
-        datas = cr.fetchall()
-        cr.execute
+        datas = cr.fetchall()        
         return datas
     
-    def get_revise_reason(self, cr, uid, section_id, context=None, **kwargs):
+    def get_revise_reason(self, cr, uid, context=None, **kwargs):    
         cr.execute('''select id,name from revise_reason where active=True''')
-        datas = cr.fetchall()
-        cr.execute
+        datas = cr.fetchall()        
         return datas
     
-    def get_cancel_reason(self, cr, uid, section_id, context=None, **kwargs):
+    def get_cancel_reason(self, cr, uid, context=None, **kwargs):    
         cr.execute('''select id,name from cancel_reason where active=True''')
-        datas = cr.fetchall()
-        cr.execute
+        datas = cr.fetchall()        
         return datas
         
     def get_salePlanDays_by_sale_team(self, cr, uid, section_id , context=None, **kwargs):
@@ -3409,7 +3400,16 @@ class mobile_sale_order(osv.osv):
                             is_revised =True
                         else :
                             is_revised=False
-                        cr.execute('''update sale_order set state ='cancel',cancel_user_id=%s,is_revised=%s where id = %s ''', (uid,is_revised, So_id[0],))
+                        if deli['cancel_reason_id'] != 'null' and deli['cancel_reason_id']:
+                            cancel_reason_id = deli['cancel_reason_id']
+                        else :
+                            cancel_reason_id=None
+                        if deli['revise_reason_id'] != 'null' and deli['revise_reason_id']:
+                            revise_reason_id = deli['revise_reason_id']
+                        else :
+                            revise_reason_id=None
+                                                                             
+                        cr.execute('''update sale_order set state ='cancel',cancel_user_id=%s,is_revised=%s,cancel_reason_id=%s,revise_reason_id=%s where id = %s ''', (uid,is_revised,cancel_reason_id,revise_reason_id, So_id[0],))
                         cr.execute('select tb_ref_no from sale_order where id=%s', (So_id[0],))
                         ref_no = cr.fetchone()[0]
                         cr.execute("update pre_sale_order set void_flag = 'voided' where name=%s", (ref_no,))        
