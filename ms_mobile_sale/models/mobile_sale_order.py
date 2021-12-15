@@ -303,8 +303,14 @@ class mobile_sale_order(osv.osv):
                         'rebate_later':rebate,
                         'order_saleperson':so['order_saleperson'],
                     }
-                    s_order_id = mobile_sale_order_obj.create(cursor, user, mso_result, context=context)
+                    s_order_id = mobile_sale_order_obj.create(cursor, user, mso_result, context=context)                 
                     so_ids.append(s_order_id);
+                    cursor.execute("""
+                    update customer_payment set payment_id =mobile_id from (
+                    select cp.id as payment_id ,so.id as mobile_id from customer_payment cp ,mobile_sale_order so 
+                    where so.name =cp.notes and cp.payment_id is null and so.id=%s
+                    )m
+                    where m.payment_id=customer_payment.id """,(s_order_id,))                       
                     for sol in sale_order_line:
                         if sol['so_name'] == so['name']:
                                 cursor.execute('select id From product_product where id  = %s ', (sol['product_id'],))
