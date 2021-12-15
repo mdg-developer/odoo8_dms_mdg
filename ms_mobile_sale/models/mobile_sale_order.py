@@ -13,6 +13,7 @@ from openerp.addons.connector.queue.job import job, related_action
 from openerp.addons.connector.session import ConnectorSession
 from openerp.addons.connector.exception import FailedJobError
 from openerp.addons.connector.jobrunner.runner import ConnectorRunner
+import logging
 
 @job(default_channel='root.directpending')
 def automation_pending_delivery(session, delivery_mobile):
@@ -170,6 +171,35 @@ class mobile_sale_order(osv.osv):
        
     } 
     
+    def get_inventory_adjustment_lines(self, cr, uid, location_id, context=None, **kwargs):
+                
+        if location_id:        
+            cr.execute('''                                
+                        select principal,category,sku_name,bigger_uom,smaller_uom,total_pcs,ctn_qty,
+                        total_pcs-(total_pcs::int/bigger_uom_ratio::int)*bigger_uom_ratio pcs_qty,
+                        product_id,bigger_uom_ratio
+                        from
+                        (
+                            select pm.name principal,categ.name category,name_template sku_name,
+                            (select name from product_uom where id=pt.report_uom_id) bigger_uom,
+                            (select name from product_uom where id=pt.uom_id) smaller_uom,
+                            COALESCE(sum(qty),0) total_pcs,
+                            COALESCE(sum(qty),0)::int/(1/factor)::int ctn_qty,    
+                            COALESCE(sum(qty),0) pcs_qty,product_id,
+                            (select floor(round(1/factor,2)) from product_uom where id=pt.report_uom_id) bigger_uom_ratio
+                            from stock_quant sq,product_product pp,product_template pt,product_category categ,product_maingroup pm,product_uom uom
+                            where sq.product_id=pp.id
+                            and pp.product_tmpl_id=pt.id
+                            and pt.categ_id=categ.id
+                            and pt.main_group=pm.id
+                            and pt.report_uom_id=uom.id
+                            and location_id=%s
+                            group by pm.name,categ.name,name_template,pt.report_uom_id,pt.uom_id,uom.factor,product_id
+                        )A
+                    ''', (location_id,))
+            datas = cr.fetchall()            
+            return datas
+        
     def create_massive(self, cursor, user, vals, context=None):
         print 'vals', vals
         sale_order_name_list = []
@@ -339,6 +369,67 @@ class mobile_sale_order(osv.osv):
             print 'False'
             print e
             return False 
+        
+    def create_inventory_adjustment(self, cursor, user, vals, context=None):
+                     
+        try : 
+            inventory_obj = self.pool.get('stock.inventory')            
+            inventory_line_obj = self.pool.get('stock.inventory.line')            
+            str = "{" + vals + "}"
+            str = str.replace(":''", ":'")  
+            str = str.replace("'',", "',")  
+            str = str.replace(":',", ":'',")  
+            str = str.replace("}{", "}|{")
+            new_arr = str.split('|')
+            result = []            
+            for data in new_arr:
+                x = ast.literal_eval(data)
+                result.append(x)
+            inventory = []
+            inventory_line = []
+            for r in result:                              
+                if len(r) > 2:
+                    inventory.append(r)
+                else:
+                    inventory_line.append(r)                   
+            if inventory:
+                for inv in inventory:     
+                    company = self.pool.get('res.company').search(cursor, user, [], limit=1, context=context)
+                    company_data = inventory_obj.browse(cursor, user, company, context=context)
+                    inventory_date = datetime.strptime(inv['date'], '%Y-%m-%d').date()      
+                    inventory_result = {
+                        'subject': inv['subject'],
+                        'location_id': int(inv['location']),  
+                        'date': inventory_date,      
+                        'company_id': company_data.id,   
+                        'filter': 'none',
+                        'state': 'draft',
+                        'request_by': inv['saleTeamName'],           
+                    }                    
+                    inventory_id = inventory_obj.create(cursor, user, inventory_result, context=context)
+                    inventory_data = inventory_obj.browse(cursor, user, inventory_id, context=context)   
+                    vals = inventory_obj._get_inventory_lines(cursor, user, inventory_data, context=context)
+                    for product_line in vals: 
+                        product_obj = self.pool.get('product.product')
+                        dom = [('product_id', '=', product_line.get('product_id')), ('inventory_id.state', '=', 'confirm'),
+                               ('location_id', '=', product_line.get('location_id')), ('partner_id', '=', product_line.get('partner_id')),
+                               ('package_id', '=', product_line.get('package_id')), ('prod_lot_id', '=', product_line.get('prod_lot_id'))]
+                        res = inventory_line_obj.search(cursor, user, dom, context=context)                                            
+                        if res:
+                            location = self.pool['stock.location'].browse(cursor, user, product_line.get('location_id'), context=context)
+                            product = product_obj.browse(cursor, user, product_line.get('product_id'), context=context)
+                            error_message = "You cannot have two inventory adjustements in state 'in Progess' with the same product("+ product.name+ "), same location("+ location.name +"), same package, same owner and same lot. Please first validate the first inventory adjustement with this product before creating another one."
+                            logging.warning("error_message: %s", error_message) 
+                            return error_message                  
+                    inventory_obj.prepare_inventory(cursor, user, [inventory_id], context=context)                                          
+                    for line in inventory_line:                             
+                        note_line_id = inventory_line_obj.search(cursor, user, [('inventory_id', '=',  inventory_id),
+                                                                                ('product_id', '=',  int(line['product_id']))],context=None)
+                        note_line_data = inventory_line_obj.browse(cursor, user, note_line_id, context=context)
+                        note_line_data.write({"product_qty": line['total_pcs_qty']})                                                                                 
+            return True     
+        except Exception, e:            
+            return False
         
     def create_tablet_sync_log_form(self, cursor, user, vals, context=None):
              try :
