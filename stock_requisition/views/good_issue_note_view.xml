@@ -16,7 +16,7 @@
 							groups="stock.group_stock_manager,stock.group_stock_user" />
 						<button name="issue" string="Issue" class="oe_highlight"
 							type="object" states="approve"
-							groups="stock.group_stock_manager,stock.group_stock_user" />
+							groups="base.group_gin_issue" />
 						<button name="cancel" string="Cancel" class="oe_highlight"
 							type="object" states="draft,approve"
 							groups="stock.group_stock_manager,stock.group_stock_user" />
