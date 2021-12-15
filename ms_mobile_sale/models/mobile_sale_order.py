@@ -377,27 +377,28 @@ class mobile_sale_order(osv.osv):
             return False 
         
     def create_inventory_adjustment(self, cursor, user, vals, context=None):
-                     
+                             
         try : 
             inventory_obj = self.pool.get('stock.inventory')            
             inventory_line_obj = self.pool.get('stock.inventory.line')            
             str = "{" + vals + "}"
-            str = str.replace(":''", ":'")  
+#             str = str.replace(":''", ":'")  
             str = str.replace("'',", "',")  
             str = str.replace(":',", ":'',")  
             str = str.replace("}{", "}|{")
-            new_arr = str.split('|')
+            new_arr = str.split('|')            
             result = []            
             for data in new_arr:
                 x = ast.literal_eval(data)
-                result.append(x)
+                result.append(x)            
             inventory = []
             inventory_line = []
             for r in result:                              
                 if len(r) > 2:
                     inventory.append(r)
-                else:
-                    inventory_line.append(r)                   
+                else:                     
+                    if r.get('product_id'):
+                        inventory_line.append(r)        
             if inventory:
                 for inv in inventory:     
                     company = self.pool.get('res.company').search(cursor, user, [], limit=1, context=context)
