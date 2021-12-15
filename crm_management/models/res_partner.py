@@ -556,7 +556,7 @@ class res_partner(osv.osv):
             codeResult = {}
             if ids:
                 for resVal in self.browse(cr, uid, ids, context=context):
-                    if resVal:
+                    if resVal and resVal.customer_code is not None:
                         cityId = resVal.city
                         townshipId = resVal.township
                         channelId = resVal.sales_channel
