@@ -523,7 +523,7 @@
 						<group>
 							<field name="partner_id" />
 							<field name="code" />
-							
+
 							<field name="township_id" />
 							<field name="name" />
 							<field name="asset_name_id" />
@@ -596,6 +596,8 @@
 				<form string="Asset Type">
 					<group>
 						<field name="name" />
+						<field name="active" />
+
 					</group>
 				</form>
 			</field>
@@ -643,6 +645,8 @@
 						<group>
 							<field name="type" />
 							<field name="is_auto_fill" />
+							<field name="active" />
+
 						</group>
 					</group>
 				</form>
