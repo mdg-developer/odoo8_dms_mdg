@@ -1549,18 +1549,26 @@ class sale_order(models.Model):
                             product_data = product_response.json()  
                             if product_data:                                
                                 woo_product_id = product_data[0].get('id')
-                                if line.sale_foc == True:
-                                    product_lists.append({
-                                                          "product_id": woo_product_id,
-                                                          "quantity": line.product_uom_qty,
-                                                          "price": 0
-                                                        })
-                                else:
-                                    product_lists.append({
-                                                          "product_id": woo_product_id,
-                                                          "quantity": line.product_uom_qty                                                          
-                                                        })
-                                
+                                woo_product_uom_name = line.product_uom.name   
+                                if not woo_product_id:
+                                    woo_product_id = 11111111111111   
+                                    woo_product_name = line.product_id.name_template + "(" + woo_product_uom_name + ")"
+                                woo_product_wcapi = instance.connect_in_woo()
+                                woo_product_response = woo_product_wcapi.get('products/%s' %woo_product_id)
+                                if woo_product_response.status_code in [200,201]:                  
+                                    woo_product_data = woo_product_response.json()                             
+                                    if woo_product_data != False:                                        
+                                        woo_product_value = woo_product_data.get('product')                                        
+                                        woo_product_name = woo_product_value.get('title') + "(" + woo_product_uom_name + ")"                          
+                                product_lists.append({
+                                                      "product_id": int(woo_product_id),
+                                                      "name": woo_product_name,
+                                                      "quantity": line.product_uom_qty,
+                                                      "price": str(line.price_unit),
+                                                      "subtotal": str(line.product_uom_qty * line.price_unit),
+                                                      "total": str(line.product_uom_qty * line.price_unit)
+                                                    })
+                    
                     data = { 
                             "status": "completed",
                             "currency": "MMK",
@@ -1620,7 +1628,7 @@ class sale_order(models.Model):
                             "line_items": product_lists,
                             "shipping_lines": shipping_lists,    
                             "fee_lines": fee_lines_lists,                                                                                                       
-                        }        
+                        }       
                     create_order_response = wcapi.post("orders", data)                    
                     logging.warning("Check create_order_response status code: %s", create_order_response.status_code)
                     if create_order_response.status_code in [200,201]:     
