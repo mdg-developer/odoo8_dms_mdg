@@ -556,18 +556,25 @@ class res_partner(osv.osv):
             codeResult = {}
             if ids:
                 for resVal in self.browse(cr, uid, ids, context=context):
-                    if resVal:
-                        cityId = resVal.city
-                        townshipId = resVal.township
-                        channelId = resVal.sales_channel
-                        if cityId and townshipId and channelId:
-                            codeId = codeObj.search(cr, uid, [('city_id', '=', cityId.id), ('township_id', '=', townshipId.id), ('sale_channel_id', '=', channelId.id)])
-                            if codeId:
-                                code = codeObj.generateCode(cr, uid, codeId[0], context=context)
-                            else:
-                                codeResult = {'city_id':cityId.id, 'township_id':townshipId.id, 'sale_channel_id':channelId.id, 'nextnumber':1, 'padding':6}
-                                codeId = codeObj.create(cr, uid, codeResult, context=context)
-                                code = codeObj.generateCode(cr, uid, codeId, context=context)
+                    is_need_generate=False
+                    if resVal :
+                        if resVal.customer_code:
+                            if resVal.customer_code.startswith('0'):
+                                is_need_generate =True
+                        else:
+                                is_need_generate =True
+                        if is_need_generate==True:
+                            cityId = resVal.city
+                            townshipId = resVal.township
+                            channelId = resVal.sales_channel
+                            if cityId and townshipId and channelId:
+                                codeId = codeObj.search(cr, uid, [('city_id', '=', cityId.id), ('township_id', '=', townshipId.id), ('sale_channel_id', '=', channelId.id)])
+                                if codeId:
+                                    code = codeObj.generateCode(cr, uid, codeId[0], context=context)
+                                else:
+                                    codeResult = {'city_id':cityId.id, 'township_id':townshipId.id, 'sale_channel_id':channelId.id, 'nextnumber':1, 'padding':6}
+                                    codeId = codeObj.create(cr, uid, codeResult, context=context)
+                                    code = codeObj.generateCode(cr, uid, codeId, context=context)
                 if code:
                     from datetime import datetime
                     cr.execute("update res_partner set customer_code=%s ,date_partnership=now()::date ,mobile_customer=False ,write_uid =%s ,write_date =now() where id=%s", (code, uid, ids[0],))
