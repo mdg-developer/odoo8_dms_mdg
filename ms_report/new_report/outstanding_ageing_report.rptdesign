@@ -481,16 +481,6 @@ and ai.date_invoice <= ?
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
-                <structure>
-                    <property name="name">param_6</property>
-                    <property name="paramName">date</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                    <property name="position">6</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
             </list-property>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
@@ -911,57 +901,7 @@ from
 (select ai.partner_id as partner_id ,ai.code customer_id,rp.name customer,ai.number invoice_cm,temp_customer bill_to_contact,date_due,number,ai.date_invoice sale_date,
 ( ? - ai.date_invoice) as day,rb.name branch,sc.name channel,rp.phone,rp.mobile,rc.name as city_name,rt.name as township_name,rp.street,
 (date_due - ?) age,credit_limit,substring(term.name from '[0-9]+') term,ccs.name sales_team,amount_total,date_due,(amount_total-residual) payment,residual + 
-(select COALESCE (sum(A.payment_amount),0) as payment_amount
-from (
-select  av.origin,av.section_id,payment_full.move_id ,payment_full.id move_line_id,av.number,av.partner_id,av.date_invoice,paidmove.date,aml.reconcile_id,aml.id,payment_full.ref,coalesce(payment_full.credit,0) as payment_amount
-,avl.amount_original invoice_amount,(avl.amount_unreconciled-avl.amount) as balance
-from account_invoice av 
-left join account_move am  on av.move_id =am.id
-left join account_move_line aml on aml.move_id=am.id and aml.reconcile_id is not null
-left join account_voucher_line avl on avl.move_line_id=aml.id and avl.amount >0
-left join account_voucher avr on avr.id=avl.voucher_id 
-left join account_move paidmove on paidmove.id= avr.move_id
-left join account_move_reconcile amr on amr.id=aml.reconcile_id 
-left join account_move_line payment_full on payment_full.reconcile_id=amr.id  and  payment_full.move_id =paidmove.id 
-where av.state not in ('draft''cancel')
-and aml.id not in (payment_full.id)
-and payment_full.move_id !=am.id
-and av.type='out_invoice'
-and av.amount_total !=av.residual
-
-and paidmove.date >?
-and av.number=ai.number
---$branch_id_av$
---$sales_team_av$
-union all 
-select av.origin,av.section_id,payment_partial.move_id,payment_partial.id move_line_id,av.number,av.partner_id,av.date_invoice,paidmove.date,aml.reconcile_id,aml.id,payment_partial.ref,coalesce(payment_partial.credit,0) as payment_amount,avl.amount_original invoice_amount,
-(avl.amount_unreconciled-avl.amount) as balance
-from account_invoice av 
-left join account_move am  on av.move_id =am.id
-left join account_move_line aml on aml.move_id=am.id and aml.reconcile_partial_id is not null
-left join account_voucher_line avl on avl.move_line_id=aml.id and avl.amount >0
-left join account_voucher avr on avr.id=avl.voucher_id 
-left join account_move paidmove on paidmove.id= avr.move_id
-left join account_move_reconcile amp on amp.id=aml.reconcile_partial_id
-left join account_move_line payment_partial on payment_partial.reconcile_partial_id=amp.id and  payment_partial.move_id =paidmove.id 
- where av.state not in ('draft','cancel')
-and aml.id not in (payment_partial.id)
-and payment_partial.move_id !=am.id
-and av.amount_total !=av.residual
-
-and paidmove.date >?
-and av.number=ai.number
-
---$branch_id_av$
---$sales_team_av$
-and av.type='out_invoice'
-)A,account_move am,account_journal aj,crm_case_section crm,res_partner rp
-where  A.move_id =am.id
-and am.journal_id = aj.id
-and A.section_id =crm.id
-and A.partner_id =rp.id
-and A.number=ai.number
-and ai.residual>0) as residual,
+(select * from get_invoice_residual_amount(?,ai.number)) as residual,
 case when amount_total<0 then 'Yes' when amount_total>0 then 'No' end as credit_memo,sc.name sales_rep_name,rp.street ship_to_address1,rp.name bill_to_name,rp.street address1,ai.origin
 from account_invoice ai
 left join res_partner rp on (ai.partner_id=rp.id)
@@ -1038,21 +978,6 @@ where residual >0
           <design:identifier>
             <design:name></design:name>
             <design:position>5</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>6</design:position>
           </design:identifier>
           <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
