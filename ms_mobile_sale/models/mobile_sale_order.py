@@ -1705,12 +1705,12 @@ class mobile_sale_order(osv.osv):
         return datas
     
     def get_revise_reason(self, cr, uid, context=None, **kwargs):    
-        cr.execute('''select id,name from revise_reason where active=True''')
+        cr.execute('''select id,name,active from revise_reason where active=True''')
         datas = cr.fetchall()        
         return datas
     
     def get_cancel_reason(self, cr, uid, context=None, **kwargs):    
-        cr.execute('''select id,name from cancel_reason where active=True''')
+        cr.execute('''select id,name,active from cancel_reason where active=True''')
         datas = cr.fetchall()        
         return datas
         
