@@ -2443,7 +2443,7 @@ class mobile_sale_order(osv.osv):
             if  payment_ids:
                 for payment in payment_ids:
                     payment_data = payment_obj.browse(cursor, user, payment, context=context)                  
-                    partner_id = payment_data.partner_id.id
+                    partner_id = payment_data.partner_id.id                    
                     journal_id = payment_data.journal_id.id
                     cheque_no = payment_data.cheque_no
                     amount = payment_data.amount
@@ -2452,7 +2452,7 @@ class mobile_sale_order(osv.osv):
                                       'journal_id':journal_id,
                                       'cheque_no':cheque_no,
                                       'amount': amount,
-                                    'denomination_cheque_ids':deno_id, }
+                                    'denomination_cheque_ids':deno_id, }                    
                     cheque_product_obj.create(cursor, user, data_id, context=context)
             if  ar_payment_ids:
                 for payment in ar_payment_ids:
@@ -2717,10 +2717,10 @@ class mobile_sale_order(osv.osv):
     def get_credit_notes(self, cr, uid, sale_team_id , noteList ,context=None, **kwargs):
         team_obj = self.pool.get('crm.case.section')
         team_data=team_obj.browse(cr, uid, sale_team_id, context=context)
-        noteList = str(noteList)     
-        noteList = noteList.replace("[", "(") 
-        noteList = noteList.replace("]", ")")  
         if noteList:
+            noteList = str(noteList)     
+            noteList = noteList.replace("[", "(") 
+            noteList = noteList.replace("]", ")")  
             where ='and ac.id NOT IN %s ' % (noteList,)
         else:
             where =''
