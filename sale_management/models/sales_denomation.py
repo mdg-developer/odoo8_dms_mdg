@@ -677,7 +677,7 @@ class sale_denomination_cheque_line(osv.osv):
     _columns = {
                 'denomination_cheque_ids': fields.many2one('sales.denomination', 'Sales Denomination'),
                 'cheque_no':fields.char('Cheque No', required=True),
-                'partner_id':fields.many2one('res.partner', 'Customer', required=True),
+                'partner_id':fields.many2one('res.partner', 'Customer', required=False),
                 'amount':fields.float('Total', digits_compute=dp.get_precision('Product Price')),
                 'journal_id':fields.many2one('account.journal', "Journal"),
                 }
