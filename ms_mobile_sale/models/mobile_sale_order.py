@@ -3132,7 +3132,7 @@ class mobile_sale_order(osv.osv):
     def get_delivery_datas(self, cr, uid, saleTeamId, soList, context=None, **kwargs):
         
         sale_order_obj = self.pool.get('sale.order')
-        list_val = None
+        list_val = None        
         list_val = sale_order_obj.search(cr, uid, [('pre_order', '=', True), ('is_generate', '=', True),('state', '=', 'manual'), ('delivery_id', '=', saleTeamId), ('shipped', '=', False), ('invoiced', '=', False) , ('tb_ref_no', 'not in', soList)], context=context)
         print 'list_val', list_val
         list = []
@@ -3944,6 +3944,7 @@ class mobile_sale_order(osv.osv):
         return True
     
     def create_sale_order_payment(self, cursor, user, vals, context=None):
+        
         try:
             rental_obj = self.pool.get('customer.payment')
             str = "{" + vals + "}"
@@ -3971,8 +3972,8 @@ class mobile_sale_order(osv.osv):
                         void_flag =None
 
                     if void_flag!='voided':
-                        cursor.execute('select id from res_partner where customer_code = %s ', (ar['partner_id'],))
-                        data = cursor.fetchall()
+                        cursor.execute('select id from res_partner where id = %s ', (ar['partner_id'],))
+                        data = cursor.fetchall()                        
                         if data:
                             parnter_id = data[0][0]
                         else:
@@ -3994,7 +3995,7 @@ class mobile_sale_order(osv.osv):
                                 'partner_id':parnter_id,
                                 'sale_team_id':ar['sale_team_id'],
                                 'payment_code':ar['payment_code'],
-                            }
+                            }                            
                             rental_obj.create(cursor, user, rental_result, context=context)
                             cheque_no =ar['cheque_no'].replace('\\', "")
                             cursor.execute("update account_creditnote set m_status ='used' where name=%s",(cheque_no,))
@@ -4008,6 +4009,7 @@ class mobile_sale_order(osv.osv):
             return False
         
     def create_pre_order_payment(self, cursor, user, vals, context=None):
+        
         try:
             rental_obj = self.pool.get('customer.payment')
             str = "{" + vals + "}"
@@ -4022,7 +4024,7 @@ class mobile_sale_order(osv.osv):
                 result.append(x)
 #             rental_collection = []
 #             for r in result:
-#                 rental_collection.append(r)  
+#                 rental_collection.append(r) 
             if result:
                 for ar in result:
                     payment_id = ar['payment_id'].replace('\\', '').replace('\\', '')   
@@ -4040,7 +4042,7 @@ class mobile_sale_order(osv.osv):
                     else:
                         so_id = None
                     cursor.execute('select count(id) from customer_payment where journal_id= %s and payment_code = %s and  notes = %s  and date = %s and amount = %s ', (ar['journal_id'],ar['payment_code'],payment_id,ar['date'],ar['amount'],))
-                    payment_data = cursor.fetchone()[0]
+                    payment_data = cursor.fetchone()[0]                    
                     if payment_data==0:                              
                         rental_result = {                    
                             'pre_order_id':so_id,
@@ -4052,7 +4054,7 @@ class mobile_sale_order(osv.osv):
                             'partner_id':ar['partner_id'],
                             'sale_team_id':ar['sale_team_id'],
                             'payment_code':ar['payment_code'],
-                        }
+                        }                        
                         rental_obj.create(cursor, user, rental_result, context=context)
                         cheque_no =ar['cheque_no'].replace('\\', "")
                         cursor.execute("update account_creditnote set m_status ='used' where name=%s",(cheque_no,))                        
