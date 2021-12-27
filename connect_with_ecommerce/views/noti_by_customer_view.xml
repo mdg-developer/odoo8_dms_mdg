@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>    
+	<data>
+	    
+		<record id="view_noti_by_customer_form" model="ir.ui.view">
+			<field name="name">noti.by.customer.form</field>
+			<field name="model">noti.by.customer</field>
+			<field name="arch" type="xml">
+				<form>	
+				    <header>				        
+						<button name="send" string="Send Message" type="object"
+							class="oe_highlight" attrs="{'invisible':[('state', '!=', 'draft')]}" />
+						<field name="state" widget="statusbar" statusbar_visible="draft,send,fail" />
+				    </header>				
+					<sheet>
+						<group>							
+							<group>								
+								<field name="title" required="1"/>
+								<field name="message" required="1"/>
+							</group>
+						</group>
+						<notebook>
+			                <page string="Customers">
+			                    <field name="partner_ids" />
+			                </page>
+			            </notebook>			
+					</sheet>									
+				</form>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_noti_by_customer_tree">
+			<field name="name">noti.by.customer.tree</field>
+			<field name="model">noti.by.customer</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="title"/>
+					<field name="state"/>					
+				</tree>
+			</field>
+		</record>
+
+		<record id="action_noti_by_customer_view"
+			model="ir.actions.act_window">
+			<field name="name">Notification by Customers</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">noti.by.customer</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" eval="view_noti_by_customer_tree"/>
+		</record>
+
+		<menuitem id="menu_noti_by_customer" sequence="2"
+			parent="menu_customization.menu_sales_notification_menu" name="Notification by Customer"
+			action="action_noti_by_customer_view"/>
+
+	</data>
+</openerp>
