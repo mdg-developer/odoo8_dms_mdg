@@ -21,7 +21,7 @@
 						</group>
 						<notebook>
 			                <page string="Customers">
-			                    <field name="partner_ids" />
+			                    <field name="partner_ids" domain="[('woo_customer_id', '!=', False)]"/>
 			                </page>
 			            </notebook>			
 					</sheet>									
