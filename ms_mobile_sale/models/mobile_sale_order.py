@@ -3699,6 +3699,8 @@ class mobile_sale_order(osv.osv):
                                 mso_line_res = {                                                            
                                       'line_id':issue_separate_stock_id,
                                       'remark':srl['remark'],
+                                      'order_qty':ori_req_quantity,
+                                      'ecommerce_qty':0,                                           
                                       'req_quantity':ori_req_quantity,
                                       'product_id':int(srl['product_id']),
                                       'product_uom':ori_uom_id,
@@ -3736,6 +3738,8 @@ class mobile_sale_order(osv.osv):
                                 mso_line_res = {                                                            
                                       'line_id':stock_id,
                                       'remark':srl['remark'],
+                                      'order_qty':ori_req_quantity,
+                                      'ecommerce_qty':0,                                              
                                       'req_quantity':ori_req_quantity,
                                       'product_id':int(srl['product_id']),
                                       'product_uom':ori_uom_id,
