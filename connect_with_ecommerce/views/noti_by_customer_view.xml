@@ -8,7 +8,7 @@
 			<field name="arch" type="xml">
 				<form>	
 				    <header>				        
-						<button name="send" string="Send Message" type="object"
+						<button name="send_msg" string="Send Message" type="object"
 							class="oe_highlight" attrs="{'invisible':[('state', '!=', 'draft')]}" />
 						<field name="state" widget="statusbar" statusbar_visible="draft,send,fail" />
 				    </header>				
