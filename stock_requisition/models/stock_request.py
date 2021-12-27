@@ -395,7 +395,7 @@ class stock_requisition(osv.osv):
                 data_line = []
                 req_list = str(tuple(req_line_id))
                 req_list = eval(req_list)
-                cr.execute('''select sum(req_quantity * floor(round(1/factor,2))) as req_quantity,l.product_id,sum(order_qty) order_qty,sum(ecommerce_qty) ecommerce_qty,sum(total_request_qty) total_request_qty
+                cr.execute('''select sum(req_quantity * floor(round(1/factor,2))) as req_quantity,l.product_id,sum(order_qty) order_qty,sum(ecommerce_qty) ecommerce_qty
                             from stock_requisition_line l ,product_uom uom 
                             where l.product_uom =uom.id and l.id in %s
                             group by product_id ''', (req_list,))
@@ -407,7 +407,7 @@ class stock_requisition(osv.osv):
                         sale_qty = float(req_data[0])
                         order_qty = req_data[2]
                         ecommerce_qty = req_data[3]
-                        total_request_qty = req_data[4]
+                        total_request_qty = req_data[2] + req_data[3]
                         cr.execute("""SELECT uom.id , floor(round(1/factor,2)) as ratio  FROM product_product pp 
                           LEFT JOIN product_template pt ON (pp.product_tmpl_id=pt.id)
                           LEFT JOIN product_template_product_uom_rel rel ON (rel.product_template_id=pt.id)

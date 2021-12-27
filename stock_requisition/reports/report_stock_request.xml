@@ -175,7 +175,7 @@
                                     <span t-field="l.product_uom" />
                                 </td>
 								
-								<td align="right" style="padding-right: 5cm;">
+								<td align="center">
 									<span t-field="l.qty_on_hand" />
 								</td>
 								<td>

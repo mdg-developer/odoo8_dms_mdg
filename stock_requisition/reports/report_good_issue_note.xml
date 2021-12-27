@@ -191,7 +191,7 @@
 							<td>
 								<span t-field="l.expiry_date" />
 							</td>
-							<td align="right" style="padding-right: 3cm;">
+							<td align="center">
 								<span t-field="l.qty_on_hand" />
 							</td>
 							<td>
