@@ -17,7 +17,7 @@ class product_template(osv.osv):
         'city_lines':fields.many2many('res.city'),
 #         'ecommerce_price': fields.float('Price'),
         'ecommerce_uom_id': fields.many2one('product.uom', 'UOM'),
-        'delivery_id':fields.many2one('delivery.group', 'Delivery Group',required=True),
+        'delivery_id':fields.many2one('delivery.group', 'Delivery Group',required=False),
             }
        
 class product_uom_price(osv.osv):
