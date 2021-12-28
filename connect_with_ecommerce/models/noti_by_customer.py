@@ -28,7 +28,7 @@ class noti_by_customer(osv.osv):
                 one_signal_values = {
                                         'partner_id': partner.id,
                                         'contents': message,
-                                        'headings': "RB"
+                                        'headings': "Burmart"
                                     }     
                 self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)
             self.write(cr, uid, ids, {'state': 'send'}, context=context)
