@@ -58,6 +58,7 @@ Connect With Ecommerce
         'views/stock_view.xml',
         'views/res_branch_view.xml',
         'views/noti_by_customer_view.xml',
+        'views/sms_by_customer_view.xml'
                 ],
     'installable': True,
     'auto_install': False,
