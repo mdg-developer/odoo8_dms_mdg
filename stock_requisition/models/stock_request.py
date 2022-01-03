@@ -119,8 +119,12 @@ class stock_requisition(osv.osv):
                 else:
                     qty_on_hand = 0
                 if product.product_tmpl_id.type=='product': 
-                    order_qty = self.get_order_qty(cr, uid, product_id=line.id, order_ids=order_ids)                    
-                    ecommerce_qty = self.get_ecommerce_qty(cr, uid, product_id=line.id, order_ids=order_ids)                                                           
+                    if pre_order==True:
+                        order_qty = self.get_order_qty(cr, uid, product_id=line.id, order_ids=order_ids)                    
+                        ecommerce_qty = self.get_ecommerce_qty(cr, uid, product_id=line.id, order_ids=order_ids)    
+                    else:  
+                        order_qty =0
+                        ecommerce_qty=0                                                          
                     data_line.append({
                                       'sequence':product.sequence,
                                         'product_id':line.id,
