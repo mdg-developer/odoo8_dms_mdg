@@ -1614,8 +1614,7 @@ else l.discount_amt end as discount_amt,
 c.name as sale_group ,s.m_status,s.type ,tp.name as township,r.village as village,ci.name as city,sc.name as channel, rs.name as state,s.delivery_remark ,s.additional_discount,
 case when s.void_flag = 'none' then 'Unvoid'
 when s.void_flag = 'voided' then 'Voided' end as void,
-case when additional_discount > 0 then 'Discount'::character varying
-else p.default_code end as product_code,
+p.default_code as product_code,
 branch.name as branch,pm.name as main_group,pc.name as product_category,
 s.net_amount as voucher_net_total,s.additional_discount,
 spd.name sale_plan_day_name,
