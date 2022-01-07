@@ -49,21 +49,7 @@
             </field>
         </record>
                 
-        <record id="one_signal_notification_message_action" model="ir.actions.act_window">
-			<field name="name">Messages</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">one.signal.notification.messages</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">tree,form</field>
-			<field name="view_id" eval="one_signal_notification_message_tree_view" />
-			<field name="help" type="html">
-				<p class="oe_view_nocontent_create">
-					Click to create new message.
-				</p>
-			</field>
-		</record>	
-		
-        <record id="view_one_signal_notification_message_filter" model="ir.ui.view">
+       	<record id="view_one_signal_notification_message_filter" model="ir.ui.view">
 			<field name="name">Messages Filter</field>
 			<field name="model">one.signal.notification.messages</field>
 			<field name="arch" type="xml">
@@ -81,6 +67,21 @@
 				</search>
 			</field>
 		</record>
-
+		
+        <record id="one_signal_notification_message_action" model="ir.actions.act_window">
+			<field name="name">Messages</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">one.signal.notification.messages</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" eval="one_signal_notification_message_tree_view" />
+			<field name="search_view_id" ref="view_one_signal_notification_message_filter" />
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to create new message.
+				</p>
+			</field>
+		</record>	
+		
     </data>
 </openerp>
