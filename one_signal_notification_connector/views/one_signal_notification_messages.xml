@@ -49,33 +49,13 @@
             </field>
         </record>
                 
-       	<record id="view_one_signal_notification_message_filter" model="ir.ui.view">
-			<field name="name">Messages Filter</field>
-			<field name="model">one.signal.notification.messages</field>
-			<field name="arch" type="xml">
-				<search string="Messages Filters">					
-					<group expand="0" string="Group By">
-						<filter name="partner_id" string="Customer" domain="[]"
-							context="{'group_by':'partner_id'}" />
-						<filter name="woo_customer_id" string="Woo Customer ID" domain="[]"
-							context="{'group_by':'woo_customer_id'}" />
-						<filter name="contents" string="Contents" domain="[]"
-							context="{'group_by':'contents'}" />
-						<filter name="status" string="Status" domain="[]"
-							context="{'group_by':'status'}" />						
-					</group>
-				</search>
-			</field>
-		</record>
-		
         <record id="one_signal_notification_message_action" model="ir.actions.act_window">
 			<field name="name">Messages</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">one.signal.notification.messages</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
-			<field name="view_id" eval="one_signal_notification_message_tree_view" />
-			<field name="search_view_id" ref="view_one_signal_notification_message_filter" />
+			<field name="view_id" eval="one_signal_notification_message_tree_view" />			
 			<field name="help" type="html">
 				<p class="oe_view_nocontent_create">
 					Click to create new message.
