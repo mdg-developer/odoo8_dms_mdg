@@ -1605,11 +1605,10 @@ else
             <xml-property name="queryText"><![CDATA[select (s.date+ '6 hour'::interval + '30 minutes'::interval)::date as date,s.po_no,s.invoice_no,
 (select name from res_partner rp,res_users ru where rp.id=ru.partner_id and ru.id=s.user_id) salesman_name,term.name payment_term,
 s.name as vr_no,s.customer_code,r.id as customerid,r.name as customer , p.name_template as product,l.product_uos_qty,
-l.price_unit,l.sub_total,
-case when additional_discount > 0 then additional_discount
-else l.discount end as discount,
-case when additional_discount > 0 then (amount_total-net_amount)
-else l.discount_amt end as discount_amt,
+l.price_unit,
+(l.sub_total-((l.sub_total) * (s.additional_discount))) as sub_total,
+l.discount,
+l.discount_amt,
 (l.price_unit *l.product_uos_qty) as net_total,
 c.name as sale_group ,s.m_status,s.type ,tp.name as township,r.village as village,ci.name as city,sc.name as channel, rs.name as state,s.delivery_remark ,s.additional_discount,
 case when s.void_flag = 'none' then 'Unvoid'
@@ -1621,7 +1620,7 @@ spd.name sale_plan_day_name,
 case when additional_discount > 0 then 2
 else 1 end as seq,
 spt.name sale_plan_trip_name,
-(price_unit * product_uos_qty * (additional_discount / 100.0)) additional_discount_amt
+((l.sub_total) * (s.additional_discount)) additional_discount_amt
 from mobile_sale_order s
 left join mobile_sale_order_line l  on s.id = l.order_id 
 left join product_product p on l.product_id = p.id
