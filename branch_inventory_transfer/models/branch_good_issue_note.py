@@ -1,7 +1,7 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
-
+from datetime import datetime, timedelta
 
 class branch_good_issue_note(osv.osv):    
     _inherit = ['mail.thread', 'ir.needaction_mixin']
@@ -315,6 +315,49 @@ class branch_good_issue_note(osv.osv):
             if partial_line_ids[0] == 0:   
                 requisition_id.write({'state':'full_complete'})
             return True  
+        
+    def create_sale_order(self, cr, uid, ids, context=None):
+        
+        warehouse_id = None    
+        payment_term = None
+        ginline_obj = self.pool.get('branch.good.issue.note.line')
+        sale_order_obj = self.pool.get('sale.order')
+        sale_order_line_obj = self.pool.get('sale.order.line')
+        gin_value = self.browse(cr, uid, ids[0], context=context)
+        cr.execute('''select sw.id
+                    from stock_warehouse sw,stock_location sl
+                    where sw.lot_stock_id=sl.id
+                    and sl.id=%s''', (gin_value.from_location_id.id,))
+        warehouse_value = cr.fetchone()
+        if warehouse_value: 
+            warehouse_id = warehouse_value[0] 
+        cr.execute("""select id from account_payment_term where name='Immediate Payment'""")
+        payment_term_value = cr.fetchone()
+        if payment_term_value: 
+            payment_term = payment_term_value[0] 
+        order_vals = {
+            'partner_id' : 252671,                
+            'section_id' : 179,
+            'date_order' : datetime.now(),                        
+            'payment_term' : payment_term,
+            'due_date' : datetime.now().date(),
+            'delivery_id': 179,
+            'warehouse_id': warehouse_id,
+            'pricelist_id': gin_value.pricelist_id.id,
+            'state': 'draft',
+            'origin': gin_value.name,
+        } 
+        sale_order_id = sale_order_obj.create(cr, uid, order_vals, context=context)
+        gin_lines = ginline_obj.search(cr, uid, [('line_id', '=', gin_value.id),('issue_quantity', '>', 0)], context=context)
+        for line in gin_lines:
+            line_value = ginline_obj.browse(cr, uid, line, context=context)
+            order_line_vals = {
+                'order_id' : sale_order_id,                
+                'product_id' : line_value.product_id.id,
+                'product_uom_qty' : line_value.issue_quantity,                        
+                'product_uom' : line_value.product_uom.id,                
+            } 
+            sale_order_line_obj.create(cr, uid, order_line_vals, context=context)
           
     def reversed(self, cr, uid, ids, context=None):
         pick_obj = self.pool.get('stock.picking')
@@ -443,7 +486,8 @@ class branch_good_issue_note(osv.osv):
                             move_obj.action_done(cr, uid, move_id, context=context)  
                             cr.execute('''update stock_move set date=((%s::date)::text || ' ' || date::time(0))::timestamp where state='done' and origin =%s''', (issue_date, origin,))
         #update status to BRFI >>> partial or complete
-        self.update_status_to_rfi(cr, uid, ids, context=context)            
+        self.update_status_to_rfi(cr, uid, ids, context=context)    
+        self.create_sale_order(cr, uid, ids, context=context)        
         return self.write(cr, uid, ids, {'state': 'issue'})       
 
     def receive(self, cr, uid, ids, context=None):
