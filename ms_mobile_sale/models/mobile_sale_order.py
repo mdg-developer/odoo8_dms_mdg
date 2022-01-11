@@ -3050,7 +3050,12 @@ class mobile_sale_order(osv.osv):
         cr.execute("""select sale_team_id,sale_channel_id from sale_team_channel_rel rel,sale_channel c where rel.sale_team_id =%s  and c.id =rel.sale_channel_id order by c.create_date,c.name desc """, (sale_team_id,))
         datas = cr.fetchall()
         return datas
-    
+
+    def get_report_link(self, cr, uid, context=None, **kwargs):    
+        cr.execute("""select value from ir_config_parameter where key ='quick_sight_report_link' """)
+        datas = cr.fetchall()        
+        return datas
+        
     def get_uom(self, cr, uid, context=None, **kwargs):    
         cr.execute("""select id,name,floor(round(1/factor,2))  as ratio from product_uom where active = true""")
         datas = cr.fetchall()
