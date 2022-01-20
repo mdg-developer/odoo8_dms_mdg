@@ -413,7 +413,7 @@ class mobile_sale_order(osv.osv):
                         'location_id': int(inv['location']),  
                         'date': inventory_date,      
                         'company_id': company_data.id,   
-                        'filter': 'none',
+                        'filter': 'partial',
                         'state': 'draft',
                         'request_by': inv['saleTeamName'],           
                     }                    
@@ -433,11 +433,14 @@ class mobile_sale_order(osv.osv):
                             logging.warning("error_message: %s", error_message) 
                             return error_message                  
                     inventory_obj.prepare_inventory(cursor, user, [inventory_id], context=context)                                          
-                    for line in inventory_line:                             
-                        note_line_id = inventory_line_obj.search(cursor, user, [('inventory_id', '=',  inventory_id),
-                                                                                ('product_id', '=',  int(line['product_id']))],context=None)
-                        note_line_data = inventory_line_obj.browse(cursor, user, note_line_id, context=context)
-                        note_line_data.write({"product_qty": line['total_pcs_qty']})                                                                                 
+                    for line in inventory_line: 
+                        inventory_line_vals = {
+                            'product_id': int(line['product_id']),
+                            'location_id': int(inv['location']),
+                            'product_qty': line['total_pcs_qty'],
+                            'inventory_id': inventory_id, 
+                        }                       
+                        inventory_line_obj.create(cursor, user, inventory_line_vals, context=context)                                                                                 
             return True     
         except Exception, e:            
             return False
