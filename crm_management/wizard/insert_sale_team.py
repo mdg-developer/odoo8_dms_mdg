@@ -102,48 +102,48 @@ class insert_sale_team(osv.osv_memory):
                 else:
                     cr.execute('INSERT INTO sale_team_customer_rel (sale_team_id,partner_id) VALUES (%s,%s)', ( section_id[0],partner))
             if collection_team_id:
-                cr.execute('update res_partner set collection_team=%s where id=%s',(collection_team_id[0],partner,))
+                cr.execute('update res_partner set write_uid =%s,write_date =current_date,collection_team=%s where id=%s',(uid,collection_team_id[0],partner,))
             if  outlet_type:
-                cr.execute('update res_partner set outlet_type=%s where id=%s',(outlet_type[0],partner,))
+                cr.execute('update res_partner set write_uid =%s,write_date =current_date,outlet_type=%s where id=%s',(uid,outlet_type[0],partner,))
             if  sales_channel:
-                cr.execute('update res_partner set sales_channel=%s where id=%s',(sales_channel[0],partner,))
+                cr.execute('update res_partner set write_uid =%s,write_date =current_date,sales_channel=%s where id=%s',(uid,sales_channel[0],partner,))
             if  frequency_id:
-                cr.execute('update res_partner set frequency_id=%s where id=%s',(frequency_id[0],partner,))
+                cr.execute('update res_partner set write_uid =%s,write_date =current_date,frequency_id=%s where id=%s',(uid,frequency_id[0],partner,))
             if  class_id:
-                cr.execute('update res_partner set class_id=%s where id=%s',(class_id[0],partner,))
+                cr.execute('update res_partner set write_uid =%s,write_date =current_date,class_id=%s where id=%s',(uid,class_id[0],partner,))
             if  branch_id:
-                cr.execute('update res_partner set branch_id=%s where id=%s',(branch_id[0],partner,))
+                cr.execute('update res_partner set write_uid =%s,write_date =current_date,branch_id=%s where id=%s',(uid,branch_id[0],partner,))
             if chiller is True:
-                cr.execute('update res_partner set chiller=%s where id=%s',(True,partner,))
+                cr.execute('update res_partner set write_uid =%s,write_date =current_date,chiller=%s where id=%s',(uid,True,partner,))
             if hamper is True:
-                cr.execute('update res_partner set hamper=%s where id=%s',(True,partner,))			
+                cr.execute('update res_partner set write_uid =%s,write_date =current_date,hamper=%s where id=%s',(uid,True,partner,))			
             if chiller_false is True:
-                cr.execute('update res_partner set chiller=%s where id=%s',(False,partner,))
+                cr.execute('update res_partner set write_uid =%s,write_date =current_date,chiller=%s where id=%s',(uid,False,partner,))
             if hamper_false is True:
-                cr.execute('update res_partner set hamper=%s where id=%s',(False,partner,))                                	
+                cr.execute('update res_partner set write_uid =%s,write_date =current_date,hamper=%s where id=%s',(uid,False,partner,))                                	
             if  state_id:
-                cr.execute('update res_partner set state_id=%s where id=%s',(state_id[0],partner,))
+                cr.execute('update res_partner set write_uid =%s,write_date =current_date,state_id=%s where id=%s',(uid,state_id[0],partner,))
             if  city:
-                cr.execute('update res_partner set city=%s where id=%s',(city[0],partner,))
+                cr.execute('update res_partner set write_uid =%s,write_date =current_date,city=%s where id=%s',(uid,city[0],partner,))
             if  township:
-                cr.execute('update res_partner set township=%s where id=%s',(township[0],partner,))                 
+                cr.execute('update res_partner set write_uid =%s,write_date =current_date,township=%s where id=%s',(uid,township[0],partner,))                 
             if price_list_id:
                 partner_obj.write(cr, uid, partner, {'property_product_pricelist':price_list_id[0]}, context=None)
             if category_ids:
                 cr.execute('INSERT INTO res_partner_res_partner_category_rel (category_id,partner_id) VALUES (%s,%s)', (category_ids[0],partner))
             if cheque_true is True:
-                cr.execute('update res_partner set is_cheque=%s where id=%s',(True,partner,))
+                cr.execute('update res_partner set write_uid =%s,write_date =current_date,is_cheque=%s where id=%s',(uid,True,partner,))
             if cheque_false is True:
-                cr.execute('update res_partner set is_cheque=%s where id=%s',(False,partner,))  
+                cr.execute('update res_partner set write_uid =%s,write_date =current_date,is_cheque=%s where id=%s',(uid,False,partner,))  
             if collection_false is True:
-                cr.execute('update res_partner set collection_team=null where id=%s',(partner,))  
+                cr.execute('update res_partner set write_uid =%s,write_date =current_date,collection_team=null where id=%s',(uid,partner,))  
             if active_action:
                 if active_action=='active':
-                    cr.execute('update res_partner set active=%s where id=%s',(True,partner,))  
+                    cr.execute('update res_partner set write_uid =%s,write_date =current_date,active=%s where id=%s',(uid,True,partner,))  
                 if active_action=='in_active':
-                    cr.execute('update res_partner set active=%s where id=%s',(False,partner,))  
+                    cr.execute('update res_partner set write_uid =%s,old_code=%s,write_date =current_date,active=%s where id=%s',(uid,uid.login,False,partner,))  
                     
             if delivery_team_id :
-                cr.execute('update res_partner set delivery_team_id=%s where id=%s',(delivery_team_id[0],partner,))       
+                cr.execute('update res_partner set write_uid =%s,write_date =current_date,delivery_team_id=%s where id=%s',(uid,delivery_team_id[0],partner,))       
                                                                    
         return True              
