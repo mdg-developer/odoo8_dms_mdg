@@ -171,9 +171,9 @@ class mobile_sale_order(osv.osv):
        
     } 
     
-    def get_inventory_adjustment_lines(self, cr, uid, location_id, context=None, **kwargs):
+    def get_inventory_adjustment_lines(self, cr, uid, location_id, section_id, context=None, **kwargs):
                 
-        if location_id:        
+        if location_id and section_id:        
             cr.execute('''                                
                         select principal,category,sku_name,bigger_uom,smaller_uom,total_pcs,ctn_qty,
                         total_pcs-(total_pcs::int/bigger_uom_ratio::int)*bigger_uom_ratio pcs_qty,
@@ -187,16 +187,20 @@ class mobile_sale_order(osv.osv):
                             COALESCE(sum(qty),0)::int/(1/factor)::int ctn_qty,    
                             COALESCE(sum(qty),0) pcs_qty,product_id,
                             (select floor(round(1/factor,2)) from product_uom where id=pt.report_uom_id) bigger_uom_ratio
-                            from stock_quant sq,product_product pp,product_template pt,product_category categ,product_maingroup pm,product_uom uom
+                            from stock_quant sq,product_product pp,product_template pt,product_category categ,
+                            product_maingroup pm,product_uom uom,crm_case_section_product_product_rel rel
                             where sq.product_id=pp.id
                             and pp.product_tmpl_id=pt.id
                             and pt.categ_id=categ.id
                             and pt.main_group=pm.id
                             and pt.report_uom_id=uom.id
-                            and location_id=%s
-                            group by pm.name,categ.name,name_template,pt.report_uom_id,pt.uom_id,uom.factor,product_id
+                            and rel.product_product_id=sq.product_id
+                            and location_id=%s   
+                            and crm_case_section_id=%s
+                            group by pm.name,categ.name,name_template,pp.sequence,pt.report_uom_id,pt.uom_id,uom.factor,product_id
+                            order by pp.sequence
                         )A
-                    ''', (location_id,))
+                    ''', (location_id,section_id,))
             datas = cr.fetchall()            
             return datas
         
