@@ -837,24 +837,29 @@ class stock_return(osv.osv):
             else:
                 move_dest_id = False
             if move.product_uom_qty > 0:
-                move_new_id = move_obj.copy(cr, uid, move.id, {
-                                    'product_id': move.product_id.id,
-                                    'product_uom_qty': move.product_uom_qty,
-                                    'product_uos_qty': move.product_uom_qty * move.product_uos_qty / move.product_uom_qty,
-                                    # 'picking_id': new_picking,
-                                    'state': 'draft',
-                                    'location_id': move.location_dest_id.id,
-                                    'location_dest_id': move.location_id.id,
-                                 #   'picking_type_id': pick_type_id,
-                                  #  'warehouse_id': pick.picking_type_id.warehouse_id.id,
-                                    'origin_returned_move_id': move.id,
-                                    'procure_method': 'make_to_stock',
-                                  #  'restrict_lot_id': data_get.lot_id.id,
-                                    'origin':'Reverse ' + move.origin,
-
-                                    'move_dest_id': move_dest_id,
-                            })
-                move_obj.action_done(cr, uid, move_new_id, context=context)
+                existing_moves = move_obj.search(cr, uid, [('origin', '=', 'Reverse ' + move.origin),
+                                                           ('product_id', '=', move.product_id.id),
+                                                           ('product_uom_qty', '=', move.product_uom_qty),
+                                                           ('product_uos_qty', '=', move.product_uom_qty * move.product_uos_qty / move.product_uom_qty)], context=context)
+                if not existing_moves:
+                    move_new_id = move_obj.copy(cr, uid, move.id, {
+                                        'product_id': move.product_id.id,
+                                        'product_uom_qty': move.product_uom_qty,
+                                        'product_uos_qty': move.product_uom_qty * move.product_uos_qty / move.product_uom_qty,
+                                        # 'picking_id': new_picking,
+                                        'state': 'draft',
+                                        'location_id': move.location_dest_id.id,
+                                        'location_dest_id': move.location_id.id,
+                                     #   'picking_type_id': pick_type_id,
+                                      #  'warehouse_id': pick.picking_type_id.warehouse_id.id,
+                                        'origin_returned_move_id': move.id,
+                                        'procure_method': 'make_to_stock',
+                                      #  'restrict_lot_id': data_get.lot_id.id,
+                                        'origin':'Reverse ' + move.origin,
+    
+                                        'move_dest_id': move_dest_id,
+                                })
+                    move_obj.action_done(cr, uid, move_new_id, context=context)
             cr.execute("update stock_move set date=%s where origin=%s", (return_date, 'Reverse ' +move.origin,))
         return self.write(cr, uid, ids, {'state': 'reversed', })    
         
@@ -887,34 +892,53 @@ class stock_return(osv.osv):
                     if different_qty < 0:
                         # Tmp===> Car
                         # inventory_location_id = location_obj.search(cr, uid, [('name', '=', 'Inventory loss')])
-                        move_id = move_obj.create(cr, uid, {
-                                              'product_id': product_id,
-                                              'product_uom_qty':-1 * different_qty ,
-                                              'product_uos_qty':-1 * different_qty,
-                                              'product_uom':uom_id,
-                                              'location_id':tmp_location_id,
-                                              'location_dest_id':from_location_id,
-                                              'name':name,
-                                               'origin':origin,
-                                               'manual':True,
-                                              'state':'confirmed'}, context=context)     
-                        move_obj.action_done(cr, uid, move_id, context=context)
+                        
+                        existing_moves = move_obj.search(cr, uid, [('origin', '=', origin),
+                                                                   ('product_id', '=', product_id),
+                                                                   ('product_uom_qty', '=', -1 * different_qty),
+                                                                   ('product_uos_qty', '=', -1 * different_qty),
+                                                                   ('product_uom', '=', uom_id)], context=context)
+                        if not existing_moves:
+                            move_id = move_obj.create(cr, uid, {
+                                                  'product_id': product_id,
+                                                  'product_uom_qty':-1 * different_qty ,
+                                                  'product_uos_qty':-1 * different_qty,
+                                                  'product_uom':uom_id,
+                                                  'location_id':tmp_location_id,
+                                                  'location_dest_id':from_location_id,
+                                                  'name':name,
+                                                   'origin':origin,
+                                                   'manual':True,
+                                                  'state':'confirmed'}, context=context)     
+                            move_obj.action_done(cr, uid, move_id, context=context)
                     if different_qty > 0:
-    #                 Car===> tmp                    
-                        move_id = move_obj.create(cr, uid, {
-                                              'product_id': product_id,
-                                              'product_uom_qty':  different_qty ,
-                                              'product_uos_qty':  different_qty,
-                                              'product_uom':uom_id,
-                                              'location_id':from_location_id,
-                                              'location_dest_id':tmp_location_id,
-                                              'name':name,
-                                               'origin':origin,
-                                             'manual':True,
-                                              'state':'confirmed'}, context=context)     
-                        move_obj.action_done(cr, uid, move_id, context=context)        
+    #                 Car===> tmp  
+                        existing_moves = move_obj.search(cr, uid, [('origin', '=', origin),
+                                                                   ('product_id', '=', product_id),
+                                                                   ('product_uom_qty', '=', different_qty),
+                                                                   ('product_uos_qty', '=', different_qty),
+                                                                   ('product_uom', '=', uom_id)], context=context)
+                        if not existing_moves:                  
+                            move_id = move_obj.create(cr, uid, {
+                                                  'product_id': product_id,
+                                                  'product_uom_qty':  different_qty ,
+                                                  'product_uos_qty':  different_qty,
+                                                  'product_uom':uom_id,
+                                                  'location_id':from_location_id,
+                                                  'location_dest_id':tmp_location_id,
+                                                  'name':name,
+                                                   'origin':origin,
+                                                 'manual':True,
+                                                  'state':'confirmed'}, context=context)     
+                            move_obj.action_done(cr, uid, move_id, context=context)        
                 if actual_return_quantity > 0:
-                    # Car===> To Location                    
+                    # Car===> To Location     
+                    existing_moves = move_obj.search(cr, uid, [('origin', '=', origin),
+                                                               ('product_id', '=', product_id),
+                                                               ('product_uom_qty', '=', actual_return_quantity),
+                                                               ('product_uos_qty', '=', actual_return_quantity),
+                                                               ('product_uom', '=', uom_id)], context=context)
+                    if not existing_moves:                 
                         move_id = move_obj.create(cr, uid, {
                                               'product_id': product_id,
                                               'product_uom_qty':  actual_return_quantity ,
