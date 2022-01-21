@@ -56,6 +56,12 @@ class partner_sync(osv.osv_memory):
                     contact_person_name = partner.temp_customer          
                     contact_person_response = customer_wcapi.put('add_user_contact_name/%s'%(woo_customer_id),contact_person_name)
                     if contact_person_response.status_code not in [200,201]:
-                        raise except_orm(_('Error'), _("Error in syncing response customer for woo customer id %s %s") % (partner.woo_customer_id,contact_person_response.content,)) 
+                        raise except_orm(_('Error'), _("Error in syncing response customer for woo customer id %s %s") % (partner.woo_customer_id,contact_person_response.content,))
+                if customer_wcapi and partner.mobile:
+                    woo_customer_id = partner.woo_customer_id.split("_")[1]
+                    main_phone_number = partner.mobile         
+                    main_phone_number_response = customer_wcapi.put('insert-phone-user/%s'%(woo_customer_id),main_phone_number)
+                    if main_phone_number_response.status_code not in [200,201]:
+                        raise except_orm(_('Error'), _("Error in syncing response customer for woo customer id %s %s") % (partner.woo_customer_id,main_phone_number_response.content,)) 
         return True
     
