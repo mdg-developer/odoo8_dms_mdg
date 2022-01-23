@@ -65,7 +65,7 @@ class product_maingroup(osv.osv):
                ), 
         'is_separate_transition':fields.boolean('Is Separate Transition',default=False),
         'skip_checking':fields.boolean('Skip Checking in Tablet',default=False),
-                 
+        'active_two':fields.boolean('Active Two',default=False),
                     
                     }
 product_maingroup()

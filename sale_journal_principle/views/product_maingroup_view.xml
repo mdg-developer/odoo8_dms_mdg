@@ -22,12 +22,9 @@
 						<field name="property_sampling_account" />
 						<field name="property_destruction_account" />
 						<field name="property_uses_account" />
-
-
 						<field name="partner_id" />
 						<field name="pricelist_id" />
 						<!-- <field name="property_account_payable_clearing" /> -->
-
 						<!-- <field name="property_account_foc_cash" /> -->
 						<!-- <field name="property_account_foc_credit" /> -->
 						<!-- <field name="property_account_discount_cash" /> <field name="property_account_discount_credit" 
@@ -37,11 +34,13 @@
 						<field name="property_trade_payable_account" />
 						<field name="property_receivable_clearing_account" />
 						<field name="skip_checking" />
+						<field name="active_two" />
+
 					</xpath>
 				</data>
 			</field>
 		</record>
-		
+
 		<record model="ir.ui.view" id="view_product_maingroup_tree_inherit">
 			<field name="name">prodcut.maingroup.tree</field>
 			<field name="model">product.maingroup</field>
@@ -50,6 +49,8 @@
 				<data>
 					<xpath expr="//field[@name='name']" position="after">
 						<field name="skip_checking" />
+						<field name="active_two" />
+
 					</xpath>
 				</data>
 			</field>
