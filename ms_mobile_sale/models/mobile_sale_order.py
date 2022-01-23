@@ -1363,7 +1363,14 @@ class mobile_sale_order(osv.osv):
                 return res['res_id']
             except Exception, e:
                 return False
-                
+
+    def get_supervisor_sale_team(self, cr, uid,section_id,context=None, **kwargs):
+        cr.execute('''select id,name,branch_id as team_branch_id,(select name from res_branch where id =branch_id) as team_branch_name from crm_case_section 
+        where supervisor_team= %s
+                     ''', (section_id,))
+        datas = cr.fetchall()
+        return datas 
+                    
     # kzo Edit
     def get_products_by_sale_team(self, cr, uid, section_id , last_date, context=None, **kwargs):
         
@@ -1662,7 +1669,7 @@ class mobile_sale_order(osv.osv):
         return datas
     
     def sale_team_return(self, cr, uid, section_id , saleTeamId, context=None, **kwargs):
-        cr.execute('''select DISTINCT cr.id,cr.complete_name,cr.warehouse_id,cr.name,sm.member_id,cr.code,pr.product_product_id,cr.location_id,cr.allow_foc,cr.allow_tax,cr.branch_id,state.name,cr_deli.name as delivery_team
+        cr.execute('''select DISTINCT cr.id,cr.complete_name,cr.warehouse_id,cr.name,sm.member_id,cr.code,pr.product_product_id,cr.location_id,cr.allow_foc,cr.allow_tax,cr.branch_id,state.name,cr_deli.name as delivery_team,cr.is_supervisor
                     from crm_case_section cr, sale_member_rel sm,crm_case_section_product_product_rel pr,res_country_state state,crm_case_section cr_deli
                      where sm.section_id = cr.id and cr.id=pr.crm_case_section_id  
                      and state.id =cr.default_division 
@@ -2618,7 +2625,13 @@ class mobile_sale_order(osv.osv):
         cr.execute("""select value from ir_config_parameter where key ='quick_sight_report_link' """)
         datas = cr.fetchall()        
         return datas
+
     
+    def get_suv_report_link(self, cr, uid, context=None, **kwargs):    
+        cr.execute("""select value from ir_config_parameter where key ='quick_sight_report_link_sv_team' """)
+        datas = cr.fetchall()        
+        return datas 
+        
     def get_uom(self, cr, uid, context=None, **kwargs):    
         cr.execute("""select id,name,floor(round(1/factor,2))  as ratio from product_uom where active = true""")
         datas = cr.fetchall()
@@ -2652,7 +2665,7 @@ class mobile_sale_order(osv.osv):
         is_supervisor=team_data.is_supervisor           
         if is_supervisor==True:
             cr.execute('''            
-                    select A.name as id ,(select name from asset_configuration where id = A.asset_name_id) as asset_name,A.partner_id,substring(encode(image::bytea, 'hex'),1,5) as image
+                    select A.name as id ,(select name from asset_configuration where id = A.asset_name_id)as asset_name ,A.partner_id,substring(encode(image::bytea, 'hex'),1,5) as image
                             ,A.qty,A.date,B.name,A.type,A.id as asset_db_id
                             from res_partner_asset A, asset_type B
                             where A.asset_type = B.id
