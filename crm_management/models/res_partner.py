@@ -683,5 +683,6 @@ class asset_configuration(osv.Model):
                                                     'Type', required=True, default='rent'),
                 'is_auto_fill':fields.boolean("Qty Auto Fill 1", default=False),
                 'active':fields.boolean("Active", default=False),
+                'principal_id':fields.many2one('product.maingroup', 'Principal', required=True),
 
                 }
