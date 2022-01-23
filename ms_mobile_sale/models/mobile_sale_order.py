@@ -1996,7 +1996,7 @@ class mobile_sale_order(osv.osv):
         return datas
     
     def sale_team_return(self, cr, uid, section_id , saleTeamId, context=None, **kwargs):
-        cr.execute('''select DISTINCT cr.id,cr.complete_name,cr.warehouse_id,cr.name,sm.member_id,cr.code,rel.product_id,cr.location_id,cr.allow_foc,cr.allow_tax,cr.branch_id,state.name,cr_deli.name as delivery_team
+        cr.execute('''select DISTINCT cr.id,cr.complete_name,cr.warehouse_id,cr.name,sm.member_id,cr.code,rel.product_id,cr.location_id,cr.allow_foc,cr.allow_tax,cr.branch_id,state.name,cr_deli.name as delivery_team,cr.is_supervisor
                     from crm_case_section cr, sale_member_rel sm,product_sale_group_rel rel,res_country_state state,crm_case_section cr_deli
                     where sm.section_id = cr.id and cr.sale_group_id=rel.sale_group_id  
                     and state.id =cr.default_division 
@@ -3055,7 +3055,11 @@ class mobile_sale_order(osv.osv):
         cr.execute("""select value from ir_config_parameter where key ='quick_sight_report_link' """)
         datas = cr.fetchall()        
         return datas
-        
+    
+    def get_suv_report_link(self, cr, uid, context=None, **kwargs):    
+        cr.execute("""select value from ir_config_parameter where key ='quick_sight_report_link_sv_team' """)
+        datas = cr.fetchall()        
+        return datas        
     def get_uom(self, cr, uid, context=None, **kwargs):    
         cr.execute("""select id,name,floor(round(1/factor,2))  as ratio from product_uom where active = true""")
         datas = cr.fetchall()
