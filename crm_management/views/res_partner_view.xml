@@ -625,9 +625,9 @@
 				<tree string="Asset Configuration">
 					<field name="name" />
 					<field name="asset_type_id" />
+					<field name="principal_id"/>					
 					<field name="type" />
 					<field name="is_auto_fill" />
-
 				</tree>
 			</field>
 		</record>
@@ -641,6 +641,8 @@
 						<group>
 							<field name="name" />
 							<field name="asset_type_id" />
+							<field name="principal_id" domain="[('active_two', '=', True)]" />
+							
 						</group>
 						<group>
 							<field name="type" />
