@@ -62,6 +62,8 @@ class product_maingroup(osv.osv):
                 type='many2one',
                 relation='account.account', domain="[('type','in', ('receivable','payable'))]",
                 string="A/R Receivable Clearing Account",
-               ),                    
+               ),  
+                   'active_two':fields.boolean('Active Two',default=False),
+                  
                     }
 product_maingroup()
