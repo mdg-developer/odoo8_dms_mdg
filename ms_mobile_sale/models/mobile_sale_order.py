@@ -426,7 +426,7 @@ class mobile_sale_order(osv.osv):
                         if res:
                             location = self.pool['stock.location'].browse(cursor, user, int(inv['location']), context=context)
                             product = product_obj.browse(cursor, user, int(product_line.get('product_id')), context=context)
-                            error_message = "You cannot have two inventory adjustments in state 'in Progess' with the same product("+ product.name+ "), same location("+ location.name +"), same package, same owner and same lot. Please first validate the first inventory adjustement with this product before creating another one."
+                            error_message = "You cannot have two inventory adjustments in state 'in Progess' with the same product("+ product.name+ "), same location("+ location.name +"), same package, same owner and same lot. Please first validate the first inventory adjustment with this product before creating another one."
                             logging.warning("error_message: %s", error_message) 
                             return error_message                  
                     inventory_obj.prepare_inventory(cursor, user, [inventory_id], context=context)                                          
