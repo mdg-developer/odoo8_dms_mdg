@@ -175,32 +175,56 @@ class mobile_sale_order(osv.osv):
                 
         if location_id and section_id:        
             cr.execute('''                                
-                        select principal,category,sku_name,bigger_uom,smaller_uom,total_pcs,ctn_qty,
-                        total_pcs-(total_pcs::int/bigger_uom_ratio::int)*bigger_uom_ratio pcs_qty,
-                        product_id,bigger_uom_ratio
-                        from
+                        with product_data as 
                         (
-                            select pm.name principal,categ.name category,name_template sku_name,
-                            (select name from product_uom where id=pt.report_uom_id) bigger_uom,
-                            (select name from product_uom where id=pt.uom_id) smaller_uom,
-                            COALESCE(sum(qty),0) total_pcs,
-                            COALESCE(sum(qty),0)::int/(1/factor)::int ctn_qty,    
-                            COALESCE(sum(qty),0) pcs_qty,product_id,
-                            (select floor(round(1/factor,2)) from product_uom where id=pt.report_uom_id) bigger_uom_ratio
-                            from stock_quant sq,product_product pp,product_template pt,product_category categ,
-                            product_maingroup pm,product_uom uom,crm_case_section_product_product_rel rel
-                            where sq.product_id=pp.id
-                            and pp.product_tmpl_id=pt.id
-                            and pt.categ_id=categ.id
-                            and pt.main_group=pm.id
-                            and pt.report_uom_id=uom.id
-                            and rel.product_product_id=sq.product_id
-                            and location_id=%s   
-                            and crm_case_section_id=%s
-                            group by pm.name,categ.name,name_template,pp.sequence,pt.report_uom_id,pt.uom_id,uom.factor,product_id
-                            order by pp.sequence
-                        )A
-                    ''', (location_id,section_id,))
+                            select principal,category,sku_name,bigger_uom,smaller_uom,product_id
+                            from
+                            (
+                                select pm.name principal,categ.name category,name_template sku_name,
+                                (select name from product_uom where id=pt.report_uom_id) bigger_uom,
+                                (select name from product_uom where id=pt.uom_id) smaller_uom,product_product_id product_id    
+                                from crm_case_section_product_product_rel rel    
+                                left join product_product pp on (rel.product_product_id=pp.id)
+                                left join product_template pt on (pp.product_tmpl_id=pt.id)
+                                left join product_category categ on (pt.categ_id=categ.id)
+                                left join product_maingroup pm on (pt.main_group=pm.id)
+                                left join product_uom uom on (pt.report_uom_id=uom.id)     
+                                where crm_case_section_id=%s
+                                group by pm.name,categ.name,name_template,pp.sequence,pt.report_uom_id,pt.uom_id,uom.factor,product_product_id
+                                order by pp.sequence
+                            )A
+                        ),
+                        on_hand_data as (
+                            select total_pcs,ctn_qty,
+                            total_pcs-(total_pcs::int/bigger_uom_ratio::int)*bigger_uom_ratio pcs_qty,
+                            product_id,bigger_uom_ratio
+                            from
+                            (
+                                select 
+                                COALESCE(sum(qty),0) total_pcs,
+                                COALESCE(sum(qty),0)::int/(1/factor)::int ctn_qty,    
+                                COALESCE(sum(qty),0) pcs_qty,product_id,
+                                (select floor(round(1/factor,2)) from product_uom where id=pt.report_uom_id) bigger_uom_ratio    
+                                from stock_quant sq
+                                left join product_product pp on (sq.product_id=pp.id)
+                                left join product_template pt on (pp.product_tmpl_id=pt.id)
+                                left join product_category categ on (pt.categ_id=categ.id)
+                                left join product_maingroup pm on (pt.main_group=pm.id)
+                                left join product_uom uom on (pt.report_uom_id=uom.id)
+                                where location_id=%s
+                                group by uom.factor,product_id,pp.sequence,pt.report_uom_id
+                                order by pp.sequence
+                            )A
+                        )
+                        select principal,category,sku_name,bigger_uom,smaller_uom,
+                        COALESCE(total_pcs,0) total_pcs,
+                        COALESCE(ctn_qty,0) ctn_qty,
+                        COALESCE(pcs_qty,0) pcs_qty,
+                        pd.product_id,
+                        COALESCE(bigger_uom_ratio,0) bigger_uom_ratio
+                        from product_data pd
+                        left join on_hand_data ohd on (pd.product_id=ohd.product_id)
+                    ''', (section_id,location_id,))
             datas = cr.fetchall()            
             return datas
         
