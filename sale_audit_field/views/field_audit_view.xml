@@ -35,6 +35,57 @@
 								<field name="shop_image" widget="image" class="oe_avatar" readonly="1" />
 							</group>
 					    </group>	
+	<div class="row">
+
+
+							<div>
+								<label for="merchant_image1" string="Merchandising Photos" />
+							</div>
+							<div class="col-md-1">
+
+								<div id="merchant_image1">
+
+									<field name="merchant_image1" widget="image" class="oe_avatar"
+										readonly="1" />
+
+								</div>
+							</div>
+							<div class="col-md-1">
+								<div id="merchant_image2">
+
+									<field name="merchant_image2" widget="image" class="oe_avatar"
+										readonly="1" />
+
+								</div>
+							</div>
+							<div class="col-md-1">
+								<div id="merchant_image3">
+
+									<field name="merchant_image3" widget="image" class="oe_avatar"
+										readonly="1" />
+
+								</div>
+							</div>
+							<div class="col-md-1">
+								<div id="merchant_image4">
+
+									<field name="merchant_image4" widget="image" class="oe_avatar"
+										readonly="1" />
+
+								</div>
+							</div>
+							<div class="col-md-1">
+								<div id="merchant_image5">
+
+									<field name="merchant_image5" widget="image" class="oe_avatar"
+										readonly="1" />
+
+								</div>
+							</div>
+						</div>
+						<group>
+							<field name="note" />
+						</group>					    
 					    <notebook>
 	                        <page string="Lines" name="line_ids">
 	                            <field name="line_ids" readonly="1" >

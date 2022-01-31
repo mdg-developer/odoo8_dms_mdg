@@ -827,6 +827,12 @@ class mobile_sale_order(osv.osv):
                                 'total_missed':pt ['total_missed'],
                                 'shop_image':pt ['shop_image'],
                                 'auditor_image':pt ['saleman_image'],
+                                'merchant_image1':pt ['merchant_image1'],
+                                'merchant_image2':pt ['merchant_image2'],
+                                'merchant_image3':pt ['merchant_image3'],
+                                'merchant_image4':pt ['merchant_image4'],
+                                'merchant_image5':pt ['merchant_image5'],
+                                'note':pt ['note'],                                
                                 'auditor_team_id':auditor_id,
                                 }
                     s_order_id = product_trans_obj.create(cursor, user, mso_result, context=context)
