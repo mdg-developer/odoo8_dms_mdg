@@ -175,32 +175,56 @@ class mobile_sale_order(osv.osv):
                 
         if location_id and section_id:        
             cr.execute('''                                
-                        select principal,category,sku_name,bigger_uom,smaller_uom,total_pcs,ctn_qty,
-                        total_pcs-(total_pcs::int/bigger_uom_ratio::int)*bigger_uom_ratio pcs_qty,
-                        product_id,bigger_uom_ratio
-                        from
+                        with product_data as 
                         (
-                            select pm.name principal,categ.name category,name_template sku_name,
-                            (select name from product_uom where id=pt.report_uom_id) bigger_uom,
-                            (select name from product_uom where id=pt.uom_id) smaller_uom,
-                            COALESCE(sum(qty),0) total_pcs,
-                            COALESCE(sum(qty),0)::int/(1/factor)::int ctn_qty,    
-                            COALESCE(sum(qty),0) pcs_qty,product_id,
-                            (select floor(round(1/factor,2)) from product_uom where id=pt.report_uom_id) bigger_uom_ratio
-                            from stock_quant sq,product_product pp,product_template pt,product_category categ,
-                            product_maingroup pm,product_uom uom,crm_case_section_product_product_rel rel
-                            where sq.product_id=pp.id
-                            and pp.product_tmpl_id=pt.id
-                            and pt.categ_id=categ.id
-                            and pt.main_group=pm.id
-                            and pt.report_uom_id=uom.id
-                            and rel.product_product_id=sq.product_id
-                            and location_id=%s   
-                            and crm_case_section_id=%s
-                            group by pm.name,categ.name,name_template,pp.sequence,pt.report_uom_id,pt.uom_id,uom.factor,product_id
-                            order by pp.sequence
-                        )A
-                    ''', (location_id,section_id,))
+                            select principal,category,sku_name,bigger_uom,smaller_uom,product_id
+                            from
+                            (
+                                select pm.name principal,categ.name category,name_template sku_name,
+                                (select name from product_uom where id=pt.report_uom_id) bigger_uom,
+                                (select name from product_uom where id=pt.uom_id) smaller_uom,product_product_id product_id    
+                                from crm_case_section_product_product_rel rel    
+                                left join product_product pp on (rel.product_product_id=pp.id)
+                                left join product_template pt on (pp.product_tmpl_id=pt.id)
+                                left join product_category categ on (pt.categ_id=categ.id)
+                                left join product_maingroup pm on (pt.main_group=pm.id)
+                                left join product_uom uom on (pt.report_uom_id=uom.id)     
+                                where crm_case_section_id=%s
+                                group by pm.name,categ.name,name_template,pp.sequence,pt.report_uom_id,pt.uom_id,uom.factor,product_product_id
+                                order by pp.sequence
+                            )A
+                        ),
+                        on_hand_data as (
+                            select total_pcs,ctn_qty,
+                            total_pcs-(total_pcs::int/bigger_uom_ratio::int)*bigger_uom_ratio pcs_qty,
+                            product_id,bigger_uom_ratio
+                            from
+                            (
+                                select 
+                                COALESCE(sum(qty),0) total_pcs,
+                                COALESCE(sum(qty),0)::int/(1/factor)::int ctn_qty,    
+                                COALESCE(sum(qty),0) pcs_qty,product_id,
+                                (select floor(round(1/factor,2)) from product_uom where id=pt.report_uom_id) bigger_uom_ratio    
+                                from stock_quant sq
+                                left join product_product pp on (sq.product_id=pp.id)
+                                left join product_template pt on (pp.product_tmpl_id=pt.id)
+                                left join product_category categ on (pt.categ_id=categ.id)
+                                left join product_maingroup pm on (pt.main_group=pm.id)
+                                left join product_uom uom on (pt.report_uom_id=uom.id)
+                                where location_id=%s
+                                group by uom.factor,product_id,pp.sequence,pt.report_uom_id
+                                order by pp.sequence
+                            )A
+                        )
+                        select principal,category,sku_name,bigger_uom,smaller_uom,
+                        COALESCE(total_pcs,0) total_pcs,
+                        COALESCE(ctn_qty,0) ctn_qty,
+                        COALESCE(pcs_qty,0) pcs_qty,
+                        pd.product_id,
+                        COALESCE(bigger_uom_ratio,0) bigger_uom_ratio
+                        from product_data pd
+                        left join on_hand_data ohd on (pd.product_id=ohd.product_id)
+                    ''', (section_id,location_id,))
             datas = cr.fetchall()            
             return datas
         
@@ -402,7 +426,7 @@ class mobile_sale_order(osv.osv):
                     inventory.append(r)
                 else:                     
                     if r.get('product_id'):
-                        inventory_line.append(r)        
+                        inventory_line.append(r)   
             if inventory:
                 for inv in inventory:     
                     company = self.pool.get('res.company').search(cursor, user, [], limit=1, context=context)
@@ -418,18 +442,15 @@ class mobile_sale_order(osv.osv):
                         'request_by': inv['saleTeamName'],           
                     }                    
                     inventory_id = inventory_obj.create(cursor, user, inventory_result, context=context)
-                    inventory_data = inventory_obj.browse(cursor, user, inventory_id, context=context)   
-                    vals = inventory_obj._get_inventory_lines(cursor, user, inventory_data, context=context)
-                    for product_line in vals: 
-                        product_obj = self.pool.get('product.product')
-                        dom = [('product_id', '=', product_line.get('product_id')), ('inventory_id.state', '=', 'confirm'),
-                               ('location_id', '=', product_line.get('location_id')), ('partner_id', '=', product_line.get('partner_id')),
-                               ('package_id', '=', product_line.get('package_id')), ('prod_lot_id', '=', product_line.get('prod_lot_id'))]
-                        res = inventory_line_obj.search(cursor, user, dom, context=context)                                            
+                    for product_line in inventory_line: 
+                        product_obj = self.pool.get('product.product')                        
+                        dom = [('product_id', '=', int(product_line.get('product_id'))), ('inventory_id.state', '=', 'confirm'),
+                               ('location_id', '=', int(inv['location']))]
+                        res = inventory_line_obj.search(cursor, user, dom, context=context)   
                         if res:
-                            location = self.pool['stock.location'].browse(cursor, user, product_line.get('location_id'), context=context)
-                            product = product_obj.browse(cursor, user, product_line.get('product_id'), context=context)
-                            error_message = "You cannot have two inventory adjustements in state 'in Progess' with the same product("+ product.name+ "), same location("+ location.name +"), same package, same owner and same lot. Please first validate the first inventory adjustement with this product before creating another one."
+                            location = self.pool['stock.location'].browse(cursor, user, int(inv['location']), context=context)
+                            product = product_obj.browse(cursor, user, int(product_line.get('product_id')), context=context)
+                            error_message = "You cannot have two inventory adjustments in state 'in Progess' with the same product("+ product.name+ "), same location("+ location.name +"), same package, same owner and same lot. Please first validate the first inventory adjustment with this product before creating another one."
                             logging.warning("error_message: %s", error_message) 
                             return error_message                  
                     inventory_obj.prepare_inventory(cursor, user, [inventory_id], context=context)                                          
