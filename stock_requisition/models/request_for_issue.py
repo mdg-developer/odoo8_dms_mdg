@@ -93,11 +93,14 @@ class issue_requisition(osv.osv):
                         product_uom = req_line_value.product_uom.id
                         uom_ratio = req_line_value.uom_ratio
                         quantity = req_line_value.req_quantity
+                        remark= req_line_value.remark
                         good_line_obj.create(cr, uid, {'line_id': good_id,
                                               'product_id': product_id,
                                               'product_uom': product_uom,
                                               'uom_ratio':uom_ratio,
-                                              'issue_quantity':quantity}, context=context)
+                                              'issue_quantity':quantity,
+                                              'remark':remark,
+                                              }, context=context)
 
         return self.write(cr, uid, ids, {'state':'approve'})
 
