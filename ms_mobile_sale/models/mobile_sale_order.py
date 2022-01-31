@@ -1678,6 +1678,11 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()
         return datas 
     
+    def get_stock_check_remark(self, cr, uid,context=None, **kwargs):
+        cr.execute('''select id,name,active from partner_stock_check_remark''')
+        datas = cr.fetchall()
+        return datas     
+    
     def get_supervisor_sale_team(self, cr, uid,section_id,context=None, **kwargs):
         cr.execute('''select id,name,branch_id as team_branch_id,(select name from res_branch where id =branch_id) as team_branch_name from crm_case_section 
         where supervisor_team= %s
