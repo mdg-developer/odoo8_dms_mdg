@@ -56,7 +56,7 @@ class res_partner(models.Model):
         return result
     
     @api.multi
-    def send_telenor_sms(self, name, phone, message_body):
+    def send_telenor_sms(self, name, phone, message_body, otp):
         
         if phone.startswith('09-') or phone.startswith('09'):
             if phone.startswith('09-'):
@@ -66,8 +66,10 @@ class res_partner(models.Model):
         if phone.startswith('+959'):  
             phone = '959' + str(phone.mobile[4:])
         
+        
         text_message = message_body.encode("utf-16-be")
         hex_message = text_message.encode('hex')
+        
         vals={
                 'phone':str(phone),
                 'message':hex_message, 
@@ -76,7 +78,7 @@ class res_partner(models.Model):
                 'text_message': message_body,
             } 
         sms_id = self.env['sms.message'].create(vals)
-        return {'status':sms_id.status} 
+        return {'status':otp} 
     
     @api.model
     def import_woo_customers(self,instance=False):        

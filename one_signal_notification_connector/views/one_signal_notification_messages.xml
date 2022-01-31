@@ -55,7 +55,7 @@
 			<field name="res_model">one.signal.notification.messages</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
-			<field name="view_id" eval="one_signal_notification_message_tree_view" />
+			<field name="view_id" eval="one_signal_notification_message_tree_view" />			
 			<field name="help" type="html">
 				<p class="oe_view_nocontent_create">
 					Click to create new message.
@@ -63,6 +63,5 @@
 			</field>
 		</record>	
 		
-
     </data>
 </openerp>

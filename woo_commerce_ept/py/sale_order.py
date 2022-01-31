@@ -412,10 +412,12 @@ class sale_order(models.Model):
         else:
             sale_foc = False 
         
-        if woo_product_uom and product.type == 'product':
-            product_uom = self.env['product.uom'].search([('id', '=', woo_product_uom)])
+        if woo_product_uom and product.product_tmpl_id.type == 'product':
+            product_uom = self.env['product.uom'].search([('name', '=', woo_product_uom)])
             if product_uom:
-                product_data.update({'product_uom': product_uom.id})   
+                if product.product_tmpl_id.uom_id.id != product_uom.id:
+                    quantity = quantity * product_uom.factor_inv
+                    price = price / float(product_uom.factor_inv)   
                             
         if line.get('meta'):
             if line.get('meta')[0].get('key') and line.get('meta')[0].get('key') == 'pa_color':
@@ -596,7 +598,8 @@ class sale_order(models.Model):
                 if result.get('payment_details').get('method_title',False) == 'Credit':
                     payment_type = "credit"
                 else:
-                    payment_type = "cash"     
+                    payment_type = "cash"
+                         
             if result.get('payment_type'):
                 payment_type = result.get('payment_type')
                 
@@ -1003,12 +1006,9 @@ class sale_order(models.Model):
                     product_wcapi = instance.connect_for_product_in_woo()                    
                     product_response=product_wcapi.get('products/%s'%(woo_product_id))                    
                     product_res = product_response.json()                   
-                    product_meta_data = product_res.get('meta_data')
-                    if product_meta_data:
-                        for meta_data in product_meta_data:
-                            if meta_data.get('key') == '_woo_uom_input':                            
-                                woo_product_uom = meta_data.get('value')
-                            
+                    woo_product_uom = product_res.get('uom')
+                    logging.warning("Retrieve woo_product_uom: %s", woo_product_uom)     
+                                                
                     actual_unit_price = 0.0                    
                     if tax_included:
                         actual_unit_price=(float(line.get('subtotal_tax')) + float(line.get('subtotal'))) / float(line.get('quantity'))                            
