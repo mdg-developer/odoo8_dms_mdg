@@ -900,6 +900,12 @@ class mobile_sale_order(osv.osv):
                                 'total_missed':pt ['total_missed'],
                                 'shop_image':pt ['shop_image'],
                                 'auditor_image':pt ['saleman_image'],
+                                'merchant_image1':pt ['merchant_image1'],
+                                'merchant_image2':pt ['merchant_image2'],
+                                'merchant_image3':pt ['merchant_image3'],
+                                'merchant_image4':pt ['merchant_image4'],
+                                'merchant_image5':pt ['merchant_image5'],
+                                'note':pt ['note'],
                                 'auditor_team_id':auditor_id,
                                 }
                     s_order_id = product_trans_obj.create(cursor, user, mso_result, context=context)
@@ -914,7 +920,6 @@ class mobile_sale_order(osv.osv):
                         product_trans_line_obj.create(cursor, user, question_result, context=context)
                     
                     for ptl in field_trans_line:
-
                         if ptl['customer_audit_id'] == pt['customer_audit_id']:
                             cursor.execute("update field_audit_line set complete=True where audit_id =%s and question_id=%s",(s_order_id,ptl['auditline_id'],))
             
