@@ -264,6 +264,7 @@ class stock_requisition(osv.osv):
                         uom_ratio = req_line_value.uom_ratio
                         quantity = req_line_value.req_quantity
                         sequence=req_line_value.sequence
+                        remark =req_line_value.remark
                         good_line_obj.create(cr, uid, {'line_id': good_id,
                                                   'product_id': product_id,
                                                   'product_uom': product_uom,
@@ -271,6 +272,7 @@ class stock_requisition(osv.osv):
                                                   'issue_quantity':quantity,
                                                   'qty_on_hand':qty_on_hand,
                                                   'sequence':sequence,
+                                                 'remark':remark,
                                                   }, context=context)
         return self.write(cr, uid, ids, {'state':'approve' , 'approve_by':uid,'good_issue_id':good_id})    
     
