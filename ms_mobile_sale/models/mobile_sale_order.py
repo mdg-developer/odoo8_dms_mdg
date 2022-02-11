@@ -2559,9 +2559,10 @@ class mobile_sale_order(osv.osv):
     def get_credit_notes(self, cr, uid, sale_team_id , noteList ,context=None, **kwargs):
         team_obj = self.pool.get('crm.case.section')
         team_data=team_obj.browse(cr, uid, sale_team_id, context=context)  
-        noteList = str(tuple(noteList))
-        noteList = eval(noteList)   
         if noteList:
+            noteList = str(noteList)
+            noteList = noteList.replace("[", "(")
+            noteList = noteList.replace("]", ")")
             where ='and ac.id NOT IN %s ' % (noteList,)
         else:
             where =''
