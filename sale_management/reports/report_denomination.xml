@@ -16,7 +16,7 @@
 												<td valign="top" align="left"
 													style="padding:15px; width:50%; line-height:18px;">
 													<h4 align="center">
-														<strong>RB Co.,Ltd</strong>
+														<strong>Rainbow Bridge Distribution Co., Ltd.</strong>
 													</h4>
 													<h4 align="center">
 														<strong>Sale to Cash Summary Report</strong>
@@ -36,7 +36,12 @@
 															<td style="border:0pt;font-size:10pt;">
 																<strong t-field="o.date"></strong>
 															</td>
-
+															<td style="border:0pt;font-size:10pt;">
+																<strong>Invoice Count :</strong>
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong t-field="o.invoice_count"></strong>
+															</td>
 														</tr>
 
 														<tr>
@@ -52,6 +57,7 @@
 															<td style="border:0pt;font-size:10pt;">
 																<strong t-field="o.branch_id.name"></strong>
 															</td>
+
 														</tr>
 
 														<table t-if="o.denomination_product_line" class="table table-condensed"
@@ -121,7 +127,7 @@
 																<tr t-foreach="o.denomination_ar_line" t-as="p">
 																	<td style="border:1pt solid;border-color:black;"
 																		align="center">
-																		<span t-field="p.invoice_id" />
+																		<span t-field="p.invoice_id.mobile_order_ref" />
 																	</td>
 																	<td style="border:1pt solid;border-color:black;"
 																		align="center">
@@ -332,7 +338,7 @@
 												<td valign="top" align="right"
 													style="padding:15px; width:50%; line-height:18px;">
 													<h4 align="center">
-														<strong>RB Co.,Ltd</strong>
+														<strong>Rainbow Bridge Distribution Co., Ltd.</strong>
 													</h4>
 													<h4 align="center">
 														<strong>Sale to Cash Summary Report</strong>
@@ -351,6 +357,13 @@
 															</td>
 															<td style="border:0pt;font-size:10pt;">
 																<strong t-field="o.date"></strong>
+															</td>
+
+															<td style="border:0pt;font-size:10pt;">
+																<strong>Invoice Count :</strong>
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong t-field="o.invoice_count"></strong>
 															</td>
 														</tr>
 
@@ -436,7 +449,7 @@
 																<tr t-foreach="o.denomination_ar_line" t-as="p">
 																	<td style="border:1pt solid;border-color:black;"
 																		align="center">
-																		<span t-field="p.invoice_id" />
+																		<span t-field="p.invoice_id.mobile_order_ref" />
 																	</td>
 																	<td style="border:1pt solid;border-color:black;"
 																		align="center">

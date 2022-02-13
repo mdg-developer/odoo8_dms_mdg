@@ -107,10 +107,10 @@
 									<span t-field="l.foc_quantity" />
 								</td>
 								<td class="text-right">
-		                            <span t-field="l.return_quantity_big"/> /  <span t-field="l.return_quantity"/>
+		                             <span t-field="l.return_quantity"/>
 		                        </td>
 		                        <td class="text-right">
-		                            <span t-field="l.rec_big_quantity"/> /  <span t-field="l.rec_small_quantity"/>
+		                             <span t-field="l.rec_small_quantity"/>
 		                        </td>
 								<td>
 									<span t-field="l.expiry_date" />
