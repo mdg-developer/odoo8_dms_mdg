@@ -367,7 +367,9 @@ class sale_order(models.Model):
                             odoo_discount_id = int(resultlist[0].get('odoo_discount_id'))
                             if odoo_discount_id:
                                 product_id,promotion_id = self.get_promotion_data(odoo_discount_id)
+                                product_obj = self.env["product.product"].browse(product_id)
                                 so_line.update({'product_id': product_id,
+                                                'product_uom': product_obj.uom_id.id,
                                                 'promotion_id': promotion_id})
                     if so_line.sale_foc == True:
                         resultlist = [p for p in promo_list if p.get('quantity', '') == float(so_line.product_uom_qty)]
