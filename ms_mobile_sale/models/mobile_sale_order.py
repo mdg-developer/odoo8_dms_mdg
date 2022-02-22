@@ -426,9 +426,23 @@ class mobile_sale_order(osv.osv):
                     inventory.append(r)
                 else:                     
                     if r.get('product_id'):
-                        inventory_line.append(r)   
+                        inventory_line.append(r)
             if inventory:
-                for inv in inventory:     
+                for inv in inventory:
+                    for product_line in inventory_line:
+                        product_obj = self.pool.get('product.product')
+                        dom = [('product_id', '=', int(product_line.get('product_id'))),
+                               ('inventory_id.state', '=', 'confirm'),
+                               ('location_id', '=', int(inv['location']))]
+                        res = inventory_line_obj.search(cursor, user, dom, context=context)
+                        if res:
+                            location = self.pool['stock.location'].browse(cursor, user, int(inv['location']),
+                                                                          context=context)
+                            product = product_obj.browse(cursor, user, int(product_line.get('product_id')), context=context)
+                            error_message = "You cannot have two inventory adjustments in state 'in Progess' with the same product(" + product.name + "), same location(" + location.name + "), same package, same owner and same lot. Please first validate the first inventory adjustment with this product before creating another one."
+                            logging.warning("error_message: %s", error_message)
+                            return error_message
+                for inv in inventory:
                     company = self.pool.get('res.company').search(cursor, user, [], limit=1, context=context)
                     company_data = inventory_obj.browse(cursor, user, company, context=context)
                     inventory_date = datetime.strptime(inv['date'], '%Y-%m-%d').date()      
@@ -442,18 +456,8 @@ class mobile_sale_order(osv.osv):
                         'request_by': inv['saleTeamName'],           
                     }                    
                     inventory_id = inventory_obj.create(cursor, user, inventory_result, context=context)
-                    for product_line in inventory_line: 
-                        product_obj = self.pool.get('product.product')                        
-                        dom = [('product_id', '=', int(product_line.get('product_id'))), ('inventory_id.state', '=', 'confirm'),
-                               ('location_id', '=', int(inv['location']))]
-                        res = inventory_line_obj.search(cursor, user, dom, context=context)   
-                        if res:
-                            location = self.pool['stock.location'].browse(cursor, user, int(inv['location']), context=context)
-                            product = product_obj.browse(cursor, user, int(product_line.get('product_id')), context=context)
-                            error_message = "You cannot have two inventory adjustments in state 'in Progess' with the same product("+ product.name+ "), same location("+ location.name +"), same package, same owner and same lot. Please first validate the first inventory adjustment with this product before creating another one."
-                            logging.warning("error_message: %s", error_message) 
-                            return error_message                  
-                    inventory_obj.prepare_inventory(cursor, user, [inventory_id], context=context)                                          
+                    logging.warning("Check inventory_id: %s", inventory_id)
+                    inventory_obj.prepare_inventory(cursor, user, [inventory_id], context=context)
                     for line in inventory_line: 
                         inventory_line_vals = {
                             'product_id': int(line['product_id']),
@@ -461,8 +465,8 @@ class mobile_sale_order(osv.osv):
                             'product_qty': line['total_pcs_qty'],
                             'inventory_id': inventory_id, 
                         }                       
-                        inventory_line_obj.create(cursor, user, inventory_line_vals, context=context)                                                                                 
-            return True     
+                        inventory_line_obj.create(cursor, user, inventory_line_vals, context=context)
+            return True
         except Exception, e:            
             return False
         
