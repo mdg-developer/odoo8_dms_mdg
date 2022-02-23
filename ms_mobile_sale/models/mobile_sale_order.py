@@ -235,11 +235,11 @@ class mobile_sale_order(osv.osv):
                                         new_invoice_no= ''
                             else:
                                 new_invoice_no= ''
-                    #
-#                     if data:
-#                         partner_id = data[0][0]
-#                     else:
-#                         partner_id = None
+                    
+                    if data:
+                        partner_id = data[0][0]
+                    else:
+                        partner_id = None
 
                     if so['type'] == 'cash':
                         paid = True
@@ -264,7 +264,7 @@ class mobile_sale_order(osv.osv):
                         'user_id':so['user_id'],
                         'name':so['name'],
                         'paid_amount':so['paid_amount'],
-                        'partner_id': so['partner_id'],
+                        'partner_id': partner_id,
                         'sale_plan_name':so['sale_plan_day_name'],
                         'additional_discount':so['additional_discount'],
                         'amount_total':so['amount_total'],
