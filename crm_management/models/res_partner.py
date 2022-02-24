@@ -503,6 +503,7 @@ class res_partner(osv.osv):
                         channelId = resVal.sales_channel
                         branchId = resVal.branch_id
                         woo_customer_id = resVal.woo_customer_id
+
                         if branchId and townshipId and woo_customer_id:
                             codeId = codeObj.search(cr, uid, [('branch_id', '=', branchId.id), ('township_id', '=', townshipId.id), ('prefix', '=', 'E')])
                             if codeId:
@@ -513,7 +514,7 @@ class res_partner(osv.osv):
                                 code = codeObj.generateCode(cr, uid, codeId, context=context)
                                 
                         if branchId and townshipId and not woo_customer_id:
-                            codeId = codeObj.search(cr, uid, [('branch_id', '=', branchId.id), ('township_id', '=', townshipId.id), ('prefix', '!=', 'E')])
+                            codeId = codeObj.search(cr, uid, [('branch_id', '=', branchId.id), ('township_id', '=', townshipId.id), ('prefix', '=', None)])
                             if codeId:
                                 code = codeObj.generateCode(cr, uid, codeId[0], context=context)
                             else:
