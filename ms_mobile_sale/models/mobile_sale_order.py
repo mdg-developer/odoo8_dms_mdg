@@ -1679,7 +1679,7 @@ class mobile_sale_order(osv.osv):
         return datas 
     
     def get_stock_check_remark(self, cr, uid,context=None, **kwargs):
-        cr.execute('''select id,name,active from partner_stock_check_remark''')
+        cr.execute('''select id,name,active,sequence from partner_stock_check_remark''')
         datas = cr.fetchall()
         return datas     
     
@@ -3823,7 +3823,7 @@ class mobile_sale_order(osv.osv):
             stock_line = []
             for r in result:
                 print "length", len(r)
-                if len(r) >= 8:
+                if len(r) >= 10:
                     stock.append(r)                                    
                 else:
                     stock_line.append(r)
@@ -3885,7 +3885,6 @@ class mobile_sale_order(osv.osv):
                                       'chiller':(srl['chiller']),
                                       'remark_id':(srl['remark_id']),
                                       'description':(srl['description']),
-                                      
                                       }
                             stock_check_line_obj.create(cursor, user, mso_line_res, context=context)
             print 'True'

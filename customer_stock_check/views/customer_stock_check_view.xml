@@ -137,6 +137,8 @@
 							<group>
 								<field name="name" />
 								<field name="active" />
+					            <field name="sequence" />
+								
 							</group>
 						</group>
 					</sheet>
@@ -151,6 +153,8 @@
 				<tree string="Customer Stock Check Remark Tree">
 					<field name="name" />
 					<field name="active" />
+					<field name="sequence" />
+										
 				</tree>
 			</field>
 		</record>

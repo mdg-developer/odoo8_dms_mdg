@@ -79,4 +79,6 @@ class customer_stock_check_remark(osv.osv):
     _columns = {
                         'name':fields.char('Name'),
                         'active':fields.boolean('Active', default=False),
+                        'sequence':fields.integer('Sequence'),
+
         }
