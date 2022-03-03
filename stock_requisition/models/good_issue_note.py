@@ -254,15 +254,7 @@ class good_issue_note(osv.osv):
                     for id in note_line_id:
                         quant_note_line_value = product_line_obj.browse(cr, uid, id, context=context)
                         quant_product_id = quant_note_line_value.product_id.id
-                        cr.execute('''select a.qty_on_hand,sum(a.total_issue_qty) as total_issue_qty from (
-                          select (select COALESCE (sum(qty),0) from stock_quant where product_id =line.product_id and location_id = note.to_location_id)  as qty_on_hand,
-                          line.product_id,line.issue_quantity as issue_quantity,
-                          (line.issue_quantity*(select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=product_uom) )as total_issue_qty 
-                          from good_issue_note_line line,good_issue_note note
-                          where  line.line_id=note.id and line.product_id =%s 
-                          and note.id=%s
-                          )a
-                          group by product_id,qty_on_hand''',(quant_product_id,note_value.id,))
+                        cr.execute('''select qty_on_hand,total_issue_qty from good_issue_note_report where product_id=%s and gin_id=%s;''',(quant_product_id,note_value.id,))
                         note_data=cr.fetchone()
                         if note_data:
                             qty_on_hand=note_data[0]
