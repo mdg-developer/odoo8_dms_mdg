@@ -47,7 +47,8 @@ class product_pricelist(osv.osv):
                         if product.product_tmpl_id.uom_id.id !=product.product_tmpl_id.ecommerce_uom_id.id:
                             product_uom = self.pool['product.uom'].search(cr,uid,[('id', '=', product.product_tmpl_id.ecommerce_uom_id.id)],context=None)
                             if product_uom:
-                                    price = pricelist_item.new_price * product_uom.factor_inv
+                                product_uom = self.pool['product.uom'].browse(cr, uid, product_uom)
+                                price = pricelist_item.new_price * product_uom.factor_inv
                         else:
                             price = pricelist_item.new_price
                         pricelist_id = data.id
