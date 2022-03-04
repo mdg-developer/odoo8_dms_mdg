@@ -45,7 +45,7 @@ class product_pricelist(osv.osv):
                         if not product.product_tmpl_id.ecommerce_uom_id:
                             raise except_orm(_('UserError'), _("Please define Ecommerce UOM  for %s!") % (pricelist_item.product_id.name_template,))
                         if product.product_tmpl_id.uom_id.id !=product.product_tmpl_id.ecommerce_uom_id.id:
-                            product_uom = self.env['product.uom'].search([('name', '=', product.product_tmpl_id.ecommerce_uom_id.id)])
+                            product_uom = self.pool['product.uom'].search(cr,uid,[('name', '=', product.product_tmpl_id.ecommerce_uom_id.id)],context=None)
                             if product_uom:
                                     price = pricelist_item.new_price * product_uom.factor_inv
                         else:
