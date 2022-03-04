@@ -27,6 +27,7 @@ class product_pricelist(osv.osv):
         data = self.browse(cr,uid,ids[0])
         if data.consumer == True or data.retail == True:
             woo_instance_obj = self.pool.get('woo.instance.ept')
+            product_obj = self.pool.get('product.product')
             pricelist_item_obj = self.pool.get('product.pricelist.item')
             instance = woo_instance_obj.search(cr, uid, [('state','=','confirmed')], limit=1)
             if instance:
@@ -40,7 +41,15 @@ class product_pricelist(osv.osv):
                         product_code = pricelist_item.product_id.default_code
                         if not product_code:
                             raise except_orm(_('UserError'), _("Please define product code for %s!") % (pricelist_item.product_id.name_template,))
-                        price = pricelist_item.new_price
+                        product=product_obj.browse(cr,uid,pricelist_item.product_id.id)
+                        if not product.product_tmpl_id.ecommerce_uom_id:
+                            raise except_orm(_('UserError'), _("Please define Ecommerce UOM  for %s!") % (pricelist_item.product_id.name_template,))
+                        if product.product_tmpl_id.uom_id.id !=product.product_tmpl_id.ecommerce_uom_id.id:
+                            product_uom = self.env['product.uom'].search([('name', '=', product.product_tmpl_id.ecommerce_uom_id.id)])
+                            if product_uom:
+                                    price = pricelist_item.new_price * product_uom.factor_inv
+                        else:
+                            price = pricelist_item.new_price
                         pricelist_id = data.id
                         if data.consumer == True:                                                    
                             price_info = product_code + "," + str(int(price)) + ",,"                                           

@@ -46,7 +46,7 @@ class sale_denomination(osv.osv):
     
     def on_change_date(self, cr, uid, ids, date, user_id,sale_team_id, context=None):
         value = {}
-        note = [{'notes':10000, 'note_qty':False}, {'notes':5000, 'note_qty':False}, {'notes':1000, 'note_qty':False}, {'notes':500, 'note_qty':False}, {'notes':100, 'note_qty':False}, {'notes':50, 'note_qty':False}, {'notes':10, 'note_qty':False}, {'notes':1, 'note_qty':False}]
+        note = [{'notes':10000, 'note_qty':False}, {'notes':5000, 'note_qty':False}, {'notes':1000, 'note_qty':False}, {'notes':500, 'note_qty':False},{'notes':200, 'note_qty':False}, {'notes':100, 'note_qty':False}, {'notes':50, 'note_qty':False}, {'notes':20, 'note_qty':False},{'notes':10, 'note_qty':False},{'notes':5, 'note_qty':False}, {'notes':1, 'note_qty':False}]
         order_line_data = []
         cheque_data = []
         ar_data=[]
@@ -129,7 +129,9 @@ class sale_denomination(osv.osv):
                     for mobile_id  in mobile_data:
                         mobile =invoice_obj.browse(cr, uid, mobile_id, context=context)
                         deduct_amt= mobile.deduct_amt
-                        amount_total= mobile.amount_untaxed
+                        cr.execute ("select amount_untaxed from account_invoice where id =%s",(mobile.id,))
+                        amount_untaxed =cr.fetchone()[0]
+                        amount_total= amount_untaxed
                         deduct_percent=mobile.additional_discount/100
                         discount_total +=  amount_total * deduct_percent
                         discount_amount+=deduct_amt
