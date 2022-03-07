@@ -210,7 +210,7 @@ class good_issue_note(osv.osv):
                 cr.execute("update good_issue_note_line set qty_on_hand=%s where product_id=%s and id=%s", (qty_on_hand, product_id,line_id,))
             
     def issue(self, cr, uid, ids, context=None):
-        product_line_obj = self.pool.get('good.issue.note.line')
+        good_issue_line = self.pool.get('good.issue.note.line')
         note_obj = self.pool.get('good.issue.note')
         picking_obj = self.pool.get('stock.picking')
         move_obj = self.pool.get('stock.move')
@@ -248,24 +248,35 @@ class good_issue_note(osv.osv):
                                               'date': issue_date,
                                               'origin':origin,
                                               'picking_type_id':picking_type_id}, context=context)
-                note_line_id = product_line_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context)
+                note_line_id = good_issue_line.search(cr, uid, [('line_id', '=', ids[0])], context=context)
                             
                 if note_line_id and picking_id:
                     for id in note_line_id:
-                        quant_note_line_value = product_line_obj.browse(cr, uid, id, context=context)
+                        quant_note_line_value = good_issue_line.browse(cr, uid, id, context=context)
                         quant_product_id = quant_note_line_value.product_id.id
-                        cr.execute('''select qty_on_hand,total_issue_qty from good_issue_note_report where product_id=%s and gin_id=%s;''',(quant_product_id,note_value.id,))
+                        #TODO phyo
+                        product = self.pool.get('product.product').browse(cr, uid, quant_product_id, context=context)
+                        qty_available = product.with_context({'location': location_id}).qty_available
+                        cr.execute('''select sum(
+                        line.issue_quantity * (( SELECT floor(round(1::numeric / product_uom.factor, 2)) AS ratio
+                         FROM product_uom
+                        WHERE product_uom.active = true AND product_uom.id = line.product_uom))) AS total_issue_qty
+                         from good_issue_note note,good_issue_note_line line where note.id=line.line_id and  
+                        line.product_id=%s and note.id=%s''',(quant_product_id,note_value.id,))
                         note_data=cr.fetchone()
                         if note_data:
-                            qty_on_hand=note_data[0]
-                            total_issue_qty=note_data[1]
-                        product_check_data = self.pool.get('product.product').browse(cr, uid, quant_product_id, context=context)   
-                        if qty_on_hand < total_issue_qty:
+                            # qty_on_hand=note_data[0]
+                            # total_issue_qty=note_data[1]
+                            # product_check_data = self.pool.get('product.product').browse(cr, uid, quant_product_id, context=context)
+
+                            #TODO phyo
+                            total_issue_qty = note_data[0]
+                        if qty_available < total_issue_qty and total_issue_qty > 0:
                             raise osv.except_osv(_('Warning'),
-                                     _('Please Check Qty On Hand For (%s)') % (product_check_data.name_template,))
+                                     _('Please Check Qty On Hand For (%s)') % (product.name_template,))
     
                     for id in note_line_id:
-                        note_line_value = product_line_obj.browse(cr, uid, id, context=context)
+                        note_line_value = good_issue_line.browse(cr, uid, id, context=context)
                         product_id = note_line_value.product_id.id
                         name = note_line_value.product_id.name_template
                         product_uom = note_line_value.product_uom.id
@@ -274,16 +285,7 @@ class good_issue_note(osv.osv):
                         big_qty=note_line_value.big_issue_quantity
                         big_uom=note_line_value.big_uom_id.id
                         lot_id=note_line_value.batch_no.id
-    
-                        
-                        #comment by EMTW
-    #                     bigger_qty=0
-    #                     if big_uom:
-    #                         cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (big_uom,))
-    #                         bigger_qty=cr.fetchone()
-    #                         if bigger_qty:
-    #                             bigger_qty=bigger_qty[0]*big_qty
-                            
+
                         move_id=move_obj.create(cr, uid, {'picking_id': picking_id,
                                                   'picking_type_id':picking_type_id,
                                                   'restrict_lot_id':lot_id,
