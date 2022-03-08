@@ -15,6 +15,7 @@ from openerp.osv import fields , osv
 from openerp.tools.translate import _
 import datetime
 import math
+import logging
 
 class good_issue_note(osv.osv):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
@@ -251,29 +252,38 @@ class good_issue_note(osv.osv):
                 note_line_id = good_issue_line.search(cr, uid, [('line_id', '=', ids[0])], context=context)
                             
                 if note_line_id and picking_id:
-                    for id in note_line_id:
-                        quant_note_line_value = good_issue_line.browse(cr, uid, id, context=context)
-                        quant_product_id = quant_note_line_value.product_id.id
-                        #TODO phyo
-                        product = self.pool.get('product.product').browse(cr, uid, quant_product_id, context=context)
-                        qty_available = product.with_context({'location': location_id}).qty_available
-                        cr.execute('''select sum(
-                        line.issue_quantity * (( SELECT floor(round(1::numeric / product_uom.factor, 2)) AS ratio
-                         FROM product_uom
-                        WHERE product_uom.active = true AND product_uom.id = line.product_uom))) AS total_issue_qty
-                         from good_issue_note note,good_issue_note_line line where note.id=line.line_id and  
-                        line.product_id=%s and note.id=%s''',(quant_product_id,note_value.id,))
-                        note_data=cr.fetchone()
-                        if note_data:
-                            # qty_on_hand=note_data[0]
-                            # total_issue_qty=note_data[1]
-                            # product_check_data = self.pool.get('product.product').browse(cr, uid, quant_product_id, context=context)
-
-                            #TODO phyo
-                            total_issue_qty = note_data[0]
-                        if qty_available < total_issue_qty and total_issue_qty > 0:
+                    cr.execute('''select *
+                                from
+                                (
+                                    SELECT a.qty_on_hand,
+                                    sum(a.total_issue_qty) AS total_issue_qty,
+                                    a.product
+                                    FROM ( 
+                                            SELECT ( SELECT COALESCE(sum(stock_quant.qty), 0::double precision) AS "coalesce"
+                                                     FROM stock_quant
+                                                     WHERE stock_quant.product_id = line.product_id AND stock_quant.location_id = note.to_location_id) AS qty_on_hand,
+                                            line.product_id,
+                                            pp.name_template product,
+                                            line.issue_quantity,
+                                            line.issue_quantity * (( SELECT floor(round(1::numeric / product_uom.factor, 2)) AS ratio
+                                                                    FROM product_uom
+                                                                    WHERE product_uom.active = true AND product_uom.id = line.product_uom)) AS total_issue_qty
+                                            FROM good_issue_note_line line,
+                                            good_issue_note note,product_product pp
+                                            WHERE line.line_id = note.id 
+                                            and line.product_id=pp.id
+                                            and note.id=%s) a
+                                    GROUP BY a.product_id, a.qty_on_hand,a.product
+                                )B
+                                where qty_on_hand < total_issue_qty and total_issue_qty > 0;''',(note_value.id,))
+                    note_data=cr.fetchall()
+                    if note_data:
+                        for note in note_data:
+                            qty_available = note_data[0][0]
+                            total_issue_qty = note_data[0][1]
+                            product_name = note_data[0][2]
                             raise osv.except_osv(_('Warning'),
-                                     _('Please Check Qty On Hand For (%s)') % (product.name_template,))
+                                     _('Please Check Qty On Hand For (%s)') % (product_name,))
     
                     for id in note_line_id:
                         note_line_value = good_issue_line.browse(cr, uid, id, context=context)
