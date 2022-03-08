@@ -32,6 +32,7 @@
 									invisible="1" />
 								<field name="pre_order" invisible="1" />
 								<field name="good_issue_id" invisible="0" />
+                                 <field name="create_date" readonly="1"/>
 
 							</group>
 							<group>

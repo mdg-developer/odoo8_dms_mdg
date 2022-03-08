@@ -51,23 +51,29 @@
 								<strong>From Location:</strong>
 							</td>
 							<td style="border:0pt;font-size:10pt;">
-							  <span t-field="o.from_location"/>
-	                        </td>
+								<span t-field="o.from_location" />
+							</td>
 
 							<td style="border:0pt;font-size:10pt;">
 								<strong>To Warehouse:</strong>
 							</td>
 							<td style="border:0pt;font-size:10pt;">
-							  <span t-field="o.to_location"/>
-	                        </td>
+								<span t-field="o.to_location" />
+							</td>
 						</tr>
 
 						<tr>
 							<td style="border:0pt;font-size:10pt;">
-								<strong>Date of Return:</strong>
+								<strong>From Date of Return:</strong>
 							</td>
 							<td style="border:0pt;font-size:10pt;">
 								<span t-field="o.return_date" />
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>To Date of Return:</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.to_return_date" />
 							</td>
 							<td style="border:0pt;font-size:10pt;">
 								<strong>Branch:</strong>
@@ -107,11 +113,11 @@
 									<span t-field="l.foc_quantity" />
 								</td>
 								<td class="text-right">
-		                             <span t-field="l.return_quantity"/>
-		                        </td>
-		                        <td class="text-right">
-		                             <span t-field="l.rec_small_quantity"/>
-		                        </td>
+									<span t-field="l.return_quantity" />
+								</td>
+								<td class="text-right">
+									<span t-field="l.rec_small_quantity" />
+								</td>
 								<td>
 									<span t-field="l.expiry_date" />
 								</td>
