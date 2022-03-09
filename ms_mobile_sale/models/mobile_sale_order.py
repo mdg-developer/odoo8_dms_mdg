@@ -1527,6 +1527,11 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()
         return datas 
     
+    def get_stock_check_remark(self, cr, uid,context=None, **kwargs):
+        cr.execute('''select id,name,active,sequence from partner_stock_check_remark''')
+        datas = cr.fetchall()
+        return datas      
+    
     def get_supervisor_sale_team(self, cr, uid,section_id,context=None, **kwargs):
         cr.execute('''select id,name,branch_id as team_branch_id,(select name from res_branch where id =branch_id) as team_branch_name from crm_case_section 
         where supervisor_team= %s
@@ -3409,7 +3414,7 @@ class mobile_sale_order(osv.osv):
             stock_line = []
             for r in result:
                 print "length", len(r)
-                if len(r) >= 8:
+                if len(r) >= 10:
                     stock.append(r)                                    
                 else:
                     stock_line.append(r)
@@ -3469,13 +3474,15 @@ class mobile_sale_order(osv.osv):
                                       'product_uom_qty':(srl['qty']),
                                       'facing':(srl['facing']),
                                       'chiller':(srl['chiller']),
+                                      'remark_id':(srl['remark_id']),
+                                      'description':(srl['description']),
                                       }
                             stock_check_line_obj.create(cursor, user, mso_line_res, context=context)
             print 'True'
             return True       
         except Exception, e:
             print 'False'
-            return False    
+            return False  
         
     def get_promos_outlet(self, cr, uid, context=None, **kwargs):    
         cr.execute("""select rel.promos_rules_id,rel.outlettype_id from promos_rules_outlettype_rel rel,promos_rules rule where rule.id =rel.promos_rules_id  and now()::date between from_date::date and to_date::date""")

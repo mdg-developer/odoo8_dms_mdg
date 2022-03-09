@@ -65,8 +65,20 @@ class customer_stock_check_line(osv.osv):
                 'available': fields.boolean('Available', default=False),
                 'product_uom_qty':fields.float('QTY'),
                 'facing':fields.float('Facing', default=False),
-                'chiller':fields.float('Chiller Qty')                
+                'chiller':fields.float('Chiller Qty'),
+                'remark_id':fields.many2one('partner.stock.check.remark', 'Remark'),      
+                'description':fields.char( 'Description'),                
+                          
                 }
 
 
 customer_stock_check_line()    
+
+class customer_stock_check_remark(osv.osv):    
+    _name = 'partner.stock.check.remark'      
+    _columns = {
+                        'name':fields.char('Name'),
+                        'active':fields.boolean('Active', default=False),
+                        'sequence':fields.integer('Sequence'),
+
+        }

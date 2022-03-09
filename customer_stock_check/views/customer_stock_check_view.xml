@@ -46,6 +46,8 @@
 											<field name="product_uom_qty" />
 											<field name="facing" />
 											<field name="chiller" />
+											<field name="remark_id" />
+											<field name="description" />
 										</tree>
 									</field>
 								</page>
@@ -95,7 +97,7 @@
 							context="{'group_by':'user_id'}" />
 						<filter string="Branch" icon="terp-partner" domain="[]"
 							context="{'group_by':'branch_id'}" />
-						<filter string="Check Date Day" context="{'group_by': 'date:day'}" />							
+						<filter string="Check Date Day" context="{'group_by': 'date:day'}" />
 					</group>
 				</search>
 			</field>
@@ -125,5 +127,53 @@
 		<menuitem id="menu_customer_stock_check" parent="menu_main_customer_stock_check"
 			name="Stock Check" action="action_partner_stock_check" sequence="1" />
 
+		<record id="partner_stock_check_remark_form" model="ir.ui.view">
+			<field name="name">partner.stock.check.remark.form</field>
+			<field name="model">partner.stock.check.remark</field>
+			<field name="arch" type="xml">
+				<form string="Customer Stock Check Remark">
+					<sheet>
+						<group>
+							<group>
+								<field name="name" />
+								<field name="active" />
+					            <field name="sequence" />
+								
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="partner_stock_check_remark_tree" model="ir.ui.view">
+			<field name="name">partner.stock.check.remark.tree</field>
+			<field name="model">partner.stock.check.remark</field>
+			<field name="arch" type="xml">
+				<tree string="Customer Stock Check Remark Tree">
+					<field name="name" />
+					<field name="active" />
+					<field name="sequence" />
+										
+				</tree>
+			</field>
+		</record>
+
+		<record id="action_partner_stock_check_remark" model="ir.actions.act_window">
+			<field name="name">Customer Stock Check Remark</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">partner.stock.check.remark</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="partner_stock_check_remark_tree" />
+			<field name="domain">[]</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to Check Customer Stock.
+				</p>
+			</field>
+		</record>
+		<menuitem id="menu_partner_stock_check_remark" parent="sale_promotions.sales"
+			action="action_partner_stock_check_remark" sequence="11" />
 	</data>
 </openerp>
