@@ -177,12 +177,13 @@ class mobile_sale_order(osv.osv):
             cr.execute('''                                
                         with product_data as 
                         (
-                            select principal,category,sku_name,bigger_uom,smaller_uom,product_id
+                            select principal,category,sku_name,bigger_uom,smaller_uom,product_id,bigger_uom_ratio
                             from
                             (
                                 select pm.name principal,categ.name category,name_template sku_name,
                                 (select name from product_uom where id=pt.report_uom_id) bigger_uom,
-                                (select name from product_uom where id=pt.uom_id) smaller_uom,product_product_id product_id    
+                                (select name from product_uom where id=pt.uom_id) smaller_uom,product_product_id product_id,
+                                (select floor(round(1/factor,2)) from product_uom where id=pt.report_uom_id) bigger_uom_ratio 
                                 from crm_case_section_product_product_rel rel    
                                 left join product_product pp on (rel.product_product_id=pp.id)
                                 left join product_template pt on (pp.product_tmpl_id=pt.id)
@@ -204,7 +205,7 @@ class mobile_sale_order(osv.osv):
                                 COALESCE(sum(qty),0) total_pcs,
                                 COALESCE(sum(qty),0)::int/(1/factor)::int ctn_qty,    
                                 COALESCE(sum(qty),0) pcs_qty,product_id,
-                                (select floor(round(1/factor,2)) from product_uom where id=pt.report_uom_id) bigger_uom_ratio    
+                                (select floor(round(1/factor,2)) from product_uom where id=pt.report_uom_id) bigger_uom_ratio 
                                 from stock_quant sq
                                 left join product_product pp on (sq.product_id=pp.id)
                                 left join product_template pt on (pp.product_tmpl_id=pt.id)
@@ -221,7 +222,7 @@ class mobile_sale_order(osv.osv):
                         COALESCE(ctn_qty,0) ctn_qty,
                         COALESCE(pcs_qty,0) pcs_qty,
                         pd.product_id,
-                        COALESCE(bigger_uom_ratio,0) bigger_uom_ratio
+                        pd.bigger_uom_ratio
                         from product_data pd
                         left join on_hand_data ohd on (pd.product_id=ohd.product_id)
                     ''', (section_id,location_id,))
