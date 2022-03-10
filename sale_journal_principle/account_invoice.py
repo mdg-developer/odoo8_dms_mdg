@@ -263,6 +263,7 @@ class account_invoice(models.Model):
     def line_get_convert_dr(self, line, part, date):
         account_id = None
         discount_amt=0
+        deduct=False
         cr=self._cr
         type='out_invoice' 
         print 'line_get_convert_newline_get_convert_new',line,part, self.id
@@ -282,14 +283,17 @@ class account_invoice(models.Model):
                 if origin and line['name']!='Discount' and line['name']!='Cash Discount':
                     cr.execute('''select avl.discount_amt + (av.deduct_amt/(select avl.count from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id  and av.origin=%s  and avl.price_unit>0)) +((av.amount_untaxed * (av.additional_discount/100))/ (select avl.count from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id  and av.origin=%s and avl.price_unit>0)) 
                         from account_invoice av,account_invoice_line avl  
-                        where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s''',(origin,origin,origin,product.id,))
+                        where av.id=avl.invoice_id and av.origin=%s and avl.price_unit>0 and avl.product_id=%s''',(origin,origin,origin,product.id,))
 #                    discount_amt=cr.fetchone()[0]   
                     dis_amt = cr.fetchone()
                     print 'dis_amtdis_amtdis_amtdis_amt',dis_amt
                     if dis_amt is not None: 
                         discount_amt = discount_amt + dis_amt[0]; 
                     if discount_amt >0:     
-                            line['price'] = line['price']+discount_amt                         
+                            line['price'] = line['price']+discount_amt
+                            if  line['price']>0: 
+                                deduct=True;
+                                
 #                     if dis_amt:     
 #                         for amt in dis_amt:
 #                             if amt[0] is not None:                                 
@@ -306,8 +310,10 @@ class account_invoice(models.Model):
     
                 print 'line>>>',line
                 print 'line[price]',line['price']
-                if line['price']<0 :
+                if line['price']<0 or deduct==True:
                     line['price'] = -line['price']
+                print 'line[price]ssssss',line['price']
+                    
                 res= {
                     'date_maturity': line.get('date_maturity', False),
                     'partner_id': part,
@@ -562,8 +568,8 @@ class account_invoice(models.Model):
                         type=type[0]
                     else:
                         type=None   
-                if type=='out_invoice':
-                    debit += res['debit']
+                if type=='out_invoice' or (type=='out_invoice' and res['credit']>0):
+                    debit += res['debit']-res['credit']
                 if type=='in_invoice':             
                     credit += res['credit']    
                 if type=='out_refund':             
