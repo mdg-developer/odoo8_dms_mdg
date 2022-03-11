@@ -44,6 +44,9 @@
 				<field name="active" position="after">
 					<field name="branch_location_id" domain="[('usage','=','internal')]" />
 				</field>
+				<field name="active" position="before">
+					<field name="subdeal" />
+				</field>
 			</field>
 		</record>
 	</data>

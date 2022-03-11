@@ -14,6 +14,7 @@ class branch(osv.osv):
                     'p_line': fields.one2many('res.branch.line', 'line_id', 'Order Lines'),
                     'request_line': fields.one2many('branch.request.line', 'request_id', 'Order Lines'),
                     'requesting_line': fields.one2many('branch.requesting.line', 'requesting_id', 'Order Lines'),
+                    'subdeal': fields.boolean('Subdeal', default=False),
                 }
     
     def retrieve_data(self, cr, uid, ids, context=None):

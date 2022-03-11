@@ -234,7 +234,8 @@ class branch_good_issue_note(osv.osv):
     'checked_by':fields.char("Checked By"),
     'address' : fields.char('Delivery Address & PH', required=False ),
     'dock_no' : fields.char('Dock No', required=False ),
-
+    'partner_id': fields.many2one('res.partner', "Customer"),
+    'section_id': fields.many2one('crm.case.section', "Sales Team"),
         }
     
     _defaults = {
@@ -336,12 +337,12 @@ class branch_good_issue_note(osv.osv):
         if payment_term_value: 
             payment_term = payment_term_value[0] 
         order_vals = {
-            'partner_id' : 252671,                
-            'section_id' : 179,
+            'partner_id' : gin_value.partner_id.id,
+            'section_id' : gin_value.section_id.id,
             'date_order' : datetime.now(),                        
             'payment_term' : payment_term,
             'due_date' : datetime.now().date(),
-            'delivery_id': 179,
+            'delivery_id': gin_value.section_id.delivery_team_id.id,
             'warehouse_id': warehouse_id,
             'pricelist_id': gin_value.pricelist_id.id,
             'state': 'draft',
@@ -486,8 +487,16 @@ class branch_good_issue_note(osv.osv):
                             move_obj.action_done(cr, uid, move_id, context=context)  
                             cr.execute('''update stock_move set date=((%s::date)::text || ' ' || date::time(0))::timestamp where state='done' and origin =%s''', (issue_date, origin,))
         #update status to BRFI >>> partial or complete
-        self.update_status_to_rfi(cr, uid, ids, context=context)    
-        self.create_sale_order(cr, uid, ids, context=context)        
+        self.update_status_to_rfi(cr, uid, ids, context=context)
+        if self.branch_id.subdeal == True:
+            if not self.partner_id:
+                raise osv.except_osv(_('Warning'),
+                                     _('Please choose customer!!'))
+
+            if not self.section_id:
+                raise osv.except_osv(_('Warning'),
+                                     _('Please choose sales team!!'))
+            self.create_sale_order(cr, uid, ids, context=context)
         return self.write(cr, uid, ids, {'state': 'issue'})       
 
     def receive(self, cr, uid, ids, context=None):
