@@ -2,6 +2,7 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 from datetime import datetime, timedelta
+from openerp.exceptions import Warning
 
 class branch_good_issue_note(osv.osv):    
     _inherit = ['mail.thread', 'ir.needaction_mixin']
@@ -497,10 +498,12 @@ class branch_good_issue_note(osv.osv):
         move_obj = self.pool.get('stock.move')
         note_value = req_lines = {}
         state='receive'
-        grn_code = self.pool.get('ir.sequence').get(cr, uid,
-                                                'branch.grn.code') or '/'    
         if ids:
             note_value = note_obj.browse(cr, uid, ids[0], context=context)
+            if note_value.grn_no:
+                raise Warning(_('You cannot transfer next GRN record.It is already create with this GRN No(\'%s\').') % note_value.grn_no)        
+            grn_code = self.pool.get('ir.sequence').get(cr, uid,
+                                                    'branch.grn.code') or '/'                
             receive_date = note_value.receive_date
             if not receive_date:
                 raise osv.except_osv(_('Warning'),
