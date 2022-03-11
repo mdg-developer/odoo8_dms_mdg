@@ -237,6 +237,7 @@ class branch_good_issue_note(osv.osv):
     'dock_no' : fields.char('Dock No', required=False ),
     'partner_id': fields.many2one('res.partner', "Customer"),
     'section_id': fields.many2one('crm.case.section', "Sales Team"),
+    'sale_order_id': fields.many2one('sale.order', "Sale Order"),
         }
     
     _defaults = {
@@ -360,6 +361,7 @@ class branch_good_issue_note(osv.osv):
                 'product_uom' : line_value.product_uom.id,                
             } 
             sale_order_line_obj.create(cr, uid, order_line_vals, context=context)
+        self.write(cr, uid, ids, {'sale_order_id': sale_order_id})
           
     def reversed(self, cr, uid, ids, context=None):
         pick_obj = self.pool.get('stock.picking')
@@ -489,16 +491,16 @@ class branch_good_issue_note(osv.osv):
                             cr.execute('''update stock_move set date=((%s::date)::text || ' ' || date::time(0))::timestamp where state='done' and origin =%s''', (issue_date, origin,))
         #update status to BRFI >>> partial or complete
         self.update_status_to_rfi(cr, uid, ids, context=context)
-        if self.branch_id.subdeal == True:
-            if not self.partner_id:
+        if note_value.branch_id.subdeal == True and not note_value.sale_order_id:
+            if not note_value.partner_id:
                 raise osv.except_osv(_('Warning'),
                                      _('Please choose customer!!'))
 
-            if not self.section_id:
+            if not note_value.section_id:
                 raise osv.except_osv(_('Warning'),
                                      _('Please choose sales team!!'))
             self.create_sale_order(cr, uid, ids, context=context)
-        return self.write(cr, uid, ids, {'state': 'issue'})       
+        return self.write(cr, uid, ids, {'state': 'issue'})
 
     def receive(self, cr, uid, ids, context=None):
         product_line_obj = self.pool.get('branch.good.issue.note.line')
