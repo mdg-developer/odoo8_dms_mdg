@@ -840,7 +840,8 @@ class stock_return(osv.osv):
                 existing_moves = move_obj.search(cr, uid, [('origin', '=', 'Reverse ' + move.origin),
                                                            ('product_id', '=', move.product_id.id),
                                                            ('product_uom_qty', '=', move.product_uom_qty),
-                                                           ('product_uos_qty', '=', move.product_uom_qty * move.product_uos_qty / move.product_uom_qty)], context=context)
+                                                           ('product_uos_qty', '=', move.product_uom_qty * move.product_uos_qty / move.product_uom_qty),
+                                                           ('location_dest_id', '=', move.location_id.id)], context=context)
                 if not existing_moves:
                     move_new_id = move_obj.copy(cr, uid, move.id, {
                                         'product_id': move.product_id.id,
@@ -897,7 +898,8 @@ class stock_return(osv.osv):
                                                                    ('product_id', '=', product_id),
                                                                    ('product_uom_qty', '=', -1 * different_qty),
                                                                    ('product_uos_qty', '=', -1 * different_qty),
-                                                                   ('product_uom', '=', uom_id)], context=context)
+                                                                   ('product_uom', '=', uom_id),
+                                                                   ('location_dest_id', '=', from_location_id)], context=context)
                         if not existing_moves:
                             move_id = move_obj.create(cr, uid, {
                                                   'product_id': product_id,
@@ -917,7 +919,8 @@ class stock_return(osv.osv):
                                                                    ('product_id', '=', product_id),
                                                                    ('product_uom_qty', '=', different_qty),
                                                                    ('product_uos_qty', '=', different_qty),
-                                                                   ('product_uom', '=', uom_id)], context=context)
+                                                                   ('product_uom', '=', uom_id),
+                                                                   ('location_dest_id', '=', tmp_location_id)], context=context)
                         if not existing_moves:                  
                             move_id = move_obj.create(cr, uid, {
                                                   'product_id': product_id,
@@ -937,7 +940,8 @@ class stock_return(osv.osv):
                                                                ('product_id', '=', product_id),
                                                                ('product_uom_qty', '=', actual_return_quantity),
                                                                ('product_uos_qty', '=', actual_return_quantity),
-                                                               ('product_uom', '=', uom_id)], context=context)
+                                                               ('product_uom', '=', uom_id),
+                                                               ('location_dest_id', '=', to_location_id)], context=context)
                     if not existing_moves:                 
                         move_id = move_obj.create(cr, uid, {
                                               'product_id': product_id,
