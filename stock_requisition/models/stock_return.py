@@ -232,15 +232,15 @@ class stock_return(osv.osv):
                                               'remark':exchange_type,
                                               'ex_return_id':t_id,
                                               }, context=context)     
-            return_data = stock_return_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context) 
-            for data in return_data:
-                return_record = stock_return_obj.browse(cr, uid, data, context=context)
-                record_id= return_record.id
-                product_id = return_record.product_id.id
-                return_qty = return_record.return_quantity
-                product = product_obj.browse(cr, uid, product_id, context=context)
-                cr.execute("update stock_return_line set return_quantity=%s where product_id=%s and line_id=%s and id=%s", (return_qty, product_id, ids[0],record_id,))
-                
+#            return_data = stock_return_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context) 
+#             for data in return_data:
+#                 return_record = stock_return_obj.browse(cr, uid, data, context=context)
+#                 record_id= return_record.id
+#                 product_id = return_record.product_id.id
+#                 return_qty = return_record.return_quantity
+#                 product = product_obj.browse(cr, uid, product_id, context=context)
+#                 cr.execute("update stock_return_line set return_quantity=%s where product_id=%s and line_id=%s and id=%s", (return_qty, product_id, ids[0],record_id,))
+#                 
         return True 
         
     def _get_default_branch(self, cr, uid, context=None):
