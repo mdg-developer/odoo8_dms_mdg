@@ -327,13 +327,7 @@ class branch_good_issue_note(osv.osv):
         sale_order_obj = self.pool.get('sale.order')
         sale_order_line_obj = self.pool.get('sale.order.line')
         gin_value = self.browse(cr, uid, ids[0], context=context)
-        cr.execute('''select sw.id
-                    from stock_warehouse sw,stock_location sl
-                    where sw.lot_stock_id=sl.id
-                    and sl.id=%s''', (gin_value.from_location_id.id,))
-        warehouse_value = cr.fetchone()
-        if warehouse_value: 
-            warehouse_id = warehouse_value[0] 
+        warehouse_id = gin_value.section_id.warehouse_id.id
         cr.execute("""select id from account_payment_term where name='Immediate Payment'""")
         payment_term_value = cr.fetchone()
         if payment_term_value: 
@@ -341,7 +335,7 @@ class branch_good_issue_note(osv.osv):
         order_vals = {
             'partner_id' : gin_value.partner_id.id,
             'section_id' : gin_value.section_id.id,
-            'date_order' : datetime.now(),                        
+            'date_order' : gin_value.issue_date,
             'payment_term' : payment_term,
             'due_date' : datetime.now().date(),
             'delivery_id': gin_value.section_id.delivery_team_id.id,
@@ -349,7 +343,7 @@ class branch_good_issue_note(osv.osv):
             'pricelist_id': gin_value.pricelist_id.id,
             'state': 'draft',
             'origin': gin_value.name,
-        } 
+        }
         sale_order_id = sale_order_obj.create(cr, uid, order_vals, context=context)
         gin_lines = ginline_obj.search(cr, uid, [('line_id', '=', gin_value.id),('issue_quantity', '>', 0)], context=context)
         for line in gin_lines:
@@ -431,6 +425,14 @@ class branch_good_issue_note(osv.osv):
         note_value = req_lines = {}
         if ids:
             note_value = note_obj.browse(cr, uid, ids[0], context=context)
+            if note_value.branch_id.subdeal == True and not note_value.sale_order_id:
+                if not note_value.partner_id:
+                    raise osv.except_osv(_('Warning'),
+                                         _('Please choose customer!!'))
+
+                if not note_value.section_id:
+                    raise osv.except_osv(_('Warning'),
+                                         _('Please choose sales team!!'))
             issue_date = note_value.issue_date
             # location_id = note_value.tansit_location.id
             location_id = note_value.to_location_id.id
@@ -492,13 +494,6 @@ class branch_good_issue_note(osv.osv):
         #update status to BRFI >>> partial or complete
         self.update_status_to_rfi(cr, uid, ids, context=context)
         if note_value.branch_id.subdeal == True and not note_value.sale_order_id:
-            if not note_value.partner_id:
-                raise osv.except_osv(_('Warning'),
-                                     _('Please choose customer!!'))
-
-            if not note_value.section_id:
-                raise osv.except_osv(_('Warning'),
-                                     _('Please choose sales team!!'))
             self.create_sale_order(cr, uid, ids, context=context)
         return self.write(cr, uid, ids, {'state': 'issue'})
 
