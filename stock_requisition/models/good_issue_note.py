@@ -164,7 +164,30 @@ class good_issue_note(osv.osv):
 class good_issue_line(osv.osv):  # #prod_pricelist_update_line
     _name = 'good.issue.note.line'
     _description = 'Note Line'
-
+    
+    
+    def create(self, cr, uid, data, context=None):
+        gin_obj = self.pool.get('good.issue.note')
+        line_id = data['line_id']        
+        print 'data',data
+        if not data.get('product_uom'):
+            line_ids = gin_obj.search(cr, uid, [('id', '=', line_id)], context=context)
+            gin_data = gin_obj.browse(cr, uid, line_ids, context)
+            location_id = gin_data.to_location_id.id
+            product = data['product_id']
+            product_data = self.pool.get('product.product').browse(cr, uid, product, context=context)
+            cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (location_id, product,))
+            qty_on_hand = cr.fetchone()
+            if qty_on_hand:
+                qty_on_hand = qty_on_hand[0]
+            else:
+                qty_on_hand = 0
+            product_uom = product_data.product_tmpl_id.uom_id.id
+            data['qty_on_hand'] = qty_on_hand
+            data['product_uom'] = product_uom
+         
+        return super(good_issue_line, self).create(cr, uid, data, context=context)      
+                  
     def on_change_product_id(self, cr, uid, ids, product_id, context=None):
         values = {}
         if product_id:

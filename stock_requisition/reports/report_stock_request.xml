@@ -82,7 +82,18 @@
 								<span t-field="o.request_by" />
 							</td>
 						</tr>
-
+						<tr>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Created on:</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.create_date"/>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+							</td>
+						</tr>
 						<tr>
 							<td style="border:0pt;font-size:10pt;">
 								<strong>Branch:</strong>
