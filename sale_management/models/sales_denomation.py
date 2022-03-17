@@ -59,6 +59,7 @@ class sale_denomination(osv.osv):
         discount_amount=0.0
         discount_total=0.0
         product_amount=0.0
+        inv_count=0
         if date:
             date = datetime.strptime(date, '%Y-%m-%d %H:%M:%S')
             de_date = date.date()
@@ -73,7 +74,7 @@ class sale_denomination(osv.osv):
                 if not team_id:
                     team_id= sale_team_id  
                       
-            mobile_ids = invoice_obj.search(cr, uid, [('date_invoice', '=', de_date), ('state', '=', 'open')], context=context)
+            mobile_ids = invoice_obj.search(cr, uid, [('date_invoice', '=', de_date),('payment_type', '=', 'cash'), ('state', '=', 'open')], context=context)
             if team_id:
                 cr.execute("select id from customer_payment where date=%s and sale_team_id=%s and payment_code='CHEQ' ", (de_date, team_id,))
                 payment_ids = cr.fetchall()
@@ -107,7 +108,9 @@ class sale_denomination(osv.osv):
                 discount_amount=0.0
                 product_amount=0.0
                 discount_total=0.0
-                cr.execute("select id from account_invoice where date_invoice=%s and section_id =%s  and state='open' ", (de_date, team_id,))
+                cr.execute("select count(id) from account_invoice where payment_type='cash' and date_invoice=%s and section_id =%s  and state='open' ", (de_date, team_id,))
+                inv_count = cr.fetchone()[0]                 
+                cr.execute("select id from account_invoice where payment_type='cash' and date_invoice=%s and section_id =%s  and state='open' ", (de_date, team_id,))
                 mobile_ids = cr.fetchall()       
                 for data_pro in mobile_ids:
                     pre_mobile_ids.append(data_pro[0])
@@ -188,6 +191,7 @@ class sale_denomination(osv.osv):
                                             'denomination_bank_line':transfer_data,
                                             'discount_amount':discount_amount,
                                             'discount_total':discount_total,
+                                             'invoice_count':inv_count,
                                             'invoice_sub_total':product_amount-discount_amount-discount_total,
                                             } 
                 

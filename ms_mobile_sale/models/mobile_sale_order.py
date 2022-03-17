@@ -1828,7 +1828,7 @@ class mobile_sale_order(osv.osv):
                 bank_ids = cursor.fetchall()
                 cursor.execute("select id from ar_payment where date=%s and sale_team_id=%s and payment_code='BNK'", (de_date, team_id,))
                 ar_bank_ids = cursor.fetchall()
-                cursor.execute("select id from mobile_sale_order where due_date=%s and sale_team =%s and void_flag != 'voided'", (de_date, team_id,))
+                cursor.execute("select id from mobile_sale_order where type='cash' and due_date=%s and sale_team =%s and void_flag != 'voided'", (de_date, team_id,))
                 m_mobile_ids = cursor.fetchall()
 #                 cursor.execute("select id from account_invoice where date_invoice=%s and section_id =%s and state='open' ", (de_date, team_id,))
 #                 invoice_ids = cursor.fetchall()
