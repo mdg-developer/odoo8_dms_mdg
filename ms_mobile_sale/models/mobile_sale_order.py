@@ -699,7 +699,7 @@ class mobile_sale_order(osv.osv):
     def create_visit(self, cursor, user, vals, context=None):
         
         try:
-            # print 'vals', vals
+            print 'vals', vals
             customer_visit_obj = self.pool.get('customer.visit')
             str = "{" + vals + "}"    
             str = str.replace("'',", "',")  # null
@@ -773,11 +773,11 @@ class mobile_sale_order(osv.osv):
                             'visit_reason':vs['visit_reason'],
                             'latitude':vs['latitude'],
                             'longitude':vs['longitude'],
-#                             'image':image1,
-#                             'image1':image2,
-#                             'image2':image3,
-#                             'image3':image4,
-#                             'image4':image5,
+                                'image':vs['image'],
+                                'image1':vs['image1'],
+                                'image2':vs['image2'],
+                                'image3':vs['image3'],
+                                'image4':vs['image4'],
                              'is_image1':is_image1,
                               'is_image2':is_image2,
                               'is_image3':is_image3,
