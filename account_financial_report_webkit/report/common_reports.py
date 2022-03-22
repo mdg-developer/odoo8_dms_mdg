@@ -747,6 +747,7 @@ SELECT l.id AS id,
             aaa.code ||'-'||aaa.name AS account_code,
             l.amount_currency,
             l.ref AS lref,
+            l.note AS lnote,
             l.name AS lname,
             COALESCE(l.debit, 0.0) - COALESCE(l.credit, 0.0) AS balance,
             l.debit,
@@ -765,7 +766,7 @@ SELECT l.id AS id,
             i.type AS invoice_type,
             i.number AS invoice_number,
             l.date_maturity
-FROM account_move_line l
+    FROM account_move_line l
     JOIN account_move m on (l.move_id=m.id)
     LEFT JOIN res_currency c on (l.currency_id=c.id)
     LEFT JOIN account_move_reconcile partialrec

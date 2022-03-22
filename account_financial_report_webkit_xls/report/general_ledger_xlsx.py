@@ -254,6 +254,11 @@ class GeneralLedgerXlsx(ReportXlsx):
                             "(%s)" % (line['invoice_number'],))
                     label = ' '.join(label_elements)
 
+                    if line.get('lnote'):
+                        label_elements.append(
+                            "(%s)" % (line['lnote'],))
+                    label = ' '.join(label_elements)
+                    
                     self.sheet.write_string(self.row_pos, 0,line.get('period_code') or '' , self.format_border_top)
                     self.sheet.set_column(1, 1, 20)
                 

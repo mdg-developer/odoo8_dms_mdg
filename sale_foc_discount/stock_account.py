@@ -161,6 +161,13 @@ class stock_quant(osv.osv):
         # the company currency... so we need to use round() before creating the accounting entries.
         valuation_amount = currency_obj.round(cr, uid, move.company_id.currency_id, valuation_amount * qty)
         partner_id = (move.picking_id.partner_id and self.pool.get('res.partner')._find_accounting_partner(move.picking_id.partner_id).id) or False
+        note=False        
+
+        if move.picking_id:
+            if move.picking_id.partner_ref:
+                note=move.picking_id.partner_ref
+            else:
+                note =move.picking_id.origin        
         if move.foc:
             # type = self.get_foc_cashorcredit(cr, uid, move, context)
             type = 'cash'
@@ -204,9 +211,8 @@ class stock_quant(osv.osv):
                     income_price = product_price - valuation_amount
                 if valuation_amount < 0:
                     income_price =  - product_price + (-1*valuation_amount)
-                    
-
-               
+                 
+              
                 
             debit_line_vals = {
                         'name': move.name,
@@ -219,6 +225,8 @@ class stock_quant(osv.osv):
                         'debit': valuation_amount > 0 and valuation_amount or 0,
                         'credit': valuation_amount < 0 and -valuation_amount or 0,
                         'account_id': debit_account_id,
+                        'note': note or False,
+
             }
             credit_line_vals = {
                         'name': move.name,
@@ -231,6 +239,8 @@ class stock_quant(osv.osv):
                         'credit': valuation_amount > 0 and valuation_amount or 0,
                         'debit': valuation_amount < 0 and -valuation_amount or 0,
                         'account_id': credit_account_id,
+                                                'note': note or False,
+
             }    
             debit_line_vals1 = {
                     'name': move.name,
@@ -243,6 +253,8 @@ class stock_quant(osv.osv):
                     'debit': product_price > 0 and product_price or 0,
                     'credit': product_price < 0 and -product_price or 0,
                     'account_id': debit_account_id_1,
+                    'note': note or False,
+
                 }
           
             credit_line_vals1 = {
@@ -256,6 +268,8 @@ class stock_quant(osv.osv):
                     'credit': valuation_amount > 0 and valuation_amount or 0,
                     'debit': valuation_amount < 0 and -valuation_amount or 0,
                     'account_id': credit_account_id_1,
+                    'note': note or False,
+
             }
             credit_line_vals2 = {
                     'name': move.name,
@@ -268,6 +282,8 @@ class stock_quant(osv.osv):
                     'credit': income_price > 0 and income_price or 0,
                     'debit': income_price < 0 and -income_price or 0,
                     'account_id': income_account_id_1,
+                    'note': note or False,
+
             }            
             return [(0, 0, debit_line_vals), (0, 0, credit_line_vals), (0, 0, debit_line_vals1), (0, 0, credit_line_vals1), (0, 0, credit_line_vals2)]    
         else:
@@ -282,6 +298,8 @@ class stock_quant(osv.osv):
                         'debit': valuation_amount > 0 and valuation_amount or 0,
                         'credit': valuation_amount < 0 and -valuation_amount or 0,
                         'account_id': debit_account_id,
+                        'note': note or False,
+                        
             }
             credit_line_vals = {
                         'name': move.name,
@@ -294,6 +312,8 @@ class stock_quant(osv.osv):
                         'credit': valuation_amount > 0 and valuation_amount or 0,
                         'debit': valuation_amount < 0 and -valuation_amount or 0,
                         'account_id': credit_account_id,
+                        'note': note or False,
+                        
             }
             return [(0, 0, debit_line_vals), (0, 0, credit_line_vals)]
         
