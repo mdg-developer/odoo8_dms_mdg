@@ -297,6 +297,11 @@ class general_ledger_xls(report_xls):
                             "(%s)" % (line['invoice_number'],))
                     label = ' '.join(label_elements)
 
+                    if line.get('lnote'):
+                        label_elements.append(
+                            "(%s)" % (line['lnote'],))
+                    label = ' '.join(label_elements)
+                    
                     if line.get('ldate'):
                         c_specs = [
                             ('ldate', 1, 0, 'date', datetime.strptime(
