@@ -4,7 +4,6 @@ import openerp.addons.decimal_precision as dp
 from openerp.osv.fields import _column
 import xmlrpclib
 
-
 class sale_order(osv.osv):
     _inherit = "sale.order"
 
@@ -35,7 +34,22 @@ class sale_order(osv.osv):
                 invoice_ids = self.pool['account.invoice'].search(cr, uid,[('origin','=',so_no),('state','=','open')],context=None)
                 for inv in self.pool['account.invoice'].browse(cr, uid,invoice_ids,context=None):
                     if inv.type == 'out_invoice' and inv.partner_id.sd_customer == True and sd_uid and inv.date_invoice >='2020-02-01':
-                                   
+                        branch_id = models.execute_kw(db, sd_uid, password,
+                        'res.branch', 'search',
+                        [[['name', '=', inv.branch_id.name]]],
+                        {'limit': 1})
+                        stock_location_group_id = models.execute_kw(db, sd_uid, password,
+                        'stock.location.group', 'search',
+                        [[['name', '=', 'Transit']]],
+                        {'limit': 1})
+                        if not stock_location_group_id:
+                            raise Warning(_("""Transit location group doesn't exit in SD!"""))
+                        transit_location_id = models.execute_kw(db, sd_uid, password,
+                        'stock.location', 'search',
+                        [[['branch_id', '=', branch_id[0]],['stock_location_group_id', '=', stock_location_group_id[0]]]],
+                        {'limit': 1})
+                        if not transit_location_id:
+                            raise Warning(_("""Transit location doesn't exit in SD!"""))
                         
                         warehouse_id = models.execute_kw(db, sd_uid, password,
                         'stock.warehouse', 'search',
@@ -49,7 +63,6 @@ class sale_order(osv.osv):
                         'stock.location', 'search',
                         [[['name', 'like', inv.section_id.location_id.name]]],
                         {'limit': 1})
-                        
                         if warehouse_id:
                             picking_type_id = models.execute_kw(db, sd_uid, password,
                             'stock.picking.type', 'search',
@@ -68,11 +81,10 @@ class sale_order(osv.osv):
                                     'move_type':'direct',
                                     'invoice_state':'none',
                                     'picking_type_id':picking_type_id[0],
-                                    'priority':'1'}    
-                            
+                                    'priority':'1'}
                         picking_id = models.execute_kw(db, sd_uid, password, 'stock.picking', 'create', [res])
                         for line in inv.invoice_line:
-                            if not warehouse_id and loc_id and dest_loc_id and picking_type_id:                                
+                            if not warehouse_id and transit_location_id and dest_loc_id and picking_type_id:
                                 raise orm.except_orm(_('Error :'), _("Warehouse and Location doesn't exit in SD"))
                             if line.product_id.type != 'service' :
                                 
@@ -88,7 +100,7 @@ class sale_order(osv.osv):
                                       'date_expected':inv.date_invoice,
                                       'date':inv.date_invoice,
                                       'origin':reverse_name,
-                                      'location_id':loc_id[0],
+                                      'location_id':transit_location_id[0],
                                       'location_dest_id':dest_loc_id[0],
                                       'create_date':inv.date_invoice,
                                       'picking_type_id':picking_type_id[0],
@@ -99,6 +111,14 @@ class sale_order(osv.osv):
                             
                         for move in move_ids:
                             models.execute_kw(db, sd_uid, password, 'stock.move', 'action_done', [move])
+                        bgin_id = models.execute_kw(db, sd_uid, password,
+                        'branch.good.issue.note', 'search',
+                        [[['internal_reference', '=',inv.origin]]],
+                        {'limit': 1})
+                        if bgin_id:
+                            models.execute_kw(db, uid, password, 'branch.good.issue.note', 'write', [[bgin_id[0]], {
+                                'state': 'reversed'
+                            }])
             
             value = {}
         
