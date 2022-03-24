@@ -670,13 +670,17 @@ class res_partner(osv.osv):
             partner_data = partner_obj.browse(cr, uid, partner, context=context)
             partner_id = partner_data.id            
             partner_data.write({
-                'email': email,
                 'phone': phone,
                 'temp_customer': name,  
                 'shop_name': shop_name, 
                 'birthday': birthday, 
                 'gender': gender,           
             })
+            if email and len(email) > 4:
+                partner_data.write({
+                    'email': email,
+                    'is_email_generated': False,
+                })
             return partner_id  
         
     def send_delivered_noti(self, cr, uid, sale_order_number, context=None, **kwargs):
