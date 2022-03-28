@@ -214,7 +214,7 @@ class sale_denomination(osv.osv):
         team_id=vals['sale_team_id'] 
         date = datetime.strptime(date, '%Y-%m-%d %H:%M:%S')
         de_date = date.date()        
-        cursor.execute("select id from account_invoice where date_invoice=%s and section_id =%s and state='open' ", (de_date, team_id,))
+        cursor.execute("select id from account_invoice where payment_type='cash' and date_invoice=%s and section_id =%s and state='open' ", (de_date, team_id,))
         mobile_ids = cursor.fetchall()       
         for data_pro in mobile_ids:
             pre_mobile_ids.append(data_pro[0])
