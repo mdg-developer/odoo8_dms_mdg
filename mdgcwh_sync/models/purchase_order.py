@@ -14,13 +14,13 @@ class purchase_order(osv.osv):
                 sd_uid,url,db,password = self.pool['cwh.connection'].get_connection_data(cr, uid, context=None)
                 models = xmlrpclib.ServerProxy('{}/xmlrpc/2/object'.format(url))
                 po_vals={}
-                po_vals['partner_id'] =8 
+                po_vals['partner_id'] =7
                 po_vals['partner_ref']= po.name                        
                 po_vals['order_line']= []
                 picking_type_id = False           
                 type_ids = models.execute_kw(db, sd_uid, password,
                         'stock.picking.type', 'search',                
-                        [[['warehouse_id', '=', 4], ['name', '=', 'Receipts']]],{'limit': 1}
+                        [[['warehouse_id', '=', 1], ['name', '=', 'Receipts']]],{'limit': 1}
                         )
                 if type_ids: 
                     po_vals['picking_type_id'] =type_ids[0] 
