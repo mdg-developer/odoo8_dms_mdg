@@ -220,7 +220,7 @@ class branch_good_issue_note(osv.osv):
         ginline_obj = self.pool.get('branch.good.issue.note.line')
         gin_value = self.browse(cr, uid, ids[0], context=context)
         rfi_id = gin_value.request_id
-        if gin_value.request_id.state not in ('cancel','full_complete'):
+        if gin_value.request_id.state not in ('cancel','full_complete') and rfi_id:
             requisition_id = requisition_obj.browse(cr, uid, rfi_id.id, context=context)
             for line in requisition_id.p_line:
                 request_qty = line.req_quantity or 0
