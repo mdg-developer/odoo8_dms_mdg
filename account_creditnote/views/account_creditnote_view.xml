@@ -74,6 +74,8 @@
 					<field name="state" />
 					<field name="issued_date" />
 					<field name="used_date" />
+					<field name="invoice_number" />
+					<field name="program_id" />					
 					<field name="principle_id" />
 					<field name="branch_id" />
 					<field name="customer_branch_id" />

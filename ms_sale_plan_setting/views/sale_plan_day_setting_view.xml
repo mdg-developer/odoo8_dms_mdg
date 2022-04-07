@@ -59,24 +59,24 @@
 									<field name="w1_thur" style="background-color: lightblue;"/>
 									<field name="w1_fri" style="background-color: lightblue;"/>
 									<field name="w1_sat" style="background-color: lightblue;"/>
-									<field name="w2_mon" style="background-color: red"/>
-									<field name="w2_tue" style="background-color: red"/>
-									<field name="w2_wed" style="background-color: red"/>
-									<field name="w2_thur" style="background-color: red"/>
-									<field name="w2_fri"  style="background-color: red"/>
-									<field name="w2_sat"  style="background-color: red"/>
-									<field name="w3_mon" style="background-color: blue;"/>
-									<field name="w3_tue" style="background-color: blue;"/>
-									<field name="w3_wed" style="background-color: blue;"/>
-									<field name="w3_thur" style="background-color: blue;"/>
-									<field name="w3_fri" style="background-color: blue;"/>
-									<field name="w3_sat" style="background-color: blue;"/>
-									<field name="w4_mon" style="background-color: green;"/>
-									<field name="w4_tue" style="background-color: green;"/>
-									<field name="w4_wed" style="background-color: green;"/>
-									<field name="w4_thur" style="background-color: green;"/>
-									<field name="w4_fri" style="background-color: green;"/>
-									<field name="w4_sat" style="background-color: green;"/>
+									<field name="w2_mon" style="background-color: red" invisible="1"/>
+									<field name="w2_tue" style="background-color: red" invisible="1"/>
+									<field name="w2_wed" style="background-color: red" invisible="1"/>
+									<field name="w2_thur" style="background-color: red" invisible="1"/>
+									<field name="w2_fri"  style="background-color: red" invisible="1"/>
+									<field name="w2_sat"  style="background-color: red" invisible="1"/>
+									<field name="w3_mon" style="background-color: blue;" invisible="1"/>
+									<field name="w3_tue" style="background-color: blue;" invisible="1"/>
+									<field name="w3_wed" style="background-color: blue;" invisible="1"/>
+									<field name="w3_thur" style="background-color: blue;" invisible="1"/>
+									<field name="w3_fri" style="background-color: blue;" invisible="1"/>
+									<field name="w3_sat" style="background-color: blue;" invisible="1"/>
+									<field name="w4_mon" style="background-color: green;" invisible="1"/>
+									<field name="w4_tue" style="background-color: green;" invisible="1"/>
+									<field name="w4_wed" style="background-color: green;" invisible="1"/>
+									<field name="w4_thur" style="background-color: green;" invisible="1"/>
+									<field name="w4_fri" style="background-color: green;" invisible="1"/>
+									<field name="w4_sat" style="background-color: green;" invisible="1"/>
 								</tree>
 							</field>
 							<group col="28">
@@ -112,75 +112,75 @@
 								</div>
 								<div>
 									<field name="w2_count_mon" class="oe_inline"
-										style="margin-left:5pt;font-size:15pt;" />
+										style="margin-left:5pt;font-size:15pt;"  invisible="1"/>
 								</div>
 								<div>
 									<field name="w2_count_tue" class="oe_inline"
-										style="margin-left:5pt;font-size:15pt;" />
+										style="margin-left:5pt;font-size:15pt;"  invisible="1"/>
 								</div>
 								<div>
 									<field name="w2_count_wed" class="oe_inline"
-										style="margin-left:5pt;font-size:15pt;" />
+										style="margin-left:5pt;font-size:15pt;"  invisible="1"/>
 								</div>
 								<div>
 									<field name="w2_count_thur" class="oe_inline"
-										style="margin-left:5pt;font-size:15pt;" />
+										style="margin-left:5pt;font-size:15pt;"  invisible="1"/>
 								</div>
 								<div>
 									<field name="w2_count_fri" class="oe_inline"
-										style="margin-left:5pt;font-size:15pt;" />
+										style="margin-left:5pt;font-size:15pt;"  invisible="1"/>
 								</div>
 								<div>
 									<field name="w2_count_sat" class="oe_inline"
-										style="margin-left:5pt;font-size:15pt;" />
+										style="margin-left:5pt;font-size:15pt;"  invisible="1"/>
 								</div>
 								<div>
 									<field name="w3_count_mon" class="oe_inline"
-										style="margin-left:5pt;font-size:15pt;" />
+										style="margin-left:5pt;font-size:15pt;"  invisible="1"/>
 								</div>
 								<div>
 									<field name="w3_count_tue" class="oe_inline"
-										style="margin-left:5pt;font-size:15pt;" />
+										style="margin-left:5pt;font-size:15pt;"  invisible="1"/>
 								</div>
 								<div>
 									<field name="w3_count_wed" class="oe_inline"
-										style="margin-left:5pt;font-size:15pt;" />
+										style="margin-left:5pt;font-size:15pt;"  invisible="1"/>
 								</div>
 								<div>
 									<field name="w3_count_thur" class="oe_inline"
-										style="margin-left:5pt;font-size:15pt;" />
+										style="margin-left:5pt;font-size:15pt;"  invisible="1"/>
 								</div>
 								<div>
 									<field name="w3_count_fri" class="oe_inline"
-										style="margin-left:5pt;font-size:15pt;" />
+										style="margin-left:5pt;font-size:15pt;"  invisible="1"/>
 								</div>
 								<div>
 									<field name="w3_count_sat" class="oe_inline"
-										style="margin-left:5pt;font-size:15pt;" />
+										style="margin-left:5pt;font-size:15pt;"  invisible="1"/>
 								</div>
 								<div>
 									<field name="w4_count_mon" class="oe_inline"
-										style="margin-left:5pt;font-size:15pt;" />
+										style="margin-left:5pt;font-size:15pt;"  invisible="1"/>
 								</div>
 								<div>
 									<field name="w4_count_tue" class="oe_inline"
-										style="margin-left:5pt;font-size:15pt;" />
+										style="margin-left:5pt;font-size:15pt;"  invisible="1"/>
 								</div>
 								<div>
 									<field name="w4_count_wed" class="oe_inline"
-										style="margin-left:5pt;font-size:15pt;" />
+										style="margin-left:5pt;font-size:15pt;"  invisible="1"/>
 								</div>
 								<div>
 									<field name="w4_count_thur" class="oe_inline"
-										style="margin-left:5pt;font-size:15pt;" />
+										style="margin-left:5pt;font-size:15pt;"  invisible="1"/>
 								</div>
 								<div>
 									<field name="w4_count_fri" class="oe_inline"
-										style="margin-left:5pt;font-size:15pt;" />
+										style="margin-left:5pt;font-size:15pt;"  invisible="1"/>
 								</div>
 								<div>
 									<field name="w4_count_sat" class="oe_inline"
-										style="margin-left:5pt;font-size:15pt;" />
+										style="margin-left:5pt;font-size:15pt;"  invisible="1"/>
 								</div>
 							</group>
 						</page>
