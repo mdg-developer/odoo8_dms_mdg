@@ -59,7 +59,6 @@ class sale_plan_for_day_setting(osv.osv):
     def w1_mon_count(self, cr, uid, ids, field, arg, context=None):
         
         setting_line_obj = self.pool.get('sale.plan.day.setting.line')
-        print ' w1_mon_count'
         res = {}
         for data in self.browse(cr, uid, ids, context=context):
 
@@ -114,8 +113,6 @@ class sale_plan_for_day_setting(osv.osv):
         setting_line_obj = self.pool.get('sale.plan.day.setting.line')
         res = {}
         for data in self.browse(cr, uid, ids, context=context):
-
-            print ' w1_tue_count', data.id
             line_ids = setting_line_obj.search(cr, uid, [('line_id', '=', data.id), ('w1_sat', '=', True)], context=context)
             if line_ids:
                 res[data.id] = len(line_ids)
@@ -137,8 +134,6 @@ class sale_plan_for_day_setting(osv.osv):
         setting_line_obj = self.pool.get('sale.plan.day.setting.line')
         res = {}
         for data in self.browse(cr, uid, ids, context=context):
-
-            print ' w1_tue_count', data.id
             line_ids = setting_line_obj.search(cr, uid, [('line_id', '=', data.id), ('w2_tue', '=', True)], context=context)
             if line_ids:
                 res[data.id] = len(line_ids)
@@ -205,7 +200,6 @@ class sale_plan_for_day_setting(osv.osv):
         res = {}
         for data in self.browse(cr, uid, ids, context=context):
 
-            print ' w1_tue_count', data.id
             line_ids = setting_line_obj.search(cr, uid, [('line_id', '=', data.id), ('w3_tue', '=', True)], context=context)
             if line_ids:
                 res[data.id] = len(line_ids)
@@ -322,7 +316,7 @@ class sale_plan_for_day_setting(osv.osv):
                 'name': fields.char('Description', required=True),
                 'sale_team_id':fields.many2many('crm.case.section', 'sale_plan_day_sale_team_rel', 'sale_plan_day_id', 'sale_team_id', 'Sale Team',required=False),
                  'date':fields.date('Apply Date', required=True),
-                 'start_date':fields.date('W1 Monday'),
+                 'start_date':fields.date('Monday'),
                 'state': fields.selection([
             ('draft', 'Pending'),
             ('confirm', 'Confirm'),
@@ -420,7 +414,7 @@ class sale_plan_for_day_setting(osv.osv):
                 if w1_mon == True:
                    # if w1_mon == True:status = 'Monday' + '(' + sale_team_name + ')'                
                     
-                    if w1_mon == True:status = 'W1 Monday'          
+                    if w1_mon == True:status = 'Monday'          
                     setting_id = plan_obj.search(cr, uid, [('week', '=', 1), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
                     if setting_id:
                         #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
@@ -455,7 +449,7 @@ class sale_plan_for_day_setting(osv.osv):
 #                         for main_group_id in main_group:
 #                             cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                    
                 if w1_tue == True:
-                    if w1_tue == True:status = 'W1 Tuesday'                   
+                    if w1_tue == True:status = 'Tuesday'                   
                     setting_id = plan_obj.search(cr, uid, [('week', '=', 1), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
                     if setting_id:
                         #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
@@ -491,7 +485,7 @@ class sale_plan_for_day_setting(osv.osv):
 #                         for main_group_id in main_group:
 #                             cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                        
                 if w1_wed == True:
-                    if w1_wed == True:status = 'W1 Wednesday'                      
+                    if w1_wed == True:status = 'Wednesday'                      
                     setting_id = plan_obj.search(cr, uid, [('week', '=', 1), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
                     if setting_id:
                         #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
@@ -525,7 +519,7 @@ class sale_plan_for_day_setting(osv.osv):
 #                         for main_group_id in main_group:
 #                             cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                        
                 if w1_thur == True:
-                    if w1_thur == True:status = 'W1 Thursday'                 
+                    if w1_thur == True:status = 'Thursday'                 
                     setting_id = plan_obj.search(cr, uid, [('week', '=', 1), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
                     if setting_id:
                         #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
@@ -559,7 +553,7 @@ class sale_plan_for_day_setting(osv.osv):
 #                         for main_group_id in main_group:
 #                             cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                        
                 if w1_fri == True:
-                    if w1_fri == True:status = 'W1 Friday'                   
+                    if w1_fri == True:status = 'Friday'                   
                     setting_id = plan_obj.search(cr, uid, [('week', '=', 1), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
                     if setting_id:
                         #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
@@ -595,7 +589,7 @@ class sale_plan_for_day_setting(osv.osv):
 #                         for main_group_id in main_group:
 #                             cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))    
                 if w1_sat == True:
-                    if w1_sat == True:status = 'W1 Saturday'              
+                    if w1_sat == True:status = 'Saturday'              
                     setting_id = plan_obj.search(cr, uid, [('week', '=', 1), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
                     if setting_id:
                         #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
@@ -1377,12 +1371,12 @@ class sale_plan_setting_line(osv.osv):  # #prod_pricelist_update_line
         'partner_id': fields.many2one('res.partner', 'Customer', readonly=True),
         'township_id':fields.related('partner_id','township',type='many2one',relation='res.township', string='Township', readonly=True),
         'purchase_date':fields.date('Last Purchase Date', readonly=True),
-        'w1_mon':fields.boolean('W1 MON'),
-        'w1_tue':fields.boolean('W1 TUE'),
-        'w1_wed':fields.boolean('W1 WED'),
-        'w1_thur':fields.boolean('W1 THU'),
-        'w1_fri':fields.boolean('W1 FRI'),
-        'w1_sat':fields.boolean('W1 SAT'),
+        'w1_mon':fields.boolean('MON'),
+        'w1_tue':fields.boolean('TUE'),
+        'w1_wed':fields.boolean('WED'),
+        'w1_thur':fields.boolean('THU'),
+        'w1_fri':fields.boolean('FRI'),
+        'w1_sat':fields.boolean('SAT'),
         'w2_mon':fields.boolean('W2 MON'),
         'w2_tue':fields.boolean('W2 TUE'),
         'w2_wed':fields.boolean('W2 WED'),
