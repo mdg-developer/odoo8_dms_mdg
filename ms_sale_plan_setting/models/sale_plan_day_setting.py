@@ -450,7 +450,7 @@ class sale_plan_for_day_setting(osv.osv):
 #                             cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                    
                 if w1_tue == True:
                     if w1_tue == True:status = 'Tuesday'                   
-                    setting_id = plan_obj.search(cr, uid, [('week', '=', 1), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
+                    setting_id = plan_obj.search(cr, uid, [('week', '=', 2), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
                     if setting_id:
                         #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
                         #
@@ -473,7 +473,7 @@ class sale_plan_for_day_setting(osv.osv):
                                                       'main_group':main_group,
                                                       'branch_id':branch,
                                                       'active':True,
-                                                      'week':1,
+                                                      'week':2,
                                                       }, context=context)   
                         #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
                         for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
@@ -486,7 +486,7 @@ class sale_plan_for_day_setting(osv.osv):
 #                             cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                        
                 if w1_wed == True:
                     if w1_wed == True:status = 'Wednesday'                      
-                    setting_id = plan_obj.search(cr, uid, [('week', '=', 1), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
+                    setting_id = plan_obj.search(cr, uid, [('week', '=', 3), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
                     if setting_id:
                         #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
                         #                    
@@ -509,7 +509,7 @@ class sale_plan_for_day_setting(osv.osv):
                                                       'main_group':main_group,
                                                       'branch_id':branch,
                                                       'active':True,
-                                                      'week':1,
+                                                      'week':3,
                                                       }, context=context)   
                         #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
                         for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
@@ -520,7 +520,7 @@ class sale_plan_for_day_setting(osv.osv):
 #                             cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                        
                 if w1_thur == True:
                     if w1_thur == True:status = 'Thursday'                 
-                    setting_id = plan_obj.search(cr, uid, [('week', '=', 1), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
+                    setting_id = plan_obj.search(cr, uid, [('week', '=', 4), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
                     if setting_id:
                         #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
                         #
@@ -543,7 +543,7 @@ class sale_plan_for_day_setting(osv.osv):
                                                       'main_group':main_group,
                                                       'branch_id':branch,
                                                       'active':True,
-                                                      'week':1,
+                                                      'week':4,
                                                       }, context=context)
                         for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
                             partner = {'line_id':plan_id,'partner_id': res_id.id,'outlet_type':res_id.outlet_type.id,'township':res_id.township.id,'address':res_id.street,'delivery_team_id':res_id.delivery_team_id.id,'branch_id':res_id.branch_id.id,'sales_channel':res_id.sales_channel.id,'frequency_id':res_id.frequency_id.id,'class_id':res_id.class_id.id}
@@ -554,7 +554,7 @@ class sale_plan_for_day_setting(osv.osv):
 #                             cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                        
                 if w1_fri == True:
                     if w1_fri == True:status = 'Friday'                   
-                    setting_id = plan_obj.search(cr, uid, [('week', '=', 1), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
+                    setting_id = plan_obj.search(cr, uid, [('week', '=', 5), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
                     if setting_id:
                         #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
                         #
@@ -579,7 +579,7 @@ class sale_plan_for_day_setting(osv.osv):
                                                       'main_group':main_group,
                                                       'branch_id':branch,
                                                       'active':True,
-                                                      'week':1,
+                                                      'week':5,
                                                       }, context=context)   
                         #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
                         for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
@@ -590,7 +590,7 @@ class sale_plan_for_day_setting(osv.osv):
 #                             cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))    
                 if w1_sat == True:
                     if w1_sat == True:status = 'Saturday'              
-                    setting_id = plan_obj.search(cr, uid, [('week', '=', 1), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
+                    setting_id = plan_obj.search(cr, uid, [('week', '=', 6), ('sale_team', '=', sale_team_id), ('name', '=', status)], context=context)             
                     if setting_id:
                         #cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id=%s and partner_id=%s", (setting_id[0], partner_id,))
                         #
@@ -614,7 +614,7 @@ class sale_plan_for_day_setting(osv.osv):
                                                       'main_group':main_group,
                                                       'branch_id':branch,
                                                       'active':True,
-                                                      'week':1,
+                                                      'week':6,
                                                       }, context=context)   
                         #cr.execute('INSERT INTO res_partner_sale_plan_day_rel (sale_plan_day_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
                         for res_id in self.pool.get('res.partner').browse(cr,uid,partner_id,context=context):
