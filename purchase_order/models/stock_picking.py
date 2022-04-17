@@ -60,11 +60,15 @@ class stock_picking(osv.osv):
                 model_obj._get_id(cr,uid,'stock', 'action_picking_tree_done')
                 
     def _get_invoice_vals(self, cr, uid, key, inv_type, journal_id, move, context=None):
-        
         invoice_vals = super(stock_picking,self)._get_invoice_vals(cr, uid, key, inv_type, journal_id, move, context=context)        
-        if invoice_vals:                 
-            if invoice_vals.get('type') == 'in_invoice':      
+        if invoice_vals:   
+            if invoice_vals.get('type') == 'in_invoice':     
+                ori_origin=invoice_vals.get('origin') 
                 invoice_vals['origin'] = 'PO-' + invoice_vals.get('origin')
+                cr.execute( " select partner_ref from stock_picking where name = %s",(ori_origin,))
+                partner_ref_data =cr.fetchone()
+                if partner_ref_data:
+                    invoice_vals['reference'] = partner_ref_data[0]
             else:
                 invoice_vals['origin'] = invoice_vals['origin']
         return invoice_vals
