@@ -331,31 +331,28 @@ class branch_good_issue_note(osv.osv):
         cr.execute("""select id from account_payment_term where name='Immediate Payment'""")
         payment_term_value = cr.fetchone()
         if payment_term_value: 
-            payment_term = payment_term_value[0] 
-        order_vals = {
-            'partner_id' : gin_value.partner_id.id,
-            'section_id' : gin_value.section_id.id,
-            'date_order' : gin_value.issue_date,
-            'payment_term' : payment_term,
-            'due_date' : datetime.now().date(),
-            'delivery_id': gin_value.section_id.delivery_team_id.id,
-            'warehouse_id': warehouse_id,
-            'pricelist_id': gin_value.pricelist_id.id,
-            'state': 'draft',
-            'origin': gin_value.name,
-        }
-        sale_order_id = sale_order_obj.create(cr, uid, order_vals, context=context)
-        gin_lines = ginline_obj.search(cr, uid, [('line_id', '=', gin_value.id),('issue_quantity', '>', 0)], context=context)
-        for line in gin_lines:
-            line_value = ginline_obj.browse(cr, uid, line, context=context)
-            order_line_vals = {
-                'order_id' : sale_order_id,                
-                'product_id' : line_value.product_id.id,
-                'product_uom_qty' : line_value.issue_quantity,                        
-                'product_uom' : line_value.product_uom.id,                
-            } 
-            sale_order_line_obj.create(cr, uid, order_line_vals, context=context)
-        self.write(cr, uid, ids, {'sale_order_id': sale_order_id})
+            payment_term = payment_term_value[0]
+
+        so_sequence = self.pool.get('ir.sequence').get(cr, uid, 'sale.order', context=context) or '/'
+        cr.execute("""insert into sale_order(name,partner_id,section_id,date_order,payment_term,due_date,delivery_id,warehouse_id,
+                    pricelist_id,state,origin,order_policy,partner_invoice_id,partner_shipping_id,picking_policy,branch_id) 
+                    values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id""",
+                   (so_sequence,gin_value.partner_id.id,gin_value.section_id.id,gin_value.issue_date,payment_term,datetime.now().date(),
+                    gin_value.section_id.delivery_team_id.id,warehouse_id,gin_value.pricelist_id.id,'draft',gin_value.name,
+                    'manual',gin_value.partner_id.id,gin_value.partner_id.id,'direct',gin_value.branch_id.id,))
+        result = cr.fetchall()
+        if result:
+            gin_lines = ginline_obj.search(cr, uid, [('line_id', '=', gin_value.id),('issue_quantity', '>', 0)], context=context)
+            for line in gin_lines:
+                line_value = ginline_obj.browse(cr, uid, line, context=context)
+                order_line_vals = {
+                    'order_id' : result[0][0],
+                    'product_id' : line_value.product_id.id,
+                    'product_uom_qty' : line_value.issue_quantity,
+                    'product_uom' : line_value.product_uom.id,
+                }
+                sale_order_line_obj.create(cr, uid, order_line_vals, context=context)
+            self.write(cr, uid, ids, {'sale_order_id': result[0][0]})
           
     def reversed(self, cr, uid, ids, context=None):
         pick_obj = self.pool.get('stock.picking')
