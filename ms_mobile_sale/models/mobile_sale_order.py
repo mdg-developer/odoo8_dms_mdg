@@ -3357,7 +3357,7 @@ class mobile_sale_order(osv.osv):
                         where sale_group_id in (select sale_group_id from crm_case_section where id =%s
                         ))  
                          group by quant.product_id, main_group,name_template,product.id,price,product.sequence
-            )A where qty_on_hand > 0  order by name_template
+            )A  order by name_template
             """, (warehouse_id,team_id,))   
             datas = cr.fetchall()
             return datas
