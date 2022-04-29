@@ -57,6 +57,18 @@
 															<td style="border:0pt;font-size:10pt;">
 																<strong t-field="o.branch_id.name"></strong>
 															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong>Credit Invoice Count :</strong>
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong t-field="o.credit_invoice_count"></strong>
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong>Credit Invoice Total :</strong>
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong t-field="o.credit_total"></strong>
+															</td>
 
 														</tr>
 
@@ -69,32 +81,32 @@
 																	</U>
 																</span>
 															</h6>
-<!-- 															<thead> -->
-<!-- 																<tr> -->
-<!-- 																	<th class="text-center" style="border:1pt solid;border-color:black;">Product</th> -->
-<!-- 																	<th class="text-center" style="border:1pt solid;border-color:black;">Quantity</th> -->
-<!-- 																	<th class="text-center" style="border:1pt solid;border-color:black;">Amount</th> -->
-<!-- 																	<th class="text-center" style="border:1pt solid;border-color:black;">Remark</th> -->
-<!-- 																</tr> -->
-<!-- 															</thead> -->
-<!-- 															<tbody class="invoice_tbody"> -->
-<!-- 																<tr t-foreach="o.denomination_product_line" t-as="p"> -->
-<!-- 																	<td style="border:1pt solid;border-color:black;" -->
-<!-- 																		align="center"> -->
-<!-- 																		<span t-field="p.product_id.name" /> -->
-<!-- 																	</td> -->
-<!-- 																	<td style="border:1pt solid;border-color:black;" -->
-<!-- 																		align="center"> -->
-<!-- 																		<span t-field="p.product_uom_qty" /> -->
-<!-- 																	</td> -->
-<!-- 																	<td style="border:1pt solid;border-color:black;" -->
-<!-- 																		align="right"> -->
-<!-- 																		<span t-field="p.amount" /> -->
-<!-- 																	</td> -->
-<!-- 																	<td style="border:1pt solid;border-color:black;" -->
-<!-- 																		align="center"></td> -->
-<!-- 																</tr> -->
-<!-- 															</tbody> -->
+															<!-- <thead> -->
+															<!-- <tr> -->
+															<!-- <th class="text-center" style="border:1pt solid;border-color:black;">Product</th> -->
+															<!-- <th class="text-center" style="border:1pt solid;border-color:black;">Quantity</th> -->
+															<!-- <th class="text-center" style="border:1pt solid;border-color:black;">Amount</th> -->
+															<!-- <th class="text-center" style="border:1pt solid;border-color:black;">Remark</th> -->
+															<!-- </tr> -->
+															<!-- </thead> -->
+															<!-- <tbody class="invoice_tbody"> -->
+															<!-- <tr t-foreach="o.denomination_product_line" t-as="p"> -->
+															<!-- <td style="border:1pt solid;border-color:black;" -->
+															<!-- align="center"> -->
+															<!-- <span t-field="p.product_id.name" /> -->
+															<!-- </td> -->
+															<!-- <td style="border:1pt solid;border-color:black;" -->
+															<!-- align="center"> -->
+															<!-- <span t-field="p.product_uom_qty" /> -->
+															<!-- </td> -->
+															<!-- <td style="border:1pt solid;border-color:black;" -->
+															<!-- align="right"> -->
+															<!-- <span t-field="p.amount" /> -->
+															<!-- </td> -->
+															<!-- <td style="border:1pt solid;border-color:black;" -->
+															<!-- align="center"></td> -->
+															<!-- </tr> -->
+															<!-- </tbody> -->
 														</table>
 
 														<h6 t-if="o.denomination_product_line" align="right">
@@ -380,6 +392,18 @@
 															<td style="border:0pt;font-size:10pt;">
 																<strong t-field="o.branch_id.name"></strong>
 															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong>Credit Invoice Count :</strong>
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong t-field="o.credit_invoice_count"></strong>
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong>Credit Invoice Total :</strong>
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong t-field="o.credit_total"></strong>
+															</td>
 														</tr>
 
 														<table t-if="o.denomination_product_line" class="table table-condensed"
@@ -391,32 +415,32 @@
 																	</U>
 																</span>
 															</h6>
-<!-- 															<thead> -->
-<!-- 																<tr> -->
-<!-- 																	<th class="text-center" style="border:1pt solid;border-color:black;">Product</th> -->
-<!-- 																	<th class="text-center" style="border:1pt solid;border-color:black;">Quantity</th> -->
-<!-- 																	<th class="text-center" style="border:1pt solid;border-color:black;">Amount</th> -->
-<!-- 																	<th class="text-center" style="border:1pt solid;border-color:black;">Remark</th> -->
-<!-- 																</tr> -->
-<!-- 															</thead> -->
-<!-- 															<tbody class="invoice_tbody"> -->
-<!-- 																<tr t-foreach="o.denomination_product_line" t-as="p"> -->
-<!-- 																	<td style="border:1pt solid;border-color:black;" -->
-<!-- 																		align="center"> -->
-<!-- 																		<span t-field="p.product_id.name" /> -->
-<!-- 																	</td> -->
-<!-- 																	<td style="border:1pt solid;border-color:black;" -->
-<!-- 																		align="center"> -->
-<!-- 																		<span t-field="p.product_uom_qty" /> -->
-<!-- 																	</td> -->
-<!-- 																	<td style="border:1pt solid;border-color:black;" -->
-<!-- 																		align="right"> -->
-<!-- 																		<span t-field="p.amount" /> -->
-<!-- 																	</td> -->
-<!-- 																	<td style="border:1pt solid;border-color:black;" -->
-<!-- 																		align="center"></td> -->
-<!-- 																</tr> -->
-<!-- 															</tbody> -->
+															<!-- <thead> -->
+															<!-- <tr> -->
+															<!-- <th class="text-center" style="border:1pt solid;border-color:black;">Product</th> -->
+															<!-- <th class="text-center" style="border:1pt solid;border-color:black;">Quantity</th> -->
+															<!-- <th class="text-center" style="border:1pt solid;border-color:black;">Amount</th> -->
+															<!-- <th class="text-center" style="border:1pt solid;border-color:black;">Remark</th> -->
+															<!-- </tr> -->
+															<!-- </thead> -->
+															<!-- <tbody class="invoice_tbody"> -->
+															<!-- <tr t-foreach="o.denomination_product_line" t-as="p"> -->
+															<!-- <td style="border:1pt solid;border-color:black;" -->
+															<!-- align="center"> -->
+															<!-- <span t-field="p.product_id.name" /> -->
+															<!-- </td> -->
+															<!-- <td style="border:1pt solid;border-color:black;" -->
+															<!-- align="center"> -->
+															<!-- <span t-field="p.product_uom_qty" /> -->
+															<!-- </td> -->
+															<!-- <td style="border:1pt solid;border-color:black;" -->
+															<!-- align="right"> -->
+															<!-- <span t-field="p.amount" /> -->
+															<!-- </td> -->
+															<!-- <td style="border:1pt solid;border-color:black;" -->
+															<!-- align="center"></td> -->
+															<!-- </tr> -->
+															<!-- </tbody> -->
 														</table>
 
 														<h6 t-if="o.denomination_product_line" align="right">

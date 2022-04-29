@@ -37,7 +37,11 @@ class sale_denomination(osv.osv):
       'partner_id':fields.many2one('res.partner', string='Partner'),
       'discount_amount':fields.float('Discount Amount',digits_compute=dp.get_precision('Product Price')),
       'discount_total':fields.float('Discount Total',digits_compute=dp.get_precision('Product Price')),
-        'invoice_sub_total':fields.float('Sub Total',digits_compute=dp.get_precision('Product Price'))
+      'invoice_sub_total':fields.float('Sub Total',digits_compute=dp.get_precision('Product Price')),
+      'credit_invoice_count':fields.integer('Credit Invoice' ,readonly=False),
+      'credit_total':fields.float('Credit Total',digits_compute=dp.get_precision('Product Price'))
+
+  
   }
     _defaults = {
         'date': fields.datetime.now,
@@ -109,7 +113,12 @@ class sale_denomination(osv.osv):
                 product_amount=0.0
                 discount_total=0.0
                 cr.execute("select count(id) from account_invoice where payment_type='cash' and date_invoice=%s and section_id =%s  and state='open' ", (de_date, team_id,))
-                inv_count = cr.fetchone()[0]                 
+                inv_count = cr.fetchone()[0]   
+                cr.execute("select count(id) from account_invoice where payment_type='credit' and date_invoice=%s and section_id =%s  and state='open' ", (de_date, team_id,))
+                credit_inv_count = cr.fetchone()[0]                                
+                cr.execute("select COALESCE(sum(residual),0) as total from account_invoice where payment_type='credit' and date_invoice=%s and section_id =%s  and state='open' ", (de_date, team_id,))
+                credit_inv_total = cr.fetchone()[0]                  
+                
                 cr.execute("select id from account_invoice where payment_type='cash' and date_invoice=%s and section_id =%s  and state='open' ", (de_date, team_id,))
                 mobile_ids = cr.fetchall()       
                 for data_pro in mobile_ids:
@@ -192,6 +201,8 @@ class sale_denomination(osv.osv):
                                             'discount_amount':discount_amount,
                                             'discount_total':discount_total,
                                              'invoice_count':inv_count,
+                                             'credit_invoice_count':credit_inv_count,
+                                             'credit_total':credit_inv_total,
                                             'invoice_sub_total':product_amount-discount_amount-discount_total,
                                             } 
                 
