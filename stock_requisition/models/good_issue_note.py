@@ -120,6 +120,9 @@ class good_issue_note(osv.osv):
         note_value = req_lines = {}
         if ids:
             note_value = note_obj.browse(cr, uid, ids[0], context=context)
+            if note_value.state=='issue':
+                raise Warning(_('You cannot transfer a record in state \'%s\'.') % note_value.state)
+            
             issue_date = note_value.issue_date
             location_id = note_value.to_location_id.id
             from_location_id = note_value.from_location_id.id
