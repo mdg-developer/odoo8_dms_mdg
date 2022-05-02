@@ -57,21 +57,23 @@
 															<td style="border:0pt;font-size:10pt;">
 																<strong t-field="o.branch_id.name"></strong>
 															</td>
-															<td style="border:0pt;font-size:10pt;">
-																<strong>Credit Invoice Count :</strong>
-															</td>
-															<td style="border:0pt;font-size:10pt;">
-																<strong t-field="o.credit_invoice_count"></strong>
-															</td>
-															<td style="border:0pt;font-size:10pt;">
-																<strong>Credit Invoice Total :</strong>
-															</td>
-															<td style="border:0pt;font-size:10pt;">
-																<strong t-field="o.credit_total"></strong>
-															</td>
+															
 
 														</tr>
-
+<tr>
+<td style="border:0pt;font-size:10pt;">
+																<strong>Credit Inv Count :</strong>
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong t-field="o.credit_invoice_count"/>
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong>Credit Inv Total :</strong>
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong t-field="o.credit_total"/>
+															</td>
+</tr>
 														<table t-if="o.denomination_product_line" class="table table-condensed"
 															style="border:1pt solid;">
 															<h6 align="rignt">
@@ -392,20 +394,22 @@
 															<td style="border:0pt;font-size:10pt;">
 																<strong t-field="o.branch_id.name"></strong>
 															</td>
-															<td style="border:0pt;font-size:10pt;">
-																<strong>Credit Invoice Count :</strong>
-															</td>
-															<td style="border:0pt;font-size:10pt;">
-																<strong t-field="o.credit_invoice_count"></strong>
-															</td>
-															<td style="border:0pt;font-size:10pt;">
-																<strong>Credit Invoice Total :</strong>
-															</td>
-															<td style="border:0pt;font-size:10pt;">
-																<strong t-field="o.credit_total"></strong>
-															</td>
+															
 														</tr>
-
+<tr>
+<td style="border:0pt;font-size:10pt;">
+																<strong>Credit Inv Count :</strong>
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong t-field="o.credit_invoice_count"/>
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong>Credit Inv Total :</strong>
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong t-field="o.credit_total"/>
+															</td>
+</tr>
 														<table t-if="o.denomination_product_line" class="table table-condensed"
 															style="border:1pt solid;">
 															<h6 align="left">

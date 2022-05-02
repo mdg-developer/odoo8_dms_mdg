@@ -64,6 +64,8 @@ class sale_denomination(osv.osv):
         discount_total=0.0
         product_amount=0.0
         inv_count=0
+        credit_inv_count=0
+        credit_inv_total=0.0
         if date:
             date = datetime.strptime(date, '%Y-%m-%d %H:%M:%S')
             de_date = date.date()
