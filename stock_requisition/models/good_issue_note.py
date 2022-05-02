@@ -284,7 +284,7 @@ class good_issue_note(osv.osv):
                             product_name = note_data[0][2]
                             raise osv.except_osv(_('Warning'),
                                      _('Please Check Qty On Hand For (%s)') % (product_name,))
-    
+                    move_list_ids = []
                     for id in note_line_id:
                         note_line_value = good_issue_line.browse(cr, uid, id, context=context)
                         product_id = note_line_value.product_id.id
@@ -307,8 +307,11 @@ class good_issue_note(osv.osv):
                                               'location_dest_id':from_location_id,
                                               'name':name,
                                                'origin':origin,
-                                              'state':'confirmed'}, context=context)     
-                        move_obj.action_done(cr, uid, move_id, context=context)  
+                                              'state':'confirmed'}, context=context)
+                        move_list_ids.append(move_id.id)
+                    if len(move_list_ids) > 0:
+                        move_obj.action_done(cr, uid, move_list_ids, context=context)
+                        #for moveid in move_list_ids:
                         cr.execute('''update stock_move set date=((%s::date)::text || ' ' || date::time(0))::timestamp where state='done' and origin =%s''',(issue_date,origin,))
         result = self.write(cr, uid, ids, {'state': 'issue'}) 
         if result:
