@@ -308,7 +308,7 @@ class good_issue_note(osv.osv):
                                               'name':name,
                                                'origin':origin,
                                               'state':'confirmed'}, context=context)
-                        move_list_ids.append(move_id.id)
+                        move_list_ids.append(move_id)
                     if len(move_list_ids) > 0:
                         move_obj.action_done(cr, uid, move_list_ids, context=context)
                         #for moveid in move_list_ids:
