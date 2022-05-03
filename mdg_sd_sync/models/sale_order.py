@@ -3,6 +3,7 @@ from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
 from openerp.osv.fields import _column
 import xmlrpclib
+from openerp.tools.translate import _
 
 class sale_order(osv.osv):
     _inherit = "sale.order"
