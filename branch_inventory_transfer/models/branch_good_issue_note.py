@@ -321,7 +321,7 @@ class branch_good_issue_note(osv.osv):
         
     def create_sale_order(self, cr, uid, ids, context=None):
         
-        warehouse_id = None    
+        warehouse_id = None
         payment_term = None
         ginline_obj = self.pool.get('branch.good.issue.note.line')
         sale_order_obj = self.pool.get('sale.order')
@@ -334,25 +334,48 @@ class branch_good_issue_note(osv.osv):
             payment_term = payment_term_value[0]
 
         so_sequence = self.pool.get('ir.sequence').get(cr, uid, 'sale.order', context=context) or '/'
-        cr.execute("""insert into sale_order(name,partner_id,code,payment_type,payment_term,is_entry,section_id,date_order,due_date,delivery_id,warehouse_id,
-                    pricelist_id,state,origin,order_policy,partner_invoice_id,partner_shipping_id,picking_policy,branch_id) 
-                    values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id""",
-                   (so_sequence,gin_value.partner_id.id,gin_value.partner_id.customer_code,'credit',gin_value.partner_id.property_payment_term.id,True,gin_value.section_id.id,gin_value.issue_date,datetime.now().date(),
-                    gin_value.section_id.delivery_team_id.id,warehouse_id,gin_value.pricelist_id.id,'draft',gin_value.name,
-                    'manual',gin_value.partner_id.id,gin_value.partner_id.id,'direct',gin_value.branch_id.id,))
-        result = cr.fetchall()
-        if result:
+        # cr.execute("""insert into sale_order(name,partner_id,code,payment_type,payment_term,is_entry,section_id,date_order,due_date,delivery_id,warehouse_id,
+        #             pricelist_id,state,origin,order_policy,partner_invoice_id,partner_shipping_id,picking_policy,branch_id,
+        #             shipped,pre_order,is_generate,is_add_discount,credit_to_cash,credit_allow,rebate_later,ignore_credit_limit,is_confirm,is_missed,ecommerce,is_revised,
+        #             create_date,create_uid,write_date,write_uid,company_id)
+        #             values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,
+        #             %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,
+        #             %s,%s,%s,%s,%s) RETURNING id""",
+        #            (so_sequence,gin_value.partner_id.id,gin_value.partner_id.customer_code,'credit',gin_value.partner_id.property_payment_term.id,True,gin_value.section_id.id,gin_value.issue_date,datetime.now().date(),
+        #             gin_value.section_id.delivery_team_id.id,warehouse_id,gin_value.pricelist_id.id,'draft',gin_value.name,
+        #             'manual',gin_value.partner_id.id,gin_value.partner_id.id,'direct',gin_value.branch_id.id,
+        #             False,False,False,False,False,False,False,True,False,False,False,False,
+        #             datetime.now(),1,datetime.now(),1,3))
+        # result = cr.fetchall()
+
+        order_vals = {
+            'partner_id': gin_value.partner_id.id,
+            'section_id': gin_value.section_id.id,
+            'warehouse_id': warehouse_id,
+            'ignore_credit_limit': True,
+            'origin': gin_value.name ,
+        }
+
+        sale_order_id = sale_order_obj.create(cr, uid, order_vals, context=None)
+
+
+        if sale_order_id:
             gin_lines = ginline_obj.search(cr, uid, [('line_id', '=', gin_value.id),('issue_quantity', '>', 0)], context=context)
             for line in gin_lines:
                 line_value = ginline_obj.browse(cr, uid, line, context=context)
                 order_line_vals = {
-                    'order_id' : result[0][0],
+                    'order_id' : sale_order_id,
                     'product_id' : line_value.product_id.id,
                     'product_uom_qty' : line_value.issue_quantity,
                     'product_uom' : line_value.product_uom.id,
                 }
                 sale_order_line_obj.create(cr, uid, order_line_vals, context=context)
-            self.write(cr, uid, ids, {'sale_order_id': result[0][0]})
+
+            # new_result = sale_order_obj.browse(cr, uid, result[0][0]).copy()
+            # sale_order_obj.browse(cr, uid, result[0][0]).unlink()
+
+            self.write(cr, uid, ids, {'sale_order_id': sale_order_id})
+
           
     def reversed(self, cr, uid, ids, context=None):
         pick_obj = self.pool.get('stock.picking')
@@ -419,6 +442,7 @@ class branch_good_issue_note(osv.osv):
         note_obj = self.pool.get('branch.good.issue.note')
         picking_obj = self.pool.get('stock.picking')
         move_obj = self.pool.get('stock.move')
+        sale_order_obj = self.pool.get('sale.order')
         note_value = req_lines = {}
         if ids:
             note_value = note_obj.browse(cr, uid, ids[0], context=context)
@@ -492,6 +516,16 @@ class branch_good_issue_note(osv.osv):
         self.update_status_to_rfi(cr, uid, ids, context=context)
         if note_value.branch_id.subdeal == True and not note_value.sale_order_id:
             self.create_sale_order(cr, uid, ids, context=context)
+            # warehouse_id= None
+            # warehouse_id = note_value.section_id.warehouse_id.id
+            # order_vals = {
+            #     'partner_id': note_value.partner_id.id,
+            #     'section_id': note_value.section_id.id,
+            #     'warehouse_id':warehouse_id,
+            #     'ignore_credit_limit':True,
+            # }
+            # sale_order_id = sale_order_obj.create(cr, uid, order_vals, context=None)
+
         return self.write(cr, uid, ids, {'state': 'issue'})
 
     def receive(self, cr, uid, ids, context=None):
