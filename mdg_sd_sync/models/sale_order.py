@@ -38,6 +38,8 @@ class sale_order(osv.osv):
                         'res.branch', 'search',
                         [[['name', '=', inv.branch_id.name]]],
                         {'limit': 1})
+                        if not branch_id:
+                            raise Warning(_("""Branch doesn't exit in SD!"""))
                         stock_location_group_id = models.execute_kw(db, sd_uid, password,
                         'stock.location.group', 'search',
                         [[['name', '=', 'Transit']]],
