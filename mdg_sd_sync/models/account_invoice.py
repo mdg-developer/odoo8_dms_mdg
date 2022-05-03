@@ -24,10 +24,11 @@ class account_invoice(models.Model):
         move_ids = []
         for inv in self:
             if inv.type == 'out_invoice' and inv.partner_id.sd_customer == True and sd_uid and inv.date_invoice >='2020-02-01':
-                branch_id = models.execute_kw(db, sd_uid, password,
-                'res.branch', 'search',
-                [[['name', '=', inv.branch_id.name]]],
-                {'limit': 1})
+                branch_id = False
+                if (inv.branch_id.name.startswith('LSD')):
+                    branch_id = models.execute_kw(db, sd_uid, password,'res.branch', 'search',[[['branch_code', '=', 'LMSD']]],{'limit': 1})
+                elif (inv.branch_id.name.startswith('USD')):
+                    branch_id = models.execute_kw(db, sd_uid, password, 'res.branch', 'search',[[['branch_code', '=', 'UMSD']]], {'limit': 1})
                 from_location_id = models.execute_kw(db, sd_uid, password,
                 'stock.location', 'search',
                 [[['name', 'like', 'loss']]],
@@ -155,7 +156,7 @@ class account_invoice(models.Model):
                 #             'invoice_state':'none',
                 #             'picking_type_id':picking_type_id[0],
                 #             'priority':'1'}
-                #
+
                 # picking_id = models.execute_kw(db, sd_uid, password, 'stock.picking', 'create', [res])
                 # for line in self.invoice_line:
                 #     if not warehouse_id and loc_id and dest_loc_id and picking_type_id:
