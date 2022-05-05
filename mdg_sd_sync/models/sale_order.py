@@ -35,10 +35,13 @@ class sale_order(osv.osv):
                 invoice_ids = self.pool['account.invoice'].search(cr, uid,[('origin','=',so_no),('state','=','open')],context=None)
                 for inv in self.pool['account.invoice'].browse(cr, uid,invoice_ids,context=None):
                     if inv.type == 'out_invoice' and inv.partner_id.sd_customer == True and sd_uid and inv.date_invoice >='2020-02-01':
-                        branch_id = models.execute_kw(db, sd_uid, password,
-                        'res.branch', 'search',
-                        [[['name', '=', inv.branch_id.name]]],
-                        {'limit': 1})
+                        # branch_id = models.execute_kw(db, sd_uid, password,
+                        # 'res.branch', 'search',
+                        # [[['name', '=', inv.branch_id.name]]],
+                        # {'limit': 1})
+                        branch_default_location = inv.branch_id.branch_location_id.name
+                        branch_id = branch_default_location.replace("-Sellable", "-Transit")
+
                         if not branch_id:
                             raise Warning(_("""Branch doesn't exit in SD!"""))
                         stock_location_group_id = models.execute_kw(db, sd_uid, password,
@@ -49,7 +52,7 @@ class sale_order(osv.osv):
                             raise Warning(_("""Transit location group doesn't exit in SD!"""))
                         transit_location_id = models.execute_kw(db, sd_uid, password,
                         'stock.location', 'search',
-                        [[['branch_id', '=', branch_id[0]],['stock_location_group_id', '=', stock_location_group_id[0]]]],
+                        [[['name', '=', branch_id],['stock_location_group_id', '=', stock_location_group_id[0]]]],
                         {'limit': 1})
                         if not transit_location_id:
                             raise Warning(_("""Transit location doesn't exit in SD!"""))

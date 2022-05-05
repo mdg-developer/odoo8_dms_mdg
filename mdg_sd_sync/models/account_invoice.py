@@ -67,9 +67,12 @@ class account_invoice(models.Model):
                     raise Warning(_("""Vehicle doesn't exit in SD!"""))
                 if not supplier_id:
                     raise Warning(_("""Supplier doesn't exit in SD!"""))
+
+                branch_default_location = inv.branch_id.branch_location_id.name
+                branch_transit_location = branch_default_location.replace("-Sellable", "-Transit")
                 transit_location_id = models.execute_kw(db, sd_uid, password,
                 'stock.location', 'search',
-                [[['branch_id', '=', branch_id[0]],['stock_location_group_id', '=',stock_location_group_id[0]]]],
+                [[['name', '=', branch_transit_location],['stock_location_group_id', '=',stock_location_group_id[0]]]],
                 {'limit': 1})
                 if not transit_location_id:
                     raise Warning(_("""Transit location doesn't exit in SD!"""))
