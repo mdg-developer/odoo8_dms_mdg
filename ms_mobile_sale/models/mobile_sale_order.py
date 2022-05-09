@@ -1742,6 +1742,8 @@ class mobile_sale_order(osv.osv):
             m_discount_amount=0.0
             v_discount_total=0.0
             v_discount_amount=0.0
+            credit_inv_count=0
+            credit_inv_total=0.0            
             str = "{" + vals + "}"
             str = str.replace(":''", ":'")
             str = str.replace("'',", "',")
@@ -1772,9 +1774,19 @@ class mobile_sale_order(osv.osv):
                     if  de_date:
                         date = datetime.strptime(de_date, '%Y-%m-%d %H:%M:%S')
                         deno_date = date.date()
+                    de_date = pt['date']
+                    user_id = pt['user_id']    
+                    team_id =pt['sale_team_id']
                     current_date = datetime.now()  
+                    cursor.execute("select count(id) from mobile_sale_order where type='credit' and (date at time zone 'UTC')::date=%s and sale_team =%s and void_flag != 'voided'", (de_date, team_id,))
+                    credit_inv_count = cursor.fetchone()[0]   
+                    cursor.execute("select COALESCE(sum(net_amount),0) as total from mobile_sale_order where type='credit' and  (date at time zone 'UTC')::date=%s and sale_team =%s and void_flag != 'voided' ", (de_date, team_id,))
+                    credit_inv_total = cursor.fetchone()[0]                      
+                    
                     cursor.execute("delete from sales_denomination where ((date at time zone 'utc') at time zone 'asia/rangoon')::date=%s and sale_team_id=%s", (deno_date, pt['sale_team_id'],))
                     deno_result = {
+                         'credit_invoice_count':credit_inv_count,
+                         'credit_total':credit_inv_total,                        
                         'invoice_count':pt['invoice_count'],
                         'sale_team_id':pt['sale_team_id'],
                         'company_id':pt['company_id'] ,
@@ -1807,8 +1819,7 @@ class mobile_sale_order(osv.osv):
                                   'amount':ptl['amount'],
                                 }
                                 notes_line_obj.create(cursor, user, note_line_res, context=context)
-                de_date = pt['date']
-                user_id = pt['user_id']
+
                 pre_mobile_ids=[]
                 mobile_ids=[]
                 mobile_sale_obj = self.pool.get('mobile.sale.order')
@@ -1818,8 +1829,6 @@ class mobile_sale_order(osv.osv):
                 print 'user_iddddddddddddd', user_id, type(user_id)
 #                 cursor.execute("select default_section_id from res_users where id=%s", (user_id,))
 #                 team_id = cursor.fetchone()[0]
-                team_id =pt['sale_team_id']
-                print 'team_id', team_id,de_date
                 cursor.execute("select id from customer_payment where date=%s and sale_team_id=%s and cheque_no !=''  ", (de_date, team_id,))
                 payment_ids = cursor.fetchall()
                 cursor.execute("select id from ar_payment where date=%s and sale_team_id=%s and payment_code='CHEQ' ", (de_date, team_id,))
