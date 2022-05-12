@@ -81,6 +81,13 @@ OUT__product_product__read_all__SCHEMA = (                 # editable
             'name',
         )),
     )]),
+    ('uom_lines', [(
+        'name',
+        'factor_inv',
+        'rounding',
+        'is_sync_woo',
+        'uom_type'
+    )]),
 )
 #           ]
 #       }
@@ -146,6 +153,13 @@ OUT__product_product__read_one__SCHEMA = (                 # editable
             'id',
             'name',
         )),
+    )]),
+    ('uom_lines', [(
+        'name',
+        'factor_inv',
+        'rounding',
+        'is_sync_woo',
+        'uom_type'
     )]),
 )
 
