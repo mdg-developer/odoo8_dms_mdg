@@ -139,6 +139,7 @@ class good_issue_note(osv.osv):
                                           'origin':origin,
                                           'picking_type_id':picking_type_id}, context=context)
             note_line_id = product_line_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context)
+            move_list_ids = []
             if note_line_id and picking_id:
                 for id in note_line_id:
                     note_line_value = product_line_obj.browse(cr, uid, id, context=context)
@@ -160,9 +161,11 @@ class good_issue_note(osv.osv):
                                           'location_dest_id':from_location_id,
                                           'name':name,
                                            'origin':origin,
-                                          'state':'confirmed'}, context=context)     
-                    move_obj.action_done(cr, uid, move_id, context=context)  
-        return self.write(cr, uid, ids, {'state': 'issue'})  
+                                          'state':'confirmed'}, context=context)
+                    move_list_ids.append(move_id)
+                if len(move_list_ids) > 0:
+                    move_obj.action_done(cr, uid, move_list_ids, context=context)
+        return self.write(cr, uid, ids, {'state': 'issue'})
                             
 class good_issue_line(osv.osv):  # #prod_pricelist_update_line
     _name = 'good.issue.note.line'
