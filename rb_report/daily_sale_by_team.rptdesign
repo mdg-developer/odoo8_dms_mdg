@@ -58,6 +58,12 @@
     <property name="layoutPreference">auto layout</property>
     <property name="bidiLayoutOrientation">ltr</property>
     <property name="imageDPI">96</property>
+    <list-property name="libraries">
+        <structure>
+            <property name="fileName">rb_testing_report_library.rptlibrary</property>
+            <property name="namespace">rb_testing_report_library</property>
+        </structure>
+    </list-property>
     <parameters>
         <scalar-parameter name="From Date" id="944">
             <property name="valueType">static</property>
@@ -102,29 +108,8 @@
         </scalar-parameter>
     </parameters>
     <data-sources>
-        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="daily_sale_by_branch" id="4">
-            <list-property name="privateDriverProperties">
-                <ex-property>
-                    <name>contentBidiFormatStr</name>
-                    <value>ILYNN</value>
-                </ex-property>
-                <ex-property>
-                    <name>metadataBidiFormatStr</name>
-                    <value>ILYNN</value>
-                </ex-property>
-                <ex-property>
-                    <name>disabledMetadataBidiFormatStr</name>
-                </ex-property>
-                <ex-property>
-                    <name>disabledContentBidiFormatStr</name>
-                </ex-property>
-            </list-property>
-            <property name="odaDriverClass">org.postgresql.Driver</property>
-            <property name="odaURL">jdbc:postgresql://localhost:5432/rbd_uat</property>
-            <property name="odaUser">odoo</property>
-            <encrypted-property name="odaPassword" encryptionID="base64">b3BlbnBncHdk</encrypted-property>
-            <property name="odaJndiName">java:comp/env/jdbc/ReportDB</property>
-        </oda-data-source>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="1448"
+ extends="rb_testing_report_library.Data Source"/>
     </data-sources>
     <data-sets>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="daily_sale_by_team" id="479">
@@ -359,7 +344,7 @@
                     </structure>
                 </list-property>
             </structure>
-            <property name="dataSource">daily_sale_by_branch</property>
+            <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
                 <structure>
                     <property name="position">1</property>
@@ -653,7 +638,7 @@ product.default_code]]></xml-property>
                     </structure>
                 </list-property>
             </structure>
-            <property name="dataSource">daily_sale_by_branch</property>
+            <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
                 <structure>
                     <property name="position">1</property>
@@ -756,7 +741,7 @@ from crm_case_section]]></xml-property>
                     </structure>
                 </list-property>
             </structure>
-            <property name="dataSource">daily_sale_by_branch</property>
+            <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
                 <structure>
                     <property name="position">1</property>
@@ -793,100 +778,6 @@ where crm_case_section.id = ?]]></xml-property>
         </oda-data-set>
     </data-sets>
     <cubes>
-        <tabular-cube name="daily_sale_by_branch" id="778">
-            <property name="dimensions">
-                <tabular-dimension name="branch_code" id="779">
-                    <property name="defaultHierarchy">NewTabularHierarchy</property>
-                    <property name="hierarchies">
-                        <tabular-hierarchy name="NewTabularHierarchy" id="780">
-                            <property name="levels">
-                                <tabular-level name="branch_code" id="781">
-                                    <property name="dataType">string</property>
-                                    <property name="columnName">branch_code</property>
-                                </tabular-level>
-                            </property>
-                        </tabular-hierarchy>
-                    </property>
-                </tabular-dimension>
-                <tabular-dimension name="invoice_count" id="782">
-                    <property name="defaultHierarchy">NewTabularHierarchy1</property>
-                    <property name="hierarchies">
-                        <tabular-hierarchy name="NewTabularHierarchy1" id="783">
-                            <property name="levels">
-                                <tabular-level name="invoice_count" id="784">
-                                    <property name="dataType">decimal</property>
-                                    <property name="columnName">invoice_count</property>
-                                </tabular-level>
-                            </property>
-                        </tabular-hierarchy>
-                    </property>
-                </tabular-dimension>
-                <tabular-dimension name="main_group" id="785">
-                    <property name="defaultHierarchy">NewTabularHierarchy2</property>
-                    <property name="hierarchies">
-                        <tabular-hierarchy name="NewTabularHierarchy2" id="786">
-                            <property name="levels">
-                                <tabular-level name="main_group" id="787">
-                                    <property name="dataType">string</property>
-                                    <property name="columnName">main_group</property>
-                                </tabular-level>
-                            </property>
-                        </tabular-hierarchy>
-                    </property>
-                </tabular-dimension>
-                <tabular-dimension name="visit_count" id="788">
-                    <property name="defaultHierarchy">NewTabularHierarchy3</property>
-                    <property name="hierarchies">
-                        <tabular-hierarchy name="NewTabularHierarchy3" id="789">
-                            <property name="levels">
-                                <tabular-level name="visit_count" id="790">
-                                    <property name="dataType">decimal</property>
-                                    <property name="columnName">visit_count</property>
-                                </tabular-level>
-                            </property>
-                        </tabular-hierarchy>
-                    </property>
-                </tabular-dimension>
-                <tabular-dimension name="amount_total" id="791">
-                    <property name="defaultHierarchy">NewTabularHierarchy4</property>
-                    <property name="hierarchies">
-                        <tabular-hierarchy name="NewTabularHierarchy4" id="792">
-                            <property name="levels">
-                                <tabular-level name="amount_total" id="793">
-                                    <property name="dataType">decimal</property>
-                                    <property name="columnName">amount_total</property>
-                                </tabular-level>
-                            </property>
-                        </tabular-hierarchy>
-                    </property>
-                </tabular-dimension>
-                <tabular-dimension name="Serial No" id="835">
-                    <property name="defaultHierarchy">NewTabularHierarchy5</property>
-                    <property name="hierarchies">
-                        <tabular-hierarchy name="NewTabularHierarchy5" id="836">
-                            <property name="levels">
-                                <tabular-level name="Serial No_" id="837">
-                                    <property name="dataType">float</property>
-                                    <property name="levelType">dynamic</property>
-                                    <property name="columnName">Serial No.</property>
-                                </tabular-level>
-                            </property>
-                        </tabular-hierarchy>
-                    </property>
-                </tabular-dimension>
-            </property>
-            <property name="measureGroups">
-                <tabular-measure-group name="Summary Field" id="794">
-                    <property name="measures">
-                        <tabular-measure name="invoice_count" id="845">
-                            <expression name="measureExpression" type="javascript">dataSetRow["invoice_count"]</expression>
-                            <property name="dataType">decimal</property>
-                        </tabular-measure>
-                    </property>
-                </tabular-measure-group>
-            </property>
-            <property name="dataSet">daily_sale_by_team</property>
-        </tabular-cube>
         <tabular-cube name="daily_sale_by_team" id="963">
             <property name="dimensions">
                 <tabular-dimension name="outlet_name" id="964">
