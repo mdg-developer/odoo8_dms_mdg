@@ -45,6 +45,12 @@
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="bidiLayoutOrientation">ltr</property>
     <property name="imageDPI">96</property>
+    <list-property name="libraries">
+        <structure>
+            <property name="fileName">rb_testing_report_library.rptlibrary</property>
+            <property name="namespace">rb_testing_report_library</property>
+        </structure>
+    </list-property>
     <parameters>
         <scalar-parameter name="From Date" id="944">
             <property name="valueType">static</property>
@@ -70,29 +76,8 @@
         </scalar-parameter>
     </parameters>
     <data-sources>
-        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="daily_sale_by_branch" id="4">
-            <list-property name="privateDriverProperties">
-                <ex-property>
-                    <name>contentBidiFormatStr</name>
-                    <value>ILYNN</value>
-                </ex-property>
-                <ex-property>
-                    <name>metadataBidiFormatStr</name>
-                    <value>ILYNN</value>
-                </ex-property>
-                <ex-property>
-                    <name>disabledMetadataBidiFormatStr</name>
-                </ex-property>
-                <ex-property>
-                    <name>disabledContentBidiFormatStr</name>
-                </ex-property>
-            </list-property>
-            <property name="odaDriverClass">org.postgresql.Driver</property>
-            <property name="odaURL">jdbc:postgresql://localhost:5432/rbd_uat</property>
-            <property name="odaUser">odoo</property>
-            <encrypted-property name="odaPassword" encryptionID="base64">b3BlbnBncHdk</encrypted-property>
-            <property name="odaJndiName">java:comp/env/jdbc/ReportDB</property>
-        </oda-data-source>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="946"
+ extends="rb_testing_report_library.Data Source"/>
     </data-sources>
     <data-sets>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="daily_sale_by_branch" id="479">
@@ -237,7 +222,7 @@
                     </structure>
                 </list-property>
             </structure>
-            <property name="dataSource">daily_sale_by_branch</property>
+            <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
                 <structure>
                     <property name="position">1</property>
