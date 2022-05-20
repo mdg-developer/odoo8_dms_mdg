@@ -566,6 +566,7 @@ on branch.branch_code=customer_visit.branch_code
             <property name="contentType">auto</property>
             <text-property name="content"><![CDATA[Daily Tablet Sale Report by Branch]]></text-property>
         </text>
+        <label id="969"/>
         <extended-item extensionName="Crosstab" extensionVersion="3.7.0" id="894">
             <property name="cube">daily_sale_by_branch</property>
             <property name="measures">
@@ -586,35 +587,18 @@ on branch.branch_code=customer_visit.branch_code
                             <property name="content">
                                 <data id="921">
                                     <structure name="numberFormat">
-                                        <property name="category">General Number</property>
-                                        <property name="pattern">General Number</property>
+                                        <property name="category">Currency</property>
+                                        <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
                                         <property name="locale">en</property>
                                     </structure>
-                                    <property name="textAlign">right</property>
+                                    <property name="textAlign">center</property>
                                     <property name="resultSetColumn">invoice_count_amount_total/amount_total_main_group/main_group</property>
                                 </data>
                             </property>
                         </extended-item>
                     </property>
                     <property name="aggregations">
-                        <extended-item extensionName="AggregationCell" id="929">
-                            <property name="aggregationOnColumn">main_group/main_group</property>
-                            <property name="borderTopStyle">solid</property>
-                            <property name="borderTopWidth">thin</property>
-                            <property name="borderLeftStyle">solid</property>
-                            <property name="borderLeftWidth">thin</property>
-                            <property name="borderBottomStyle">solid</property>
-                            <property name="borderBottomWidth">thin</property>
-                            <property name="borderRightStyle">solid</property>
-                            <property name="borderRightWidth">thin</property>
-                            <property name="content">
-                                <data id="930">
-                                    <property name="textAlign">right</property>
-                                    <property name="resultSetColumn">invoice_count_main_group/main_group</property>
-                                </data>
-                            </property>
-                        </extended-item>
-                        <extended-item extensionName="AggregationCell" id="934">
+                        <extended-item extensionName="AggregationCell" id="956">
                             <property name="aggregationOnRow">amount_total/amount_total</property>
                             <property name="borderTopStyle">solid</property>
                             <property name="borderTopWidth">thin</property>
@@ -625,18 +609,54 @@ on branch.branch_code=customer_visit.branch_code
                             <property name="borderRightStyle">solid</property>
                             <property name="borderRightWidth">thin</property>
                             <property name="content">
-                                <data id="935">
-                                    <property name="numberAlign">right</property>
-                                    <property name="textAlign">right</property>
-                                    <property name="resultSetColumn">invoice_count_amount_total/amount_total</property>
+                                <data id="957">
+                                    <structure name="numberFormat">
+                                        <property name="category">Custom</property>
+                                    </structure>
+                                    <property name="textAlign">center</property>
+                                    <property name="resultSetColumn">invoice_count_amount_total/amount_total_2</property>
                                 </data>
                             </property>
                         </extended-item>
-                        <extended-item extensionName="AggregationCell" id="936">
+                        <extended-item extensionName="AggregationCell" id="964">
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">thin</property>
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">thin</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">thin</property>
                             <property name="content">
-                                <data id="937">
-                                    <property name="textAlign">right</property>
-                                    <property name="resultSetColumn">invoice_count</property>
+                                <data id="965">
+                                    <structure name="numberFormat">
+                                        <property name="category">Currency</property>
+                                        <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
+                                    </structure>
+                                    <property name="textAlign">center</property>
+                                    <property name="resultSetColumn">invoice_count_2</property>
+                                </data>
+                            </property>
+                        </extended-item>
+                        <extended-item extensionName="AggregationCell" id="966">
+                            <property name="aggregationOnColumn">main_group/main_group</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">thin</property>
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">thin</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">thin</property>
+                            <property name="content">
+                                <data id="967">
+                                    <property name="paddingRight">1pt</property>
+                                    <structure name="numberFormat">
+                                        <property name="category">Currency</property>
+                                        <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
+                                    </structure>
+                                    <property name="textAlign">center</property>
+                                    <property name="resultSetColumn">invoice_count_main_group/main_group</property>
                                 </data>
                             </property>
                         </extended-item>
@@ -658,21 +678,12 @@ on branch.branch_code=customer_visit.branch_code
                             <property name="borderRightStyle">solid</property>
                             <property name="borderRightWidth">thin</property>
                         </extended-item>
-                        <extended-item extensionName="CrosstabCell" id="938">
+                        <extended-item extensionName="CrosstabCell" id="960">
                             <property name="content">
-                                <label id="940">
-                                    <property name="textAlign">center</property>
-                                    <text-property name="text">Total Invoice</text-property>
+                                <label id="961">
+                                    <text-property name="text">invoice_count</text-property>
                                 </label>
                             </property>
-                            <property name="borderTopStyle">solid</property>
-                            <property name="borderTopWidth">thin</property>
-                            <property name="borderLeftStyle">solid</property>
-                            <property name="borderLeftWidth">thin</property>
-                            <property name="borderBottomStyle">solid</property>
-                            <property name="borderBottomWidth">thin</property>
-                            <property name="borderRightStyle">solid</property>
-                            <property name="borderRightWidth">thin</property>
                         </extended-item>
                     </property>
                 </extended-item>
@@ -680,11 +691,10 @@ on branch.branch_code=customer_visit.branch_code
             <property name="rows">
                 <extended-item extensionName="CrosstabView" id="896">
                     <property name="grandTotal">
-                        <extended-item extensionName="CrosstabCell" id="928">
+                        <extended-item extensionName="CrosstabCell" id="963">
                             <property name="content">
-                                <label id="931">
-                                    <property name="textAlign">right</property>
-                                    <text-property name="text">Total Invoice</text-property>
+                                <label id="968">
+                                    <text-property name="text">Grand Total</text-property>
                                 </label>
                             </property>
                             <property name="borderTopStyle">solid</property>
@@ -707,6 +717,7 @@ on branch.branch_code=customer_visit.branch_code
                                         <extended-item extensionName="CrosstabCell" id="899">
                                             <property name="content">
                                                 <data name="branch_code" id="900">
+                                                    <property name="fontWeight">normal</property>
                                                     <property name="textAlign">left</property>
                                                     <property name="resultSetColumn">branch_code</property>
                                                 </data>
@@ -733,12 +744,13 @@ on branch.branch_code=customer_visit.branch_code
                                         <extended-item extensionName="CrosstabCell" id="904">
                                             <property name="content">
                                                 <data name="visit_count" id="906">
+                                                    <property name="fontWeight">normal</property>
                                                     <structure name="numberFormat">
                                                         <property name="category">General Number</property>
                                                         <property name="pattern">General Number</property>
                                                         <property name="locale">en</property>
                                                     </structure>
-                                                    <property name="textAlign">left</property>
+                                                    <property name="textAlign">center</property>
                                                     <property name="resultSetColumn">visit_count</property>
                                                 </data>
                                             </property>
@@ -764,6 +776,7 @@ on branch.branch_code=customer_visit.branch_code
                                         <extended-item extensionName="CrosstabCell" id="910">
                                             <property name="content">
                                                 <data name="amount_total" id="912">
+                                                    <property name="fontWeight">normal</property>
                                                     <property name="textAlign">right</property>
                                                     <property name="resultSetColumn">amount_total</property>
                                                 </data>
@@ -787,7 +800,12 @@ on branch.branch_code=customer_visit.branch_code
             <property name="columns">
                 <extended-item extensionName="CrosstabView" id="914">
                     <property name="grandTotal">
-                        <extended-item extensionName="CrosstabCell" id="933">
+                        <extended-item extensionName="CrosstabCell" id="955">
+                            <property name="content">
+                                <label id="962">
+                                    <text-property name="text">Grand Total</text-property>
+                                </label>
+                            </property>
                             <property name="borderTopStyle">solid</property>
                             <property name="borderTopWidth">thin</property>
                             <property name="borderLeftStyle">solid</property>
@@ -799,13 +817,18 @@ on branch.branch_code=customer_visit.branch_code
                         </extended-item>
                     </property>
                     <property name="views">
-                        <extended-item extensionName="DimensionView" id="915">
+                        <extended-item extensionName="DimensionView" id="949">
                             <property name="dimension">main_group</property>
                             <property name="levels">
-                                <extended-item extensionName="LevelView" name="NewLevel View3" id="916">
+                                <extended-item extensionName="LevelView" name="NewLevel View3" id="950">
                                     <property name="level">main_group/main_group</property>
                                     <property name="member">
-                                        <extended-item extensionName="CrosstabCell" id="917">
+                                        <extended-item extensionName="CrosstabCell" id="951">
+                                            <property name="content">
+                                                <data name="main_group1" id="954">
+                                                    <property name="resultSetColumn">main_group</property>
+                                                </data>
+                                            </property>
                                             <property name="borderTopStyle">solid</property>
                                             <property name="borderTopWidth">thin</property>
                                             <property name="borderLeftStyle">solid</property>
@@ -823,9 +846,6 @@ on branch.branch_code=customer_visit.branch_code
                 </extended-item>
             </property>
             <property name="header">
-                <extended-item extensionName="CrosstabCell" id="924"/>
-                <extended-item extensionName="CrosstabCell" id="925"/>
-                <extended-item extensionName="CrosstabCell" id="926"/>
                 <extended-item extensionName="CrosstabCell" id="895">
                     <property name="content">
                         <label id="901">
@@ -873,6 +893,7 @@ on branch.branch_code=customer_visit.branch_code
                     <property name="borderRightWidth">thin</property>
                 </extended-item>
             </property>
+            <property name="hideMeasureHeader">true</property>
             <property name="borderTopStyle">solid</property>
             <property name="borderTopWidth">thin</property>
             <property name="borderLeftStyle">solid</property>
@@ -898,24 +919,39 @@ on branch.branch_code=customer_visit.branch_code
                     <property name="dataType">decimal</property>
                 </structure>
                 <structure>
-                    <property name="name">main_group</property>
-                    <expression name="expression">dimension["main_group"]["main_group"]</expression>
-                    <property name="dataType">string</property>
+                    <property name="name">invoice_count_amount_total/amount_total</property>
+                    <expression name="expression">measure["invoice_count"]</expression>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>amount_total/amount_total</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">sum</property>
                 </structure>
                 <structure>
-                    <property name="name">invoice_count_amount_total/amount_total_main_group/main_group</property>
+                    <property name="name">invoice_count</property>
+                    <expression name="expression">measure["invoice_count"]</expression>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">sum</property>
+                </structure>
+                <structure>
+                    <property name="name">invoice_count_1</property>
+                    <expression name="expression">measure["invoice_count"]</expression>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">sum</property>
+                </structure>
+                <structure>
+                    <property name="name">invoice_count_amount_total/amount_total_1</property>
+                    <expression name="expression">measure["invoice_count"]</expression>
                     <property name="dataType">decimal</property>
                     <simple-property-list name="aggregateOn">
                         <value>amount_total/amount_total</value>
-                        <value>main_group/main_group</value>
                     </simple-property-list>
                     <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">measure["invoice_count"]</expression>
-                        </structure>
-                    </list-property>
+                </structure>
+                <structure>
+                    <property name="name">main_group</property>
+                    <expression name="expression">dimension["main_group"]["main_group"]</expression>
+                    <property name="dataType">string</property>
                 </structure>
                 <structure>
                     <property name="name">invoice_count_main_group/main_group</property>
@@ -927,7 +963,17 @@ on branch.branch_code=customer_visit.branch_code
                     <property name="aggregateFunction">sum</property>
                 </structure>
                 <structure>
-                    <property name="name">invoice_count_amount_total/amount_total</property>
+                    <property name="name">invoice_count_amount_total/amount_total_main_group/main_group</property>
+                    <expression name="expression">measure["invoice_count"]</expression>
+                    <property name="dataType">decimal</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>amount_total/amount_total</value>
+                        <value>main_group/main_group</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                </structure>
+                <structure>
+                    <property name="name">invoice_count_amount_total/amount_total_2</property>
                     <expression name="expression">measure["invoice_count"]</expression>
                     <property name="dataType">float</property>
                     <simple-property-list name="aggregateOn">
@@ -936,7 +982,7 @@ on branch.branch_code=customer_visit.branch_code
                     <property name="aggregateFunction">sum</property>
                 </structure>
                 <structure>
-                    <property name="name">invoice_count</property>
+                    <property name="name">invoice_count_2</property>
                     <expression name="expression">measure["invoice_count"]</expression>
                     <property name="dataType">float</property>
                     <property name="aggregateFunction">sum</property>
