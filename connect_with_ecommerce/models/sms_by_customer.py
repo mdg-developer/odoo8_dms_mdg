@@ -27,22 +27,27 @@ class sms_by_customer(osv.osv):
         data = None     
         error_msg = None  
         error_log = None       
-        boom_sms_key = self.pool.get('ir.config_parameter').get_param(cr, uid, 'boom_sms_key', default=False, context=context)
-        headers = {
-                   'Accept': 'application/json',
-                   'Authorization' : 'Bearer {0}'.format(boom_sms_key),
-                   }
-        url = 'https://boomsms.net/api/sms/json'
         for partner in record.partner_ids:
             try: 
-                mobile = partner.mobile
-                data = {
-                        'from' : 'Burmart',
-                        'text' : message,
-                        'to'   : mobile,
-                        }
-                response = requests.post(url,json=data, headers=headers, timeout=60, verify=False)
-                if response.status_code == 200:                
+                if partner.mobile.startswith('09-') or partner.mobile.startswith('09'):
+                    if partner.mobile.startswith('09-'):
+                        phone = '959' + str(partner.mobile[3:])
+                    else:
+                        phone = '959' + str(partner.mobile[2:])
+                if partner.mobile.startswith('+959'):
+                    phone = '959' + str(partner.mobile[4:])
+                text_message = message.encode("utf-16-be")
+                hex_message = text_message.encode('hex')
+                vals = {
+                    'phone': str(phone),
+                    'message': hex_message,
+                    'partner_id': partner.id,
+                    'name': record.title,
+                    'text_message': message,
+                }
+                sms_message = self.pool.get('sms.message').create(cr, uid, vals)
+                message_obj = self.pool.get('sms.message').browse(cr, uid, sms_message, context=context)
+                if message_obj.status == 'success':
                     sms_status = 'success'  
                     data = message
                 else:
@@ -57,8 +62,8 @@ class sms_by_customer(osv.osv):
             current_datetime_data = cr.fetchall()
             for time_data in current_datetime_data:
                 current_datetime = time_data[0] 
-            cr.execute("""insert into sms_message(name,phone,message,error_log,status,create_date,create_uid) 
-                        values(%s,%s,%s,%s,%s,%s,%s)""",('SMS by Customer',mobile,message,error_log,sms_status,current_datetime,1,))          
+            cr.execute("""insert into sms_message(name,partner_id,phone,text_message,error_log,status,create_date,create_uid) 
+                        values(%s,%s,%s,%s,%s,%s,%s,%s)""",('SMS by Customer',partner.id,str(phone),message,error_log,sms_status,current_datetime,1,))
         if sms_status == 'success':
             self.write(cr, uid, ids, {'state': 'send'}, context=context) 
         else:
