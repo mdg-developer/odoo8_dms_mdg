@@ -2809,7 +2809,7 @@ class mobile_sale_order(osv.osv):
         return datas
     
     def get_asset_type(self, cr, uid, context=None, **kwargs):    
-        cr.execute("""select conf.id,conf.name,type.name as asset_type,is_auto_fill,type from asset_configuration conf ,asset_type type where conf.asset_type_id=type.id""")
+        cr.execute("""select conf.id,conf.name,type.name as asset_type,is_auto_fill,type,conf.active,type.active from asset_configuration conf ,asset_type type where conf.asset_type_id=type.id""")
         datas = cr.fetchall()        
         return datas
     
@@ -2835,11 +2835,13 @@ class mobile_sale_order(osv.osv):
         is_supervisor=team_data.is_supervisor           
         if is_supervisor==True:
             cr.execute('''            
-                    select A.name as id ,(select name from asset_configuration where id = A.asset_name_id)as asset_name ,A.partner_id,substring(encode(image::bytea, 'hex'),1,5) as image
+                    select A.name as id ,(C.name) as asset_name,A.partner_id,substring(encode(image::bytea, 'hex'),1,5) as image
                             ,A.qty,A.date,B.name,A.type,A.id as asset_db_id
-                            from res_partner_asset A, asset_type B
+                            from res_partner_asset A, asset_type B ,asset_configuration C
                             where A.asset_type = B.id
                             and A.active=True
+                            and A.asset_name_id=C.id                             
+                            and C.active=True                            
                     AND A.partner_id IN  (
                    select partner_id from (
                     (select distinct b.partner_id from res_partner_res_partner_category_rel a,
@@ -2862,11 +2864,13 @@ class mobile_sale_order(osv.osv):
             datas=cr.fetchall()            
         else:
             cr.execute('''            
-                           select A.name as id ,(select name from asset_configuration where id = A.asset_name_id) as asset_name,A.partner_id,substring(encode(image::bytea, 'hex'),1,5) as image
+                           select A.name as id ,(C.name) as asset_name,A.partner_id,substring(encode(image::bytea, 'hex'),1,5) as image
                             ,A.qty,A.date,B.name,A.type,A.id as asset_db_id
-                            from res_partner_asset A, asset_type B
+                            from res_partner_asset A, asset_type B ,asset_configuration C
                             where A.asset_type = B.id
                             and A.active=True 
+                            and A.asset_name_id=C.id      
+                            and C.active=True                            
                             AND A.partner_id IN  (
                            select partner_id from (
                             (select distinct b.partner_id from res_partner_res_partner_category_rel a,
@@ -2885,7 +2889,7 @@ class mobile_sale_order(osv.osv):
                             )a group by partner_id
                             )
                      ''', (section_id,section_id,))                
-            datas=cr.fetchall()            
+            datas=cr.fetchall()                    
         return datas
             
     # Get Pending Delivery
