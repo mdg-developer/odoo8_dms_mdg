@@ -60,6 +60,7 @@ Connect With Ecommerce
         'views/app_announcement_view.xml',
         'wizards/township_multi_sync_woo_view.xml',
         'views/noti_by_customer_view.xml',
+        'views/sms_by_customer_view.xml',
                 ],
     'installable': True,
     'auto_install': False,
