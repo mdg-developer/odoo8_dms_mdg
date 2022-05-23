@@ -43,6 +43,7 @@
     </list-property>
     <property name="units">in</property>
     <property name="iconFile">/templates/blank_report.gif</property>
+    <property name="layoutPreference">auto layout</property>
     <property name="bidiLayoutOrientation">ltr</property>
     <property name="imageDPI">96</property>
     <list-property name="libraries">
@@ -552,6 +553,7 @@ on branch.branch_code=customer_visit.branch_code
     </cubes>
     <page-setup>
         <simple-master-page name="Simple MasterPage" id="2">
+            <property name="orientation">auto</property>
             <page-footer>
                 <text id="3">
                     <property name="contentType">html</property>
@@ -562,7 +564,9 @@ on branch.branch_code=customer_visit.branch_code
     </page-setup>
     <body>
         <text id="507">
+            <property name="fontFamily">sans-serif</property>
             <property name="fontSize">large</property>
+            <property name="fontWeight">bold</property>
             <property name="contentType">auto</property>
             <text-property name="content"><![CDATA[Daily Tablet Sale Report by Branch]]></text-property>
         </text>
@@ -584,6 +588,7 @@ on branch.branch_code=customer_visit.branch_code
                             <property name="borderBottomWidth">thin</property>
                             <property name="borderRightStyle">solid</property>
                             <property name="borderRightWidth">thin</property>
+                            <property name="width">0.7916666666666666in</property>
                             <property name="content">
                                 <data id="921">
                                     <structure name="numberFormat">
@@ -608,6 +613,7 @@ on branch.branch_code=customer_visit.branch_code
                             <property name="borderBottomWidth">thin</property>
                             <property name="borderRightStyle">solid</property>
                             <property name="borderRightWidth">thin</property>
+                            <property name="width">286px</property>
                             <property name="content">
                                 <data id="957">
                                     <structure name="numberFormat">
@@ -694,6 +700,8 @@ on branch.branch_code=customer_visit.branch_code
                         <extended-item extensionName="CrosstabCell" id="963">
                             <property name="content">
                                 <label id="968">
+                                    <property name="fontFamily">sans-serif</property>
+                                    <property name="fontWeight">bold</property>
                                     <text-property name="text">Grand Total</text-property>
                                 </label>
                             </property>
@@ -730,6 +738,7 @@ on branch.branch_code=customer_visit.branch_code
                                             <property name="borderBottomWidth">thin</property>
                                             <property name="borderRightStyle">solid</property>
                                             <property name="borderRightWidth">thin</property>
+                                            <property name="width">0.65625in</property>
                                         </extended-item>
                                     </property>
                                 </extended-item>
@@ -762,6 +771,7 @@ on branch.branch_code=customer_visit.branch_code
                                             <property name="borderBottomWidth">thin</property>
                                             <property name="borderRightStyle">solid</property>
                                             <property name="borderRightWidth">thin</property>
+                                            <property name="width">1.15625in</property>
                                         </extended-item>
                                     </property>
                                 </extended-item>
@@ -777,6 +787,10 @@ on branch.branch_code=customer_visit.branch_code
                                             <property name="content">
                                                 <data name="amount_total" id="912">
                                                     <property name="fontWeight">normal</property>
+                                                    <structure name="numberFormat">
+                                                        <property name="category">Currency</property>
+                                                        <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
+                                                    </structure>
                                                     <property name="textAlign">right</property>
                                                     <property name="resultSetColumn">amount_total</property>
                                                 </data>
@@ -789,6 +803,7 @@ on branch.branch_code=customer_visit.branch_code
                                             <property name="borderBottomWidth">thin</property>
                                             <property name="borderRightStyle">solid</property>
                                             <property name="borderRightWidth">thin</property>
+                                            <property name="width">1.0416666666666667in</property>
                                         </extended-item>
                                     </property>
                                 </extended-item>
@@ -803,6 +818,8 @@ on branch.branch_code=customer_visit.branch_code
                         <extended-item extensionName="CrosstabCell" id="955">
                             <property name="content">
                                 <label id="962">
+                                    <property name="fontFamily">sans-serif</property>
+                                    <property name="fontWeight">bold</property>
                                     <text-property name="text">Grand Total</text-property>
                                 </label>
                             </property>
@@ -826,6 +843,8 @@ on branch.branch_code=customer_visit.branch_code
                                         <extended-item extensionName="CrosstabCell" id="951">
                                             <property name="content">
                                                 <data name="main_group1" id="954">
+                                                    <property name="fontFamily">sans-serif</property>
+                                                    <property name="fontWeight">bold</property>
                                                     <property name="resultSetColumn">main_group</property>
                                                 </data>
                                             </property>
@@ -849,6 +868,8 @@ on branch.branch_code=customer_visit.branch_code
                 <extended-item extensionName="CrosstabCell" id="895">
                     <property name="content">
                         <label id="901">
+                            <property name="fontFamily">sans-serif</property>
+                            <property name="fontWeight">bold</property>
                             <text-property name="text">Branch</text-property>
                         </label>
                     </property>
@@ -864,6 +885,8 @@ on branch.branch_code=customer_visit.branch_code
                 <extended-item extensionName="CrosstabCell" id="905">
                     <property name="content">
                         <label id="907">
+                            <property name="fontFamily">sans-serif</property>
+                            <property name="fontWeight">bold</property>
                             <text-property name="text">Visit Count</text-property>
                         </label>
                     </property>
@@ -879,6 +902,8 @@ on branch.branch_code=customer_visit.branch_code
                 <extended-item extensionName="CrosstabCell" id="911">
                     <property name="content">
                         <label id="913">
+                            <property name="fontFamily">sans-serif</property>
+                            <property name="fontWeight">bold</property>
                             <property name="textAlign">center</property>
                             <text-property name="text">Amount Total</text-property>
                         </label>
