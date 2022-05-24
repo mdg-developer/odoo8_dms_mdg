@@ -138,8 +138,8 @@
                     <property name="name">from_date</property>
                     <property name="paramName">From Date</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">dateTime</property>
-                    <property name="nativeDataType">0</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
                     <property name="position">1</property>
                     <property name="isOptional">false</property>
                     <property name="isInput">true</property>
@@ -149,8 +149,8 @@
                     <property name="name">to_date</property>
                     <property name="paramName">To Date</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">dateTime</property>
-                    <property name="nativeDataType">0</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
                     <property name="position">2</property>
                     <property name="isOptional">false</property>
                     <property name="isInput">true</property>
@@ -159,7 +159,9 @@
                 <structure>
                     <property name="name">from_date_1</property>
                     <property name="paramName">From Date</property>
+                    <property name="nativeName"></property>
                     <property name="dataType">dateTime</property>
+                    <property name="nativeDataType">91</property>
                     <property name="position">3</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
@@ -167,7 +169,9 @@
                 <structure>
                     <property name="name">to_date_1</property>
                     <property name="paramName">To Date</property>
+                    <property name="nativeName"></property>
                     <property name="dataType">dateTime</property>
+                    <property name="nativeDataType">91</property>
                     <property name="position">4</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
@@ -175,7 +179,9 @@
                 <structure>
                     <property name="name">from_date_2</property>
                     <property name="paramName">From Date</property>
+                    <property name="nativeName"></property>
                     <property name="dataType">dateTime</property>
+                    <property name="nativeDataType">91</property>
                     <property name="position">5</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
@@ -183,7 +189,9 @@
                 <structure>
                     <property name="name">to_date_2</property>
                     <property name="paramName">To Date</property>
+                    <property name="nativeName"></property>
                     <property name="dataType">dateTime</property>
+                    <property name="nativeDataType">91</property>
                     <property name="position">6</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
@@ -306,7 +314,7 @@ left join
 (
 select branch.branch_code,count(visit.*) as visit_count from customer_visit visit 
 left join res_branch branch on visit.branch_id=branch.id
-where date >= ? and date <= ?
+where ((date at time zone 'utc' ) at time zone 'asia/rangoon')::date between ? and ?
 group by branch.branch_code
 )customer_visit
 on branch.branch_code=customer_visit.branch_code
