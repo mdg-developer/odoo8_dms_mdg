@@ -54,10 +54,16 @@ class product_pricelist(osv.osv):
                         pricelist_id = data.id
                         if data.consumer == True:                                                    
                             price_info = product_code + "," + str(int(price)) + ",,"                                           
-                            wcapi.put('dynamic-price-consumer',str(price_info)) 
+                            response = wcapi.put('dynamic-price-consumer',str(price_info))
+                            if response.status_code not in [200,201]:
+                                message = "Error in syncing response pricelist for product %s %s"%(product.name_template,response.content)
+                                raise except_orm(_('UserError'), _("%s!") % (message,))
                         if data.retail == True and data.branch_id:
                             price_info = product_code + "," + str(int(price)) + "," + str(data.branch_id.name)                      
-                            wcapi.put('insert-price-userrole',price_info)
+                            response = wcapi.put('insert-price-userrole',price_info)
+                            if response.status_code not in [200,201]:
+                                message = "Error in syncing response pricelist for product %s %s"%(product.name_template,response.content)
+                                raise except_orm(_('UserError'), _("%s!") % (message,))
             if data.is_sync_woo != True:
                 self.write(cr, uid, ids, {'is_sync_woo': True}, context=context)
             
