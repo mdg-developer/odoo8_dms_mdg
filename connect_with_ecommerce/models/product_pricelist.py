@@ -25,6 +25,8 @@ class product_pricelist(osv.osv):
     def sync_to_woo(self, cr, uid, ids, context=None):
         
         data = self.browse(cr,uid,ids[0])
+        consumer_product_data = ""
+        product_data = ""
         if data.consumer == True or data.retail == True:
             woo_instance_obj = self.pool.get('woo.instance.ept')
             product_obj = self.pool.get('product.product')
@@ -54,16 +56,26 @@ class product_pricelist(osv.osv):
                         pricelist_id = data.id
                         if data.consumer == True:                                                    
                             price_info = product_code + "," + str(int(price)) + ",,"                                           
-                            response = wcapi.put('dynamic-price-consumer',str(price_info))
-                            if response.status_code not in [200,201]:
-                                message = "Error in syncing response pricelist for product %s %s"%(product.name_template,response.content)
-                                raise except_orm(_('UserError'), _("%s!") % (message,))
+                            if consumer_product_data == "":
+                                consumer_product_data = price_info
+                            else:
+                                consumer_product_data = consumer_product_data + "/ " + price_info
                         if data.retail == True and data.branch_id:
-                            price_info = product_code + "," + str(int(price)) + "," + str(data.branch_id.name)                      
-                            response = wcapi.put('insert-price-userrole',price_info)
-                            if response.status_code not in [200,201]:
-                                message = "Error in syncing response pricelist for product %s %s"%(product.name_template,response.content)
-                                raise except_orm(_('UserError'), _("%s!") % (message,))
+                            price_info = product_code + "," + str(int(price)) + "," + str(data.branch_id.name)
+                            if product_data == "":
+                                product_data = price_info
+                            else:
+                                product_data = product_data + "/ " + price_info
+            if consumer_product_data:
+                response = wcapi.put('dynamic-price-consumer-all-products', consumer_product_data)
+                if response.status_code not in [200, 201]:
+                    message = "Error in syncing response pricelist %s" % (response.content)
+                    raise except_orm(_('UserError'), _("%s!") % (message,))
+            if product_data:
+                response = wcapi.put('insert-price-userrole-all-products',product_data)
+                if response.status_code not in [200,201]:
+                    message = "Error in syncing response pricelist %s"%(response.content)
+                    raise except_orm(_('UserError'), _("%s!") % (message,))
             if data.is_sync_woo != True:
                 self.write(cr, uid, ids, {'is_sync_woo': True}, context=context)
             
