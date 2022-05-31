@@ -1,5 +1,5 @@
 -- FUNCTION: stock_movement_data()
--- select * from stock_movement_data('2019-04-01','2019-04-30')
+-- select * from stock_movement_data('2019-04-01','2019-04-01')
 -- DROP FUNCTION stock_movement_data();
 
 CREATE OR REPLACE FUNCTION stock_movement_data(from_date date,to_date date)
@@ -38,10 +38,11 @@ AS $BODY$
 			   where s.product_uom=suom.id
 			   and s.location_id=fl.id
 			   and s.state='done'
+			   and fl.active=true
 			   and fl.usage!='supplier'
 			   and fl.usage!='customer'
 			   and fl.usage in ('internal','transit')
-			   and s.date between from_date and to_date
+			   and s.date <= to_date
 			   union
 			   select s.id,s.location_dest_id,s.product_id,s.date, s.origin, suom.factor product_uom
 			   from stock_move s,
@@ -50,10 +51,11 @@ AS $BODY$
 			   where s.product_uom=suom.id
 			   and s.location_dest_id=tl.id
 			   and s.state='done'
+			   and tl.active=true
 			   and tl.usage!='supplier'
 			   and tl.usage!='customer'
 			   and tl.usage in ('internal','transit')
-			   and s.date between from_date and to_date
+			   and s.date <= to_date
 			)tmp
 		)
 		s
@@ -89,7 +91,7 @@ AS $BODY$
 			and s.state='done'
 		   	and tl.usage!='customer'
 		   	and tl.usage!='supplier'
-			and s.date between from_date and to_date
+			and s.date <= to_date
 		   	) move_in on move_in.product_id=s.product_id and move_in.location_dest_id=s.location_id
 		   	and move_in.date=s.date and move_in.id=s.id and move_in.product_uom=s.product_uom
 
@@ -125,7 +127,7 @@ AS $BODY$
 				and s.state='done'
 			   	and fl.usage!='supplier'
 			   	and fl.usage!='customer'
-				and s.date between from_date and to_date
+				and s.date <= to_date
 		   ) move_out on s.product_id=move_out.product_id and s.location_id=move_out.location_id
 		   and move_out.date=s.date and move_out.id=s.id and move_out.product_uom=s.product_uom
 

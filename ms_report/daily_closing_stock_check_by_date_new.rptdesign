@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.24" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 4.10.0.v202204260816</property>
     <list-property name="propertyBindings">
         <structure>
             <property name="name">queryText</property>
@@ -163,9 +163,12 @@
                     <property name="nativeDataType">12</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select pp.id,pp.name_template from product_product pp, product_template pt 
+            <xml-property name="queryText"><![CDATA[select pp.id,pp.name_template 
+from product_product pp, product_template pt 
 where pp.product_tmpl_id = pt.id
-]]></xml-property>
+and pp.active=true
+and pt.active=true
+and type='product']]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -1672,7 +1675,9 @@ where code = ?]]></xml-property>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select id,complete_name		
-from stock_location where usage in ('internal' ,'transit')
+from stock_location 
+where usage in ('internal' ,'transit')
+and active=true
 --$warehouse$
 order by name]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
