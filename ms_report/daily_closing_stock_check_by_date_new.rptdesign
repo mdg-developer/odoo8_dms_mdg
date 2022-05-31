@@ -602,7 +602,8 @@ this.queryText =this.queryText.replace("--$location_id$", "")
 else
 {
 this.queryText =this.queryText.replace("--$location_id$", " and x_location_id in (" + params["location_id"].value.join(",") + ")")
-}]]></method>
+}
+this.queryText = this.queryText.replace("xxx", params["product_id"].value.join(","));]]></method>
             <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
                 <structure>
@@ -818,7 +819,7 @@ end as x_move_type,
 d.opening as x_opening,
 d.qty as x_qty,
 d.closing as x_closing
-from stock_movement_data(?,?) m
+from stock_movement_data(?,?,'xxx') m
 left join
 (
 select t.name,p.default_code,p.id,pc.name as categ,pm.name as maingroup, pg.name as pgroup
@@ -846,7 +847,7 @@ left join
 SELECT x_id,x_location_id, x_product_id, x_date
    , sum(x_balance) OVER (PARTITION BY x_location_id, x_product_id ORDER BY x_date,x_uom) - x_balance as opening,
    x_balance as qty, sum(x_balance) OVER (PARTITION BY x_location_id, x_product_id ORDER BY x_date,x_uom) as closing
-FROM   stock_movement_data(?,?)
+FROM   stock_movement_data(?,?,'xxx')
 ORDER  BY x_product_id, x_location_id, x_date
 ) d on m.x_location_id=d.x_location_id and m.x_product_id=d.x_product_id  and m.x_date=d.x_date and m.x_id = d.x_id
 order by m.x_location_id,m.x_product_id,m.x_date,m.x_uom
@@ -859,68 +860,6 @@ where date between ? and ?
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
-  <DataSetParameters>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>3</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>4</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>5</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>6</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-  </DataSetParameters>
   <design:ResultSets derivedMetaData="true">
     <design:resultSetDefinitions>
       <design:resultSetColumns>
