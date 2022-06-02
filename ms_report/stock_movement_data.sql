@@ -283,7 +283,7 @@ ALTER FUNCTION stock_movement_data(date,date,text)
     OWNER TO odoo;
     
 -- FUNCTION: stock_movement_data()
--- select * from stock_movement_data('2019-04-01','2019-04-01','1,2','10255')
+-- select * from stock_movement_data('2022-06-01','2022-06-01','523','1396') where x_source='GIN/2022/0039885'
 -- select * from product_product where id in (select unnest (string_to_array('1,2', ',')::integer[]))
 -- DROP FUNCTION stock_movement_data();
 
@@ -328,7 +328,7 @@ AS $BODY$
 			   and fl.usage!='supplier'
 			   and fl.usage!='customer'
 			   and fl.usage in ('internal','transit')
-			   and s.date <= to_date
+			   and ((s.date at time zone 'utc' )at time zone 'asia/rangoon')::date <= to_date
 			   and s.product_id in (select unnest (string_to_array(product_ids, ',')::integer[]))
 			   union
 			   select s.id,s.location_dest_id,s.product_id,s.date, s.origin, suom.factor product_uom
@@ -342,7 +342,7 @@ AS $BODY$
 			   and tl.usage!='supplier'
 			   and tl.usage!='customer'
 			   and tl.usage in ('internal','transit')
-			   and s.date <= to_date
+			   and ((s.date at time zone 'utc' )at time zone 'asia/rangoon')::date <= to_date
 			   and s.product_id in (select unnest (string_to_array(product_ids, ',')::integer[]))
 			)tmp
 			where tmp.location_id in (select unnest (string_to_array(location_ids, ',')::integer[]))
@@ -380,7 +380,7 @@ AS $BODY$
 			and s.state='done'
 		   	and tl.usage!='customer'
 		   	and tl.usage!='supplier'
-			and s.date <= to_date
+			and ((s.date at time zone 'utc' )at time zone 'asia/rangoon')::date <= to_date
 			and s.product_id in (select unnest (string_to_array(product_ids, ',')::integer[]))
 		   	) move_in on move_in.product_id=s.product_id and move_in.location_dest_id=s.location_id
 		   	and move_in.date=s.date and move_in.id=s.id and move_in.product_uom=s.product_uom
@@ -417,7 +417,7 @@ AS $BODY$
 				and s.state='done'
 			   	and fl.usage!='supplier'
 			   	and fl.usage!='customer'
-				and s.date <= to_date
+				and ((s.date at time zone 'utc' )at time zone 'asia/rangoon')::date <= to_date
 				and s.product_id in (select unnest (string_to_array(product_ids, ',')::integer[]))
 		   ) move_out on s.product_id=move_out.product_id and s.location_id=move_out.location_id
 		   and move_out.date=s.date and move_out.id=s.id and move_out.product_uom=s.product_uom
