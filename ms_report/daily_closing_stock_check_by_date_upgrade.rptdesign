@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.24" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 4.10.0.v202204260816</property>
     <list-property name="propertyBindings">
         <structure>
             <property name="name">queryText</property>
@@ -163,9 +163,12 @@
                     <property name="nativeDataType">12</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select pp.id,pp.name_template from product_product pp, product_template pt 
+            <xml-property name="queryText"><![CDATA[select pp.id,pp.name_template 
+from product_product pp, product_template pt 
 where pp.product_tmpl_id = pt.id
-]]></xml-property>
+and pp.active=true
+and pt.active=true
+and type='product']]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -590,7 +593,8 @@ where pp.product_tmpl_id = pt.id
                     </structure>
                 </list-property>
             </structure>
-            <method name="beforeOpen"><![CDATA[this.queryText =this.queryText.replace("--$branch_id$", "and x_branch  in ("+ params["branch_id"].value.join(",")+")")
+            <method name="beforeOpen"><![CDATA[this.queryText =this.queryText.replace("--$location_branch$", "and branch_id in ("+ params["branch_id"].value.join(",")+")")
+this.queryText =this.queryText.replace("--$branch_id$", "and x_branch  in ("+ params["branch_id"].value.join(",")+")")
 this.queryText =this.queryText.replace("--$product_id$", "and x_product_id  in ("+ params["product_id"].value.join(",")+")")
 if (params["location_id"].value == null || params["location_id"].value[0] == null)
 {
@@ -599,7 +603,10 @@ this.queryText =this.queryText.replace("--$location_id$", "")
 else
 {
 this.queryText =this.queryText.replace("--$location_id$", " and x_location_id in (" + params["location_id"].value.join(",") + ")")
-}]]></method>
+}
+this.queryText = this.queryText.replace("xxx", params["product_id"].value.join(","));
+this.queryText = this.queryText.replace("yyy", params["location_id"].value.join(","));
+this.queryText = this.queryText.replace("zzz", params["branch_id"].value.join(","));]]></method>
             <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
                 <structure>
@@ -800,12 +807,7 @@ pp.categ as x_product_category,
 pp.maingroup as x_product_maingroup,
 pp.pgroup as x_product_group,
 m.x_source,    
-case when m.x_source like 'GIN%' then (select internal_ref from good_issue_note where name =m.x_source)
-when m.x_source like 'SO%' then  (select (select code from res_township where id in (select  township from res_partner where id= so.partner_id)) || ','||tb_ref_no from sale_order so where name =m.x_source)
-when m.x_source like 'MSRN%' then  (select (case when internal_ref is null then '' else internal_ref end ) || ' ' ||  (case when internal_ref_note is null then '' else internal_ref_note end ) from stock_return_manual where name =m.x_source)  
-when m.x_source like 'PO%' then  (select  (case when partner_ref is null then '' else partner_ref end )  || ','|| (case when note is null then '' else note end) from stock_picking where id in (select picking_id from stock_move where id =m.x_id))  
-
-end as x_ref,
+(select * from get_reference(m.x_source,m.x_id)) as x_ref,
 case when m.x_from is null then m.x_to
 when m.x_to is null then m.x_from
 end as x_team,
@@ -815,7 +817,7 @@ end as x_move_type,
 d.opening as x_opening,
 d.qty as x_qty,
 d.closing as x_closing
-from stock_movement_data(?,?) m
+from stock_movement_data(?,?,'xxx','yyy','zzz') m
 left join
 (
 select t.name,p.default_code,p.id,pc.name as categ,pm.name as maingroup, pg.name as pgroup
@@ -835,6 +837,7 @@ left join
 (
 select sl.name as complete_name,sl.id,sl.branch_id
 from stock_location sl where active=true
+--$location_branch$
 )ll on m.x_location_id=ll.id
 left join
 stock_warehouse as w on w.lot_stock_id=m.x_location_id
@@ -843,7 +846,7 @@ left join
 SELECT x_id,x_location_id, x_product_id, x_date
    , sum(x_balance) OVER (PARTITION BY x_location_id, x_product_id ORDER BY x_date,x_uom) - x_balance as opening,
    x_balance as qty, sum(x_balance) OVER (PARTITION BY x_location_id, x_product_id ORDER BY x_date,x_uom) as closing
-FROM   stock_movement_data(?,?)
+FROM   stock_movement_data(?,?,'xxx','yyy','zzz')
 ORDER  BY x_product_id, x_location_id, x_date
 ) d on m.x_location_id=d.x_location_id and m.x_product_id=d.x_product_id  and m.x_date=d.x_date and m.x_id = d.x_id
 order by m.x_location_id,m.x_product_id,m.x_date,m.x_uom
@@ -856,68 +859,6 @@ where date between ? and ?
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
-  <DataSetParameters>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>3</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>4</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>5</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>6</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-  </DataSetParameters>
   <design:ResultSets derivedMetaData="true">
     <design:resultSetDefinitions>
       <design:resultSetColumns>
@@ -1672,7 +1613,9 @@ where code = ?]]></xml-property>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select id,complete_name		
-from stock_location where usage in ('internal' ,'transit')
+from stock_location 
+where usage in ('internal' ,'transit')
+and active=true
 --$warehouse$
 order by name]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
