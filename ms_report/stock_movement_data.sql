@@ -604,7 +604,7 @@ AS $BODY$
 				and fl.branch_id in (select unnest (string_to_array(branch_ids, ',')::integer[]))
 		   ) move_out on s.product_id=move_out.product_id and s.location_id=move_out.location_id
 		   and move_out.date=s.date and move_out.id=s.id and move_out.product_uom=s.product_uom
-
+		   where s.location_id in (select unnest (string_to_array(location_ids, ',')::integer[]))
 		   order by s.id,s.location_id,s.product_id,s.date,s.product_uom desc;
 		END;$BODY$;
 

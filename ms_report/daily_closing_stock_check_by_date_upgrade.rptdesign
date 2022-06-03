@@ -596,6 +596,7 @@ and type='product']]></xml-property>
             <method name="beforeOpen"><![CDATA[this.queryText =this.queryText.replace("--$location_branch$", "and branch_id in ("+ params["branch_id"].value.join(",")+")")
 this.queryText =this.queryText.replace("--$branch_id$", "and x_branch  in ("+ params["branch_id"].value.join(",")+")")
 this.queryText =this.queryText.replace("--$product_id$", "and x_product_id  in ("+ params["product_id"].value.join(",")+")")
+this.queryText =this.queryText.replace("--$param_product$", "and p.id in ("+ params["product_id"].value.join(",")+")")
 if (params["location_id"].value == null || params["location_id"].value[0] == null)
 {
 this.queryText =this.queryText.replace("--$location_id$", "")
@@ -832,6 +833,7 @@ and t.group=pg.id
 and t.categ_id=pc.id
 and p.active=true
 and t.active=true
+--$param_product$
 )pp on m.x_product_id=pp.id
 left join
 (
