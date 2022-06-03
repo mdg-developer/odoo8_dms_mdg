@@ -533,8 +533,6 @@ AS $BODY$
 		left join
 		(
 			select s.id,s.product_id,s.location_dest_id, s.product_qty as qty, suom.factor product_uom,
-			--    case when duom.id=suom.id then s.product_qty
-			--    when duom.id!=suom.id then (s.product_qty/suom.factor)*duom.factor end as qty, 
 			s.date,split_part(fl.name, '-', 1) team,
 			case when fl.usage in ('internal','transit') and tl.usage in ('internal','transit') and tl.scrap_location=false then 'transfer_in'
   			when fl.usage='production' and tl.usage in ('internal','transit') then 'transfer_in'
@@ -546,16 +544,10 @@ AS $BODY$
 		    when fl.usage in ('internal','transit') and tl.usage='inventory' and tl.name='Inventory loss' then 'for adjustment- (INV)'
 		    end as move_type
 		    from stock_move s,
-			--    product_product pp,
-			--    product_template pt,
 		   	product_uom suom,
-			--    product_uom duom,
 		   	stock_location fl,
 		   	stock_location tl
 		   	where s.product_uom=suom.id
-			--    and s.product_id=pp.id
-			--    and pp.product_tmpl_id=pt.id
-			--    and pt.uom_id=duom.id
 		   	and s.location_dest_id=tl.id
 		   	and s.location_id=fl.id
 			and s.state='done'
@@ -570,8 +562,6 @@ AS $BODY$
 		   	left join
 		   	(
 		   		select s.id,s.product_id,s.location_id, s.product_qty as qty, suom.factor product_uom,
-				--    case when duom.id=suom.id then s.product_qty
-				--    when duom.id!=suom.id then (s.product_qty/suom.factor)*duom.factor end as qty, 
 				s.date,split_part(tl.name, '-', 1) team,
 				case when fl.usage in ('internal','transit') and tl.usage in ('internal','transit')and tl.scrap_location=false then 'transfer_out'
 				when fl.usage in ('internal','transit') and tl.usage='production' then 'transfer_out'
@@ -584,16 +574,10 @@ AS $BODY$
 				when fl.usage='customer' and tl.usage in ('internal','transit') then 'customer_return'
 				end as move_type
 				from stock_move s,
-				--    product_product pp,
-				--    product_template pt,
-				   product_uom suom,
-				--    product_uom duom,
+				product_uom suom,
 				stock_location fl,
 				stock_location tl
 				where s.product_uom=suom.id
-				--    and s.product_id=pp.id
-				--    and pp.product_tmpl_id=pt.id
-				--    and pt.uom_id=duom.id
 			   	and s.location_dest_id=tl.id
 			   	and s.location_id=fl.id
 				and s.state='done'
