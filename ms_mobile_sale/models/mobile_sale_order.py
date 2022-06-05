@@ -1382,7 +1382,11 @@ class mobile_sale_order(osv.osv):
 #                                     detailObj.do_detailed_transfer()
                                 new_session = ConnectorSession(cr, uid, context)
                                 jobid = automatic_direct_sale_transfer.delay(new_session, solist, ms_ids.date, priority=10)
-                                
+                                cr.execute ('''select count(id) as credit_note_count from customer_payment where payment_code ='CN' and notes =%s''',(ms_ids.name,))
+                                credit_note_count=cr.fetchone()[0]
+                                if credit_note_count >0:
+                                    queue_id=self.pool['queue.job'].search(cr, uid, [('uuid', '=', jobid)], context=context)
+                                    self.pool['queue.job'].write(cr, uid, queue_id, {'is_credit_invoice':True}, context)                                     
                                 runner = ConnectorRunner()
                                 runner.run_jobs()                                       
                         if ms_ids.type == 'cash' and ms_ids.delivery_remark == 'none':  # Payment Type=>Cash and Delivery Remark=>None
