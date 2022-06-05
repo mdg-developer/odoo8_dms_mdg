@@ -38,7 +38,7 @@ class field_audit(osv.Model):
         'latitude':fields.float('Geo Latitude', digits=(16, 5)),
         'longitude':fields.float('Geo Longitude', digits=(16, 5)),
         'shop_image': fields.binary("Shop Font And Sales Rep"),
-        'line_ids': fields.one2many('field.audit.line', 'audit_id', 'Field Audit lines'),
+        'line_ids': fields.one2many('field.audit.line', 'audit_id', 'Field Coaching lines'),
         'total_score':fields.float('Total Score'),
         'total_missed':fields.float('Total Missed'),
         'transaction_id':fields.char(string='Transaction Id'),
@@ -55,7 +55,7 @@ class field_audit_line(osv.Model):
     _name = 'field.audit.line'
     
     _columns = {            
-            'audit_id':fields.many2one('field.audit', 'Field Audit'),
+            'audit_id':fields.many2one('field.audit', 'Field Coaching'),
             'sequence': fields.integer('No.'),            
             'question_id': fields.many2one('audit.question', 'In-Call Requirements'),
             'complete':fields.boolean('Complete'),

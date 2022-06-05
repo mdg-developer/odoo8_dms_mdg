@@ -34,7 +34,7 @@
 		</record>
 
 		<record id="action_audit_question_view" model="ir.actions.act_window">
-			<field name="name">Field Audit Setting</field>
+			<field name="name">Field Coaching Setting</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">audit.question</field>
 			<field name="view_type">form</field>
@@ -48,7 +48,7 @@
 		</record>
 
 		<menuitem id="menu_audit_question_setting" action="action_audit_question_view"
-			 parent="sale_promotions.sales" name="Field Audit Setting" sequence="12" />
+			 parent="sale_promotions.sales" name="Field Coaching Setting" sequence="12" />
 
 	</data>
 </openerp>	    

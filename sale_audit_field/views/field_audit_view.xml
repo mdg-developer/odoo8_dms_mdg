@@ -6,7 +6,7 @@
 			<field name="name">field.audit.form</field>
 			<field name="model">field.audit</field>
 			<field name="arch" type="xml">
-				<form string="Field Audit Form">
+				<form string="Field Coaching Form">
 					<sheet>
 						<group>
 							<group>
@@ -123,7 +123,7 @@
 			<field name="name">field.audit.tree</field>
 			<field name="model">field.audit</field>
 			<field name="arch" type="xml">
-				<tree string="Field Audit">
+				<tree string="Field Coaching">
 					<field name="name" />
 					<field name="date" />
 					<field name="partner_id" />
@@ -145,10 +145,10 @@
 		</record>
 
 		<record id="view_field_audit_filter" model="ir.ui.view">
-			<field name="name">Field Audit Filter</field>
+			<field name="name">Field Coaching Filter</field>
 			<field name="model">field.audit</field>
 			<field name="arch" type="xml">
-				<search string="Field Audit Filter">
+				<search string="Field Coaching Filter">
 					<group expand="0" string="Group By...">
 						<filter string="Date Day" icon="terp-partner" domain="[]"
 							context="{'group_by':'date:day'}" />
@@ -180,7 +180,7 @@
 		</record>
 
 		<record id="action_field_audit_view" model="ir.actions.act_window">
-			<field name="name">Field Audit</field>
+			<field name="name">Field Coaching</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">field.audit</field>
 			<field name="view_type">form</field>
@@ -188,13 +188,13 @@
 			<field name="view_id" eval="view_field_audit_tree" />
 			<field name="help" type="html">
 				<p class="oe_view_nocontent_create">
-					Click to create new field audit.
+					Click to create new field Coaching.
 				</p>
 			</field>
 		</record>
 
 		<menuitem id="menu_field_audit" action="action_field_audit_view"
-			parent="menu_customization.menu_sales_rental_menu" name="Field Audit"
+			parent="menu_customization.menu_sales_rental_menu" name="Field Coaching"
 			sequence="2" />
 
 	</data>
