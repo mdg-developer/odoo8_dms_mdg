@@ -469,7 +469,8 @@ class mobile_sale_order(osv.osv):
                         'rebate_later':rebate,
                         'order_saleperson':order_saleperson,
                         'pre_sale_order_id':pre_sale_order_id,
-                        'revise_reason_id':revise_reason_id                       
+                        'revise_reason_id':revise_reason_id,
+                        'payment_ref':so['payment_ref']                       
                     }
                     s_order_id = mobile_sale_order_obj.create(cursor, user, mso_result, context=context)
                     so_ids.append(s_order_id);
@@ -1384,7 +1385,7 @@ class mobile_sale_order(osv.osv):
                                 jobid = automatic_direct_sale_transfer.delay(new_session, solist, ms_ids.date, priority=10)
                                 cr.execute ('''select count(id) as credit_note_count from customer_payment where payment_code ='CN' and notes =%s''',(ms_ids.name,))
                                 credit_note_count=cr.fetchone()[0]
-                                if credit_note_count >0:
+                                if ms_ids.payment_ref=='credit_note':
                                     queue_id=self.pool['queue.job'].search(cr, uid, [('uuid', '=', jobid)], context=context)
                                     self.pool['queue.job'].write(cr, uid, queue_id, {'is_credit_invoice':True}, context)                                     
                                 runner = ConnectorRunner()
