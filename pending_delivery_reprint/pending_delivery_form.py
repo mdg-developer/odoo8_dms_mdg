@@ -73,6 +73,8 @@ class pendingdelivery(osv.osv):
                 'longitude':fields.float('Geo Longitude',  digits=(16, 5), readonly=True),
                 'distance_status':fields.char('Distance Status', readonly=True),
                 'geo_point':fields.char('Geo Point'),
+                'payment_ref':fields.char('Payment Ref'),
+                
               }
 #     def create_automation_pending_delivery(self, cr, uid, pending_ids, context=None):
 #         session = ConnectorSession(cr, uid, context)
@@ -153,7 +155,7 @@ class pendingdelivery(osv.osv):
                                 invoiceObj.credit_approve(cr, uid, [invoice_id], context=context)  
                             session = ConnectorSession(cr, uid, context)
                             jobid = automatic_pending_delivery_stock_transfer.delay(session, [solist], delivery_date, priority=20)                            
-                            if payment_type=='credit' or credit_note_count >0:
+                            if payment_type=='credit' or pending_id.payment_ref=='credit_note':
                                 queue_id=jobObj.search(cr, uid, [('uuid', '=', jobid)], context=context)
                                 jobObj.write(cr, uid, queue_id, {'is_credit_invoice':True}, context)      
                             runner = ConnectorRunner()

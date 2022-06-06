@@ -28,7 +28,9 @@
 							<field name="latitude" />
 							<field name="longitude" />
 							<field name="distance_status" class="oe_inline"/>
-							<field name="geo_point" class="oe_inline"/>							
+							<field name="geo_point" class="oe_inline"/>		
+							<field name="payment_ref" class="oe_inline"/>							
+												
 						</group>
 						<widget type="gmap_marker" lat="latitude" lng="longitude"
 							description="field_descriptions" />
@@ -50,6 +52,7 @@
 					<field name="order_id" />
 					<field name="miss" />
 					<field name="is_revised" />
+					<field name="payment_ref" class="oe_inline"/>							
 					<field name="state" />
 				</tree>
 			</field>

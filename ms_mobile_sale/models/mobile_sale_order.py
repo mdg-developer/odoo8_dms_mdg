@@ -3279,7 +3279,8 @@ class mobile_sale_order(osv.osv):
                                   'state':'draft',
                                   'delivery_team_id': delivery_team_id ,
                                   'latitude':deli['mosLatitude'],
-                                  'longitude':deli['mosLongitude']                             
+                                  'longitude':deli['mosLongitude'],  
+                                  'payment_ref':deli['payment_ref']                           
                             }
                         pending_id = pending_obj.create(cr, uid, delivery, context=context)                                                                                                                                 
                         pending_ids.append(pending_id)
