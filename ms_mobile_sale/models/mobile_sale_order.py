@@ -429,7 +429,10 @@ class mobile_sale_order(osv.osv):
                         revise_reason_id = so['revise_reason_id']
                     else:
                         revise_reason_id = None                                           
-                        
+                    if so.get('payment_ref'): 
+                        payment_ref=so['payment_ref']
+                    else:
+                        payment_ref=None       
                     mso_result = {
                         'customer_code':so['customer_code'],
                         'sale_plan_day_id':so['sale_plan_day_id'],
@@ -470,7 +473,7 @@ class mobile_sale_order(osv.osv):
                         'order_saleperson':order_saleperson,
                         'pre_sale_order_id':pre_sale_order_id,
                         'revise_reason_id':revise_reason_id,
-                        'payment_ref':so['payment_ref']                       
+                        'payment_ref':payment_ref                    
                     }
                     s_order_id = mobile_sale_order_obj.create(cursor, user, mso_result, context=context)
                     so_ids.append(s_order_id);
@@ -3268,7 +3271,10 @@ class mobile_sale_order(osv.osv):
                             #confirm_date=deli['confirm_date']
                             cr.execute ("select timestamp%s - '7 hour'::interval + '30 minutes'::interval",(deli['confirm_date'],))
                             confirm_date =cr.fetchone()[0]
-                                        
+                        if deli.get('payment_ref'): 
+                            payment_ref=deli['payment_ref']
+                        else:
+                            payment_ref=None                 
                         delivery = {                                                            
                                   'order_id':So_id[0],
                                   'miss':False,
@@ -3280,7 +3286,7 @@ class mobile_sale_order(osv.osv):
                                   'delivery_team_id': delivery_team_id ,
                                   'latitude':deli['mosLatitude'],
                                   'longitude':deli['mosLongitude'],  
-                                  'payment_ref':deli['payment_ref']                           
+                                  'payment_ref':payment_ref                           
                             }
                         pending_id = pending_obj.create(cr, uid, delivery, context=context)                                                                                                                                 
                         pending_ids.append(pending_id)
