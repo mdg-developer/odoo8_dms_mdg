@@ -484,7 +484,9 @@ class res_partner(osv.osv):
                      'verify': True,
                      'date_localization': datetime.now().date()
                 }                
-            partner_obj.write(cr, uid, partner.id, vals, context=None)                       
+            #partner_obj.write(cr, uid, partner.id, vals, context=None) 
+            cr.execute('''update res_partner set verify_person_id=%s,verify=True,date_localization=%s where id =%s''',(uid,datetime.now().date(),partner.id,))
+                                  
         return True                        
     
     def partner_id_from_sale_plan_day(self, cr, uid, sale_team_id , context=None, **kwargs):
