@@ -1985,7 +1985,16 @@ class mobile_sale_order(osv.osv):
                     where a.partner_id = b.partner_id
                     and b.sale_plan_trip_id = p.id
                     and p.sale_team in (select id from crm_case_section where supervisor_team= %s))
-                    ''', (section_id, section_id,))
+                    UNION ALL
+                    (select distinct a.category_id,a.partner_id,(select name from res_partner_category where id = a.category_id) as name 
+                    from sale_order so,res_partner_res_partner_category_rel a
+                    WHERE  a.partner_id = so.partner_id
+                    AND so.pre_order = TRUE 
+                    AND so.delivery_id in (select id from crm_case_section where supervisor_team= %s)
+                    AND shipped = False
+                    AND invoiced = False
+                    AND ecommerce =TRUE)
+                    ''', (section_id, section_id,section_id,))
             datas = cr.fetchall()     
         else:
             cr.execute('''(select distinct a.category_id, a.partner_id ,(select name from res_partner_category where id = a.category_id) as name from res_partner_res_partner_category_rel a,
@@ -2002,7 +2011,17 @@ class mobile_sale_order(osv.osv):
             and b.sale_plan_trip_id = p.id
             and p.sale_team = %s
             )
-            ''', (section_id, section_id,))
+            UNION ALL            
+            (select distinct a.category_id,a.partner_id,(select name from res_partner_category where id = a.category_id) as name 
+            from sale_order so,res_partner_res_partner_category_rel a
+            WHERE  a.partner_id = so.partner_id
+            AND so.pre_order = TRUE 
+            AND so.delivery_id = %s
+            AND shipped = False
+            AND invoiced = False
+            AND ecommerce =TRUE
+            )            
+            ''', (section_id, section_id,section_id,))
             datas = cr.fetchall()    
         return datas
     
@@ -5000,7 +5019,18 @@ class mobile_sale_order(osv.osv):
                     where a.partner_id = b.partner_id
                     and b.sale_plan_trip_id = p.id
                     and p.sale_team in (select id from crm_case_section where supervisor_team= %s))
-                    ''', (section_id, section_id,))
+                    UNION ALL
+                    (
+                    select distinct a.* 
+                    from sale_order so,res_partner_res_partner_category_rel a
+                    WHERE  a.partner_id = so.partner_id
+                    AND so.pre_order = TRUE 
+                    AND so.delivery_id  in (select id from crm_case_section where supervisor_team= %s))
+                    AND shipped = False
+                    AND invoiced = False
+                    AND ecommerce =TRUE)
+                    
+                    ''', (section_id, section_id,section_id,))
             datas = cr.fetchall()     
         else:
             cr.execute('''(select distinct a.* from res_partner_res_partner_category_rel a,
@@ -5017,7 +5047,17 @@ class mobile_sale_order(osv.osv):
             and b.sale_plan_trip_id = p.id
             and p.sale_team = %s
             )
-            ''', (section_id, section_id,))
+            UNION ALL
+            (
+            select distinct a.* 
+            from sale_order so,res_partner_res_partner_category_rel a
+            WHERE  a.partner_id = so.partner_id
+            AND so.pre_order = TRUE 
+            AND so.delivery_id =%s
+            AND shipped = False
+            AND invoiced = False
+            AND ecommerce =TRUE)            
+            ''', (section_id, section_id,section_id,))
             datas = cr.fetchall()    
         return datas
     
