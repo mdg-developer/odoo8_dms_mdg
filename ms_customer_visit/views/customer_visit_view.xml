@@ -45,6 +45,8 @@
 							context="{'group_by':'township_id'}" />
 						<filter name="branch" string="Branch" domain="[]"
 							context="{'group_by':'branch_id'}" />
+						<filter name="state" string="Status" domain="[]"
+							context="{'group_by':'state'}" />							
 					</group>
 				</search>
 			</field>
@@ -65,8 +67,15 @@
 					<script src="/static/src/js/fastclick.js"></script>
 
 					<header>
-						<field name="m_status" widget="statusbar" statusbar_visible="pending,approved,rejected"
-							statusbar_colors='{"pending":"green","approved":"blue","rejected":"red"}' />
+						<button name="is_approve" string="Validate" class="oe_highlight"
+							type="object" states="pending"
+							 />
+						<button name="is_reject" string="Reject" class="oe_highlight"
+							type="object" states="pending"
+							 />
+												
+						<field name="state" widget="statusbar" statusbar_visible="pending,approved,reject"
+							statusbar_colors='{"pending":"green","approved":"blue","reject":"red"}' />
 					</header>
 					<sheet>
 						<group>
@@ -75,6 +84,7 @@
 									<field name="customer_id" readonly="1" />
 									<field name="township_id" readonly="1" />
 									<field name="customer_code" readonly="1" />
+									<field name="user_id" readonly="1" />
 									<field name="tablet_id" readonly="1" />
 									<field name="latitude" readonly="1" />
 									<field name="longitude" readonly="1" />
@@ -97,14 +107,14 @@
 								</group>
 								<group>
 									<field name="date" readonly="1" />
-									<field name="user_id" readonly="1" />
 									<field name="sale_plan_day_id" readonly="1" />
 									<field name="sale_plan_trip_id" readonly="1" />
 									<field name="sale_team_id" readonly="1" />
 									<field name="visit_reason" readonly="1" />
-									<field name="is_sync" readonly="1" />
-									<field name="m_status" readonly="1" />
-
+									<field name="validated_by" readonly="1" />
+									<field name="validated_date" readonly="1" />
+									<field name="rejected_by" readonly="1" />
+									<field name="rejected_date" readonly="1" />
 									<button name="go_image1" string="Show Image1"
 										attrs="{'invisible':[('is_image1','!=',True)]}" type="object"
 										icon="terp-gtk-jump-to-ltr" />
@@ -230,6 +240,7 @@
 					<field name="sale_team_id" />
 					<field name="visit_reason" />
 					<field name="other_reason" />
+					<field name="state" />
 				</tree>
 			</field>
 		</record>
@@ -237,7 +248,7 @@
 			<field name="name">customer.visit.calendar</field>
 			<field name="model">customer.visit</field>
 			<field name="arch" type="xml">
-				<calendar string="Customer Visit" color="m_status"
+				<calendar string="Customer Visit" color="state"
 					date_start="date">
 					<field name="customer_id" />
 					<field name="user_id" />
@@ -265,7 +276,7 @@
 			<field name="view_id" ref="view_customer_visit_tree" />
 		</record>
 
-		<menuitem id="menu_visit_partner_form" parent="base.menu_mobile_sale_menu"
-			action="action_visit_partner_form1" sequence="4" />
+<!-- 		<menuitem id="menu_visit_partner_form" parent="base.menu_mobile_sale_menu" -->
+<!-- 			action="action_visit_partner_form1" sequence="4" /> -->
 	</data>
 </openerp>

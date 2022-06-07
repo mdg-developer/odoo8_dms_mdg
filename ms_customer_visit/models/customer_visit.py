@@ -3,6 +3,7 @@ from lxml import etree
 import math
 import pytz
 import urlparse
+from datetime import datetime
 
 import openerp
 from openerp import tools, api
@@ -37,8 +38,10 @@ class customer_visit(osv.osv):
                  ('Sold', 'Sold')
             ], 'Reason'),
                 'other_reason':fields.text('Remark'),
-        'm_status':fields.selection([('pending', 'Pending'), ('approved', 'Approved'),
+        'm_status':fields.selection([('pending', 'Pending'), ('approved', 'Validate'),
                                                       ('reject', 'Reject')], string='Status'),
+        'state':fields.selection([('pending', 'Pending'), ('approved', 'Validate'),
+                                                      ('reject', 'Reject')], string='Status'),        
      'branch_id': fields.many2one('res.branch', 'Branch',required=True),
     'distance_status':fields.char('Distance Status', readonly=True),
         'township_id': fields.related(
@@ -57,10 +60,15 @@ class customer_visit(osv.osv):
         'is_image3':fields.boolean('Is Image3', default=False),    
         'is_image4':fields.boolean('Is Image4', default=False),    
         'is_image5':fields.boolean('Is Image5', default=False),    
- 
+       'rejected_by':fields.many2one('res.users', "Rejected By"),
+       'validated_by':fields.many2one('res.users', "Validated By"),        
+         'rejected_date':fields.datetime('Rejected Date'),
+         'validated_date':fields.datetime('Validated Date'),
+
     }
     _defaults = {        
         'm_status' : 'pending',
+        'state': 'pending'
     } 
     # image: all image fields are base64 encoded and PIL-supported
     image = openerp.fields.Binary("Image", attachment=True,
@@ -369,6 +377,13 @@ class customer_visit(osv.osv):
                     response = requests.get(url).content
                     image5 = base64.b64encode(response)    
         return self.write(cr, uid, ids, {'image':image1,'image1':image2,'image2':image3,'image3':image4,'image4':image5})
-                   
-                                        
+
+    def is_approve(self, cr, uid, ids, context=None):
+        
+        return self.write(cr, uid, ids, {'state': 'approved','validated_by':uid,'validated_date':datetime.now()})                   
+
+    def is_reject(self, cr, uid, ids, context=None):
+        
+        return self.write(cr, uid, ids, {'state': 'reject','rejected_by':uid,'rejected_date':datetime.now()})
+                                                        
 customer_visit()
