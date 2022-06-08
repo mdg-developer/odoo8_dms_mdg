@@ -289,6 +289,7 @@ left join product_maingroup maingroup on template.main_group=maingroup.id
 left join res_branch branch on invoice.branch_id=branch.id
 where invoice.date_invoice >= ?
 and  invoice.date_invoice <= ?
+and invoice.state not in ('draft', 'cancel')
  group by 
  branch.branch_code,
 maingroup.code
@@ -304,6 +305,7 @@ from account_invoice invoice
 left join res_branch branch on invoice.branch_id=branch.id
 where date_invoice >= ?
 and  date_invoice <= ?
+and invoice.state not in ('draft', 'cancel')
 group by 
 branch.branch_code
 )branch

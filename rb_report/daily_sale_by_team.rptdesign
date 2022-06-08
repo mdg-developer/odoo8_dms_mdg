@@ -67,6 +67,7 @@
     <parameters>
         <scalar-parameter name="From Date" id="944">
             <property name="valueType">static</property>
+            <property name="isRequired">true</property>
             <property name="dataType">date</property>
             <property name="distinct">true</property>
             <list-property name="selectionList"/>
@@ -78,6 +79,7 @@
         </scalar-parameter>
         <scalar-parameter name="To Date" id="945">
             <property name="valueType">static</property>
+            <property name="isRequired">true</property>
             <property name="dataType">date</property>
             <property name="distinct">true</property>
             <list-property name="selectionList"/>
@@ -304,6 +306,36 @@
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
+                <structure>
+                    <property name="name">param_1</property>
+                    <property name="paramName">From Date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">10</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_2</property>
+                    <property name="paramName">To Date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">11</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_3</property>
+                    <property name="paramName">By Team</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">12</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
             </list-property>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
@@ -456,9 +488,9 @@ invoice.mobile_order_ref as ref,
 category.name as category_name,
 concat(product.default_code,'/', product.name_template) as product_name,
 (select sum(payment_amount) from mobile_ar_collection aca
-where date >= '2018-01-01'
-and date <= '2022-06-01'
-and team.id = 465
+where date >= ?
+and date <= ?
+and team.id = ?
 and aca.partner_id=invoice.partner_id) as ar_collection_amount,
 (select sum(amount_total) from account_invoice inv where payment_type = 'cash'
 and state in ('paid', 'open')
@@ -509,6 +541,51 @@ invoice.code]]></xml-property>
           <design:identifier>
             <design:name></design:name>
             <design:position>3</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>10</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>11</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>12</design:position>
           </design:identifier>
           <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
