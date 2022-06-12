@@ -636,12 +636,9 @@ class res_partner(osv.osv):
             
     def delete_delivery_address(self, cr, uid, ids, delivery_address_id=None, context=None):  
         
-        partner_obj = self.pool.get('res.partner')
         if delivery_address_id:
-            delivery_data = partner_obj.browse(cr, uid, delivery_address_id, context=context)
-            if delivery_data:
-                delivery_data.unlink()
-                
+            cr.execute("""delete from res_partner where id=%s;""",(delivery_address_id,))
+
     def edit_customer_profile(self, cr, uid, ids, customer_code=None, woo_customer_id=None, mobile=None, email=None, phone=None, name=None, shop_name=None, gender=None, birthday=None, image=None, sale_channel=None, context=None): 
         
         vals = {}
