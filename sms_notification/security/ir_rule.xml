@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="sms_notification" model="res.groups">
+        <field name="name">Enable SMS Feature</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    </data>
+</openerp>
+

@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<!-- ==============================Content Form============================== -->
+		<record id="branch_stock_requsition_form" model="ir.ui.view">
+			<field name="name">branch_stock_requsition_form</field>
+			<field name="model">branch.stock.requisition</field>
+			<field name="arch" type="xml">
+				<form string="Fine Sheet">
+					<header>
+						<button name="confirm" string="Confirm" class="oe_highlight"
+							type="object" states="draft" groups="base.group_sale_manager,base.group_no_one" />
+						<button name="loading_plan" string="Loading Plan" class="oe_highlight"
+							type="object" states="confirm" groups="base.group_sale_manager,base.group_no_one" />
+						<button name="approve" string="Approve" class="oe_highlight"
+							type="object" states="loading_plan" groups="base.group_sale_manager,base.group_no_one" />
+						<button name="create_gin" string="Create GIN" class="oe_highlight"
+							type="object" states="partial" groups="base.group_sale_manager,base.group_no_one" />
+						<button name="full_complete" string="Full Complete" class="oe_highlight"
+							type="object" states="partial" groups="base.group_sale_manager,base.group_no_one" />
+
+						<button name="cancel" string="Cancel" class="oe_highlight"
+							type="object" states="draft,confirm" groups="base.group_sale_manager,base.group_no_one" />
+						<field name="state" widget="statusbar" />
+					</header>
+					<sheet>
+						<h1>
+							<label string="BRFI No" />
+							<field name="name" class="oe_inline" readonly="1" />
+						</h1>
+						<group>
+							<group>
+								<field name="branch_id" on_change="on_change_branch_id(branch_id)"
+									attrs="{'readonly':[('state','!=','draft')]}" />
+								<field name="from_location_id" attrs="{'readonly':[('state','!=','draft')]}" />
+								<field name="request_date" attrs="{'readonly':[('state','!=','draft')]}" />
+								<field name="write_date" attrs="{'readonly':[('state','!=','draft')]}" />
+								<field name="company_id" attrs="{'readonly':[('state','!=','draft')]}"
+									invisible="1" />
+								<field name="good_issue_id" invisible="0" />
+								<field name="vehicle_id" attrs="{'readonly':[('state','!=','draft')]}" />
+								<field name="internal_reference" attrs="{'readonly':[('state','!=','draft')]}" />
+								<field name="branch_target_id" domain="[('branch_id','=',branch_id)]"
+									attrs="{'readonly':[('state','!=','draft')]}" />
+								<field name="warehouse_cbm" />
+								<field name="current_stock_cbm" />
+								<field name="remaining_cbm" />
+							</group>
+							<group>
+								<field name="issue_to" attrs="{'readonly':[('state','!=','draft')]}" />
+								<field name="to_location_id" domain="[('usage','=','internal')]"
+									attrs="{'readonly':[('state','!=','draft')]}" />
+								<field name="request_by" />
+								<field name="approve_by" />
+								<field name="plan_by" />
+								<field name="total_value" />
+								<field name="truck_type_id" attrs="{'readonly':[('state','!=','draft')]}" />
+								<field name="max_viss" />
+								<field name="max_cbm" />
+								<field name="total_viss" invisible="1" />
+								<field name="total_viss_store" />
+								<field name="total_cbm" />
+								<field name="total_cbm_store" invisible="1" />
+								<field name="bal_viss" />
+								<field name="bal_cbm" />
+								<field name="pricelist_id" />
+								<field name="cbm_ratio" />
+							</group>
+						</group>
+						<button name="retrieve_data" string="Retrieve" type="object"
+							widget="statinfo" class="oe_highlight" attrs="{'invisible': [('state','!=','draft')]}" />
+						<button name="calculate_target" string="Calculate with Target"
+							type="object" widget="statinfo" class="oe_highlight"
+							attrs="{'invisible': [('state','!=','draft')]}" />
+						<button name="calculate_standard_rule" string="Calculate with Standard Rule"
+							type="object" widget="statinfo" class="oe_highlight"
+							attrs="{'invisible': [('state','!=','draft')]}" />
+						<div class="oe_subtotal_footer_separator oe_inline"
+							groups="base.group_sale_supervisor,base.group_sale_manager,base.group_sale_admin,base.group_no_one">
+							<label string="Update Qty On Hand" class="oe_edit_only" />
+							<button name="updateQtyOnHand" states="draft,confirm,loading_plan"
+								string="(Update)" type="object" class="oe_edit_only oe_link"
+								groups="base.group_sale_supervisor,base.group_sale_manager,base.group_sale_admin,base.group_no_one" />
+						</div>
+						<group>
+							<notebook>
+								<page string="Stock">
+									<field name="p_line" attrs="{'readonly':[('state','!=','draft')]}">
+										<tree string="Stock Request Line" editable="bottom"
+											default_order="sequence asc">
+											<field name="sequence" invisible="1" />
+											<field name="product_id"
+												on_change="on_change_product_id(product_id,parent.from_location_id,parent.to_location_id)" />
+											<field name="req_loc_small_qty_bal" readonly="1" />
+											<field name="req_loc_bigger_qty_bal" readonly="1" />
+											<field name="target_quantity" readonly="1" />
+											<field name="target_percent" readonly="1"
+												colors="red:target_percent&lt;20;blue:target_percent&gt;100;black:target_percent&gt;200" />
+											<field name="recommend_quantity" readonly="1" />
+											<field name="req_quantity" />
+											<field name="issue_quantity" invisible="1" />
+											<field name="diff_quantity" invisible="1" />
+											<field name="gin_issue_quantity" readonly="1" />
+											<field name="gin_diff_quantity" />
+
+											<field name="product_uom"
+												on_change="on_change_product_uom(product_id,product_uom)"
+												string="UOM" />
+											<field name="qty_on_hand" string="Qty on Hand (S)"
+												readonly="True" />
+											<field name="bigger_qty_on_hand" string="Qty on Hand (B)"
+												readonly="True" />
+											<field name="product_value" />
+											<field name="loss" />
+											<field name="is_foc" />
+											<field name="viss_value" />
+											<field name="cbm_value" />
+											<field name="remark" />
+											<field name="state" invisible="1" />
+
+
+										</tree>
+									</field>
+								</page>
+								<page string="GIN">
+									<field name="good_issue_line" readonly="1"> <!-- attrs="{'readonly':[('state','!=','draft')]}"> -->
+									</field>
+								</page>
+							</notebook>
+
+						</group>
+
+					</sheet>
+					<div class="oe_chatter">
+						<field name="message_follower_ids" widget="mail_followers"
+							groups="base.group_user" />
+						<field name="message_ids" widget="mail_thread" />
+					</div>
+				</form>
+			</field>
+		</record>
+
+		<!-- ============================== Content Tree ============================== -->
+		<record id="branch_stock_requsition_tree" model="ir.ui.view">
+			<field name="name">branch_stock_requsition_tree</field>
+			<field name="model">branch.stock.requisition</field>
+			<field name="arch" type="xml">
+				<tree string="Contents">
+					<field name="branch_id" />
+					<field name="state" />
+					<field name="request_date" string="Req Date" />
+					<field name="name" string="Ref No." />
+					<field name="request_by" />
+					<field name="issue_to" />
+					<field name="from_location_id" string="Location" />
+					<field name="to_location_id" string="Warehouse" />
+				</tree>
+			</field>
+		</record>
+		<!-- filter -->
+
+		<record id="view_branch_stock_request_filter" model="ir.ui.view">
+			<field name="name">Stock Request Filter</field>
+			<field name="model">branch.stock.requisition</field>
+			<field name="arch" type="xml">
+				<search string="Search Stock Request">
+					<group expand="0" string="Group By...">
+						<filter string="Branch" icon="terp-partner" domain="[]"
+							context="{'group_by':'branch_id'}" />
+						<filter string="Request From" icon="terp-partner" domain="[]"
+							context="{'group_by':'from_location_id'}" />
+						<filter string="Request To" icon="terp-partner" domain="[]"
+							context="{'group_by':'to_location_id'}" />
+						<filter string="Request Date" icon="terp-partner" domain="[]"
+							context="{'group_by':'request_date'}" />
+						<filter string="Pending" domain="[('state','=','draft')]"
+							name="state_filter" />
+					</group>
+				</search>
+			</field>
+		</record>
+		<!-- Stock Requisition -->
+		<record id="action_branch_stock_requsition" model="ir.actions.act_window">
+			<field name="name">Branch Request For Issue</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">branch.stock.requisition</field>
+			<field name="context">{'search_default_state_filter': 1}</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="branch_stock_requsition_tree" />
+			<field name="search_view_id" ref="view_branch_stock_request_filter" />
+			<field name="domain">[]
+			</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to Register Branch Stock Requisition .
+				</p>
+			</field>
+		</record>
+
+
+		<menuitem id="menu_branch_inventory_transfer" name="Branch Transfer"
+			parent="stock.menu_stock_root" groups="stock.group_stock_manager"
+			sequence="2" />
+
+		<menuitem action='action_branch_stock_requsition' id="menu_branch_stock_requsition"
+			parent="menu_branch_inventory_transfer" groups="stock.group_stock_manager"
+			sequence="1" />
+
+	</data>
+</openerp>

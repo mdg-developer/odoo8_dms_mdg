@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data noupdate="0">
+
+		<record id="base.group_allow_promotion_edit" model="res.groups">
+			<field name="name">Allow To Promotion Edit</field>
+			<field name="category_id" ref="base.module_category_accounting_and_finance" />
+
+		</record>
+	</data>
+</openerp>

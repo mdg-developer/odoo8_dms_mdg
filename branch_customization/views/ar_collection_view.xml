@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<!-- add branch in sale order form -->
+		<record id="inherit_view_mobile_ar_collection_form" model="ir.ui.view">
+			<field name="name">mobile.ar.collection.form</field>
+			<field name="model">mobile.ar.collection</field>
+			<field name="inherit_id" ref="ms_mobile_sale_credit.view_mobile_ar_collection_form" />
+			<field name="arch" type="xml">
+				<field name="due_date" position="before">
+					<field name="branch_id" />
+				</field>
+				
+			</field>
+		</record>
+		
+		
+		
+	</data>
+</openerp>

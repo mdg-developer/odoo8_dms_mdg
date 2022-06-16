@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+
+		<!-- ============================== Content Form ============================== -->
+
+		<record id="good_issue_note_form" model="ir.ui.view">
+			<field name="name">Good Issue Note Form</field>
+			<field name="model">good.issue.note</field>
+			<field name="arch" type="xml">
+				<form string="Good Issue Note Form">
+					<header>
+						<button name="approve" string="Approve" class="oe_highlight"
+							type="object" states="draft"
+							groups="stock.group_stock_manager,stock.group_stock_user" />
+						<button name="issue" string="Issue" class="oe_highlight"
+							type="object" states="approve"
+							groups="base.group_gin_issue" />
+						<button name="cancel" string="Cancel" class="oe_highlight"
+							type="object" states="draft,approve"
+							groups="stock.group_stock_manager,stock.group_stock_user" />
+						<button name="reversed" string="Reversed" class="oe_highlight"
+							type="object" states="issue" groups="stock.group_stock_manager" />
+						<field name="state" widget="statusbar" />
+					</header>
+					<sheet>
+						<!-- <h1> -->
+						<!-- <label string="(GIN)Ref;No." /> -->
+						<!-- <field name="name" class="oe_inline" readonly="1" /> -->
+						<!-- </h1> -->
+						<group>
+							<group>
+								<field name="name" />
+								<field name="sale_team_id" attrs="{'readonly':[('state','=','issue')]}"
+									 />
+								<field name="to_location_id" readonly="1" />
+								<field name="request_by" readonly="1" />
+								<field name="issue_date" attrs="{'readonly':[('state','=','issue')]}" />
+								<field name="write_date" attrs="{'readonly':[('state','=','issue')]}" />
+								<field name="issue_from_optional_location" />
+							    <field name="reverse_date"
+									attrs="{'readonly':[('state','=','reversed')],'invisible': [('state','not in',('issue','reversed'))]}" />
+								<!-- <field name="branch_id" widget="selection" attrs="{'readonly':[('state','=','issue')]}"/> -->
+								<field name="reverse_user_id" readonly="1" />
+								<field name="sub_d_customer_id" />
+								<field name="principle_id" readonly="1"/>
+								
+								
+							</group>
+							<group>
+								<field name="request_id" />
+								<field name="from_location_id" readonly="1" />
+								<field name="vehicle_id" readonly="1" />
+								<field name="approve_by" readonly="1" />
+								<field name="internal_ref" attrs="{'readonly':[('state','=','issue')]}" />
+								<field name="issue_by"
+									attrs="{'readonly':[('state','=','issue')]}" />
+								<field name="receiver"
+									attrs="{'readonly':[('state','=','issue')]}" />
+								<field name="company_id" attrs="{'readonly':[('state','=','issue')]}"
+									invisible="1" />														
+							</group>
+						</group>
+						
+						<div class="oe_subtotal_footer_separator oe_inline" 
+							groups="base.group_sale_supervisor,base.group_sale_manager,base.group_sale_admin,base.group_no_one">
+							<label string="Update Qty On Hand" class="oe_edit_only" />
+							<button name="updateQtyOnHand" states="approve" string="(Update)"
+								type="object" class="oe_edit_only oe_link"
+								groups="base.group_sale_supervisor,base.group_sale_manager,base.group_sale_admin,base.group_no_one" />
+						</div>	
+							
+						<group>
+						
+							<notebook>
+								<page string="Stock List" attrs="{'readonly':[('state','=','issue')]}">
+									<field name="p_line" attrs="{'readonly':[('state','=','issue')]}">
+										<tree string="Good Issue Note Line" editable="bottom"
+											default_order="sequence asc" attrs="{'readonly':[('state','=','issue')]}">
+											<field name="sequence" invisible="1" />
+											<field name="product_id" on_change="on_change_product_id(product_id)" />
+											<field name="order_qty" />
+											<field name="ecommerce_qty" />
+											<field name="total_request_qty" />
+											<field name="big_issue_quantity" string="Qty (B)"
+												invisible="1" />
+											<field name="big_uom_id" invisible="1" />
+											<field name="opening_qty" invisible="1" />
+											<field name="opening_product_uom" invisible="1" />
+											<field name="approved_quantity" invisible="1"/>
+											<field name="issue_quantity" string="Qty" />
+											<field name="product_uom" string="UOM" />
+											<field name="uom_ratio" invisible="1" />
+											<field name="batch_no" domain="[('product_id', '=',product_id)]"
+												on_change="on_change_expired_date(batch_no)" />
+											<field name="expiry_date" />
+											<field name="qty_on_hand" string="Qty on Hand (S)" />
+											<field name="remark" />
+										</tree>
+									</field>
+								</page>
+							</notebook>
+
+						</group>
+
+					</sheet>
+					<div class="oe_chatter">
+						<field name="message_follower_ids" widget="mail_followers"
+							groups="base.group_user" />
+						<field name="message_ids" widget="mail_thread" />
+					</div>
+				</form>
+			</field>
+		</record>
+
+		<!-- ============================== Content Tree ============================== -->
+		<record id="good_issue_note_tree" model="ir.ui.view">
+			<field name="name">good_issue_note_tree</field>
+			<field name="model">good.issue.note</field>
+			<field name="arch" type="xml">
+				<tree string="Contents">
+					<field name="sale_team_id" />
+					<field name="name" />
+					<field name="request_id" />
+					<field name="to_location_id" />
+					<field name="from_location_id" />
+					<field name="issue_date" />
+					<field name="vehicle_id" />
+					<field name="internal_ref" />
+					<field name="state" />
+					<field name="reverse_user_id" />
+				</tree>
+			</field>
+		</record>
+
+
+		<record id="view_good_issue_note_filter" model="ir.ui.view">
+			<field name="name">Good Issue NoteFilter</field>
+			<field name="model">good.issue.note</field>
+			<field name="arch" type="xml">
+				<search string="Search Good Issue Note">
+					<group expand="0" string="Group By...">
+						<filter string="Delivery Team" icon="terp-partner" domain="[]"
+							context="{'group_by':'sale_team_id'}" />
+						<filter string="Issue From" icon="terp-partner" domain="[]"
+							context="{'group_by':'from_location_id'}" />
+						<filter string="Issue To" icon="terp-partner" domain="[]"
+							context="{'group_by':'to_location_id'}" />
+						<filter string="Date of Issue" icon="terp-partner" domain="[]"
+							context="{'group_by':'issue_date'}" />
+						<filter string="Pending" domain="[('state','=','approve')]"
+							name="state_filter" />
+					</group>
+				</search>
+			</field>
+		</record>
+		<!-- Stock Requisition -->
+		<record id="action_good_issue_note" model="ir.actions.act_window">
+			<field name="name">Good Issue Note</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">good.issue.note</field>
+			<field name="context">{'search_default_state_filter': 1}</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="good_issue_note_tree" />
+			<field name="search_view_id" ref="view_good_issue_note_filter" />
+			<field name="domain">[]
+			</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to Register Good Issue Note .
+				</p>
+			</field>
+		</record>
+
+
+		<menuitem action='action_good_issue_note' id="menu_action_good_issue_note"
+			parent="stock.menu_stock_warehouse_mgmt" groups="stock.group_stock_manager" />
+		
+		<record id="good_issue_note_tree2" model="ir.ui.view">
+			<field name="name">good_issue_note_tree</field>
+			<field name="model">good.issue.note</field>
+			<field name="arch" type="xml">
+				<tree string="Contents">
+					<field name="issue_date" />
+					<field name="sub_d_customer_id" />
+					<field name="state" />
+					<field name="request_id" />
+					<field name="to_location_id" />
+					<field name="from_location_id" />
+					<field name="name" />
+					<field name="receiver" />
+					<field name="issue_by" />
+					<field name="request_by" />
+					<field name="approve_by" />
+				</tree>
+			</field>
+		</record>
+		
+		<record id="action_good_issue_note2" model="ir.actions.act_window">
+			<field name="name">Good Issue Note</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">good.issue.note</field>
+			<field name="context">{}</field>
+			<field name="view_type">tree</field>
+			<field name="view_mode">tree</field>
+			<field name="view_id" ref="good_issue_note_tree2" />			
+			<field name="domain">[]
+			</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to Register Good Issue Note .
+				</p>
+			</field>
+		</record>
+		
+		<menuitem id="menu_gin" name="GIN"
+			parent="base.menu_base_partner" sequence="2" />
+
+<!-- 		<menuitem id="menu_good_issue_note" parent="menu_gin" -->
+<!-- 			name="Good Issue Note" action="action_good_issue_note2" -->
+<!-- 			sequence="1" groups="base.group_sale_rom,base.group_sale_manager"/> -->
+				
+	</data>
+</openerp>

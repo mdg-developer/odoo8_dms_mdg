@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<record id="view_sales_config1" model="ir.ui.view">
+			<field name="name">account settings1</field>
+			<field name="model">account.config.settings</field>
+			<field name="inherit_id" ref="account.view_account_config_settings" />
+			<field name="arch" type="xml">
+					<label for="module_account_budget" position="after">
+                            <div name="module_sale_foc_discount">
+                                <field name="module_sale_foc_discount" class="oe_inline" />
+                                <label for="module_sale_foc_discount"/>
+	                       <group attrs="{'invisible': [('module_sale_foc_discount', '&lt;&gt;', True)]}" col="2">
+	                        <group>
+                                  
+                                 <field name="foc_account_id" on_change="onchange_discount_foc(module_sale_foc_discount)" class="oe_inline"/>
+	                              <field name="discount_account_id" on_change="onchange_discount_foc(module_sale_foc_discount)" class="oe_inline"/>
+	                              <field name="discount_cash_account_id" on_change="onchange_discount_foc(module_sale_foc_discount)" class="oe_inline"/>
+	                        </group>
+	                        </group>
+	                        </div>
+                            
+				</label>
+			</field>
+		</record>
+	</data>
+</openerp>

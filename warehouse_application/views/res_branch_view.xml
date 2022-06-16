@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>    
+    <data>
+        
+        <record id="view_branch_form_new_inherit_warehouse" model="ir.ui.view">
+            <field name="name">res.branch.form.inherit</field>
+            <field name="model">res.branch</field>
+            <field name="inherit_id" ref="branch_inventory_transfer.view_branch_form_new_inherit" />
+            <field name="priority" eval="20"/>           
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='branch_location_id']" position="after">
+                    <field name="branch_warehouse_id" />
+                </xpath>
+            </field>
+        </record>
+        
+    </data>
+</openerp>

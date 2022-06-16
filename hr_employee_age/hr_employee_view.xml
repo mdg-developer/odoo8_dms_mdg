@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		
+		<record id="hr_employee_age_form_view" model="ir.ui.view">
+            <field name="name">hr.employee.age.form</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <data>                   
+                    <xpath expr="//field[@name='birthday']" position="after">
+                    	 <field name="age"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>   
+        
+        <record id="hr_employee_age_tree_view" model="ir.ui.view">
+            <field name="name">hr.employee.age.tree</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_tree"/>
+            <field name="arch" type="xml">
+                <data>                   
+                    <xpath expr="//field[@name='parent_id']" position="after">
+                    	 <field name="age"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>    
+                              
+	</data>
+</openerp>

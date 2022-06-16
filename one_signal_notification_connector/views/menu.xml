@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>	 
+	       
+		<!-- One Signal Notification -->
+		<!-- Main Menu-->
+		<menuitem name="One Signal Notification" id="menu_one_signal_notification_main"  sequence="20"
+				  web_icon="one_signal_notification_connector,static/description/icon.png"
+				  groups="base.group_erp_manager"/>
+		<!-- This Menu Item Must have a parent -->
+		<menuitem name="One Signal" parent="menu_one_signal_notification_main"
+				  id="menu_one_notification_configuration_menu"  sequence="100"/>
+		<menuitem name="User Account" parent="menu_one_notification_configuration_menu"
+				  id="menu_one_notification_user_account" action="action_one_signal_notification_user_account" sequence="1"/>
+		<!-- This Menu Item must have a parent and an action -->
+		<menuitem name="Apps Configuration" parent="menu_one_notification_configuration_menu"
+				  id="menu_one_notification_apps_configuration" action="action_one_signal_notification_apps" sequence="2"/>
+		
+		<menuitem name="Messages" parent="menu_one_notification_configuration_menu"
+				  id="menu_one_signal_message" action="one_signal_notification_message_action" sequence="3"/>
+		
+		<!-- This Menu Item must have a parent and an action -->
+<!-- 		<menuitem id="one_signal_notification_message_menu_category" name="Messages" -->
+<!-- 				  parent="menu_one_signal_notification_main" action="one_signal_notification_message_action" sequence="1"/> -->
+	
+		<!-- This Menu Item must have a parent and an action -->
+<!-- 		<menuitem id="one_signal_notification_users_menu_category" name="One Signal Users" -->
+<!-- 				  parent="menu_one_signal_notification_main" action="action_one_signal_notification_users" sequence="2"/> -->
+		
+	</data>	
+</openerp>

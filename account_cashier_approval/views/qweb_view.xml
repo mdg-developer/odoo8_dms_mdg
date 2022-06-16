@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<report id="cashier_approval" model="cashier.approval" string="Cashier Approval Report"
+			report_type="qweb-pdf" name="account_cashier_approval.report_cashier_approval"
+			file="account_cashier_approval.report_cashier_approval" attachment_use="True"
+			attachment="('Cashier Approval')+'.pdf'" />
+	</data>
+</openerp>

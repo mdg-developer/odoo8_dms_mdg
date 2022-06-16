@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        
+        <record id="view_account_invoice_state" model="ir.ui.view">
+            <field name="name">account.invoice.state.form</field>
+            <field name="model">account.invoice.state</field>
+            <field name="arch"  type="xml">
+                <form string="Invoice Status">
+                    <group col="4" colspan="6">
+                       <label for="id" string="Invoice State"/>
+                       <div>
+                           <div name="fm_approve">
+                                <field name="fm_approve" class="oe_inline" groups="account.group_account_manager" attrs="{'readonly': [('cashier_approve','=',True)]}" />
+                                <label for="fm_approve"/>
+                            </div>                         
+                           <div name="cashier_approve">
+                                <field name="cashier_approve" class="oe_inline" groups="account_voucher_approval.group_account_cashier,account.group_account_manager"  attrs="{'readonly': [('fm_approve','=',True)]}" />
+                                <label for="cashier_approve"/>
+                            </div>                                                        
+                       </div>
+                        
+                    </group>
+                    <footer>
+                        <button name="print_report" string="Confirm" type="object" class="oe_highlight"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_account_invoice_state1" model="ir.actions.act_window">
+            <field name="name">Invoice Status</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.invoice.state</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record model="ir.values" id="account_invoice_state_value1">
+            <field name="name">Invoice Status</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_account_invoice_state1'))" />
+            <field name="key">action</field>
+            <field name="model">account.invoice</field>
+        </record>
+
+    </data>
+</openerp>

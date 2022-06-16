@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record id="view_stock_history_report_search_inherit" model="ir.ui.view">
+			<field name="name">stock.history.report.search</field>
+			<field name="model">stock.history</field>
+			<field name="inherit_id" ref="stock_account.view_stock_history_report_search" />
+			<field name="arch" type="xml">
+				<filter name="group_by_product" position="after">
+                    <filter string="Product UoM" icon="terp-accessories-archiver" context="{'group_by':'uom_id'}" name='group_by_uom_id'/>
+
+				</filter>	
+			</field>
+		</record>
+	</data>
+</openerp>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- Good Issue Note -->
+		<report id="report_good_receive_note" model="good.receive.note"
+			string="GRN Report" report_type="qweb-pdf"
+			name="good_receive_note.report_good_receive_note_document" file="good_receive_note.report_good_receive_note_document"
+			attachment_use="True" attachment="('Good Receive Note')+'.pdf'" />
+
+		<report id="report_pallet_transfer" model="pallet.transfer"
+			string="Pallet Transfer Report" report_type="qweb-pdf"
+			name="good_receive_note.report_pallet_transfer_document" file="good_receive_note.report_pallet_transfer_document"
+			attachment_use="True" attachment="('Pallet Transfer Report')+'.pdf'" />
+
+	</data>
+</openerp>

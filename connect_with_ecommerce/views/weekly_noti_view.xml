@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>    
+	<data>
+	    
+		<record id="view_weekly_noti_form" model="ir.ui.view">
+			<field name="name">weekly.noti.form</field>
+			<field name="model">weekly.noti</field>
+			<field name="arch" type="xml">
+				<form>					
+					<sheet>
+						<group>							
+							<group>
+								<field name="state_id"/>
+								<field name="city_id"/>
+								<field name="township_ids"/>
+								<field name="notified_days_ids" widget="many2many_tags" required="1"/>
+								<field name="message" required="1"/>
+							</group>
+						</group>			
+					</sheet>									
+				</form>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_weekly_noti_tree">
+			<field name="name">weekly.noti.tree</field>
+			<field name="model">weekly.noti</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="state_id"/>
+					<field name="city_id"/>					
+					<field name="notified_days_ids"/>
+					<field name="message"/>
+				</tree>
+			</field>
+		</record>
+
+		<record id="action_weekly_noti_view"
+			model="ir.actions.act_window">
+			<field name="name">Weekly Notification</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">weekly.noti</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" eval="view_weekly_noti_tree"/>
+		</record>
+
+		<menuitem id="menu_weekly_noti" sequence="21"
+			parent="sale_promotions.sales" name="Weekly Notification"
+			action="action_weekly_noti_view"/>
+
+	</data>
+</openerp>

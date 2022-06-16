@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Expenses -->
+        
+        <record id="view_expenses_form_inherit" model="ir.ui.view">
+            <field name="name">hr.expense.form.inherit</field>
+            <field name="model">hr.expense.expense</field>
+            <field name="inherit_id" ref="hr_expense.view_expenses_form"/>
+            <field name="arch" type="xml">
+				<data>
+					<xpath expr="//button[@name='confirm']" position="replace">
+						<button name="manager_accepted" states="draft" string="Submit to Manager" type="workflow" class="oe_highlight"/>
+					</xpath>
+					<xpath expr="//button[@name='manager_accepted']" position="after">
+                    	<!-- <button name="manager_accepted" states="confirm" string="Approve" type="workflow" class="oe_highlight"/> -->
+                    	<button name="gm_accepted" states="manager_approve" string="Approve" type="workflow" class="oe_highlight"/>
+                    	<button name="finance_accepted" states="gm_approve" string="Approve" type="workflow" class="oe_highlight"/>
+                    	<button name="cashier_accepted" states="finance_approve" string="Approve" type="workflow" class="oe_highlight"/>
+                    	<button name="paid" states="cashier_approve" string="Open Accounting Entries" type="workflow" class="oe_highlight"/> 
+                    	<!-- <button name="draft" states="confirm,cancelled" string="Set to Draft" type="workflow" groups="base.group_hr_user" /> -->
+					</xpath>
+					
+					<xpath expr="//button[@name='validate']" position="replace">
+					</xpath>
+					<xpath expr="//button[@name='done']" position="replace">
+					</xpath>
+					<xpath expr="//button[@name='action_view_move']" position="replace">
+					</xpath>
+					<xpath expr="//button[@name='refuse']" position="replace">
+						<button name="refuse" states="manager_approve,gm_approve,finance_approve,cashier_approve" string="Refuse" type="workflow" />
+					</xpath>
+					
+					<xpath expr="//form/header/field[@name='state']" position="replace">
+						<field name="state" widget="statusbar" statusbar_visible="draft,manager_approve,gm_approve,finance_approve,cashier_approve,paid" statusbar_colors='{"manager_approve":"blue","cancelled":"red"}'/>
+					</xpath>                 
+					
+					<field name="name" position="replace">
+						<field name="manager_note" placeholder="Notes..."/>
+					</field>
+					
+					<field name="manager_note" position="before">
+						<field name="notify_manager"/>
+					</field>
+					
+					<xpath expr="//sheet/group/group/field[@name='user_valid']" position="replace">
+					</xpath>
+					
+					<field name="company_id" position="after">
+						<field name="branch_id"/>
+					</field>
+					
+					<xpath expr="//sheet/notebook/page/field/form/group/group/field[@name='product_id']" position="replace">
+						<field name="product_id" string ="Expense Type" on_change="onchange_product_id(product_id, context)" context="{'default_hr_expense_ok':1}"/>
+					</xpath>
+					
+					<xpath expr="//tree/field[@name='date_value']" position="replace">
+					</xpath>
+					
+					<xpath expr="//tree/field[@name='ref']" position="replace">
+					</xpath>
+					
+					<xpath expr="//tree/field[@name='uom_id']" position="replace">
+					</xpath>
+					
+				</data>					
+			</field>
+        </record>
+        
+        <!-- Type Advance  -->
+        <record id="advance" model="ir.actions.act_window">
+            <field name="name">Advance</field>
+            <field name="res_model">hr.expense.expense</field>
+            <field name="view_type">form</field>
+            <field name="context">{'default_type': 'advance'}</field>
+			<field name="domain">[('type','=','advance')]</field>
+            <field name="view_id" ref="hr_expense.view_expenses_tree"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to register new advance. 
+              </p><p>
+                Odoo will ensure the whole process is followed; the expense
+                sheet is validated by manager(s), the employee is reimbursed
+                from his expenses, some expenses must be re-invoiced to the
+                customers.
+              </p>
+            </field>
+        </record>
+        
+        <!-- Type Claim  -->
+        <record id="claim" model="ir.actions.act_window">
+            <field name="name">Claim</field>
+            <field name="res_model">hr.expense.expense</field>
+            <field name="view_type">form</field>
+            <field name="context">{'default_type': 'claim'}</field>
+			<field name="domain">[('type','=','claim')]</field>
+            <field name="view_id" ref="hr_expense.view_expenses_tree"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to register new claim. 
+              </p><p>
+                Odoo will ensure the whole process is followed; the expense
+                sheet is validated by manager(s), the employee is reimbursed
+                from his expenses, some expenses must be re-invoiced to the
+                customers.
+              </p>
+            </field>
+        </record>
+		
+        <menuitem action="advance" id="menu_advance"  parent="hr_expense.next_id_49" sequence="16"/>
+        <menuitem action="claim" id="menu_claim"  parent="hr_expense.next_id_49" sequence="17"/>
+
+    </data>
+</openerp>
+

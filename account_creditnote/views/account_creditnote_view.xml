@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+		<!-- =============== Credit Note Form ============ -->
+
+		<record id="view_creditnote_form" model="ir.ui.view">
+			<field name="name">Credit Note Form</field>
+			<field name="model">account.creditnote</field>
+			<field eval="25" name="priority" />
+			<field name="arch" type="xml">
+				<form string="Credit Note Sheet" version="7.0">
+					<header>
+
+						<button name="set_to_approved" string="Approved"
+							groups="account.group_account_manager" type="object" states="draft"
+							class="oe_highlight" />
+						<button name="set_to_redeemed" type="object" states="approved"
+							string="Redeemed" groups="account.group_account_manager" class="oe_highlight" />
+						<button name="set_to_claimed" type="object" states="redeemed"
+							string="Claim" groups="account.group_account_manager" class="oe_highlight" />
+
+						<field name="state" widget="statusbar" statusbar_visible="draft,approved,redeemed,claimed" />
+					</header>
+					<sheet>
+						<group>
+							<group>
+								<field name="name" />
+								<field name="so_no" placeholder="SO00001" invisible="1" />
+								<!-- <field name="ref_no" placeholder="A00001" /> -->
+								<field name="customer_id" attrs="{'readonly': [('state','not in',('draft'))]}"
+									on_change="on_change_customer_id(customer_id)" />
+								<field name="customer_code" />
+								<field name="sale_team_id" />
+								<field name="user_id" domain="[('default_section_id', '=',sale_team_id)]" />
+								<field name="program_id" on_change="on_change_program_id(program_id)"
+									attrs="{'readonly': [('state','not in',('draft'))]}" />
+								<field name="principle_id" readonly="1" />
+								<field name="type" attrs="{'readonly': [('state','not in',('draft'))]}" />
+								<field name="description" attrs="{'readonly': [('state','not in',('draft'))]}" />
+								<field name="terms_and_conditions" attrs="{'readonly': [('state','not in',('draft'))]}" />
+								<field name="amount" attrs="{'readonly': [('state','not in',('draft'))]}" />
+								<field name="remark" />
+							</group>
+							<group>
+								<field name="create_date" readonly="1" />
+								<field name="issued_date" />
+								<field name="invoice_number" />
+								<field name="used_date" />
+								<field name="m_status" />
+								<field name="customer_branch_id" />
+								<field name="approved_date" />
+								<field name="used_by" />
+								<field name="approved_user_id" />
+								<field name="from_date" readonly="1" />
+								<field name="to_date" readonly="1" />
+							</group>
+						</group>
+						<group>
+							<notebook>
+								<page string="Principal">
+									<field name="p_line" attrs="{'readonly': [('state','not in',('draft'))]}">
+										<tree string="Principal Line" editable="bottom">
+											<field name="principle_id" />
+											<field name="amount" sum="Total"/>
+										</tree>
+									</field>
+								</page>
+							</notebook>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="view_creditnote_tree" model="ir.ui.view">
+			<field name="name">Credit Note Tree</field>
+			<field name="model">account.creditnote</field>
+			<field name="arch" type="xml">
+				<tree string="Credit Note Tree">
+					<field name="name" />
+					<field name="amount" />
+					<field name="customer_id" />
+					<field name="customer_code" />
+					<field name="user_id" />
+					<field name="sale_team_id" />
+					<field name="state" />
+					<field name="issued_date" />
+					<field name="used_date" />
+					<field name="invoice_number" />
+					<field name="program_id" />
+					<field name="principle_id" />
+					<field name="branch_id" />
+					<field name="customer_branch_id" />
+					<field name="from_date" />
+					<field name="to_date" />
+					<field name="create_date" />
+					<field name="remark" />
+					<field name="m_status" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="view_creditnote_filter" model="ir.ui.view">
+			<field name="name">account.creditnote.select</field>
+			<field name="model">account.creditnote</field>
+			<field name="arch" type="xml">
+				<search string="Search Credit Note">
+					<field name="name" string="Credit Note Number" />
+					<field name="customer_id" string="Customer" />
+					<field name="sale_team_id" string="Sales Team" />
+					<field name="program_id" string="Program" />
+					<field name="principle_id" string="Principle" />
+					<field name="state" string="Status" />
+					<field name="branch_id" string="Branch" />
+					<field name="customer_branch_id" string="Customer Branch" />
+					<group expand="0" string="Group By">
+						<filter string="Customer" context="{'group_by':'customer_id'}" />
+						<filter string="Sales Team" context="{'group_by':'sale_team_id'}" />
+						<filter string="Program" context="{'group_by':'program_id'}" />
+						<filter string="Principle" context="{'group_by':'principle_id'}" />
+						<filter string="Status" icon="terp-stock_effects-object-colorize"
+							domain="[]" context="{'group_by':'state'}" />
+						<filter string="Branch" context="{'group_by':'branch_id'}" />
+						<filter string="Customer Branch" context="{'group_by':'customer_branch_id'}" />
+
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<record id="action_creditnote" model="ir.actions.act_window">
+			<field name="name">Credit Note</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">account.creditnote</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="search_view_id" ref="view_creditnote_filter" />
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to create new Credit Note .
+				</p>
+			</field>
+		</record>
+
+		<menuitem action="action_creditnote" id="menu_creditnote"
+			parent="account.menu_finance_receivables" sequence="100" />
+
+	</data>
+</openerp>

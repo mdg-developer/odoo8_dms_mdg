@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="sms_template_form">
+            <field name="name">sms.template.form</field>
+            <field name="model">sms.template</field>
+            <field name="arch" type="xml">
+                <form string="SMS Templates">
+                    <sheet>
+                        <div class="oe_right" name="button_box">
+                            <!-- <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                            </button> -->
+                            <button class="oe_stat_button" name="%(wizard_sms_template_preview)d" icon="fa-search-plus" string="Preview"
+                                    type="action" target="new"
+                                    context="{'template_id':active_id}" attrs="{'invisible':[('globally_access','=',True)]}"/>
+                        </div>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1><field name="name" required="1"/></h1>
+                        </div>
+                        <group>
+                            <field name="globally_access"/>
+                            <field name="active"/>
+                        </group>
+                        <group string="SMS Notification will automatically triggered when:" attrs="{'invisible':[('globally_access','=',True)]}">
+                            <group>
+                                <field name="condition" attrs="{'required':[('globally_access','=',False)]}"/>
+                                <field name="model_id" options="{'no_create': True}" readonly="1"/>
+                            </group>
+                            <group>
+                            </group>
+                        </group>
+                        <div>
+                        <!-- <b>Note: </b>If no condition selected then the template will be used globally. -->
+                        </div>
+                        <group>
+                            <field name="model" invisible="1"/>
+                            <field name="auto_delete"/>
+                        </group>
+                        <notebook>
+                            <page string="Content">
+                                <field name="sms_body_html" placeholder="# Available locals:
+                                  #  - If you are not selecting any condition inside template then this will be used globally.
+                                  #  - object: Record on which the action is triggered if there is one, otherwise None
+                                  #  - If you are selecting condition inside template then to access the field of the record use  ${object.field_name}
+                                  #  - Example:- To access partner_id field of the document use ${object.partner_id}."/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="sms_template_tree">
+            <field name="name">sms.template.tree</field>
+            <field name="model">sms.template</field>
+            <field name="arch" type="xml">
+                <tree string="SMS Templates">
+                    <field name="name"/>
+                    <field name="globally_access"/>
+                    <field name="model_id"/>
+                    <field name="condition"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_sms_template_search" model="ir.ui.view">
+           <field name="name">sms.template.search</field>
+           <field name="model">sms.template</field>
+           <field name="arch" type="xml">
+               <search string="Templates">
+                    <field name="name" filter_domain="['|', '|', '|',('name','ilike',self), ('report_name','ilike',self), ('subject','ilike',self), ('email_to','ilike',self)]" string="Templates"/>
+                    <field name="model_id"/>
+                    <field name="condition"/>
+                    <filter string="Order Place" domain="[('condition','=','order_placed')]" help="Order Place" name="order_placed"/>
+                    <filter string="Order Confirm" domain="[('condition','=','order_confirm')]" help="Order Confirm" name="order_confirm"/>
+                    <filter string="Order Delivered" domain="[('condition','=','order_delivered')]" help="Order Delivered" name="order_delivered"/>
+                    <filter string="Invoice Validate" domain="[('condition','=','invoice_vaildate')]" help="Invoice Validate" name="invoice_vaildate"/>
+                    <filter string="Invoice Paid" domain="[('condition','=','invoice_paid')]" help="Invoice Paid" name="invoice_paid"/>
+                    <filter string="Global" domain="[('globally_access','=',True)]" help="Global Template" name="global"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                    <group expand="0" string="Group by...">
+                        <filter string="Model" domain="[]" context="{'group_by':'model_id'}" icon="terp-accessories-archiver"/>
+                        <filter string="Condition" domain="[]" context="{'group_by':'condition'}" icon="terp-accessories-archiver"/>
+                    </group>
+               </search>
+           </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_sms_template_tree_all">
+            <field name="name">Templates</field>
+            <field name="res_model">sms.template</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field name="view_id" ref="sms_template_tree" />
+        </record>
+
+        <menuitem id="wk_menu_sms_templates" parent="base.menu_sms" action="action_sms_template_tree_all" sequence="20"/>
+
+    </data>
+</openerp>

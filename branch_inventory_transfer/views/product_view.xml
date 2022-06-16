@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+		<record id="view_product_template_uom_form" model="ir.ui.view">
+			<field name="name">product.template.form</field>
+			<field name="model">product.template</field>
+			<field name="inherit_id" ref="product.product_template_form_view" />
+			<field name="arch" type="xml">
+
+				<field name="weight_net" position="after">
+					<field name="viss_value" />
+					<field name="cbm_value" />
+					<field name="ctn_pallet" />
+				</field>
+				<field name="volume" position="replace">
+					<field digits="(14, 3)" name="volume" invisible="1"/>					
+				</field>
+				<field name="weight" position="replace">
+					<field name="weight" invisible="1"/>					
+				</field>
+				<field name="weight_net" position="replace">
+					<field name="weight_net" invisible="1"/>					
+				</field>
+			</field>
+		</record>
+	</data>
+</openerp>
+		

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        
+        <record model="ir.ui.view" id="view_company_inherit_form_sms">
+            <field name="name">res.company.form.inherit.sms</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="model">res.company</field>
+            <field name="arch" type="xml">
+                <notebook position="inside">
+                    <page string="Credit Invoice Message" position="inside">
+                        <separator string="Credit Invoice Message" colspan="4"/>
+                        <field name="credit_invoice_msg" colspan ="4"/>
+                    </page>
+                </notebook>
+            </field>
+        </record>         
+     
+    </data>
+</openerp>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+		<!-- sale team creation form -->
+
+		<record model="ir.ui.view" id="view_sale_team_assign_warehouse_form">
+			<field name="name">crm</field>
+			<field name="model">crm.case.section</field>
+			<field name="inherit_id" ref="sales_team.crm_case_section_view_form" />
+			<field name="priority" eval="20" />
+			<field name="arch" type="xml">
+
+				<page string="Notes" position="after">
+					<page string="Reassign Warehouses">
+
+
+						<field name="assign_warehouse_lines">
+							<form string="Assign Warehouse">
+								<group>
+									<field name="location_id" />
+									<field name="assign" />
+								</group>
+							</form>
+							<tree string="Pricelists" editable="bottom">
+								<field name="location_id"/>
+								<field name="assign" />
+							</tree>
+						</field>
+					</page>
+				</page>
+
+			</field>
+		</record>
+
+		
+	</data>
+</openerp>
+		

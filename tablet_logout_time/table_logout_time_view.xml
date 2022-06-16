@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record id="view_tablet_sync_log_form" model="ir.ui.view">
+			<field name="name">Tablet Logout Time Form</field>
+			<field name="model">tablet.logout.time</field>
+			<field name="arch" type="xml">
+				<form string="Logout Time" version="7.0">
+					<sheet>
+						<group>
+							<field name="section_id" class="oe_inline" />
+							<field name="user_id" domain="[('default_section_id', '=',section_id)]"
+								class="oe_inline" />							
+							<field name="logout_time" />					
+							<field name="branch_id" />
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="view_tablet_sync_log_tree" model="ir.ui.view">
+			<field name="name">Tablet Logout Time Tree</field>
+			<field name="model">tablet.logout.time</field>
+			<field name="arch" type="xml">
+				<tree string="Logout Time" default_order="logout_time desc">
+					<field name="section_id" />
+					<field name="user_id" />				
+					<field name="logout_time" />
+					<field name="branch_id" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="view_tablet_sync_filter" model="ir.ui.view">
+			<field name="name">Tablet Logout Time</field>
+			<field name="model">tablet.logout.time</field>
+			<field name="arch" type="xml">
+				<search string="Search Tablet Logout Time">
+					<group expand="0" string="Group By...">
+						<filter string="Sales Team" icon="terp-partner" domain="[]"
+							context="{'group_by':'section_id'}" />
+						<filter string="Branch" icon="terp-partner" domain="[]" context="{'group_by':'branch_id'}" /> 
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<!-- Action -->
+		<record id="action_tablet_sync_log" model="ir.actions.act_window">
+			<field name="name">Tablet Logout Time</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">tablet.logout.time</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_tablet_sync_log_tree" />
+			<field name="search_view_id" ref="view_tablet_sync_filter" />
+		</record>
+
+		<!-- First level menu -->
+		<menuitem id="menu_tablet_print_import" name="Tablet Logout Time"
+			action="action_tablet_sync_log" sequence="5"
+			parent="menu_customization.menu_sale_team_menu" />
+
+	</data>
+</openerp>

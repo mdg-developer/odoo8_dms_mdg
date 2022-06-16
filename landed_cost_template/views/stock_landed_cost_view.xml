@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+   
+        <record model="ir.ui.view" id="view_stock_landed_cost_form_inherit">
+            <field name="name">stock.landed.cost.form.inherit</field>
+            <field name="model">stock.landed.cost</field>
+            <field name="inherit_id" ref="stock_landed_costs.view_stock_landed_cost_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='account_move_id']" position="after">
+                    <field name="template_id"  on_change="onchange_template_id(template_id)"/>
+                </xpath>
+            </field>
+        </record>
+        
+        <!-- Stock Landed Cost Menu -->
+        <menuitem name="Landed Costs" parent="base.menu_purchase_root" id="stock_landed_costs.menu_stock_landed_cost_main" />
+     	<menuitem action="stock_landed_costs.action_stock_landed_cost" id="stock_landed_costs.menu_stock_landed_cost" name="Landed Costs"
+		 parent="stock_landed_costs.menu_stock_landed_cost_main"  sequence="1"/>
+		 
+		 <!-- Manufacturing Menu -->
+		 <menuitem name="Assemblies" parent="base.menu_purchase_root" id="menu_assemblies" sequence="101"/>
+		 <menuitem action="mrp.mrp_bom_form_action" id="mrp.menu_mrp_bom_form_action" parent="menu_assemblies" sequence="1"/>
+		 <menuitem name ="Order" action="mrp.mrp_production_action" id="mrp.menu_mrp_production_action"
+            parent="menu_assemblies" sequence="2"/>
+
+     
+    </data>
+</openerp>

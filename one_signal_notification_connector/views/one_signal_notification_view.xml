@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+	    
+		<!-- One Signal Notification User Account -->
+		<record id="one_signal_notification_user_account_form_view" model="ir.ui.view">
+			<field name="name">one.signal.notification.user.account.form</field>
+			<field name="model">one.signal.notification.user.account</field>
+			<field name="arch" type="xml">
+				<form string="One Signal Notification">
+					<sheet>				
+						<group>
+							<field name="company_id" required="1" groups="base.group_multi_company"/>
+							<field name="email" />
+							<field name="user_auth_key" required="1"/>
+							<field name="active"/>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		
+		<record id="one_signal_notification_user_account_tree_view" model="ir.ui.view">
+			<field name="name">one.signal.notification.user.account.tree</field>
+			<field name="model">one.signal.notification.user.account</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="email"/>
+					<field name="user_auth_key"/>
+					<field name="company_id" groups="base.group_multi_company"/>
+					<field name="active"/>
+				</tree>
+			</field>
+		</record>
+		
+		<record id="action_one_signal_notification_user_account" model="ir.actions.act_window">
+			<field name="name">One Signal Notification User Account</field>
+			<field name="res_model">one.signal.notification.user.account</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_type">form</field>
+		</record>
+		
+	<!-- One Signal Notification Apps -->
+		<record id="one_signal_notification_apps_form_view" model="ir.ui.view">
+			<field name="name">one.signal.notification.form</field>
+			<field name="model">one.signal.notification.apps</field>
+			<field name="arch" type="xml">
+				<form string="One Signal Notification">
+					<sheet>					
+						<group>
+							<field name="company_id" required="1" groups="base.group_multi_company"/>
+							<field name="name" required="1"/>
+							<field name="app_id" required="1"/>
+							<field name="app_api_key" required="1"/>
+							<field name="user_auth_key_id" required="1"/>
+							<field name="active"/>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+	
+		<record id="one_signal_notification_apps_tree_view" model="ir.ui.view">
+			<field name="name">one.signal.notification.tree</field>
+			<field name="model">one.signal.notification.apps</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="name"/>
+					<field name="app_id" required="1"/>
+					<field name="app_api_key" required="1"/>
+					<field name="user_auth_key_id"/>
+					<field name="company_id" groups="base.group_multi_company"/>
+					<field name="active"/>
+				</tree>
+			</field>
+		</record>
+	
+		<record id="action_one_signal_notification_apps" model="ir.actions.act_window">
+			<field name="name">One Signal Notification</field>
+			<field name="res_model">one.signal.notification.apps</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_type">form</field>
+		</record>
+
+	</data>
+</openerp>

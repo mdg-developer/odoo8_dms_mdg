@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record id="view_pending_delivery_form" model="ir.ui.view">
+			<field name="name">Pending Delivery Form</field>
+			<field name="model">pending.delivery</field>
+			<field name="arch" type="xml">
+				<form string="Pending Delivery" version="7.0">
+					<header>
+						<button name="action_convert_pending_delivery" string="Convert Delivery Order"
+							type="object" class="oe_highlight" groups="base.group_user"
+							attrs="{'invisible':[('state', '=', 'done')]}"></button>
+						<field name="state" widget="statusbar" statusbar_visible="draft,done"
+							statusbar_colors='{"draft":"red","done":"blue"}' />
+					</header>
+					<sheet>
+						<group>
+							<field name="due_date" />
+							<field name="delivery_date" />
+							<field name="confirm_date" />
+					        <field name="create_date" />
+							<field name="order_id" class="oe_inline" />
+							<field name="delivery_team_id" class="oe_inline" />
+							<field name="miss" />
+							<field name="is_revised" />
+							<field name="state" />
+							<field name="latitude" />
+							<field name="longitude" />
+							<field name="distance_status" class="oe_inline"/>
+							<field name="geo_point" class="oe_inline"/>		
+							<field name="payment_ref" class="oe_inline"/>							
+												
+						</group>
+						<widget type="gmap_marker" lat="latitude" lng="longitude"
+							description="field_descriptions" />
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="view_pending_delivery_tree1" model="ir.ui.view">
+			<field name="name">Pending Delivery Tree</field>
+			<field name="model">pending.delivery</field>
+			<field name="arch" type="xml">
+				<tree string="Pending Delivery" default_order="delivery_date desc">
+				    <field name="delivery_date" />			
+					<field name="confirm_date" />
+					<field name="due_date" />
+					<field name="create_date" />
+					<field name="delivery_team_id" />
+					<field name="order_id" />
+					<field name="miss" />
+					<field name="is_revised" />
+					<field name="payment_ref" class="oe_inline"/>							
+					<field name="state" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="view_pending_delivery_filter" model="ir.ui.view">
+			<field name="name">Pending Delivery</field>
+			<field name="model">pending.delivery</field>
+			<field name="arch" type="xml">
+				<search string="Search Stock Delivery ">
+					<group expand="0" string="Group By...">
+						<filter string="State" icon="terp-partner" domain="[]"
+							context="{'group_by':'state'}" />
+						<filter string="Delivery Team" icon="terp-partner" domain="[]"
+							context="{'group_by':'delivery_team_id'}" />
+						<filter string="Draft" domain="[('state','=','draft')]"
+							name="state_filter" />
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<!-- Action -->
+		<record id="action_pending_delivery_log" model="ir.actions.act_window">
+			<field name="name">Pending Delivery</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">pending.delivery</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_pending_delivery_tree1" />
+			<field name="context">{
+				'search_default_state_filter': 1}
+			</field>
+			<field name="search_view_id" ref="view_pending_delivery_filter" />
+		</record>
+
+
+		<!-- First level menu -->
+		<menuitem id="menu_pending_delivery_menu_parent" parent="base.menu_base_partner"
+			name="Pending Delivery" sequence="4" />
+		<menuitem id="menu_pending_delivery_menu" parent="menu_pending_delivery_menu_parent"
+			name="Pending Delivery" action="action_pending_delivery_log"
+			sequence="1" />
+
+	</data>
+</openerp>

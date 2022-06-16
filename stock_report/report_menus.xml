@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <menuitem name="Stock by Date" parent="stock.next_id_61" action="action_stock_by_date_menu" id="stock_by_date_menu"/>
+
+    </data>
+</openerp>

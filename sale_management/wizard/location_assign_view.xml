@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<record id="view_sale_order_make_location" model="ir.ui.view">
+			<field name="name">Assign Team And Location</field>
+			<field name="model">sale.make.location</field>
+			<field name="arch" type="xml">
+				<form string="Assign Team And Location">
+					<separator colspan="4"/>
+					<group>
+						<field name="section_id" on_change="on_change_sale_team_id(section_id)"  class="oe_inline" />
+						<field name="user_id"  domain="[('default_section_id', '=',section_id)]"  class="oe_inline"/>
+						<field name="warehouse_id" readonly="1" />
+						<field name="location_id"  readonly="1"/>
+					</group>
+					<footer>
+						<button name="make_location" string="Assign" type="object"
+							class="oe_highlight" />
+						or
+						<button string="Cancel" class="oe_link" special="cancel" />
+					</footer>
+				</form>
+			</field>
+		</record>
+
+		<record id="action_sale_order_make_location" model="ir.actions.act_window">
+			<field name="name">Assign Team And Location</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">sale.make.location</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="view_sale_order_make_location" />
+			<field name="target">new</field>
+			<field name="multi">True</field>
+		</record>
+
+		<record model="ir.values" id="sale_order_make_location">
+			<field name="model_id" ref="sale.model_sale_order" />
+			<field name="name">Assign Team And Location</field>
+			<field name="key2">client_action_multi</field>
+			<field name="value"
+				eval="'ir.actions.act_window,' + str(ref('action_sale_order_make_location'))" />
+			<field name="key">action</field>
+			<field name="model">sale.order</field>
+<!-- 	<field name="groups_id" eval="[(4, ref('base.group_no_one'))]" />
+ -->
+		</record>
+	</data>
+</openerp>

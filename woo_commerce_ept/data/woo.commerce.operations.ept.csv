@@ -1,0 +1,13 @@
+id,name,sequence,action_id:id,url,display_inline_image,display_outline_image,use_quotations,use_products,use_invoices,use_delivery_orders,use_woo_commerce_workflow,use_log
+sale_order_woo_commerce_operation,Sales Orders,1,woo_commerce_ept.action_woo_sales_order,/woo_commerce_ept/static/src/img/kanban/sale.png,0,1,1,0,0,0,0,0
+products_woo_commerce_operation,Products,2,woo_commerce_ept.action_woo_product_ept,/woo_commerce_ept/static/src/img/kanban/products.png,0,1,0,1,0,0,0,0
+delivery_orders_woo_commerce_operation,Delivery Orders,4,woo_commerce_ept.action_picking_view_ept,/woo_commerce_ept/static/src/img/kanban/delivery.png,1,0,0,0,0,1,0,0
+invoices_woo_commerce_operation,Invoices,5,woo_commerce_ept.action_invoice_woo_invoices,/woo_commerce_ept/static/src/img/kanban/invoice.png,0,1,0,0,1,0,0,0
+woo_commerce_mismatch_log_operation,Mismatch Log,6,woo_commerce_ept.action_mismatch_log_ept,/woo_commerce_ept/static/src/img/kanban/feed_history.png,0,1,0,0,0,0,0,1
+woo_commerce_customer_operation,Customer,7,woo_commerce_ept.action_woo_partner_form,/woo_commerce_ept/static/src/img/kanban/customer.png,0,1,0,0,0,0,0,0
+woo_commerce_tags_operation,Tags,8,woo_commerce_ept.product_tags_action_ept,/woo_commerce_ept/static/src/img/kanban/tags.png,0,1,0,0,0,0,0,0
+woo_commerce_categories_operation,Categories,9,woo_commerce_ept.product_categ_action_ept,/woo_commerce_ept/static/src/img/kanban/categories.png,0,1,0,0,0,0,0,0
+import_export_woo_commerce_operation,Perform Operation,10,woo_commerce_ept.action_wizard_woo_processes_ept,/woo_commerce_ept/static/src/img/kanban/perform_operations.png,0,1,0,0,0,0,0,0
+woo_commerce_cron_jobs_operation,Woo Commerce Cron,11,base.ir_cron_act,/woo_commerce_ept/static/src/img/kanban/auto_jobs.png,0,1,0,0,0,0,0,0
+sales_analysis_woo_commerce_operation,Sales Analysis,12,woo_commerce_ept.action_order_report_all,/woo_commerce_ept/static/src/img/kanban/sales_report.png,0,1,0,0,0,0,0,0
+invoice_workflow_woo_commerce_operation,Invoice Workflow Settings,13,woo_commerce_ept.act_sale_workflow_config_form,/woo_commerce_ept/static/src/img/kanban/setting.png,0,1,0,0,0,0,1,0

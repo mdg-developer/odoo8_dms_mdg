@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<record id="view_delivery_invoice_transfer" model="ir.ui.view">
+			<field name="name">Multi Delivery Form</field>
+			<field name="model">invoice.delivery.transfer</field>
+			<field name="arch" type="xml">
+				<form string="Multi Delivery Order">
+					<separator colspan="4" />
+					<group>
+						<field name="date" />
+					</group>
+					<footer>
+						<button name="print_report" string="Transfer" type="object"
+							class="oe_highlight" />
+						or
+						<button string="Cancel" class="oe_link" special="cancel" />
+					</footer>
+				</form>
+			</field>
+		</record>
+
+		<record id="action_view_delivery_invoice_transfer1" model="ir.actions.act_window">
+			<field name="name">Multi Delivery And Invoice Create</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">invoice.delivery.transfer</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="view_delivery_invoice_transfer" />
+			<field name="target">new</field>
+			<field name="multi">True</field>
+		</record>
+
+		<record model="ir.values" id="sale_order_delivery_invoice_transfer1">
+			<field name="model_id" ref="sale.model_sale_order" />
+			<field name="name">Multi Delivery And Invoice Create</field>
+			<field name="key2">client_action_multi</field>
+			<field name="value"
+				eval="'ir.actions.act_window,' + str(ref('action_view_delivery_invoice_transfer1'))" />
+			<field name="key">action</field>
+			<field name="model">sale.order</field>
+			<field name="groups_id" eval="[(4, ref('base.group_no_one'))]" />
+
+		</record>
+	</data>
+</openerp>

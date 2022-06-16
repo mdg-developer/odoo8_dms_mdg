@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        
+        <record model="ir.ui.view" id="view_branch_stock_requisition_wizard">
+            <field name="name">branch.requisition.wizard.form</field>
+            <field name="model">branch.requisition.wizard</field>
+            <field name="priority">30</field>
+            <field name="arch" type="xml">
+                <form string="Confirmation">                    
+                    <footer>
+                        <button name="recalculate" string="Recalculate" class="oe_highlight" type="object"/> or
+                        <button name="proceed_existing" string="Proceed Existing" class="oe_highlight" type="object"/> or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>       
+                
+    </data>
+</openerp>

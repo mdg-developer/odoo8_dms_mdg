@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record id="product_exchange_sequence" model="ir.sequence.type">
+			<field name="name">Exchange Return Sequence</field>
+			<field name="code">product.transactions.code</field>
+		</record>
+
+		<record id="product_exchange_seq" model="ir.sequence">
+			<field name="name">Exchange Return Sequence</field>
+			<field name="code">product.transactions.code</field>
+			<field name="prefix">SEN/%(year)s/</field>
+			<field name="padding">7</field>
+		</record>
+	</data>
+</openerp>

@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<record model="ir.ui.view" id="view_promotion_rules_form">
+			<field name="name">promos.rules.form</field>
+			<field name="model">promos.rules</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Promotions" version="7.0">
+					<header>
+						<button name="approve" string="Approve" class="oe_highlight"
+							type="object" states="draft" groups="base.group_sale_manager" />
+						<button name="publish" string="Publish" class="oe_highlight"
+							type="object" states="approve" groups="base.group_sale_manager" />
+						<field name="state" widget="statusbar" />
+					</header>
+					<sheet>
+						<h1>
+							<field name="code" placeholder="Promotion Code" />
+							<field name="name" placeholder="Promotion Name" />
+						</h1>
+						<field name="description" colspan="4" nolabel="1"
+							placeholder="Description..." />
+						<button name="generate_code" string="Generate Code" class="oe_highlight"
+							type="object" groups="base.group_sale_manager" />
+
+						<group col="4">
+							<field name="sequence" colspan="2" />
+							<field name="active" colspan="2" select="1" />
+							<field name="promotion_count" colspan="2" select="1" />
+							<field name="monthly_promotion" colspan="2" select="1" />
+							<field name="join_promotion_ids" colspan="2" select="1"
+								widget="many2many_tags" />
+							<!-- <field name="stop_further" colspan="2" /> -->
+							<!-- <field name="special" colspan="2" select="1" invisible="1"/> -->
+							<!-- <field name="special1" colspan="2" select="1" /> <field name="special2" 
+								colspan="2" select="1" /> <field name="special3" colspan="2" select="1" /> -->
+							<field name="main_group" colspan="2" select="1" on_change="onchange_main_group(main_group)" />
+							<field name="checking_main_group" colspan="2" select="1" />
+							<field name="sale_channel_id" colspan="2" widget="many2many_tags" />
+							<field name="outlettype_id" colspan="2" widget="many2many_tags" />
+							<field name="branch_id" colspan="2" widget="many2many_tags" />
+							<field name="product_ids" colspan="2" widget="many2many_tags" />
+							<field name="category_ids" colspan="2" widget="many2many_tags" />
+							<newline />
+							<field name="from_date" />
+							<field name="to_date" />
+							<field name="manual" colspan="2" select="1" />
+							<field name="create_date" readonly="1" />
+							<field name="create_uid" readonly="1" />
+							<field name="write_date" readonly="1" />
+							<field name="write_uid" readonly="1" />
+							<field name="bundle_promotion" />
+							<field name="high_priority" />
+							<field name="approved_datetime" />
+							<field name="approved_by" />
+						</group>
+
+						<group invisible="1">
+							<separator string="Coupon/Voucher Settings" col="4"
+								invisible="1" />
+							<separator string="Applicable Period" col="2"
+								invisible="1" />
+							<group>
+								<field name="coupon_code" invisible="1" />
+								<field name="coupon_used" invisible="1" />
+								<field name="uses_per_coupon" attrs="{'required':[('coupon_code','!=',False)]}"
+									invisible="1" />
+								<field name="uses_per_partner" attrs="{'required':[('coupon_code','!=',False)]}"
+									invisible="1" />
+							</group>
+							<!-- <group> <field name="from_date" /> <field name="to_date" /> </group>! -->
+						</group>
+						<notebook colspan="4">
+							<page string="Conditions">
+								<group>
+									<label string="If" />
+									<field name="logic" nolabel="1" colspan="1" />
+									<label string="expressions are" />
+									<field name="expected_logic_result" nolabel="1" />
+								</group>
+								<separator string="Expressions" />
+								<br />
+								<field name="expressions" nolabel="1">
+									<tree string="Expressions" editable="bottom">
+										<field name="sequence" />
+										<!-- <field name="stop_further" /> -->
+										<field name="attribute" on_change="on_change(attribute, value)" />
+										<field name="comparator" />
+										<field name="value" />
+									</tree>
+									<form>
+										<field name="sequence" />
+										<field name="attribute" on_change="_on_change(attribute, value)" />
+										<field name="comparator" />
+										<field name="value" />
+										<!-- <field name="stop_further" /> -->
+									</form>
+								</field>
+							</page>
+							<page string="Actions">
+								<field name="actions" nolabel="1">
+									<tree editable="bottom" string="Actions">
+										<field name="sequence" />
+										<field name="action_type"
+											on_change="on_change(action_type, product_code, arguments)" />
+										<field name="product_code" />
+										<field name="arguments" />
+										<field name="discount_product_code" />
+									</tree>
+									<form>
+										<field name="sequence" />
+										<field name="action_type"
+											on_change="_on_change(action_type, product_code, arguments)" />
+										<field name="product_code" />
+										<field name="arguments" />
+										<field name="discount_product_code" />
+										
+									</form>
+								</field>
+							</page>
+							<page string="Customers">
+								<field name="customer_ids" nolabel="1" />
+							</page>
+<!-- 							<page string="Description"> -->
+<!-- 								<group col="4" colspan="4"> -->
+<!-- 									<field name="description" colspan="4" nolabel="1" -->
+<!-- 										placeholder="Description..." /> -->
+
+<!-- 								</group> -->
+
+<!-- 							</page> -->
+							<!-- <page string="Monthly Other Promotions" -->
+							<!-- attrs="{'invisible':[('monthly_promotion', '!=',True)]}"> -->
+							<!-- <group> -->
+							<!-- <field name="promotion_id_a" class="oe_inline" /> -->
+							<!-- <field name="promotion_id_b" class="oe_inline" /> -->
+							<!-- <field name="promotion_id_c" class="oe_inline" /> -->
+							<!-- </group> -->
+							<!-- </page> -->
+						</notebook>
+					</sheet>
+					<div class="oe_chatter">
+	                    <field name="message_follower_ids" widget="mail_followers"/>
+	                    <field name="message_ids" widget="mail_thread"/>
+	                </div>
+				</form>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="view_promotion_rules_tree">
+			<field name="name">promos.rules.tree</field>
+			<field name="model">promos.rules</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Promotions">
+					<field name="code" />
+					<field name="name" />
+					<field name="active" />
+					<field name="manual" />
+					<field name="coupon_code" />
+					<field name="main_group" />
+					<field name="from_date" />
+					<field name="to_date" />
+					<field name="state" />
+					
+				</tree>
+			</field>
+		</record>
+
+
+
+		<!-- Main Group filter -->
+		<record id="view_sale_pomo_maingroup_filter" model="ir.ui.view">
+			<field name="name">Main Group</field>
+			<field name="model">promos.rules</field>
+			<field name="arch" type="xml">
+				<search string="Filters">
+					<group expand="0" string="Group By">
+						<filter name="main_group" string="Main Group" domain="[]"
+							context="{'group_by':'main_group'}" />
+						<filter string="Promotion Month" context="{'group_by':'to_date:month'}"
+							help="date of the promotion" />
+
+
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<record id="act_promotion_rules" model="ir.actions.act_window">
+			<field name="name">Promotions</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">promos.rules</field>
+			<field name="src_model">promos.rules</field>
+			<field name="context">{'search_default_main_group':1,'search_default_branch_id':1}
+			</field>
+			<field name="search_view_id" ref="view_sale_pomo_maingroup_filter" />
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<menuitem id="sales" parent="base.menu_base_config" name="Sales"
+			sequence="1" />
+
+		<menuitem id="promos" parent="sales" action="act_promotion_rules"
+			sequence="1" />
+
+		<!--<menuitem id="promos" parent="sale_management.promotions" action="act_promotion_rules" 
+			sequence="1" /> -->
+
+		<record model="ir.ui.view" id="view_promotion_cond_expr_form">
+			<field name="name">promos.rules.conditions.exps.form</field>
+			<field name="model">promos.rules.conditions.exps</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Expressions">
+					<field name="sequence" />
+					<field name="serialised_expr" />
+				</form>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="view_promotion_cond_expr_tree">
+			<field name="name">promos.rules.conditions.expres.tree</field>
+			<field name="model">promos.rules.conditions.exps</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Expressions">
+					<field name="sequence" />
+					<field name="serialised_expr" />
+				</tree>
+			</field>
+		</record>
+	</data>
+</openerp>
