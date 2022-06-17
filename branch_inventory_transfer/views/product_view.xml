@@ -22,6 +22,14 @@
 				<field name="weight_net" position="replace">
 					<field name="weight_net" invisible="1"/>					
 				</field>
+
+				<field name="write_uid" position="after">
+					<field name="principal_description"/>
+					<field name="supplier_name"/>
+					<field name="country"/>
+					<field name="variety"/>
+					<field name="vintage"/>
+				</field>
 			</field>
 		</record>
 	</data>
