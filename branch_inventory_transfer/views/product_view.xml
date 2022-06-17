@@ -25,10 +25,10 @@
 
 				<field name="write_uid" position="after">
 					<field name="principal_description"/>
-					<field name="supplier_name"/>
-					<field name="country"/>
+					<field name="supplier_id"/>
+					<field name="country_id"/>
 					<field name="variety"/>
-					<field name="vintage"/>
+					<field name="vintage_id"/>
 				</field>
 			</field>
 		</record>
