@@ -39,7 +39,8 @@ class sale_order(osv.osv):
                         # 'res.branch', 'search',
                         # [[['name', '=', inv.branch_id.name]]],
                         # {'limit': 1})
-                        branch_default_location = inv.branch_id.branch_location_id.name
+                        branch_default_location = inv.section_id.location_id.name
+                        # branch_default_location = inv.branch_id.branch_location_id.name
                         branch_id = branch_default_location.replace("-Sellable", "-Transit")
 
                         if not branch_id:
