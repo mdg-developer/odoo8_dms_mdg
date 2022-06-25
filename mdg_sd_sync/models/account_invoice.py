@@ -25,15 +25,15 @@ class account_invoice(models.Model):
         for inv in self:
             if inv.type == 'out_invoice' and inv.partner_id.sd_customer == True and sd_uid and inv.date_invoice >='2020-02-01':
                 branch_id = False
-                if (inv.branch_id.name.startswith('LSD')):
+                if (inv.branch_id.branch_code.startswith('LMSD')):
                     branch_id = models.execute_kw(db, sd_uid, password,'res.branch', 'search',[[['branch_code', '=', 'LMSD']]],{'limit': 1})
-                elif (inv.branch_id.name.startswith('USD')):
+                elif (inv.branch_id.branch_code.startswith('UMSD')):
                     branch_id = models.execute_kw(db, sd_uid, password, 'res.branch', 'search',[[['branch_code', '=', 'UMSD']]], {'limit': 1})
-                from_location_id = models.execute_kw(db, sd_uid, password,
+                to_location_id = models.execute_kw(db, sd_uid, password,
                 'stock.location', 'search',
                 [[['name', 'like', 'loss']]],
                 {'limit': 1})
-                to_location_id = models.execute_kw(db, sd_uid, password,
+                from_location_id = models.execute_kw(db, sd_uid, password,
                 'stock.location', 'search',
                 [[['name', '=', inv.section_id.location_id.name]]],
                 {'limit': 1})
@@ -68,7 +68,7 @@ class account_invoice(models.Model):
                 if not supplier_id:
                     raise Warning(_("""Supplier doesn't exit in SD!"""))
 
-                branch_default_location = inv.branch_id.branch_location_id.name
+                branch_default_location = inv.section_id.location_id.name
                 branch_transit_location = branch_default_location.replace("-Sellable", "-Transit")
                 transit_location_id = models.execute_kw(db, sd_uid, password,
                 'stock.location', 'search',
