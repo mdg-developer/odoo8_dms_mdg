@@ -141,6 +141,20 @@ class customer_visit(osv.osv):
              "resized as a 64x64px image, with aspect ratio preserved. "\
              "Use this field anywhere a small image is required.")
     
+    image5 = openerp.fields.Binary("Image", attachment=True,
+        help="This field holds the image used as avatar for this contact, limited to 1024x1024px",
+        default=lambda self: self._get_default_image5(False, True))
+    image_medium5 = openerp.fields.Binary("Medium-sized image",
+        compute='_compute_images5', inverse='_inverse_image_medium5', store=True, attachment=True,
+        help="Medium-sized image of this contact. It is automatically "\
+             "resized as a 128x128px image, with aspect ratio preserved. "\
+             "Use this field in form views or some kanban views.")
+    image_small5 = openerp.fields.Binary("Small-sized image",
+        compute='_compute_images5', inverse='_inverse_image_small5', store=True, attachment=True,
+        help="Small-sized image of this contact. It is automatically "\
+             "resized as a 64x64px image, with aspect ratio preserved. "\
+             "Use this field anywhere a small image is required.")    
+    
     @api.depends('image')
     def _compute_images(self):
         for rec in self:
@@ -224,7 +238,22 @@ class customer_visit(osv.osv):
     def _inverse_image_small4(self):
         for rec in self:
             rec.image4 = tools.image_resize_image_big(rec.image_small4)
-            
+
+# image5
+    @api.depends('image5')
+    def _compute_images5(self):
+        for rec in self:
+            rec.image_medium5 = tools.image_resize_image_medium(rec.image5)
+            rec.image_small5 = tools.image_resize_image_small(rec.image5)
+
+    def _inverse_image_medium5(self):
+        for rec in self:
+            rec.image5 = tools.image_resize_image_big(rec.image_medium5)
+
+    def _inverse_image_small5(self):
+        for rec in self:
+            rec.image5 = tools.image_resize_image_big(rec.image_small5)     
+                   
     def go_image1(self, cr, uid, ids, context=None):
         result =  {
                   'name'     : 'Show Image1',
@@ -356,6 +385,7 @@ class customer_visit(osv.osv):
             image3 =False
             image4 =False
             image5 =False
+            image6 =False
             if visit_data.image1_reference:
                     url =baseUrlPrefix + visit_data.image1_reference + baseUrlPostFix
                     response = requests.get(url).content
@@ -375,8 +405,11 @@ class customer_visit(osv.osv):
             if visit_data.image5_reference:
                     url =baseUrlPrefix + visit_data.image5_reference + baseUrlPostFix
                     response = requests.get(url).content
-                    image5 = base64.b64encode(response)    
-        return self.write(cr, uid, ids, {'image':image1,'image1':image2,'image2':image3,'image3':image4,'image4':image5})
+                    image5 = base64.b64encode(response)
+            if visit_data.customer_id.image:
+                    image6 = (visit_data.customer_id.image)
+                    
+        return self.write(cr, uid, ids, {'image':image1,'image1':image2,'image2':image3,'image3':image4,'image4':image5,'image5':image6})
 
     def is_approve(self, cr, uid, ids, context=None):
         
