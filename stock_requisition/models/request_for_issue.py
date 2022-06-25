@@ -75,8 +75,10 @@ class issue_requisition(osv.osv):
         req_value = req_lines = {}
         if ids:
             req_value = requisition_obj.browse(cr, uid, ids[0], context=context)
+            if req_value.state=='approve':
+                raise osv.except_osv(_('Warning'),
+                                         _('You cannot transfer a record in Approved state'))                  
             request_id = req_value.id
-
             issue_date = req_value.issue_date
             to_location_id = req_value.to_location_id.id
             from_location_id = req_value.from_location_id.id
