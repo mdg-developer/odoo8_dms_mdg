@@ -376,6 +376,19 @@ class customer_visit(osv.osv):
 
         return tools.image_resize_image_big(image.encode('base64'))
 
+    @api.model
+    def _get_default_image5(self, is_company, colorize=False):
+        img_path = openerp.modules.get_module_resource(
+            'base', 'static/src/img', 'company_image.png' if is_company else 'avatar.png')
+        with open(img_path, 'rb') as f:
+            image = f.read()
+
+        # colorize user avatars
+        if not is_company:
+            image = tools.image_colorize(image)
+
+        return tools.image_resize_image_big(image.encode('base64'))
+    
     def generate_image(self, cr, uid, ids, context=None):
         if ids:
             visit_data = self.browse(cr, uid, ids[0], context=context)
