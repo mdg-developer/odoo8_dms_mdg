@@ -46,6 +46,8 @@
                                 <field name="eta"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="user_id"/>
+								<field name="is_credit_invoice" />
+                                
                             </group>
                             <group>
                                 <field name="date_created"/>

@@ -292,7 +292,11 @@ class mobile_sale_order(osv.osv):
                         rebate = True
                     else:
                         rebate = False
-                            
+                    if so.get('payment_ref'): 
+                        payment_ref=so['payment_ref']
+                    else:
+                        payment_ref=None 
+                                                    
                     mso_result = {
                         'customer_code':so['customer_code'],
                         'sale_plan_day_id':so['sale_plan_day_id'],
@@ -331,6 +335,8 @@ class mobile_sale_order(osv.osv):
                         'order_team':order_team,
                         'rebate_later':rebate,
                         'order_saleperson':so['order_saleperson'],
+                        'payment_ref':payment_ref                    
+                        
                     }
                     s_order_id = mobile_sale_order_obj.create(cursor, user, mso_result, context=context)                 
                     so_ids.append(s_order_id);
@@ -1235,6 +1241,9 @@ class mobile_sale_order(osv.osv):
 
                                 new_session = ConnectorSession(cr, uid, context)
                                 jobid = automatic_direct_sale_transfer.delay(new_session, solist, ms_ids.date, priority=10)
+                                if ms_ids.payment_ref=='credit_note':
+                                    queue_id=self.pool['queue.job'].search(cr, uid, [('uuid', '=', jobid)], context=context)
+                                    self.pool['queue.job'].write(cr, uid, queue_id, {'is_credit_invoice':True}, context)                                     
                                 runner = ConnectorRunner()
                                 runner.run_jobs()                                       
                         if ms_ids.type == 'cash' and ms_ids.delivery_remark == 'none':  # Payment Type=>Cash and Delivery Remark=>None
@@ -1407,6 +1416,8 @@ class mobile_sale_order(osv.osv):
                             self.pool['account.invoice'].credit_approve(cr, uid, [invoice_id], context=context)                                 
                             new_session_name = ConnectorSession(cr, uid, context)
                             jobid = automatic_direct_sale_transfer.delay(new_session_name, solist, ms_ids.date, priority=10)
+                            queue_id=self.pool['queue.job'].search(cr, uid, [('uuid', '=', jobid)], context=context)
+                            self.pool['queue.job'].write(cr, uid, queue_id, {'is_credit_invoice':True}, context)   
                             runner = ConnectorRunner()
                             runner.run_jobs() 
                             # clicking the delivery order view button
@@ -2992,7 +3003,11 @@ class mobile_sale_order(osv.osv):
                         So_id = soObj.search(cr, uid, [('pre_order', '=', True), ('shipped', '=', False), ('invoiced', '=', False)
                                                        , ('name', '=', so_ref_no)], context=context)
                         so_data = soObj.browse(cr, uid, So_id, context=context)
-                        delivery_team_id = so_data.delivery_id.id                        
+                        delivery_team_id = so_data.delivery_id.id      
+                        if deli.get('payment_ref'): 
+                            payment_ref=deli['payment_ref']
+                        else:
+                            payment_ref=None                                           
                         delivery = {                                                            
                                   'order_id':So_id[0],
                                   'miss':False,
@@ -3001,7 +3016,9 @@ class mobile_sale_order(osv.osv):
                                   'state':'draft',
                                   'delivery_team_id': delivery_team_id ,
                                   'latitude':deli['mosLatitude'],
-                                  'longitude':deli['mosLongitude']                             
+                                  'longitude':deli['mosLongitude'],       
+                                  'payment_ref':payment_ref                           
+                                                        
                             }
                         pending_id = pending_obj.create(cr, uid, delivery, context=context)                                                                                                                                 
                     pending_ids.append(pending_id)
@@ -4389,6 +4406,10 @@ class mobile_sale_order(osv.osv):
 #         datas = cr.fetchall()        
 #         return datas
 
+    def push_credit_job(self, cr, uid,date, context=None, **kwargs):
+        cr.execute('''update queue_job set is_credit_invoice=False where user_id=%s and date_created::date=%s''', (uid,date,))
+        return True   
+    
     def get_partner_category_rel(self, cr, uid, section_id , context=None):  
         section = self.pool.get('crm.case.section')      
         sale_team_data = section.browse(cr, uid, section_id, context=context)

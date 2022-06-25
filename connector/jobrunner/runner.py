@@ -291,7 +291,7 @@ class Database(object):
     def select_jobs(self, where, args):
         query = ("SELECT channel, uuid, id as seq, date_created, "
                  "priority, EXTRACT(EPOCH FROM eta), state "
-                 "FROM queue_job WHERE %s" %
+                 "FROM queue_job WHERE is_credit_invoice=False and %s" %
                  (where, ))
         with closing(self.conn.cursor()) as cr:
             cr.execute(query, args)

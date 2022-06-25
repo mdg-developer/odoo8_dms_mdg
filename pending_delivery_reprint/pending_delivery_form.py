@@ -71,6 +71,8 @@ class pendingdelivery(osv.osv):
                 'longitude':fields.float('Geo Longitude',  digits=(16, 5), readonly=True),
                 'distance_status':fields.char('Distance Status', readonly=True),
                 'geo_point':fields.char('Geo Point'),
+                'payment_ref':fields.char('Payment Ref'),
+                
               }
 #     def create_automation_pending_delivery(self, cr, uid, pending_ids, context=None):
 #         session = ConnectorSession(cr, uid, context)
@@ -83,7 +85,8 @@ class pendingdelivery(osv.osv):
     def action_convert_pending_delivery(self, cr, uid, ids, context=None):
         context = {'lang':'en_US', 'params':{'action':458}, 'tz': 'Asia/Rangoon', 'uid': 1}
         soObj = self.pool.get('sale.order')        
-        invoiceObj = self.pool.get('account.invoice')                
+        invoiceObj = self.pool.get('account.invoice')  
+        jobObj = self.pool.get('queue.job')                                      
         stockPickingObj = self.pool.get('stock.picking')
         stockDetailObj = self.pool.get('stock.transfer_details')        
         pending_obj =self.pool.get('pending.delivery')        
@@ -188,6 +191,9 @@ class pendingdelivery(osv.osv):
                                                               
                             session = ConnectorSession(cr, uid, context)
                             jobid = automatic_pending_delivery_stock_transfer.delay(session, [solist], delivery_date, priority=20)
+                            if payment_type=='credit' or pending_id.payment_ref=='credit_note':
+                                queue_id=jobObj.search(cr, uid, [('uuid', '=', jobid)], context=context)
+                                jobObj.write(cr, uid, queue_id, {'is_credit_invoice':True}, context)                                 
                             runner = ConnectorRunner()
                             runner.run_jobs()                                                                 
             self.write(cr, uid, ids[0], {'state':'done'}, context=context)                        
