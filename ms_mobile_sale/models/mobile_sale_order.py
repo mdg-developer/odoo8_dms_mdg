@@ -382,154 +382,156 @@ class mobile_sale_order(osv.osv):
             
             if sale_order:
                 for so in sale_order:
-                    if so['order_saleteam'] != 'null':
-                        cursor.execute('select id from crm_case_section where name=%s', (so['order_saleteam'],))
-                        order_team = cursor.fetchone()[0]
-                        # so['sale_team']=order_team
-                        so['sale_team'] = so['sale_team']
-                    else:
-                        order_team = None
-                    if so['order_saleperson'] != 'null' and so['order_saleperson']:
-                       # so['user_id']=so['order_saleperson']
-                        so['user_id'] = so['user_id']
-                        order_saleperson =so['order_saleperson']
-                    else:
-                        order_saleperson = None
-                    if so['presaleorderid'] != 'null' and so['presaleorderid']: 
-                        presaleorderid = so['presaleorderid'].replace('\\', '').replace('\\', '')   
-                        cursor.execute("select id from sale_order where name = %s ",(presaleorderid,))
-                        sale_order_data=cursor.fetchone()
-                        if sale_order_data:
-                            pre_sale_order_id =sale_order_data[0]
+                    cursor.execute('select count(id) from mobile_sale_order where name=%s', (so['name'],))
+                    is_exit_mobile_record = cursor.fetchone()[0]  
+                    if is_exit_mobile_record < 1:                  
+                        if so['order_saleteam'] != 'null':
+                            cursor.execute('select id from crm_case_section where name=%s', (so['order_saleteam'],))
+                            order_team = cursor.fetchone()[0]
+                            # so['sale_team']=order_team
+                            so['sale_team'] = so['sale_team']
                         else:
-                            pre_sale_order_id = None
-                    else:
-                        pre_sale_order_id = None 
-                        
-                    cursor.execute('select branch_id from crm_case_section where id=%s', (so['sale_team'],))
-                    branch_id = cursor.fetchone()[0]     
-                    cursor.execute('select id From res_partner where customer_code  = %s ', (so['customer_code'],))
-                    data = cursor.fetchall()                
-                    if data:
-                        partner_id = data[0][0]
-                    else:
-                        partner_id = None 
-                        
-                    if so['type'] == 'cash':
-                        paid = True
-                    else:
-                        paid = False
-                        
-                    if so['rebate'] == 'T':
-                        rebate = True
-                    else:
-                        rebate = False
+                            order_team = None
+                        if so['order_saleperson'] != 'null' and so['order_saleperson']:
+                            so['user_id'] = so['user_id']
+                            order_saleperson =so['order_saleperson']
+                        else:
+                            order_saleperson = None
+                        if so['presaleorderid'] != 'null' and so['presaleorderid']: 
+                            presaleorderid = so['presaleorderid'].replace('\\', '').replace('\\', '')   
+                            cursor.execute("select id from sale_order where name = %s ",(presaleorderid,))
+                            sale_order_data=cursor.fetchone()
+                            if sale_order_data:
+                                pre_sale_order_id =sale_order_data[0]
+                            else:
+                                pre_sale_order_id = None
+                        else:
+                            pre_sale_order_id = None 
                             
-                    if so['revise_reason_id'] != 'null' and so['revise_reason_id']: 
-                        revise_reason_id = so['revise_reason_id']
-                    else:
-                        revise_reason_id = None                                           
-                    if so.get('payment_ref'): 
-                        payment_ref=so['payment_ref']
-                    else:
-                        payment_ref=None       
-                    mso_result = {
-                        'customer_code':so['customer_code'],
-                        'sale_plan_day_id':so['sale_plan_day_id'],
-                        'sale_plan_trip_id':so['sale_plan_trip_id'] ,
-                        'paid': paid,
-                        'warehouse_id':so['warehouse_id'],
-                        'tablet_id':so['tablet_id'],
-                      #  'delivery_remark':so['delivery_remark'],
-                        'delivery_remark':'delivered',
-                        'location_id':so['location_id'],
-                        'deduction_amount':so['deduction_amount'],
-                        'user_id':so['user_id'],
-                        'name':so['name'],
-                        'paid_amount':so['paid_amount'],
-                        'partner_id': partner_id,
-                        'sale_plan_name':so['sale_plan_day_name'],
-                        'additional_discount':so['additional_discount'],
-                        'amount_total':so['amount_total'],
-                        'type':so['type'],
-                        'void_flag':so['void_flag'],
-                        'sale_team':so['sale_team'],
-                        'date':so['date'],
-                        'remaining_amount':so['remaining_amount'],
-                        'change_amount':so['change_amount'],
-                        'net_amount':so['discounted_total_amount'],
-                        'due_date':so['due_date'],
-                        'payment_term':so['payment_term'],
-                        'mso_longitude':so['mso_longitude'],
-                        'mso_latitude':so['mso_latitude'],
-                        'outlet_type':so['outlet_type'] ,
-                        'pricelist_id':so['pricelist_id'],
-                        'branch_id':branch_id,
-                        'note':so['note'],
-                        'print_count':so['print_count'],
-                        'void_print_count':so['void_print_count'],
-                        'order_team':order_team,
-                        'rebate_later':rebate,
-                        'order_saleperson':order_saleperson,
-                        'pre_sale_order_id':pre_sale_order_id,
-                        'revise_reason_id':revise_reason_id,
-                        'payment_ref':payment_ref                    
-                    }
-                    s_order_id = mobile_sale_order_obj.create(cursor, user, mso_result, context=context)
-                    so_ids.append(s_order_id);
-                    for sol in sale_order_line:
-                        if sol['so_name'] == so['name']:
-                                cursor.execute('select id From product_product where id  = %s ', (sol['product_id'],))
-                                data = cursor.fetchall()
-                                if data:
-                                    productId = data[0][0]
-                                    product = product_obj.browse(cursor, user, productId, context=context)
-                                    product_type = product.product_tmpl_id.type
-                                else:
-                                    productId = None
-                                    product_type = None
+                        cursor.execute('select branch_id from crm_case_section where id=%s', (so['sale_team'],))
+                        branch_id = cursor.fetchone()[0]     
+                        cursor.execute('select id From res_partner where customer_code  = %s ', (so['customer_code'],))
+                        data = cursor.fetchall()                
+                        if data:
+                            partner_id = data[0][0]
+                        else:
+                            partner_id = None 
+                            
+                        if so['type'] == 'cash':
+                            paid = True
+                        else:
+                            paid = False
+                            
+                        if so['rebate'] == 'T':
+                            rebate = True
+                        else:
+                            rebate = False
                                 
-                                if sol['price_unit'] == '0':
-                                    foc_val = True
-                                else:
-                                    foc_val = False
-                                if sol['manual_foc'] == 'T':
-                                    manual_foc = True
-                                else:
-                                    manual_foc = False                 
-                                if sol['promotion_action'] and sol['promotion_action'] != 'null':
-                                    cursor.execute("select promotion from promos_rules_actions where id =%s", (sol['promotion_action'],))
-                                    promotion_id = cursor.fetchone()[0]  
-                                else:
-                                    promotion_id = None   
-                                if sol['manual_promotion'] and sol['manual_promotion'] != 'null':
-                                    promotion_id = sol['manual_promotion']                                           
-                                price = sol['price_unit']
-#                                 if  float(price) < 0:
-#                                     product_price= 0
-#                                     discount_amt =-1 * float(price)
-#                                 else:
-                                product_price = sol['price_unit']
-                                discount_amt = sol['discount_amt']                                          
-                                mso_line_res = {                                                            
-                                  'order_id':s_order_id,
-                                  'product_type':product_type,
-                                  'product_id':productId,
-                                  'price_unit':product_price,
-                                  'product_uos_qty':sol['product_uos_qty'],
-                                  'foc': foc_val,
-                                  'discount':sol['discount'],
-                                  'discount_amt':discount_amt,
-                                  'sub_total':sol['sub_total'],
-                                  'uom_id':sol['uom_id'],
-                                  'manual_foc':manual_foc,
-                                  'promotion_id':promotion_id,
-                                }
-                                mobile_sale_order_line_obj.create(cursor, user, mso_line_res, context=context) 
-                    # convertintablet(KM)
-                                
-                    # mobile_sale_order_obj.action_convert_so(cursor, user, [s_order_id], context=context)    
-                    sale_order_name_list.append(so['name'])
+                        if so['revise_reason_id'] != 'null' and so['revise_reason_id']: 
+                            revise_reason_id = so['revise_reason_id']
+                        else:
+                            revise_reason_id = None                                           
+                        if so.get('payment_ref'): 
+                            payment_ref=so['payment_ref']
+                        else:
+                            payment_ref=None       
+                        mso_result = {
+                            'customer_code':so['customer_code'],
+                            'sale_plan_day_id':so['sale_plan_day_id'],
+                            'sale_plan_trip_id':so['sale_plan_trip_id'] ,
+                            'paid': paid,
+                            'warehouse_id':so['warehouse_id'],
+                            'tablet_id':so['tablet_id'],
+                          #  'delivery_remark':so['delivery_remark'],
+                            'delivery_remark':'delivered',
+                            'location_id':so['location_id'],
+                            'deduction_amount':so['deduction_amount'],
+                            'user_id':so['user_id'],
+                            'name':so['name'],
+                            'paid_amount':so['paid_amount'],
+                            'partner_id': partner_id,
+                            'sale_plan_name':so['sale_plan_day_name'],
+                            'additional_discount':so['additional_discount'],
+                            'amount_total':so['amount_total'],
+                            'type':so['type'],
+                            'void_flag':so['void_flag'],
+                            'sale_team':so['sale_team'],
+                            'date':so['date'],
+                            'remaining_amount':so['remaining_amount'],
+                            'change_amount':so['change_amount'],
+                            'net_amount':so['discounted_total_amount'],
+                            'due_date':so['due_date'],
+                            'payment_term':so['payment_term'],
+                            'mso_longitude':so['mso_longitude'],
+                            'mso_latitude':so['mso_latitude'],
+                            'outlet_type':so['outlet_type'] ,
+                            'pricelist_id':so['pricelist_id'],
+                            'branch_id':branch_id,
+                            'note':so['note'],
+                            'print_count':so['print_count'],
+                            'void_print_count':so['void_print_count'],
+                            'order_team':order_team,
+                            'rebate_later':rebate,
+                            'order_saleperson':order_saleperson,
+                            'pre_sale_order_id':pre_sale_order_id,
+                            'revise_reason_id':revise_reason_id,
+                            'payment_ref':payment_ref                    
+                        }
+                        s_order_id = mobile_sale_order_obj.create(cursor, user, mso_result, context=context)
+                        so_ids.append(s_order_id);
+                        for sol in sale_order_line:
+                            if sol['so_name'] == so['name']:
+                                    cursor.execute('select id From product_product where id  = %s ', (sol['product_id'],))
+                                    data = cursor.fetchall()
+                                    if data:
+                                        productId = data[0][0]
+                                        product = product_obj.browse(cursor, user, productId, context=context)
+                                        product_type = product.product_tmpl_id.type
+                                    else:
+                                        productId = None
+                                        product_type = None
+                                    
+                                    if sol['price_unit'] == '0':
+                                        foc_val = True
+                                    else:
+                                        foc_val = False
+                                    if sol['manual_foc'] == 'T':
+                                        manual_foc = True
+                                    else:
+                                        manual_foc = False                 
+                                    if sol['promotion_action'] and sol['promotion_action'] != 'null':
+                                        cursor.execute("select promotion from promos_rules_actions where id =%s", (sol['promotion_action'],))
+                                        promotion_id = cursor.fetchone()[0]  
+                                    else:
+                                        promotion_id = None   
+                                    if sol['manual_promotion'] and sol['manual_promotion'] != 'null':
+                                        promotion_id = sol['manual_promotion']                                           
+                                    price = sol['price_unit']
+    #                                 if  float(price) < 0:
+    #                                     product_price= 0
+    #                                     discount_amt =-1 * float(price)
+    #                                 else:
+                                    product_price = sol['price_unit']
+                                    discount_amt = sol['discount_amt']                                          
+                                    mso_line_res = {                                                            
+                                      'order_id':s_order_id,
+                                      'product_type':product_type,
+                                      'product_id':productId,
+                                      'price_unit':product_price,
+                                      'product_uos_qty':sol['product_uos_qty'],
+                                      'foc': foc_val,
+                                      'discount':sol['discount'],
+                                      'discount_amt':discount_amt,
+                                      'sub_total':sol['sub_total'],
+                                      'uom_id':sol['uom_id'],
+                                      'manual_foc':manual_foc,
+                                      'promotion_id':promotion_id,
+                                    }
+                                    mobile_sale_order_line_obj.create(cursor, user, mso_line_res, context=context) 
+                        # convertintablet(KM)
+                                    
+                        # mobile_sale_order_obj.action_convert_so(cursor, user, [s_order_id], context=context)    
+                        sale_order_name_list.append(so['name'])
                     
                     # convert to sale order.
             session = ConnectorSession(cursor, user, context)
@@ -3293,22 +3295,25 @@ class mobile_sale_order(osv.osv):
                         if deli.get('payment_ref'): 
                             payment_ref=deli['payment_ref']
                         else:
-                            payment_ref=None                 
-                        delivery = {                                                            
-                                  'order_id':So_id[0],
-                                  'miss':False,
-                                  'is_revised':False,
-                                  'due_date':deli['due_date'],
-                                  'delivery_date':datetime.now(),
-                                  'confirm_date':confirm_date,
-                                  'state':'draft',
-                                  'delivery_team_id': delivery_team_id ,
-                                  'latitude':deli['mosLatitude'],
-                                  'longitude':deli['mosLongitude'],  
-                                  'payment_ref':payment_ref                           
-                            }
-                        pending_id = pending_obj.create(cr, uid, delivery, context=context)                                                                                                                                 
-                        pending_ids.append(pending_id)
+                            payment_ref=None 
+                        cr.execute('''select count(id) from sale_order where state='progress' and id=%s''', (So_id[0],))
+                        is_exit_pending_record = cr.fetchone()[0]  
+                        if is_exit_pending_record < 1:                                      
+                            delivery = {                                                            
+                                      'order_id':So_id[0],
+                                      'miss':False,
+                                      'is_revised':False,
+                                      'due_date':deli['due_date'],
+                                      'delivery_date':datetime.now(),
+                                      'confirm_date':confirm_date,
+                                      'state':'draft',
+                                      'delivery_team_id': delivery_team_id ,
+                                      'latitude':deli['mosLatitude'],
+                                      'longitude':deli['mosLongitude'],  
+                                      'payment_ref':payment_ref                           
+                                }
+                            pending_id = pending_obj.create(cr, uid, delivery, context=context)                                                                                                                                 
+                            pending_ids.append(pending_id)
             session = ConnectorSession(cr, uid, context)
             # jobid=pending_obj.create_automation_pending_delivery(cr, uid, pending_ids, context=context)       
             jobid = automation_pending_delivery.delay(session, pending_ids, priority=50)
