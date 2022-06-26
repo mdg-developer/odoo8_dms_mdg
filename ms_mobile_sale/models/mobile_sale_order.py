@@ -70,20 +70,20 @@ def automatic_direct_sale_transfer(session,order_ids,de_date):
                     detailObj.do_detailed_transfer()
                 cr.execute('update stock_picking set date_done =%s where origin=%s', (date, order_data.name,))
                 cr.execute('update stock_move set date = %s where origin =%s', (date, order_data.name,))
-                picking_id = stockViewResult['res_id']
-                print 'picking_id', picking_id
-                pick_date = stockPickingObj.browse(cr, uid, picking_id, context=context)
-                cr.execute(
-                    "update account_move_line set date= %s from account_move move where move.id=account_move_line.move_id and move.ref= %s",
-                    (date, pick_date.name,))
-                cr.execute('''update account_move set period_id=p.id,date=%s
-                            from (
-                            select id,date_start,date_stop
-                            from account_period
-                            where date_start != date_stop
-                            ) p
-                            where p.date_start <= %s and  %s <= p.date_stop
-                            and account_move.ref=%s''', (date, date, date, pick_date.name,))    
+#                 picking_id = stockViewResult['res_id']
+#                 print 'picking_id', picking_id
+#                 pick_date = stockPickingObj.browse(cr, uid, picking_id, context=context)
+#                 cr.execute(
+#                     "update account_move_line set date= %s from account_move move where move.id=account_move_line.move_id and move.ref= %s",
+#                     (date, pick_date.name,))
+#                 cr.execute('''update account_move set period_id=p.id,date=%s
+#                             from (
+#                             select id,date_start,date_stop
+#                             from account_period
+#                             where date_start != date_stop
+#                             ) p
+#                             where p.date_start <= %s and  %s <= p.date_stop
+#                             and account_move.ref=%s''', (date, date, date, pick_date.name,))    
     return True
 
 class customer_payment(osv.osv):
@@ -1025,24 +1025,24 @@ class mobile_sale_order(osv.osv):
 #                                     # invoice paid status is true
 #                                     invFlag = True
                             # clicking the delivery order view button
-                            stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)
-
-                            if stockViewResult:
-                                # cr.execute('update stock_move set location_id=%s where picking_id=%s',(ms_ids.location_id.id,stockViewResult['res_id'],))
-                                # stockViewResult is form result
-                                # stocking id =>stockViewResult['res_id']
-                                # click force_assign
-                                stockPickingObj.force_assign(cr, uid, stockViewResult['res_id'], context=context)
-                                # transfer
-                                # call the transfer wizard
-                                # change list
-                                pickList = []
-                                pickList.append(stockViewResult['res_id'])
-                                wizResult = stockPickingObj.do_enter_transfer_details(cr, uid, pickList, context=context)
-                                # pop up wizard form => wizResult
-                                detailObj = stockDetailObj.browse(cr, uid, wizResult['res_id'], context=context)
-                                if detailObj:
-                                    detailObj.do_detailed_transfer()
+#                             stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)
+# 
+#                             if stockViewResult:
+#                                 # cr.execute('update stock_move set location_id=%s where picking_id=%s',(ms_ids.location_id.id,stockViewResult['res_id'],))
+#                                 # stockViewResult is form result
+#                                 # stocking id =>stockViewResult['res_id']
+#                                 # click force_assign
+#                                 stockPickingObj.force_assign(cr, uid, stockViewResult['res_id'], context=context)
+#                                 # transfer
+#                                 # call the transfer wizard
+#                                 # change list
+#                                 pickList = []
+#                                 pickList.append(stockViewResult['res_id'])
+#                                 wizResult = stockPickingObj.do_enter_transfer_details(cr, uid, pickList, context=context)
+#                                 # pop up wizard form => wizResult
+#                                 detailObj = stockDetailObj.browse(cr, uid, wizResult['res_id'], context=context)
+#                                 if detailObj:
+#                                     detailObj.do_detailed_transfer()
 
                         if ms_ids.type == 'cash' and ms_ids.delivery_remark == 'none':  # Payment Type=>Cash and Delivery Remark=>None
                             # SO Confirm
@@ -1218,24 +1218,24 @@ class mobile_sale_order(osv.osv):
                             runner = ConnectorRunner()
                             runner.run_jobs() 
                             # clicking the delivery order view button
-                            stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)
-                            if stockViewResult:
-                                # cr.execute('update stock_move set location_id=%s where picking_id=%s',(ms_ids.location_id.id,stockViewResult['res_id'],))
-
-                                # stockViewResult is form result
-                                # stocking id =>stockViewResult['res_id']
-                                # click force_assign
-                                stockPickingObj.force_assign(cr, uid, stockViewResult['res_id'], context=context)
-                                # transfer
-                                # call the transfer wizard
-                                # change list
-                                pickList = []
-                                pickList.append(stockViewResult['res_id'])
-                                wizResult = stockPickingObj.do_enter_transfer_details(cr, uid, pickList, context=context)
-                                # pop up wizard form => wizResult
-                                detailObj = stockDetailObj.browse(cr, uid, wizResult['res_id'], context=context)
-                                if detailObj:
-                                    detailObj.do_detailed_transfer()
+#                             stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)
+#                             if stockViewResult:
+#                                 # cr.execute('update stock_move set location_id=%s where picking_id=%s',(ms_ids.location_id.id,stockViewResult['res_id'],))
+# 
+#                                 # stockViewResult is form result
+#                                 # stocking id =>stockViewResult['res_id']
+#                                 # click force_assign
+#                                 stockPickingObj.force_assign(cr, uid, stockViewResult['res_id'], context=context)
+#                                 # transfer
+#                                 # call the transfer wizard
+#                                 # change list
+#                                 pickList = []
+#                                 pickList.append(stockViewResult['res_id'])
+#                                 wizResult = stockPickingObj.do_enter_transfer_details(cr, uid, pickList, context=context)
+#                                 # pop up wizard form => wizResult
+#                                 detailObj = stockDetailObj.browse(cr, uid, wizResult['res_id'], context=context)
+#                                 if detailObj:
+#                                     detailObj.do_detailed_transfer()
 
                         if ms_ids.type == 'credit' and ms_ids.delivery_remark == 'none':  # Payment Type=>Credit and Delivery Remark=>None
                             # so Confirm
