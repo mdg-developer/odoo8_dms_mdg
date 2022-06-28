@@ -3048,7 +3048,7 @@ and branch.id in (select brel.bid from res_branch_users_rel brel where brel.user
                     <list-property name="arguments">
                         <structure>
                             <property name="name">Expression</property>
-                            <expression name="value" type="javascript">row["sub_total"]</expression>
+                            <expression name="value" type="javascript">dataSetRow["net_total"]</expression>
                         </structure>
                     </list-property>
                     <property name="allowExport">true</property>
@@ -3072,7 +3072,7 @@ and branch.id in (select brel.bid from res_branch_users_rel brel where brel.user
                     <list-property name="arguments">
                         <structure>
                             <property name="name">Expression</property>
-                            <expression name="value" type="javascript">row["voucher_net_total"]</expression>
+                            <expression name="value" type="javascript">dataSetRow["sub_total"]</expression>
                         </structure>
                     </list-property>
                     <property name="allowExport">true</property>
@@ -3139,6 +3139,30 @@ and branch.id in (select brel.bid from res_branch_users_rel brel where brel.user
                     <text-property name="displayName">voucher_net_total</text-property>
                     <expression name="expression" type="javascript">dataSetRow["voucher_net_total"]</expression>
                     <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="name">Aggregation_11</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">dataSetRow["sub_total"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">Aggregation_12</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">dataSetRow["voucher_net_total"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
                 </structure>
             </list-property>
             <column id="3184"/>
