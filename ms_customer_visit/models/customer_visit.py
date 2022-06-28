@@ -142,8 +142,7 @@ class customer_visit(osv.osv):
              "Use this field anywhere a small image is required.")
     
     image5 = openerp.fields.Binary("Image", attachment=True,
-        help="This field holds the image used as avatar for this contact, limited to 1024x1024px",
-        default=lambda self: self._get_default_image5(False, True))
+        help="This field holds the image used as avatar for this contact, limited to 1024x1024px")
     image_medium5 = openerp.fields.Binary("Medium-sized image",
         compute='_compute_images5', inverse='_inverse_image_medium5', store=True, attachment=True,
         help="Medium-sized image of this contact. It is automatically "\
@@ -402,23 +401,28 @@ class customer_visit(osv.osv):
             if visit_data.image1_reference:
                     url =baseUrlPrefix + visit_data.image1_reference + baseUrlPostFix
                     response = requests.get(url).content
-                    image1 = base64.b64encode(response)
+                    if 'error' not in response:
+                        image1 = base64.b64encode(response)
             if visit_data.image2_reference:
                     url =baseUrlPrefix + visit_data.image2_reference + baseUrlPostFix
                     response = requests.get(url).content
-                    image2 = base64.b64encode(response)                                                      
+                    if 'error' not in response:
+                        image2 = base64.b64encode(response)
             if visit_data.image3_reference:
                     url =baseUrlPrefix + visit_data.image3_reference + baseUrlPostFix
                     response = requests.get(url).content
-                    image3 = base64.b64encode(response)                                                                
+                    if 'error' not in response:
+                        image3 = base64.b64encode(response)
             if visit_data.image4_reference:
                     url =baseUrlPrefix + visit_data.image4_reference + baseUrlPostFix
                     response = requests.get(url).content
-                    image4 = base64.b64encode(response)                                                                        
+                    if 'error' not in response:
+                        image4 = base64.b64encode(response)
             if visit_data.image5_reference:
                     url =baseUrlPrefix + visit_data.image5_reference + baseUrlPostFix
                     response = requests.get(url).content
-                    image5 = base64.b64encode(response)
+                    if 'error' not in response:
+                        image5 = base64.b64encode(response)
             if visit_data.customer_id.image:
                     image6 = (visit_data.customer_id.image)
                     
