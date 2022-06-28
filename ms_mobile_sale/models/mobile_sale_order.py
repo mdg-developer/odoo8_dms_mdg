@@ -4305,6 +4305,7 @@ class mobile_sale_order(osv.osv):
                                             and RP.township =RT.id
                                             and RP.city = RC.id
                                             and RP.outlet_type = OT.id
+                                            and  RP.active=True
                                             and RP.id in %s                                                                                
                                             order by RP.name                                       
                         )A 
