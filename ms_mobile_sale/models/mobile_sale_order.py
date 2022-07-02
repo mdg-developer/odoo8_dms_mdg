@@ -1743,7 +1743,8 @@ class mobile_sale_order(osv.osv):
             v_discount_total=0.0
             v_discount_amount=0.0
             credit_inv_count=0
-            credit_inv_total=0.0            
+            credit_inv_total=0.0   
+            cash_inv_count=0         
             str = "{" + vals + "}"
             str = str.replace(":''", ":'")
             str = str.replace("'',", "',")
@@ -1780,6 +1781,8 @@ class mobile_sale_order(osv.osv):
                     current_date = datetime.now()  
                     cursor.execute("select count(id) from mobile_sale_order where type='credit' and (date at time zone 'UTC')::date=%s and sale_team =%s and void_flag != 'voided'", (de_date, team_id,))
                     credit_inv_count = cursor.fetchone()[0]   
+                    cursor.execute("select count(id) from mobile_sale_order where type='cash' and (date at time zone 'UTC')::date=%s and sale_team =%s and void_flag != 'voided'", (de_date, team_id,))
+                    cash_inv_count = cursor.fetchone()[0]                      
                     cursor.execute("select COALESCE(sum(net_amount),0) as total from mobile_sale_order where type='credit' and  (date at time zone 'UTC')::date=%s and sale_team =%s and void_flag != 'voided' ", (de_date, team_id,))
                     credit_inv_total = cursor.fetchone()[0]                      
                     
@@ -1787,7 +1790,7 @@ class mobile_sale_order(osv.osv):
                     deno_result = {
                          'credit_invoice_count':credit_inv_count,
                          'credit_total':credit_inv_total,                        
-                        'invoice_count':pt['invoice_count'],
+                        'invoice_count':cash_inv_count,
                         'sale_team_id':pt['sale_team_id'],
                         'company_id':pt['company_id'] ,
                         'note':pt['note'],
