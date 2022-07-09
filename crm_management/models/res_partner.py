@@ -293,7 +293,7 @@ class res_partner(osv.osv):
         res = dict(map(lambda x: (x, 0), ids))
         amount_total = 0.0
         for data in self.browse(cr, uid, ids, context=context):
-            cr.execute("select sum(amount_total) from account_invoice where partner_id =%s", (data.id,))
+            cr.execute("select sum(amount_total) from account_invoice where partner_id =%s and TO_CHAR(date_invoice :: DATE, 'MM')=TO_CHAR(NOW() :: DATE, 'MM')", (data.id,))
             amount_total = cr.fetchone()
             if amount_total:
                 amount_total = amount_total[0]
