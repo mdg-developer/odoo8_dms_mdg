@@ -348,36 +348,32 @@ class sale_order(models.Model):
     def assign_promotions(self,sale_order,woo_promotions):
         
         promo_list = []
+        woo_line_list = []
         if sale_order and woo_promotions:
             for promo in woo_promotions:
+                woo_line_list = []
                 discounted_price = promo.get("discounted_price")
                 foc_quantity = promo.get("quantity")
                 odoo_discount_id = promo.get('odoo_discount_id',False)
-                promo_list.append({
-                                    'discounted_price': float(discounted_price),
-                                    'quantity': float(foc_quantity),
-                                    'odoo_discount_id': odoo_discount_id,
-                                })     
-            if len(promo_list) > 0:                    
-                sale_order_lines = self.env['sale.order.line'].search([('promotion_id','!=', False),('order_id','=', sale_order.id)], order="id asc")        
-                for so_line in sale_order_lines:
-                    if float(so_line.price_unit) < 0:
-                        resultlist = [p for p in promo_list if p.get('discounted_price', '') == float(so_line.price_unit)]
-                        if resultlist:
-                            odoo_discount_id = int(resultlist[0].get('odoo_discount_id'))
-                            if odoo_discount_id:
-                                product_id,promotion_id = self.get_promotion_data(odoo_discount_id)
-                                product_obj = self.env["product.product"].browse(product_id)
-                                so_line.update({'product_id': product_id,
-                                                'product_uom': product_obj.uom_id.id,
-                                                'promotion_id': promotion_id})
-                    if so_line.sale_foc == True:
-                        resultlist = [p for p in promo_list if p.get('quantity', '') == float(so_line.product_uom_qty)]
-                        if resultlist:
-                            odoo_discount_id = int(resultlist[0].get('odoo_discount_id'))
-                            if odoo_discount_id:
-                                product_id,promotion_id = self.get_promotion_data(odoo_discount_id)
-                                so_line.update({'promotion_id': promotion_id})
+                promo_base_items = promo.get('promo_base_items',False)
+                if promo_base_items:
+                    for base_item in promo_base_items:
+                        woo_line_list.append(base_item.get('id',False))
+                promo_list = {
+                                'discounted_price': float(discounted_price),
+                                'quantity': float(foc_quantity),
+                                'odoo_discount_id': odoo_discount_id,
+                                'woo_line_id': woo_line_list
+                            }
+                if len(promo_list) > 0:
+                    sale_order_lines = self.env['sale.order.line'].search([('promotion_id','!=', False),('order_id','=', sale_order.id)], order="id asc")
+                    for so_line in sale_order_lines:
+                        if float(so_line.price_unit) < 0 or so_line.sale_foc == True:
+                            if int(so_line.woo_line_id) in promo_list.get('woo_line_id', ''):
+                                odoo_discount_id = int(promo_list.get('odoo_discount_id'))
+                                if odoo_discount_id:
+                                    product_id,promotion_id = self.get_promotion_data(odoo_discount_id)
+                                    so_line.update({'promotion_id': promotion_id})
                                    
     @api.model
     def create_woo_sale_order_line(self,line,tax_ids,product,woo_product_uom,quantity,fiscal_position,partner,pricelist_id,name,order,price):
@@ -416,9 +412,12 @@ class sale_order(models.Model):
                     woo_fee_product = self.env['product.product'].search([('id', '=', woo.fee_line_id.id)])
                     if woo_fee_product:
                         if product.id == woo_fee_product.id:
-                            fees_product = True                             
-                            if promotion:
-                                promotion_id = promotion.id                                                                      
+                            fees_product = True
+                            fee_discount_id = self.env.context.get('fee_discount_id')
+                            if fee_discount_id:
+                                promotion_id = fee_discount_id
+                            else:
+                                promotion_id = promotion.id
         
         if price == 0:
             if promotion:
@@ -945,13 +944,14 @@ class sale_order(models.Model):
                             delivery_address += ' ' + sale_order.partner_shipping_id.city.name
                                            
                     phone_wcapi = instance.connect_for_product_in_woo()                    
-                    phone_response = phone_wcapi.get('orders/%s'%(order.get('id')))                    
-                    phone_res = phone_response.json()                   
-                    phone_meta_data = phone_res.get('meta_data')
-                    if phone_meta_data:
-                        for phone_meta_data in phone_meta_data:
-                            if phone_meta_data.get('key') == '_shipping_phone':                       
-                                shipping_phone = phone_meta_data.get('value')
+                    phone_response = phone_wcapi.get('orders/%s'%(order.get('id')))
+                    if phone_response.status_code in [200, 201]:
+                        phone_res = phone_response.json()
+                        phone_meta_data = phone_res.get('meta_data')
+                        if phone_meta_data:
+                            for phone_meta_data in phone_meta_data:
+                                if phone_meta_data.get('key') == '_shipping_phone':
+                                    shipping_phone = phone_meta_data.get('value')
                                 
                     sale_order.write({ 
                                       'delivery_address' : delivery_address,
@@ -1009,13 +1009,14 @@ class sale_order(models.Model):
                     product=woo_product.product_id
                     woo_product_id=line.get('product_id')
                     product_wcapi = instance.connect_for_product_in_woo()                    
-                    product_response=product_wcapi.get('products/%s'%(woo_product_id))                    
-                    product_res = product_response.json()                   
-                    product_meta_data = product_res.get('meta_data')
-                    if product_meta_data:
-                        for meta_data in product_meta_data:
-                            if meta_data.get('key') == '_woo_uom_input':                            
-                                woo_product_uom = meta_data.get('value')
+                    product_response=product_wcapi.get('products/%s'%(woo_product_id))
+                    if product_response.status_code in [200, 201]:
+                        product_res = product_response.json()
+                        product_meta_data = product_res.get('meta_data')
+                        if product_meta_data:
+                            for meta_data in product_meta_data:
+                                if meta_data.get('key') == '_woo_uom_input':
+                                    woo_product_uom = meta_data.get('value')
                             
                     actual_unit_price = 0.0                    
                     if tax_included:
@@ -1049,14 +1050,24 @@ class sale_order(models.Model):
                 if order_discount and discount_value:                                                                                                                            
                     self.create_woo_sale_order_line({},tax_ids,instance.discount_product_id,woo_product_uom,1,fiscal_position,partner,pricelist_id,instance.discount_product_id.name,sale_order,discount_value*-1)
                 fee_lines = order.get("fee_lines",[])
+                fee_discount_id = None
                 for fee_line in fee_lines:
                     fee_value = fee_line.get("total")
                     fee = fee_line.get("title")
+                    fee_id = fee_line.get("id")
                     fee_line_tax_ids = []
                     fee_line_tax_ids =  self.get_woo_tax_id_ept(instance,tax_datas,False)
                     if fee_value:
-                        self.create_woo_sale_order_line({},fee_line_tax_ids,instance.fee_line_id,woo_product_uom,1,fiscal_position,partner,pricelist_id,fee,sale_order,fee_value)
-                woo_promotions = order.get("related_promotion",[]) 
+                        modified_fee_lines = order.get("modified_fee_lines", [])
+                        for modified_fee_line in modified_fee_lines:
+                            modified_fee_id = modified_fee_line.get("id")
+                            if fee_id == modified_fee_id:
+                                modified_odoo_discount_id = modified_fee_line.get("odoo_discount_id")
+                                if modified_odoo_discount_id:
+                                    fee_discount_id = int(modified_odoo_discount_id)
+                                    break
+                        self.with_context(fee_discount_id=fee_discount_id).create_woo_sale_order_line({},fee_line_tax_ids,instance.fee_line_id,woo_product_uom,1,fiscal_position,partner,pricelist_id,fee,sale_order,fee_value)
+                woo_promotions = order.get("related_promotion",[])
                 if woo_promotions:  
                     self.assign_promotions(sale_order,woo_promotions)        
                 if sale_order:
