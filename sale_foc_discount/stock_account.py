@@ -169,7 +169,8 @@ class stock_quant(osv.osv):
             else:
                 note =move.picking_id.origin    
         if move.is_exchange==True:
-                note =move.origin    
+                note =move.origin
+                partner_id=move.partner_id.id   
         if move.foc:
             # type = self.get_foc_cashorcredit(cr, uid, move, context)
             type = 'cash'
@@ -289,6 +290,10 @@ class stock_quant(osv.osv):
             }            
             return [(0, 0, debit_line_vals), (0, 0, credit_line_vals), (0, 0, debit_line_vals1), (0, 0, credit_line_vals1), (0, 0, credit_line_vals2)]    
         else:
+            if move.is_exchange==True:
+                account_data = self.pool.get('account.account').browse(cr, uid, debit_account_id, context=context)
+                if account_data.user_type.name=='Cost of Revenue':
+                    debit_account_id = move.product_id.product_tmpl_id.categ_id.property_account_foc_principle_receivable.id  
             debit_line_vals = {
                         'name': move.name,
                         'product_id': move.product_id.id,
