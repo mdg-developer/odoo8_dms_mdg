@@ -168,6 +168,7 @@ class exchange_product(osv.osv):
             product_value = product_obj.browse(cr, uid, ids[0], context=context)
             if product_value.void_flag=='none':
                 location_id = product_value.customer_id.property_stock_customer.id
+                partner_id = product_value.customer_id.id
                 payment_type = product_value.location_type
                 if payment_type == 'Normal stock returned':
                     from_location_id = product_value.team_id.normal_return_location_id.id
@@ -195,9 +196,11 @@ class exchange_product(osv.osv):
                         trans_type = product_line_value.trans_type
                         if trans_type == 'In':
                             move_id = move_obj.create(cr, uid, {
+                                                  'partner_id': partner_id,
                                                   'product_id': product_id,
                                                   'product_uom_qty': quantity,
                                                   'product_uos_qty': quantity,
+                                                  'product_uos':product_uom,
                                                   'product_uom':product_uom,
                                                   'is_exchange':True,
                                                   'location_id':location_id,
@@ -207,11 +210,13 @@ class exchange_product(osv.osv):
                                                   'state':'confirmed'}, context=context)     
                         if trans_type == 'Out'  :
                             move_id = move_obj.create(cr, uid, {
+                                                  'partner_id': partner_id,
                                                   'product_id': product_id,
                                                   'product_uom_qty': quantity,
                                                   'product_uos_qty': quantity,
+                                                  'product_uos':product_uom,
                                                   'product_uom':product_uom,
-                                                     'is_exchange':True,
+                                                  'is_exchange':True,
                                                   'location_id':car_location_id,
                                                   'location_dest_id':location_id,
                                                   'name':name,

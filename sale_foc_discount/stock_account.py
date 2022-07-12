@@ -167,7 +167,9 @@ class stock_quant(osv.osv):
             if move.picking_id.partner_ref:
                 note=move.picking_id.partner_ref
             else:
-                note =move.picking_id.origin        
+                note =move.picking_id.origin    
+        if move.is_exchange==True:
+                note =move.origin    
         if move.foc:
             # type = self.get_foc_cashorcredit(cr, uid, move, context)
             type = 'cash'
@@ -239,7 +241,7 @@ class stock_quant(osv.osv):
                         'credit': valuation_amount > 0 and valuation_amount or 0,
                         'debit': valuation_amount < 0 and -valuation_amount or 0,
                         'account_id': credit_account_id,
-                                                'note': note or False,
+                        'note': note or False,
 
             }    
             debit_line_vals1 = {
