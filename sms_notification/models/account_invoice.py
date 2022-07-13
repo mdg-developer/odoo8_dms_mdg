@@ -232,7 +232,7 @@ class account_invoice(osv.osv):
                                                              
     def send_overdue_sms(self, cr, uid, ids=None, context=None):
             
-        cr.execute("select id from account_invoice where type='out_invoice' and state='open' and date_due=current_date-3")    
+        cr.execute("select id from account_invoice where type='out_invoice' and state='open' and date_due=current_date-7")    
         invoice_data = cr.fetchall()   
         if invoice_data:    
             for inv in invoice_data:
