@@ -1140,14 +1140,7 @@ class mobile_sale_order(osv.osv):
         invFlag = False
         product_name = ''
         if ids:
-            # default price list need in sale order form
-#             cr.execute("""select id from product_pricelist where type = 'sale' """)
-#             data = cr.fetchall()
-#             if data:
-#                 pricelist_id = data[0][0]
-# old query version 
-#                 cr.execute("select TI.sale_team_id from  mobile_sale_order msol,tablets_information TI where msol.tablet_id=TI.id and msol.id=%s", (ids[0],))
-#                 sale_team_id = cr.fetchone()
+
             sale_team_obj = self.browse(cr, uid, ids, context)
             sale_team_id = sale_team_obj.sale_team.id
             cr.execute("select cc.analytic_account_id from crm_case_section cc,mobile_sale_order mso where mso.sale_team=cc.id and mso.id=%s", (ids[0],))
@@ -1161,7 +1154,7 @@ class mobile_sale_order(osv.osv):
                 analytic_id = False
 
             for ms_ids in msoObj.browse(cr, uid, ids[0], context=context):
-                if ms_ids:
+                if ms_ids and ms_ids.m_status=='draft':
                     if ms_ids.void_flag == 'voided':  # they work while payment type not 'cash' and 'credit'
                         so_state = 'cancel'
                     elif ms_ids.void_flag == 'none':

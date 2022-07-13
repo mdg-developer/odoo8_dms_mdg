@@ -237,13 +237,9 @@ class pre_sale_order(osv.osv):
         delivery_id=None
         if ids:
             try:
-                # default price list need in sale order form
-#                 cr.execute("""select id from product_pricelist""")
-#                 data = cr.fetchall()
-#                 if data:
-#                     pricelist_id = data[0][0]
+
                 for preObj_ids in presaleorderObj.browse(cr, uid, ids[0], context=context):
-                    if preObj_ids:
+                    if preObj_ids and preObj_ids.m_status=='draft':
                         print 'Sale Team', preObj_ids.sale_team
                         #for multi Sale Team
                         cr.execute("select is_customer_delivery_team from crm_case_section where id =%s",(preObj_ids.sale_team.id,))    
