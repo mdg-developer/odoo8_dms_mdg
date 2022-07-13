@@ -164,9 +164,12 @@ class exchange_product(osv.osv):
         product_line_obj = self.pool.get('product.transactions.line')
         product_obj = self.pool.get('product.transactions')
         move_obj = self.pool.get('stock.move')
+        location_obj = self.pool.get('stock.location')
         if ids:
             product_value = product_obj.browse(cr, uid, ids[0], context=context)
             if product_value.void_flag=='none':
+                location_in_id = location_obj.search(cr, uid, [('name', '=', 'Stock Exchange In'),('usage','=','internal')], context=context)
+                
                 location_id = product_value.customer_id.property_stock_customer.id
                 partner_id = product_value.customer_id.id
                 payment_type = product_value.location_type
@@ -203,7 +206,7 @@ class exchange_product(osv.osv):
                                                   'product_uos':product_uom,
                                                   'product_uom':product_uom,
                                                   'is_exchange':True,
-                                                  'location_id':location_id,
+                                                  'location_id':location_in_id[0],
                                                   'location_dest_id':from_location_id,
                                                   'name':name,
                                                    'origin':origin,
