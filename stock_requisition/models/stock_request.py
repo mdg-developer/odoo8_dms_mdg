@@ -350,6 +350,9 @@ class stock_requisition(osv.osv):
         req_value = {}
         if ids:
             req_value = requisition_obj.browse(cr, uid, ids[0], context=context)
+            if req_value.state=='approve':
+                raise osv.except_osv(_('Warning'),
+                                         _('You cannot transfer a record in Approved state'))              
             request_id = req_value.id
             request_date = req_value.request_date
             request_by = req_value.request_by.id
