@@ -3563,15 +3563,17 @@ class mobile_sale_order(osv.osv):
                     stock_id = stock_return_obj.create(cursor, user, mso_result, context=context)                  
                     for srl in stock_line:  # return_quantity=  float(srl['return_quantity']) - (float(srl['sale_quantity'])+float(srl['foc_quantity'] ))          
                             return_quantity = srl['return_quantity']
-                            mso_line_res = {                                                            
-                                  'line_id':stock_id,
-                                  'return_quantity':return_quantity,
-                                  'sale_quantity':srl['sale_quantity'],
-                                  'product_id':srl['product_id'],
-                                  'product_uom':srl['product_uom'],
-                                  'foc_quantity':srl['foc_quantity'],
-                            }
-                            stock_return_line_obj.create(cursor, user, mso_line_res, context=context)
+                            product = self.pool.get('product.product').browse(cursor, user, srl['product_id'], context=context)
+                            if product.type!='service':
+                                mso_line_res = {                                                            
+                                      'line_id':stock_id,
+                                      'return_quantity':return_quantity,
+                                      'sale_quantity':srl['sale_quantity'],
+                                      'product_id':srl['product_id'],
+                                      'product_uom':srl['product_uom'],
+                                      'foc_quantity':srl['foc_quantity'],
+                                }
+                                stock_return_line_obj.create(cursor, user, mso_line_res, context=context)
             print 'True'
             return True       
         except Exception, e:

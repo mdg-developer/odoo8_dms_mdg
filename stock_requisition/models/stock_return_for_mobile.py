@@ -67,23 +67,23 @@ class stock_return_from_mobile(osv.osv):
                 small_issue_quantity = note_line[4]
                 small_uom_id=note_line[5]
                 receive_qty=small_issue_quantity
-
                 product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-                if small_uom_id != product.product_tmpl_id.uom_id.id:                                                                          
-                    cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (small_uom_id,))
-                    bigger_qty = cr.fetchone()[0]
-                    receive_qty = (small_issue_quantity * bigger_qty)
-                return_ids = stock_return_obj.search(cr, uid, [('product_id', '=', product_id),('line_id','=',ids[0])], context=context) 
-                if return_ids:
-                    cr.execute("update stock_return_mobile_line set return_quantity=return_quantity+%s where product_id=%s and line_id =%s",(receive_qty,product_id,ids[0],)) 
-                else:
-                    stock_return_obj.create(cr, uid, {'line_id': ids[0],
-                                  'product_id': product_id,
-                                  'return_quantity':receive_qty,
-                                  'sale_quantity':0,
-                                  'foc_quantity':0,
-                                  'product_uom':  product.product_tmpl_id.uom_id.id ,
-                            }, context=context)
+                if product.type!='service':
+                    if small_uom_id != product.product_tmpl_id.uom_id.id:                                                                          
+                        cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (small_uom_id,))
+                        bigger_qty = cr.fetchone()[0]
+                        receive_qty = (small_issue_quantity * bigger_qty)
+                    return_ids = stock_return_obj.search(cr, uid, [('product_id', '=', product_id),('line_id','=',ids[0])], context=context) 
+                    if return_ids:
+                        cr.execute("update stock_return_mobile_line set return_quantity=return_quantity+%s where product_id=%s and line_id =%s",(receive_qty,product_id,ids[0],)) 
+                    else:
+                        stock_return_obj.create(cr, uid, {'line_id': ids[0],
+                                      'product_id': product_id,
+                                      'return_quantity':receive_qty,
+                                      'sale_quantity':0,
+                                      'foc_quantity':0,
+                                      'product_uom':  product.product_tmpl_id.uom_id.id ,
+                                }, context=context)
             order_ids = account_inv_obj.search(cr, uid, [('section_id', '=', sale_team_id),('user_id','=',user_id), ('state', '=', 'open'),('date_invoice','=',return_date)], context=context) 
             order_list = str(tuple(order_ids))
             order_list = eval(order_list)
