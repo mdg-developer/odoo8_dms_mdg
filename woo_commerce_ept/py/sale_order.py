@@ -434,7 +434,15 @@ class sale_order(models.Model):
         if woo_product_uom and product.type == 'product':
             product_uom = self.env['product.uom'].search([('id', '=', woo_product_uom)])
             if product_uom:
-                product_data.update({'product_uom': product_uom.id})   
+                product_data.update({'product_uom': product_uom.id})
+
+        fee_product_uom_id = self.env.context.get('fee_product_uom_id')
+        if fee_product_uom_id:
+            product_data.update({'product_uom': fee_product_uom_id})
+
+        fee_product_id = self.env.context.get('fee_product_id')
+        if fee_product_id:
+            sol_product_id = fee_product_id
                                                         
         product_data.update(
                             {
@@ -1065,8 +1073,11 @@ class sale_order(models.Model):
                                 modified_odoo_discount_id = modified_fee_line.get("odoo_discount_id")
                                 if modified_odoo_discount_id:
                                     fee_discount_id = int(modified_odoo_discount_id)
+                                    fee_product_id, fee_promotion_id = self.get_promotion_data(fee_discount_id)
+                                    fee_product_obj = self.env["product.product"].browse(fee_product_id)
+                                    fee_product_uom_id = fee_product_obj.uom_id.id
                                     break
-                        self.with_context(fee_discount_id=fee_discount_id).create_woo_sale_order_line({},fee_line_tax_ids,instance.fee_line_id,woo_product_uom,1,fiscal_position,partner,pricelist_id,fee,sale_order,fee_value)
+                        self.with_context(fee_discount_id=fee_discount_id,fee_product_id=fee_product_id,fee_product_uom_id=fee_product_uom_id).create_woo_sale_order_line({},fee_line_tax_ids,instance.fee_line_id,woo_product_uom,1,fiscal_position,partner,pricelist_id,fee,sale_order,fee_value)
                 woo_promotions = order.get("related_promotion",[])
                 if woo_promotions:  
                     self.assign_promotions(sale_order,woo_promotions)        
