@@ -51,7 +51,7 @@
 						<field name="old_code" />
 
 						<group>
-							<button name="generate_customercode" type="object" string="Generate Code" />
+							<button name="generate_customercode_byyear" type="object" string="Generate Code" />
 						</group>
 						<!-- <group> </group> <group> <field name="customer_target_id" widget="selection"/> 
 							<button name="customer_target" type="object" string="Customer Target" /> 

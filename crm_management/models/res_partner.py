@@ -589,6 +589,13 @@ class res_partner(osv.osv):
             return True
 
 
+    def generate_customercode_byyear(self, cr, uid, ids, val, context=None):
+        if ids:
+            for resVal in self.browse(cr, uid, ids, context=context):
+                if not resVal.customer_code:
+                    resVal.customer_code = self.pool.get('ir.sequence').get(cr, uid, 'res.partner') or ''
+
+
 res_partner()
 
 
