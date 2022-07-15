@@ -61,7 +61,7 @@ class res_partner(osv.osv):
                 message = "Dear Valued Customer, " + str(otp) + " is your RB account's OTP code"
                 consumer_key = self.pool.get('ir.config_parameter').get_param(cr, uid, 'telenor_consumer_key')
                 consumer_secret = self.pool.get('ir.config_parameter').get_param(cr, uid, 'telenor_consumer_secret')
-                auth_url = 'https://prod-apigw.mytelenor.com.mm/oauth/v1/userAuthorize?client_id=%s&response_type=code&scope=READ'%(consumer_key)
+                auth_url = 'https://prod-apigw.atom.com.mm/oauth/v1/userAuthorize?client_id=%s&response_type=code&scope=READ'%(consumer_key)
                 scopes = ['READ']
                 oauth = OAuth2Session(client=MobileApplicationClient(client_id=consumer_key), scope=scopes)
                 authorization_url, state = oauth.authorization_url(auth_url)
@@ -71,7 +71,7 @@ class res_partner(osv.osv):
                 code = parse_qs(parsed.query)['code']
                 auth_code = code[0]
                 
-                token_url = "https://prod-apigw.mytelenor.com.mm/oauth/v1/token"
+                token_url = "https://prod-apigw.atom.com.mm/oauth/v1/token"
                 token_headers = CaseInsensitiveDict()
                 token_headers["Content-Type"] = "application/x-www-form-urlencoded"
                 token_data = "grant_type=authorization_code&client_id=%s&client_secret=%s&expires_in=86400&code=%s&redirect_uri=https://cms.rbdmyanmar.com/oauth2/callback" %(consumer_key,consumer_secret,auth_code,)
@@ -79,7 +79,7 @@ class res_partner(osv.osv):
                 if resp.status_code in [200,201]:                 
                     result = resp.json()
                     access_token = result['accessToken']                      
-                sms_url = "https://prod-apigw.mytelenor.com.mm/v3/mm/en/communicationMessage/send"
+                sms_url = "https://prod-apigw.atom.com.mm/v3/mm/en/communicationMessage/send"
                 sms_headers = CaseInsensitiveDict()
                 sms_headers["Authorization"] = "Bearer " + access_token
                 sms_headers["Content-Type"] = "application/json"                
@@ -143,7 +143,7 @@ class res_partner(osv.osv):
                 message = "Dear Valued Customer, " + str(otp) + " is your RB account's OTP code"
                 consumer_key = self.pool.get('ir.config_parameter').get_param(cr, uid, 'telenor_consumer_key')
                 consumer_secret = self.pool.get('ir.config_parameter').get_param(cr, uid, 'telenor_consumer_secret')
-                auth_url = 'https://prod-apigw.mytelenor.com.mm/oauth/v1/userAuthorize?client_id=%s&response_type=code&scope=READ'%(consumer_key)
+                auth_url = 'https://prod-apigw.atom.com.mm/oauth/v1/userAuthorize?client_id=%s&response_type=code&scope=READ'%(consumer_key)
                 scopes = ['READ']
                 oauth = OAuth2Session(client=MobileApplicationClient(client_id=consumer_key), scope=scopes)
                 authorization_url, state = oauth.authorization_url(auth_url)
@@ -153,7 +153,7 @@ class res_partner(osv.osv):
                 code = parse_qs(parsed.query)['code']
                 auth_code = code[0]
                 
-                token_url = "https://prod-apigw.mytelenor.com.mm/oauth/v1/token"
+                token_url = "https://prod-apigw.atom.com.mm/oauth/v1/token"
                 token_headers = CaseInsensitiveDict()
                 token_headers["Content-Type"] = "application/x-www-form-urlencoded"
                 token_data = "grant_type=authorization_code&client_id=%s&client_secret=%s&expires_in=86400&code=%s&redirect_uri=https://cms.rbdmyanmar.com/oauth2/callback" %(consumer_key,consumer_secret,auth_code,)
@@ -161,7 +161,7 @@ class res_partner(osv.osv):
                 if resp.status_code in [200,201]:                 
                     result = resp.json()
                     access_token = result['accessToken']                      
-                sms_url = "https://prod-apigw.mytelenor.com.mm/v3/mm/en/communicationMessage/send"
+                sms_url = "https://prod-apigw.atom.com.mm/v3/mm/en/communicationMessage/send"
                 sms_headers = CaseInsensitiveDict()
                 sms_headers["Authorization"] = "Bearer " + access_token
                 sms_headers["Content-Type"] = "application/json"                
