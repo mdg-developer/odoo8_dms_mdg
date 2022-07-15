@@ -58,7 +58,7 @@ class res_partner(osv.osv):
                 if mobile_phone.startswith('+959'):  
                     mobile_phone = '959' + str(mobile_phone[4:])              
                 otp = random.randint(1000,9999)                   
-                message = "Dear Valued Customer, " + str(otp) + " is your RB account's OTP code"
+                message = "Dear Valued Customer, " + str(otp) + " is your RBD Myanmar account's OTP code"
                 consumer_key = self.pool.get('ir.config_parameter').get_param(cr, uid, 'telenor_consumer_key')
                 consumer_secret = self.pool.get('ir.config_parameter').get_param(cr, uid, 'telenor_consumer_secret')
                 auth_url = 'https://prod-apigw.atom.com.mm/oauth/v1/userAuthorize?client_id=%s&response_type=code&scope=READ'%(consumer_key)
@@ -140,7 +140,7 @@ class res_partner(osv.osv):
                 if mobile_phone.startswith('+959'):  
                     mobile_phone = '959' + str(mobile_phone[4:])              
                 otp = random.randint(1000,9999)                   
-                message = "Dear Valued Customer, " + str(otp) + " is your RB account's OTP code"
+                message = "Dear Valued Customer, " + str(otp) + " is your RBD Myanmar account's OTP code"
                 consumer_key = self.pool.get('ir.config_parameter').get_param(cr, uid, 'telenor_consumer_key')
                 consumer_secret = self.pool.get('ir.config_parameter').get_param(cr, uid, 'telenor_consumer_secret')
                 auth_url = 'https://prod-apigw.atom.com.mm/oauth/v1/userAuthorize?client_id=%s&response_type=code&scope=READ'%(consumer_key)
