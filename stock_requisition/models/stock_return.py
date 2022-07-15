@@ -311,7 +311,8 @@ class stock_return(osv.osv):
         note_obj = self.pool.get('good.issue.note') 
         return_obj = self.browse(cr, uid, ids, context=context)    
         if return_obj.state=='received':
-            raise Warning(_('You cannot transfer a record in state \'%s\'.') % return_obj.state)        
+            raise osv.except_osv(_('Warning'),
+                                     _('You cannot transfer a record in Received state'))            
         origin = return_obj.name
         return_date = return_obj.to_return_date
         main_location_id = return_obj.to_location.id    
