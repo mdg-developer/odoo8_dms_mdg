@@ -130,13 +130,14 @@ class stock_return_from_mobile(osv.osv):
                         if product_foc_search:                            
                             cr.execute('update stock_return_mobile_line set return_quantity = return_quantity - %s, foc_quantity = foc_quantity + %s where line_id= %s and product_id =%s ',(foc_qty,foc_qty,ids[0],product_id,))                        
                         else:
-                            stock_return_obj.create(cr, uid, {'line_id': ids[0],
-                                  'product_id': product_id,
-                                  'return_quantity':-1 * foc_qty,
-                                  'sale_quantity':0,
-                                  'foc_quantity':foc_qty,
-                                  'product_uom':  product.product_tmpl_id.uom_id.id ,
-                            }, context=context) 
+                            if product.type!='service':                            
+                                stock_return_obj.create(cr, uid, {'line_id': ids[0],
+                                      'product_id': product_id,
+                                      'return_quantity':-1 * foc_qty,
+                                      'sale_quantity':0,
+                                      'foc_quantity':foc_qty,
+                                      'product_uom':  product.product_tmpl_id.uom_id.id ,
+                                }, context=context) 
                             
                 for mobile_line_id in mobile_return_data.p_line:
                     mobile_line_data =stock_return_obj.browse(cr, uid, mobile_line_id.id, context=context)
