@@ -47,7 +47,15 @@ class res_partner(osv.osv):
             return maintenance_mode.lower()
         else:
             return "false"
+
+    def check_registering_mode(self, cr, uid, ids, context=None):
         
+        maintenance_mode = self.pool.get('ir.config_parameter').get_param(cr, uid, 'app_use_for_consumer')
+        if maintenance_mode:
+            return maintenance_mode.lower()
+        else:
+            return "false"
+                
     def send_otp_code(self, cr, uid, ids, mobile_phone, context=None):
         
         if mobile_phone:        
