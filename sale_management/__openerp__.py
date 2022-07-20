@@ -59,6 +59,7 @@ Sale Management
         'reports/custom_layout.xml',
         'reports/invoice_custom_layouts.xml',
         'reports/report_invoice.xml',
+        'wizard/location_assign_view.xml',
     ],
     'installable': True,
     'auto_install': False,
