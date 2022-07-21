@@ -51,21 +51,34 @@
 						t-field="company.rml_header1" />
 				</div>
 				<div class="row">
-					<div class="col-xs-4">
+					<div class="col-xs-2">
 						<img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo"
 							style="max-height: 50pt;" />
 					</div>
 
-					<div class="col-xs-4" align="center" style="margin-top:30pt;">
-						<span style="font-size:20pt;">INVOICE
-						</span>
+					<div class="col-xs-8" style="margin-top:10pt;padding-left:95px;">
+						<div style="font-size:15pt;padding-left:15px;" t-field="o.company_id.partner_id"/>
+						<span t-field="o.company_id.street"/>,<span t-field="o.company_id.street2"/>,
+						<span t-field="o.company_id.city"/>,<span t-field="o.company_id.country_id"/>
+						<br/>
+						<span style="padding-left:35px;">Tel: <span t-field="o.company_id.phone" />
+							<span t-field="o.company_id.fax"/></span>
 					</div>
 
-					<div class="col-xs-4">
+					<div class="col-xs-2">
 					</div>
 				</div>
-				<!-- <div class="row"> <div class="col-xs-3"> <div t-field="company.partner_id" 
-					t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": 
+<!--				<div class="row">-->
+<!--					<div align="center">-->
+<!--&lt;!&ndash;						<div style="font-size:15pt;" t-field="o.company_id.partner_id"/>&ndash;&gt;-->
+<!--						<span t-field="o.company_id.street"/>,<span t-field="o.company_id.street2"/>,-->
+<!--						<span t-field="o.company_id.city"/>,<span t-field="o.company_id.country_id"/>-->
+<!--						<br/>-->
+<!--						Tel: <span t-field="o.company_id.phone" /> <span t-field="o.company_id.fax"/>-->
+<!--					</div>-->
+<!--				</div>-->
+				<!-- <div class="row"> <div class="col-xs-3"> <div t-field="company.partner_id"
+					t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker":
 					true}' style="border-bottom: 1pt solid black;" /> </div> </div> -->
 			</div>
 		</template>

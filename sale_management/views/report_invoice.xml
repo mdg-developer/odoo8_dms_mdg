@@ -6,175 +6,269 @@
 
 				<t t-call="sale_management.invoice_custom_layout">
 					<div class="page" style="font-size:9pt;">
-						<div class="row" style="padding-top:-2s0pt;">
-							<div class="col-xs-8 pull-left">
-								<table class="table" style="border:solid;border-color:white;">
+<!--						<div class="row" style="padding-top:-2s0pt;">-->
+						<div class="row" style="padding-top:20pt;">
+							<div class="col-xs-4 pull-left">
+								<table class="table">
 									<tr>
-										<td style="margin-top:-10pt;">
-											<div t-field="o.company_id.partner_id"
-												t-field-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: true}" />
-											<div t-field="o.company_id.phone" />
+										<td style="text-align : left;width: 30%;margin-top:-10pt;border: 0 !important;">
+											<nobr>Outlet</nobr>
+										</td>
+										<td style="text-align : left;margin-top:-10pt;border: 0 !important;">
+											<nobr>:</nobr>
+										</td>
+										<td style="text-align : left;width:70%;padding-left:5px;margin-top:-10pt;border: 0 !important;">
+											<span t-field="o.partner_id"/>
+										</td>
+									</tr>
+									<tr>
+										<td style="text-align : left;width: 30%;margin-top:-10pt;border: 0 !important;">
+											<nobr>Deliver to</nobr>
+										</td>
+										<td style="text-align : left;margin-top:-10pt;border: 0 !important;">
+											<nobr>:</nobr>
+										</td>
+										<td style="text-align : left;width:70%;padding-left:5px;margin-top:-10pt;border: 0 !important;">
+											<span t-field="o.delivery_address"/>
+										</td>
+									</tr>
+									<tr>
+										<td style="text-align : left;width: 30%;margin-top:-10pt;border: 0 !important;">
+											<nobr>Bill to</nobr>
+										</td>
+										<td style="text-align : left;margin-top:-10pt;border: 0 !important;">
+											<nobr>:</nobr>
+										</td>
+										<td style="text-align : left;width:70%;padding-left:5px;margin-top:-10pt;border: 0 !important;">
+											<span t-field="o.partner_id"/>
+										</td>
+									</tr>
+									<tr>
+										<td style="text-align : left;width: 30%;margin-top:-10pt;border: 0 !important;">
+											<nobr>Attention to</nobr>
+										</td>
+										<td style="text-align : left;margin-top:-10pt;border: 0 !important;">
+											<nobr>:</nobr>
+										</td>
+										<td style="text-align : left;width:70%;padding-left:5px;margin-top:-10pt;border: 0 !important;">
+											<span t-field="o.partner_id"/>
 										</td>
 									</tr>
 								</table>
+							</div>
+							<div class="col-xs-4" align="left" style="padding-left:55px;">
+								<span style="font-size:15pt;border-bottom:1px solid black;">Invoice</span>
 							</div>
 							<div class="col-xs-4 pull-right">
-								<table class="table" style="border:solid;border-color:white;">
+								<table class="table">
 									<tr>
-										<td style="margin-top:-10pt;">
-											<b>Customer address:</b>
-											<address t-field="o.partner_id"
-												t-field-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: true}" />
-											<span t-field="o.partner_id.vat"
-												t-field-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: true}" />
-											<div style="margin-top:-15pt;" t-field="o.partner_id.phone" />
+										<td style="text-align : left;width: 30%;margin-top:-10pt;border: 0 !important;">
+											<nobr>Invoice No</nobr>
+										</td>
+										<td style="text-align : left;margin-top:-10pt;border: 0 !important;">
+											<nobr>:</nobr>
+										</td>
+										<td style="text-align : left;width:70%;padding-left:5px;margin-top:-10pt;border: 0 !important;">
+											<span t-field="o.number"/>
+										</td>
+									</tr>
+									<tr>
+										<td style="text-align : left;width: 30%;margin-top:-10pt;border: 0 !important;">
+											<nobr>Delivery Order</nobr>
+										</td>
+										<td style="text-align : left;margin-top:-10pt;border: 0 !important;">
+											<nobr>:</nobr>
+										</td>
+										<td style="text-align : left;width:70%;padding-left:5px;margin-top:-10pt;border: 0 !important;">
+<!--											<span t-field="o.number"/>-->
+										</td>
+									</tr>
+									<tr>
+										<td style="text-align : left;width: 30%;margin-top:-10pt;border: 0 !important;">
+											<nobr>Date</nobr>
+										</td>
+										<td style="text-align : left;margin-top:-10pt;border: 0 !important;">
+											<nobr>:</nobr>
+										</td>
+										<td style="text-align : left;width:70%;padding-left:5px;margin-top:-10pt;border: 0 !important;">
+											<span t-field="o.date_invoice"/>
+										</td>
+									</tr>
+									<tr>
+										<td style="text-align : left;width: 30%;margin-top:-10pt;border: 0 !important;">
+											<nobr>Payment Term</nobr>
+										</td>
+										<td style="text-align : left;margin-top:-10pt;border: 0 !important;">
+											<nobr>:</nobr>
+										</td>
+										<td style="text-align : left;width:70%;padding-left:5px;margin-top:-10pt;border: 0 !important;">
+											<span t-field="o.payment_term"/>
+										</td>
+									</tr>
+									<tr>
+										<td style="text-align : left;width: 30%;margin-top:-10pt;border: 0 !important;">
+											<nobr>Sale Person</nobr>
+										</td>
+										<td style="text-align : left;margin-top:-10pt;border: 0 !important;">
+											<nobr>:</nobr>
+										</td>
+										<td style="text-align : left;width:70%;padding-left:5px;margin-top:-10pt;border: 0 !important;">
+											<span t-field="o.user_id"/>
 										</td>
 									</tr>
 								</table>
 
 							</div>
 						</div>
-						<div class="row">
-							<div class="col-xs-8 pull-left" style="margin-top:-20pt;">
-								<table class="table" style="border:solid;border-color:white;">
-									<tr style="margin-top:-30pt;border:solid;border-color:white;">
-										<td style="font-size:20pt;" colspan="4">
-											<span
-												t-if="o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid') and o.is_nonsale !=True">Invoice No - </span>
-											<span
-												t-if="o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid') and o.is_nonsale ==True">Debit Note No - </span>
-											<span t-if="o.type == 'out_invoice' and o.state == 'proforma2'">PRO-FORMA</span>
-											<span t-if="o.type == 'out_invoice' and o.state == 'draft'">Draft Invoice</span>
-											<span t-if="o.type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice</span>
-											<span t-if="o.type == 'out_refund'">Refund</span>
-											<span t-if="o.type == 'in_refund'">Supplier Refund</span>
-											<span t-if="o.type == 'in_invoice'">Supplier Invoice</span>
-											<span t-field="o.number" />
-										</td>
-									</tr>
-								</table>
-							</div>
-							<div class="col-xs-4 pull-right" style="margin-top:-20pt;">
-								<table class="table" style="border:solid;border-color:white;">
-									<tr style="margin-top:-30pt;border:solid;border-color:white;">
-										<td style="padding-top:10pt;">
-											<b>Branch Code:</b>
-											<span t-field="o.partner_id.branch_id.branch_code" />
-										</td>
-									</tr>
-								</table>
-							</div>
-						</div>
+<!--						<div class="row">-->
+<!--							<div class="col-xs-8 pull-left" style="margin-top:-20pt;">-->
+<!--								<table class="table" style="border:solid;border-color:white;">-->
+<!--									<tr style="margin-top:-30pt;border:solid;border-color:white;">-->
+<!--										<td style="font-size:20pt;" colspan="4">-->
+<!--											<span-->
+<!--												t-if="o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid') and o.is_nonsale !=True">Invoice No - </span>-->
+<!--											<span-->
+<!--												t-if="o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid') and o.is_nonsale ==True">Debit Note No - </span>-->
+<!--											<span t-if="o.type == 'out_invoice' and o.state == 'proforma2'">PRO-FORMA</span>-->
+<!--											<span t-if="o.type == 'out_invoice' and o.state == 'draft'">Draft Invoice</span>-->
+<!--											<span t-if="o.type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice</span>-->
+<!--											<span t-if="o.type == 'out_refund'">Refund</span>-->
+<!--											<span t-if="o.type == 'in_refund'">Supplier Refund</span>-->
+<!--											<span t-if="o.type == 'in_invoice'">Supplier Invoice</span>-->
+<!--											<span t-field="o.number" />-->
+<!--										</td>-->
+<!--									</tr>-->
+<!--								</table>-->
+<!--							</div>-->
+<!--							<div class="col-xs-4 pull-right" style="margin-top:-20pt;">-->
+<!--								<table class="table" style="border:solid;border-color:white;">-->
+<!--									<tr style="margin-top:-30pt;border:solid;border-color:white;">-->
+<!--										<td style="padding-top:10pt;">-->
+<!--											<b>Branch Code:</b>-->
+<!--											<span t-field="o.partner_id.branch_id.branch_code" />-->
+<!--										</td>-->
+<!--									</tr>-->
+<!--								</table>-->
+<!--							</div>-->
+<!--						</div>-->
 
 
-						<table class="table"
-							style="border:solid;border-color:white;margin-top:-20pt;">
-							<tr style="border:solid;border-color:white;">
-								<td>
-									<b>Tab Reference</b>
-									<br />
-									<span t-field="o.sale_order_id.tb_ref_no" />
-								</td>
-								<td>
-									<b>Sales Team</b>
-									<br />
-									<span t-field="o.section_id.name" />
-								</td>
-								<td>
-									<b>Salesman</b>
-									<br />
-									<span t-field="o.user_id.name" />
-								</td>
-								<td>
-									<b>Order Date</b>
-									<br />
-									<span t-field="o.sale_order_id.date_order" />
-								</td>
-								<td>
-									<b>Invoice Date</b>
-									<br />
-									<span t-field="o.date_invoice" />
-								</td>
-							</tr>
+<!--						<table class="table"-->
+<!--							style="border:solid;border-color:white;margin-top:-20pt;">-->
+<!--							<tr style="border:solid;border-color:white;">-->
+<!--								<td>-->
+<!--									<b>Tab Reference</b>-->
+<!--									<br />-->
+<!--									<span t-field="o.sale_order_id.tb_ref_no" />-->
+<!--								</td>-->
+<!--								<td>-->
+<!--									<b>Sales Team</b>-->
+<!--									<br />-->
+<!--									<span t-field="o.section_id.name" />-->
+<!--								</td>-->
+<!--								<td>-->
+<!--									<b>Salesman</b>-->
+<!--									<br />-->
+<!--									<span t-field="o.user_id.name" />-->
+<!--								</td>-->
+<!--								<td>-->
+<!--									<b>Order Date</b>-->
+<!--									<br />-->
+<!--									<span t-field="o.sale_order_id.date_order" />-->
+<!--								</td>-->
+<!--								<td>-->
+<!--									<b>Invoice Date</b>-->
+<!--									<br />-->
+<!--									<span t-field="o.date_invoice" />-->
+<!--								</td>-->
+<!--							</tr>-->
 
-							<tr style="border:solid;border-color:white;">
-								<td>
-									<b>Customer Code</b>
-									<br />
-									<span t-field="o.partner_id.customer_code" />
-								</td>
-								<td>
-									<b>Source</b>
-									<br />
-									<span t-field="o.origin" />
-								</td>
-								<td>
-									<b>Delivery Remark</b>
-									<br />
-									<span t-field="o.sale_order_id.delivery_remark" />
-								</td>
-								<td>
-									<b>Payment Type</b>
-									<br />
-									<span t-field="o.sale_order_id.payment_type" />
-								</td>
-								<td>
-									<b>Due Date</b>
-									<br />
-									<span t-field="o.date_due" />
-								</td>
-							</tr>
-						</table>
+<!--							<tr style="border:solid;border-color:white;">-->
+<!--								<td>-->
+<!--									<b>Customer Code</b>-->
+<!--									<br />-->
+<!--									<span t-field="o.partner_id.customer_code" />-->
+<!--								</td>-->
+<!--								<td>-->
+<!--									<b>Source</b>-->
+<!--									<br />-->
+<!--									<span t-field="o.origin" />-->
+<!--								</td>-->
+<!--								<td>-->
+<!--									<b>Delivery Remark</b>-->
+<!--									<br />-->
+<!--									<span t-field="o.sale_order_id.delivery_remark" />-->
+<!--								</td>-->
+<!--								<td>-->
+<!--									<b>Payment Type</b>-->
+<!--									<br />-->
+<!--									<span t-field="o.sale_order_id.payment_type" />-->
+<!--								</td>-->
+<!--								<td>-->
+<!--									<b>Due Date</b>-->
+<!--									<br />-->
+<!--									<span t-field="o.date_due" />-->
+<!--								</td>-->
+<!--							</tr>-->
+<!--						</table>-->
 
-						<table class="table"
-							style="border:solid;border-color:#ffffff;margin-bottom:-1pt;margin-top:-20pt;">
-							<tr style="border:solid;border-color:white;">
-								<td align="left">
-									<t t-if="o.payment_term.note">
-										<strong>Payment Term:</strong>
-										<span t-field="o.payment_term.note" />
-									</t>
-								</td>
-								
-							</tr>
-							<tr style="border:solid;border-color:white;">
-								<td align="left">
-									<t t-if="o.subject and o.is_nonsale ==True">
-										<strong>Subject:</strong>
-										<span t-field="o.subject" />
-									</t>
-								</td>
-                                <td align="right">
-									<strong>
-										Amount in (
-										<span t-field="o.currency_id.name" />
-										)
-									</strong>
-								</td>
-							</tr>
-						</table>
+<!--						<table class="table"-->
+<!--							style="border:solid;border-color:#ffffff;margin-bottom:-1pt;margin-top:-20pt;">-->
+<!--							<tr style="border:solid;border-color:white;">-->
+<!--								<td align="left">-->
+<!--									<t t-if="o.payment_term.note">-->
+<!--										<strong>Payment Term:</strong>-->
+<!--										<span t-field="o.payment_term.note" />-->
+<!--									</t>-->
+<!--								</td>-->
+<!--								-->
+<!--							</tr>-->
+<!--							<tr style="border:solid;border-color:white;">-->
+<!--								<td align="left">-->
+<!--									<t t-if="o.subject and o.is_nonsale ==True">-->
+<!--										<strong>Subject:</strong>-->
+<!--										<span t-field="o.subject" />-->
+<!--									</t>-->
+<!--								</td>-->
+<!--                                <td align="right">-->
+<!--									<strong>-->
+<!--										Amount in (-->
+<!--										<span t-field="o.currency_id.name" />-->
+<!--										)-->
+<!--									</strong>-->
+<!--								</td>-->
+<!--							</tr>-->
+<!--						</table>-->
 						<table class="table table-condensed" style="border:1pt solid;">
 							<thead>
-								<tr style="background-color:#0052cc;color:#ffffff;" height="10pt;">
+								<tr height="10pt;">
 									<th class="text-center" style="border:1pt solid;border-color:black;">No
 									</th>
-									<th class="text-center" style="border:1pt solid;border-color:black;">Description
+									<th class="text-center" style="border:1pt solid;border-color:black;">Product ID
 									</th>
-									<th class="text-center" style="border:1pt solid;border-color:black;">Quantity</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Items
+									</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">UOM</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Qty</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">Unit Price</th>
-									<th class="text-center" style="border:1pt solid;border-color:black;">Total(incl.tax)</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Total</th>
 <!-- 									<th style="border:1pt solid;border-color:black;" class="text-center" -->
 <!-- 										groups="sale.group_discount_per_so_line">Disc.(%)</th> -->
 <!-- 									<th class="text-center" style="border:1pt solid;border-color:black;" groups="sale.group_discount_per_so_line">Disc.(Amt)</th> -->
-									<th class="text-center" style="border:1pt solid;border-color:black;">FOC</th>
-									<th class="text-center" style="border:1pt solid;border-color:black;">Total(excl.tax)</th>
+<!--									<th class="text-center" style="border:1pt solid;border-color:black;">FOC</th>-->
+<!--									<th class="text-center" style="border:1pt solid;border-color:black;">Total(excl.tax)</th>-->
 								</tr>
 							</thead>
 							<tbody class="invoice_tbody">
 								<tr t-foreach="o.invoice_line" t-as="l">
 									<td style="border:1pt solid;border-color:black;" align="center">
 										<t t-esc="l_index+1" />
+									</td>
+									<td style="border:1pt solid;border-color:black;" align="center">
+										<span t-field="l.product_id.default_code"/>
+										<t t-if="l.foc==True">
+											(FOC)
+										</t>
 									</td>
 									<td style="border:1pt solid;border-color:black;">
 										<span t-field="l.product_id.name" />
@@ -183,17 +277,17 @@
 										</t>
 									</td>
 									<td style="border:1pt solid;border-color:black;" align="center">
-									    <t t-esc=" '%.0f' % l.quantity"/>
+										<span t-field="l.uos_id" groups="product.group_uom" />
 									</td>
 									<td style="border:1pt solid;border-color:black;" align="center">
-										<span t-field="l.uos_id" groups="product.group_uom" />
+									    <t t-esc=" '%.0f' % l.quantity"/>
 									</td>
 									<td class="text-right" style="border:1pt solid;border-color:black;">
 										<t t-esc="'{0:,.0f}'.format(l.price_unit)"/>
 									</td>
-									<td class="text-right" style="border:1pt solid;border-color:black;">
-									    <t t-esc="'{0:,.0f}'.format(l.net_total)"/>
-									</td>
+<!--									<td class="text-right" style="border:1pt solid;border-color:black;">-->
+<!--									    <t t-esc="'{0:,.0f}'.format(l.net_total)"/>-->
+<!--									</td>-->
 <!-- 									<td class="text-right" groups="sale.group_discount_per_so_line" -->
 <!-- 										style="border:1pt solid;border-color:black;"> -->
 <!-- 										<span t-field="l.discount" /> -->
@@ -201,11 +295,11 @@
 <!-- 									<td class="text-right" style="border:1pt solid;border-color:black;" groups="sale.group_discount_per_so_line"> -->
 <!-- 										<span t-field="l.discount_amt" /> -->
 <!-- 									</td> -->
-									<td class="text-center" style="border:1pt solid;border-color:black;">
-										<t t-if="l.foc==True">
-											✓
-										</t>
-									</td>
+<!--									<td class="text-center" style="border:1pt solid;border-color:black;">-->
+<!--										<t t-if="l.foc==True">-->
+<!--											✓-->
+<!--										</t>-->
+<!--									</td>-->
 									<td class="text-right" style="border:1pt solid;border-color:black;">
 										<t t-if="l.foc==True">
 											0.00
@@ -217,152 +311,271 @@
 									</td>
 								</tr>
 							</tbody>
+							<tfoot>
+								<tr>
+									<th class="text-center" style="border:1pt solid;border-color:black;"></th>
+									<th></th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Net Amounts
+										Kyats</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Tbt</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;"></th>
+	<!--								<th><t t-esc=" '%.0f' % l.quantity"/></th>-->
+									<th></th>
+									<th class="text-right" style="border:1pt solid;border-color:black;">
+										<span t-field="o.amount_total" />
+									</th>
+								</tr>
+							</tfoot>
 						</table>
 
-						<div class="row">
-							<div class="col-xs-8 pull-left" style="padding-top: 1cm;">
-								<t t-if="o.tax_line">
-									<table class="table table-condensed">
-										<thead>
-											<tr>
-												<th>Tax</th>
-												<th class="text-right">Base</th>
-												<th class="text-right">Amount</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr t-foreach="o.tax_line" t-as="t">
-												<td>
-													<span t-field="t.name" />
-												</td>
-												<td class="text-right">
-													<span t-field="t.base" />
-												</td>
-												<td class="text-right">
-													<span t-field="t.amount" />
-												</td>
-											</tr>
-										</tbody>
-									</table>
-								</t>
-							</div>
-							<div class="col-xs-4 pull-right">
-								<table class="table">
-									<!-- <tr> -->
-									<!-- <td style="border-top-color:white;padding-bottom: 2mm;"> -->
-									<!-- Sub Total -->
-									<!-- </td> -->
-									<!-- <td class="text-right" style="border-top-color:white;padding-bottom: 
-										2mm;"> -->
-									<!-- <span t-field="o.amount_untaxed" /> -->
-									<!-- </td> -->
-									<!-- </tr> -->
-									<!-- <tr class="border-black"> -->
-									<!-- <td style="padding-top: 2mm;padding-bottom: 2mm;"> -->
-									<!-- Total Discount -->
-									<!-- </td> -->
-									<!-- <td class="text-right" style="padding-top: 2mm;padding-bottom: 
-										2mm;"> -->
-									<!-- <span t-field="o.discount_total" /> -->
-									<!-- </td> -->
-									<!-- </tr> -->
-									<!-- <tr class="border-black"> -->
-									<!-- <td style="padding-top: 2mm;padding-bottom: 2mm;"> -->
-									<!-- Deduction Amount -->
-									<!-- </td> -->
-									<!-- <td class="text-right" style="padding-top: 2mm;padding-bottom: 
-										2mm;"> -->
-									<!-- <span t-field="o.deduct_amt" /> -->
-									<!-- </td> -->
-									<!-- </tr> -->
-									<tr>
-										<td style="padding-top: 2mm;padding-bottom: 2mm;">
-											<strong>Net Amount</strong>
+<!--						<div class="row">-->
+<!--							<div class="col-xs-8 pull-left" style="padding-top: 1cm;">-->
+<!--								<t t-if="o.tax_line">-->
+<!--									<table class="table table-condensed">-->
+<!--										<thead>-->
+<!--											<tr>-->
+<!--												<th>Tax</th>-->
+<!--												<th class="text-right">Base</th>-->
+<!--												<th class="text-right">Amount</th>-->
+<!--											</tr>-->
+<!--										</thead>-->
+<!--										<tbody>-->
+<!--											<tr t-foreach="o.tax_line" t-as="t">-->
+<!--												<td>-->
+<!--													<span t-field="t.name" />-->
+<!--												</td>-->
+<!--												<td class="text-right">-->
+<!--													<span t-field="t.base" />-->
+<!--												</td>-->
+<!--												<td class="text-right">-->
+<!--													<span t-field="t.amount" />-->
+<!--												</td>-->
+<!--											</tr>-->
+<!--										</tbody>-->
+<!--									</table>-->
+<!--								</t>-->
+<!--							</div>-->
+<!--&lt;!&ndash;							<div class="col-xs-4 pull-right">&ndash;&gt;-->
+<!--&lt;!&ndash;								<table class="table">&ndash;&gt;-->
+<!--&lt;!&ndash;									&lt;!&ndash; <tr> &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;									&lt;!&ndash; <td style="border-top-color:white;padding-bottom: 2mm;"> &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;									&lt;!&ndash; Sub Total &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;									&lt;!&ndash; </td> &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;									&lt;!&ndash; <td class="text-right" style="border-top-color:white;padding-bottom: &ndash;&gt;-->
+<!--&lt;!&ndash;										2mm;"> &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;									&lt;!&ndash; <span t-field="o.amount_untaxed" /> &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;									&lt;!&ndash; </td> &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;									&lt;!&ndash; </tr> &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;									&lt;!&ndash; <tr class="border-black"> &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;									&lt;!&ndash; <td style="padding-top: 2mm;padding-bottom: 2mm;"> &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;									&lt;!&ndash; Total Discount &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;									&lt;!&ndash; </td> &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;									&lt;!&ndash; <td class="text-right" style="padding-top: 2mm;padding-bottom: &ndash;&gt;-->
+<!--&lt;!&ndash;										2mm;"> &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;									&lt;!&ndash; <span t-field="o.discount_total" /> &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;									&lt;!&ndash; </td> &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;									&lt;!&ndash; </tr> &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;									&lt;!&ndash; <tr class="border-black"> &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;									&lt;!&ndash; <td style="padding-top: 2mm;padding-bottom: 2mm;"> &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;									&lt;!&ndash; Deduction Amount &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;									&lt;!&ndash; </td> &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;									&lt;!&ndash; <td class="text-right" style="padding-top: 2mm;padding-bottom: &ndash;&gt;-->
+<!--&lt;!&ndash;										2mm;"> &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;									&lt;!&ndash; <span t-field="o.deduct_amt" /> &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;									&lt;!&ndash; </td> &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;									&lt;!&ndash; </tr> &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;									<tr>&ndash;&gt;-->
+<!--&lt;!&ndash;										<td style="padding-top: 2mm;padding-bottom: 2mm;">&ndash;&gt;-->
+<!--&lt;!&ndash;											<strong>Net Amount</strong>&ndash;&gt;-->
+<!--&lt;!&ndash;										</td>&ndash;&gt;-->
+<!--&lt;!&ndash;										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">&ndash;&gt;-->
+<!--&lt;!&ndash;											<span t-field="o.amount_total" />&ndash;&gt;-->
+<!--&lt;!&ndash;										</td>&ndash;&gt;-->
+<!--&lt;!&ndash;									</tr>&ndash;&gt;-->
+<!--&lt;!&ndash;								</table>&ndash;&gt;-->
+<!--&lt;!&ndash;							</div>&ndash;&gt;-->
+<!--						</div>-->
+
+						<div class="row" style="padding-left: 20px;">
+							<ul>
+								<li style="padding-bottom: 10px;">
+									<span>Payment in MMK only, exchange rate is based on daily bank's rate.</span>
+								</li>
+								<li style="padding-bottom: 10px;">
+									<span>Customers are advised to inspect goods thoroughly upon receipt for any
+										discrepancies</span>
+									<br/>
+									<span>(i.e., shortfall, conditional and breakage).</span>
+								</li>
+								<li style="padding-bottom: 10px;">
+									<span>Goods sold are non-refundable and/or returnable unless otherwise stated
+										.</span>
+								</li>
+								<li style="padding-bottom: 10px;">
+									<span>Legitimate claims against sale ability of goods must be lodged whithin
+										24 hours after delivery/collection.</span>
+								</li>
+								<li style="padding-bottom: 10px;">
+									<span>Kindly remit or transfer payment to our bank details as follows:</span>
+								</li>
+								<li style="list-style: none;padding-bottom: 10px;">
+									<span><b>FINE WINE DISTRIBUTION Co.,LTD</b></span>
+								</li>
+								<li style="list-style: none;padding-bottom: 10px;">
+									<span><b>Kyats Account No. 0150133015003648026 MYANMA APEX BANK (Mingalarsay
+										Branch)</b></span>
+								</li>
+								<li style="list-style: none;padding-bottom: 10px;">
+									<span><b>Kyats Account No. 075-304-07501366401 KBZ BANK (Tamwe
+										Branch)</b></span>
+								</li>
+								<li style="list-style: none;padding-bottom: 10px;">
+									<span><b>Kyats Account No. 075-513-07502245301 KBZ BANK <u>(special Account)</u>
+										(Mingalarsay
+										Branch)</b></span>
+								</li>
+								<li style="list-style: none;padding-bottom: 10px;">
+									<span><b>Kyats Account No. 20023217034 AYA BANK (Kyauk Kone
+										Branch)</b></span>
+								</li>
+								<li style="list-style: none;padding-bottom: 10px;">
+									<span><b>Kyats Account No. 0117600300000299 {CB} - CB BANK (Tamwe
+										Branch)</b></span>
+								</li>
+								<li style="list-style: none;padding-bottom: 10px;">
+									<span><b>USD Account No. 060-109-06004684001 KBZ BANK (Kyaut Tadar
+										Branch)</b></span>
+								</li>
+								<li style="list-style: none;padding-bottom: 10px;">
+									<span><b>USD Account No: 1DA0403161{ MFTB } -Myanmar Foreign Trade Bank</b></span>
+								</li>
+								<li style="list-style: none;padding-bottom: 10px;">
+									<span><b>USD Account No: 996 02 13 996017909 019 {MAB} -MYANMAR APEX BANK</b></span>
+								</li>
+								<li style="list-style: none;padding-bottom: 10px;">
+									<span><b>USD Account No: 0117 1012 0000 2248 {CB} -CB BANK</b></span>
+								</li>
+								<li style="padding-bottom: 10px;">
+									<span>If you have any enquiry, please contact Ph-0931943976,09-977803201
+										directly.</span>
+								</li>
+							</ul>
+						</div>
+
+
+						<div t-if="o.is_nonsale!=True" class="row" style="padding-top:30pt;">
+							<div class="col-xs-4 pull-left" align="left">
+								<hr style="border: 1px solid black;"/>
+								<table class="table"
+									   style="border:solid;border-color:white;border-top: 1px solid black !important;"
+									align="left">
+									<tr style="border:solid;border-color:white;">
+										<td style="margin-top:-10pt;" align="center">
+											<span>
+												<strong>Paid By:</strong>
+											</span>
 										</td>
-										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
-											<span t-field="o.amount_total" />
+									</tr>
+								</table>
+							</div>
+
+							<div class="col-xs-4 text-center" align="center">
+								<hr style="border: 1px solid black;"/>
+								<table class="table" style="border:solid;border-color:white;"
+									align="center">
+									<tr style="border:solid;border-color:white;">
+										<td style="margin-top:-10pt;"
+											align="center">
+											<span>
+												<strong>Approve By:</strong>
+											</span>
+										</td>
+									</tr>
+								</table>
+							</div>
+
+								<div class="col-xs-4 pull-left" align="right">
+									<hr style="border: 1px solid black;"/>
+								<table class="table" style="border:solid;border-color:white;"
+									align="right">
+									<tr style="border:solid;border-color:white;">
+										<td style="margin-top:-10pt;" align="center">
+											<span>
+												<strong>Received By:</strong>
+											</span>
 										</td>
 									</tr>
 								</table>
 							</div>
 						</div>
 
-
-
-						<div t-if="o.is_nonsale!=True" class="row" style="padding-top:-2s0pt;width:500px;">
-							<div class="col-xs-4 pull-left" style="width:250px;" align="left">
+<!--						<p t-if="o.comment">-->
+<!--							<strong>Comment:</strong>-->
+<!--							<span t-field="o.comment" />-->
+<!--						</p>-->
+<!--						<p t-if="o.fiscal_position.note">-->
+<!--							<strong>Fiscal Position Remark:</strong>-->
+<!--							<span t-field="o.fiscal_position.note" />-->
+<!--						</p>-->
+						<div class="row" style="padding-top:20pt;">
+							<div class="col-xs-4 pull-left" align="left">
 								<table class="table" style="border:solid;border-color:white;"
 									align="left">
 									<tr style="border:solid;border-color:white;">
 										<td style="margin-top:-10pt;" align="left">
 											<span>
-												<strong>Cash Paid By</strong>
+												Name: ..................................
 											</span>
 										</td>
 									</tr>
 									<tr style="border:solid;border-color:white;">
 										<td style="margin-top:-10pt;" align="left">
 											<span>
-												(Customer Name)
+												Position: ..................................
 											</span>
 										</td>
 									</tr>
 								</table>
 							</div>
 
-							<div class="col-xs-2 pull-left" style="width:250px;" align="right">
+							<div class="col-xs-4 text-center" align="center">
+								<table class="table" style="border:solid;border-color:white;"
+									align="center">
+									<tr style="border:solid;border-color:white;">
+										<td style="margin-top:-10pt;" align="left">
+											<span>
+												Name: ..................................
+											</span>
+										</td>
+									</tr>
+									<tr style="border:solid;border-color:white;">
+										<td style="margin-top:-10pt;" align="left">
+											<span>
+												Position: ..................................
+											</span>
+										</td>
+									</tr>
+								</table>
+							</div>
+
+								<div class="col-xs-4 pull-left" align="right">
 								<table class="table" style="border:solid;border-color:white;"
 									align="right">
 									<tr style="border:solid;border-color:white;">
 										<td style="margin-top:-10pt;" align="left">
 											<span>
-												<strong>Cash Received By</strong>
+												Name: ..................................
 											</span>
 										</td>
 									</tr>
 									<tr style="border:solid;border-color:white;">
 										<td style="margin-top:-10pt;" align="left">
 											<span>
-												(Salesman Name)
+												Position: ..................................
 											</span>
 										</td>
 									</tr>
 								</table>
-
-							</div>
-						</div>
-
-						<p t-if="o.comment">
-							<strong>Comment:</strong>
-							<span t-field="o.comment" />
-						</p>
-						<p t-if="o.fiscal_position.note">
-							<strong>Fiscal Position Remark:</strong>
-							<span t-field="o.fiscal_position.note" />
-						</p>
-						<div class="row" style="padding-top:-2s0pt;margin-top:20pt;">
-							<div class="col-xs-12">
-
-								<table class="table" style="border:solid;border-color:white;">
-									<tr>
-										<td style="text-align:center;">
-											For questions concerning this invoice, please
-											contact Hot
-											Line
-											:
-											01 400533,
-											Fax: 01 400912,
-											info@mdgmyanmar.com
-										</td>
-									</tr>
-									<tr>
-										<td style="text-align:center;border:solid;border-color:white;">
-											<b> THANK YOU</b>
-										</td>
-									</tr>
-								</table>
-							</div>
-							<div class="col-xs-4 pull-right">
 							</div>
 						</div>
 					</div>
