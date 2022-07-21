@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+		<!-- Product MainGroup Form -->
+		<record id="view_sd_inventory_count_form" model="ir.ui.view">
+			<field name="name">sd.inventory.count.form</field>
+			<field name="model">sd.inventory.count</field>
+			<field name="arch" type="xml">
+				<form string="SD Inventory Count" version="7.0">
+					<header>
+						<button name="validate" string="Validate" class="oe_highlight"
+							type="object" states="draft" />
+						<button name="cancel" string="Cancel" class="oe_highlight"
+							type="object" states="draft,validate" />
+						<field name="state" widget="statusbar" />
+					</header>
+					<sheet>
+						<h1>
+							<label string="Inventory Adjustment " attrs="{'invisible': [('state','not in',('draft'))]}"/>
+							<field name="name" class="oe_inline"/>
+                    	</h1>
+						<group>
+							<field name="subject" attrs="{'readonly': [('state','not in',('draft'))]}" />
+							<field name="team" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+							<field name="date" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+						</group>
+						<notebook>
+							<page string="Product Move">
+								<field name="inventory_line" attrs="{'readonly': [('state','not in',('draft'))]}">
+									<tree string="Inventory Lines" editable="bottom">
+										<field name="principle_id"/>
+										<field name="category_id"/>
+										<field name="bigger_product_uom"/>
+										<field name="smaller_product_uom"/>
+										<field name="product_id"/>
+										<field name="ctns"/>
+										<field name="pcs"/>
+										<field name="total_pcs"/>
+										<field name="actual_ctns"/>
+										<field name="actual_pcs"/>
+										<field name="diff_pcs"/>
+									</tree>
+								</field>
+							</page>
+						</notebook>
+
+					</sheet>
+
+				</form>
+			</field>
+
+		</record>
+
+		<!-- Product MainGroup Tree -->
+		<record id="view_sd_inventory_count_tree" model="ir.ui.view">
+			<field name="name">sd.inventory.count.tree</field>
+			<field name="model">sd.inventory.count</field>
+			<field name="arch" type="xml">
+				<tree string="SD Inventory Count" version="7.0">
+					<field name="subject" />
+					<field name="team" />
+					<field name="date" />
+					<field name="state" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- Product MainGroup Action -->
+		<record id="action_sd_inventory_count_view" model="ir.actions.act_window">
+			<field name="name">SD Inventory Count</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">sd.inventory.count</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" eval="view_sd_inventory_count_tree" />
+		</record>
+
+		<!-- Product MainGroup Menu -->
+		<menuitem id="sd_inventory_menu" parent="stock.menu_stock_inventory_control"
+			name="SD Inventory Count" action="action_sd_inventory_count_view"
+			groups="base.group_user"/>
+
+<!--		<menuitem id="product_principal_menu" parent="product_product.product_menu"-->
+<!--			name="Product Principal" action="action_product_principal_view" groups="base.group_system" />-->
+
+<!--		<menuitem action="product_uom_categ_form_action" id="menu_product_uom_categ_form_action"-->
+<!--				  parent="base.menu_base_config" sequence="25" groups="base.group_no_one"/>-->
+
+
+	</data>
+</openerp>

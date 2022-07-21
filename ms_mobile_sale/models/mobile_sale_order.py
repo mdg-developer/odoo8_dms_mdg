@@ -177,12 +177,15 @@ class mobile_sale_order(osv.osv):
             cr.execute('''                                
                         with product_data as 
                         (
-                            select principal,category,sku_name,bigger_uom,smaller_uom,product_id,bigger_uom_ratio
+                            select principal,principal_id,category,category_id,sku_name,bigger_uom,bigger_uom_id,smaller_uom,smaller_uom_id,product_id,bigger_uom_ratio
                             from
                             (
-                                select pm.name principal,categ.name category,name_template sku_name,
+                                select pm.name principal,pm.id principal_id,categ.name category,categ.id category_id,name_template sku_name,
                                 (select name from product_uom where id=pt.report_uom_id) bigger_uom,
-                                (select name from product_uom where id=pt.uom_id) smaller_uom,product_product_id product_id,
+                                (select id from product_uom where id=pt.report_uom_id) bigger_uom_id,
+                                (select name from product_uom where id=pt.uom_id) smaller_uom,
+                                (select id from product_uom where id=pt.uom_id) smaller_uom_id,
+                                product_product_id product_id,
                                 (select floor(round(1/factor,2)) from product_uom where id=pt.report_uom_id) bigger_uom_ratio 
                                 from crm_case_section_product_product_rel rel    
                                 left join product_product pp on (rel.product_product_id=pp.id)
@@ -191,7 +194,7 @@ class mobile_sale_order(osv.osv):
                                 left join product_maingroup pm on (pt.main_group=pm.id)
                                 left join product_uom uom on (pt.report_uom_id=uom.id)     
                                 where crm_case_section_id=%s
-                                group by pm.name,categ.name,name_template,pp.sequence,pt.report_uom_id,pt.uom_id,uom.factor,product_product_id
+                                group by pm.name,pm.id,categ.name,categ.id,name_template,pp.sequence,pt.report_uom_id,pt.uom_id,uom.factor,product_product_id
                                 order by pp.sequence
                             )A
                         ),
@@ -222,7 +225,8 @@ class mobile_sale_order(osv.osv):
                         COALESCE(ctn_qty,0) ctn_qty,
                         COALESCE(pcs_qty,0) pcs_qty,
                         pd.product_id,
-                        pd.bigger_uom_ratio
+                        pd.bigger_uom_ratio,
+                        pd.principal_id,pd.category_id,pd.bigger_uom_id,pd.smaller_uom_id
                         from product_data pd
                         left join on_hand_data ohd on (pd.product_id=ohd.product_id)
                     ''', (section_id,location_id,))
@@ -412,69 +416,90 @@ class mobile_sale_order(osv.osv):
             return False 
         
     def create_inventory_adjustment(self, cursor, user, vals, context=None):
+
                              
         try : 
-            inventory_obj = self.pool.get('stock.inventory')            
-            inventory_line_obj = self.pool.get('stock.inventory.line')            
+            inventory_obj = self.pool.get('sd.inventory.count')
+            inventory_line_obj = self.pool.get('sd.inventory.count.line')
             str = "{" + vals + "}"
 #             str = str.replace(":''", ":'")  
             str = str.replace("'',", "',")  
             str = str.replace(":',", ":'',")  
             str = str.replace("}{", "}|{")
-            new_arr = str.split('|')            
+            new_arr = str.split('|')
+            logging.warning("New Array: %s", new_arr)
             result = []            
             for data in new_arr:
                 x = ast.literal_eval(data)
-                result.append(x)            
+                result.append(x)
+            logging.warning("Result: %s", result)
             inventory = []
             inventory_line = []
             for r in result:                              
-                if len(r) > 2:
+                # if len(r) > 2:
+                #     inventory.append(r)
+                if r.get('subject'):
                     inventory.append(r)
                 else:                     
                     if r.get('product_id'):
                         inventory_line.append(r)
             if inventory:
+                # for inv in inventory:
+                #     for product_line in inventory_line:
+                #         product_obj = self.pool.get('product.product')
+                #         dom = [('product_id', '=', int(product_line.get('product_id'))),
+                #                ('inventory_id.state', '=', 'confirm'),
+                #                ('location_id', '=', int(inv['location']))]
+                #         res = inventory_line_obj.search(cursor, user, dom, context=context)
+                #         if res:
+                #             location = self.pool['stock.location'].browse(cursor, user, int(inv['location']),
+                #                                                           context=context)
+                #             product = product_obj.browse(cursor, user, int(product_line.get('product_id')), context=context)
+                #             error_message = "You cannot have two inventory adjustments in state 'in Progess' with the same product(" + product.name + "), same location(" + location.name + "), same package, same owner and same lot. Please first validate the first inventory adjustment with this product before creating another one."
+                #             logging.warning("error_message: %s", error_message)
+                #             return error_message
+                logging.warning("Check inv first: %s", inventory)
+                logging.warning("Check inv line first: %s", inventory_line)
                 for inv in inventory:
-                    for product_line in inventory_line:
-                        product_obj = self.pool.get('product.product')
-                        dom = [('product_id', '=', int(product_line.get('product_id'))),
-                               ('inventory_id.state', '=', 'confirm'),
-                               ('location_id', '=', int(inv['location']))]
-                        res = inventory_line_obj.search(cursor, user, dom, context=context)
-                        if res:
-                            location = self.pool['stock.location'].browse(cursor, user, int(inv['location']),
-                                                                          context=context)
-                            product = product_obj.browse(cursor, user, int(product_line.get('product_id')), context=context)
-                            error_message = "You cannot have two inventory adjustments in state 'in Progess' with the same product(" + product.name + "), same location(" + location.name + "), same package, same owner and same lot. Please first validate the first inventory adjustment with this product before creating another one."
-                            logging.warning("error_message: %s", error_message)
-                            return error_message
-                for inv in inventory:
-                    company = self.pool.get('res.company').search(cursor, user, [], limit=1, context=context)
-                    company_data = inventory_obj.browse(cursor, user, company, context=context)
-                    inventory_date = datetime.strptime(inv['date'], '%Y-%m-%d').date()      
+                    # company = self.pool.get('res.company').search(cursor, user, [], limit=1, context=context)
+                    # company_data = inventory_obj.browse(cursor, user, company, context=context)
+                    # inventory_date = datetime.strptime(inv['date'], '%Y-%m-%d').date()
+                    logging.warning("Check inv: %s", inv)
                     inventory_result = {
                         'subject': inv['subject'],
-                        'location_id': int(inv['location']),  
-                        'date': inventory_date,      
-                        'company_id': company_data.id,   
-                        'filter': 'partial',
-                        'state': 'draft',
-                        'request_by': inv['saleTeamName'],           
+                        'team': int(inv['team']),
+                        'date': inv['date'],
                     }                    
                     inventory_id = inventory_obj.create(cursor, user, inventory_result, context=context)
-                    logging.warning("Check inventory_id: %s", inventory_id)
-                    inventory_obj.prepare_inventory(cursor, user, [inventory_id], context=context)
-                    for line in inventory_line: 
+                    logging.warning("Check sd_inventory_count: %s", inventory_id)
+                    # inventory_obj.prepare_inventory(cursor, user, [inventory_id], context=context)
+                    for line in inventory_line:
+                        logging.warning("line: %s", line)
                         inventory_line_vals = {
+                            'principle_id': int(line['principle_id']),
+                            'category_id': int(line['category_id']),
+                            'bigger_product_uom': int(line['bigger_product_uom']),
+                            'smaller_product_uom': int(line['smaller_product_uom']),
                             'product_id': int(line['product_id']),
-                            'location_id': int(inv['location']),
-                            'product_qty': line['total_pcs_qty'],
-                            'inventory_id': inventory_id, 
-                        }                       
-                        inventory_line_obj.create(cursor, user, inventory_line_vals, context=context)
+                            'ctns': float(line['ctns']),
+                            'pcs': float(line['pcs']),
+                            'total_pcs': float(line['total_pcs']),
+                            'actual_ctns': float(line['actual_ctns']),
+                            'actual_pcs': float(line['actual_pcs']),
+                            'diff_pcs': float(line['diff_pcs']),
+                            'sd_inventory_id': inventory_id,
+                        }
+                        # inventory_line_vals = {
+                        #     'product_id': int(line['product_id']),
+                        #     'location_id': int(inv['location']),
+                        #     'product_qty': line['total_pcs_qty'],
+                        #     'inventory_id': inventory_id,
+                        # }
+                        inventory_line_id=inventory_line_obj.create(cursor, user, inventory_line_vals, context=context)
+                        logging.warning("Check sd_inventory_line: %s", inventory_line_id)
             return True
-        except Exception, e:            
+        except Exception, e:
+            raise e
             return False
         
     def create_tablet_sync_log_form(self, cursor, user, vals, context=None):

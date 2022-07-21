@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+        <record id="sd_inventory_count_sequence" model="ir.sequence.type">
+			<field name="name">SD Inventory Count</field>
+			<field name="code">sd.inventory.count.code</field>
+		</record>
+
+		<record id="sd_inventory_count_seq" model="ir.sequence">
+			<field name="name">SD Inventory Count Sequence</field>
+			<field name="code">sd.inventory.count.code</field>
+			<field name="prefix">SD-INV/%(year)s/</field>
+			<field name="padding">7</field>
+		</record>
+    </data>
+</openerp>
