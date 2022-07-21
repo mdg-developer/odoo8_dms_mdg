@@ -1,3 +1,4 @@
 import product_maingroup
 import account_invoice
 import res_partner
+import sale_order

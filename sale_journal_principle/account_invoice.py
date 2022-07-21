@@ -9,7 +9,18 @@ import openerp.addons.decimal_precision as dp
 
 class account_invoice(models.Model):
     _inherit = "account.invoice"
-    
+
+    def cancel_credit(self, cr, uid, ids, context=None):
+        invoice_obj = self.pool.get('account.invoice')
+        # invoice_obj.action_cancel(cr, uid, ids, context=context)
+        # action_invoice_cancel
+        invoice = self.browse(cr, uid, ids[0], context=context)
+        invoice.signal_workflow('invoice_cancel')
+        order_no = invoice.origin
+        cr.execute("update sale_order set  credit_to_cash =True where name=%s", (order_no,))
+
+        return True
+
     def _compute_payments(self):
         partial_lines = lines = self.env['account.move.line']
         cr=self._cr

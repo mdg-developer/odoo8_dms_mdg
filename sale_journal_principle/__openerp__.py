@@ -38,6 +38,7 @@ With this module for discount making.
         'views/product_maingroup_view.xml',
         #'views/account_invoice.xml',
         #'views/res_partner_view.xml.xml',
+        'views/sale_order_view.xml',
     ],
     'demo': [],
     'installable': True,

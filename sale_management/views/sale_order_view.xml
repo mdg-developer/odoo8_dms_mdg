@@ -82,6 +82,10 @@
 					<button name="is_generate_RFI" string="Missed Order" type="object"
 						class="oe_highlight" states="manual" groups="base.group_user" />
 				</xpath>
+				<xpath expr="//button[@name='action_cancel']" position="after">
+					<button name="action_reverse" states="manual,progress"
+						string="Reverse Order" type="object" groups="base.group_user" />
+				</xpath>
 				<xpath expr="//form/sheet/notebook/page/field/tree/field[@name='name']"
 					position="replace">
 					<field name="name" invisible="1" />
@@ -94,6 +98,8 @@
 				<field name="pricelist_id" position="after">
 					<field name="tb_ref_no" attrs="{'readonly':[('state','!=','draft')]}"></field>
 					<field name="delivery_remark" />
+					<field name="reverse_date"
+						attrs="{'readonly':[('state','=','reversed')],'invisible': [('state','not in',('manual','progress'))]}" />
 				</field>
 				<field name="date_order" position="after">
 				    <field name="payment_type" on_change="on_change_payment_type(partner_id,payment_type)" />
