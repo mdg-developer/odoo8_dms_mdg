@@ -5,3 +5,4 @@ import res_partner
 import sale_order
 import sd_connection
 import product_template
+import product_transactions

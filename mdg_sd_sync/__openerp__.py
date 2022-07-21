@@ -31,7 +31,7 @@ MDG SYC TO SD
 """,
     'author': 'Seventh Computing',
     'website': 'http://www.7thcomputing.com',
-    'depends': ['base', 'product','sale','sale_promotions','crm_management','sale_journal_principle','web_tree_dynamic_colored_field'],
+    'depends': ['base', 'product','sale','sale_promotions','crm_management','sale_journal_principle','web_tree_dynamic_colored_field','ms_exchange'],
     'data': [        
              'views/pricelist_view.xml',
              'views/sale_promotion_view.xml',
