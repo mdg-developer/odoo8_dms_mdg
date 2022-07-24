@@ -285,7 +285,7 @@ class sale_denomination_product_line(osv.osv):
     _columns = {
                 'denomination_product_ids': fields.many2one('sales.denomination', 'Sales denomination'),
                 'product_id':fields.many2one('product.product', 'Product', required=False),
-                'product_code': fields.char(related='product_id.default_code', string="Product Code"),
+                'product_code': fields.char(string="Product Code"),
                 'product_uom_qty':fields.integer('QTY', required=False),
                 'amount':fields.float('Amount', required=False, digits_compute=dp.get_precision('Product Price')),
                 'sequence':fields.integer('Sequence'),

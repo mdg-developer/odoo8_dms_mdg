@@ -46,7 +46,7 @@ class stock_quant(osv.osv):
     _description = "Quants"
 
     _columns = {
-                'product_code': fields.char(related='product_id.default_code', string="Product Code")
+                'product_code': fields.char(string="Product Code")
             }
     
 class stock_picking(osv.osv):

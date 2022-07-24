@@ -8,7 +8,7 @@ class account_invoice_line(models.Model):
     _order = "invoice_id,sequence,id"
     
     _columns = {              
-                'product_code': fields.char(related='product_id.default_code', string="Product Code"),
+                'product_code': fields.char(string="Product Code"),
             }
     
     @api.multi    

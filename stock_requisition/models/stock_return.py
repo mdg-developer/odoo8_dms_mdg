@@ -399,7 +399,7 @@ class stock_return_line(osv.osv):  # #prod_pricelist_update_line
     _columns = {                
         'line_id':fields.many2one('stock.return', 'Line', ondelete='cascade', select=True),
         'product_id': fields.many2one('product.product', 'Product', required=True),
-        'product_code': fields.char(related='product_id.default_code', string="Product Code"),
+        'product_code': fields.char(string="Product Code"),
         'receive_quantity' : fields.float(string='Received Qty', digits=(16, 0)),
         'return_quantity' : fields.float(string='Returned Qty', digits=(16, 0)),
         'sale_quantity' : fields.float(string='Sales Qty', digits=(16, 0)),

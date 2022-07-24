@@ -11,7 +11,7 @@ class stock_history(osv.osv):
     _order = 'date asc'
 
     _columns = {
-                'product_code': fields.char(related='product_id.default_code', string="Product Code")
+                'product_code': fields.char(string="Product Code")
                 }
     
     def init(self, cr):
