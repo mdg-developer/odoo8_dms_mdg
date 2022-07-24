@@ -221,6 +221,9 @@ class good_issue_note(osv.osv):
         sale_order_obj = self.pool.get('sale.order')
         if ids:
             note_value= note_obj.browse(cr, uid, ids[0], context=context)
+            if note_value.state=='issue':
+                raise osv.except_osv(_('Warning'),
+                                     _('You cannot transfer a record in Issued state'))              
             if not note_value.issue_by: 
                 raise osv.except_osv(_('Warning'),
                                      _('Please Insert Issuer Name'))
@@ -241,87 +244,87 @@ class good_issue_note(osv.osv):
                 raise osv.except_osv(_('Warning'),
                                      _('Picking Type has not for this transition'))
                 
-            existing_picking = picking_obj.search(cr, uid, [('date', '=', issue_date),
-                                                            ('origin', '=', origin),
-                                                            ('picking_type_id', '=', picking_type_id)], context=context)
-            if not existing_picking:
-                picking_id = picking_obj.create(cr, uid, {
-                                              'date': issue_date,
-                                              'origin':origin,
-                                              'picking_type_id':picking_type_id}, context=context)
-                note_line_id = good_issue_line.search(cr, uid, [('line_id', '=', ids[0])], context=context)
-                            
-                if note_line_id and picking_id:
-                    cr.execute('''select *
-                                from
-                                (
-                                    SELECT a.qty_on_hand,
-                                    sum(a.total_issue_qty) AS total_issue_qty,
-                                    a.product
-                                    FROM ( 
-                                            SELECT ( SELECT COALESCE(sum(stock_quant.qty), 0::double precision) AS "coalesce"
-                                                     FROM stock_quant
-                                                     WHERE stock_quant.product_id = line.product_id AND stock_quant.location_id = note.to_location_id) AS qty_on_hand,
-                                            line.product_id,
-                                            pp.name_template product,
-                                            line.issue_quantity,
-                                            line.issue_quantity * (( SELECT floor(round(1::numeric / product_uom.factor, 2)) AS ratio
-                                                                    FROM product_uom
-                                                                    WHERE product_uom.active = true AND product_uom.id = line.product_uom)) AS total_issue_qty
-                                            FROM good_issue_note_line line,
-                                            good_issue_note note,product_product pp
-                                            WHERE line.line_id = note.id 
-                                            and line.product_id=pp.id
-                                            and note.id=%s) a
-                                    GROUP BY a.product_id, a.qty_on_hand,a.product
-                                )B
-                                where qty_on_hand < total_issue_qty and total_issue_qty > 0;''',(note_value.id,))
-                    note_data=cr.fetchall()
-                    if note_data:
-                        for note in note_data:
-                            qty_available = note_data[0][0]
-                            total_issue_qty = note_data[0][1]
-                            product_name = note_data[0][2]
-                            raise osv.except_osv(_('Warning'),
-                                     _('Please Check Qty On Hand For (%s)') % (product_name,))
-                    move_list_ids = []
-                    for id in note_line_id:
-                        note_line_value = good_issue_line.browse(cr, uid, id, context=context)
-                        product_id = note_line_value.product_id.id
-                        name = note_line_value.product_id.name_template
-                        product_uom = note_line_value.product_uom.id
-                        origin = origin
-                        quantity = note_line_value.issue_quantity
-                        big_qty=note_line_value.big_issue_quantity
-                        big_uom=note_line_value.big_uom_id.id
-                        lot_id=note_line_value.batch_no.id
+#             existing_picking = picking_obj.search(cr, uid, [('date', '=', issue_date),
+#                                                             ('origin', '=', origin),
+#                                                             ('picking_type_id', '=', picking_type_id)], context=context)
+#             if not existing_picking:
+            picking_id = picking_obj.create(cr, uid, {
+                                          'date': issue_date,
+                                          'origin':origin,
+                                          'picking_type_id':picking_type_id}, context=context)
+            note_line_id = good_issue_line.search(cr, uid, [('line_id', '=', ids[0])], context=context)
+                        
+            if note_line_id and picking_id:
+                cr.execute('''select *
+                            from
+                            (
+                                SELECT a.qty_on_hand,
+                                sum(a.total_issue_qty) AS total_issue_qty,
+                                a.product
+                                FROM ( 
+                                        SELECT ( SELECT COALESCE(sum(stock_quant.qty), 0::double precision) AS "coalesce"
+                                                 FROM stock_quant
+                                                 WHERE stock_quant.product_id = line.product_id AND stock_quant.location_id = note.to_location_id) AS qty_on_hand,
+                                        line.product_id,
+                                        pp.name_template product,
+                                        line.issue_quantity,
+                                        line.issue_quantity * (( SELECT floor(round(1::numeric / product_uom.factor, 2)) AS ratio
+                                                                FROM product_uom
+                                                                WHERE product_uom.active = true AND product_uom.id = line.product_uom)) AS total_issue_qty
+                                        FROM good_issue_note_line line,
+                                        good_issue_note note,product_product pp
+                                        WHERE line.line_id = note.id 
+                                        and line.product_id=pp.id
+                                        and note.id=%s) a
+                                GROUP BY a.product_id, a.qty_on_hand,a.product
+                            )B
+                            where qty_on_hand < total_issue_qty and total_issue_qty > 0;''',(note_value.id,))
+                note_data=cr.fetchall()
+                if note_data:
+                    for note in note_data:
+                        qty_available = note_data[0][0]
+                        total_issue_qty = note_data[0][1]
+                        product_name = note_data[0][2]
+                        raise osv.except_osv(_('Warning'),
+                                 _('Please Check Qty On Hand For (%s)') % (product_name,))
+                move_list_ids = []
+                for id in note_line_id:
+                    note_line_value = good_issue_line.browse(cr, uid, id, context=context)
+                    product_id = note_line_value.product_id.id
+                    name = note_line_value.product_id.name_template
+                    product_uom = note_line_value.product_uom.id
+                    origin = origin
+                    quantity = note_line_value.issue_quantity
+                    big_qty=note_line_value.big_issue_quantity
+                    big_uom=note_line_value.big_uom_id.id
+                    lot_id=note_line_value.batch_no.id
 
-                        move_id=move_obj.create(cr, uid, {'picking_id': picking_id,
-                                                  'picking_type_id':picking_type_id,
-                                                  'restrict_lot_id':lot_id,
-                                              'product_id': product_id,
-                                              'product_uom_qty': quantity,
-                                              'product_uos_qty': quantity,
-                                              'product_uom':product_uom,
-                                              'location_id':location_id,
-                                              'location_dest_id':from_location_id,
-                                              'name':name,
-                                               'origin':origin,
-                                              'state':'confirmed'}, context=context)
-                        move_list_ids.append(move_id)
-                    if len(move_list_ids) > 0:
-                        move_obj.action_done(cr, uid, move_list_ids, context=context)
-                        #for moveid in move_list_ids:
-                        cr.execute('''update stock_move set date=((%s::date)::text || ' ' || date::time(0))::timestamp where state='done' and origin =%s''',(issue_date,origin,))
-        result = self.write(cr, uid, ids, {'state': 'issue'}) 
-        if result:
-            for line in request_order_line:
-                order_ids = sale_order_obj.search(cr, uid, [('name', '=', line.name)], context=context)
-                if order_ids:
-                    current_order = sale_order_obj.browse(cr, uid, order_ids[0], context=context)
-                    if current_order and current_order.woo_order_number:
-                        current_order.update_woo_order_status_action('delivered')                    
-        return result 
+                    move_id=move_obj.create(cr, uid, {'picking_id': picking_id,
+                                              'picking_type_id':picking_type_id,
+                                              'restrict_lot_id':lot_id,
+                                          'product_id': product_id,
+                                          'product_uom_qty': quantity,
+                                          'product_uos_qty': quantity,
+                                          'product_uom':product_uom,
+                                          'location_id':location_id,
+                                          'location_dest_id':from_location_id,
+                                          'name':name,
+                                           'origin':origin,
+                                          'state':'confirmed'}, context=context)
+                    move_list_ids.append(move_id)
+                if len(move_list_ids) > 0:
+                    move_obj.action_done(cr, uid, move_list_ids, context=context)
+                    #for moveid in move_list_ids:
+                    cr.execute('''update stock_move set date=((%s::date)::text || ' ' || date::time(0))::timestamp where state='done' and origin =%s''',(issue_date,origin,))
+            result = self.write(cr, uid, ids, {'state': 'issue'}) 
+            if result:
+                for line in request_order_line:
+                    order_ids = sale_order_obj.search(cr, uid, [('name', '=', line.name)], context=context)
+                    if order_ids:
+                        current_order = sale_order_obj.browse(cr, uid, order_ids[0], context=context)
+                        if current_order and current_order.woo_order_number:
+                            current_order.update_woo_order_status_action('delivered')                    
+            return result 
                             
 class good_issue_line(osv.osv):  # #prod_pricelist_update_line
     _name = 'good.issue.note.line'
