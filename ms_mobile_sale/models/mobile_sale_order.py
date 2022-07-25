@@ -3175,9 +3175,18 @@ class mobile_sale_order(osv.osv):
         
     # Get Pending Delivery
     def get_delivery_datas(self, cr, uid, saleTeamId, soList, context=None, **kwargs):
-        
+        logging.warning("soList: %s", soList)
         sale_order_obj = self.pool.get('sale.order')
-        list_val = None        
+        list_val = None
+        if soList:
+            for list in range(len(soList)):
+                content = soList[list]
+                if 'EC-SONo' in content:
+                    content = content.replace('EC-SONo', 'EC-SONo/')
+                    content = content[:-9] + "/" + content[-9:]
+                    soList[list] = content
+
+        logging.warning("soList_ Updated: %s", soList)
         list_val = sale_order_obj.search(cr, uid, [('pre_order', '=', True), ('is_generate', '=', True),('state', '=', 'manual'), ('delivery_id', '=', saleTeamId), ('shipped', '=', False), ('invoiced', '=', False) , ('tb_ref_no', 'not in', soList)], context=context)
         print 'list_val', list_val
         list = []
