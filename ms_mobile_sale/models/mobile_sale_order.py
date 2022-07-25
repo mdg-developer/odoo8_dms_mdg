@@ -1676,7 +1676,7 @@ class mobile_sale_order(osv.osv):
                 return False
             
     def get_field_audit_question(self, cr, uid,context=None, **kwargs):
-        logging.warning("get_field_audit_question")
+
         cr.execute('''select id,sequence,name,english_name from audit_question order by sequence asc                     ''')
         datas = cr.fetchall()
         return datas 
@@ -3175,7 +3175,7 @@ class mobile_sale_order(osv.osv):
         
     # Get Pending Delivery
     def get_delivery_datas(self, cr, uid, saleTeamId, soList, context=None, **kwargs):
-        logging.warning("soList: %s", soList)
+
         sale_order_obj = self.pool.get('sale.order')
         list_val = None
         if soList:
@@ -3186,7 +3186,7 @@ class mobile_sale_order(osv.osv):
                     content = content[:-9] + "/" + content[-9:]
                     soList[list] = content
 
-        logging.warning("soList_ Updated: %s", soList)
+
         list_val = sale_order_obj.search(cr, uid, [('pre_order', '=', True), ('is_generate', '=', True),('state', '=', 'manual'), ('delivery_id', '=', saleTeamId), ('shipped', '=', False), ('invoiced', '=', False) , ('tb_ref_no', 'not in', soList)], context=context)
         print 'list_val', list_val
         list = []
