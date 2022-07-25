@@ -427,12 +427,10 @@ class mobile_sale_order(osv.osv):
             str = str.replace(":',", ":'',")  
             str = str.replace("}{", "}|{")
             new_arr = str.split('|')
-            logging.warning("New Array: %s", new_arr)
             result = []            
             for data in new_arr:
                 x = ast.literal_eval(data)
                 result.append(x)
-            logging.warning("Result: %s", result)
             inventory = []
             inventory_line = []
             for r in result:                              
@@ -458,23 +456,22 @@ class mobile_sale_order(osv.osv):
                 #             error_message = "You cannot have two inventory adjustments in state 'in Progess' with the same product(" + product.name + "), same location(" + location.name + "), same package, same owner and same lot. Please first validate the first inventory adjustment with this product before creating another one."
                 #             logging.warning("error_message: %s", error_message)
                 #             return error_message
-                logging.warning("Check inv first: %s", inventory)
-                logging.warning("Check inv line first: %s", inventory_line)
+
                 for inv in inventory:
                     # company = self.pool.get('res.company').search(cursor, user, [], limit=1, context=context)
                     # company_data = inventory_obj.browse(cursor, user, company, context=context)
                     # inventory_date = datetime.strptime(inv['date'], '%Y-%m-%d').date()
-                    logging.warning("Check inv: %s", inv)
+
                     inventory_result = {
                         'subject': inv['subject'],
                         'team': int(inv['team']),
                         'date': inv['date'],
                     }                    
                     inventory_id = inventory_obj.create(cursor, user, inventory_result, context=context)
-                    logging.warning("Check sd_inventory_count: %s", inventory_id)
+
                     # inventory_obj.prepare_inventory(cursor, user, [inventory_id], context=context)
                     for line in inventory_line:
-                        logging.warning("line: %s", line)
+
                         inventory_line_vals = {
                             'principle_id': int(line['principle_id']),
                             'category_id': int(line['category_id']),
@@ -496,7 +493,7 @@ class mobile_sale_order(osv.osv):
                         #     'inventory_id': inventory_id,
                         # }
                         inventory_line_id=inventory_line_obj.create(cursor, user, inventory_line_vals, context=context)
-                        logging.warning("Check sd_inventory_line: %s", inventory_line_id)
+
             return True
         except Exception, e:
             raise e
@@ -1559,7 +1556,7 @@ class mobile_sale_order(osv.osv):
                 return False
 
     def get_field_audit_question(self, cr, uid,context=None, **kwargs):
-        logging.warning("get_field_audit_question")
+
         cr.execute('''select id,sequence,name,english_name from audit_question order by sequence asc                     ''')
         datas = cr.fetchall()
         return datas 
