@@ -69,8 +69,8 @@
 								<field name="checked_by"
 									attrs="{'readonly':[('state','in',('issue','receive','cancel'))]}" />
 								<field name="posm_remark" />
-								<field name="partner_id" domain="[('customer','=',True)]" />
-								<field name="section_id" />
+<!--								<field name="partner_id" domain="[('customer','=',True)]" />-->
+<!--								<field name="section_id" />-->
 								<field name="sale_order_id" readonly="1"/>
 							</group>
 							<group>

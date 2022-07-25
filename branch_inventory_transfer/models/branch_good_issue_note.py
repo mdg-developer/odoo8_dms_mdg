@@ -235,8 +235,8 @@ class branch_good_issue_note(osv.osv):
     'checked_by':fields.char("Checked By"),
     'address' : fields.char('Delivery Address & PH', required=False ),
     'dock_no' : fields.char('Dock No', required=False ),
-    'partner_id': fields.many2one('res.partner', "Customer"),
-    'section_id': fields.many2one('crm.case.section', "Sales Team"),
+    # 'partner_id': fields.many2one('res.partner', "Customer"),
+    # 'section_id': fields.many2one('crm.case.section', "Sales Team"),
     'sale_order_id': fields.many2one('sale.order', "Sale Order"),
         }
     
@@ -327,7 +327,7 @@ class branch_good_issue_note(osv.osv):
         sale_order_obj = self.pool.get('sale.order')
         sale_order_line_obj = self.pool.get('sale.order.line')
         gin_value = self.browse(cr, uid, ids[0], context=context)
-        warehouse_id = gin_value.section_id.warehouse_id.id
+        warehouse_id = gin_value.branch_id.section_id.warehouse_id.id
         cr.execute("""select id from account_payment_term where name='Immediate Payment'""")
         payment_term_value = cr.fetchone()
         if payment_term_value: 
@@ -349,8 +349,8 @@ class branch_good_issue_note(osv.osv):
         # result = cr.fetchall()
 
         order_vals = {
-            'partner_id': gin_value.partner_id.id,
-            'section_id': gin_value.section_id.id,
+            'partner_id': gin_value.branch_id.partner_id.id,
+            'section_id': gin_value.branch_id.section_id.id,
             'warehouse_id': warehouse_id,
             'ignore_credit_limit': True,
             'origin': gin_value.name ,
@@ -448,11 +448,11 @@ class branch_good_issue_note(osv.osv):
         if ids:
             note_value = note_obj.browse(cr, uid, ids[0], context=context)
             if note_value.branch_id.subdeal == True and not note_value.sale_order_id:
-                if not note_value.partner_id:
+                if not note_value.branch_id.partner_id:
                     raise osv.except_osv(_('Warning'),
                                          _('Please choose customer!!'))
 
-                if not note_value.section_id:
+                if not note_value.branch_id.section_id:
                     raise osv.except_osv(_('Warning'),
                                          _('Please choose sales team!!'))
             issue_date = note_value.issue_date

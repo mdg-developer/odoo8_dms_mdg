@@ -15,6 +15,8 @@ class branch(osv.osv):
                     'request_line': fields.one2many('branch.request.line', 'request_id', 'Order Lines'),
                     'requesting_line': fields.one2many('branch.requesting.line', 'requesting_id', 'Order Lines'),
                     'subdeal': fields.boolean('Subdeal', default=False),
+                    'partner_id': fields.many2one('res.partner', "Customer"),
+                    'section_id': fields.many2one('crm.case.section', "Sales Team"),
                 }
     
     def retrieve_data(self, cr, uid, ids, context=None):
