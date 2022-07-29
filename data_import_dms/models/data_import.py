@@ -260,7 +260,7 @@ class product(osv.osv):
                         principal = str(aml['principal']).strip()
                         
                     if aml['bar_code']:
-                        bar_code = str(aml['bar_code']).strip()
+                        bar_code = aml['bar_code'].strip()
                         
                     if aml['product_type']:
                         product_type = str(aml['product_type']).strip()
