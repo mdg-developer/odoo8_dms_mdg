@@ -345,7 +345,7 @@ class res_partner(osv.osv):
                                     if township_value:
                                         township_data = township_obj.browse(cr, uid, township_value, context=context)
                                         contact_township = township_data.id
-                                        vals['branch_id'] = township_data.branch_id.id 
+                                        #vals['branch_id'] = township_data.branch_id.id 
                 
                 vals['name'] = shop_name if shop_name else name             
                 vals['phone'] = phone
