@@ -79,6 +79,7 @@ OUT__res_partner__read_all__SCHEMA = (                # editable
     )),    
     'channel',
     'customer_type',
+    'credit_allow'
 )
 #           ]
 #       }
@@ -137,6 +138,7 @@ OUT__res_partner__read_one__SCHEMA = (                # editable
     )),    
     'channel',
     'customer_type',
+    'credit_allow'
 )
 
 # /api/res.partner  POST  - Create one
