@@ -87,6 +87,7 @@
 	                                    <th class="text-center" style="border:1pt solid;border-color:black;"><strong>Sr.No</strong></th>
 	                                    <th class="text-center" style="border:1pt solid;border-color:black;"><strong>Gold Code</strong></th>
 	                                    <th class="text-center" style="border:1pt solid;border-color:black;"><strong>Description</strong></th>
+										<th class="text-center" style="border:1pt solid;border-color:black;"><strong>Product Code</strong></th>
 	                                    <th class="text-center" style="border:1pt solid;border-color:black;"><strong>Quantity</strong></th>
 	                                    <th class="text-center" style="border:1pt solid;border-color:black;"><strong>UOM</strong></th>
 	                                    <th class="text-center" style="border:1pt solid;border-color:black;"><strong>Unit Price</strong></th>
@@ -106,6 +107,9 @@
 	                                    </td>
 	                                    <td style="border:1pt solid;border-color:black;">
 	                                    	<span t-field="l.name"/>
+	                                    </td>
+										<td style="border:1pt solid;border-color:black;" class="text-center">
+	                                    	<span t-field="l.product_id.default_code"/>
 	                                    </td>
 	                                    <td style="border:1pt solid;border-color:black;" class="text-center">
 	                                    	<!-- <span t-field="l.product_uom_qty"/> -->

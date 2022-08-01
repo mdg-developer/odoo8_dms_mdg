@@ -136,6 +136,7 @@
 									</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">Description
 									</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Product Code</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">Quantity</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">Unit Price</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">Total Price</th>
@@ -156,6 +157,9 @@
 										<t t-if="l.sale_foc==True">
 											(FOC)
 										</t>
+									</td>
+									<td style="border:1pt solid;border-color:black;">
+										<span t-field="l.product_id.default_code" />
 									</td>
 									<td style="border:1pt solid;border-color:black;" align="right">
 										<span t-field="l.product_uom_qty" />
@@ -297,9 +301,11 @@
 											contact Hot
 											Line
 											:
-											01 400533,
-											Fax: 01 400912,
-											info@mdgmyanmar.com
+											<span t-field="o.company_id.phone" />,
+											<t t-if="o.company_id.fax">
+												Fax: <span t-field="o.company_id.fax" />,
+											</t>
+											<span t-field="o.company_id.email" />
 										</td>
 									</tr>
 									<tr>
