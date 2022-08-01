@@ -163,7 +163,6 @@ class sale_order(models.Model):
             partner=partner_obj.search([('name','=',name),('city','=',city),('township','=',township),('street','=',address1),('street2','=',address2),('email','=',email),('phone','=',phone),('zip','=',zip),('country_id','=',country.id),('state_id','=',state.id)],limit=1)
         if not partner:
             partner=partner_obj.search([('name','=',name),('city','=',city),('township','=',township),('street','=',address1),('street2','=',address2),('zip','=',zip),('country_id','=',country.id)],limit=1)
-           
         if partner:
             partner.write({'state_id':state and state.id or False,'is_company':is_company,'woo_company_name_ept':company_name or partner.woo_company_name_ept,
                            'phone':phone or partner.phone,'woo_customer_id':woo_customer_id or partner.woo_customer_id,
@@ -599,6 +598,9 @@ class sale_order(models.Model):
                     payment_type = "credit"
                 else:
                     payment_type = "cash"
+                    terms = self.env['account.payment.term'].search([('name', '=', 'Immediate Payment')], limit=1)
+                    if terms:
+                        term_id = terms.id
                          
             if result.get('payment_type'):
                 payment_type = result.get('payment_type')
@@ -842,8 +844,7 @@ class sale_order(models.Model):
                                                     })
                     continue
                 partner=order.get('billing_address',False) and self.create_or_update_woo_customer(woo_customer_id,order.get('billing_address'), False, False,False,instance)
-                
-                if not partner:                    
+                if not partner:
                     message="Customer Not Available In %s Order"%(order.get('order_number'))
                     log=transaction_log_obj.search([('woo_instance_id','=',instance.id),('message','=',message)])
                     if not log:
