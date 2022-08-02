@@ -11,7 +11,7 @@ from openerp.osv.expression import get_unaccent_wrapper
 from openerp.tools.translate import _
 import requests
 
-baseUrlPrefix = "https://firebasestorage.googleapis.com/v0/b/odoo-8d694.appspot.com/o/customer_visit%2F"
+baseUrlPrefix = "https://firebasestorage.googleapis.com/v0/b/odoo-8d694.appspot.com/o/finewine_customer_visit%2F"
 baseUrlPostFix = ".png?alt=media"
 class customer_visit(osv.osv):
     _name = "customer.visit"
