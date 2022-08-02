@@ -29,12 +29,12 @@ class customer_visit(osv.osv):
        'sale_team_id':fields.many2one('crm.case.section', 'Sale Team'),
        'date':fields.datetime('Date'),
         'visit_reason':fields.selection([
-                ('no_shopkeeper', 'No Shopkeeper'),
-                ('no_authorized_person', 'No Authorized Person'),
-                ('products_already_existed', 'Products Already Existed'),
-                 ('sold_other_people_products', 'Sold Other People Products'),
-                 ('other_reason', 'Other Reasons'),
-                 ('Sold', 'Sold')
+                ('shop_front', 'Shop Front'),
+                ('wine_shelf_display', 'Wine Shelf Display'),
+                ('wine_menu', 'Wine Menu'),
+                ('tablet_placards', 'Table Placards (if any)'),
+                ('posm', 'POSM'),
+                ('Sold', 'Sold')
             ], 'Reason'),
                 'other_reason':fields.text('Remark'),
         'm_status':fields.selection([('pending', 'Pending'), ('approved', 'Approved'),
