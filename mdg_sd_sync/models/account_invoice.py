@@ -25,9 +25,9 @@ class account_invoice(models.Model):
         for inv in self:
             if inv.type == 'out_invoice' and inv.partner_id.sd_customer == True and sd_uid and inv.date_invoice >='2020-02-01':
                 branch_id = False
-                if (inv.branch_id.branch_code.startswith('LMSD')):
+                if (inv.branch_id.branch_code.startswith('LMSD') or inv.branch_id.branch_code.startswith('LSD')):
                     branch_id = models.execute_kw(db, sd_uid, password,'res.branch', 'search',[[['branch_code', '=', 'LMSD']]],{'limit': 1})
-                elif (inv.branch_id.branch_code.startswith('UMSD')):
+                elif (inv.branch_id.branch_code.startswith('UMSD') or inv.branch_id.branch_code.startswith('USD')):
                     branch_id = models.execute_kw(db, sd_uid, password, 'res.branch', 'search',[[['branch_code', '=', 'UMSD']]], {'limit': 1})
                 to_location_id = models.execute_kw(db, sd_uid, password,
                 'stock.location', 'search',
