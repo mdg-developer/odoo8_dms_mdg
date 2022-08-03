@@ -48,6 +48,7 @@
 					<field name="subdeal" />
 					<field name="partner_id" />
 					<field name="section_id" />
+					<field name="pricelist_id" />
 				</field>
 			</field>
 		</record>

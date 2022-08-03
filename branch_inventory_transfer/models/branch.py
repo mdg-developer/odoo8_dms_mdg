@@ -17,7 +17,13 @@ class branch(osv.osv):
                     'subdeal': fields.boolean('Subdeal', default=False),
                     'partner_id': fields.many2one('res.partner', "Customer"),
                     'section_id': fields.many2one('crm.case.section', "Sales Team"),
+                    'pricelist_id': fields.many2one('product.pricelist', 'Price list', required=True),
                 }
+
+    _defaults = {
+        'pricelist_id': 1,
+
+    }
     
     def retrieve_data(self, cr, uid, ids, context=None):
         branch_line_obj = self.pool.get('res.branch.line')

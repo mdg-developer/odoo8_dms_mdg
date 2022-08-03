@@ -355,6 +355,7 @@ class branch_good_issue_note(osv.osv):
             'ignore_credit_limit': True,
             'origin': gin_value.name ,
             'branch_id': gin_value.branch_id.id,
+            'pricelist_id': gin_value.branch_id.pricelist_id.id,
         }
 
         sale_order_id = sale_order_obj.create(cr, uid, order_vals, context=None)
