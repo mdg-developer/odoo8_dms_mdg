@@ -315,6 +315,8 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
         data['qty_on_hand']=qty_on_hand
 #        data['product_uom']= product_data.product_tmpl_id.uom_id.id
         data['uom_ratio']=product_data.product_tmpl_id.uom_ratio
+        data['product_code']=product_data.product_tmpl_id.default_code
+        
         return super(stock_requisition_line, self).create(cr, uid, data, context=context)
     
     def on_change_product_id(self,cr,uid,ids,product_id,to_location_id, context=None):

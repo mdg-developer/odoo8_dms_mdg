@@ -191,6 +191,7 @@ class stock_return(osv.osv):
                         stock_return_obj.create(cr, uid, {'line_id': ids[0],
                                                    'sequence':sequence,
                                                   'product_id': product_id,
+                                                  'product_code': product.product_tmpl_id.default_code,
                                                   'product_uom': small_uom_id,
                                                   'receive_quantity':in_stock_qty,
                                                   'return_quantity':return_quantity,
@@ -224,6 +225,8 @@ class stock_return(osv.osv):
                     stock_return_obj.create(cr, uid, {'line_id': ids[0],
                                              'sequence':sequence,
                                               'product_id': product_id,
+                                                  'product_code': product.product_tmpl_id.default_code,
+                                              
                                               'product_uom': small_uom_id,
                                               'receive_quantity':0,
                                               'return_quantity':return_quantity,

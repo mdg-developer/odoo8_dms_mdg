@@ -88,7 +88,8 @@
 					<table class="table table-condensed">
 						<thead>
 							<tr>
-								<th>Product</th>
+								<th>Product Name</th>
+								<th>Product Code</th>
 								<th class="text-right">Issued Qty</th>
 								<th class="text-right">Sales Qty</th>
 								<th class="text-right">FOC Qty</th>
@@ -99,10 +100,13 @@
 							</tr>
 						</thead>
 						<tbody class="invoice_tbody">
-							<tr t-foreach="o.p_line" t-as="l">
+							<tr t-foreach="o.p_line.sorted(key=lambda b: b.product_id.name_template)" t-as="l">
 								<td>
 									<span t-field="l.product_id" />
 								</td>
+								<td>
+									<span t-field="l.product_code" />
+								</td>								
 								<td class="text-right">
 									<span t-field="l.receive_quantity" />
 								</td>

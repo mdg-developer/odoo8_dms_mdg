@@ -120,7 +120,8 @@
 					<table class="table table-condensed">
 						<thead>
 							<tr>
-								<th>Product</th>
+								<th>Product Name</th>
+								<th>Product Code</th>
 								<th>Qty</th>
 								<th>Batch No</th>
 								<th>Expiry</th>
@@ -129,10 +130,13 @@
 							</tr>
 						</thead>
 						<tbody class="invoice_tbody">
-							<tr t-foreach="o.p_line" t-as="l">
+							<tr t-foreach="o.p_line.sorted(key=lambda b: b.product_id.name_template)" t-as="l">
 								<td>
 									<span t-field="l.product_id" />
 								</td>
+								<td>
+									<span t-field="l.product_code" />
+								</td>								
 								<td>
 									<span t-field="l.issue_quantity" />
 								</td>

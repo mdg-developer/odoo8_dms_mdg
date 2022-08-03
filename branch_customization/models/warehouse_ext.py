@@ -59,7 +59,7 @@ class stock_warehouse(osv.osv):
         return branch_id
         
     _columns = {
-               'branch_id':fields.many2one('res.branch', 'Branch', required=True),
+               'branch_id':fields.many2one('res.branch', 'Branch', required=False),
                }
     _defaults = {
         'branch_id': _get_default_branch,

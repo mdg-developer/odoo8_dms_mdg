@@ -192,6 +192,7 @@ class good_issue_line(osv.osv):  # #prod_pricelist_update_line
             product_uom = product_data.product_tmpl_id.uom_id.id
             data['qty_on_hand'] = qty_on_hand
             data['product_uom'] = product_uom
+            data['product_code']=product_data.product_tmpl_id.default_code
          
         return super(good_issue_line, self).create(cr, uid, data, context=context)      
                   
