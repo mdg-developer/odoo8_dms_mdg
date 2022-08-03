@@ -22,9 +22,8 @@ class product_product(osv.osv):
 
         def _name_get(d):
             name = d.get('name','')
-            code = d.get('default_code','')
-         #   code = context.get('display_default_code', True) and d.get('default_code',False) or False
-            name = '%s %s' % (code, name)
+   #         code = context.get('display_default_code', True) and d.get('default_code',False) or False
+            name = '%s' % (name)
             return (d['id'], name)
 
         partner_id = context.get('partner_id', False)
