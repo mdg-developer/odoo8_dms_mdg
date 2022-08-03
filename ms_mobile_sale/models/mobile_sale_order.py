@@ -927,6 +927,7 @@ class mobile_sale_order(osv.osv):
                                              'order_id':soId,
                                               'product_id':line_id.product_id.id,
                                               'name':product_name,
+                                              'product_code':line_id.product_id.product_tmpl_id.default_code,
                                               'price_unit':price_unit,
                                               'product_uom':line_id.uom_id.id,
                                               'product_uom_qty':line_id.product_uos_qty,
