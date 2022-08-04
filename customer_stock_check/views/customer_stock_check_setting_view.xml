@@ -37,7 +37,7 @@
 								</page>
 								<page string="Competitor Product Lines">
 									<field name="competitor_product_lines">
-										<tree string="Competitor Product Lines" editable="bottom">
+										<tree string="Competitor Product Lines" editable="bottom" default_order="sequence asc">
 											<field name="sequence" invisible="1" />
 											<field name="competitor_product_id" />
 											<field name="available" />
