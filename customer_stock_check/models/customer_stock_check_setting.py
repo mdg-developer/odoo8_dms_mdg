@@ -27,12 +27,14 @@ class customer_stock_check(osv.osv):
                                 'sequence':sequence,
                                 'product_id': product_id, 
                                 }, context=context)
-            cr.execute("""select id from competitor_product where id not in (select competitor_product_id from stock_check_setting_competitor_line where stock_setting_ids =%s)""",(ids[0],))
+            cr.execute("""select id,sequence from competitor_product where id not in (select competitor_product_id from stock_check_setting_competitor_line where stock_setting_ids =%s) order by sequence asc""",(ids[0],))
             competitor_product_data = cr.fetchall()
             for cp_line in competitor_product_data:
                 if cp_line:
                     competitor_product_id = cp_line[0]
+                    cp_sequence = cp_line[1]
                     competitor_line_obj.create(cr, uid, {'stock_setting_ids': ids[0],
+                                                         'sequence': cp_sequence,
                                                          'competitor_product_id': competitor_product_id,
                                                     }, context=context)
         return True 
@@ -58,6 +60,7 @@ class stock_check_setting_competitor_line(osv.osv):
 
     _columns = {
         'stock_setting_ids': fields.many2one('stock.check.setting', 'Partner Stock Check Setting'),
+        'sequence': fields.integer('Sequence'),
         'competitor_product_id': fields.many2one('competitor.product', 'Product Name'),
         'available': fields.boolean('Available', default=False),
         'product_uom_qty': fields.boolean('QTY', default=False),
