@@ -200,7 +200,7 @@ class sale_order_line(osv.osv):
                 'foc':line.sale_foc,
                 'uos_id': uos_id,
                 'product_id': line.product_id.id or False,
-                'product_code':line.product_id.product_tmpl_id.default_code or False,
+                'product_code':line.product_id.product_tmpl_id.default_code ,
                 'invoice_line_tax_id': [(6, 0, [x.id for x in line.tax_id])],
              #   'account_analytic_id': line.order_id.project_id and line.order_id.project_id.id or False,
             }
