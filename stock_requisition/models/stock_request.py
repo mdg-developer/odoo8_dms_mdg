@@ -260,6 +260,7 @@ class stock_requisition(osv.osv):
                     if (req_line_value.req_quantity ) != 0:
                         product_id = req_line_value.product_id.id
                         product_uom = req_line_value.product_uom.id
+                        product_code = req_line_value.product_id.product_tmpl_id.default_code
                         qty_on_hand = req_line_value.qty_on_hand
                         uom_ratio = req_line_value.uom_ratio
                         quantity = req_line_value.req_quantity
@@ -267,6 +268,7 @@ class stock_requisition(osv.osv):
                         remark =req_line_value.remark
                         good_line_obj.create(cr, uid, {'line_id': good_id,
                                                   'product_id': product_id,
+                                                  'product_code': product_code,
                                                   'product_uom': product_uom,
                                                   'uom_ratio':uom_ratio,
                                                   'issue_quantity':quantity,
