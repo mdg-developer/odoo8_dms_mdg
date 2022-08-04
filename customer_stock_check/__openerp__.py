@@ -31,7 +31,7 @@ Customer Stock Check Module
 
     """,
     'website': 'https://www.odoo.com/page/warehouse',
-    'depends': ['base','sale','stock'],
+    'depends': ['base','sale','stock','competitor_product'],
     'category': 'stock',
     'sequence': 16,
     'data': [
