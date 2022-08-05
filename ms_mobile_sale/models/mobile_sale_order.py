@@ -2962,6 +2962,16 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()
         return datas
 
+    def get_all_competitor_products(self, cr, uid, sale_team_id , context=None, **kwargs):
+        cr.execute('''            
+            select id,name,array_agg(product_uom_id) uom_ids
+            from competitor_product cp,competitor_product_product_uom_rel rel
+            where cp.id=rel.competitor_product_id
+            group by id,name
+         ''')
+        datas = cr.fetchall()
+        return datas
+
     def get_competitor_stock_check(self, cr, uid, sale_team_id , context=None, **kwargs):
         cr.execute('''select outlet_type,cp.name,competitor_product_id,product_uom,available,product_uom_qty,facing,chiller,remark_id,cline.sequence,cline.description
                     from competitor_product cp,crm_case_section ccs,partner_stock_check_competitor_line cline,partner_stock_check psc
