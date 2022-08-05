@@ -356,6 +356,8 @@ class branch_good_issue_note(osv.osv):
             'origin': gin_value.name ,
             'branch_id': gin_value.branch_id.id,
             'pricelist_id': gin_value.branch_id.pricelist_id.id,
+            'deduct_amt': 0.0,
+            'additional_discount': 0.0,
         }
 
         sale_order_id = sale_order_obj.create(cr, uid, order_vals, context=None)
