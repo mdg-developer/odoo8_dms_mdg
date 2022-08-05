@@ -2960,7 +2960,18 @@ class mobile_sale_order(osv.osv):
                   select scl.id ,sc.outlet_type,scl.product_id,scl.product_uom_qty as quantity,scl.available,scl.facing, scl.chiller from stock_check_setting sc ,stock_check_setting_line scl where sc.id=scl.stock_setting_ids
          ''')
         datas = cr.fetchall()
-        return datas            
+        return datas
+
+    def get_competitor_stock_check(self, cr, uid, sale_team_id , context=None, **kwargs):
+        cr.execute('''select outlet_type,cp.name,competitor_product_id,product_uom,available,product_uom_qty,facing,chiller,remark_id,cline.sequence,cline.description
+                    from competitor_product cp,crm_case_section ccs,partner_stock_check_competitor_line cline,partner_stock_check psc
+                    where cp.sales_group_id=ccs.sale_group_id
+                    and cp.id=cline.competitor_product_id
+                    and cline.stock_check_ids=psc.id
+                    and ccs.id=%s
+                    ''', (sale_team_id,))
+        datas = cr.dictfetchall()
+        return datas
     
     def udpate_credit_notes_issue_status(self, cr, uid, sale_team_id , context=None, **kwargs):
         try:
