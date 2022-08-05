@@ -2964,20 +2964,21 @@ class mobile_sale_order(osv.osv):
 
     def get_all_competitor_products(self, cr, uid, sale_team_id , context=None, **kwargs):
         cr.execute('''            
-            select id,name,array_agg(product_uom_id) uom_ids
-            from competitor_product cp,competitor_product_product_uom_rel rel
+            select cp.id,cp.name,product_uom_id
+            from competitor_product cp,competitor_product_product_uom_rel rel,crm_case_section ccs
             where cp.id=rel.competitor_product_id
-            group by id,name
-         ''')
+            and cp.sales_group_id=ccs.sale_group_id
+            and ccs.id=%s
+         ''', (sale_team_id,))
         datas = cr.fetchall()
         return datas
 
     def get_competitor_stock_check(self, cr, uid, sale_team_id , context=None, **kwargs):
-        cr.execute('''select outlet_type,cp.name,competitor_product_id,product_uom,available,product_uom_qty,facing,chiller,remark_id,cline.sequence,cline.description
-                    from competitor_product cp,crm_case_section ccs,partner_stock_check_competitor_line cline,partner_stock_check psc
+        cr.execute('''select cline.id,outlet_type,competitor_product_id,product_uom_qty as qty,available,facing,chiller
+                    from competitor_product cp,crm_case_section ccs,stock_check_setting_competitor_line cline,stock_check_setting scs
                     where cp.sales_group_id=ccs.sale_group_id
                     and cp.id=cline.competitor_product_id
-                    and cline.stock_check_ids=psc.id
+                    and cline.stock_setting_ids=scs.id
                     and ccs.id=%s
                     ''', (sale_team_id,))
         datas = cr.dictfetchall()
