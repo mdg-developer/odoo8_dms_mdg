@@ -1,2 +1,0 @@
-import mobile_report
-
