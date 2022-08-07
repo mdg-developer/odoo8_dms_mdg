@@ -197,12 +197,12 @@ class product_pricelist_import(osv.osv):
                         
                         if discount_amount:
                             new_price = (product_price * (1 + 0.0)) + discount_amount
-                            pricelist_res_discount = {'name':name, 'price_version_id':version_id, 'product_id':product_id, 'categ_id':category_id, 'min_quantity':min_qty, 'base':price_type, 'base_pricelist_id':None, 'price_surcharge':discount_amount, 'new_price':new_price}
+                            pricelist_res_discount = {'name':name,'product_code':name, 'price_version_id':version_id, 'product_id':product_id, 'categ_id':category_id, 'min_quantity':min_qty, 'base':price_type, 'base_pricelist_id':None, 'price_surcharge':discount_amount, 'new_price':new_price}
                             pricelist_item_obj.create(cr,uid,pricelist_res_discount,context=context)
                         
                         if discount_amount == 0:
                             new_price = (product_price * (1 + 0.0)) + discount_amount
-                            pricelist_res_nodiscount = {'name':name, 'price_version_id':version_id, 'product_id':product_id, 'categ_id':category_id, 'min_quantity':min_qty, 'base':price_type, 'base_pricelist_id':None, 'price_surcharge':discount_amount, 'new_price':new_price}
+                            pricelist_res_nodiscount = {'name':name,'product_code':name, 'price_version_id':version_id, 'product_id':product_id, 'categ_id':category_id, 'min_quantity':min_qty, 'base':price_type, 'base_pricelist_id':None, 'price_surcharge':discount_amount, 'new_price':new_price}
                             pricelist_item_obj.create(cr, uid, pricelist_res_nodiscount, context=context)
                         
             except Exception,e:
