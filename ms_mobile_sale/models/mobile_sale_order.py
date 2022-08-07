@@ -1902,7 +1902,7 @@ class mobile_sale_order(osv.osv):
                         sequence = product.sequence
                         product_amount+=data[2]
                         data_id = {'product_id':data[0],
-                                          'product_uom_qty':data[1],
+                                   'product_code':product.product_tmpl_id.default_code,                                          'product_uom_qty':data[1],
                                           'denomination_product_ids':deno_id,
                                           'sequence':sequence,
                                           'amount':data[2]}
