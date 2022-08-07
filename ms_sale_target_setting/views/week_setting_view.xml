@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<!-- Parent Menu -->
+		<menuitem name="Mobile Sales" id="base.menu_mobile_sale"
+			groups="base.group_sale_salesman,base.group_sale_manager" sequence="11" />
+
+		<!-- Child Menus -->
+		<menuitem name="Sale Target Settings" id="base.menu_mobile_sale_sale_target_menu"
+			sequence="4" parent="base.menu_mobile_sale" />
+		<!-- Filter -->
+		<record id="view_week_setting_filter" model="ir.ui.view">
+			<field name="name">Week Setting Filter</field>
+			<field name="model">setting.week</field>
+			<field name="arch" type="xml">
+				<search string="Search Week Setting">
+					<group expand="0" string="Group By">
+						<filter name="name" string="Name" domain="[]"
+							context="{'group_by':'name'}" />
+						<filter name="from_date" string="From Date" domain="[]"
+							context="{'group_by':'from_date'}" />
+						<filter name="to_date" string="To Date" domain="[]"
+							context="{'group_by':'to_date'}" />
+						<filter name="total_days_of_week" string="Total Days of week" domain="[]"
+							context="{'group_by':'total_days_of_week'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+		<!--============ Week Setting ============== -->
+		<!-- tree -->
+		<record id="view_week_setting_tree" model="ir.ui.view">
+			<field name="name">Week Setting Tree</field>
+			<field name="model">setting.week</field>
+			<field name="arch" type="xml">
+				<tree string="Week Setting Tree">
+					<field name="name" />
+					<field name="from_date" />
+					<field name="to_date" />
+					<field name="total_days_of_week" />
+					<field name="sequence" />
+				</tree>
+
+			</field>
+		</record>
+		<record id="view_week_setting_form" model="ir.ui.view">
+			<field name="name">Week Setting Form</field>
+			<field name="model">setting.week</field>
+			<field name="arch" type="xml">
+				<form string="Week Setting Form" version="9.0">
+					<sheet>
+						<group>
+							<group>
+								<field name="name" />
+								<field name="from_date" />
+								<field name="to_date" />
+								<field name="total_days_of_week" />
+								<field name="sequence" />
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+
+		<!-- action form -->
+
+
+		<record id="action_week_setting" model="ir.actions.act_window">
+			<field name="name">Week Setting</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">setting.week</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_week_setting_tree" />
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to create new Week.
+				</p>
+			</field>
+		</record>
+		<menuitem id="menu_week_setting_menu" parent="base.menu_mobile_sale_sale_target_menu"
+			action="action_week_setting" sequence="5" />
+	</data>
+</openerp>

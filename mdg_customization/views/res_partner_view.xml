@@ -1,0 +1,469 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record model="ir.ui.view" id="mdg_res_partner_opt_out_form">
+			<field name="name">res.partner.opt_out.form</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="email_template.res_partner_opt_out_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='opt_out']" position="replace">
+				</xpath>
+			</field>
+		</record>
+
+		<record id="inherit_view_crm_partner_assign_form" model="ir.ui.view">
+			<field name="name">res.partner.geo.inherit</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="crm_partner_assign.view_crm_partner_assign_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//page[@name='geo_localization']" position="replace">
+					<page string="Information" name="geo_localization">
+						<group>
+							<group>
+								<separator string="Geo Localization" colspan="2" />
+								<button string="Geo Localize" name="geo_localize"
+									colspan="2" icon="gtk-apply" type="object" />
+								<field name="partner_latitude" />
+								<field name="partner_longitude" />
+								<field name="date_localization" />
+							</group>
+							<group>
+								<!-- <field name="grade_id" widget="selection" /> -->
+								<!-- <field name="activation" widget="selection" /> -->
+								<field name="date_review" invisible="1" />
+								<field name="date_review_next" invisible="1" />
+								<field name="date_partnership" string="Activation Date"
+									readonly="1" />
+								<field name="create_date" />
+
+							</group>
+						</group>
+						<group>
+							<group>
+								<widget type="gmap_marker" lat="partner_latitude" lng="partner_longitude" />
+							</group>
+							<group>
+								<group>
+									<label for="start_time" string="Operation Hour" />
+									<div>
+										<field name="start_time" class="oe_inline" />
+										-
+										<field name="start_rate" class="oe_inline" />
+										To
+									</div>
+									<label string="" />
+									<div>
+										<field name="end_time" class="oe_inline" />
+										-
+										<field name="end_rate" class="oe_inline" />
+									</div>
+									<label for="mon" string="OFF Day" />
+									<div>
+										<field name="mon" class="oe_inline" />
+										MON
+										<field name="tue" class="oe_inline" />
+										TUE
+										<field name="wed" />
+										WED
+										<field name="thur" />
+										TURS
+									</div>
+									<label string="" />
+									<div>
+										<field name="fri" />
+										FRI
+										<field name="sat" />
+										SAT
+										<field name="sun" />
+										SUN
+									</div>
+								</group>
+							</group>
+						</group>
+						<field name="opportunity_assigned_ids" colspan="4" nolabel="1"
+							invisible="1">
+						</field>
+					</page>
+				</xpath>
+				<xpath expr="//page[@string='Contacts']" position="replace" />
+				<xpath expr="//page[@name='geo_localization']" position="after">
+					<page string="Contacts"
+						attrs="{'invisible': [('is_company','=',False), ('child_ids', '=', [])]}"
+						autofocus="autofocus">
+						<field name="child_ids" mode="kanban"
+							context="{'default_parent_id': active_id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_supplier': supplier, 'default_customer': customer, 'default_use_parent_address': True}">
+							<kanban>
+								<field name="color" />
+								<field name="name" />
+								<field name="title" />
+								<field name="email" />
+								<field name="parent_id" />
+								<field name="is_company" />
+								<field name="function" />
+								<field name="phone" />
+								<field name="street" />
+								<field name="street2" />
+								<field name="zip" />
+								<field name="city" />
+								<field name="country_id" />
+								<field name="mobile" />
+								<field name="fax" />
+								<field name="state_id" />
+								<field name="has_image" />
+								<templates>
+									<t t-name="kanban-box">
+										<t t-set="color" t-value="kanban_color(record.color.raw_value)" />
+										<div
+											t-att-class="color + (record.title.raw_value == 1 ? ' oe_kanban_color_alert' : '')"
+											style="position: relative">
+											<a t-if="! read_only_mode" type="delete"
+												style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
+											<div class="oe_module_vignette">
+												<a type="open">
+													<t t-if="record.has_image.raw_value === true">
+														<img
+															t-att-src="kanban_image('res.partner', 'image', record.id.value, {'preview_image': 'image_small'})"
+															class="oe_avatar oe_kanban_avatar_smallbox" />
+													</t>
+													<t t-if="record.image and record.image.raw_value !== false">
+														<img t-att-src="'data:image/png;base64,'+record.image.raw_value"
+															class="oe_avatar oe_kanban_avatar_smallbox" />
+													</t>
+													<t
+														t-if="record.has_image.raw_value === false and (!record.image or record.image.raw_value === false)">
+														<t t-if="record.is_company.raw_value === true">
+															<img t-att-src='_s + "/base/static/src/img/company_image.png"'
+																class="oe_kanban_image oe_kanban_avatar_smallbox" />
+														</t>
+														<t t-if="record.is_company.raw_value === false">
+															<img t-att-src='_s + "/base/static/src/img/avatar.png"'
+																class="oe_kanban_image oe_kanban_avatar_smallbox" />
+														</t>
+													</t>
+												</a>
+												<div class="oe_module_desc">
+													<div
+														class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_color_border">
+														<table class="oe_kanban_table">
+															<tr>
+																<td class="oe_kanban_title1" align="left" valign="middle">
+																	<h4>
+																		<a type="open">
+																			<field name="name" />
+																		</a>
+																	</h4>
+																	<i>
+																		<div t-if="record.function.raw_value">
+																			<field name="function" />
+																		</div>
+																	</i>
+																	<div>
+																		<a t-if="record.email.raw_value" title="Mail"
+																			t-att-href="'mailto:'+record.email.value">
+																			<field name="email" />
+																		</a>
+																	</div>
+																	<div t-if="record.phone.raw_value">
+																		Phone:
+																		<field name="phone" />
+																	</div>
+																	<div t-if="record.mobile.raw_value">
+																		Mobile:
+																		<field name="mobile" />
+																	</div>
+																	<div t-if="record.fax.raw_value">
+																		Fax:
+																		<field name="fax" />
+																	</div>
+																</td>
+															</tr>
+														</table>
+													</div>
+												</div>
+											</div>
+										</div>
+									</t>
+								</templates>
+							</kanban>
+							<form string="Contact">
+								<sheet>
+									<field name="image" widget='image' class="oe_avatar oe_left"
+										options='{"preview_image": "image_medium"}' />
+									<div class="oe_title">
+										<label for="name" class="oe_edit_only" />
+										<h1>
+											<field name="name" style="width: 70%%" />
+										</h1>
+										<field name="category_id" widget="many2many_tags"
+											placeholder="Tags..." style="width: 70%%" />
+									</div>
+									<group>
+										<field name="function" placeholder="e.g. Sales Director" />
+										<field name="email" />
+										<field name="phone" />
+										<field name="mobile" />
+									</group>
+									<div>
+										<field name="use_parent_address" />
+										<label for="use_parent_address" />
+									</div>
+									<group>
+										<label for="type" />
+										<div name="div_type">
+											<field class="oe_inline" name="type" />
+										</div>
+										<label for="street" string="Address"
+											attrs="{'invisible': [('use_parent_address','=', True)]}" />
+										<div attrs="{'invisible': [('use_parent_address','=', True)]}"
+											name="div_address">
+											<field name="street" placeholder="Street..." />
+											<field name="street2" />
+											<div class="address_format">
+												<field name="city" placeholder="City" style="width: 40%%" />
+												<field name="state_id" class="oe_no_button"
+													placeholder="State" style="width: 37%%" options='{"no_open": True}'
+													on_change="onchange_state(state_id)" />
+												<field name="zip" placeholder="ZIP" style="width: 20%%" />
+											</div>
+											<field name="country_id" placeholder="Country" class="oe_no_button"
+												options='{"no_open": True}' />
+										</div>
+									</group>
+									<field name="supplier" invisible="True" />
+									<field name="customer" invisible="True" />
+								</sheet>
+							</form>
+						</field>
+					</page>
+
+				</xpath>
+			</field>
+		</record>
+
+		<record id="mdg_res_partner_form_view" model="ir.ui.view">
+			<field name="name">res.partner.form.view</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="base.view_partner_form" />
+			<field name="arch" type="xml">
+				<data>
+					<field name="fax" position="replace">
+						<field name="fax" invisible="1" />
+					</field>
+					<!-- <field name="active" position="replace" /> <notebook position="inside"> 
+						<page string="Marketing"> <label for="active" /> <field name="active" /> 
+						<div> <label for="opt_out" /> <field name="opt_out" /> </div> </page> </notebook> -->
+
+					<xpath
+						expr="//page[@name='sales_purchases']/group/group/field[@name='customer']"
+						position="replace">
+						<field name="customer" attrs="{'invisible':[('supplier','=',True)]}"
+							readonly="1" />
+
+					</xpath>
+					<xpath
+						expr="//page[@name='sales_purchases']/group/group/field[@name='supplier']"
+						position="replace">
+						<field name="supplier" attrs="{'invisible':[('customer','=',True)]}" />
+
+					</xpath>
+
+					<xpath
+						expr="//form[@string='Contact']/sheet/group/field[@name='mobile']"
+						position="after">
+						<field name="contact_note" />
+					</xpath>
+					<xpath
+						expr="//page[@name='sales_purchases']/group/group/field[@name='supplier']"
+						position="after">
+						<field name="is_exclusive" />
+					</xpath>
+				</data>
+			</field>
+		</record>
+
+		<record id="res_partner_team_form_view" model="ir.ui.view">
+			<field name="name">res.partner.form.view</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="crm.view_partners_form_crm1" />
+			<field name="arch" type="xml">
+				<data>
+					<field name="section_id" position="replace">
+						<field name="section_id" completion="1"
+							groups="base.group_multi_salesteams" widget="many2many_tags"
+							attrs="{'invisible':[('supplier','=',True)]}" />
+					</field>
+				</data>
+			</field>
+		</record>
+		<record id="res_partner_team_form_view1" model="ir.ui.view">
+			<field name="name">res.partner.form.view</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="crm.view_partners_form_crm1" />
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//field[@name='section_id']" position="after">
+						<field name="collection_team" />
+					</xpath>
+				</data>
+			</field>
+		</record>
+		<record id="collection_res_partner_tree_view" model="ir.ui.view">
+			<field name="name">res.partner.tree.view</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="base.view_partner_tree" />
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//field[@name='parent_id']" position="after">
+						<field name="collection_team" />
+					</xpath>
+				</data>
+			</field>
+		</record>
+		
+		<!-- Partner group by -->
+		<record id="view_collection_res_partner_filter_inherit" model="ir.ui.view">
+			<field name="name">Customer Filter</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="base.view_res_partner_filter" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='name']" position="after">
+					<field name="collection_team" />
+				</xpath>
+				<xpath expr="//group/filter[@string='Country']" position="after">
+					<filter string="Collection Team" icon="terp-personal" domain="[]"
+						context="{'group_by' : 'collection_team'}" />
+				</xpath>
+			</field>
+		</record>
+		
+		<record id="mdg_account_view_partner_property_form" model="ir.ui.view">
+			<field name="name">res.partner.property.form.inherit</field>
+			<field name="model">res.partner</field>
+			<field name="priority">2</field>
+			<field name="inherit_id" ref="account.view_partner_property_form" />
+			<field name="arch" type="xml">
+				<data>
+					<field name="property_payment_term" position="replace">
+						<field name="property_payment_term" widget="selection"
+							attrs="{'invisible':[('supplier','=',True)]}" />
+					</field>
+					<field name="property_supplier_payment_term" position="replace">
+						<field name="property_supplier_payment_term" widget="selection"
+							attrs="{'invisible':[('customer','=',True)]}" />
+					</field>
+
+					<field name="credit" position="replace">
+						<field name="credit" attrs="{'invisible':[('supplier','=',True)]}" />
+					</field>
+
+					<field name="credit_limit" position="replace">
+						<field name="credit_limit" attrs="{'invisible':[('supplier','=',True)]}" />
+
+					</field>
+
+					<field name="property_account_payable" position="after">
+						<!-- <field name="property_account_payable" groups="account.group_account_invoice" -->
+						<!-- attrs="{'invisible':[('customer','=',True)]}" /> -->
+						<field name="gain_account_id" groups="account.group_account_invoice"
+							attrs="{'invisible':[('customer','=',True)]}" />
+						<field name="loss_account_id" groups="account.group_account_invoice"
+							attrs="{'invisible':[('customer','=',True)]}" />
+					</field>
+					<!-- <field name="property_supplier_payment_term" position="replace"> -->
+					<!-- <field name="property_supplier_payment_term" widget="selection" -->
+					<!-- attrs="{'invisible':[('customer','=',True)]}" /> -->
+					<!-- </field> -->
+					<field name="debit" position="replace">
+						<field name="debit" attrs="{'invisible':[('customer','=',True)]}" />
+					</field>
+				</data>
+			</field>
+		</record>
+
+		<record id="view_res_partner_credit_limit_form" model="ir.ui.view">
+			<field name="name">res.partner.credit.limit.form</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id"
+				ref="ms_credit_limit.view_res_partner_credit_limit_form" />
+			<field name="arch" type="xml">
+				<field name="credit_allow" position="replace">
+					<field name="credit_allow" attrs="{'invisible':[('supplier','=',True)]}" />
+					<field name="is_bank" attrs="{'invisible':[('supplier','=',True)]}" />
+					<field name="is_cheque" attrs="{'invisible':[('supplier','=',True)]}" />
+					<field name="is_consignment" attrs="{'invisible':[('supplier','=',True)]}" />
+					<field name="is_tax" attrs="{'invisible':[('supplier','=',True)]}" />
+
+				</field>
+			</field>
+		</record>
+
+		<record id="mdg_view_partner_property_form" model="ir.ui.view">
+			<field name="name">res.partner.stock.property.form.inherit</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="stock.view_partner_property_form" />
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//field[@name='property_stock_customer']"
+						position="replace">
+						<field name="property_stock_customer" domain="[('usage','=','customer')]"
+							attrs="{'invisible':[('supplier','=',True)],'readonly':[('customer','=',True)]}" />
+					</xpath>
+					<xpath expr="//field[@name='property_stock_supplier']"
+						position="replace">
+						<field name="property_stock_supplier" domain="[('usage','=','supplier')]"
+							attrs="{'invisible':[('customer','=',True)]}" />
+					</xpath>
+				</data>
+			</field>
+		</record>
+		<record id="mdg_product_view_partner_property_form" model="ir.ui.view">
+			<field name="name">res.partner.product.property.form.inherit</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="product.view_partner_property_form" />
+			<field name="groups_id"
+				eval="[(4, ref('product.group_sale_pricelist')), (4, ref('product.group_purchase_pricelist'))]" />
+			<field name="arch" type="xml">
+				<field name="property_product_pricelist" position="replace">
+					<field name="property_product_pricelist" groups="product.group_sale_pricelist"
+						attrs="{'invisible':[('supplier','=',True)]}" />
+				</field>
+			</field>
+		</record>
+		<record id="mdg_purchase_view_partner_property_form" model="ir.ui.view">
+			<field name="name">res.partner.purchase.property.form.inherit</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="purchase.view_partner_property_form" />
+			<field name="priority">36</field>
+			<field name="groups_id" eval="[(4, ref('product.group_purchase_pricelist'))]" />
+			<field name="arch" type="xml">
+				<field name="property_product_pricelist_purchase" position="replace">
+					<field name="property_product_pricelist_purchase" groups="product.group_purchase_pricelist"
+						attrs="{'readonly':[('customer','=',True)]}" />
+				</field>
+			</field>
+		</record>
+		<record id="mdg_res_partner_button_form_view" model="ir.ui.view">
+			<field name="name">res.partner.form.view</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="account.partner_view_buttons" />
+			<field name="arch" type="xml">
+				<data>
+					<button id='invoice_button' position="replace">
+						<button type="action" class="oe_stat_button" id="invoice_button"
+							icon="fa-pencil-square-o" name="%(account.action_invoice_tree)d"
+							context="{'search_default_partner_id': active_id,'default_partner_id': active_id}"
+							groups="account.group_account_invoice" invisible="1">
+							<div>
+								<strong>
+									<field name="total_invoiced" widget="monetary" />
+								</strong>
+								<br />
+								Invoiced
+							</div>
+						</button>
+					</button>
+				</data>
+			</field>
+		</record>
+	</data>
+</openerp>

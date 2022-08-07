@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+	   <!--  <record id="accounting_report_view" model="ir.ui.view">
+            <field name="name">accounting.report</field>
+            <field name="model">accounting.report</field>
+            <field name="inherit_id" ref="account.accounting_report_view"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//notebook" position="inside">
+						<page string="Analytic Account Filters" name="account_analytic_ids">
+                            <separator string="Print only" colspan="4"/>
+                            <field name="account_analytic_ids" colspan="4" nolabel="1">
+                                <tree>
+                                    <field name="code"/>
+                                    <field name="name"/>                                    
+                                </tree>
+                            </field>
+                        </page>	
+                        <page string="Branches Filters" name="branch_ids">
+                            <separator string="Print only" colspan="4"/>
+                            <field name="branch_ids" colspan="4" nolabel="1">
+                                <tree>
+                                    <field name="branch_code"/>
+                                    <field name="name"/>                                    
+                                </tree>
+                            </field>
+                        </page>						
+					</xpath>
+                </data>
+            </field>
+        </record> -->
+        
+		<record id="accounting_report_xls_view" model="ir.ui.view">
+			<field name="name">Accounting Report XLS</field>
+			<field name="model">accounting.report</field>
+			<field name="inherit_id" ref="account.account_common_report_view" />
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//notebook/page[@string='Filters']" position="after">
+						<page string="Analytic Filter" name="account_page_id">
+							<label string="Export Only" />
+							<field name="account_analytic_id" colspan="4" nolabel="1" />
+						</page>
+						
+					</xpath>
+					
+					<!-- <xpath expr="//form/footer/button[@name='check_report']"
+						position="after">
+						<a
+							href="http://192.168.0.100:8080/birt/frameset?__report=account_financial_report.rptdesign"
+							target="_blank"> Excel
+						</a>
+						or
+					</xpath> -->
+				</data>
+			</field>
+		</record>
+	</data>
+</openerp>

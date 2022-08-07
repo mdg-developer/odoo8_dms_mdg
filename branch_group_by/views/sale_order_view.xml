@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<!-- Add the Filter and Group for RB -->
+		<record id="inherit_view_sales_order_branch_groupby" model="ir.ui.view">
+			<field name="name">sale.order.list.select</field>
+			<field name="model">sale.order</field>
+			<field name="inherit_id" ref="sale.view_sales_order_filter" />
+			<field name="arch" type="xml">
+				<xpath expr="//search/group/filter[@string='Order Month']"
+					position="before">
+					<filter string="Branch" context="{'group_by': 'branch_id'}" />                    
+                    <filter string="Order Day" context="{'group_by': 'date_order:day'}" />	
+                    <filter string="Township" context="{'group_by': 'township'}" />					
+				</xpath>
+			</field>
+		</record>
+	</data>
+</openerp>

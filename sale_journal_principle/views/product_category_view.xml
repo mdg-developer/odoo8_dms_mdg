@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+
+		<record model="ir.ui.view" id="inherit_view_product_category_form">
+			<field name="name">prodcut.category.form</field>
+			<field name="model">product.category</field>
+			<field name="inherit_id" ref="account.view_category_property_form" />
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//field[@name='property_account_expense_categ']"
+						position="after">
+						<field name="property_account_foc_cash" />
+						<field name="property_account_foc_credit" />
+						<field name="property_account_foc_principle_receivable" />
+						<field name="property_account_foc_income" />
+						<field name="property_account_discount_cash" />
+						<field name="property_account_discount_credit" />
+						<field name="property_account_discount_principle_receivable" />
+
+					</xpath>
+				</data>
+			</field>
+		</record>
+
+
+
+
+
+	</data>
+</openerp>
+		

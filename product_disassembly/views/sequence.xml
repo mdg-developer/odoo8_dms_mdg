@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record id="product_disassembly" model="ir.sequence.type">
+			<field name="name">Product Disassembly Sequence</field>
+			<field name="code">product.disassembly.code</field>
+		</record>
+
+		<record id="product_req_seq" model="ir.sequence">
+			<field name="name">Product Disassembly Sequence</field>
+			<field name="code">product.disassembly.code</field>
+			<field name="prefix">PD/%(year)s/</field>
+			<field name="padding">7</field>
+		</record>
+
+		
+	</data>
+</openerp>

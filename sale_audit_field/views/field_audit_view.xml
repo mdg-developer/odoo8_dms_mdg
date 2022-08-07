@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record id="view_field_audit_form" model="ir.ui.view">
+			<field name="name">field.audit.form</field>
+			<field name="model">field.audit</field>
+			<field name="arch" type="xml">
+				<form string="Field Audit Form">
+					<sheet>
+					    <group>
+					        <group>
+								<field name="name" readonly="1" />
+								<field name="transaction_id" readonly="1" />
+								<field name="partner_id" domain="[('customer', '=', True)]" readonly="1" />
+								<field name="customer_code" readonly="1" />
+								<field name="outlet_type" readonly="1" />
+								<field name="township_id" readonly="1" />
+								<field name="city_id" readonly="1" />
+								<field name="address" readonly="1" />
+								<field name="auditor_team_id" readonly="1" />
+								<field name="date" readonly="1" />
+								<field name="total_score" readonly="1" />
+								<field name="total_missed" readonly="1" />
+							</group>
+							<group>
+							    <field name="frequency_id" readonly="1" />
+								<field name="class_id" readonly="1" />
+								<field name="sales_channel" readonly="1" />
+								<field name="branch_id" readonly="1" />
+								<field name="sale_team_id" readonly="1" />
+								<field name="latitude" readonly="1" />
+								<field name="longitude" readonly="1" />
+								<field name="auditor_image" widget="image" class="oe_avatar" readonly="1" />
+								<field name="shop_image" widget="image" class="oe_avatar" readonly="1" />
+							</group>
+					    </group>	
+	<div class="row">
+
+
+							<div>
+								<label for="merchant_image1" string="Merchandising Photos" />
+							</div>
+							<div class="col-md-1">
+
+								<div id="merchant_image1">
+
+									<field name="merchant_image1" widget="image" class="oe_avatar"
+										readonly="1" />
+
+								</div>
+							</div>
+							<div class="col-md-1">
+								<div id="merchant_image2">
+
+									<field name="merchant_image2" widget="image" class="oe_avatar"
+										readonly="1" />
+
+								</div>
+							</div>
+							<div class="col-md-1">
+								<div id="merchant_image3">
+
+									<field name="merchant_image3" widget="image" class="oe_avatar"
+										readonly="1" />
+
+								</div>
+							</div>
+							<div class="col-md-1">
+								<div id="merchant_image4">
+
+									<field name="merchant_image4" widget="image" class="oe_avatar"
+										readonly="1" />
+
+								</div>
+							</div>
+							<div class="col-md-1">
+								<div id="merchant_image5">
+
+									<field name="merchant_image5" widget="image" class="oe_avatar"
+										readonly="1" />
+
+								</div>
+							</div>
+						</div>
+						<group>
+							<field name="note" />
+						</group>					    
+					    <notebook>
+	                        <page string="Lines" name="line_ids">
+	                            <field name="line_ids" readonly="1" >
+	                                <tree editable="bottom" string="Field Audit lines">
+	                                    <field name="sequence"/>		
+	                                    <field name="question_id"/>		
+	                                    <field name="complete"/>
+	                                </tree>
+	                            </field>  	                                                    
+	                        </page>	
+	                        <page string="Map" name="map">
+	                            <widget type="gmap_marker" lat="latitude" lng="longitude" description="field_descriptions"/>
+								<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+									<div class="modal-dialog modal-lg">
+										<div class="modal-content" align="center">
+											<img id="zoom" src="" width="500" height="500" border="1"/>										
+										</div>
+									</div>
+								</div>
+	                        </page>                        
+	                   	</notebook>	                   				
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+
+		<record model="ir.ui.view" id="view_field_audit_tree">
+			<field name="name">field.audit.tree</field>
+			<field name="model">field.audit</field>
+			<field name="arch" type="xml">
+				<tree string="Field Audit">
+					<field name="name" />
+					<field name="date" />
+					<field name="partner_id" />
+					<field name="customer_code" />
+					<field name="township_id" />
+					<field name="city_id" />
+					<field name="address" />
+					<field name="outlet_type" />
+					<field name="frequency_id" />
+					<field name="class_id" />
+					<field name="sales_channel" />
+					<field name="branch_id" />
+					<field name="sale_team_id" />
+					<field name="auditor_team_id" />
+					<field name="total_score" />
+					<field name="total_missed" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="view_field_audit_filter" model="ir.ui.view">
+			<field name="name">Field Audit Filter</field>
+			<field name="model">field.audit</field>
+			<field name="arch" type="xml">
+				<search string="Field Audit Filter">
+					<group expand="0" string="Group By...">
+						<filter string="Date Day" icon="terp-partner" domain="[]"
+							context="{'group_by':'date:day'}" />
+						<filter string="Customer" icon="terp-partner" domain="[]"
+							context="{'group_by':'partner_id'}" />
+						<filter string="Customer Code" icon="terp-partner" domain="[]"
+							context="{'group_by':'customer_code'}" />
+						<filter string="Township" icon="terp-partner" domain="[]"
+							context="{'group_by':'township_id'}" />
+						<filter string="City" icon="terp-partner" domain="[]"
+							context="{'group_by':'city_id'}" />
+						<filter string="Oultet Type" icon="terp-partner" domain="[]"
+							context="{'group_by':'outlet_type'}" />
+						<filter string="Frequency" icon="terp-partner" domain="[]"
+							context="{'group_by':'frequency_id'}" />
+						<filter string="Class" icon="terp-partner" domain="[]"
+							context="{'group_by':'class_id'}" />
+						<filter string="Sale Channel" icon="terp-partner" domain="[]"
+							context="{'group_by':'sales_channel'}" />
+						<filter string="Branch" icon="terp-partner" domain="[]"
+							context="{'group_by':'branch_id'}" />
+						<filter string="Sales Team" icon="terp-partner" domain="[]"
+							context="{'group_by':'sale_team_id'}" />
+						<filter string="Auditor Team" icon="terp-partner" domain="[]"
+							context="{'group_by':'auditor_team_id'}" />						
+					</group>
+				</search>
+			</field>
+		</record>
+		
+		<record id="action_field_audit_view" model="ir.actions.act_window">
+			<field name="name">Field Audit</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">field.audit</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" eval="view_field_audit_tree" />
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to create new field audit.
+				</p>
+			</field>
+		</record>
+
+		<menuitem id="menu_field_audit" action="action_field_audit_view"
+			 parent="menu_customization.menu_sales_rental_menu" name="Field Audit" sequence="2" />
+
+	</data>
+</openerp>	    

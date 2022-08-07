@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+	    		
+		<record id="view_credit_note_import_form" model="ir.ui.view">
+			<field name="name">Credit Note Import Form</field>
+			<field name="model">credit.note.import</field>
+			<field name="arch" type="xml">
+				<form string="Credit Note Import" version="7.0">
+					<header>
+						<button name="import_credit_note" string="Import Credit Note" type="object" attrs="{'invisible': [('state','!=','draft')]}"
+							class="oe_highlight" />
+						<field name="state" widget="statusbar" statusbar_visible="draft,completed,error" />
+					</header>
+					<sheet>
+						<group>
+							<field name="name" />
+							<field name="import_date" />
+							<field name="import_file" filename="import_fname" />
+							<field name="import_fname" invisible="1" class="oe_inline oe_right" />
+							<field name="note" />
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="view_credit_note_import_tree" model="ir.ui.view">
+			<field name="name">Credit Note Import Tree</field>
+			<field name="model">credit.note.import</field>
+			<field name="arch" type="xml">
+				<tree string="Credit Note Import">
+					<field name="import_date" />
+					<field name="name" />
+					<field name="import_fname" />
+					<field name="note" />
+					<field name="state" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="action_credit_note_import" model="ir.actions.act_window">
+			<field name="name">Credit Note Import</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">credit.note.import</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_credit_note_import_tree" />
+		</record>
+
+		<menuitem action="action_credit_note_import" id="menu_credit_note_import"
+			parent="account.menu_finance_receivables" sequence="101" />
+		
+	</data>
+</openerp>

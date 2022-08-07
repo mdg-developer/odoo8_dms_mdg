@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="cash_sequence" model="ir.sequence.type">
+            <field name="name">Cash Sequence</field>
+            <field name="code">cash.code</field>
+        </record>
+
+        <record id="cash_seq" model="ir.sequence">
+            <field name="name">Cash Sequence</field>
+            <field name="code">cash.code</field>
+            <field name="prefix"></field>
+        </record>
+
+    </data>
+</openerp>

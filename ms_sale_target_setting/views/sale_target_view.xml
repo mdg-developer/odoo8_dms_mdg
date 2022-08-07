@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- Parent Menu -->
+		<menuitem name="Mobile Sales" id="base.menu_mobile_sale"
+			groups="base.group_sale_salesman,base.group_sale_manager" sequence="11" />
+
+		<!-- Child Menus -->
+		<menuitem name="Sale Target Settings" id="base.menu_mobile_sale_sale_target_menu"
+			sequence="4" parent="base.menu_mobile_sale" />
+		<!-- Filter -->
+		<record id="view_sale_target_filter" model="ir.ui.view">
+			<field name="name">Sale Tartget Filter</field>
+			<field name="model">sale.target</field>
+			<field name="arch" type="xml">
+				<search string="Search Sale Target">
+					<group expand="0" string="Group By">
+						<filter name="name" string="Name" domain="[]"
+							context="{'group_by':'name'}" />
+						<filter name="sale_team" string="Sale Team" domain="[]"
+							context="{'group_by':'sale_team'}" />
+						<filter name="date" string="Date" domain="[]"
+							context="{'group_by':'date'}" />
+						<filter name="schedule" string="Schedule" domain="[]"
+							context="{'group_by':'schedule'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+		<!-- =============== Sale Target ============ -->
+		<!-- tree -->
+		<record id="view_sale_target_tree" model="ir.ui.view">
+			<field name="name">Sale Target Tree</field>
+			<field name="model">sale.target</field>
+			<field name="arch" type="xml">
+				<tree string="Sale Target Tree">
+					<field name="name" />
+					<field name="sale_team" />
+					<field name="schedule" />
+					<field name="date" />
+				</tree>
+
+			</field>
+		</record>
+		<record id="view_sale_target_form" model="ir.ui.view">
+			<field name="name">Sale Target Form</field>
+			<field name="model">sale.target</field>
+			<field name="arch" type="xml">
+				<form string="Sale Target Form" version="9.0">
+					<sheet>
+						<group>
+							<group>
+								<separator string="Name" />
+								<br></br>
+
+								<field name="name" />
+								<field name="sale_team" />
+								<field name="target_type" />
+								<field name="outlet_target" />
+							</group>
+
+							<group>
+								<separator string="Schedule" />
+								<br></br>
+								<field name="date" />
+								<field name="schedule" />
+								<field name="week"
+									attrs="{'invisible': ['|', ('schedule','=','daily')]}" />								
+								<field name="month" />
+								<field name="half_year" />															
+								<field name="year" attrs="{'required':[('half_year','=',True)]}"/>								
+							</group>
+							<group>
+								<separator string="Category Target" />
+								<br></br>
+								<field name="category_id" />
+								<field name="categ_target_qty" />
+								<field name="categ_target_amt" />
+
+							</group>
+							<group>
+								<separator string="Plan Name" />
+								<br></br>
+								<field name="day_name" on_change="on_change_day_name(day_name)" />
+								<field name="total_shop_to_visit" />
+							</group>
+						</group>
+						<notebook>
+							<page string="Products Targets Lines"
+								attrs="{'invisible': [('target_type','=', 'category')]}">
+								<field name="product_target_line">
+									<form string="Products Targets Lines">
+										<field name="date" />
+									</form>
+									<tree string="Products Targets Lines" editable="bottom">
+										<field name="product_id" />
+										<field name="target_qty" />
+										<field name="target_amt" />
+
+									</tree>
+								</field>
+							</page>
+							<page string="Categories Targets Lines"
+								attrs="{'invisible': [('target_type','=', 'product')]}">
+								<field name="category_target_line">
+									<form string="Categories Targets Lines">
+										<field name="date" />
+									</form>
+									<tree string="Categories Targets Lines" editable="bottom">
+										<field name="date" />
+										<field name="category_id" />
+										<field name="target_qty" />
+										<field name="target_amt" />
+
+									</tree>
+								</field>
+							</page>
+
+						</notebook>
+						<field name="note" placeholder="Notes...." />
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+
+		<!-- action form -->
+
+
+		<record id="action_sale_target" model="ir.actions.act_window">
+			<field name="name">Sales Target</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">sale.target</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_sale_target_tree" />
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to create new Sale Target.
+				</p>
+			</field>
+		</record>
+
+		<menuitem id="menu_sale_target_menu" parent="base.menu_mobile_sale_sale_target_menu"
+			action="action_sale_target" sequence="2" />
+	</data>
+</openerp>

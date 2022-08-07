@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<!-- add branch in sale order form -->
+		<record id="inherit_view_sales_approval_form" model="ir.ui.view">
+			<field name="name">sales.approval.form</field>
+			<field name="model">sales.approval</field>
+			<field name="inherit_id" ref="sale_management.view_sales_approval_form" />
+			<field name="arch" type="xml">
+				<field name="company_id" position="before">
+					<field name="branch_id" />
+				</field>
+			</field>
+		</record>
+	</data>
+</openerp>

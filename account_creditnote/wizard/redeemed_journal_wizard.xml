@@ -1,0 +1,48 @@
+<?xml version="1.0" ?>
+<openerp>
+	<data>
+		<record id="redeemed_journal_view" model="ir.ui.view">
+			<field name="name">redeemed.journal.form</field>
+			<field name="model">redeemed.journal</field>
+			<field name="priority">1</field>
+			<field name="arch" type="xml">
+				<form string="Credit Note State" version="7.0">
+					<group>
+						<group>
+
+							<field name="state"  />
+							
+							
+							
+						</group>
+						<group>
+
+							<field name="journal_id" attrs="{'invisible': [('state', '!=', 'claimed')]}"/>
+							
+						</group>
+						<group>
+
+							
+						</group>
+					</group>
+					
+					<footer>
+						<button name="confirm" string="Confirm" type="object" class="oe_highlight" />
+						or
+						<button string="Close" class="oe_link" special="cancel" />
+
+					</footer>
+				</form>
+			</field>
+		</record>
+		
+		 <act_window id="action_redeemed_journal_wizard"
+            name="Credit Note State"        
+            src_model="account.creditnote"
+            res_model="redeemed.journal"
+            view_type="form" view_mode="form"
+            key2="client_action_multi" target="new"/>
+
+
+	</data>
+</openerp>

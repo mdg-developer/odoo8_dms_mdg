@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+		<!-- customer creation form -->
+
+		<record id="res_partner_form_view" model="ir.ui.view">
+			<field name="name">Tablet Information Form</field>
+			<field name="model">tablets.information</field>
+			<field name="inherit_id" ref="ms_tablet_info.view_table_information_form" />
+			<field name="arch" type="xml">
+				<data>
+					<xpath
+						expr="//form[@string='Tablet Information Form']/sheet/group/group/field[@name='hotline']"
+						position="after">
+						<field name="notification_time" placeholder ="Notification Schedule Minutes" />
+					</xpath>			
+					                                         
+                
+				</data>
+						
+			</field>
+		</record>
+		
+		
+		
+	</data>
+</openerp>

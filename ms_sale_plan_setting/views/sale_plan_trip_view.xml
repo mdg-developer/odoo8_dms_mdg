@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+		<!-- Parent Menu -->
+		<menuitem name="Mobile Sales" id="base.menu_mobile_sale"
+			groups="base.group_sale_salesman,base.group_sale_manager" 
+			sequence="11" />
+			
+		<!--<menuitem name="Sale Plan Settings" id="menu_mobile_sale_saleplan_setting_menu"
+			sequence="5" parent="base.menu_mobile_sale" />-->
+			
+		<menuitem name="Setting" id="base.menu_mobile_sale_sale_target_menu"
+			sequence="4" parent="base.menu_mobile_sale" />
+			
+		<!-- === Sales Plan For Trip Form === -->
+		<record id="view_sale_plan_for_trip_form" model="ir.ui.view">
+			<field name="name">plan.form</field>
+			<field name="model">sale.plan.trip</field>
+			<field name="arch" type="xml">
+				<form string="Sale Plans Setup" version="7.0">
+					<notebook>
+
+						<page string="Trips">
+							<group>
+								<field name="name" />
+								<field name="date" invisible="1"/>
+								<field name="sale_team" string="Sale Team" />
+								<field name="principal" string="Principal"  invisible="1"/>
+								<field name="main_group" string="Main Group" widget="many2many_tags" invisible="1"/>
+								<field name="branch_id" string="Branch" />
+								<field name="active" />
+							</group>
+							<notebook>
+								<page string="Customers">
+									<field name="trip_customer_ids" widget="many2many_list">
+										<kanban quick_create="false" create="true">
+											<field name="name" />
+											<templates>
+												<t t-name="kanban-box">
+													<div style="position: relative">
+														<a t-if="! read_only_mode" type="delete"
+															style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
+														<div class="oe_module_vignette">
+															<div class="oe_module_desc">
+																<field name="name" />
+															</div>
+														</div>
+													</div>
+												</t>
+											</templates>
+										</kanban>
+									</field>
+								</page>
+							</notebook>
+						</page>
+					</notebook>
+				</form>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_sale_plan_for_trip_tree">
+			<field name="name">plan.tree</field>
+			<field name="model">sale.plan.trip</field>
+			<field name="arch" type="xml">
+				<tree string="Sale Plan Setup">
+					<field name="name" />
+					<field name="date" />
+					<field name="sale_team" string="Sale Team" />
+					<field name="principal" string="Principal" invisible="1" />
+					<field name="main_group" string="Main Group"  invisible="1"/>
+					<field name="branch_id" string="Branch" />
+					<field name="active" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="action_sale_plan_for_trip_view" model="ir.actions.act_window">
+			<field name="name">Sale Plan For Trips Setup</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">sale.plan.trip</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_sale_plan_for_trip_tree" />
+		</record>
+
+		<record id="view_sale_plan_for_trip_filter" model="ir.ui.view">
+			<field name="name">sale.plan.trip.select</field>
+			<field name="model">sale.plan.trip</field>
+			<field name="arch" type="xml">
+				<search string="Search Sale Plan Trip">
+					<group expand="0" string="Group By...">
+						<filter string="Trip Name" domain="[]"
+							context="{'group_by':'name'}" />
+						<filter string="Sales Team" domain="[]"
+							context="{'group_by':'sale_team'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<menuitem id="config_sale_plan_for_trips"
+			parent="base.menu_mobile_sale_sale_target_menu" name="Sale Plans For Trips"
+			action="action_sale_plan_for_trip_view" sequence="4" />
+	</data>
+</openerp>

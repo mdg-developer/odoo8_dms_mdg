@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+	    
+	<!-- Product Group Form -->
+		<record id="view_product_principal_form" model="ir.ui.view">
+			<field name="name">product.principal.form</field>
+			<field name="model">product.principal</field>
+			<field name="arch" type="xml">
+				<form string="Product Principal" version="7.0">
+					<group >
+						<field name="name" />
+					</group>
+				</form>
+			</field>
+		</record>
+
+		<!-- Product Group Tree -->
+		<record id="view_product_principal_tree" model="ir.ui.view">
+			<field name="name">product.principal.tree</field>
+			<field name="model">product.principal</field>
+			<field name="arch" type="xml">
+				<tree string="Product Group" version="7.0">
+					<field name="name" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- Product Group Action -->
+		<record id="action_product_principal_view" model="ir.actions.act_window">
+			<field name="name">Product Principal</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">product.principal</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" eval="view_product_principal_tree" />
+		</record>
+
+		<!-- Product Group Menu -->
+		<menuitem id="product_principal_menu" parent="product_product.product_menu"
+			name="Product Principal" action="action_product_principal_view" groups="base.group_system" />
+
+	</data>
+</openerp>

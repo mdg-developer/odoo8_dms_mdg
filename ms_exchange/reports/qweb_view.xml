@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- Good Issue Note -->
+		<report id="report_good_issue_note" model="product.transactions" string="Exchange/Return Report"
+			report_type="qweb-pdf" name="ms_exchange.exchange_return_report" file="ms_exchange.exchange_return_report"
+			attachment_use="False" attachment="('Exchange/Return Report')+'.pdf'" />
+			
+			
+	</data>
+</openerp>

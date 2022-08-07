@@ -1,0 +1,1024 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 4.4.2.v201410272105 Build &lt;4.4.2.v20150217-1805></property>
+    <list-property name="propertyBindings">
+        <structure>
+            <property name="name">queryText</property>
+            <property name="id">212</property>
+        </structure>
+        <structure>
+            <property name="name">queryTimeOut</property>
+            <property name="id">212</property>
+        </structure>
+        <structure>
+            <property name="name">rowFetchSize</property>
+            <property name="id">212</property>
+        </structure>
+    </list-property>
+    <property name="units">in</property>
+    <property name="iconFile">/templates/blank_report.gif</property>
+    <property name="layoutPreference">fixed layout</property>
+    <property name="bidiLayoutOrientation">ltr</property>
+    <property name="imageDPI">96</property>
+    <list-property name="libraries">
+        <structure>
+            <property name="fileName">birt_report/general_library.rptlibrary</property>
+            <property name="namespace">general_library</property>
+        </structure>
+    </list-property>
+    <parameters>
+        <scalar-parameter name="report_id" id="9">
+            <property name="hidden">false</property>
+            <text-property name="promptText">Report Name</text-property>
+            <property name="valueType">dynamic</property>
+            <property name="isRequired">true</property>
+            <property name="dataSetName">report_name</property>
+            <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
+            <expression name="labelExpr" type="javascript">dataSetRow["name"]</expression>
+            <expression name="sortByColumn">dataSetRow["name"]</expression>
+            <property name="sortDirection">asc</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">list-box</property>
+            <property name="mustMatch">true</property>
+            <property name="fixedOrder">false</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <cascading-parameter-group name="fiscal_year_period" id="293" extends="general_library.fiscal_year_period"/>
+        <scalar-parameter name="start_date" id="294" extends="general_library.start_date"/>
+        <scalar-parameter name="end_date" id="295" extends="general_library.end_date"/>
+        <scalar-parameter name="target_move" id="296" extends="general_library.target_move"/>
+    </parameters>
+    <data-sources>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="290"
+ extends="general_library.Data Source"/>
+    </data-sources>
+    <data-sets>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="report_name" id="8">
+            <property name="nullsOrdering">nulls lowest</property>
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">id</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">id</text-property>
+                    <text-property name="heading">id</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">name</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">name</text-property>
+                    <text-property name="heading">name</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters"/>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">id</property>
+                    <property name="nativeName">id</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">name</property>
+                    <property name="nativeName">name</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select id,name from account_financial_report where parent_id is null and id in (1,4,9)]]></xml-property>
+        </oda-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="company" id="103">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">name</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">name</text-property>
+                    <text-property name="heading">name</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters"/>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">name</property>
+                    <property name="nativeName">name</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select name from res_company where id = 1]]></xml-property>
+        </oda-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="opening_closing_report" id="212">
+            <property name="nullsOrdering">nulls lowest</property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">closing_fiscal_year</property>
+                    <property name="paramName">fiscal_year_id</property>
+                    <property name="dataType">integer</property>
+                    <property name="position">1</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">closing_start_date</property>
+                    <property name="paramName">start_date</property>
+                    <property name="dataType">date</property>
+                    <property name="position">2</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">closing_end_date</property>
+                    <property name="paramName">end_date</property>
+                    <property name="dataType">date</property>
+                    <property name="position">3</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">closing_start_period_id</property>
+                    <property name="paramName">start_period_id</property>
+                    <property name="dataType">integer</property>
+                    <property name="position">4</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">closing_end_period_id</property>
+                    <property name="paramName">end_period_id</property>
+                    <property name="dataType">integer</property>
+                    <property name="position">5</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">closing_target_move</property>
+                    <property name="paramName">target_move</property>
+                    <property name="dataType">string</property>
+                    <property name="position">6</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">opening_fiscal_year_id</property>
+                    <property name="paramName">fiscal_year_id</property>
+                    <property name="dataType">integer</property>
+                    <property name="position">7</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">opening_start_date</property>
+                    <property name="paramName">start_date</property>
+                    <property name="dataType">date</property>
+                    <property name="position">8</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">opening_end_date</property>
+                    <property name="paramName">end_date</property>
+                    <property name="dataType">date</property>
+                    <property name="position">9</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">opening_start_period_id</property>
+                    <property name="paramName">start_period_id</property>
+                    <property name="dataType">integer</property>
+                    <property name="position">10</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">opening_end_period_id</property>
+                    <property name="paramName">end_period_id</property>
+                    <property name="dataType">integer</property>
+                    <property name="position">11</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">opening_target_move</property>
+                    <property name="paramName">target_move</property>
+                    <property name="dataType">string</property>
+                    <property name="position">12</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">purchase_fiscal_year</property>
+                    <property name="paramName">fiscal_year_id</property>
+                    <property name="dataType">integer</property>
+                    <property name="position">13</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">purchase_start_date</property>
+                    <property name="paramName">start_date</property>
+                    <property name="dataType">date</property>
+                    <property name="position">14</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">purchase_end_date</property>
+                    <property name="paramName">end_date</property>
+                    <property name="dataType">date</property>
+                    <property name="position">15</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">purchase_start_period_id</property>
+                    <property name="paramName">start_period_id</property>
+                    <property name="dataType">integer</property>
+                    <property name="position">16</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">purchase_end_period_id</property>
+                    <property name="paramName">end_period_id</property>
+                    <property name="dataType">integer</property>
+                    <property name="position">17</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">purchase_target_move</property>
+                    <property name="paramName">target_move</property>
+                    <property name="dataType">string</property>
+                    <property name="position">18</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">net_fiscal_year</property>
+                    <property name="paramName">fiscal_year_id</property>
+                    <property name="dataType">integer</property>
+                    <property name="position">19</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">net_start_date</property>
+                    <property name="paramName">start_date</property>
+                    <property name="dataType">integer</property>
+                    <property name="position">20</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">net_end_date</property>
+                    <property name="paramName">end_date</property>
+                    <property name="dataType">integer</property>
+                    <property name="position">21</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">net_start_period_id</property>
+                    <property name="paramName">start_period_id</property>
+                    <property name="dataType">integer</property>
+                    <property name="position">22</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">net_end_period_id</property>
+                    <property name="paramName">end_period_id</property>
+                    <property name="dataType">integer</property>
+                    <property name="position">23</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">net_target_move</property>
+                    <property name="paramName">target_move</property>
+                    <property name="dataType">string</property>
+                    <property name="position">24</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">report_id1</property>
+                    <property name="paramName">report_id</property>
+                    <property name="dataType">integer</property>
+                    <property name="position">25</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">report_id2</property>
+                    <property name="paramName">report_id</property>
+                    <property name="dataType">integer</property>
+                    <property name="position">26</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">style_overwrite</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">sign</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">closing_balance</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">opening_balance</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">depth</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">7</property>
+                        <property name="name">purchase_balance</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">net_balance</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">report_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">name</property>
+                    <property name="nativeName">name</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">style_overwrite</property>
+                    <property name="nativeName">style_overwrite</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">sign</property>
+                    <property name="nativeName">sign</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">closing_balance</property>
+                    <property name="nativeName">closing_balance</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">opening_balance</property>
+                    <property name="nativeName">opening_balance</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">depth</property>
+                    <property name="nativeName">depth</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">purchase_balance</property>
+                    <property name="nativeName">purchase_balance</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">net_balance</property>
+                    <property name="nativeName">net_balance</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
+                    <property name="name">report_name</property>
+                    <property name="nativeName">report_name</property>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select A.name,A.style_overwrite,A.sign,A.closing_balance,A.opening_balance,A.depth,A.purchase_balance,A.net_balance,frt.name as report_name
+from
+(select  name,style_overwrite,sign,
+financial_report_balance(id,?,?,?,?,?,?) as closing_balance ,
+financial_report_balance_opening(id,?,?,?,?,?,?) as opening_balance,
+financial_report_balance_purchase(id,?,?,?,?,?,?) as purchase_balance,
+financial_report_balance_net(id,?,?,?,?,?,?) as net_balance,
+depth
+from financial_report_tree where depth>1 and 
+parent_id=? and sequence is not null
+)A,financial_report_tree frt
+where frt.id=?]]></xml-property>
+        </oda-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="fiscal_year" id="291"
+ extends="general_library.fiscal_year"/>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="period" id="292"
+ extends="general_library.period"/>
+    </data-sets>
+    <styles>
+        <style name="double_underline" id="4">
+            <property name="fontFamily">"Arial"</property>
+            <property name="fontSize">10pt</property>
+            <property name="fontWeight">bold</property>
+            <property name="textLineThrough">none</property>
+            <property name="textUnderline">none</property>
+            <property name="borderBottomStyle">double</property>
+            <property name="borderTopStyle">groove</property>
+            <structure name="numberFormat">
+                <property name="category">Currency</property>
+                <property name="pattern">#,##0.00{RoundingMode=UNNECESSARY}</property>
+            </structure>
+        </style>
+        <style name="crosstab-cell" id="5">
+            <property name="borderBottomColor">#CCCCCC</property>
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">1pt</property>
+            <property name="borderLeftColor">#CCCCCC</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">1pt</property>
+            <property name="borderRightColor">#CCCCCC</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">1pt</property>
+            <property name="borderTopColor">#CCCCCC</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">1pt</property>
+        </style>
+        <style name="crosstab" id="6">
+            <property name="borderBottomColor">#CCCCCC</property>
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">1pt</property>
+            <property name="borderLeftColor">#CCCCCC</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">1pt</property>
+            <property name="borderRightColor">#CCCCCC</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">1pt</property>
+            <property name="borderTopColor">#CCCCCC</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">1pt</property>
+        </style>
+        <style name="bold_underline" id="140">
+            <property name="fontFamily">"Arial"</property>
+            <property name="fontSize">11pt</property>
+            <property name="fontWeight">bold</property>
+            <property name="borderBottomStyle">solid</property>
+            <structure name="numberFormat">
+                <property name="category">Currency</property>
+                <property name="pattern">#,##0.00{RoundingMode=UNNECESSARY}</property>
+            </structure>
+            <property name="verticalAlign">bottom</property>
+        </style>
+        <style name="financial_cell" id="141">
+            <property name="fontFamily">"Arial"</property>
+            <property name="fontSize">10pt</property>
+            <list-property name="highlightRules">
+                <structure>
+                    <property name="operator">eq</property>
+                    <expression name="testExpr" type="javascript">row["Column Binding"]</expression>
+                    <simple-property-list name="value1">
+                        <value type="javascript">1</value>
+                    </simple-property-list>
+                    <property name="style">bold_underline</property>
+                </structure>
+                <structure>
+                    <property name="operator">eq</property>
+                    <expression name="testExpr" type="javascript">row["Column Binding"]</expression>
+                    <simple-property-list name="value1">
+                        <value type="javascript">2</value>
+                    </simple-property-list>
+                    <property name="style">title2_underline</property>
+                </structure>
+                <structure>
+                    <property name="operator">eq</property>
+                    <property name="fontSize">10pt</property>
+                    <property name="fontWeight">bold</property>
+                    <expression name="testExpr" type="javascript">row["Column Binding"]</expression>
+                    <simple-property-list name="value1">
+                        <value type="javascript">3</value>
+                    </simple-property-list>
+                </structure>
+                <structure>
+                    <property name="operator">eq</property>
+                    <expression name="testExpr" type="javascript">row["Column Binding"]</expression>
+                    <simple-property-list name="value1">
+                        <value type="javascript">4</value>
+                    </simple-property-list>
+                    <property name="style">Normal_underline</property>
+                </structure>
+                <structure>
+                    <property name="operator">eq</property>
+                    <property name="fontFamily">"Arial"</property>
+                    <property name="fontSize">9pt</property>
+                    <property name="fontStyle">italic</property>
+                    <expression name="testExpr" type="javascript">row["Column Binding"]</expression>
+                    <simple-property-list name="value1">
+                        <value type="javascript">5</value>
+                    </simple-property-list>
+                </structure>
+                <structure>
+                    <property name="operator">eq</property>
+                    <property name="fontFamily">"Arial"</property>
+                    <property name="fontSize">9pt</property>
+                    <property name="fontStyle">normal</property>
+                    <expression name="testExpr" type="javascript">row["Column Binding"]</expression>
+                    <simple-property-list name="value1">
+                        <value type="javascript">6</value>
+                    </simple-property-list>
+                </structure>
+            </list-property>
+        </style>
+        <style name="financial_amt_cell" id="142">
+            <property name="fontFamily">"Arial"</property>
+            <property name="fontSize">10pt</property>
+            <list-property name="highlightRules">
+                <structure>
+                    <property name="operator">eq</property>
+                    <expression name="testExpr" type="javascript">row["Column Binding"]</expression>
+                    <simple-property-list name="value1">
+                        <value type="javascript">1</value>
+                    </simple-property-list>
+                    <property name="style">bold_underline</property>
+                </structure>
+                <structure>
+                    <property name="operator">eq</property>
+                    <expression name="testExpr" type="javascript">row["Column Binding"]</expression>
+                    <simple-property-list name="value1">
+                        <value type="javascript">2</value>
+                    </simple-property-list>
+                    <property name="style">title2_underline</property>
+                </structure>
+                <structure>
+                    <property name="operator">eq</property>
+                    <expression name="testExpr" type="javascript">row["Column Binding"]</expression>
+                    <simple-property-list name="value1">
+                        <value type="javascript">3</value>
+                    </simple-property-list>
+                    <property name="style">double_underline</property>
+                </structure>
+                <structure>
+                    <property name="operator">eq</property>
+                    <expression name="testExpr" type="javascript">row["Column Binding"]</expression>
+                    <simple-property-list name="value1">
+                        <value type="javascript">4</value>
+                    </simple-property-list>
+                    <property name="style">Normal_underline</property>
+                </structure>
+                <structure>
+                    <property name="operator">eq</property>
+                    <property name="fontFamily">"Arial"</property>
+                    <property name="fontSize">9pt</property>
+                    <property name="fontStyle">italic</property>
+                    <expression name="testExpr" type="javascript">row["Column Binding"]</expression>
+                    <simple-property-list name="value1">
+                        <value type="javascript">5</value>
+                    </simple-property-list>
+                </structure>
+                <structure>
+                    <property name="operator">eq</property>
+                    <property name="fontFamily">"Arial"</property>
+                    <property name="fontSize">9pt</property>
+                    <property name="fontStyle">normal</property>
+                    <expression name="testExpr" type="javascript">row["Column Binding"]</expression>
+                    <simple-property-list name="value1">
+                        <value type="javascript">6</value>
+                    </simple-property-list>
+                </structure>
+            </list-property>
+        </style>
+        <style name="Normal_underline" id="143">
+            <property name="fontSize">small</property>
+            <property name="borderBottomStyle">dashed</property>
+            <property name="borderBottomWidth">thin</property>
+        </style>
+        <style name="title2_underline" id="144">
+            <property name="fontWeight">bold</property>
+            <property name="fontStyle">normal</property>
+            <property name="textUnderline">none</property>
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">thin</property>
+        </style>
+    </styles>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2">
+            <property name="type">a4</property>
+            <property name="orientation">landscape</property>
+            <page-footer>
+                <text id="3">
+                    <property name="contentType">html</property>
+                    <text-property name="content"><![CDATA[<value-of>new Date()</value-of>]]></text-property>
+                </text>
+            </page-footer>
+        </simple-master-page>
+    </page-setup>
+    <body>
+        <grid id="253">
+            <property name="height">1.4444444444444444in</property>
+            <column id="254"/>
+            <column id="255"/>
+            <column id="256"/>
+            <column id="257"/>
+            <column id="258"/>
+            <column id="259"/>
+            <row id="260">
+                <property name="height">0.4027777777777778in</property>
+                <cell id="261">
+                    <property name="colSpan">6</property>
+                    <property name="rowSpan">1</property>
+                    <data id="288">
+                        <property name="fontSize">16pt</property>
+                        <property name="fontWeight">bold</property>
+                        <property name="textAlign">center</property>
+                        <property name="dataSet">company</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">name</property>
+                                <text-property name="displayName">name</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["name"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">name</property>
+                    </data>
+                </cell>
+            </row>
+            <row id="267">
+                <property name="height">0.4444444444444444in</property>
+                <cell id="268">
+                    <property name="colSpan">6</property>
+                    <property name="rowSpan">1</property>
+                    <data id="289">
+                        <property name="fontSize">16pt</property>
+                        <property name="fontWeight">bold</property>
+                        <property name="textAlign">center</property>
+                        <property name="dataSet">opening_closing_report</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">report_name</property>
+                                <text-property name="displayName">report_name</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["report_name"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">report_name</property>
+                    </data>
+                </cell>
+            </row>
+            <row id="274">
+                <cell id="275">
+                    <label id="66">
+                        <property name="fontSize">11pt</property>
+                        <property name="fontWeight">bold</property>
+                        <property name="textAlign">center</property>
+                        <text-property name="text">Fiscal Year:</text-property>
+                    </label>
+                </cell>
+                <cell id="276">
+                    <label id="67">
+                        <property name="fontSize">11pt</property>
+                        <property name="fontWeight">bold</property>
+                        <property name="textAlign">center</property>
+                        <text-property name="text">Start Period:</text-property>
+                    </label>
+                </cell>
+                <cell id="277">
+                    <label id="94">
+                        <property name="fontSize">11pt</property>
+                        <property name="fontWeight">bold</property>
+                        <property name="textAlign">center</property>
+                        <text-property name="text">End Period:</text-property>
+                    </label>
+                </cell>
+                <cell id="278">
+                    <label id="136">
+                        <property name="fontWeight">bold</property>
+                        <property name="textAlign">center</property>
+                        <text-property name="text">Start Date:</text-property>
+                    </label>
+                </cell>
+                <cell id="279">
+                    <label id="137">
+                        <property name="fontWeight">bold</property>
+                        <property name="textAlign">center</property>
+                        <text-property name="text">End Date:</text-property>
+                    </label>
+                </cell>
+                <cell id="280">
+                    <label id="69">
+                        <property name="fontSize">11pt</property>
+                        <property name="fontWeight">bold</property>
+                        <property name="textAlign">center</property>
+                        <text-property name="text">Target Move:</text-property>
+                    </label>
+                </cell>
+            </row>
+            <row id="281">
+                <cell id="282">
+                    <data id="57">
+                        <property name="fontWeight">bold</property>
+                        <property name="textAlign">center</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">fiscal_year_id</property>
+                                <expression name="expression" type="javascript">params["fiscal_year_id"].displayText</expression>
+                                <property name="dataType">string</property>
+                                <property name="allowExport">true</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">fiscal_year_id</property>
+                    </data>
+                </cell>
+                <cell id="283">
+                    <data id="58">
+                        <property name="fontWeight">bold</property>
+                        <property name="textAlign">center</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">start_period_id</property>
+                                <expression name="expression" type="javascript">params["start_period_id"].displayText</expression>
+                                <property name="dataType">string</property>
+                                <property name="allowExport">true</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">start_period_id</property>
+                    </data>
+                </cell>
+                <cell id="284">
+                    <data id="95">
+                        <property name="fontWeight">bold</property>
+                        <property name="textAlign">center</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">end_period_id</property>
+                                <expression name="expression" type="javascript">params["end_period_id"].displayText</expression>
+                                <property name="dataType">string</property>
+                                <property name="allowExport">true</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">end_period_id</property>
+                    </data>
+                </cell>
+                <cell id="285">
+                    <data id="138">
+                        <property name="fontWeight">bold</property>
+                        <property name="textAlign">center</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">start_date</property>
+                                <expression name="expression" type="javascript">params["start_date"]</expression>
+                                <property name="dataType">date</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">start_date</property>
+                    </data>
+                </cell>
+                <cell id="286">
+                    <data id="139">
+                        <property name="fontWeight">bold</property>
+                        <property name="textAlign">center</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">end_date</property>
+                                <expression name="expression" type="javascript">params["end_date"]</expression>
+                                <property name="dataType">date</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">end_date</property>
+                    </data>
+                </cell>
+                <cell id="287">
+                    <data id="60">
+                        <property name="fontWeight">bold</property>
+                        <property name="textAlign">center</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">target_move</property>
+                                <expression name="expression" type="javascript">params["target_move"].displayText</expression>
+                                <property name="dataType">string</property>
+                                <property name="allowExport">true</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">target_move</property>
+                    </data>
+                </cell>
+            </row>
+        </grid>
+        <table id="219">
+            <property name="width">11.125in</property>
+            <property name="dataSet">opening_closing_report</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">name</property>
+                    <text-property name="displayName">name</text-property>
+                    <expression name="expression" type="javascript">label='\xA0';
+label+=dataSetRow["name"];
+label;</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">closing_balance</property>
+                    <text-property name="displayName">closing_balance</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["closing_balance"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">opening_balance</property>
+                    <text-property name="displayName">opening_balance</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["opening_balance"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">purchase_balance</property>
+                    <text-property name="displayName">purchase_balance</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["purchase_balance"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">net_balance</property>
+                    <text-property name="displayName">net_balance</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["net_balance"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">Column Binding</property>
+                    <expression name="expression" type="javascript">dataSetRow["style_overwrite"]</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+            </list-property>
+            <column id="248">
+                <property name="width">4.041666666666667in</property>
+            </column>
+            <column id="249">
+                <property name="width">1.8611111111111112in</property>
+            </column>
+            <column id="250">
+                <property name="width">1.7638888888888888in</property>
+            </column>
+            <column id="251">
+                <property name="width">1.8611111111111112in</property>
+            </column>
+            <column id="252">
+                <property name="width">1.5972222222222223in</property>
+            </column>
+            <header>
+                <row id="220">
+                    <property name="backgroundColor">silver</property>
+                    <property name="height">0.3611111111111111in</property>
+                    <cell id="221">
+                        <label id="205">
+                            <property name="fontFamily">"Arial"</property>
+                            <property name="fontSize">12pt</property>
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">center</property>
+                            <text-property name="text">Description</text-property>
+                        </label>
+                    </cell>
+                    <cell id="223">
+                        <label id="204">
+                            <property name="fontFamily">"Arial"</property>
+                            <property name="fontSize">12pt</property>
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">center</property>
+                            <text-property name="text">OPENING US$</text-property>
+                        </label>
+                    </cell>
+                    <cell id="225">
+                        <label id="206">
+                            <property name="fontFamily">"Arial"</property>
+                            <property name="fontSize">12pt</property>
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">center</property>
+                            <text-property name="text">PURCHASE US$</text-property>
+                        </label>
+                    </cell>
+                    <cell id="227">
+                        <label id="207">
+                            <property name="fontFamily">"Arial"</property>
+                            <property name="fontSize">12pt</property>
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">center</property>
+                            <text-property name="text">CLOSING US$</text-property>
+                        </label>
+                    </cell>
+                    <cell id="229">
+                        <label id="208">
+                            <property name="fontFamily">"Arial"</property>
+                            <property name="fontSize">12pt</property>
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">center</property>
+                            <text-property name="text">NET US$</text-property>
+                        </label>
+                    </cell>
+                </row>
+            </header>
+            <detail>
+                <row id="231">
+                    <cell id="232">
+                        <data id="233">
+                            <property name="style">financial_cell</property>
+                            <property name="resultSetColumn">name</property>
+                        </data>
+                    </cell>
+                    <cell id="234">
+                        <data id="237">
+                            <property name="style">financial_amt_cell</property>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">opening_balance</property>
+                        </data>
+                    </cell>
+                    <cell id="236">
+                        <data id="239">
+                            <property name="style">financial_amt_cell</property>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">purchase_balance</property>
+                        </data>
+                    </cell>
+                    <cell id="238">
+                        <data id="235">
+                            <property name="style">financial_amt_cell</property>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">closing_balance</property>
+                        </data>
+                    </cell>
+                    <cell id="240">
+                        <data id="241">
+                            <property name="style">financial_amt_cell</property>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">net_balance</property>
+                        </data>
+                    </cell>
+                </row>
+            </detail>
+            <footer>
+                <row id="242">
+                    <cell id="243"/>
+                    <cell id="244"/>
+                    <cell id="245"/>
+                    <cell id="246"/>
+                    <cell id="247"/>
+                </row>
+            </footer>
+        </table>
+    </body>
+</report>

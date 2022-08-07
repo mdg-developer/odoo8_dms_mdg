@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record model="ir.ui.view" id="view_outlettype_outlettype_tree">
+			<field name="name">outlettype.outlettype.tree</field>
+			<field name="model">outlettype.outlettype</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Outlet Type">
+					<field name="name" />
+
+				</tree>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_outlettype_outlettype_form">
+			<field name="name">outlettype.outlettype.form</field>
+			<field name="model">outlettype.outlettype</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Outlet Type">
+					<sheet>
+
+						<group>
+							<field name="name" />
+						</group>
+						<group>
+							<group>
+								<button name="retrieve_data" string="Retrieve"
+									type="object" widget="statinfo" class="oe_highlight" />
+							</group>
+							<group>
+
+							</group>
+						</group>
+						<group>
+							<notebook>
+								<page string ="Product">
+									<field name='outlet_product_line'>
+										<tree string="Product" editable="bottom" default_order="sequence asc">
+											<field name="sequence" invisible="1" />
+											<field name="product_id" />
+											<field name="type" />
+										</tree>
+									</field>
+
+								</page>
+
+							</notebook>
+						</group>
+					</sheet>
+				</form>
+
+			</field>
+		</record>
+
+		<record model="ir.actions.act_window" id="action_outlettype_outlettype_form">
+			<field name="name">Outlet Type</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">outlettype.outlettype</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_outlettype_outlettype_tree" />
+		</record>
+
+		<menuitem id="menu_outlettype" name="Outlet Type" parent="sale_promotions.sales"
+			action="action_outlettype_outlettype_form" sequence="3" />
+
+	</data>
+</openerp>

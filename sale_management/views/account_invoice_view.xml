@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+
+		<!-- customize form for sale order line view -->
+		<record id="view_account_invoice_report_form" model="ir.ui.view">
+			<field name="name">account.invoice.report</field>
+			<field name="model">account.invoice</field>
+			<field name="inherit_id" ref="account.invoice_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//form/sheet/h1" position="replace">
+					<h1>
+						<label string="Draft Invoice"
+							attrs="{'invisible': ['|',('state','not in',('draft',)), ('type','&lt;&gt;','out_invoice')]}" />
+						<label string="Draft Credit Note"
+							attrs="{'invisible': ['|',('state','not in',('draft',)), ('type','&lt;&gt;','out_refund')]}" />
+						<label string="Pro Forma Invoice"
+							attrs="{'invisible': [('state','not in',('proforma','proforma2'))]}" />
+						<label string="Invoice"
+							attrs="{'invisible': ['|',('state','in',('draft','proforma','proforma2')), ('type','&lt;&gt;','out_invoice')]}" />
+						<label string="Credit Note"
+							attrs="{'invisible': ['|',('state','in',('draft','proforma','proforma2')), ('type','&lt;&gt;','out_refund')]}" />
+						<field name="number" readonly="1" class="oe_inline" />
+					</h1>
+				</xpath>
+				<field name="origin" position="after">
+					<field name="sale_order_id" attrs="{'invisible':[('type','!=','out_invoice')]}" />
+				</field>
+				<field name="journal_id" position="after">
+					<field name="ignore_credit_limit" attrs="{'invisible':[('type','!=','out_invoice')]}" />
+					<field name="principle_id"
+						attrs="{'readonly': [('state', '=', 'paid')],'invisible':[('type','in',('out_invoice','in_invoice'))]}" />
+					<field name="approved_by"
+						attrs="{'invisible':[('type','in',('out_invoice','in_invoice'))]}" />
+					<field name="offset_by"
+						attrs="{'invisible':[('type','in',('out_invoice','in_invoice'))]}" />
+				</field>
+
+				<xpath expr="/form/sheet/notebook/page[@string='Invoice Lines']"
+					position="after">
+					<page name='promo_lines' string="Promotion Lines"
+						attrs="{'invisible':[('type','!=','out_invoice')]}">
+						<field name="promos_line_ids" attrs="{'readonly':[('state','!=','draft')]}">
+							<form string="Promotion Lines" version="7.0">
+								<group>
+									<group>
+										<field name="pro_id" on_change="onchange_promo_id(pro_id)" />
+										<field name="from_date" />
+										<field name="to_date" />
+										<field name="product_id" />
+										<field name="is_foc" />
+										<field name="is_discount" />
+										<field name="foc_qty" />
+										<field name="discount_amount" />
+										<field name="discount_percent" />
+										<field name="manual" />
+									</group>
+								</group>
+							</form>
+							<tree string="Promotion Lines" editable="bottom">
+								<field name="pro_id" on_change="onchange_promo_id(pro_id)" />
+								<field name="from_date" />
+								<field name="to_date" />
+								<field name="product_id" />
+								<field name="is_foc" />
+								<field name="is_discount" />
+								<field name="foc_qty" />
+								<field name="discount_amount" />
+								<field name="discount_percent" />
+								<field name="manual" />
+
+							</tree>
+						</field>
+					</page>
+					<page name="credit_line_ids" string="Credit History"
+						attrs="{'invisible':[('type','!=','out_invoice')]}">
+						<field name="credit_line_ids" attrs="{'readonly':[('state','!=','draft')]}">
+							<tree string="Credit Lines" editable="bottom">
+								<field name="date" readonly="1" />
+								<field name="invoice_no" readonly="1" />
+								<field name="invoice_amt" readonly="1" />
+								<field name="paid_amount" readonly="1" />
+								<field name="balance" readonly="1" />
+								<field name="due_date" readonly="1" />
+								<field name="balance_day" readonly="1" />
+								<field name="branch_id" readonly="1" />
+								<field name="status" readonly="1" />
+							</tree>
+						</field>
+						<group class="oe_subtotal_footer oe_center" colspan="2">
+							<field name="credit_invoice_balance" readonly="1" />
+							<field name="credit_limit_amount" readonly="1" />
+							<field name="credit_balance" readonly="1" />
+						</group>
+
+					</page>
+				</xpath>
+				<xpath
+					expr="/form/sheet/notebook/page[@string='Payments']/field/tree/field[@name='move_id']"
+					position="after">
+					<field name="partner_id" />
+				</xpath>
+			</field>
+		</record>
+		<record id="invoice_supplier_form_pending" model="ir.ui.view">
+			<field name="name">account.invoice.supplier.form</field>
+			<field name="model">account.invoice</field>
+			<field name="inherit_id" ref="account.invoice_supplier_form" />
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//form/sheet/div[@class='oe_title']" position="replace">
+						<h1>
+							<label string="Draft Invoice"
+								attrs="{'invisible': ['|',('state','&lt;&gt;','draft'), ('type','&lt;&gt;','in_invoice')]}" />
+							<label string="Draft Debit Note"
+								attrs="{'invisible': ['|',('state','&lt;&gt;','draft'), ('type','&lt;&gt;','in_refund')]}" />
+							<label string="Invoice"
+								attrs="{'invisible': ['|',('state', '=', 'draft'), ('type','&lt;&gt;','in_invoice')]}" />
+							<label string="Debit Note"
+								attrs="{'invisible': ['|',('state', '=', 'draft'), ('type','&lt;&gt;','in_refund')]}" />
+							<field name="number" class="oe_inline"
+								attrs="{'invisible': [('state', '=', 'draft')]}" />
+						</h1>
+					</xpath>
+					<xpath
+						expr="/form/sheet/notebook/page[@string='Payments']/field/tree/field[@name='move_id']"
+						position="after">
+						<field name="partner_id" />
+					</xpath>
+					<field name="fiscal_position" position="replace">
+					</field>
+
+					<field name="user_id" position="replace">
+
+						<field name="user_id" string="Prepared By"
+							context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'account.group_account_invoice']}" />
+						<field name="fiscal_position" options="{'no_create': True}" />
+
+					</field>
+					<field name="origin" position="replace">
+					</field>
+
+					<field name="journal_id" position="after">
+
+						<field name="claim_type"
+							attrs="{'readonly': [('state', '=', 'paid')],'invisible':[('type','!=','in_refund')]}" />
+
+						<field name="principle_id"
+							attrs="{'readonly': [('state', '=', 'paid')],'invisible':[('type','in',('out_invoice','in_invoice'))]}" />
+						<!-- <field name="cdnreference_no" attrs="{'readonly': [('state', '=', 
+							'paid')]}" /> -->
+						<field name="origin" required="1" attrs="{'invisible':[('type','!=','in_invoice')]}" />
+						<field name="origin" required="1"  string="Reference No"
+							attrs="{'invisible':[('type','!=','in_refund')]}" />
+
+						<field name="subject" attrs="{'readonly': [('state', '=', 'paid')]}" />
+						<field name="approved_by"
+							attrs="{'invisible':[('type','in',('out_invoice','in_invoice'))]}" />
+						<field name="offset_by"
+							attrs="{'invisible':[('type','in',('out_invoice','in_invoice'))]}" />
+					</field>
+					<xpath expr="/form/sheet/notebook/page[@string='Other Info']"
+						position="before">
+						<page name='fx_rates' string="F/X"
+							attrs="{'invisible':[('type','!=','in_refund')]}">
+							<group>
+								<group>
+									<field name="dn_currency_id" attrs="{'readonly': [('state', '=', 'paid')]}" />
+									<field name="dn_rate" attrs="{'readonly': [('state', '=', 'paid')]}" />
+									<field name="dn_bank" attrs="{'readonly': [('state', '=', 'paid')]}" />
+								</group>
+								<group>
+									<field name="document_file1" filename="document_fname1"
+										attrs="{'readonly': [('state', '=', 'paid')]}" />
+									<field name="document_file2" filename="document_fname2"
+										attrs="{'readonly': [('state', '=', 'paid')]}" />
+									<field name="document_file3" filename="document_fname3"
+										attrs="{'readonly': [('state', '=', 'paid')]}" />
+								</group>
+							</group>
+						</page>
+					</xpath>
+
+				</data>
+
+			</field>
+		</record>
+
+	</data>
+</openerp>
+		

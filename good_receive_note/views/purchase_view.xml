@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<record id="draft_purchase_order" model="ir.actions.act_window">
+			<field name="name">Draft Purchase Order</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">purchase.order</field>
+			<field name="context">{}</field>
+			<field name="domain">[('state','=','approved'),('shipped', '=',False)]</field>
+			<field name="view_mode">tree,form</field>
+			<field name="search_view_id" ref="purchase.view_purchase_order_filter" />
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to create a request for quotation.
+				</p>
+				<p>
+					The quotation contains the history of the discussion/negotiation
+					you had with your supplier. Once confirmed, a request for
+					quotation is converted into a purchase order.
+				</p>
+				<p>
+					Most propositions of purchase orders are created automatically
+					by Odoo based on inventory needs.
+				</p>
+			</field>
+		</record>
+
+		<menuitem action="draft_purchase_order"   id="menu_draft_purchase_order"
+			parent="menu_action_good_receive_note"  sequence="0" />
+		
+		
+	</data>
+</openerp>

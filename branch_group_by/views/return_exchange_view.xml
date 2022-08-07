@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		
+		<record id="view_product_return_exchange_filter" model="ir.ui.view">
+			<field name="name">product.transactions.select</field>
+			<field name="model">product.transactions</field>
+			<field name="arch" type="xml">
+				<search string="Search Return">
+					<group expand="0" string="Group By">
+						<filter string="Branch" context="{'group_by':'branch_id'}" />
+						<filter string="Sale Team" context="{'group_by':'team_id'}" />
+						<filter string="Return Day" context="{'group_by': 'date:day'}" />	
+						<filter string="Township" context="{'group_by':'township_id'}" />
+					</group>
+				</search>
+			</field>
+		</record>		
+		
+	</data>
+</openerp>

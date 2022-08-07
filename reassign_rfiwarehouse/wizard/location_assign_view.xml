@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<record id="view_rfi_reassign_location" model="ir.ui.view">
+			<field name="name">Reassign Warehouse</field>
+			<field name="model">rfi.reassign.location</field>
+			<field name="arch" type="xml">
+				<form string="Assign Team And Location">
+					<separator colspan="4" />
+					<group>
+						<field name="section_id" class="oe_inline" invisible="1" />
+						<field name="request_id" class="oe_inline" invisible="1" />
+						<field name="location_id" class="oe_inline" widget="selection" domain="[('section_id', '=',section_id),('assign', '=',True)]"/>
+					</group>
+					<footer>
+						<button name="make_location" string="Assign" type="object"
+							class="oe_highlight" />
+						or
+						<button string="Cancel" class="oe_link" special="cancel" />
+					</footer>
+				</form>
+			</field>
+		</record>
+
+		<record id="open_rfi_reassign_location" model="ir.actions.act_window">
+			<field name="name">Reassign Warehouse</field>
+			<field name="res_model">rfi.reassign.location</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_rfi_reassign_location" />
+			<field name="target">new</field>
+		</record>
+	</data>
+</openerp>

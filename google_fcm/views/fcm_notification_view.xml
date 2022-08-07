@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		
+		<record id="view_fcm_notification_form" model="ir.ui.view">
+			<field name="name">FCM Notification</field>
+			<field name="model">fcm.notification</field>
+			<field eval="25" name="priority" />
+			<field name="arch" type="xml">
+				<form string="FCM Notification Form">
+					<header>
+						<button name="send_msg" string="Send Custom Msg" type="object"
+							class="oe_highlight" attrs="{'invisible':[('state', '=', 'send')]}"/>
+						<field name="state" widget="statusbar"/>
+					</header>
+					<sheet>
+						<group>
+							<field name="reason" />
+							<field name="date" />
+							<field name="title" />
+							<field name="body" />
+						</group>
+						<notebook>
+							<page string="Send To Teams">
+								<field name="sales_team_id" />
+							</page>
+						</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		
+		<record model="ir.ui.view" id="view_fcm_notification_tree">
+			<field name="name">fcm.notificaton.tree</field>
+			<field name="model">fcm.notification</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="FCM Notification">
+					<field name="reason" />
+					<field name="date" />
+					<field name="title" />
+					<field name="body" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="action_fcm_notification" model="ir.actions.act_window">
+			<field name="name">Notification</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">fcm.notification</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_fcm_notification_tree" />
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to create notification.
+				</p>
+			</field>
+		</record>
+		
+		<menuitem id="menu_fcm_notification" parent="base.menu_mobile_sale_menu"
+			name="Notification" action="action_fcm_notification" sequence="12" />
+			
+	</data>
+</openerp>

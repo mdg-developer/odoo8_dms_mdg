@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<!-- for Sale Branch Setup -->
+
+		<record id="view_sale_order_configuration_form" model="ir.ui.view">
+			<field name="name">sale.order.configuration.form</field>
+			<field name="model">sale.order.configuration</field>
+			<field name="arch" type="xml">
+				<form string="Sale Order Configuration" version="7.0">
+					<group>
+						<field name="customer_type" />
+						<field name="day" />
+					</group>
+				</form>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_sale_order_configuration_tree">
+			<field name="name">sale.order.configuration.tree</field>
+			<field name="model">sale.order.configuration</field>
+			<field name="arch" type="xml">
+				<tree string="Sale Order Configuration">
+					<field name="customer_type" />
+						<field name="day" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="action_sale_order_configuration_view" model="ir.actions.act_window">
+			<field name="name">Sale Order Configuration</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">sale.order.configuration</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" eval="view_sale_order_configuration_tree" />
+		</record>
+
+		<menuitem id="config_sale_order" parent="sale_promotions.sales"
+			name="Sale Order Configuration" action="action_sale_order_configuration_view" />
+		
+	</data>
+</openerp>

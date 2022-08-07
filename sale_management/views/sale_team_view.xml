@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+		<record model="ir.ui.view" id="inherit_crm_case_section_view_tree">
+			<field name="name">crm</field>
+			<field name="model">crm.case.section</field>
+			<field name="inherit_id" ref="sales_team.crm_case_section_view_tree" />
+			<field name="priority" eval="20" />
+			<field name="arch" type="xml">
+				<field name="code" position="after">
+					<!-- <field name="region" /> -->
+					<field name="delivery_team_id" string="Delivery" />
+					<field name="parent_id" />
+					<field name="branch_id" />
+					<field name="sale_channel_id" />
+				</field>
+			</field>
+		</record>
+
+		<!-- sale team creation form -->
+
+		<record model="ir.ui.view" id="view_sale_team_form">
+			<field name="name">crm</field>
+			<field name="model">crm.case.section</field>
+			<field name="inherit_id" ref="sales_team.crm_case_section_view_form" />
+			<field name="priority" eval="20" />
+			<field name="arch" type="xml">
+				<field name="change_responsible" position="replace">
+				</field>
+				<field name="code" position="replace">
+					<field name="code" />
+				</field>
+				<field name="code" position="after">
+					<field name="delivery_team_id" />
+					<field name="region" />
+				</field>
+				<field name="region" position="after">
+					<field name="warehouse_id" />
+				</field>
+				<field name="warehouse_id" position="after">
+					<field name="location_id" />
+				</field>
+				<field name="location_id" position="after">
+					<field name="issue_warehouse_id" />
+					<field name="issue_location_id" />
+					<field name="optional_issue_location_id" />
+					<field name="temp_location_id" />
+                    <field name="normal_return_location_id" />
+                    <field name="exp_location_id" />
+                    <field name="near_exp_location_id" />
+                    <field name="damage_location_id" />
+                    <field name="fresh_stock_not_good_location_id" />										
+					<field name="receiver" />
+					<field name="analytic_account_id" />
+					<field name="van_id" invisible="1" />
+					<field name="vehicle_id" />
+					<field name="sale_channel_id" widget="many2many_tags" />
+					<field name="date" />
+					<field name="total_invoice" invisible="1" />
+					<field name="total_sku" invisible="1" />
+					<field name="total_sku_inv" invisible="1" />
+					<field name="total_rout_plan" invisible="1" />
+					<field name="total_customer_visit" invisible="1" />
+					<field name="total_pre_sale" invisible="1" />
+					<field name="sale_value" invisible="1" />
+					<field name="sale_total_month" invisible="1" />
+					<field name="sale_confirm_today" invisible="1" />
+					<field name="sale_work_day" invisible="1" />
+					<field name="sku_invoice" invisible="1" />
+					<field name="product_invoice" invisible="1" />
+					<field name="credit_sale" invisible="1" />
+				</field>
+				<field name="active" position="after">
+					<field name="allow_foc" />
+					<field name="allow_tax" />
+					<field name="default_division" />
+					<field name="is_supervisor" />
+					<field name="supervisor_team" domain="[('is_supervisor','=',True)]"/>
+				</field>
+				<page string="Team Members" position="after">
+					<page string="Products">
+						<separator string="Products" />
+						<field name="product_ids" widget="many2many_list">
+							<kanban quick_create="false" create="true">
+								<field name="name" />
+								<templates>
+									<t t-name="kanban-box">
+										<div style="position: relative">
+											<a t-if="! read_only_mode" type="delete"
+												style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
+											<div class="oe_module_vignette">
+												<div class="oe_module_desc">
+													<field name="name" />
+												</div>
+											</div>
+										</div>
+									</t>
+								</templates>
+							</kanban>
+						</field>
+					</page>
+
+					<page string="Pricelists">
+						<field name="price_list_line">
+							<form string="Pricelists">
+								<group>
+									<field name="property_product_pricelist" widget="selection" />
+									<field name="is_default" />
+								</group>
+							</form>
+							<tree string="Pricelists" editable="bottom">
+								<field name="property_product_pricelist" widget="selection" />
+								<field name="is_default" />
+							</tree>
+						</field>
+					</page>
+					<!-- Add adding demarcation -->
+
+					<page string="Demarcations">
+						<separator string="Demarcations" />
+						<field name="demarcation_ids" widget="many2many_list">
+							<kanban quick_create="false" create="true">
+								<field name="name" />
+								<templates>
+									<t t-name="kanban-box">
+										<div style="position: relative">
+											<a t-if="! read_only_mode" type="delete"
+												style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
+											<div class="oe_module_vignette">
+												<div class="oe_module_desc">
+													<field name="name" />
+												</div>
+											</div>
+										</div>
+									</t>
+								</templates>
+							</kanban>
+						</field>
+					</page>
+					<!-- Add Product Main Group -->
+					<!-- <page string="Product Main Group"> -->
+					<!-- <separator string="Main Group" /> -->
+					<!-- <field name="main_group_id" widget="many2many_list"> -->
+					<!-- <kanban quick_create="false" create="true"> -->
+					<!-- <field name="name" /> -->
+					<!-- <templates> -->
+					<!-- <t t-name="kanban-box"> -->
+					<!-- <div style="position: relative"> -->
+					<!-- <a t-if="! read_only_mode" type="delete" -->
+					<!-- style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a> -->
+					<!-- <div class="oe_module_vignette"> -->
+					<!-- <div class="oe_module_desc"> -->
+					<!-- <field name="name" /> -->
+					<!-- </div> -->
+					<!-- </div> -->
+					<!-- </div> -->
+					<!-- </t> -->
+					<!-- </templates> -->
+					<!-- </kanban> -->
+					<!-- </field> -->
+					<!-- </page> -->
+				</page>
+
+			</field>
+		</record>
+
+		<record id="crm_case_section_salesteams_view_kanban_inherit"
+			model="ir.ui.view">
+			<field name="name">crm.case.section.kanban</field>
+			<field name="model">crm.case.section</field>
+			<field name="inherit_id" ref="sale.crm_case_section_salesteams_view_kanban" />
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//field[@name='name']" position="after">
+						<field name="total_invoice" />
+						<field name="total_sku" />
+						<field name="total_sku_inv" />
+						<field name="total_rout_plan" />
+						<field name="total_customer_visit" />
+						<field name="total_pre_sale" />
+						<field name="sale_value" />
+						<field name="sale_total_month" />
+						<field name="sale_confirm_today" />
+						<field name="sale_work_day" />
+						<field name="sku_invoice" />
+						<field name="product_invoice" />
+						<field name="credit_sale" />
+					</xpath>
+					<xpath expr="//div[@class='oe_items_list']" position="replace">
+						<div class="oe_items_list">
+							<div>
+								<a type="button">
+									<button name="%(open_view_date_form)d" type="action"
+										widget="statinfo" class="oe_highlight">
+										<span>Insert Date</span>
+									</button>
+								</a>
+							</div>
+							<div>
+
+								<a name="date" type="action">
+									<field name="date">
+									</field>
+								</a>
+							</div>
+
+							<div class="oe_items_list">
+								<div>
+									<a name="total_invoice" type="action">MTD Ach</a>
+									<a name="total_invoice" type="action">
+										<field name="total_invoice">
+										</field>
+									</a>
+								</div>
+							</div>
+							<div class="oe_items_list">
+
+								<div>
+									<a name="total_sku" type="action">Month Target</a>
+									<a name="total_sku" type="action">
+										<field name="total_sku">
+										</field>
+									</a>
+								</div>
+							</div>
+							<div class="oe_salesteams_quotations" t-if="record.use_quotations.raw_value">
+								<a name="total_sku_inv" type="action">MTD Ach %</a>
+								<a name="total_sku_inv" type="action">
+									<field name="total_sku_inv">
+									</field>
+								</a>
+							</div>
+							<div>
+								<a name="total_rout_plan" type="action">Plan</a>
+								<a name="total_rout_plan" type="action">
+									<field name="total_rout_plan">
+									</field>
+								</a>
+							</div>
+							<div>
+								<a name="total_customer_visit" type="action">Coverage</a>
+								<a name="total_customer_visit" type="action">
+									<field name="total_customer_visit">
+									</field>
+								</a>
+							</div>
+							<div class="oe_salesteams_quotations" t-if="record.use_quotations.raw_value">
+								<a name="total_pre_sale" type="action">Effective</a>
+								<a name="total_pre_sale" type="action">
+									<field name="total_pre_sale">
+									</field>
+								</a>
+							</div>
+							<!-- </div> -->
+
+							<!-- <div class="oe_items_list"> -->
+							<div class="oe_salesteams_quotations" t-if="record.use_quotations.raw_value">
+								<a name="sale_value" type="action">Sales</a>
+								<a name="sale_value" type="action">
+									<field name="sale_value">
+									</field>
+								</a>
+							</div>
+							<div class="oe_salesteams_quotations" t-if="record.use_quotations.raw_value">
+								<a name="sale_total_month" type="action">Daily Average</a>
+								<a name="sale_total_month" type="action">
+									<field name="sale_total_month">
+									</field>
+								</a>
+							</div>
+							<div class="oe_salesteams_quotations" t-if="record.use_quotations.raw_value">
+								<a name="sale_confirm_today" type="action">Invoice</a>
+								<a name="sale_confirm_today" type="action">
+									<field name="sale_confirm_today">
+									</field>
+								</a>
+							</div>
+							<div class="oe_salesteams_quotations" t-if="record.use_quotations.raw_value">
+								<a name="sale_work_day" type="action">Daily Average</a>
+								<a name="sale_work_day" type="action">
+									<field name="sale_work_day">
+									</field>
+								</a>
+							</div>
+							<div class="oe_salesteams_quotations" t-if="record.use_quotations.raw_value">
+								<a name="sku_invoice" type="action">SKU/Invoice</a>
+								<a name="sku_invoice" type="action">
+									<field name="sku_invoice">
+									</field>
+								</a>
+							</div>
+							<div class="oe_salesteams_quotations" t-if="record.use_quotations.raw_value">
+								<a name="product_invoice" type="action">Daily Average</a>
+								<a name="product_invoice" type="action">
+									<field name="product_invoice">
+									</field>
+								</a>
+							</div>
+							<div class="oe_salesteams_quotations" t-if="record.use_quotations.raw_value">
+								<a name="credit_sale" type="action">Credit</a>
+								<a name="credit_sale" type="action">
+									<field name="credit_sale">
+									</field>
+								</a>
+							</div>
+
+						</div>
+					</xpath>
+
+
+				</data>
+			</field>
+		</record>
+
+		<record id="crm_case_section_salesteams_view_kanban_crm" model="ir.ui.view">
+			<field name="name">crm.case.section.kanban</field>
+			<field name="model">crm.case.section</field>
+			<field name="inherit_id" ref="crm.crm_case_section_salesteams_view_kanban" />
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//div[@class='oe_items_list']" position="replace">
+					</xpath>
+
+				</data>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="sales_team_form_view_in_crm_inherit">
+			<field name="name">crm.case.section.form</field>
+			<field name="model">crm.case.section</field>
+			<field name="inherit_id" ref="crm.sales_team_form_view_in_crm" />
+			<field name="arch" type="xml">
+				<page string="Stages" position="replace">
+				</page>
+			</field>
+		</record>
+		<!-- <menuitem id="sales_team.menu_sales_team_act" action="open_view_date_form" 
+			name ="Sales Teams" -->
+		<!-- sequence="1" parent="base.menu_sales" groups="base.group_multi_salesteams" 
+			/> -->
+	</data>
+</openerp>
+		
