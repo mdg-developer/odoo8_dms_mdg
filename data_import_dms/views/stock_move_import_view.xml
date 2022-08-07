@@ -65,6 +65,8 @@
 										<field name="origin" />
 										<field name="issue" />
 										<field name="product_id" />
+										<field name="product_code" />
+										
 										<field name="product_uom" />
 										<field name="theoretical_qty" />
 										<field name="product_uom_qty" />

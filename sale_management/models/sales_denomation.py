@@ -135,6 +135,7 @@ class sale_denomination(osv.osv):
                         sequence = product.sequence
                         product_amount+=data[2]
                         data_id = {'product_id':data[0],
+                                   'product_code':product.product_tmpl_id.default_code,
                                           'product_uom_qty':data[1],
                                           'sequence':sequence,
                                           'amount':data[2]}

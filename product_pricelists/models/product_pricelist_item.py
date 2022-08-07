@@ -85,6 +85,7 @@ class product_pricelist_item(osv.osv):
         return super(product_pricelist_item, self).create(cr, uid, data, context=context)
         
     _columns = {
+         'product_code':fields.char(string='Product Code'),
          'branch_id':fields.many2one('res.branch',string='Branch'),
          'product_uom_id':fields.many2one('product.uom', string='Product UoM'),
         'list_price': fields.float('Basic Price', digits_compute=dp.get_precision('Product Price'),readonly=True),
@@ -115,7 +116,7 @@ class product_pricelist_item(osv.osv):
         print 'UOM-->>',uom_list        
         domain = {'product_uom_id': [('id', 'in', uom_list)]}
         if prod[0]['code']:     
-            return {'value': {'name': prod[0]['code'], 'new_price': (product_price * (1 + price_discount)) + price_surcharge, 'list_price':product_price, 'product_uom_id':uom_id, 'base':1, 'categ_id':categ_id, 'product_tmpl_id':product_tmpl_id}
+            return {'value': {'name': prod[0]['code'], 'product_code':  prod[0]['code'], 'new_price': (product_price * (1 + price_discount)) + price_surcharge, 'list_price':product_price, 'product_uom_id':uom_id, 'base':1, 'categ_id':categ_id, 'product_tmpl_id':product_tmpl_id}
                     , 'domain': domain}
         return {}
     

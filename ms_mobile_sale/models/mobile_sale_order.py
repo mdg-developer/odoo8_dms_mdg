@@ -291,12 +291,15 @@ class mobile_sale_order(osv.osv):
 
                     for sol in sale_order_line:
                         if sol['so_name'] == so['name']:
-                                cursor.execute('select id From product_product where id  = %s ', (sol['product_id'],))
+                                cursor.execute('select id,default_code From product_product where id  = %s ', (sol['product_id'],))
                                 data = cursor.fetchall()
                                 if data:
                                     productId = data[0][0]
+                                    productcode = data[0][1]
+                                    
                                 else:
                                     productId = None
+                                    productcode =None
 
                                 if sol['price_unit'] == '0':
                                     foc_val = True
@@ -306,6 +309,7 @@ class mobile_sale_order(osv.osv):
                                 mso_line_res = {
                                   'order_id':s_order_id,
                                   'product_id':productId,
+                                  'product_code':productcode,
                                   'price_unit':sol['price_unit'],
                                   'product_uos_qty':sol['product_uos_qty'],
                                   'foc': foc_val,
@@ -1872,6 +1876,7 @@ class mobile_sale_order(osv.osv):
                         sequence = product.sequence
                         product_amount+=data[2]
                         data_id = {'product_id':data[0],
+                                   'product_code':product.product_tmpl_id.default_code,
                                           'product_uom_qty':data[1],
                                           'denomination_product_ids':deno_id,
                                           'sequence':sequence,

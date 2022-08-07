@@ -98,6 +98,7 @@
 						<tree string="Item List" editable="bottom" default_order="name desc">
 							<field name="sequence" />
 							<field name="product_id" on_change="product_id_change(product_id,price_discount,price_surcharge)" />
+							<field name="product_code"  />
 							<field name="name" invisible="1" />
 							
 							<field name="categ_id"/>

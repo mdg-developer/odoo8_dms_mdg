@@ -303,7 +303,7 @@ class stock_move_import(osv.osv):
                 for i in range(0, val):
                     ln.append('')
                 if ln and ln[0] and ln[0][0] not in ['#', '']:
-                    
+               
                     import_vals = {}
                     import_vals['product'] = ln[product_i]
                     import_vals['uom'] = ln[product_uom_i]
@@ -397,6 +397,7 @@ class stock_move_import(osv.osv):
                 if product_id:
                     product = product_obj.browse(cr, uid, product_id[0], context=context)
                     uom_ids = product.uom_id.id
+                    product_code= product.product_tmpl_id.default_code                         
                     # I check the actual product uom id with uom in excel are same or not
                     # if they are same together next conditin will go to transfer
                 if uom_id and uom_ids:
@@ -405,6 +406,7 @@ class stock_move_import(osv.osv):
                         for product_item in product_list:
                             if product_id[0] == product_item['product_id'] and uom_ids == product_item['product_uom_id'] and from_location_id == product_item['location_id']:
                                 move_val['product_id'] = product_item['product_id']
+                                move_val['product_code'] = product_code
                                 move_val['product_uom'] = product_item['product_uom_id']
                                 move_val['theoretical_qty'] = product_item['theoretical_qty']
                                 move_val['origin'] = tg_no
@@ -436,6 +438,7 @@ class stock_line(osv.osv):
     _description = 'Stock Lines Import'
     _columns = {     
                 'product_id':fields.many2one('product.product', 'Product'),
+                'product_code':fields.char('Product Code'),
                 'product_uom':fields.many2one('product.uom', 'Product Unit of Measure'),
                 'theoretical_qty':fields.float('Stock Quantity'),
                 'product_uom_qty':fields.float('Transfer Quantity'),
