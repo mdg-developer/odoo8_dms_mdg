@@ -2981,7 +2981,7 @@ class mobile_sale_order(osv.osv):
                     and cline.stock_setting_ids=scs.id
                     and ccs.id=%s
                     ''', (sale_team_id,))
-        datas = cr.dictfetchall()
+        datas = cr.fetchall()
         return datas
     
     def udpate_credit_notes_issue_status(self, cr, uid, sale_team_id , context=None, **kwargs):
