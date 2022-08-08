@@ -2960,7 +2960,29 @@ class mobile_sale_order(osv.osv):
                   select scl.id ,sc.outlet_type,scl.product_id,scl.product_uom_qty as quantity,scl.available,scl.facing, scl.chiller from stock_check_setting sc ,stock_check_setting_line scl where sc.id=scl.stock_setting_ids
          ''')
         datas = cr.fetchall()
-        return datas            
+        return datas
+
+    def get_all_competitor_products(self, cr, uid, sale_team_id , context=None, **kwargs):
+        cr.execute('''            
+            select cp.id,cp.name,product_uom_id
+            from competitor_product cp,competitor_product_product_uom_rel rel,crm_case_section ccs
+            where cp.id=rel.competitor_product_id
+            and cp.sales_group_id=ccs.sale_group_id
+            and ccs.id=%s
+         ''', (sale_team_id,))
+        datas = cr.fetchall()
+        return datas
+
+    def get_competitor_stock_check(self, cr, uid, sale_team_id , context=None, **kwargs):
+        cr.execute('''select cline.id,outlet_type,competitor_product_id,product_uom_qty as qty,available,facing,chiller
+                    from competitor_product cp,crm_case_section ccs,stock_check_setting_competitor_line cline,stock_check_setting scs
+                    where cp.sales_group_id=ccs.sale_group_id
+                    and cp.id=cline.competitor_product_id
+                    and cline.stock_setting_ids=scs.id
+                    and ccs.id=%s
+                    ''', (sale_team_id,))
+        datas = cr.dictfetchall()
+        return datas
     
     def udpate_credit_notes_issue_status(self, cr, uid, sale_team_id , context=None, **kwargs):
         try:
