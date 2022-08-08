@@ -326,10 +326,18 @@ class branch_good_issue_note(osv.osv):
         ginline_obj = self.pool.get('branch.good.issue.note.line')
         sale_order_obj = self.pool.get('sale.order')
         sale_order_line_obj = self.pool.get('sale.order.line')
+        branch_obj = self.pool.get('res.branch')
         gin_value = self.browse(cr, uid, ids[0], context=context)
         warehouse_id = gin_value.branch_id.section_id.warehouse_id.id
         cr.execute("""select id from account_payment_term where name='Immediate Payment'""")
         payment_term_value = cr.fetchone()
+        branch_code = gin_value.branch_id.branch_code
+        if (branch_code.startswith('LMSD') or branch_code.startswith('LSD')):
+            branch_id = branch_obj.search(cr, uid, [('branch_code', '=', 'LMSD')], limit=1)
+        elif (branch_code.startswith('UMSD') or branch_code.startswith('USD')):
+            branch_id = branch_obj.search(cr, uid, [('branch_code', '=', 'UMSD')], limit=1)
+        else:
+            raise Warning(_("""Check the branch code of LSD/USD in MDG Portal!"""))
         if payment_term_value: 
             payment_term = payment_term_value[0]
 
@@ -354,7 +362,8 @@ class branch_good_issue_note(osv.osv):
             'warehouse_id': warehouse_id,
             'ignore_credit_limit': True,
             'origin': gin_value.name ,
-            'branch_id': gin_value.branch_id.id,
+            # 'branch_id': gin_value.branch_id.id,
+            'branch_id': branch_id[0],
             'pricelist_id': gin_value.branch_id.pricelist_id.id,
             'deduct_amt': 0.0,
             'additional_discount': 0.0,
