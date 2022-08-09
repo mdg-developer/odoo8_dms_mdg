@@ -1042,7 +1042,8 @@ class sale_order(models.Model):
                         sale_order.write({'carrier_id':carrier.id})
                         if carrier.product_id:
                             shipping_product=carrier.product_id
-                    self.create_woo_sale_order_line(line,shipping_tax_ids,shipping_product,woo_product_uom,1,fiscal_position,partner,pricelist_id,shipping_product and shipping_product.name or line.get('method_title'),sale_order,line.get('total'))
+                        if float(line.get('total')) > 0:
+                            self.create_woo_sale_order_line(line,shipping_tax_ids,shipping_product,woo_product_uom,1,fiscal_position,partner,pricelist_id,shipping_product and shipping_product.name or line.get('method_title'),sale_order,line.get('total'))
                 if order_discount and discount_value:                                                                                                                            
                     self.create_woo_sale_order_line({},tax_ids,instance.discount_product_id,woo_product_uom,1,fiscal_position,partner,pricelist_id,instance.discount_product_id.name,sale_order,discount_value*-1)
                 fee_lines = order.get("fee_lines",[])
