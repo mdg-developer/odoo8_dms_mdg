@@ -2974,14 +2974,14 @@ class mobile_sale_order(osv.osv):
         return datas
 
     def get_competitor_stock_check(self, cr, uid, sale_team_id , context=None, **kwargs):
-        cr.execute('''select cline.id,outlet_type,competitor_product_id,product_uom_qty as qty,available,facing,chiller
+        cr.execute('''select cline.id,outlet_type,competitor_product_id,product_uom_qty as qty,available,facing,chiller,cp.sequence
                     from competitor_product cp,crm_case_section ccs,stock_check_setting_competitor_line cline,stock_check_setting scs
                     where cp.sales_group_id=ccs.sale_group_id
                     and cp.id=cline.competitor_product_id
                     and cline.stock_setting_ids=scs.id
                     and ccs.id=%s
                     ''', (sale_team_id,))
-        datas = cr.dictfetchall()
+        datas = cr.fetchall()
         return datas
     
     def udpate_credit_notes_issue_status(self, cr, uid, sale_team_id , context=None, **kwargs):
