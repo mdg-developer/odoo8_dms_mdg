@@ -4019,7 +4019,7 @@ class mobile_sale_order(osv.osv):
 
                     for csl in competitor_stock_line:
                         if (sr['st_id'] == csl['stock_check_no']):
-                            cursor.execute("select sequence from competitor_product where id =%s",(csl['competitor_product_id'],))
+                            cursor.execute("select sequence from competitor_product where id =%s",(csl['product_id'],))
                             competitor_product_data = cursor.fetchone()
                             if competitor_product_data:
                                 sequence = competitor_product_data[0]
@@ -4028,7 +4028,7 @@ class mobile_sale_order(osv.osv):
                             csl_line_res = {
                                 'stock_check_ids': stock_id,
                                 'sequence': sequence,
-                                'competitor_product_id': (csl['competitor_product_id']),
+                                'competitor_product_id': (csl['product_id']),
                                 'product_uom': int(csl['uom_id']),
                                 'available': (csl['avail']),
                                 'product_uom_qty': (csl['qty']),
