@@ -3869,6 +3869,7 @@ class mobile_sale_order(osv.osv):
         try : 
             stock_check_obj = self.pool.get('partner.stock.check')
             stock_check_line_obj = self.pool.get('partner.stock.check.line')
+            competitor_stock_check_line_obj = self.pool.get('partner.stock.check.competitor.line')
             str = "{" + vals + "}"
             str = str.replace(":''", ":'")  # change Order_id
             str = str.replace("'',", "',")  # null
@@ -3883,10 +3884,13 @@ class mobile_sale_order(osv.osv):
                 result.append(x)
             stock = []
             stock_line = []
+            competitor_stock_line = []
             for r in result:
                 print "length", len(r)
                 if len(r) >= 10:
-                    stock.append(r)                                    
+                    stock.append(r)
+                elif r.get('avail') == 'none' or r.get('avail') == 'yes' or r.get('avail') == 'no':
+                    competitor_stock_line.append(r)
                 else:
                     stock_line.append(r)
             if stock:
@@ -3949,6 +3953,26 @@ class mobile_sale_order(osv.osv):
                                       'description':(srl['description']),
                                       }
                             stock_check_line_obj.create(cursor, user, mso_line_res, context=context)
+                    for csl in competitor_stock_line:
+                        cursor.execute("select sequence from competitor_product where id =%s", (csl['competitor_product_id'],))
+                        competitor_product_data = cursor.fetchone()
+                        if competitor_product_data:
+                            sequence = competitor_product_data[0]
+                        else:
+                            sequence = None
+                        csl_line_res = {
+                            'stock_check_ids': stock_id,
+                            'sequence': sequence,
+                            'competitor_product_id': (csl['competitor_product_id']),
+                            'product_uom': int(csl['uom_id']),
+                            'available': (csl['avail']),
+                            'product_uom_qty': (csl['qty']),
+                            'facing': (csl['facing']),
+                            'chiller': (csl['chiller']),
+                            'remark_id': (csl['remark_id']),
+                            'description': (csl['description']),
+                        }
+                        competitor_stock_check_line_obj.create(cursor, user, csl_line_res, context=context)
             print 'True'
             return True       
         except Exception, e:
