@@ -4000,23 +4000,26 @@ class mobile_sale_order(osv.osv):
                         check_date_time = sr['date'].replace('\\', '').replace('\\', '').replace('/', '-')
                         date = datetime.strptime(check_date_time, '%Y-%m-%d %H:%M:%S') - timedelta(hours=6, minutes=30)
                         check_date = date.date()
-                    cursor.execute("delete from partner_stock_check where check_datetime =%s and partner_id=%s",
+                    cursor.execute("select id from partner_stock_check where check_datetime =%s and partner_id=%s",
                                    (date, customer_id,))
-                    mso_result = {
-                        'partner_id': customer_id,
-                        'sale_team_id': sr['sale_team_id'],
-                        'user_id': sr['user_id'],
-                        'township_id': township_id,
-                        'outlet_type': outlet_type,
-                        'date': check_date,
-                        'check_datetime': date,
-                        'customer_code': sr['customer_code'],
-                        'branch_id': sr['branch'],
-                        'latitude': sr['latitude'],
-                        'longitude': sr['longitude'],
-                    }
-                    stock_id = stock_check_obj.create(cursor, user, mso_result, context=context)
-
+                    stock_check_data = cursor.fetchone()
+                    if stock_check_data: 
+                        stock_id =stock_check_data[0]
+                    else: 
+                        mso_result = {
+                            'partner_id': customer_id,
+                            'sale_team_id': sr['sale_team_id'],
+                            'user_id': sr['user_id'],
+                            'township_id': township_id,
+                            'outlet_type': outlet_type,
+                            'date': check_date,
+                            'check_datetime': date,
+                            'customer_code': sr['customer_code'],
+                            'branch_id': sr['branch'],
+                            'latitude': sr['latitude'],
+                            'longitude': sr['longitude'],
+                        }
+                        stock_id = stock_check_obj.create(cursor, user, mso_result, context=context)
                     for csl in competitor_stock_line:
                         if (sr['st_id'] == csl['stock_check_no']):
                             cursor.execute("select sequence from competitor_product where id =%s",(csl['product_id'],))
