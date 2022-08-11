@@ -244,8 +244,8 @@
 								<tr height="10pt;">
 									<th class="text-center" style="border:1pt solid;border-color:black;">No
 									</th>
-									<th class="text-center" style="border:1pt solid;border-color:black;">Product ID
-									</th>
+<!--									<th class="text-center" style="border:1pt solid;border-color:black;">Product ID-->
+<!--									</th>-->
 									<th class="text-center" style="border:1pt solid;border-color:black;">Items
 									</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">UOM</th>
@@ -272,14 +272,19 @@
 									<td style="border:1pt solid;border-color:black;" align="center">
 										<t t-esc="l_index+1" />
 									</td>
-									<td style="border:1pt solid;border-color:black;" align="center">
-										<span t-field="l.product_id.default_code"/>
-										<t t-if="l.foc==True">
-											(FOC)
-										</t>
-									</td>
+<!--									<td style="border:1pt solid;border-color:black;" align="center">-->
+<!--										<span t-field="l.product_id.default_code"/>-->
+<!--										<t t-if="l.foc==True">-->
+<!--											(FOC)-->
+<!--										</t>-->
+<!--									</td>-->
 									<td style="border:1pt solid;border-color:black;">
-										<span t-field="l.product_id.name" />
+										<t if="l.product_id.typeservice">
+											<span t-field="l.promotion_id.name"/>
+										</t>
+										<t t-else="">
+											<span t-field="l.product_id.name" />
+										</t>
 										<t t-if="l.foc==True">
 											(FOC)
 										</t>
@@ -325,10 +330,10 @@
 							<tfoot>
 								<tr>
 									<th class="text-center" style="border:1pt solid;border-color:black;"></th>
-									<th></th>
+<!--									<th></th>-->
 									<th class="text-center" style="border:1pt solid;border-color:black;">Net Amounts
 										Kyats</th>
-									<th class="text-center" style="border:1pt solid;border-color:black;">Tbt</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">MMK</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;"></th>
 	<!--								<th><t t-esc=" '%.0f' % l.quantity"/></th>-->
 									<th></th>
@@ -339,33 +344,34 @@
 							</tfoot>
 						</table>
 
-<!--						<div class="row">-->
-<!--							<div class="col-xs-8 pull-left" style="padding-top: 1cm;">-->
-<!--								<t t-if="o.tax_line">-->
-<!--									<table class="table table-condensed">-->
-<!--										<thead>-->
-<!--											<tr>-->
-<!--												<th>Tax</th>-->
-<!--												<th class="text-right">Base</th>-->
-<!--												<th class="text-right">Amount</th>-->
-<!--											</tr>-->
-<!--										</thead>-->
-<!--										<tbody>-->
-<!--											<tr t-foreach="o.tax_line" t-as="t">-->
-<!--												<td>-->
-<!--													<span t-field="t.name" />-->
-<!--												</td>-->
-<!--												<td class="text-right">-->
-<!--													<span t-field="t.base" />-->
-<!--												</td>-->
-<!--												<td class="text-right">-->
-<!--													<span t-field="t.amount" />-->
-<!--												</td>-->
-<!--											</tr>-->
-<!--										</tbody>-->
-<!--									</table>-->
-<!--								</t>-->
-<!--							</div>-->
+						<div class="row">
+							<div class="col-xs-8 pull-left" style="padding-top: 1cm;">
+								<t t-if="o.tax_line">
+									<table class="table table-condensed">
+										<thead>
+											<tr>
+												<th>Tax</th>
+												<th class="text-right">Base</th>
+												<th class="text-right">Amount</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr t-foreach="o.tax_line" t-as="t">
+												<td>
+													<span t-field="t.name" />
+												</td>
+												<td class="text-right">
+													<span t-field="t.base" />
+												</td>
+												<td class="text-right">
+													<span t-field="t.amount" />
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</t>
+							</div>
+						</div>
 <!--&lt;!&ndash;							<div class="col-xs-4 pull-right">&ndash;&gt;-->
 <!--&lt;!&ndash;								<table class="table">&ndash;&gt;-->
 <!--&lt;!&ndash;									&lt;!&ndash; <tr> &ndash;&gt;&ndash;&gt;-->
