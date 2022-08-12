@@ -1711,7 +1711,20 @@ class mobile_sale_order(osv.osv):
                     and ccs.id = %s ''', (section_id,))
         datas = cr.fetchall()
         return datas
-
+    
+    def get_products_barcode_by_sale_team(self, cr, uid, section_id , last_date, context=None, **kwargs):
+        
+        cr.execute('''select barcode.id ,barcode.name,barcode.product_tmpl_id from product_multi_barcode barcode,product_sale_group_rel rel,product_template pt,product_product pp,crm_case_section ccs 
+                    where pp.id = rel.product_id
+                    and barcode.product_tmpl_id=pt.id
+                    and pt.id = pp.product_tmpl_id
+                    and pt.active = true
+                    and pp.active = true
+                    and ccs.sale_group_id = rel.sale_group_id
+                    and ccs.id = %s ''', (section_id,))
+        datas = cr.fetchall()
+        return datas
+    
     def get_productMainGroup(self, cr, uid, section_id, context=None, **kwargs):
         cr.execute('''select id,name,skip_checking,active_two from product_maingroup''')
         datas = cr.fetchall()        
