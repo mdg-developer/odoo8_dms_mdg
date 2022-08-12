@@ -1290,7 +1290,7 @@ order by login]]></xml-property>
                     <structure>
                         <property name="position">32</property>
                         <property name="name">voucher_net_total</property>
-                        <property name="dataType">float</property>
+                        <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">33</property>
@@ -1563,8 +1563,8 @@ else
                     <property name="position">32</property>
                     <property name="name">voucher_net_total</property>
                     <property name="nativeName">voucher_net_total</property>
-                    <property name="dataType">float</property>
-                    <property name="nativeDataType">8</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
                     <property name="position">33</property>
@@ -1602,20 +1602,21 @@ else
                     <property name="nativeDataType">8</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select (s.date+ '6 hour'::interval + '30 minutes'::interval)::date as date,s.po_no,s.invoice_no,
-(select name from res_partner rp,res_users ru where rp.id=ru.partner_id and ru.id=s.user_id) salesman_name,term.name payment_term,
-s.name as vr_no,s.customer_code,r.id as customerid,r.name as customer , p.name_template as product,invl.quantity product_uos_qty,
+            <xml-property name="queryText"><![CDATA[select (inv.date_invoice+ '6 hour'::interval + '30 minutes'::interval)::date as date,s.po_no,
+inv.number as invoice_no,
+(select name from res_partner rp,res_users ru where rp.id=ru.partner_id and ru.id=inv.user_id) salesman_name,term.name payment_term,
+inv.mobile_order_ref as vr_no,r.customer_code,r.id as customerid,r.name as customer , p.name_template as product,invl.quantity product_uos_qty,
 invl.price_unit,
 (invl.price_subtotal-((invl.price_subtotal) * (inv.additional_discount))) as sub_total,
 invl.discount,
 invl.discount_amt,
 (invl.price_unit *invl.quantity) as net_total,
-c.name as sale_group ,s.m_status,s.type ,tp.name as township,r.village as village,ci.name as city,sc.name as channel, rs.name as state,s.delivery_remark ,s.additional_discount,
+c.name as sale_group ,inv.state m_status,payment_type type ,tp.name as township,r.village as village,ci.name as city,sc.name as channel, rs.name as state,inv.delivery_remark ,inv.additional_discount,
 case when s.void_flag = 'none' then 'Unvoid'
 when s.void_flag = 'voided' then 'Voided' end as void,
 p.default_code as product_code,
 branch.name as branch,pm.name as main_group,pc.name as product_category,
-s.net_amount as voucher_net_total,s.additional_discount,
+inv.amount_total as voucher_net_total,inv.additional_discount,
 spd.name sale_plan_day_name,
 case when inv.additional_discount > 0 then 2
 else 1 end as seq,
@@ -1635,7 +1636,7 @@ left join sale_channel sc on sc.id = r.sales_channel
 left join res_branch branch on branch.id=r.branch_id
 left join res_city ci on r.city = ci.id
 left join res_township  tp on  r.township = tp.id
-left join account_payment_term term on s.payment_term=term.id
+left join account_payment_term term on inv.payment_term=term.id
 left join sale_plan_day spd on (spd.id = s.sale_plan_day_id)
 left join sale_plan_trip spt on (spt.id = s.sale_plan_trip_id)
 where (inv.date_invoice+ '6 hour'::interval + '30 minutes'::interval)::date between ? and ?
