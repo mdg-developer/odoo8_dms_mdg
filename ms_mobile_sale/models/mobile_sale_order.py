@@ -2987,7 +2987,8 @@ class mobile_sale_order(osv.osv):
         return datas
 
     def get_competitor_stock_check(self, cr, uid, sale_team_id , context=None, **kwargs):
-        cr.execute('''select cline.id,outlet_type,competitor_product_id,product_uom_qty as qty,available,facing,chiller,cp.sequence,cp.image
+        cr.execute('''select cline.id,outlet_type,competitor_product_id,product_uom_qty as qty,available,facing,chiller,cp.sequence,
+                    substring(replace(cast(cp.image as text),'/',''),1,5) image
                     from competitor_product cp,crm_case_section ccs,stock_check_setting_competitor_line cline,stock_check_setting scs
                     where cp.sales_group_id=ccs.sale_group_id
                     and cp.id=cline.competitor_product_id
