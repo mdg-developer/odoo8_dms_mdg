@@ -2977,7 +2977,7 @@ class mobile_sale_order(osv.osv):
 
     def get_all_competitor_products(self, cr, uid, sale_team_id , context=None, **kwargs):
         cr.execute('''            
-            select cp.id,cp.name,product_uom_id,cp.image
+            select cp.id,cp.name,product_uom_id,substring(replace(cast(cp.image as text),'/',''),1,5) image
             from competitor_product cp,competitor_product_product_uom_rel rel,crm_case_section ccs
             where cp.id=rel.competitor_product_id
             and cp.sales_group_id=ccs.sale_group_id
