@@ -2977,7 +2977,7 @@ class mobile_sale_order(osv.osv):
 
     def get_all_competitor_products(self, cr, uid, sale_team_id , context=None, **kwargs):
         cr.execute('''            
-            select cp.id,cp.name,product_uom_id
+            select cp.id,cp.name,product_uom_id,cp.image
             from competitor_product cp,competitor_product_product_uom_rel rel,crm_case_section ccs
             where cp.id=rel.competitor_product_id
             and cp.sales_group_id=ccs.sale_group_id
@@ -2987,7 +2987,7 @@ class mobile_sale_order(osv.osv):
         return datas
 
     def get_competitor_stock_check(self, cr, uid, sale_team_id , context=None, **kwargs):
-        cr.execute('''select cline.id,outlet_type,competitor_product_id,product_uom_qty as qty,available,facing,chiller,cp.sequence
+        cr.execute('''select cline.id,outlet_type,competitor_product_id,product_uom_qty as qty,available,facing,chiller,cp.sequence,cp.image
                     from competitor_product cp,crm_case_section ccs,stock_check_setting_competitor_line cline,stock_check_setting scs
                     where cp.sales_group_id=ccs.sale_group_id
                     and cp.id=cline.competitor_product_id
