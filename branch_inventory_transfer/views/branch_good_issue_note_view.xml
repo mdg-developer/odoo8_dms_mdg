@@ -197,6 +197,7 @@
 							context="{'group_by':'receive_date'}" />
 						<filter string="Pending" domain="[('state','=','draft')]"
 							name="state_filter" />
+													<filter string="State"  domain="[]" context="{'group_by':'state'}"/>
 					</group>
 				</search>
 			</field>
