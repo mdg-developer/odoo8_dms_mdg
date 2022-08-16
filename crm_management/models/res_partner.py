@@ -255,7 +255,7 @@ class res_partner(osv.osv):
     def _get_last_visit_date(self, cr, uid, ids, field_name, arg, context=None):
         res = dict(map(lambda x: (x,0), ids))
         for data in self.browse(cr, uid, ids, context=context):
-            cr.execute("select date from customer_visit where customer_id=%s order by id desc", (data.id,))
+            cr.execute("select date from customer_visit where customer_id=%s and TO_CHAR(date :: DATE, 'MM')=TO_CHAR(NOW() :: DATE, 'MM') order by id desc", (data.id,))
             last_visit = cr.fetchone()
             if last_visit:
                 last_visit_date = last_visit[0]
@@ -282,7 +282,7 @@ class res_partner(osv.osv):
         res = dict(map(lambda x: (x,0), ids))
         amount_total=0.0
         for data in self.browse(cr, uid, ids, context=context):
-            cr.execute("select sum(amount_total) from account_invoice where partner_id =%s", (data.id,))
+            cr.execute("select sum(amount_total) from account_invoice where partner_id =%s and TO_CHAR(date_invoice :: DATE, 'MM')=TO_CHAR(NOW() :: DATE, 'MM')", (data.id,))
             amount_total = cr.fetchone()
             if amount_total:
                 amount_total = amount_total[0]

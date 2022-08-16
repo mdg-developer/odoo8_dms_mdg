@@ -638,7 +638,7 @@ class account_invoice(models.Model):
                         raise except_orm(_('Warning!'), _('Please define payable control account.'))
                     
                 if line['ref'][:2] == 'PO'  and line.get('product_id', False) != False:
-                    cr.execute("select avl.id from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s and avl.foc!=true", (origin, product.id,))
+                    cr.execute("select avl.id from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s and avl.foc!=true and type='in_invoice'", (origin, product.id,))
                     invoice_line_id = cr.fetchone()
                     if invoice_line_id:
                         invoice_line_data = self.env['account.invoice.line'].browse(invoice_line_id)                    
@@ -997,7 +997,7 @@ class account_invoice(models.Model):
                     else:
                         account_id = product.product_tmpl_id.categ_id.property_account_discount_cash.id     
                     if line['ref'][:2] == 'PO':
-                        cr.execute("select avl.id from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s and avl.foc!=true", (origin, product.id,))
+                        cr.execute("select avl.id from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s and avl.foc!=true and type='in_invoice'", (origin, product.id,))
                         invoice_line_id = cr.fetchone()  
                                           
                         if invoice_line_id:
