@@ -2986,6 +2986,21 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()
         return datas
 
+    def get_all_competitor_product_images(self, cr, uid, sale_team_id , context=None, **kwargs):
+        list = []
+        cr.execute('''            
+            select cp.id
+            from competitor_product cp,crm_case_section ccs
+            where cp.sales_group_id=ccs.sale_group_id
+            and ccs.id=%s
+         ''', (sale_team_id,))
+        datas = cr.fetchall()
+        for data in datas:
+            product = self.pool.get('competitor.product').browse(cr, uid, data[0][0], context=context)
+            product_data = {"id": data[0][0],"image": product.image}
+            list.append(product_data)
+        return datas
+
     def get_competitor_stock_check(self, cr, uid, sale_team_id , context=None, **kwargs):
         cr.execute('''select cline.id,outlet_type,competitor_product_id,product_uom_qty as qty,available,facing,chiller,cp.sequence
                     from competitor_product cp,crm_case_section ccs,stock_check_setting_competitor_line cline,stock_check_setting scs
