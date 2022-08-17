@@ -15,6 +15,7 @@ from openerp.addons.connector.exception import FailedJobError
 from openerp.addons.connector.jobrunner.runner import ConnectorRunner
 import requests
 import logging
+import base64
 
 @job(default_channel='root.directpending')
 def automation_pending_delivery(session, delivery_mobile):
@@ -2986,7 +2987,7 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()
         return datas
 
-    def get_all_competitor_product_images(self, cr, uid, sale_team_id , context=None, **kwargs):
+    def get_all_competitor_product_images(self, cr, uid, sale_team_id, context=None, **kwargs):
         list = []
         cr.execute('''            
             select cp.id
@@ -2996,10 +2997,11 @@ class mobile_sale_order(osv.osv):
          ''', (sale_team_id,))
         datas = cr.fetchall()
         for data in datas:
-            product = self.pool.get('competitor.product').browse(cr, uid, data[0][0], context=context)
-            product_data = {"id": data[0][0],"image": product.image}
-            list.append(product_data)
-        return datas
+            product = self.pool.get('competitor.product').browse(cr, uid, data[0], context=context)
+            if product.image:
+                product_data = [data[0], product.image]
+                list.append(product_data)
+        return list
 
     def get_competitor_stock_check(self, cr, uid, sale_team_id , context=None, **kwargs):
         cr.execute('''select cline.id,outlet_type,competitor_product_id,product_uom_qty as qty,available,facing,chiller,cp.sequence
