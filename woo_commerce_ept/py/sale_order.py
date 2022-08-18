@@ -1454,7 +1454,7 @@ class sale_order(models.Model):
         if result:
             current_so = self.browse(cursor, user, ids, context=context)
             if vals.get('is_generate') == True and current_so.woo_order_number:
-                current_so.update_woo_order_status_action('misha-shipment')           
+                current_so.update_woo_order_status_action('completed')
         return result
     
     @api.multi
