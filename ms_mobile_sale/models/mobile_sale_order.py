@@ -2979,9 +2979,10 @@ class mobile_sale_order(osv.osv):
     def get_all_competitor_products(self, cr, uid, sale_team_id , context=None, **kwargs):
         cr.execute('''            
             select cp.id,cp.name,product_uom_id
-            from competitor_product cp,competitor_product_product_uom_rel rel,crm_case_section ccs
-            where cp.id=rel.competitor_product_id
-            and cp.sales_group_id=ccs.sale_group_id
+            from crm_case_section ccs,sales_group sg,competitor_product cp,competitor_product_product_uom_rel rel
+            where ccs.sale_group_id=sg.id
+            and cp.sales_group_id=sg.id
+            and cp.id=rel.competitor_product_id
             and ccs.id=%s
          ''', (sale_team_id,))
         datas = cr.fetchall()
@@ -2991,8 +2992,9 @@ class mobile_sale_order(osv.osv):
         list = []
         cr.execute('''            
             select cp.id
-            from competitor_product cp,crm_case_section ccs
-            where cp.sales_group_id=ccs.sale_group_id
+            from crm_case_section ccs,sales_group sg,competitor_product cp
+            where ccs.sale_group_id=sg.id
+            and cp.sales_group_id=sg.id
             and ccs.id=%s
          ''', (sale_team_id,))
         datas = cr.fetchall()
@@ -3005,8 +3007,9 @@ class mobile_sale_order(osv.osv):
 
     def get_competitor_stock_check(self, cr, uid, sale_team_id , context=None, **kwargs):
         cr.execute('''select cline.id,outlet_type,competitor_product_id,product_uom_qty as qty,available,facing,chiller,cp.sequence
-                    from competitor_product cp,crm_case_section ccs,stock_check_setting_competitor_line cline,stock_check_setting scs
-                    where cp.sales_group_id=ccs.sale_group_id
+                    from crm_case_section ccs,sales_group sg,competitor_product cp,stock_check_setting_competitor_line cline,stock_check_setting scs
+                    where ccs.sale_group_id=sg.id
+                    and cp.sales_group_id=sg.id
                     and cp.id=cline.competitor_product_id
                     and cline.stock_setting_ids=scs.id
                     and ccs.id=%s
