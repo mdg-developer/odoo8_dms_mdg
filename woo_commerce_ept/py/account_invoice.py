@@ -50,13 +50,13 @@ class account_invoice(models.Model):
             values.update({'woo_instance_id':invoice.woo_instance_id.id,'sale_ids':[(6,0,invoice.sale_ids.ids)]})        
         return values   
     
-#     @api.multi
-#     def confirm_paid(self):
-#         values = super(account_invoice,self).confirm_paid()
-#         if self.sale_order_id:
-#             if self.sale_order_id.woo_order_number:
-#                 self.sale_order_id.update_woo_order_status_action('completed')       
-#         return values
+    @api.multi
+    def confirm_paid(self):
+        values = super(account_invoice,self).confirm_paid()
+        if self.sale_order_id:
+            if self.sale_order_id.woo_order_number:
+                self.sale_order_id.update_woo_order_status_action('completed')
+        return values
 
 class sale_order(models.Model):
     _inherit="sale.order"
