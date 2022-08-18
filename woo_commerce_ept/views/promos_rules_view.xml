@@ -22,19 +22,19 @@
 			</field>
 		</record>
 		
-		<record id="view_promotion_rules_tree_inherit_woo" model="ir.ui.view">
-			<field name="name">promos.rules.form.inherit.woo</field>
-			<field name="model">promos.rules</field>
-			<field name="type">form</field>
-			<field name="inherit_id" ref="sale_promotions.view_promotion_rules_tree" />
-			<field name="arch" type="xml">
-				<data>
-					<xpath expr="//field[@name='is_sync_sd']" position="after">
-						<field name="is_sync_woo" />
-					</xpath>					
-				</data>
-			</field>
-		</record>
+<!--		<record id="view_promotion_rules_tree_inherit_woo" model="ir.ui.view">-->
+<!--			<field name="name">promos.rules.form.inherit.woo</field>-->
+<!--			<field name="model">promos.rules</field>-->
+<!--			<field name="type">form</field>-->
+<!--			<field name="inherit_id" ref="sale_promotions.view_promotion_rules_tree" />-->
+<!--			<field name="arch" type="xml">-->
+<!--				<data>-->
+<!--					<xpath expr="//field[@name='is_sync_sd']" position="after">-->
+<!--						<field name="is_sync_woo" />-->
+<!--					</xpath>					-->
+<!--				</data>-->
+<!--			</field>-->
+<!--		</record>-->
 
 	</data>
 </openerp>

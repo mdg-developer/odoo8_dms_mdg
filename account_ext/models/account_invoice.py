@@ -16,6 +16,6 @@ class account_invoice(osv.osv):
              " * The 'Open' status is used when user create invoice,a invoice number is generated.Its in open status till user does not pay invoice.\n"
              " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
              " * The 'Cancelled' status is used when user cancel invoice."),
-                }
+             )}
     
 account_invoice()     

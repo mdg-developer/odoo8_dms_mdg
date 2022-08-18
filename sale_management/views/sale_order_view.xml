@@ -180,7 +180,7 @@
 					<field name="so_latitude" digits="(14,15)"></field>
 					<field name="so_longitude" digits="(14,15)"></field>
 					<field name="distance_status" />
-
+					<field name="not_show_logo"/>
 				</field>
 				<field name="invoiced" position="before">
 

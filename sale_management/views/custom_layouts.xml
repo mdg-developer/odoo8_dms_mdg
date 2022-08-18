@@ -43,8 +43,10 @@
 			<div class="header">
 				<div class="row">
 					<div class="col-xs-3" style="margin-top:150px;">
+						<t t-if="not o.not_show_logo">
 						<img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo"
 							style="max-height: 100px;" />
+						</t>
 					</div>
 					<div class="col-xs-9 text-right" style="margin-top:50px;font-size:25px;color:#4d94ff;"
 						t-field="company.rml_header1" />

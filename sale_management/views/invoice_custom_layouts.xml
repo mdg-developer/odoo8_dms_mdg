@@ -52,8 +52,10 @@
 				</div>
 				<div class="row">
 					<div class="col-xs-2">
+						<t t-if="not o.not_show_logo">
 						<img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo"
 							style="max-height: 50pt;" />
+						</t>
 					</div>
 
 					<div class="col-xs-8" style="margin-top:10pt;padding-left:95px;">
