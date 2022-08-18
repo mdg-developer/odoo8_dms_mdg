@@ -17,12 +17,11 @@ class customer_visit_report(osv.osv):
        'sale_team_id':fields.many2one('crm.case.section', 'Sale Team'),
        'date':fields.datetime('Date'),
         'visit_reason':fields.selection([
-                ('shop_front', 'Shop Front'),
-                ('wine_shelf_display', 'Wine Shelf Display'),
-                ('wine_menu', 'Wine Menu'),
-                ('tablet_placards', 'Table Placards (if any)'),
-                ('posm', 'POSM'),
-                ('Sold', 'Sold')
+                ('no_authorized_person', 'No Authorized Person'),
+                ('buyer_rejected', 'Buyer Rejected'),
+                ('shop_closed', 'Shop Closed'),
+                ('Sold', 'Sold'),
+                ('has_sufficient_stock_holding_for_all_listed_skus', 'Has sufficient stock holding for ALL listed SKUs'),
             ], 'Reason'),
                 'other_reason':fields.text('Remark'),
         'm_status':fields.selection([('pending', 'Pending'), ('approved', 'Approved'),
