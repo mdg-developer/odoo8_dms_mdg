@@ -15,6 +15,7 @@ from openerp.addons.connector.exception import FailedJobError
 from openerp.addons.connector.jobrunner.runner import ConnectorRunner
 import requests
 import logging
+import base64
 
 @job(default_channel='root.directpending')
 def automation_pending_delivery(session, delivery_mobile):
@@ -2977,20 +2978,40 @@ class mobile_sale_order(osv.osv):
 
     def get_all_competitor_products(self, cr, uid, sale_team_id , context=None, **kwargs):
         cr.execute('''            
-            select cp.id,cp.name,product_uom_id,substring(replace(cast(cp.image as text),'/',''),1,5) image
-            from competitor_product cp,competitor_product_product_uom_rel rel,crm_case_section ccs
-            where cp.id=rel.competitor_product_id
-            and cp.sales_group_id=ccs.sale_group_id
+            select cp.id,cp.name,product_uom_id
+            from crm_case_section ccs,sales_group sg,competitor_product_sales_group_rel prel,competitor_product cp,competitor_product_product_uom_rel rel
+            where ccs.sale_group_id=sg.id
+            and prel.sales_group_id=sg.id
+            and prel.competitor_product_id=cp.id
+            and cp.id=rel.competitor_product_id
             and ccs.id=%s
          ''', (sale_team_id,))
         datas = cr.fetchall()
         return datas
 
+    def get_all_competitor_product_images(self, cr, uid, sale_team_id, context=None, **kwargs):
+        list = []
+        cr.execute('''            
+            select competitor_product_id
+            from crm_case_section ccs,sales_group sg,competitor_product_sales_group_rel rel
+            where ccs.sale_group_id=sg.id
+            and rel.sales_group_id=sg.id
+            and ccs.id=%s
+         ''', (sale_team_id,))
+        datas = cr.fetchall()
+        for data in datas:
+            product = self.pool.get('competitor.product').browse(cr, uid, data[0], context=context)
+            if product.image:
+                product_data = [data[0], product.image]
+                list.append(product_data)
+        return list
+
     def get_competitor_stock_check(self, cr, uid, sale_team_id , context=None, **kwargs):
-        cr.execute('''select cline.id,outlet_type,competitor_product_id,product_uom_qty as qty,available,facing,chiller,cp.sequence,
-                    substring(replace(cast(cp.image as text),'/',''),1,5) image
-                    from competitor_product cp,crm_case_section ccs,stock_check_setting_competitor_line cline,stock_check_setting scs
-                    where cp.sales_group_id=ccs.sale_group_id
+        cr.execute('''select cline.id,outlet_type,prel.competitor_product_id,product_uom_qty as qty,available,facing,chiller,cp.sequence
+                    from crm_case_section ccs,sales_group sg,competitor_product_sales_group_rel prel,competitor_product cp,stock_check_setting_competitor_line cline,stock_check_setting scs
+                    where ccs.sale_group_id=sg.id
+                    and prel.sales_group_id=sg.id
+                    and prel.competitor_product_id=cp.id
                     and cp.id=cline.competitor_product_id
                     and cline.stock_setting_ids=scs.id
                     and ccs.id=%s
