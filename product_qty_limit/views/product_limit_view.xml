@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+	<!-- Product Qty Limit Form -->
+		<record id="view_product_limit_form" model="ir.ui.view">
+			<field name="name">product.limit.form</field>
+			<field name="model">product.limit</field>
+			<field name="arch" type="xml">
+				<form string="Product Quantity Limit" version="7.0">
+					<sheet>
+						<group >
+							<field name="product_id" />
+							<field name="max_qty" />
+					</group>
+					</sheet>
+
+				</form>
+			</field>
+		</record>
+
+		<!-- Product Qty Limit Tree -->
+		<record id="view_product_limit_tree" model="ir.ui.view">
+			<field name="name">product.limit.tree</field>
+			<field name="model">product.limit</field>
+			<field name="arch" type="xml">
+				<tree string="Product Quantity Limit" version="7.0">
+					<field name="product_id" />
+					<field name="max_qty" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- Product Qty Limit Action -->
+		<record id="action_product_limit_view" model="ir.actions.act_window">
+			<field name="name">Product Quantity Limit Form</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">product.limit</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" eval="view_product_limit_tree" />
+		</record>
+
+		<!-- Product Qty Limit Menu -->
+		<menuitem id="product_limit_menu" parent="base.menu_base_config"
+			name="Product Quantity Limit" action="action_product_limit_view" groups="base.group_user" />
+
+	</data>
+</openerp>
