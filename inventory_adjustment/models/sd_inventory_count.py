@@ -2,6 +2,7 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.exceptions import Warning
 from openerp import api
+from datetime import datetime
 
 class sd_inventory_count(osv.osv):
 
@@ -15,11 +16,11 @@ class sd_inventory_count(osv.osv):
         'inventory_line': fields.one2many('sd.inventory.count.line', 'sd_inventory_id', 'Inventory Lines',states={'draft': [('readonly', False)], 'validate': [('readonly', True)], 'cancel': [('readonly', True)]}),
 
         'state': fields.selection([('draft', 'Draft'), ('validate', 'Validate'), ('cancel', 'Cancel')], 'Status'),
+
     }
 
     _defaults = {
         'state': 'draft',
-
     }
 
     def create(self, cursor, user, vals, context=None):

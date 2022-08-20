@@ -78,6 +78,8 @@
 							context="{'group_by':'team'}" />
 						<filter string="State" icon="terp-partner" domain="[]"
 							context="{'group_by':'state'}" />
+						<filter string="Date" icon="terp-partner" domain="[]"
+							context="{'group_by':'date'}" />
 					</group>
 				</search>
 			</field>
