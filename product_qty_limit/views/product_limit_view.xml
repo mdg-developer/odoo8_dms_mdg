@@ -8,10 +8,17 @@
 			<field name="model">product.limit</field>
 			<field name="arch" type="xml">
 				<form string="Product Quantity Limit" version="7.0">
+					<header>
+						<button name="sync_to_woo" string="Sync To Woo" class="oe_highlight" type="object"/>
+					</header>
 					<sheet>
 						<group >
+							<field name="state_id"/>
+							<field name="city_id" domain="[('state_id', '=', state_id)]"/>
+							<field name="township_ids" domain="[('city', '=', city_id)]"/>
 							<field name="product_id" />
 							<field name="max_qty" />
+							<field name="is_sync_woo" />
 					</group>
 					</sheet>
 
@@ -27,6 +34,7 @@
 				<tree string="Product Quantity Limit" version="7.0">
 					<field name="product_id" />
 					<field name="max_qty" />
+					<field name="is_sync_woo" />
 				</tree>
 			</field>
 		</record>
