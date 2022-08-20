@@ -12,7 +12,7 @@
 						<button name="validate" string="Validate" class="oe_highlight"
 							type="object" states="draft" />
 						<button name="cancel" string="Cancel" class="oe_highlight"
-							type="object" states="draft,validate" />
+							type="object" states="draft" />
 						<field name="state" widget="statusbar" />
 					</header>
 					<sheet>
@@ -68,6 +68,22 @@
 			</field>
 		</record>
 
+		<record id="view_sd_inventory_count_filter" model="ir.ui.view">
+			<field name="name">sd.inventory.count.filter</field>
+			<field name="model">sd.inventory.count</field>
+			<field name="arch" type="xml">
+				<search string="Search SD Inventory Count">
+					<group expand="0" string="Group By...">
+						<filter string="Sales Team" icon="terp-partner" domain="[]"
+							context="{'group_by':'team'}" />
+						<filter string="State" icon="terp-partner" domain="[]"
+							context="{'group_by':'state'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+
+
 		<!-- Product MainGroup Action -->
 		<record id="action_sd_inventory_count_view" model="ir.actions.act_window">
 			<field name="name">SD Inventory Count</field>
@@ -76,6 +92,7 @@
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field name="view_id" eval="view_sd_inventory_count_tree" />
+			<field name="search_view_id" ref="view_sd_inventory_count_filter" />
 		</record>
 
 		<!-- Product MainGroup Menu -->
