@@ -86,6 +86,8 @@
 							context="{'group_by':'state'}" />
 						<filter string="Date" icon="terp-partner" domain="[]"
 							context="{'group_by':'date'}" />
+						<filter name="date_day" string="Date Day" domain="[]"
+							context="{'group_by':'date:day'}" />
 					</group>
 				</search>
 			</field>
