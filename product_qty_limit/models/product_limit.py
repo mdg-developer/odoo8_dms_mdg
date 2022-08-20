@@ -25,12 +25,20 @@ class product_limit(osv.osv):
         res = super(product_limit, self).write(cr, uid, ids, vals, context=context)
         return res
 
+    def sync_all_product_limit(self, cr, uid, context=None):
+        logging.warning("Calling sync_all_product_limit schedular")
+        product_limit_obj = self.pool.get('product.limit')
+        product_limits = product_limit_obj.search(cr, uid, [('is_sync_woo', '!=', True)])
+        for data in product_limits:
+            logging.warning("Calling data %s", data)
+            product_limit = product_limit_obj.browse(cr, uid, data)
+            product_limit.sync_to_woo()
+
     def sync_to_woo(self, cr, uid, ids, context=None):
 
         data = self.browse(cr, uid, ids[0])
         if data.is_sync_woo != True:
             woo_instance_obj = self.pool.get('woo.instance.ept')
-            product_limit_obj = self.pool.get('product.limit')
             instance = woo_instance_obj.search(cr, uid, [('state', '=', 'confirmed')], limit=1)
             if instance:
                 instance_obj = woo_instance_obj.browse(cr, uid, instance)
@@ -39,7 +47,6 @@ class product_limit(osv.osv):
                 login_info = instance_obj.admin_username + ":" + instance_obj.admin_password
                 login_info_bytes = login_info.encode('ascii')
                 base64_bytes = base64.b64encode(login_info_bytes)
-                logging.warning("Check base64_bytes: %s", base64_bytes)
                 headers["Authorization"] = "Basic " + base64_bytes
                 headers["Content-Type"] = "application/json"
                 for line in data.township_ids:
@@ -47,19 +54,9 @@ class product_limit(osv.osv):
                     city = data.city_id.name
                     township = line.name
                     product_code = data.product_id.default_code
-                    limit_data = {
-                                    "branch_code": str(branch_code),
-                                    "city": str(city),
-                                    "township": str(township),
-                                    "product_lists": [
-                                                    {
-                                                        "product_sku": str(product_code),
-                                                        "max_stock": data.max_qty
-                                                    }
-                                                ]
-                                }
-                    logging.warning("Check limit_data: %s", json.dumps(limit_data))
-                    response = requests.post(url, headers=headers, data=json.dumps(limit_data))
+                    limit_data = '''[{"branch_code":"%s","city":"%s","township":"%s","product_lists":[{"product_sku":"%s","max_stock":%s}]}]''' % (str(branch_code),str(city), str(township),str(product_code),data.max_qty)
+                    logging.warning("Check limit_data: %s", limit_data)
+                    response = requests.post(url, headers=headers, data=limit_data)
                     logging.warning("Check response.status_code: %s", response.status_code)
                     logging.warning("Check response.content: %s", response.content)
                     if response.status_code not in [200, 201]:
