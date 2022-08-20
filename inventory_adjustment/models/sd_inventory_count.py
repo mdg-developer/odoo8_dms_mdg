@@ -10,7 +10,7 @@ class sd_inventory_count(osv.osv):
     _description = "SD Inventory Count"
     _columns = {
         'name': fields.char('Adjustment Reference', readonly=True),
-        'subject': fields.char('Subjectt', required=True),
+        'subject': fields.char('Subject', required=True),
         'team': fields.many2one('crm.case.section', 'Sale Team'),
         'date': fields.date('Date'),
         'inventory_line': fields.one2many('sd.inventory.count.line', 'sd_inventory_id', 'Inventory Lines',states={'draft': [('readonly', False)], 'validate': [('readonly', True)], 'cancel': [('readonly', True)]}),
