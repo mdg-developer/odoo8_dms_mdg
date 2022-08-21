@@ -116,12 +116,12 @@ class sd_inventory_count_line(osv.osv):
     @api.one
     @api.depends('actual_ctns','actual_pcs')
     def get_total_actual_pcs(self):
-        self.total_actual_pcs = (self.product_id.report_uom_id.factor_inv*self.actual_ctns)+self.actual_pcs
+        self.total_actual_pcs = (self.product_id.product_tmpl_id.report_uom_id.factor_inv*self.actual_ctns)+self.actual_pcs
 
     @api.one
     @api.depends('actual_ctns', 'actual_pcs')
     def get_diff_pcs(self):
-        total_actual_pcs = (self.product_id.report_uom_id.factor_inv * self.actual_ctns) + self.actual_pcs
+        total_actual_pcs = (self.product_id.product_tmpl_id.report_uom_id.factor_inv * self.actual_ctns) + self.actual_pcs
         self.diff_pcs = total_actual_pcs - self.total_pcs
 
 
