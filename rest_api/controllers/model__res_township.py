@@ -55,6 +55,7 @@ OUT__res_township__read_all__SCHEMA = (                 # editable
     ('branch_id', (
         'id',
         'name',
+        'branch_code',
     )),
     'pick_up',
     'description'                                   
@@ -98,6 +99,7 @@ OUT__res_township__read_one__SCHEMA = (                 # editable
     ('branch_id', (
         'id',
         'name',
+        'branch_code',
     )),
     'pick_up',
     'description'  
