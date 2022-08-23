@@ -3966,17 +3966,20 @@ class mobile_sale_order(osv.osv):
                                 sequence = product_data[0]
                             else:
                                 sequence = None
-#                             if srl['avail'] == 'false':
-#                                 avaliable = False
-#                             else:
-#                                 avaliable = True
+                                
+                            if srl['avail'] == 'false':
+                                avaliable = 'no'
+                            elif srl['avail'] == 'true':
+                                avaliable = 'yes'
+                            else:
+                                avaliable =srl['avail']
                         
                             mso_line_res = {                                                            
                                       'stock_check_ids':stock_id,
                                       'sequence':sequence,
                                       'product_id':(srl['product_id']),
                                       'product_uom':int(srl['uom_id']),
-                                      'available':(srl['avail']),
+                                      'available':avaliable,
                                       'product_uom_qty':(srl['qty']),
                                       'facing':(srl['facing']),
                                       'chiller':(srl['chiller']),
