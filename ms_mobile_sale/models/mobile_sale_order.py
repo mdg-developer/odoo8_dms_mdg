@@ -1564,8 +1564,51 @@ class mobile_sale_order(osv.osv):
     def get_stock_check_remark(self, cr, uid,context=None, **kwargs):
         cr.execute('''select id,name,active,sequence from partner_stock_check_remark''')
         datas = cr.fetchall()
-        return datas      
-    
+        return datas
+
+    def get_all_competitor_products(self, cr, uid, sale_team_id , context=None, **kwargs):
+        cr.execute('''            
+            select cp.id,cp.name,product_uom_id
+            from crm_case_section ccs,sales_group sg,competitor_product_sales_group_rel prel,competitor_product cp,competitor_product_product_uom_rel rel
+            where ccs.sale_group_id=sg.id
+            and prel.sales_group_id=sg.id
+            and prel.competitor_product_id=cp.id
+            and cp.id=rel.competitor_product_id
+            and ccs.id=%s
+         ''', (sale_team_id,))
+        datas = cr.fetchall()
+        return datas
+
+    def get_all_competitor_product_images(self, cr, uid, sale_team_id, context=None, **kwargs):
+        list = []
+        cr.execute('''            
+            select competitor_product_id
+            from crm_case_section ccs,sales_group sg,competitor_product_sales_group_rel rel
+            where ccs.sale_group_id=sg.id
+            and rel.sales_group_id=sg.id
+            and ccs.id=%s
+         ''', (sale_team_id,))
+        datas = cr.fetchall()
+        for data in datas:
+            product = self.pool.get('competitor.product').browse(cr, uid, data[0], context=context)
+            if product.image:
+                product_data = [data[0], product.image]
+                list.append(product_data)
+        return list
+
+    def get_competitor_stock_check(self, cr, uid, sale_team_id , context=None, **kwargs):
+        cr.execute('''select cline.id,outlet_type,prel.competitor_product_id,product_uom_qty as qty,available,facing,chiller,cp.sequence
+                    from crm_case_section ccs,sales_group sg,competitor_product_sales_group_rel prel,competitor_product cp,stock_check_setting_competitor_line cline,stock_check_setting scs
+                    where ccs.sale_group_id=sg.id
+                    and prel.sales_group_id=sg.id
+                    and prel.competitor_product_id=cp.id
+                    and cp.id=cline.competitor_product_id
+                    and cline.stock_setting_ids=scs.id
+                    and ccs.id=%s
+                    ''', (sale_team_id,))
+        datas = cr.fetchall()
+        return datas
+
     def get_supervisor_sale_team(self, cr, uid,section_id,context=None, **kwargs):
         cr.execute('''select id,name,branch_id as team_branch_id,(select name from res_branch where id =branch_id) as team_branch_name from crm_case_section 
         where supervisor_team= %s
@@ -3446,7 +3489,7 @@ class mobile_sale_order(osv.osv):
     def create_stock_check_from_mobile(self, cursor, user, vals, context=None):
         print 'vals', vals
 
-        try : 
+        try:
             stock_check_obj = self.pool.get('partner.stock.check')
             stock_check_line_obj = self.pool.get('partner.stock.check.line')
             str = "{" + vals + "}"
@@ -3455,7 +3498,7 @@ class mobile_sale_order(osv.osv):
             str = str.replace(":',", ":'',")  # due to order_id
             str = str.replace(":'}", ":''}")
             str = str.replace("}{", "}|{")
-            
+
             new_arr = str.split('|')
             result = []
             for data in new_arr:
@@ -3466,12 +3509,13 @@ class mobile_sale_order(osv.osv):
             for r in result:
                 print "length", len(r)
                 if len(r) >= 10:
-                    stock.append(r)                                    
+                    stock.append(r)
                 else:
                     stock_line.append(r)
             if stock:
-                for sr in stock:                                    
-                    cursor.execute('select id ,township ,outlet_type from res_partner where customer_code = %s ', (sr['customer_code'],))
+                for sr in stock:
+                    cursor.execute('select id ,township ,outlet_type from res_partner where customer_code = %s ',
+                                   (sr['customer_code'],))
                     customer_data = cursor.fetchone()
                     if customer_data:
                         customer_id = customer_data[0]
@@ -3482,58 +3526,154 @@ class mobile_sale_order(osv.osv):
                         customer_id = None
                         township_id = None
                         outlet_type = None
-                    
-                    if  sr['date']:
+
+                    if sr['date']:
                         check_date_time = sr['date'].replace('\\', '').replace('\\', '').replace('/', '-')
                         date = datetime.strptime(check_date_time, '%Y-%m-%d %H:%M:%S') - timedelta(hours=6, minutes=30)
                         check_date = date.date()
-                    cursor.execute("delete from partner_stock_check where check_datetime =%s and partner_id=%s", (date, customer_id,))
+                    cursor.execute("delete from partner_stock_check where check_datetime =%s and partner_id=%s",
+                                   (date, customer_id,))
                     mso_result = {
-                        'partner_id':customer_id,
-                        'sale_team_id':sr['sale_team_id'] ,
-                         'user_id':sr['user_id'] ,
+                        'partner_id': customer_id,
+                        'sale_team_id': sr['sale_team_id'],
+                        'user_id': sr['user_id'],
                         'township_id': township_id,
-                        'outlet_type':outlet_type,
-                        'date':check_date,
-                        'check_datetime':date,
-                        'customer_code':sr['customer_code'],
-                        'branch_id':sr['branch'],
-                                                    'latitude':sr['latitude'],
-                            'longitude':sr['longitude'],
+                        'outlet_type': outlet_type,
+                        'date': check_date,
+                        'check_datetime': date,
+                        'customer_code': sr['customer_code'],
+                        'branch_id': sr['branch'],
+                        'latitude': sr['latitude'],
+                        'longitude': sr['longitude'],
                     }
                     stock_id = stock_check_obj.create(cursor, user, mso_result, context=context)
-                    
+
                     for srl in stock_line:
                         if (sr['st_id'] == srl['stock_check_no']):
                             cursor.execute("select sequence from product_product where id =%s", (srl['product_id'],))
                             product_data = cursor.fetchone()
-                            if  product_data:
+                            if product_data:
                                 sequence = product_data[0]
                             else:
                                 sequence = None
+
                             if srl['avail'] == 'false':
-                                avaliable = False
+                                avaliable = 'no'
+                            elif srl['avail'] == 'true':
+                                avaliable = 'yes'
                             else:
-                                avaliable = True
-                        
-                            mso_line_res = {                                                            
-                                      'stock_check_ids':stock_id,
-                                      'sequence':sequence,
-                                      'product_id':(srl['product_id']),
-                                      'product_uom':int(srl['uom_id']),
-                                      'available':avaliable,
-                                      'product_uom_qty':(srl['qty']),
-                                      'facing':(srl['facing']),
-                                      'chiller':(srl['chiller']),
-                                      'remark_id':(srl['remark_id']),
-                                      'description':(srl['description']),
-                                      }
+                                avaliable = srl['avail']
+
+                            mso_line_res = {
+                                'stock_check_ids': stock_id,
+                                'sequence': sequence,
+                                'product_id': (srl['product_id']),
+                                'product_uom': int(srl['uom_id']),
+                                'available': avaliable,
+                                'product_uom_qty': (srl['qty']),
+                                'facing': (srl['facing']),
+                                'chiller': (srl['chiller']),
+                                'remark_id': (srl['remark_id']),
+                                'description': (srl['description']),
+                            }
                             stock_check_line_obj.create(cursor, user, mso_line_res, context=context)
             print 'True'
-            return True       
+            return True
         except Exception, e:
             print 'False'
-            return False  
+            return False
+
+    def create_competitor_stock_check_from_mobile(self, cursor, user, vals, context=None):
+        print 'vals', vals
+
+        try:
+            stock_check_obj = self.pool.get('partner.stock.check')
+            competitor_stock_check_line_obj = self.pool.get('partner.stock.check.competitor.line')
+            str = "{" + vals + "}"
+            str = str.replace(":''", ":'")  # change Order_id
+            str = str.replace("'',", "',")  # null
+            str = str.replace(":',", ":'',")  # due to order_id
+            str = str.replace(":'}", ":''}")
+            str = str.replace("}{", "}|{")
+
+            new_arr = str.split('|')
+            result = []
+            for data in new_arr:
+                x = ast.literal_eval(data)
+                result.append(x)
+            stock = []
+            competitor_stock_line = []
+            for r in result:
+                print "length", len(r)
+                if len(r) >= 10:
+                    stock.append(r)
+                else:
+                    competitor_stock_line.append(r)
+            if stock:
+                for sr in stock:
+                    cursor.execute('select id ,township ,outlet_type from res_partner where customer_code = %s ',
+                                   (sr['customer_code'],))
+                    customer_data = cursor.fetchone()
+                    if customer_data:
+                        customer_id = customer_data[0]
+                        township_id = customer_data[1]
+                        outlet_type = customer_data[2]
+
+                    else:
+                        customer_id = None
+                        township_id = None
+                        outlet_type = None
+
+                    if sr['date']:
+                        check_date_time = sr['date'].replace('\\', '').replace('\\', '').replace('/', '-')
+                        date = datetime.strptime(check_date_time, '%Y-%m-%d %H:%M:%S') - timedelta(hours=6, minutes=30)
+                        check_date = date.date()
+                    cursor.execute("select id from partner_stock_check where check_datetime =%s and partner_id=%s",
+                                   (date, customer_id,))
+                    stock_check_data = cursor.fetchone()
+                    if stock_check_data:
+                        stock_id =stock_check_data[0]
+                    else:
+                        mso_result = {
+                            'partner_id': customer_id,
+                            'sale_team_id': sr['sale_team_id'],
+                            'user_id': sr['user_id'],
+                            'township_id': township_id,
+                            'outlet_type': outlet_type,
+                            'date': check_date,
+                            'check_datetime': date,
+                            'customer_code': sr['customer_code'],
+                            'branch_id': sr['branch'],
+                            'latitude': sr['latitude'],
+                            'longitude': sr['longitude'],
+                        }
+                        stock_id = stock_check_obj.create(cursor, user, mso_result, context=context)
+                    for csl in competitor_stock_line:
+                        if (sr['st_id'] == csl['stock_check_no']):
+                            cursor.execute("select sequence from competitor_product where id =%s",(csl['product_id'],))
+                            competitor_product_data = cursor.fetchone()
+                            if competitor_product_data:
+                                sequence = competitor_product_data[0]
+                            else:
+                                sequence = None
+                            csl_line_res = {
+                                'stock_check_ids': stock_id,
+                                'sequence': sequence,
+                                'competitor_product_id': (csl['product_id']),
+                                'product_uom': int(csl['uom_id']),
+                                'available': (csl['avail']),
+                                'product_uom_qty': (csl['qty']),
+                                'facing': (csl['facing']),
+                                'chiller': (csl['chiller']),
+                                'remark_id': (csl['remark_id']),
+                                'description': (csl['description']),
+                            }
+                            competitor_stock_check_line_obj.create(cursor, user, csl_line_res, context=context)
+            print 'True'
+            return True
+        except Exception, e:
+            print 'False'
+            return False
         
     def get_promos_outlet(self, cr, uid, context=None, **kwargs):    
         cr.execute("""select rel.promos_rules_id,rel.outlettype_id from promos_rules_outlettype_rel rel,promos_rules rule where rule.id =rel.promos_rules_id  and now()::date between from_date::date and to_date::date""")
