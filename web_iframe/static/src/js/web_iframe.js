@@ -23,21 +23,23 @@ openerp.web_iframe = function (session) {
             }, this.action.params);
         },
         start: function() {
+            this._super();
             var team_data = '';
+            var self = this
             openerp.jsonRpc("/user_sales_team", 'call', {
                 'user_id': this.session.uid
                 })
-                .then(function (data) {
-                    if(data){
-                        team_data = data;
-                    }
-                });
-            if (team_data){
-                this.$el.find('iframe').css({height: '100%', width: '100%', border: 0});
-                this.$el.find('iframe').attr({src: this.action.params.link+'&p.team='+ team_data});
-                this.$el.find('iframe').on("load", this.bind_events.bind(this));
-                return this._super();
-            }
+            .then(function (data) {
+                if(data){
+                    console.log("###########")
+                    team_data = data;
+                    self.$el.find('iframe').css({height: '100%', width: '100%', border: 0});
+                    self.$el.find('iframe').attr({src: self.action.params.link+'&p.team='+ team_data});
+                    self.$el.find('iframe').on("load", self.bind_events.bind(self));
+                }
+//                return this._super();
+            });
+
         },
         bind_events: function(){
             //this.$el.find('iframe').contents().click(this.iframe_clicked.bind(this));
