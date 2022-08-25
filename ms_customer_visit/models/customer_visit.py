@@ -34,7 +34,7 @@ class customer_visit(osv.osv):
                  ('Sold', 'Sold')
             ], 'Reason'),
                 'other_reason':fields.text('Remark'),
-        'm_status':fields.selection([('pending', 'Pending'), ('approved', 'Approved'),
+        'm_status':fields.selection([('pending', 'Pending'), ('approved', 'Validate'),
                                                       ('reject', 'Reject')], string='Status'),
         'state': fields.selection([('pending', 'Pending'), ('approved', 'Validate'),
                                    ('reject', 'Reject')], string='Status'),

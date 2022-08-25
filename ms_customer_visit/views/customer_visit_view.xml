@@ -44,7 +44,9 @@
 						<filter name="township" string="Township" domain="[]"
 							context="{'group_by':'township_id'}" />
 						<filter name="branch" string="Branch" domain="[]"
-							context="{'group_by':'branch_id'}" />						
+							context="{'group_by':'branch_id'}" />
+						<filter name="state" string="Status" domain="[]"
+							context="{'group_by':'state'}" />
 					</group>
 				</search>
 			</field>
@@ -65,8 +67,14 @@
 					<script src="/static/src/js/fastclick.js"></script>
 
 					<header>
-						<field name="m_status" widget="statusbar" statusbar_visible="pending,approved,rejected"
-							statusbar_colors='{"pending":"green","approved":"blue","rejected":"red"}' />
+						<button name="is_approve" string="Validate" class="oe_highlight"
+							type="object" states="pending"
+							 />
+						<button name="is_reject" string="Reject" class="oe_highlight"
+							type="object" states="pending"
+							 />
+						<field name="state" widget="statusbar" statusbar_visible="pending,approved,reject"
+							statusbar_colors='{"pending":"green","approved":"blue","reject":"red"}' />
 					</header>
 					<sheet>
 						<group>
@@ -75,6 +83,7 @@
 									<field name="customer_id" />
 									<field name="township_id" />
 									<field name="customer_code" />
+									<field name="user_id" readonly="1" />
 									<field name="tablet_id" />
 									<field name="latitude" />
 									<field name="longitude" />
@@ -83,11 +92,14 @@
 								</group>
 								<group>
 									<field name="date" />
-									<field name="user_id" />
 									<field name="sale_plan_day_id" />
 									<field name="sale_plan_trip_id" />
 									<field name="sale_team_id" />
 									<field name="visit_reason" />
+									<field name="validated_by" readonly="1" />
+									<field name="validated_date" readonly="1" />
+									<field name="rejected_by" readonly="1" />
+									<field name="rejected_date" readonly="1" />
 									<field name="other_reason" placeholder="Additional Reasons..." />
 								</group>
 							</group>
@@ -157,6 +169,18 @@
 									<i class="fa fa-plus"></i>
 								</p>
 							</div>
+							<div class="col-md-2">
+								<div id="image5">
+									<field name="image5" widget='image' class="oe_avatar"
+										options='{"preview_image": "image_medium5"}' />
+								</div>
+								<p class="btn btn-default source" data-toggle="modal"
+									data-target=".bs-example-modal-lg" data-backdrop="false"
+									onclick="var list =document.getElementById('image5'); var imageName =list.id ; var link = list.getElementsByTagName('img')[0].src;link = link.replace('image_medium5','image5');var zoom=document.getElementById('zoom'); zoom.src=link;">
+									Zoom
+									<i class="fa fa-plus"></i>
+								</p>
+							</div>
 						</div>
 
 						<widget type="gmap_marker" lat="latitude" lng="longitude"
@@ -193,6 +217,7 @@
 					<field name="sale_team_id" />
 					<field name="visit_reason" />
 					<field name="other_reason" />
+					<field name="state" />
 				</tree>
 			</field>
 		</record>
@@ -200,7 +225,7 @@
 			<field name="name">customer.visit.calendar</field>
 			<field name="model">customer.visit</field>
 			<field name="arch" type="xml">
-				<calendar string="Customer Visit" color="m_status"
+				<calendar string="Customer Visit" color="state"
 					date_start="date">
 					<field name="customer_id" />
 					<field name="user_id" />
@@ -228,7 +253,7 @@
 			<field name="view_id" ref="view_customer_visit_tree" />
 		</record>
 
-		<menuitem id="menu_visit_partner_form" parent="base.menu_mobile_sale_menu"
-			action="action_visit_partner_form1" sequence="4" />
+<!--		<menuitem id="menu_visit_partner_form" parent="base.menu_mobile_sale_menu"-->
+<!--			action="action_visit_partner_form1" sequence="4" />-->
 	</data>
 </openerp>
