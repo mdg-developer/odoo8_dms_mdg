@@ -139,7 +139,7 @@ class customer_visit(osv.osv):
               "resized as a 64x64px image, with aspect ratio preserved. " \
               "Use this field anywhere a small image is required.")
 
-@api.depends('image')
+    @api.depends('image')
     def _compute_images(self):
         for rec in self:
             rec.image_medium = tools.image_resize_image_medium(rec.image)
