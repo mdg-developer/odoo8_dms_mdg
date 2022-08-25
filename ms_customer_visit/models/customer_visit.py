@@ -44,7 +44,7 @@ class customer_visit(osv.osv):
                    'customer_id', 'township',
                    type='many2one',
                    relation='res.township',
-                   string="Township",store=True)
+                   string="Township",store=True),
         'rejected_by': fields.many2one('res.users', "Rejected By"),
         'validated_by': fields.many2one('res.users', "Validated By"),
         'rejected_date': fields.datetime('Rejected Date'),
