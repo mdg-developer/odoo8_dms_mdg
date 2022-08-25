@@ -3,6 +3,7 @@ from lxml import etree
 import math
 import pytz
 import urlparse
+from datetime import datetime
 
 import openerp
 from openerp import tools, api
@@ -35,16 +36,23 @@ class customer_visit(osv.osv):
                 'other_reason':fields.text('Remark'),
         'm_status':fields.selection([('pending', 'Pending'), ('approved', 'Approved'),
                                                       ('reject', 'Reject')], string='Status'),
-     'branch_id': fields.many2one('res.branch', 'Branch',required=True),
+        'state': fields.selection([('pending', 'Pending'), ('approved', 'Validate'),
+                                   ('reject', 'Reject')], string='Status'),
+        'branch_id': fields.many2one('res.branch', 'Branch',required=True),
     'distance_status':fields.char('Distance Status', readonly=True),
         'township_id': fields.related(
                    'customer_id', 'township',
                    type='many2one',
                    relation='res.township',
-                   string="Township",store=True)          
+                   string="Township",store=True)
+        'rejected_by': fields.many2one('res.users', "Rejected By"),
+        'validated_by': fields.many2one('res.users', "Validated By"),
+        'rejected_date': fields.datetime('Rejected Date'),
+        'validated_date': fields.datetime('Validated Date'),
     }
     _defaults = {        
         'm_status' : 'pending',
+        'state': 'pending'
     } 
     # image: all image fields are base64 encoded and PIL-supported
     image = openerp.fields.Binary("Image", attachment=True,
@@ -116,8 +124,22 @@ class customer_visit(osv.osv):
         help="Small-sized image of this contact. It is automatically "\
              "resized as a 64x64px image, with aspect ratio preserved. "\
              "Use this field anywhere a small image is required.")
-    
-    @api.depends('image')
+    image5 = openerp.fields.Binary("Image", attachment=True,
+        help="This field holds the image used as avatar for this contact, limited to 1024x1024px")
+    image_medium5 = openerp.fields.Binary("Medium-sized image",
+        compute='_compute_images5', inverse='_inverse_image_medium5', store=True,
+        attachment=True,
+        help="Medium-sized image of this contact. It is automatically " \
+           "resized as a 128x128px image, with aspect ratio preserved. " \
+           "Use this field in form views or some kanban views.")
+    image_small5 = openerp.fields.Binary("Small-sized image",
+         compute='_compute_images5', inverse='_inverse_image_small5', store=True,
+         attachment=True,
+         help="Small-sized image of this contact. It is automatically " \
+              "resized as a 64x64px image, with aspect ratio preserved. " \
+              "Use this field anywhere a small image is required.")
+
+@api.depends('image')
     def _compute_images(self):
         for rec in self:
             rec.image_medium = tools.image_resize_image_medium(rec.image)
@@ -200,6 +222,21 @@ class customer_visit(osv.osv):
     def _inverse_image_small4(self):
         for rec in self:
             rec.image4 = tools.image_resize_image_big(rec.image_small4)
+
+    @api.depends('image5')
+    def _compute_images5(self):
+        for rec in self:
+            rec.image_medium5 = tools.image_resize_image_medium(rec.image5)
+            rec.image_small5 = tools.image_resize_image_small(rec.image5)
+
+    def _inverse_image_medium5(self):
+        for rec in self:
+            rec.image5 = tools.image_resize_image_big(rec.image_medium5)
+
+    def _inverse_image_small5(self):
+        for rec in self:
+            rec.image5 = tools.image_resize_image_big(rec.image_small5)
+
     @api.model
     def _get_default_image(self, is_company, colorize=False):
         img_path = openerp.modules.get_module_resource(
@@ -260,6 +297,14 @@ class customer_visit(osv.osv):
             image = tools.image_colorize(image)
 
         return tools.image_resize_image_big(image.encode('base64'))
+
+    def is_approve(self, cr, uid, ids, context=None):
+
+        return self.write(cr, uid, ids, {'state': 'approved', 'validated_by': uid, 'validated_date': datetime.now()})
+
+    def is_reject(self, cr, uid, ids, context=None):
+
+        return self.write(cr, uid, ids, {'state': 'reject', 'rejected_by': uid, 'rejected_date': datetime.now()})
 
          
 customer_visit()
