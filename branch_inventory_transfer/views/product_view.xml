@@ -12,6 +12,11 @@
 					<field name="viss_value" />
 					<field name="cbm_value" />
 					<field name="ctn_pallet" />
+					<field name="ti" />
+					<field name="hi" />
+					<field name="ctn_weight" />
+					<field name="ctn_height" />
+					<field name="inbound_shelf_life" />
 				</field>
 				<field name="volume" position="replace">
 					<field digits="(14, 3)" name="volume" invisible="1"/>					
