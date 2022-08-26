@@ -2971,8 +2971,13 @@ class mobile_sale_order(osv.osv):
         
     def get_stockcheck(self, cr, uid, sale_team_id , context=None, **kwargs):
         cr.execute('''            
-                  select scl.id ,sc.outlet_type,scl.product_id,scl.product_uom_qty as quantity,scl.available,scl.facing, scl.chiller from stock_check_setting sc ,stock_check_setting_line scl where sc.id=scl.stock_setting_ids
-         ''')
+                select scl.id ,sc.outlet_type,scl.product_id,scl.product_uom_qty as quantity,scl.available,scl.facing, scl.chiller 
+                from stock_check_setting sc ,stock_check_setting_line scl,crm_case_section ccs,product_sale_group_rel rel
+                where sc.id=scl.stock_setting_ids
+                and ccs.sale_group_id = rel.sale_group_id
+                and rel.product_id=scl.product_id
+                and ccs.id=%s
+         ''', (sale_team_id,))
         datas = cr.fetchall()
         return datas
 
