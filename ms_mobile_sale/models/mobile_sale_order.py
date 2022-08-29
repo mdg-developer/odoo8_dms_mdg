@@ -1569,10 +1569,9 @@ class mobile_sale_order(osv.osv):
     def get_all_competitor_products(self, cr, uid, sale_team_id , context=None, **kwargs):
         cr.execute('''            
             select cp.id,cp.name,product_uom_id
-            from crm_case_section ccs,sales_group sg,competitor_product_sales_group_rel prel,competitor_product cp,competitor_product_product_uom_rel rel
-            where ccs.sale_group_id=sg.id
-            and prel.sales_group_id=sg.id
-            and prel.competitor_product_id=cp.id
+            from crm_case_section ccs,competitor_product_crm_case_section_rel cprel,competitor_product cp,competitor_product_product_uom_rel rel
+            where ccs.id=cprel.crm_case_section_id
+            and cprel.competitor_product_id=cp.id
             and cp.id=rel.competitor_product_id
             and ccs.id=%s
          ''', (sale_team_id,))
@@ -1583,9 +1582,8 @@ class mobile_sale_order(osv.osv):
         list = []
         cr.execute('''            
             select competitor_product_id
-            from crm_case_section ccs,sales_group sg,competitor_product_sales_group_rel rel
-            where ccs.sale_group_id=sg.id
-            and rel.sales_group_id=sg.id
+            from crm_case_section ccs,competitor_product_crm_case_section_rel rel
+            where ccs.id=rel.crm_case_section_id
             and ccs.id=%s
          ''', (sale_team_id,))
         datas = cr.fetchall()
@@ -1598,9 +1596,8 @@ class mobile_sale_order(osv.osv):
 
     def get_competitor_stock_check(self, cr, uid, sale_team_id , context=None, **kwargs):
         cr.execute('''select cline.id,outlet_type,prel.competitor_product_id,product_uom_qty as qty,available,facing,chiller,cp.sequence
-                    from crm_case_section ccs,sales_group sg,competitor_product_sales_group_rel prel,competitor_product cp,stock_check_setting_competitor_line cline,stock_check_setting scs
-                    where ccs.sale_group_id=sg.id
-                    and prel.sales_group_id=sg.id
+                    from crm_case_section ccs,competitor_product_crm_case_section_rel prel,competitor_product cp,stock_check_setting_competitor_line cline,stock_check_setting scs
+                    where ccs.id=prel.crm_case_section_id
                     and prel.competitor_product_id=cp.id
                     and cp.id=cline.competitor_product_id
                     and cline.stock_setting_ids=scs.id

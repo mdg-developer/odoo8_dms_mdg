@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+        <record model="ir.ui.view" id="crm_case_section_view_form_inherit_competitor_product">
+			<field name="name">crm</field>
+			<field name="model">crm.case.section</field>
+			<field name="inherit_id" ref="sales_team.crm_case_section_view_form" />
+			<field name="priority" eval="20" />
+			<field name="arch" type="xml">
+                <page string="Team Members" position="after">
+					<page string="Competitor Products">
+						<separator string="Competitor Products" />
+						<field name="competitor_product_ids" widget="many2many_list">
+							<kanban quick_create="false" create="true">
+								<field name="name" />
+								<templates>
+									<t t-name="kanban-box">
+										<div style="position: relative">
+											<a t-if="! read_only_mode" type="delete"
+												style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
+											<div class="oe_module_vignette">
+												<div class="oe_module_desc">
+													<field name="name" />
+												</div>
+											</div>
+										</div>
+									</t>
+								</templates>
+							</kanban>
+						</field>
+					</page>
+                </page>
+            </field>
+        </record>
+    </data>
+</openerp>

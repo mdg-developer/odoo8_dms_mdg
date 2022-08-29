@@ -32,10 +32,10 @@ Competitor Product
 """,
     'author': 'Seventh Computing',
     'website': 'http://www.7thcomputing.com',
-    'depends': ['base','product','sale_group'],
+    'depends': ['base','product'],
     'data': [
        'views/competitor_product_view.xml',
-       'views/sales_group_view.xml'
+       'views/sale_team_view.xml',
     ],
     'installable': True,
     'auto_install': False,

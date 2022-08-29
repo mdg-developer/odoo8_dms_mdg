@@ -298,6 +298,16 @@ class customer_visit(osv.osv):
 
         return tools.image_resize_image_big(image.encode('base64'))
 
+    def generate_image(self, cr, uid, ids, context=None):
+        if ids:
+            visit_data = self.browse(cr, uid, ids[0], context=context)
+            import base64
+            image6 = False
+            if visit_data.customer_id.image:
+                image6 = (visit_data.customer_id.image)
+
+        return self.write(cr, uid, ids, {'image5': image6})
+
     def is_approve(self, cr, uid, ids, context=None):
 
         return self.write(cr, uid, ids, {'state': 'approved', 'validated_by': uid, 'validated_date': datetime.now()})
