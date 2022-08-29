@@ -45,6 +45,7 @@
 								<field name="warehouse_cbm" />
 								<field name="current_stock_cbm" />
 								<field name="remaining_cbm" />
+								<field name="total_request_diff_quantity" />
 							</group>
 							<group>
 								<field name="issue_to" attrs="{'readonly':[('state','!=','draft')]}" />
@@ -102,7 +103,7 @@
 											<field name="diff_quantity" invisible="1" />
 											<field name="gin_issue_quantity" readonly="1" />
 											<field name="gin_diff_quantity" />
-
+											<field name="request_diff_quantity" />
 											<field name="product_uom"
 												on_change="on_change_product_uom(product_id,product_uom)"
 												string="UOM" />
