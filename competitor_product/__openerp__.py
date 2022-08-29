@@ -35,7 +35,7 @@ Competitor Product
     'depends': ['base','product','sale_group'],
     'data': [
        'views/competitor_product_view.xml',
-       'views/sales_group_view.xml'
+       'views/sale_team_view.xml',
     ],
     'installable': True,
     'auto_install': False,
