@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<record id="inherit_stock_return_form" model="ir.ui.view">
+					<field name="name">stock.return.form.inherit</field>
+					<field name="model">stock.return</field>
+					<field name="inherit_id" ref="stock_requisition.stock_return_form" />
+					<field name="arch" type="xml">
+						<xpath expr="//field[@name='state']" position="replace">
+                    		<field name="state" widget="statusbar" />
+                		</xpath>
+						<button name="received" position="after">
+							<button name="open" string="Open" class="oe_highlight" type="object" states="draft" groups="stock.group_stock_manager,stock.group_stock_user" />
+						</button>
+						<button name="received" position="replace">
+							<button name="received" string="Received" class="oe_highlight"
+							type="object" states="open"
+							groups="stock.group_stock_manager,stock.group_stock_user" />
+						</button>
+
+					</field>
+		</record>
+    </data>
+</openerp>

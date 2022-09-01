@@ -26,6 +26,7 @@ class product_template(osv.osv):
     
     def sync_to_cwh(self, cr, uid, ids, context=None):
         try:
+
             sd_uid,url,db,password = self.pool['cwh.connection'].get_connection_data(cr, uid, context=None)
             models = xmlrpclib.ServerProxy('{}/xmlrpc/2/object'.format(url))
             #promos.rules promos_rules
@@ -65,6 +66,7 @@ class product_template(osv.osv):
                                 'uom_po_id':uom_po_id,
                                 'list_price':data.list_price,
                                 'type':data.type,
+                                'barcode':data.barcode_no,
                                 #'standard_price':data.standard_price,
                                  }
                 if product_ids:
@@ -89,4 +91,10 @@ class product_template(osv.osv):
         except Exception , e:            
             raise e              
                                         
-              
+
+# class stock_location(osv.osv):
+#     _inherit = "stock.location"
+#
+#     _columns = {
+#         'is_cwh_location': fields.boolean('Drop Point Location'),
+#     }

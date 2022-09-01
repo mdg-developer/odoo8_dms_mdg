@@ -31,11 +31,12 @@ MDG SYC TO SD
 """,
     'author': 'Seventh Computing',
     'website': 'http://www.7thcomputing.com',
-    'depends': ['base','branch_inventory_transfer','good_receive_note', 'product','web_tree_dynamic_colored_field'],
+    'depends': ['base','product','purchase','stock','stock_requisition'],
     'data': [        
              
              'views/cwh_connection_view.xml',
              'views/product_template_view.xml',
+             'views/inventory_adjustment_view.xml',
              'wizard/product_template_multi_sync_view.xml',
     ],
     'installable': True,
