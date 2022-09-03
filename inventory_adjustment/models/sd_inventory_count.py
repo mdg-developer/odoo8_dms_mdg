@@ -61,8 +61,8 @@ class sd_inventory_count(osv.osv):
                     'location_dest_id': inv_loss_location,
                     'location_id': sellable_location,
                     'product_uom_qty': abs(line.diff_pcs),
-                    # 'product_uom': line.smaller_product_uom.id,
-                    'product_uom':1,
+                    'product_uom': line.smaller_product_uom.id,
+                    # 'product_uom':1,
                     'origin': inventory_count.name,
                 }
 
@@ -74,13 +74,18 @@ class sd_inventory_count(osv.osv):
                     'location_dest_id': sellable_location,
                     'location_id': inv_loss_location,
                     'product_uom_qty': abs(line.diff_pcs),
-                    # 'product_uom': line.smaller_product_uom.id,
-                    'product_uom':1,
+                    'product_uom': line.smaller_product_uom.id,
+                    # 'product_uom':1,
                     'origin': inventory_count.name,
                 }
 
-            move_id = stock_move_obj.create(cr, uid, stock_move_value, context=context)
-            stock_move_obj.action_done(cr, uid, move_id, context=context)
+            has_duplicate = stock_move_obj.search(cr, uid, [('origin', '=', inventory_count.name),
+                                                            ('product_id', '=', line.product_id.id),
+                                                            ('product_uom_qty', '=', abs(line.diff_pcs))],
+                                                  context=context)
+            if not has_duplicate:
+                move_id = stock_move_obj.create(cr, uid, stock_move_value, context=context)
+                stock_move_obj.action_done(cr, uid, move_id, context=context)
 
         return self.write(cr, uid, vals, {'state': 'validate'})
 
