@@ -33,7 +33,7 @@ class res_users(osv.osv):
         'allow_customer_create':fields.boolean('Allow Customer Create',default=False),
         'allow_customer_edit':fields.boolean('Allow Customer Edit',default=False),
         'allow_visit_photo_taken':fields.boolean('Allow Visit Photo Taken',default=False),
-
+        'is_burmart_team':fields.boolean('Is Burmart Team',default=False),
     }
     
     def automation_cashier_approval(self, cr, uid,context=None):
