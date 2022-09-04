@@ -2,6 +2,11 @@ from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
 from openerp.osv.fields import _column
 import xmlrpclib
+from requests.structures import CaseInsensitiveDict
+import base64
+import requests
+from openerp.osv.orm import except_orm
+from openerp.tools.translate import _
 
 class product_pricelist(osv.osv):
     _inherit = "product.pricelist"
@@ -44,8 +49,26 @@ class product_pricelist(osv.osv):
                                     price_info = product_code + "," + str(int(price)) + "," + str(pricelist_id) + ',consumer'                        
                                     wcapi.put('dynamic-price-consumer',price_info) 
                                 if data.retail == True:
-                                    price_info = product_code + "," + str(int(price)) + "," + str(pricelist_id) + ',retail'                      
-                                    wcapi.put('dynamic-price-retailer',price_info)
+                                    instance_obj = woo_instance_obj.browse(cr, uid, instance)
+                                    url = instance_obj.host + "/wp-json/auth-api/v1/odoo/products/price_lists_update"
+                                    headers = CaseInsensitiveDict()
+                                    login_info = instance_obj.admin_username + ":" + instance_obj.admin_password
+                                    login_info_bytes = login_info.encode('ascii')
+                                    base64_bytes = base64.b64encode(login_info_bytes)
+                                    headers["Authorization"] = "Basic " + base64_bytes
+                                    headers["Content-Type"] = "application/json"
+                                    for line in data.branch_id:
+                                        branch_code = line.branch_code
+                                        city = data.city_id.name if data.city_id else None
+                                        township = data.township_id.name if data.township_id else None
+                                        limit_data = '''[{"branch_code":"%s","city":"%s","township":"%s","product_lists":[{"product_sku":"%s","product_price":%s}]}]''' % (
+                                        str(branch_code), str(city), str(township), str(product_code),
+                                        price)
+                                        response = requests.post(url, headers=headers, data=limit_data)
+                                        if response.status_code not in [200, 201]:
+                                            raise except_orm(_('Error'),
+                                                             _("Error in syncing response for product %s %s") % (
+                                                             pricelist_item.product_id.name, response.content,))
             if data.is_sync_woo != True:
                 self.write(cr, uid, ids, {'is_sync_woo': True}, context=context)
             
