@@ -24,7 +24,7 @@ class res_users(osv.osv):
             cursor.execute('''select loc.name location_name,name_template product_name,sum(quant.qty) total_small_qty,
                             round((sum(quant.qty)/(1/factor))::numeric,1) total_bigger_qty,
                             (select uom.name from product_uom uom where uom.id=pt.uom_id) small_uom,
-                            (select uom.name from product_uom uom where uom.id=pt.report_uom_id) bigger_uom
+                            (select uom.name from product_uom uom where uom.id=pt.report_uom_id) bigger_uom,pp.sequence
                             from stock_quant quant,product_product pp,stock_location loc,product_template pt,product_uom uom
                             where quant.product_id=pp.id
                             and quant.location_id=loc.id
@@ -44,7 +44,7 @@ class res_users(osv.osv):
             cursor.execute('''select loc.name location_name,name_template product_name,sum(quant.qty) total_small_qty,
                             round((sum(quant.qty)/(1/factor))::numeric,1) total_bigger_qty,
                             (select uom.name from product_uom uom where uom.id=pt.uom_id) small_uom,
-                            (select uom.name from product_uom uom where uom.id=pt.report_uom_id) bigger_uom
+                            (select uom.name from product_uom uom where uom.id=pt.report_uom_id) bigger_uom,pp.sequence
                             from stock_quant quant,product_product pp,stock_location loc,product_template pt,product_uom uom
                             where quant.product_id=pp.id
                             and quant.location_id=loc.id
@@ -69,7 +69,7 @@ class res_users(osv.osv):
             cursor.execute('''select loc.name location_name,name_template product_name,sum(quant.qty) total_small_qty,
                             round((sum(quant.qty)/(1/factor))::numeric,1) total_bigger_qty,
                             (select uom.name from product_uom uom where uom.id=pt.uom_id) small_uom,
-                            (select uom.name from product_uom uom where uom.id=pt.report_uom_id) bigger_uom
+                            (select uom.name from product_uom uom where uom.id=pt.report_uom_id) bigger_uom,pp.sequence
                             from stock_quant quant,product_product pp,stock_location loc,product_template pt,product_uom uom
                             where quant.product_id=pp.id
                             and quant.location_id=loc.id
@@ -81,7 +81,7 @@ class res_users(osv.osv):
                             and pt.active=true
                             and loc.id=%s
                             and pp.id in (select id from product_product where lower(name_template) like %s)
-                            group by loc.name,name_template,uom.factor,pt.uom_id,pt.report_uom_id''',(location_id,param_product_name,))
+                            group by loc.name,name_template,uom.factor,pt.uom_id,pt.report_uom_id,pp.sequence''',(location_id,param_product_name,))
             balance_record = cursor.dictfetchall() 
             if balance_record:
                 return balance_record 
@@ -89,7 +89,7 @@ class res_users(osv.osv):
             cursor.execute('''select loc.name location_name,name_template product_name,sum(quant.qty) total_small_qty,
                             round((sum(quant.qty)/(1/factor))::numeric,1) total_bigger_qty,
                             (select uom.name from product_uom uom where uom.id=pt.uom_id) small_uom,
-                            (select uom.name from product_uom uom where uom.id=pt.report_uom_id) bigger_uom
+                            (select uom.name from product_uom uom where uom.id=pt.report_uom_id) bigger_uom,pp.sequence
                             from stock_quant quant,product_product pp,stock_location loc,product_template pt,product_uom uom,product_multi_barcode barcode
                             where quant.product_id=pp.id
                             and quant.location_id=loc.id
@@ -102,7 +102,7 @@ class res_users(osv.osv):
                             and pt.active=true
                             and loc.id=%s
                             and barcode.name=%s
-                            group by loc.name,name_template,uom.factor,pt.uom_id,pt.report_uom_id''',(location_id,barcode_no,))
+                            group by loc.name,name_template,uom.factor,pt.uom_id,pt.report_uom_id,pp.sequence''',(location_id,barcode_no,))
             balance_record = cursor.dictfetchall() 
             if balance_record:
                 return balance_record

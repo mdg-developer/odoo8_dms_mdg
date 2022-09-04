@@ -97,9 +97,21 @@ class branch_stock_requisition(osv.osv):
                 val1 += req_data.cbm_value                      
             res[order.id] = val1
             cr.execute("update branch_stock_requisition set total_cbm_store=%s where id =%s",(val1,order.id,))
-            
-        return res   
-       
+
+        return res
+
+    def _total_request_diff_quantity(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        if context is None:
+            context = {}
+        for order in self.browse(cr, uid, ids, context=context):
+            val1 = 0.0
+            for line in order.p_line:
+                req_data = self.pool.get('branch.stock.requisition.line').browse(cr, uid, line.id, context=context)
+                val1 += abs(req_data.request_diff_quantity)
+            res[order.id] = val1
+        return res
+
     def _total_value(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         if context is None:
@@ -281,6 +293,7 @@ class branch_stock_requisition(osv.osv):
     'total_viss_store':fields.float("Total Viss", digits_compute=dp.get_precision('Product Price'),readonly=True),
     'total_cbm_store':fields.float("Total CBM", digits_compute=dp.get_precision('Product Price'),readonly=True),
     'total_cbm':fields.function(_cbm_amount, string='Total CBM', digits_compute=dp.get_precision('Product Price'), type='float'),
+    'total_request_diff_quantity': fields.function(_total_request_diff_quantity, string='Total Request Diff(Qty)', digits_compute=dp.get_precision('Product Price'), type='float'),
     'bal_viss':fields.function(_bal_viss_amount, string='Bal Viss', digits_compute=dp.get_precision('Product Price'), type='float'),
     'bal_cbm':fields.function(_bal_cbm_amount, string='Bal CBM', digits_compute=dp.get_precision('Product Price'), type='float'),
     'total_value':fields.function(_total_value, string='Total Value', digits=(16, 0) , type='float'),
@@ -603,6 +616,7 @@ class branch_stock_requisition(osv.osv):
                                 result =check_qty
                 else:
                     result =0
+            line.req_quantity = result
             line.recommend_quantity = result
             
     def calculate_standard_rule(self, cr, uid, ids, context=None):
@@ -643,6 +657,7 @@ class branch_stock_requisition(osv.osv):
                                 result =check_qty
                 else:
                     result = 0
+                line.req_quantity = result
                 line.recommend_quantity = result
         
     def updateQtyOnHand(self, cr, uid, ids, context=None):
@@ -773,7 +788,18 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
 
             val1 = order.req_quantity - order.gin_issue_quantity                      
             res[order.id] = val1
-        return res  
+        return res
+
+    def _request_diff_quantity_value(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        if context is None:
+            context = {}
+        for order in self.browse(cr, uid, ids, context=context):
+            val1 = 0.0
+
+            val1 = order.req_quantity - order.recommend_quantity
+            res[order.id] = val1
+        return res
             
     def _diff_quantity_value(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
@@ -833,12 +859,13 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
             request_data = self.pool.get('branch.stock.requisition').browse(cr, uid, order.line_id.id, context=context)
             if request_data:
                 pricelist_id=request_data.pricelist_id.id
-                cr.execute("select new_price from product_pricelist_item where price_version_id in ( select id from product_pricelist_version where pricelist_id=%s and active=True) and product_id=%s and product_uom_id=%s", (pricelist_id,order.product_id.id, order.product_uom.id,))
-                product_price = cr.fetchone()
-                if product_price:
-                    product_value=product_price[0]  
-                else:
-                    product_value=0           
+                if pricelist_id and order.product_id and order.product_uom:
+                    cr.execute("select new_price from product_pricelist_item where price_version_id in ( select id from product_pricelist_version where pricelist_id=%s and active=True) and product_id=%s and product_uom_id=%s", (pricelist_id,order.product_id.id, order.product_uom.id,))
+                    product_price = cr.fetchone()
+                    if product_price:
+                        product_value=product_price[0]
+                    else:
+                        product_value=0
                 if order.req_quantity >0:
                     val1 = order.req_quantity * product_value      
                 else:
@@ -855,7 +882,8 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
         'req_quantity' : fields.float(string='Request (Qty)', digits=(16, 0)),
         'issue_quantity': fields.float(string='Issued (Qty)', digits=(16, 0)),
         'gin_issue_quantity': fields.float(string='GIN Issued (Qty)', digits=(16, 0),copy=False),
-        'gin_diff_quantity':fields.function(_gin_diff_quantity_value, string='Diff(Qty)', digits=(16, 0), type='float', readonly=True,copy=False),
+        'gin_diff_quantity':fields.function(_gin_diff_quantity_value, string='GIN Diff(Qty)', digits=(16, 0), type='float', readonly=True,copy=False),
+        'request_diff_quantity': fields.function(_request_diff_quantity_value, string='Request Diff(Qty)', digits=(16, 0), type='float', readonly=True, copy=False),
         'diff_quantity':fields.function(_diff_quantity_value, string='Diff(Qty)', digits=(16, 0), type='float', readonly=True),
         'loss' : fields.boolean(string='Loose'),
          'is_foc': fields.boolean(string='Foc'),

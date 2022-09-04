@@ -23,7 +23,10 @@ class branch_stock_requisition(osv.osv):
             so_vals['order_line']= []   
             if ids:
                 req_value = requisition_obj.browse(cr, uid, ids[0], context=context)
+                if not req_value.to_location_id.is_cwh_location:
+                    return result
                 so_vals['client_order_ref']= req_value.from_location_id.name or ''
+                so_vals['origin']= req_value.name or ''
                 so_create = False
                 data_line = []
                 #KM
