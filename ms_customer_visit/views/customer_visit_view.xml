@@ -110,7 +110,7 @@
 									<field name="sale_plan_day_id" readonly="1" />
 									<field name="sale_plan_trip_id" readonly="1" />
 									<field name="sale_team_id" readonly="1" />
-									<field name="visit_reason" readonly="1" />
+									<field name="visit_reason_id" readonly="1" />
 									<field name="validated_by" readonly="1" />
 									<field name="validated_date" readonly="1" />
 									<field name="rejected_by" readonly="1" />
@@ -250,7 +250,7 @@
 					<field name="sale_plan_trip_id" />
 					<field name="tablet_id" />
 					<field name="sale_team_id" />
-					<field name="visit_reason" />
+					<field name="visit_reason_id" />
 					<field name="other_reason" />
 					<field name="state" />
 				</tree>

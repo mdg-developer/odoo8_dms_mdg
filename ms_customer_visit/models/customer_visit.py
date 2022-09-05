@@ -27,8 +27,8 @@ class customer_visit(osv.osv):
         'tablet_id':fields.many2one('tablets.information', 'Tablet ID'),
         'latitude':fields.float('Geo Latitude', digits=(16, 5), readonly=True),
         'longitude':fields.float('Geo Longitude', digits=(16, 5), readonly=True),
-       'sale_team_id':fields.many2one('crm.case.section', 'Sale Team'),
-       'date':fields.datetime('Date'),
+        'sale_team_id':fields.many2one('crm.case.section', 'Sale Team'),
+        'date':fields.datetime('Date'),
         'visit_reason':fields.selection([
                 ('no_shopkeeper', 'No Shopkeeper'),
                 ('no_authorized_person', 'No Authorized Person'),
@@ -42,8 +42,8 @@ class customer_visit(osv.osv):
                                                       ('reject', 'Reject')], string='Status'),
         'state':fields.selection([('pending', 'Pending'), ('approved', 'Validate'),
                                                       ('reject', 'Reject')], string='Status'),        
-     'branch_id': fields.many2one('res.branch', 'Branch',required=True),
-    'distance_status':fields.char('Distance Status', readonly=True),
+        'branch_id': fields.many2one('res.branch', 'Branch',required=True),
+        'distance_status':fields.char('Distance Status', readonly=True),
         'township_id': fields.related(
                    'customer_id', 'township',
                    type='many2one',
@@ -60,11 +60,11 @@ class customer_visit(osv.osv):
         'is_image3':fields.boolean('Is Image3', default=False),    
         'is_image4':fields.boolean('Is Image4', default=False),    
         'is_image5':fields.boolean('Is Image5', default=False),    
-       'rejected_by':fields.many2one('res.users', "Rejected By"),
-       'validated_by':fields.many2one('res.users', "Validated By"),        
-         'rejected_date':fields.datetime('Rejected Date'),
-         'validated_date':fields.datetime('Validated Date'),
-
+        'rejected_by':fields.many2one('res.users', "Rejected By"),
+        'validated_by':fields.many2one('res.users', "Validated By"),
+        'rejected_date':fields.datetime('Rejected Date'),
+        'validated_date':fields.datetime('Validated Date'),
+        'visit_reason_id': fields.many2one('visit.reason', 'Visit Reason', required=True),
     }
     _defaults = {        
         'm_status' : 'pending',

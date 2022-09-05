@@ -2968,7 +2968,14 @@ class mobile_sale_order(osv.osv):
         cr.execute('''select * from get_customer_target(%s)''', (customer_id,))
         datas = cr.fetchall()
         return datas    
-        
+
+    def get_all_visit_reason(self, cr, uid, sale_team_id , context=None, **kwargs):
+        cr.execute('''            
+                select id,name,sequence,active from visit_reason
+         ''')
+        datas = cr.fetchall()
+        return datas
+
     def get_stockcheck(self, cr, uid, sale_team_id , context=None, **kwargs):
         cr.execute('''            
                 select scl.id ,sc.outlet_type,scl.product_id,scl.product_uom_qty as quantity,scl.available,scl.facing, scl.chiller 

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<openerp>
+    <data>
+        <record id="view_visit_reason_form" model="ir.ui.view">
+			<field name="name">Visit Reason Form</field>
+			<field name="model">visit.reason</field>
+			<field eval="25" name="priority" />
+			<field name="arch" type="xml">
+				<form string="Visit Reason Form" version="8.0">
+					<sheet>
+						<group>
+							<group>
+								<field name="name" />
+								<field name="sequence" />
+								<field name="active" />
+							</group>
+							<group>
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+        <record id="view_visit_reason_tree" model="ir.ui.view">
+			<field name="name">Visit Tree</field>
+			<field name="model">visit.reason</field>
+			<field name="arch" type="xml">
+				<tree string="Visit Reason">
+					<field name="name" />
+					<field name="sequence" />
+					<field name="active" />
+				</tree>
+			</field>
+		</record>
+
+        <record id="action_visit_reason" model="ir.actions.act_window">
+			<field name="name">Visit Reason</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">visit.reason</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_visit_reason_tree" />
+		</record>
+
+        <menuitem id="menu_visit_reason_menu" parent="sale_promotions.sales"
+			name="Visit Reason" action="action_visit_reason" groups="base.group_system" sequence="23" />
+
+    </data>
+</openerp>
