@@ -10,6 +10,8 @@
     """,
     'data': [
              'views/product_view.xml',
+             'views/product_info_view.xml',
+             'security/ir.model.access.csv',
             ],
     'installable': True,
     'auto_install': False,
