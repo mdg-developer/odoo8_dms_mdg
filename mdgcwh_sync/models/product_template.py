@@ -68,6 +68,14 @@ class product_template(osv.osv):
                                 'type':data.type,
                                 'barcode':data.barcode_no,
                                 #'standard_price':data.standard_price,
+                                'ctn_weight': data.ctn_weight,
+                                'ctn_height': data.ctn_height,
+                                'inbound_shelf_life': data.inbound_shelf_life,
+                                'viss': data.viss_value,
+                                'cbm': data.cbm_value,
+                                'pallet_quantity': data.ctn_pallet,
+                                'ti': data.ti,
+                                'hi': data.hi,
                                  }
                 if product_ids:
                     print("product write")

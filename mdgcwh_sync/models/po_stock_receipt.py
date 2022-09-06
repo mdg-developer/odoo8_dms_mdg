@@ -98,7 +98,7 @@ class stock_transfer_details(models.TransientModel):
                 po_obj = self.env['purchase.order'].search([('name', '=', po_number)])
                 is_cwh_location = picking.picking_type_id.default_location_dest_id.is_cwh_location
                 location = picking.picking_type_id.default_location_dest_id.name
-                if picking_code == 'incoming' and is_cwh_location and po_obj and location in ('MDGCWH1-Sellable','MDGCWH2-Sellable'):
+                if picking_code == 'incoming' and is_cwh_location and po_obj and location in ('MDGCWH1-Sellable','MDGCWH2-Sellable','MDGCWHA-Sellable','MDGCWHB-Sellable'):
                     sd_uid, url, db, password = self.env['cwh.connection'].get_connection_data()
                     models = xmlrpclib.ServerProxy('{}/xmlrpc/2/object'.format(url))
                     if location == 'MDGCWH1-Sellable':
