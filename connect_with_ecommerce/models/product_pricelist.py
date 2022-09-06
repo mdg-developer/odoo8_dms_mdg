@@ -59,11 +59,8 @@ class product_pricelist(osv.osv):
                                     headers["Content-Type"] = "application/json"
                                     for line in data.branch_id:
                                         branch_code = line.branch_code
-                                        city = data.city_id.name if data.city_id else None
-                                        township = data.township_id.name if data.township_id else None
-                                        limit_data = '''[{"branch_code":"%s","city":"%s","township":"%s","product_lists":[{"product_sku":"%s","product_price":%s}]}]''' % (
-                                        str(branch_code), str(city), str(township), str(product_code),
-                                        price)
+                                        limit_data = '''[{"branch_code":"%s","product_lists":[{"product_sku":"%s","product_price":%s}]}]''' % (
+                                        str(branch_code), str(product_code), price)
                                         response = requests.post(url, headers=headers, data=limit_data)
                                         if response.status_code not in [200, 201]:
                                             raise except_orm(_('Error'),
