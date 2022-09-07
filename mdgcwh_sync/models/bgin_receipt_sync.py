@@ -76,7 +76,7 @@ class branch_good_issue_note(osv.osv):
                                                     [[('default_code', '=', line.product_id.default_code)]],{'limit': 1})
                     uom_id = models.execute_kw(db, sd_uid, password, 'uom.uom', 'search',
                                                [[('name', '=', line.product_uom.name)]], {'limit': 1})
-                    if product_ids:
+                    if product_ids and line.receive_quantity != 0:
                         product_id = models.execute_kw(db, sd_uid, password, 'product.product', 'read', [product_ids])[0]
                         move_value = {
                             'name': product_id['name'],
