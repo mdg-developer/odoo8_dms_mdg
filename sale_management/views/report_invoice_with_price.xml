@@ -283,7 +283,9 @@
 											<span t-field="l.promotion_id.name"/>
 										</t>
 										<t t-else="">
-											<span t-field="l.product_id.name" />
+											<t t-if="l.product_id.type != 'service'">
+												<span t-field="l.product_id.name" />
+											</t>
 										</t>
 										<t t-if="l.foc==True">
 											(FOC)
