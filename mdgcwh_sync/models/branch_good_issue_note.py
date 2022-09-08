@@ -129,7 +129,7 @@ class branch_good_issue_note(osv.osv):
                         models.execute_kw(db, sd_uid, password, 'sale.order', 'action_confirm', [order_id])
             return result
         except Exception , e:
-            print "error order id",order_id
-            if order_id:
-                models.execute_kw(db, sd_uid, password, 'sale.order', 'unlink', [[order_id]])
+            print "Exception",e
+            # if order_id:
+            #     models.execute_kw(db, sd_uid, password, 'sale.order', 'unlink', [[order_id]])
             raise e
