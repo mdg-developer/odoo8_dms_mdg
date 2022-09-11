@@ -35,6 +35,8 @@
 					<field name="product_id" />
 					<field name="max_qty" />
 					<field name="is_sync_woo" />
+					<field name="state_id" />
+					<field name="city_id" />
 				</tree>
 			</field>
 		</record>
