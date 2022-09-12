@@ -34,6 +34,8 @@
 				<tree string="Product Quantity Limit" version="7.0">
 					<field name="product_id" />
 					<field name="max_qty" />
+					<field name="state_id" />
+					<field name="city_id" />
 					<field name="is_sync_woo" />
 				</tree>
 			</field>

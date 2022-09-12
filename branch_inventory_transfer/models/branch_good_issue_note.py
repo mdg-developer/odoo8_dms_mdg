@@ -587,6 +587,7 @@ class branch_good_issue_note(osv.osv):
                                               'picking_type_id':picking_type_id}, context=context)
                 note_line_id = product_line_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context)
                 if note_line_id and picking_id:
+                    move_list_ids = []
                     for note_id in note_value.p_line:
                         note_line_value = product_line_obj.browse(cr, uid, note_id.id, context=context)
                         product_id = note_line_value.product_id.id
@@ -598,19 +599,21 @@ class branch_good_issue_note(osv.osv):
                             raise osv.except_osv(_('Warning'),
                                                  _('Cannot Receive Over Qty')) 
                                                    
-                                               
-                        move_id = move_obj.create(cr, uid, {'picking_id': picking_id,
-                                                  'picking_type_id':picking_type_id,
-                                              'product_id': product_id,
-                                              'product_uom_qty': quantity,
-                                              'product_uos_qty': quantity,
-                                              'product_uom':product_uom,
-                                              'location_id':location_id,
-                                              'location_dest_id':from_location_id,
-                                              'name':name,
-                                               'origin':origin,
-                                              'state':'confirmed'}, context=context)     
-                        move_obj.action_done(cr, uid, move_id, context=context)  
+                        if quantity > 0:
+                            move_id = move_obj.create(cr, uid, {'picking_id': picking_id,
+                                                      'picking_type_id':picking_type_id,
+                                                  'product_id': product_id,
+                                                  'product_uom_qty': quantity,
+                                                  'product_uos_qty': quantity,
+                                                  'product_uom':product_uom,
+                                                  'location_id':location_id,
+                                                  'location_dest_id':from_location_id,
+                                                  'name':name,
+                                                   'origin':origin,
+                                                  'state':'confirmed'}, context=context)
+                            move_list_ids.append(move_id)
+                    if len(move_list_ids) > 0:
+                        move_obj.action_done(cr, uid, move_list_ids, context=context)
                         cr.execute('''update stock_move set date=((%s::date)::text || ' ' || date::time(0))::timestamp where state='done' and origin =%s''', (receive_date, origin,))
             
             if note_value.total_diff_qty>0:
