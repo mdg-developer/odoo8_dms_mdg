@@ -104,10 +104,10 @@ class branch_good_issue_note(osv.osv):
                 if inventory_line == True:
                     models.execute_kw(db, sd_uid, password, 'stock.move', 'create', [move_array])
                     models.execute_kw(db, sd_uid, password, 'stock.picking', 'action_confirm', [picking_id])
-                    return result
+                    # return result
                 else:
                     models.execute_kw(db, sd_uid, password, 'stock.picking', 'unlink', [[picking_id]])
 
-
+            return result
         except Exception, e:
             raise e
