@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+		<!-- Product OOS Configuration Form -->
+		<record id="view_product_oos_form" model="ir.ui.view">
+			<field name="name">product.oos.form</field>
+			<field name="model">product.oos</field>
+			<field name="arch" type="xml">
+				<form string="Minimum Stock Qty Control" version="7.0">
+					<header>
+					</header>
+					<sheet>
+						<group>
+								<button name="sync_to_woo" string="Sync to Woo" type="object" widget="statinfo" class="oe_highlight"/>
+						</group>
+						<group>
+							<group>
+								<field name="branch_id"/>ss
+								<field name="updated_by"/>
+								<field name="updated_time"/>
+								<field name="retrieved_by"/>
+								<field name="retrieved_time"/>
+								<field name="sku_count"/>
+							</group>
+
+						</group>
+
+						<group>
+								<button name="retrieve_product" string="Retrieve Product" type="object" widget="statinfo" class="oe_highlight"/>
+						</group>
+						<notebook>
+							<page string="Product Info">
+								<field name="product_oos_line">
+									<tree string="Product OOS Lines" editable="bottom">
+										<field name="product_id"/>
+										<field name="ecommerce_uom_id"/>
+										<field name="min_qty"/>
+										<field name="oos"/>
+									</tree>
+								</field>
+							</page>
+						</notebook>
+
+					</sheet>
+
+				</form>
+			</field>
+
+		</record>
+
+		<!-- Product MainGroup Tree -->
+		<record id="view_product_oos_tree" model="ir.ui.view">
+			<field name="name">product.oos.tree</field>
+			<field name="model">product.oos</field>
+			<field name="arch" type="xml">
+				<tree string="Minimum Stock Qty Control" version="7.0">
+					<field name="branch_id" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="view_product_oos_filter" model="ir.ui.view">
+			<field name="name">product.oos.filter</field>
+			<field name="model">product.oos</field>
+			<field name="arch" type="xml">
+				<search string="Search Minimum Stock Qty Contorl">
+					<group expand="0" string="Group By...">
+						<filter string="Branch" icon="terp-partner" domain="[]"
+							context="{'group_by':'branch_id'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+
+
+		<!-- Product MainGroup Action -->
+		<record id="action_product_oos_view" model="ir.actions.act_window">
+			<field name="name">Product OOS Form</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">product.oos</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" eval="view_product_oos_tree" />
+			<field name="search_view_id" ref="view_product_oos_filter" />
+		</record>
+
+		<!-- Product MainGroup Menu -->
+		<menuitem id="product_oos_menu" parent="woo_commerce_ept.woo_instance_menu_item_autoworkflow"
+			name="Minimum Stock Qty Control" action="action_product_oos_view" sequence="70"
+			groups="base.group_user"/>
+
+<!--			<menuitem id="product_oos_menu" parent="stock.menu_stock_inventory_control"-->
+<!--			name="Minimum Stock Qty Control" action="action_product_oos_view" sequence="70"-->
+<!--			groups="base.group_user"/>-->
+
+
+
+	</data>
+</openerp>
