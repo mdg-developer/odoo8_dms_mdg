@@ -730,6 +730,7 @@ class account_invoice(models.Model):
                     if product_code == 'disc-cash-antoni-kanonkop' or product_code == 'disc-cash-dbr' or  product_code == 'disc-cash-lvmh' or product_code == 'disc-cash-other-import' or  product_code == 'disc-cash-silveroak' or  product_code == 'disc-cash-twins-jonanne' :
                         cr.execute("select avl.id from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s and avl.foc!=true and avl.price_unit = %s", (origin, product.id,line['price_unit'],))
                         invoice_line_id = cr.fetchone()
+                        total_tax_amt=0
                         if invoice_line_id:
                             invoice_line_data = self.env['account.invoice.line'].browse(invoice_line_id)
                             net_total = invoice_line_data.net_total
