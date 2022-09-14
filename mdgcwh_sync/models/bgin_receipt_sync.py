@@ -74,15 +74,32 @@ class branch_good_issue_note(osv.osv):
                     inventory_line = True
                     product_ids = models.execute_kw(db, sd_uid, password,'product.product', 'search',
                                                     [[('default_code', '=', line.product_id.default_code)]],{'limit': 1})
-                    uom_id = models.execute_kw(db, sd_uid, password, 'uom.uom', 'search',
-                                               [[('name', '=', line.product_uom.name)]], {'limit': 1})
+
+
+                    base_uom = line.product_id.product_tmpl_id.uom_id
+                    report_uom = line.product_id.product_tmpl_id.report_uom_id
+                    if base_uom == line.product_uom:
+                        uom_id = models.execute_kw(db, sd_uid, password, 'uom.uom', 'search',
+                                                   [[('name', '=', line.product_uom.name)]], {'limit': 1})
+                        quantity = line.receive_quantity
+                    elif report_uom == line.product_uom:
+                        uom_id = models.execute_kw(db, sd_uid, password, 'uom.uom', 'search',
+                                                   [[('name', '=', base_uom.name)]], {'limit': 1})
+                        quantity = line.receive_quantity * report_uom.factor_inv
+                    else:
+                        raise osv.except_osv(_('Error!'), _('Check the uom of wms and portal.'))
+
+                    # uom_id = models.execute_kw(db, sd_uid, password, 'uom.uom', 'search',
+                    #                            [[('name', '=', line.product_uom.name)]], {'limit': 1})
                     if product_ids and line.receive_quantity != 0:
                         product_id = models.execute_kw(db, sd_uid, password, 'product.product', 'read', [product_ids])[0]
                         move_value = {
                             'name': product_id['name'],
                             'product_id': product_ids[0],
-                            'product_uom_qty': line.receive_quantity,
-                            'quantity_done': line.receive_quantity,
+                            # 'product_uom_qty': line.receive_quantity,
+                            # 'quantity_done': line.receive_quantity,
+                            'product_uom_qty': quantity,
+                            'quantity_done': quantity,
                             'product_uom': uom_id[0],
                             'picking_id': picking_id,
                             'state': 'draft',
