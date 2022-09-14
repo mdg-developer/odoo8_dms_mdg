@@ -1061,13 +1061,16 @@ class sale_order(models.Model):
                     amount_total = sale_order.amount_untaxed - abs(total_discount_amount)
                     self.env.cr.execute('update sale_order so set amount_total=%s,total_dis=%s where so.id=%s',(amount_total,abs(total_discount_amount),sale_order.id))
                 
-                if sale_order:           
-                    one_signal_values = {
-                                         'partner_id': sale_order.partner_id.id,
-                                         'contents': "Your order " + sale_order.name + " is created successfully.",
-                                         'headings': "RB"
-                                        }                          
-                    self.env['one.signal.notification.messages'].create(one_signal_values)    
+                if sale_order:
+                    content = "Your order " + sale_order.name + " is created successfully."
+                    one_signal_message = self.env['one.signal.notification.messages'].search([('contents', '=', content)])
+                    if not one_signal_message:
+                        one_signal_values = {
+                                             'partner_id': sale_order.partner_id.id,
+                                             'contents': content,
+                                             'headings': "RB"
+                                            }
+                        self.env['one.signal.notification.messages'].create(one_signal_values)
             if import_order_ids:
                 self.env['sale.workflow.process.ept'].auto_workflow_process(ids=import_order_ids)
         return True
