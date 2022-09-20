@@ -50,7 +50,7 @@ class sale_plans_import(osv.osv):
               }
     _defaults = {
             'state':'draft',
-            'import_date':datetime.today(),
+            'import_date':fields.datetime.now,
                  }
     
     def _check_file_ext(self, cursor, user, ids):
