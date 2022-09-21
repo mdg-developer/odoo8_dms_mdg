@@ -107,7 +107,7 @@
 				<xpath expr="//filter[@string='Type']" position="after">
 					<filter string='Division' icon="terp-mrp" domain="[]"
 						context="{'group_by' : 'division'}" />
-					<filter string='Product Principle' icon="terp-mrp" domain="[]"
+					<filter string='Product Principal' icon="terp-mrp" domain="[]"
 						context="{'group_by' : 'main_group'}" />
 					<filter string='Internal Category' icon="terp-mrp" domain="[]"
 						context="{'group_by' : 'categ_id'}" />

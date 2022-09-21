@@ -824,7 +824,7 @@
 			parent="product_menu_sale" sequence="1" />
 
 		<menuitem id="product_maingroup_menu_sale" parent="product_menu_sale"
-			name="Product Principle" action="product_product.action_product_maingroup_view"
+			name="Product Principal" action="product_product.action_product_maingroup_view"
 			sequence="50" groups="base.group_system" />
 
 		<menuitem id="product_group_menu_sale" parent="product_menu_sale"
