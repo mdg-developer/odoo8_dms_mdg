@@ -17,6 +17,8 @@
 					<sheet>
 						<group>
 							<field name="product_tmpl_id" attrs="{'readonly': [('state','=','done')]}"/>
+							<field name="description" attrs="{'readonly': [('state','=','done')]}"/>
+							<field name="default_code" attrs="{'readonly': [('state','=','done')]}"/>
 							<field name="ti" attrs="{'readonly': [('state','=','done')]}"/>
 							<field name="hi" attrs="{'readonly': [('state','=','done')]}"/>
 							<field name="viss_value" attrs="{'readonly': [('state','=','done')]}"/>

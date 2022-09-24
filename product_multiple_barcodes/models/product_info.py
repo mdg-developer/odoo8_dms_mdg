@@ -22,7 +22,9 @@ class product_info(osv.osv):
         'confirm_date': fields.datetime('Confirm Date'),
         'confirm_by':fields.many2one('res.users', 'Confirm By'),
         'carton_image': fields.binary("Carton Image"),
-        'barcode_ids': fields.one2many('product.multi.barcode', 'product_info_id', string='Barcodes')
+        'barcode_ids': fields.one2many('product.multi.barcode', 'product_info_id', string='Barcodes'),
+        'description':fields.char('Product Description'),
+        'default_code':fields.char('Internal Referencce')
 
     }
 
@@ -45,6 +47,8 @@ class product_info(osv.osv):
         self.ctn_weight = self.product_tmpl_id.ctn_weight
         self.ctn_height = self.product_tmpl_id.ctn_height
         self.inbound_shelf_life = self.product_tmpl_id.inbound_shelf_life
+        self.description = self.product_tmpl_id.description
+        self.default_code = self.product_tmpl_id.default_code
 
     def confirm(self, cr, uid, ids, context=None):
         for flag in self.browse(cr, uid, ids, context=context):
@@ -60,6 +64,8 @@ class product_info(osv.osv):
                 'ctn_weight': flag.ctn_weight,
                 'ctn_height': flag.ctn_height,
                 'inbound_shelf_life': flag.inbound_shelf_life,
+                'description':flag.description,
+                'default_code':flag.default_code,
             })
 
             flag.update({'state':'done'})
