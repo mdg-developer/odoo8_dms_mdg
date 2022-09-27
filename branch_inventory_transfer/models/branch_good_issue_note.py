@@ -371,6 +371,8 @@ class branch_good_issue_note(osv.osv):
                                                 'branch.grn.code') or '/'    
         if ids:
             note_value = note_obj.browse(cr, uid, ids[0], context=context)
+            if note_value.grn_no:
+                raise Warning(_('You cannot transfer next GRN record.It is already create with this GRN No(\'%s\').') % note_value.grn_no)     
             receive_date = note_value.receive_date
             if not receive_date:
                 raise osv.except_osv(_('Warning'),
