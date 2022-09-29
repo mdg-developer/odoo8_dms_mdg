@@ -46,12 +46,12 @@ class res_users(osv.osv):
 
     def automation_account_invoice(self, cr, uid,context=None):
         cr.execute('''
-            select count(*) from account_invoice where residual =0 and state='open' and type='out_invoice' and payment_type='credit'
+            select count(*) from account_invoice where residual =0 and state='open' and type='out_invoice' 
         ''')
         credit_count=cr.fetchone()[0]
         if credit_count>0:
             cr.execute('''
-                  update account_invoice set state ='paid' where state='open' and type='out_invoice' and payment_type='credit' and residual =0 
+                  update account_invoice set state ='paid' where state='open' and type='out_invoice' and residual =0 
                   ''')
         return True
 
