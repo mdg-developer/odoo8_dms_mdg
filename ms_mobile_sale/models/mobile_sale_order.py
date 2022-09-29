@@ -1636,6 +1636,17 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()
         cr.execute
         return datas
+
+
+    def get_cancel_reason(self, cr, uid, context=None, **kwargs):
+        cr.execute('''select id,name,active from cancel_reason where active=True''')
+        datas = cr.fetchall()
+        return datas
+
+    def get_revise_reason(self, cr, uid, context=None, **kwargs):
+        cr.execute('''select id,name,active from revise_reason where active=True''')
+        datas = cr.fetchall()
+        return datas
 		
     def get_salePlanDays_by_sale_team(self, cr, uid, section_id , context=None, **kwargs):
         cr.execute('''select id,name,date,sale_team from sale_plan_day where sale_team=%s ''', (section_id,))
@@ -3234,7 +3245,16 @@ class mobile_sale_order(osv.osv):
                                                    , ('name', '=', so_ref_no)], context=context)
                     if So_id:
                         print 'Sale Order Id', So_id[0]
-                        cr.execute('''update sale_order set state ='cancel',cancel_user_id=%s where id = %s ''', (uid, So_id[0],))
+                        if deli['cancel_reason_id'] != 'null' and deli['cancel_reason_id']:
+                            cancel_reason_id = deli['cancel_reason_id']
+                        else:
+                            cancel_reason_id = None
+                        if deli['revise_reason_id'] != 'null' and deli['revise_reason_id']:
+                            revise_reason_id = deli['revise_reason_id']
+                        else:
+                            revise_reason_id = None
+
+                        cr.execute('''update sale_order set state ='cancel',cancel_user_id=%s,cancel_reason_id=%s,revise_reason_id=%s where id = %s ''', (uid, cancel_reason_id, revise_reason_id, So_id[0],))
                         cr.execute('select tb_ref_no from sale_order where id=%s', (So_id[0],))
                         ref_no = cr.fetchone()[0]
                         cr.execute("update pre_sale_order set void_flag = 'voided' where name=%s", (ref_no,))                                                                                                                                                                                                                            
@@ -4015,7 +4035,7 @@ class mobile_sale_order(osv.osv):
                      A.zip,A.state_name,A.partner_latitude,A.partner_longitude,null,A.image_medium,A.credit_limit,
                      A.credit_allow,A.sales_channel,A.branch_id,A.pricelist_id,A.payment_term_id,A.outlet_type ,
                      A.city_id,A.township_id,A.country_id,A.state_id,A.unit,A.class_id,A.chiller,A.frequency_id,A.temp_customer,
-                     A.is_consignment,A.hamper,A.is_bank,A.is_cheque
+                     A.is_consignment,A.hamper,A.is_bank,A.is_cheque,A.verify
                      from (
 
                      select RP.id,RP.name,'' as image,RP.is_company,null,
@@ -4025,7 +4045,7 @@ class mobile_sale_order(osv.osv):
                      substring(replace(cast(RP.image_medium as text),'/',''),1,5) as image_medium,RP.credit_limit,RP.credit_allow,
                      RP.sales_channel,RP.branch_id,RP.pricelist_id,RP.payment_term_id,RP.outlet_type,RP.city as city_id,RP.township as township_id,
                      RP.country_id,RP.state_id,RP.unit,RP.class_id,RP.chiller,RP.frequency_id,RP.temp_customer,RP.is_consignment,
-                     RP.hamper,RP.is_bank,RP.is_cheque
+                     RP.hamper,RP.is_bank,RP.is_cheque,RP.verify
 
                      from  res_partner RP ,res_country_state RS, res_city RC,res_township RT,
                              outlettype_outlettype OT
@@ -4428,7 +4448,7 @@ class mobile_sale_order(osv.osv):
                      A.zip,A.state_name,A.partner_latitude,A.partner_longitude,null,A.image_medium,A.credit_limit,
                      A.credit_allow,A.sales_channel,A.branch_id,A.pricelist_id,A.payment_term_id,A.outlet_type ,
                      A.city_id,A.township_id,A.country_id,A.state_id,A.unit,A.class_id,A.chiller,A.frequency_id,A.temp_customer,
-                     A.is_consignment,A.hamper,A.is_bank,A.is_cheque
+                     A.is_consignment,A.hamper,A.is_bank,A.is_cheque,A.verify
                      
                      from (
                      select RP.id,RP.name,'' as image,RP.is_company,null,
@@ -4438,7 +4458,7 @@ class mobile_sale_order(osv.osv):
                      substring(replace(cast(RP.image_medium as text),'/',''),1,5) as image_medium,RP.credit_limit,RP.credit_allow,
                      RP.sales_channel,RP.branch_id,RP.pricelist_id,RP.payment_term_id,RP.outlet_type,RP.city as city_id,RP.township as township_id,
                      RP.country_id,RP.state_id,RP.unit,RP.class_id,RP.chiller,RP.frequency_id,RP.temp_customer,RP.is_consignment,RP.hamper,
-                     RP.is_bank,RP.is_cheque
+                     RP.is_bank,RP.is_cheque,RP.verify
                      from outlettype_outlettype OT,
                                              res_partner RP ,res_country_state RS, res_city RC,res_township RT
                                             where RS.id = RP.state_id
@@ -4473,7 +4493,7 @@ class mobile_sale_order(osv.osv):
                      A.zip,A.state_name,A.partner_latitude,A.partner_longitude,A.sale_plan_day_id,A.image_medium,A.credit_limit,
                      A.credit_allow,A.sales_channel,A.branch_id,A.pricelist_id,A.payment_term_id,A.outlet_type ,
                      A.city_id,A.township_id,A.country_id,A.state_id,A.unit,A.class_id,A.chiller,A.frequency_id,A.temp_customer,
-                     A.is_consignment,A.hamper,A.is_bank,A.is_cheque
+                     A.is_consignment,A.hamper,A.is_bank,A.is_cheque,A.verify
                      from (
                      select RP.id,RP.name,'' as image,RP.is_company,RPS.line_id as sale_plan_day_id,
                      '' as image_small,RP.street,RP.street2,RC.name as city,RP.website,
@@ -4482,7 +4502,7 @@ class mobile_sale_order(osv.osv):
                      substring(replace(cast(RP.image_medium as text),'/',''),1,5) as image_medium,RP.credit_limit,RP.credit_allow,
                      RP.sales_channel,RP.branch_id,RP.pricelist_id,RP.payment_term_id,RP.outlet_type,RP.city as city_id,RP.township as township_id,
                      RP.country_id,RP.state_id,RP.unit,RP.class_id,RP.chiller,RP.frequency_id,RP.temp_customer,RP.is_consignment,RP.hamper,
-                     RP.is_bank,RP.is_cheque
+                     RP.is_bank,RP.is_cheque,RP.verify
                      from sale_plan_day SPD ,outlettype_outlettype OT,
                                             sale_plan_day_line RPS , res_partner RP ,res_country_state RS, res_city RC,res_township RT
                                             where SPD.id = RPS.line_id 
@@ -4523,7 +4543,7 @@ class mobile_sale_order(osv.osv):
                      A.zip,A.state_name,A.partner_latitude,A.partner_longitude,A.sale_plan_trip_id,A.image_medium,
                      A.credit_limit,A.credit_allow,A.sales_channel,A.branch_id,A.pricelist_id,A.payment_term_id ,A.outlet_type,
                     A.city_id,A.township_id,A.country_id,A.state_id,A.unit,A.class_id,A.chiller,A.frequency_id,A.temp_customer,
-                    A.is_consignment,A.hamper,A.is_bank,A.is_cheque
+                    A.is_consignment,A.hamper,A.is_bank,A.is_cheque,A.verify
                       from (
                      select RP.id,RP.name,'' as image,RP.is_company,
                      '' as image_small,RP.street,RP.street2,RC.name as city,RP.website,
@@ -4533,7 +4553,7 @@ class mobile_sale_order(osv.osv):
                       ,substring(replace(cast(RP.image_medium as text),'/',''),1,5) as image_medium ,RP.credit_limit,RP.credit_allow,
                      RP.sales_channel,RP.branch_id,RP.pricelist_id,RP.payment_term_id,RP.outlet_type,RP.city as city_id,RP.township as township_id,
                      RP.country_id,RP.state_id,RP.unit,RP.class_id,RP.chiller,RP.frequency_id,RP.temp_customer ,RP.is_consignment,RP.hamper,
-                     RP.is_bank,RP.is_cheque
+                     RP.is_bank,RP.is_cheque,RP.verify
                      from sale_plan_trip SPT , res_partner_sale_plan_trip_rel RPT , res_partner RP ,res_country_state RS ,
                      res_city RC, res_township RT,outlettype_outlettype OT 
                      where SPT.id = RPT.sale_plan_trip_id 
