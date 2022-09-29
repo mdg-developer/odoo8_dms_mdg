@@ -1069,7 +1069,7 @@ class mobile_sale_order(osv.osv):
                             'date':vs['date'],
                             'tablet_id':vs['tablet_id'],
                             'other_reason':vs['other_reason'],
-                            'visit_reason':vs['visit_reason'],
+                            'visit_reason':'other_reason',
                             'visit_reason_id':vs['visit_reason_id'],
                             'latitude':vs['latitude'],
                             'longitude':vs['longitude'],
