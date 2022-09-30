@@ -296,6 +296,12 @@ class mobile_sale_order(osv.osv):
                         rebate = True
                     else:
                         rebate = False
+
+                    if so['revise_reason_id'] != 'null' and so['revise_reason_id']:
+                        revise_reason_id = so['revise_reason_id']
+                    else:
+                        revise_reason_id = None
+
                     if so.get('payment_ref'): 
                         payment_ref=so['payment_ref']
                     else:
@@ -339,7 +345,8 @@ class mobile_sale_order(osv.osv):
                         'order_team':order_team,
                         'rebate_later':rebate,
                         'order_saleperson':so['order_saleperson'],
-                        'payment_ref':payment_ref                    
+                        'payment_ref':payment_ref,
+                        'revise_reason_id':revise_reason_id,
                         
                     }
                     s_order_id = mobile_sale_order_obj.create(cursor, user, mso_result, context=context)                 
@@ -987,6 +994,7 @@ class mobile_sale_order(osv.osv):
                             'tablet_id':vs['tablet_id'],
                             'other_reason':vs['other_reason'],
                             'visit_reason':vs['visit_reason'],
+                            'visit_reason_id': vs['visit_reason_id'],
                             'latitude':vs['latitude'],
                             'longitude':vs['longitude'],
                             'image':vs['image'],
@@ -2745,7 +2753,14 @@ class mobile_sale_order(osv.osv):
 
         cr.execute('''select * from get_customer_target(%s)''', (customer_id,))
         datas = cr.fetchall()
-        return datas       
+        return datas
+
+    def get_all_visit_reason(self, cr, uid, sale_team_id , context=None, **kwargs):
+        cr.execute('''            
+                select id,name,sequence,active from visit_reason
+         ''')
+        datas = cr.fetchall()
+        return datas
     
     def get_stockcheck(self, cr, uid, sale_team_id , context=None, **kwargs):
         cr.execute('''            

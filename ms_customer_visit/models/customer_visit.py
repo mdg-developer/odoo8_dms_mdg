@@ -10,6 +10,10 @@ from openerp import tools, api
 from openerp.osv import osv, fields
 from openerp.osv.expression import get_unaccent_wrapper
 from openerp.tools.translate import _
+
+baseUrlPrefix = "https://firebasestorage.googleapis.com/v0/b/odoo-8d694.appspot.com/o/subd_customer_visit%2F"
+baseUrlPostFix = ".png?alt=media"
+
 class customer_visit(osv.osv):
     _name = "customer.visit"
     _description = "Customer Visit"
@@ -49,6 +53,7 @@ class customer_visit(osv.osv):
         'validated_by': fields.many2one('res.users', "Validated By"),
         'rejected_date': fields.datetime('Rejected Date'),
         'validated_date': fields.datetime('Validated Date'),
+        'visit_reason_id': fields.many2one('visit.reason', 'Visit Reason', required=True),
     }
     _defaults = {        
         'm_status' : 'pending',
