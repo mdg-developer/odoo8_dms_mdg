@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <record id="view_woo_point_history_form" model="ir.ui.view">
+            <field name="name">woo.point.history.form</field>
+            <field name="model">woo.point.history</field>
+            <field name="arch" type="xml">
+                <form create="false" edit="false">
+                    <group>
+                        <group>
+                            <field name="woo_point_history_id" readonly="1"/>
+                            <field name="woo_customer_id" readonly="1"/>
+                            <field name="partner_id" readonly="1"/>
+                            <field name="action" readonly="1"/>
+                            <field name="order_id" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="amount" readonly="1"/>
+                            <field name="date_earning" readonly="1"/>
+                            <field name="expire_date" readonly="1"/>
+                            <field name="title" readonly="1"/>
+                            <field name="custom_order_number" readonly="1"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_woo_point_history_tree" model="ir.ui.view">
+            <field name="name">woo.point.history.tree</field>
+            <field name="model">woo.point.history</field>
+            <field name="arch" type="xml">
+                <tree default_order='id desc' string="Woo Point History" create="false" edit="false">
+                    <field name="partner_id" />
+					<field name="woo_customer_id" />
+					<field name="order_id" />
+					<field name="title" />
+					<field name="amount" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="woo_point_history_filter" model="ir.ui.view">
+            <field name="name">woo.point.history.filter</field>
+            <field name="model">woo.point.history</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="order_id" />
+                    <field name="partner_id" />
+                    <group expand="0" string="Group By">
+                        <filter string="Sale Order" context="{'group_by':'order_id'}"/>
+                        <filter string="Customer" context="{'group_by':'partner_id'}"/>
+                    </group>
+               </search>
+            </field>
+        </record>
+
+		<record id="action_woo_point_history_view" model="ir.actions.act_window">
+            <field name="name">Point History</field>
+            <field name="res_model">woo.point.history</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_woo_point_history_tree"/>
+        </record>
+
+		<menuitem id="woo_point_history_menu" action="action_woo_point_history_view"
+			parent="points_and_memberships_menu" sequence="2" />
+
+    </data>
+</openerp>

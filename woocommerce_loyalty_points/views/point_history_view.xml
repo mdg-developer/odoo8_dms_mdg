@@ -45,8 +45,8 @@
 		
         <menuitem id="points_and_memberships_menu" parent="base.menu_base_partner" name="Points and Memberships"
 			sequence="15" />
-		<menuitem id="point_history_menu" action="action_point_history_view"
-			parent="points_and_memberships_menu" sequence="1" />
+<!--		<menuitem id="point_history_menu" action="action_point_history_view"-->
+<!--			parent="points_and_memberships_menu" sequence="1" />-->
 		
     </data>
 </openerp>

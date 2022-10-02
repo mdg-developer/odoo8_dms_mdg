@@ -3,3 +3,4 @@ import membership_config
 import point_history
 import res_partner
 import redeem_point
+import woo_point_history

@@ -43,5 +43,6 @@ class res_partner(osv.osv):
         'point_count': fields.function(_point_count, string='# of Point', type='integer'),
         'point_history_ids': fields.one2many('point.history','partner_id','Point History'),
         'membership_id':fields.function(_get_membership_level, type='many2one', relation='membership.config', string='Membership Level'),
+        'total_points': fields.integer(string='Total Points'),
     }
     
