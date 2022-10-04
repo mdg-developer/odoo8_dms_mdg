@@ -461,8 +461,8 @@ $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
     
- -- FUNCTION: stock_movement_data()
--- select * from stock_movement_data('2022-06-01','2022-06-01','523','1396','1')
+-- FUNCTION: stock_movement_data()
+-- select * from stock_movement_data('2022-06-01','2022-09-30','523','1396','1')
 -- select * from product_product where id in (select unnest (string_to_array('1,2', ',')::integer[]))
 -- DROP FUNCTION stock_movement_data();
 
@@ -510,6 +510,7 @@ AS $BODY$
 			   and ((s.date at time zone 'utc' )at time zone 'asia/rangoon')::date <= to_date
 			   and s.product_id in (select unnest (string_to_array(product_ids, ',')::integer[]))
 			   and fl.branch_id in (select unnest (string_to_array(branch_ids, ',')::integer[]))
+			   and fl.id in (select unnest (string_to_array(location_ids, ',')::integer[]))
 			   union
 			   select s.id,s.location_dest_id,s.product_id,s.date, s.origin, suom.factor product_uom
 			   from stock_move s,
@@ -525,6 +526,7 @@ AS $BODY$
 			   and ((s.date at time zone 'utc' )at time zone 'asia/rangoon')::date <= to_date
 			   and s.product_id in (select unnest (string_to_array(product_ids, ',')::integer[]))
 			   and tl.branch_id in (select unnest (string_to_array(branch_ids, ',')::integer[]))
+			   and tl.id in (select unnest (string_to_array(location_ids, ',')::integer[]))
 			)tmp
 			where tmp.location_id in (select unnest (string_to_array(location_ids, ',')::integer[]))
 		)
@@ -556,6 +558,7 @@ AS $BODY$
 			and ((s.date at time zone 'utc' )at time zone 'asia/rangoon')::date <= to_date
 			and s.product_id in (select unnest (string_to_array(product_ids, ',')::integer[]))
 			and tl.branch_id in (select unnest (string_to_array(branch_ids, ',')::integer[]))
+			and (fl.id in (select unnest (string_to_array(location_ids, ',')::integer[])) or tl.id in (select unnest (string_to_array(location_ids, ',')::integer[])))
 		   	) move_in on move_in.product_id=s.product_id and move_in.location_dest_id=s.location_id
 		   	and move_in.date=s.date and move_in.id=s.id and move_in.product_uom=s.product_uom
 
@@ -586,6 +589,7 @@ AS $BODY$
 				and ((s.date at time zone 'utc' )at time zone 'asia/rangoon')::date <= to_date
 				and s.product_id in (select unnest (string_to_array(product_ids, ',')::integer[]))
 				and fl.branch_id in (select unnest (string_to_array(branch_ids, ',')::integer[]))
+				and (fl.id in (select unnest (string_to_array(location_ids, ',')::integer[])) or tl.id in (select unnest (string_to_array(location_ids, ',')::integer[])))
 		   ) move_out on s.product_id=move_out.product_id and s.location_id=move_out.location_id
 		   and move_out.date=s.date and move_out.id=s.id and move_out.product_uom=s.product_uom
 		   where s.location_id in (select unnest (string_to_array(location_ids, ',')::integer[]))
