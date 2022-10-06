@@ -1091,6 +1091,8 @@ class mobile_sale_order(osv.osv):
 
                         }
                         visit_id=customer_visit_obj.create(cursor, user, visit_result, context=context)
+                        if visit_id and not is_image1 and not is_image2 and not is_image3 and not is_image4 and not is_image5:
+                            customer_visit_obj.is_reject(cursor, user, [visit_id], context=context)
                         #customer_visit_obj.generate_image(cursor, user, [visit_id], context=context)
                 return True
         except Exception, e:
