@@ -1,0 +1,97 @@
+<?xml version="1.0" ?>
+<openerp>
+  <data>
+        <record id="view_woo_minimum_stock_form" model="ir.ui.view">
+            <field name="name">woo.minimum.stock.form</field>
+            <field name="model">woo.minimum.stock</field>
+
+            <field name="arch" type="xml">
+                <form string="Woo Minimum Stock">
+                <header>
+                    <button name="sync_to_woo" string="Sync to WooCommerce" type="object" class="oe_highlight"/>
+                </header>
+                 <sheet>
+                     <group>
+                        <group>
+                            <field name="branch_id"/>
+                            <field name="township_id"/>
+                            <button name="retrieve_data" string="Retrieve" type="object"
+									class="oe_highlight" />
+
+                         </group>
+                         <group>
+
+                             <field name="write_date" string="Last Updated On" />
+                            <field name="write_uid" string="Last Updated By"/>
+                             <field name="retrive_date" />
+                             <field name="retrive_uid"/>
+
+                         </group>
+                     </group>
+                     <notebook>
+                         <page string="Minimum Stock Lines">
+                             <field name="stock_line">
+                                 <form string="Minimum Stock Lines">
+                                     <group>
+                                         <group>
+                                             <field name="product_id" />
+                                             <field name="qty" />
+                                         </group>
+                                         <group>
+                                             <field name="uom_id" />
+                                             <field name="oos"/>
+                                         </group>
+                                     </group>
+
+                                 </form>
+                                 <tree string="Minimum Stock Lines" >
+                                    <field name="product_id" />
+                                    <field name="uom_id" />
+                                    <field name="qty" />
+                                    <field name="oos"/>
+                                </tree>
+
+                             </field>
+
+                         </page>
+                     </notebook>
+
+                 </sheet>
+
+                </form>
+			</field>
+		</record>
+
+        <record id="woo_minimum_stock_tree" model="ir.ui.view">
+            <field name="name">woo.minimum.stock.tree</field>
+            <field name="model">woo.minimum.stock</field>
+            <field name="priority">100</field>
+            <field name="arch" type="xml">
+                <tree >
+            		<field name="branch_id" />
+            		<field name="township_id" />
+                    <field name="write_date" string="Last Updated On" />
+                    <field name="write_uid" string="Last Updated By"/>
+                    <field name="retrive_date" />
+                    <field name="retrive_uid"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="action_minimum_stock" model="ir.actions.act_window">
+            <field name="name">Woo Minimum Stock</field>
+            <field name="res_model">woo.minimum.stock</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+
+            <field name="view_id" ref="woo_minimum_stock_tree"/>
+        </record>
+
+
+     <menuitem id="menu_woo_minimum_stock"
+      parent="woo_commerce_ept.woo_instance_menu_item_transfer_details" action="action_minimum_stock" sequence="6"/>
+
+  </data>
+</openerp>
