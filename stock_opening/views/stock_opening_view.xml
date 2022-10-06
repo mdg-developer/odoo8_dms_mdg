@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record id="view_stock_opening_form" model="ir.ui.view">
+			<field name="name">stock.opening.form</field>
+			<field name="model">stock.opening</field>
+			<field name="arch" type="xml">
+				<form string="Stock Opening Form" create="false" edit="false">
+					<sheet>
+						<group>
+							<field name="date" />
+							<field name="product_id" />
+							<field name="location_id" />
+							<field name="qty" />
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+ 		<record id="view_stock_opening_filter" model="ir.ui.view">
+ 			<field name="name">stock.opening.filter</field>
+ 			<field name="model">stock.opening</field>
+ 			<field name="arch" type="xml">
+ 				<search string="Stock Opening Filter">
+ 					<group expand="0" string="Group By...">
+ 						<filter string="Product" name="product_id" context="{'group_by': 'product_id'}" />
+						<filter string="Location" name="location_id" context="{'group_by': 'location_id'}" />
+						<filter string="Date" name="date" context="{'group_by': 'date'}" />
+ 					</group>
+ 				</search>
+ 			</field>
+ 		</record>
+
+		<record model="ir.ui.view" id="view_stock_opening_tree">
+			<field name="name">stock.opening.tree</field>
+			<field name="model">stock.opening</field>
+			<field name="arch" type="xml">
+				<tree string="Stock Opening" create="false" edit="false">
+					<field name="date" />
+					<field name="product_id"/>
+					<field name="location_id"/>
+					<field name="qty"/>
+				</tree>
+			</field>
+		</record>
+
+		<record id="action_stock_opening_view" model="ir.actions.act_window">
+			<field name="name">Stock Opening</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">stock.opening</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" eval="view_stock_opening_tree" />
+ 			<field name="search_view_id" ref="view_stock_opening_filter" />
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to create new stock opening.
+				</p>
+			</field>
+		</record>
+
+		<menuitem id="menu_stock_opening" action="action_stock_opening_view"
+			parent="stock.menu_stock_sched" name="Stock Opening" sequence="51" />
+
+	</data>
+</openerp>
