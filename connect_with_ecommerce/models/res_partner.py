@@ -355,6 +355,8 @@ class res_partner(osv.osv):
             if partner:
                 partner_data = partner_obj.browse(cr, uid, partner, context=context)
                 partner_obj.generate_customercode(cr, uid, [partner_data.id],partner_data,context=context)
+                if not partner_data.woo_customer_id or partner_data.woo_customer_id is None:
+                    return False
             return result
         else:
             partner = partner_obj.search(cr, uid, [('customer_code', '=', customer_code)])
@@ -454,7 +456,10 @@ class res_partner(osv.osv):
                                          'contents': "Thank you for registration in Burmart E-commerce.",
                                          'headings': "Burmart"
                                         }     
-                    self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)  
+                    self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)
+                    partner_data = partner_obj.browse(cr, uid, partner_data.id, context=context)
+                    if not partner_data.woo_customer_id or partner_data.woo_customer_id is None:
+                        return False
                 return result 
             
     def create_or_update_delivery_address(self, cr, uid, ids, customer_code=None, woo_customer_id=None, name=None, contact_note=None, street=None,street2=None,township=None,state=None, delivery_address_id=None, image=None, type=None, address_title=None, context=None):
