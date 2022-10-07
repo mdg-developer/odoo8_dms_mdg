@@ -598,3 +598,97 @@ AS $BODY$
 
 ALTER FUNCTION stock_movement_data(date,date,text,text,text)
     OWNER TO odoo;
+    
+-- FUNCTION: get_stock_movement_balance(date)
+-- select * from get_stock_movement_balance('2022-10-06');
+-- DROP FUNCTION get_stock_movement_balance(date);
+
+CREATE OR REPLACE FUNCTION get_stock_movement_balance(report_date date)
+    RETURNS TABLE(x_warehouse character varying, x_location integer, x_branch integer, x_product character varying, x_product_code character varying, x_product_id integer, x_balance numeric) 
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE PARALLEL UNSAFE
+    ROWS 1000
+
+AS $BODY$
+BEGIN
+		RETURN QUERY
+		select dat.x_warehouse,
+		dat.x_location,
+		dat.x_branch,
+		dat.x_product,
+		dat.x_product_code,
+		dat.x_product_id,
+		dat.x_balance
+		from
+		(
+		select w.name as x_warehouse,
+		s.location_id as x_location,
+		w.branch_id as x_branch,
+		pp.id as x_product_id,
+		pp.name as x_product,
+		pp.default_code as x_product_code,
+		(greatest(0,next_in.qty) - greatest(0,next_out.qty)) x_balance
+		from 
+		stock_warehouse w,
+
+		(
+			select tmp.location_id,tmp.product_id
+			from
+			(
+				select location_id,product_id
+				from stock_move
+				where state='done'
+				and date_trunc('day',((date at time zone 'utc') at time zone 'asia/rangoon')::date)::date <= report_date
+				union
+				select location_dest_id,product_id
+				from stock_move
+				where state='done'
+				and date_trunc('day',((date at time zone 'utc') at time zone 'asia/rangoon')::date)::date <= report_date
+			)tmp
+		)
+		 s
+		left join
+		(
+		select t.name,p.default_code,p.id
+		from product_product p,
+		product_template t,
+		product_uom uom
+		where p.product_tmpl_id=t.id
+		and t.uom_id=uom.id
+		and t.type='product'
+		and p.active=true
+		and t.active=true	
+		)pp on s.product_id=pp.id
+		left join
+		(
+		select complete_name,id,usage
+		from stock_location
+		where usage!='view'
+		and active=true
+		)ll on s.location_id=ll.id
+		left join
+		(
+		select product_id,location_dest_id,greatest(0,sum(product_qty)) as qty
+		from stock_move
+		where date_trunc('day',((date at time zone 'utc') at time zone 'asia/rangoon')::date)::date <= report_date
+		and state='done'
+		group by location_dest_id, product_id
+		) next_in on next_in.product_id=s.product_id and next_in.location_dest_id=s.location_id
+		left join
+		(
+		select product_id,location_id,greatest(0,sum(product_qty)) as qty
+		from stock_move
+		where date_trunc('day',((date at time zone 'utc') at time zone 'asia/rangoon')::date)::date <= report_date
+		and state='done'
+		group by location_id, product_id
+		) next_out on s.product_id=next_out.product_id and s.location_id=next_out.location_id
+
+		where ll.usage='internal'
+		and s.location_id in (
+			w.lot_stock_id,w.wh_temp_location_id,w.wh_normal_return_location_id,
+		w.wh_exp_location_id,w.wh_near_exp_location_id,
+		w.wh_damage_location_id,w.wh_fresh_stock_not_good_location_id)
+		) dat;
+		END;
+$BODY$;
