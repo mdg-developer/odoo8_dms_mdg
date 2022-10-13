@@ -978,8 +978,30 @@ class mobile_sale_order(osv.osv):
                     cursor.execute('select branch_id from crm_case_section where id=%s', (vs['sale_team_id'],))
                     branch_id = cursor.fetchone()[0]
                     cursor.execute('select id from res_partner where customer_code=%s', (vs['customer_code'],))
-                    customer_id = cursor.fetchone()  
-                    if customer_id:                                                             
+                    customer_id = cursor.fetchone()
+                    is_image1 = False
+                    is_image2 = False
+                    is_image3 = False
+                    is_image4 = False
+                    is_image5 = False
+                    image1 = False
+                    image2 = False
+                    image3 = False
+                    image4 = False
+                    image5 = False
+                    if customer_id:
+                        if vs['image1_reference']:
+                                is_image1 =True
+                        if vs['image2_reference']:
+                                is_image2 =True
+                        if vs['image3_reference']:
+                                is_image3 =True
+                        if vs['image4_reference']:
+                                is_image4 =True
+                        if vs['image5_reference']:
+                                is_image5 =True
+
+
                         visit_result = {
                             'customer_code':vs['customer_code'],
                             'branch_id':branch_id,
@@ -993,20 +1015,30 @@ class mobile_sale_order(osv.osv):
                             'date':vs['date'],
                             'tablet_id':vs['tablet_id'],
                             'other_reason':vs['other_reason'],
-                            'visit_reason':vs['visit_reason'],
+                            'visit_reason':'other_reason',
                             'visit_reason_id': vs['visit_reason_id'],
                             'latitude':vs['latitude'],
                             'longitude':vs['longitude'],
-                            'image':vs['image'],
-                            'image1':vs['image1'],
-                            'image2':vs['image2'],
-                            'image3':vs['image3'],
-                            'image4':vs['image4'],
+                            # 'image':vs['image'],
+                            # 'image1':vs['image1'],
+                            # 'image2':vs['image2'],
+                            # 'image3':vs['image3'],
+                            # 'image4':vs['image4'],
+                            'is_image1': is_image1,
+                            'is_image2': is_image2,
+                            'is_image3': is_image3,
+                            'is_image4': is_image4,
+                            'is_image5': is_image5,
+                            'image1_reference': vs['image1_reference'],
+                            'image2_reference': vs['image2_reference'],
+                            'image3_reference': vs['image3_reference'],
+                            'image4_reference': vs['image4_reference'],
+                            'image5_reference': vs['image5_reference'],
                         }
                         customer_visit_obj.create(cursor, user, visit_result, context=context)
             return True
         except Exception, e:
-            print e            
+            print e
             return False
                 
     def geo_location(self, cr, uid, ids, context=None):
