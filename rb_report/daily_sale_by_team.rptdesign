@@ -76,8 +76,10 @@
             </structure>
         </scalar-parameter>
         <scalar-parameter name="user_id" id="1523">
+            <property name="hidden">true</property>
             <text-property name="promptText">User</text-property>
             <property name="valueType">dynamic</property>
+            <property name="isRequired">true</property>
             <property name="dataSetName">users</property>
             <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
             <expression name="labelExpr" type="javascript">dataSetRow["login"]</expression>
@@ -94,7 +96,7 @@
                 <property name="category">Unformatted</property>
             </structure>
         </scalar-parameter>
-        <scalar-parameter name="by_team" id="1524">
+        <scalar-parameter name="By Team" id="1524">
             <text-property name="promptText">By Team</text-property>
             <property name="valueType">dynamic</property>
             <property name="dataSetName">team_list</property>
@@ -774,6 +776,7 @@ mac.payment_amount]]></xml-property>
 </model:DesignValues>]]></xml-property>
         </oda-data-set>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="team_list" id="1041">
+            <property name="nullsOrdering">nulls lowest</property>
             <list-property name="columnHints">
                 <structure>
                     <property name="columnName">id</property>
