@@ -14,24 +14,12 @@
             <property name="name">rowFetchSize</property>
             <property name="id">9</property>
         </structure>
-        <structure>
-            <property name="name">queryText</property>
-            <property name="id">967</property>
-        </structure>
-        <structure>
-            <property name="name">queryTimeOut</property>
-            <property name="id">967</property>
-        </structure>
-        <structure>
-            <property name="name">rowFetchSize</property>
-            <property name="id">967</property>
-        </structure>
     </list-property>
     <property name="units">in</property>
     <method name="initialize"><![CDATA[branchList = params["branch_id"].value.join(",");
 teamList = params["sale_team_id"].value.join(",");]]></method>
     <property name="iconFile">/templates/blank_report.gif</property>
-    <property name="layoutPreference">fixed layout</property>
+    <property name="layoutPreference">auto layout</property>
     <property name="bidiLayoutOrientation">ltr</property>
     <property name="imageDPI">96</property>
     <list-property name="libraries">
@@ -104,7 +92,7 @@ teamList = params["sale_team_id"].value.join(",");]]></method>
             </structure>
         </scalar-parameter>
         <scalar-parameter name="user_id" id="12">
-            <property name="hidden">false</property>
+            <property name="hidden">true</property>
             <text-property name="promptText">User</text-property>
             <property name="valueType">dynamic</property>
             <property name="isRequired">true</property>
@@ -126,7 +114,7 @@ teamList = params["sale_team_id"].value.join(",");]]></method>
         </scalar-parameter>
     </parameters>
     <data-sources>
-        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="1088"
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="1090"
  extends="rb_testing_report_library.Data Source">
             <property name="odaDriverClass">org.postgresql.Driver</property>
             <property name="odaURL">jdbc:postgresql://localhost:5433/rbd_testing</property>
@@ -203,12 +191,6 @@ teamList = params["sale_team_id"].value.join(",");]]></method>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">remark</text-property>
                     <text-property name="heading">remark</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">customer_code</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">customer_code</text-property>
-                    <text-property name="heading">customer_code</text-property>
                 </structure>
             </list-property>
             <list-property name="parameters">
@@ -288,11 +270,6 @@ teamList = params["sale_team_id"].value.join(",");]]></method>
                     <structure>
                         <property name="position">11</property>
                         <property name="name">remark</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">12</property>
-                        <property name="name">customer_code</property>
                         <property name="dataType">string</property>
                     </structure>
                 </list-property>
@@ -390,22 +367,15 @@ else
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
-                <structure>
-                    <property name="position">12</property>
-                    <property name="name">customer_code</property>
-                    <property name="nativeName">customer_code</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select ((cv.date at time zone 'utc') at time zone 'asia/rangoon')::date as date,
 cast (cv.date::timestamp
    at time zone 'UTC' at time zone 'asia/rangoon' as time) as time,ti.mac_address tablet_id,
 res.name,ccs.name sale_team,spd.name sale_plan_day,cv.visit_reason reason,rt.name township,
-case when cv.image is null and cv.image1 is  null and cv.image2 is  null and cv.image3 is  null and cv.image4 is null  then 'No'
-	 when cv.image is  not null or cv.image1 is  not null or cv.image2 is  not null or cv.image3 is  not null or cv.image4 is  not null  then 'Yes'
+case when is_image1 = 'False' then 'No'
+	 when is_image1 = 'True'  then 'Yes'
 end as image,cv.date -LAG(cv.date)OVER (ORDER BY cv.date ) as difference,
-cv.other_reason remark,res.customer_code
+cv.other_reason remark
 from customer_visit cv
 left join res_partner res on res.id = cv.customer_id 
 left join crm_case_section ccs on  ccs.id = cv.sale_team_id
@@ -1318,12 +1288,14 @@ from res_company
                     <property name="columnName">total_effective</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">total_effective</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">total_effective</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">total_visit</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">total_visit</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">total_visit</text-property>
                 </structure>
                 <structure>
@@ -1336,6 +1308,7 @@ from res_company
                     <property name="columnName">achi</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">achi</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">achi</text-property>
                 </structure>
                 <structure>
@@ -1365,6 +1338,7 @@ from res_company
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">1</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -1375,6 +1349,7 @@ from res_company
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">2</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -1385,6 +1360,7 @@ from res_company
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">3</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -1395,6 +1371,7 @@ from res_company
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">4</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -1424,12 +1401,12 @@ from res_company
                     <structure>
                         <property name="position">1</property>
                         <property name="name">total_effective</property>
-                        <property name="dataType">decimal</property>
+                        <property name="dataType">integer</property>
                     </structure>
                     <structure>
                         <property name="position">2</property>
                         <property name="name">total_visit</property>
-                        <property name="dataType">decimal</property>
+                        <property name="dataType">integer</property>
                     </structure>
                     <structure>
                         <property name="position">3</property>
@@ -1494,14 +1471,14 @@ else
                     <property name="position">1</property>
                     <property name="name">total_effective</property>
                     <property name="nativeName">total_effective</property>
-                    <property name="dataType">decimal</property>
+                    <property name="dataType">integer</property>
                     <property name="nativeDataType">-5</property>
                 </structure>
                 <structure>
                     <property name="position">2</property>
                     <property name="name">total_visit</property>
                     <property name="nativeName">total_visit</property>
-                    <property name="dataType">decimal</property>
+                    <property name="dataType">integer</property>
                     <property name="nativeDataType">-5</property>
                 </structure>
                 <structure>
@@ -1541,9 +1518,9 @@ else
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[with total_effective as(
-	select count(distinct ai.partner_id) total_effective from account_invoice ai 
+	select count(distinct ai.partner_id) total_effective from sale_order ai 
 	where ai.state!='cancel'
-	and ai.date_invoice between ? and ?
+	and ai.date_order::date between ? and ?
 	--$sales_team_inv$
 	--$branch_id_inv$
 ),total_visit as(
@@ -1570,6 +1547,38 @@ from total_effective te,total_visit tv,total_plan_outlet tpl]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>5</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>6</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
   <design:ResultSets derivedMetaData="true">
     <design:resultSetDefinitions>
       <design:resultSetColumns>
@@ -1603,9 +1612,6 @@ from total_effective te,total_visit tv,total_plan_outlet tpl]]></xml-property>
     </data-sets>
     <page-setup>
         <simple-master-page name="Simple MasterPage" id="2">
-            <property name="type">us-super-b</property>
-            <property name="orientation">landscape</property>
-            <property name="rightMargin">0in</property>
             <page-footer>
                 <text id="3">
                     <property name="contentType">html</property>
@@ -1635,7 +1641,7 @@ from total_effective te,total_visit tv,total_plan_outlet tpl]]></xml-property>
             <property name="fontSize">12pt</property>
             <property name="fontWeight">bold</property>
             <property name="textAlign">center</property>
-            <text-property name="text">Customer Visit Report By Delivery,Direct Sales Team</text-property>
+            <text-property name="text">Customer Visit Report By Delivery,Pre Sales Team</text-property>
         </label>
         <table id="904">
             <property name="dataSet">branch</property>
@@ -1759,41 +1765,30 @@ from total_effective te,total_visit tv,total_plan_outlet tpl]]></xml-property>
                 </row>
             </footer>
         </table>
-        <label id="1013"/>
-        <grid id="1014">
-            <property name="width">14.395833333333334in</property>
-            <column id="1015">
-                <property name="width">10.34375in</property>
-            </column>
-            <column id="1016">
-                <property name="width">1.25in</property>
-            </column>
+        <label id="1029"/>
+        <grid id="1015">
+            <column id="1016"/>
             <column id="1017">
-                <property name="width">1.2083333333333333in</property>
+                <property name="width">1.0833333333333333in</property>
             </column>
             <column id="1018">
-                <property name="width">1.59375in</property>
+                <property name="width">0.6666666666666666in</property>
             </column>
-            <row id="1019">
-                <cell id="1020">
-                    <text id="1024">
+            <column id="1019">
+                <property name="width">4.21875in</property>
+            </column>
+            <row id="1020">
+                <cell id="1021">
+                    <text id="1025">
                         <property name="fontWeight">bold</property>
-                        <property name="borderBottomStyle">none</property>
-                        <property name="borderLeftStyle">none</property>
-                        <property name="borderRightStyle">none</property>
-                        <property name="borderTopStyle">none</property>
                         <property name="textAlign">right</property>
                         <property name="contentType">auto</property>
                         <text-property name="content"><![CDATA[From Date :]]></text-property>
                     </text>
                 </cell>
-                <cell id="1021">
-                    <data id="1025">
+                <cell id="1022">
+                    <data id="1026">
                         <property name="fontWeight">bold</property>
-                        <property name="borderBottomStyle">none</property>
-                        <property name="borderLeftStyle">none</property>
-                        <property name="borderRightStyle">none</property>
-                        <property name="borderTopStyle">none</property>
                         <structure name="dateTimeFormat">
                             <property name="category">Custom</property>
                             <property name="pattern">dd/MM/yyyy</property>
@@ -1808,25 +1803,17 @@ from total_effective te,total_visit tv,total_plan_outlet tpl]]></xml-property>
                         <property name="resultSetColumn">from_date</property>
                     </data>
                 </cell>
-                <cell id="1022">
-                    <text id="1026">
+                <cell id="1023">
+                    <text id="1027">
                         <property name="fontWeight">bold</property>
-                        <property name="borderBottomStyle">none</property>
-                        <property name="borderLeftStyle">none</property>
-                        <property name="borderRightStyle">none</property>
-                        <property name="borderTopStyle">none</property>
-                        <property name="textAlign">right</property>
-                        <property name="contentType">auto</property>
+                        <property name="textAlign">left</property>
+                        <property name="contentType">plain</property>
                         <text-property name="content"><![CDATA[To Date :]]></text-property>
                     </text>
                 </cell>
-                <cell id="1023">
-                    <data id="1027">
+                <cell id="1024">
+                    <data id="1028">
                         <property name="fontWeight">bold</property>
-                        <property name="borderBottomStyle">none</property>
-                        <property name="borderLeftStyle">none</property>
-                        <property name="borderRightStyle">none</property>
-                        <property name="borderTopStyle">none</property>
                         <structure name="dateTimeFormat">
                             <property name="category">Custom</property>
                             <property name="pattern">dd/MM/yyyy</property>
@@ -1843,16 +1830,34 @@ from total_effective te,total_visit tv,total_plan_outlet tpl]]></xml-property>
                 </cell>
             </row>
         </grid>
-        <label id="1028"/>
+        <label id="1052"/>
+        <label id="1050"/>
         <grid id="1093">
-            <column id="1094"/>
-            <column id="1095"/>
-            <column id="1096"/>
-            <column id="1097"/>
-            <column id="1098"/>
-            <column id="1099"/>
-            <column id="1100"/>
-            <column id="1101"/>
+            <property name="width">10.90625in</property>
+            <column id="1094">
+                <property name="width">1.1875in</property>
+            </column>
+            <column id="1095">
+                <property name="width">0.8645833333333334in</property>
+            </column>
+            <column id="1096">
+                <property name="width">1.40625in</property>
+            </column>
+            <column id="1097">
+                <property name="width">0.9791666666666666in</property>
+            </column>
+            <column id="1098">
+                <property name="width">1.5416666666666667in</property>
+            </column>
+            <column id="1099">
+                <property name="width">1.2083333333333333in</property>
+            </column>
+            <column id="1100">
+                <property name="width">1.65625in</property>
+            </column>
+            <column id="1101">
+                <property name="width">2.0625in</property>
+            </column>
             <row id="1104">
                 <cell id="1105">
                     <text id="1115">
@@ -1969,14 +1974,32 @@ from total_effective te,total_visit tv,total_plan_outlet tpl]]></xml-property>
             </row>
         </grid>
         <grid id="1124">
-            <column id="1125"/>
-            <column id="1126"/>
-            <column id="1127"/>
-            <column id="1128"/>
-            <column id="1129"/>
-            <column id="1130"/>
-            <column id="1145"/>
-            <column id="1147"/>
+            <property name="height">0.4270833333333333in</property>
+            <property name="width">10.895833333333334in</property>
+            <column id="1125">
+                <property name="width">1.21875in</property>
+            </column>
+            <column id="1126">
+                <property name="width">0.7916666666666666in</property>
+            </column>
+            <column id="1127">
+                <property name="width">1.4479166666666667in</property>
+            </column>
+            <column id="1128">
+                <property name="width">1.1145833333333333in</property>
+            </column>
+            <column id="1129">
+                <property name="width">1.375in</property>
+            </column>
+            <column id="1130">
+                <property name="width">1.1875in</property>
+            </column>
+            <column id="1145">
+                <property name="width">1.6875in</property>
+            </column>
+            <column id="1147">
+                <property name="width">2.0729166666666665in</property>
+            </column>
             <row id="1131">
                 <cell id="1132">
                     <text id="1138">
@@ -2069,10 +2092,8 @@ from total_effective te,total_visit tv,total_plan_outlet tpl]]></xml-property>
                 <cell id="1146"/>
             </row>
         </grid>
-        <label id="1056"/>
         <table id="20">
-            <property name="fontWeight">normal</property>
-            <property name="width">14.447916666666666in</property>
+            <property name="width">18.239583333333332in</property>
             <property name="dataSet">Data Set</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -2136,6 +2157,12 @@ from total_effective te,total_visit tv,total_plan_outlet tpl]]></xml-property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
+                    <property name="name">difference</property>
+                    <text-property name="displayName">difference</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["difference"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
                     <property name="name">Aggregation</property>
                     <property name="dataType">integer</property>
                     <property name="aggregateFunction">RUNNINGCOUNT</property>
@@ -2146,65 +2173,53 @@ from total_effective te,total_visit tv,total_plan_outlet tpl]]></xml-property>
                     </list-property>
                     <property name="allowExport">true</property>
                 </structure>
-                <structure>
-                    <property name="name">difference</property>
-                    <text-property name="displayName">difference</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["difference"]</expression>
-                    <property name="dataType">string</property>
-                </structure>
-                <structure>
-                    <property name="name">customer_code</property>
-                    <text-property name="displayName">customer_code</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["customer_code"]</expression>
-                    <property name="dataType">string</property>
-                </structure>
             </list-property>
-            <column id="1059">
-                <property name="width">0.4583333333333333in</property>
+            <column id="1056">
+                <property name="width">1in</property>
             </column>
             <column id="84">
-                <property name="width">1.1666666666666667in</property>
+                <property name="width">1.3645833333333333in</property>
             </column>
             <column id="126">
-                <property name="width">1.3125in</property>
-            </column>
-            <column id="1150">
-                <property name="width">1.15625in</property>
+                <property name="width">1.7604166666666667in</property>
             </column>
             <column id="131">
-                <property name="width">1.15625in</property>
+                <property name="width">2.2916666666666665in</property>
+            </column>
+            <column id="85">
+                <property name="width">0.8854166666666666in</property>
             </column>
             <column id="86">
-                <property name="width">1.1041666666666667in</property>
+                <property name="width">0.7083333333333334in</property>
             </column>
             <column id="87">
-                <property name="width">0.96875in</property>
+                <property name="width">0.8229166666666666in</property>
             </column>
             <column id="88">
-                <property name="width">1.28125in</property>
+                <property name="width">1in</property>
             </column>
             <column id="89">
-                <property name="width">1.125in</property>
+                <property name="width">0.9479166666666666in</property>
             </column>
             <column id="90">
-                <property name="width">0.9270833333333334in</property>
+                <property name="width">1.65625in</property>
             </column>
             <column id="91">
-                <property name="width">0.6354166666666666in</property>
+                <property name="width">1.1770833333333333in</property>
             </column>
             <column id="92">
-                <property name="width">1.21875in</property>
+                <property name="width">1.8020833333333333in</property>
             </column>
             <column id="93">
-                <property name="width">1.5416666666666667in</property>
+                <property name="width">1.6875in</property>
             </column>
             <column id="94">
-                <property name="width">1.375in</property>
+                <property name="width">1.5729166666666667in</property>
             </column>
             <header>
                 <row id="21">
-                    <property name="height">0.6041666666666666in</property>
-                    <cell id="1057">
+                    <property name="height">0.4375in</property>
+                    <cell id="1054">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
@@ -2213,10 +2228,15 @@ from total_effective te,total_visit tv,total_plan_outlet tpl]]></xml-property>
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <label id="1074">
+                        <text id="1057">
                             <property name="fontWeight">bold</property>
-                            <text-property name="text">No</text-property>
-                        </label>
+                            <property name="borderBottomStyle">none</property>
+                            <property name="borderLeftStyle">none</property>
+                            <property name="borderRightStyle">none</property>
+                            <property name="borderTopStyle">none</property>
+                            <property name="contentType">auto</property>
+                            <text-property name="content"><![CDATA[No]]></text-property>
+                        </text>
                     </cell>
                     <cell id="22">
                         <property name="borderBottomStyle">solid</property>
@@ -2227,10 +2247,15 @@ from total_effective te,total_visit tv,total_plan_outlet tpl]]></xml-property>
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <label id="1075">
+                        <text id="104">
                             <property name="fontWeight">bold</property>
-                            <text-property name="text">Date</text-property>
-                        </label>
+                            <property name="borderBottomStyle">none</property>
+                            <property name="borderLeftStyle">none</property>
+                            <property name="borderRightStyle">none</property>
+                            <property name="borderTopStyle">none</property>
+                            <property name="contentType">auto</property>
+                            <text-property name="content"><![CDATA[Date]]></text-property>
+                        </text>
                     </cell>
                     <cell id="123">
                         <property name="borderBottomStyle">solid</property>
@@ -2241,24 +2266,15 @@ from total_effective te,total_visit tv,total_plan_outlet tpl]]></xml-property>
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <label id="1076">
+                        <text id="127">
                             <property name="fontWeight">bold</property>
-                            <text-property name="text">Time</text-property>
-                        </label>
-                    </cell>
-                    <cell id="1148">
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <label id="1151">
-                            <property name="fontWeight">bold</property>
-                            <text-property name="text">Customer Code</text-property>
-                        </label>
+                            <property name="borderBottomStyle">none</property>
+                            <property name="borderLeftStyle">none</property>
+                            <property name="borderRightStyle">none</property>
+                            <property name="borderTopStyle">none</property>
+                            <property name="contentType">auto</property>
+                            <text-property name="content"><![CDATA[Time]]></text-property>
+                        </text>
                     </cell>
                     <cell id="128">
                         <property name="borderBottomStyle">solid</property>
@@ -2269,10 +2285,34 @@ from total_effective te,total_visit tv,total_plan_outlet tpl]]></xml-property>
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <label id="1077">
+                        <text id="132">
                             <property name="fontWeight">bold</property>
-                            <text-property name="text">Customer Name</text-property>
-                        </label>
+                            <property name="borderBottomStyle">none</property>
+                            <property name="borderLeftStyle">none</property>
+                            <property name="borderRightStyle">none</property>
+                            <property name="borderTopStyle">none</property>
+                            <property name="contentType">auto</property>
+                            <text-property name="content"><![CDATA[Customer]]></text-property>
+                        </text>
+                    </cell>
+                    <cell id="23">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <text id="106">
+                            <property name="fontWeight">bold</property>
+                            <property name="borderBottomStyle">none</property>
+                            <property name="borderLeftStyle">none</property>
+                            <property name="borderRightStyle">none</property>
+                            <property name="borderTopStyle">none</property>
+                            <property name="contentType">auto</property>
+                            <text-property name="content"><![CDATA[Address]]></text-property>
+                        </text>
                     </cell>
                     <cell id="24">
                         <property name="borderBottomStyle">solid</property>
@@ -2283,10 +2323,15 @@ from total_effective te,total_visit tv,total_plan_outlet tpl]]></xml-property>
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <label id="1078">
+                        <text id="107">
                             <property name="fontWeight">bold</property>
-                            <text-property name="text">Township</text-property>
-                        </label>
+                            <property name="borderBottomStyle">none</property>
+                            <property name="borderLeftStyle">none</property>
+                            <property name="borderRightStyle">none</property>
+                            <property name="borderTopStyle">none</property>
+                            <property name="contentType">auto</property>
+                            <text-property name="content"><![CDATA[Township]]></text-property>
+                        </text>
                     </cell>
                     <cell id="25">
                         <property name="borderBottomStyle">solid</property>
@@ -2297,10 +2342,15 @@ from total_effective te,total_visit tv,total_plan_outlet tpl]]></xml-property>
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <label id="1079">
+                        <text id="108">
                             <property name="fontWeight">bold</property>
-                            <text-property name="text">Sale  Team</text-property>
-                        </label>
+                            <property name="borderBottomStyle">none</property>
+                            <property name="borderLeftStyle">none</property>
+                            <property name="borderRightStyle">none</property>
+                            <property name="borderTopStyle">none</property>
+                            <property name="contentType">auto</property>
+                            <text-property name="content"><![CDATA[Sale Team]]></text-property>
+                        </text>
                     </cell>
                     <cell id="26">
                         <property name="borderBottomStyle">solid</property>
@@ -2311,10 +2361,15 @@ from total_effective te,total_visit tv,total_plan_outlet tpl]]></xml-property>
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <label id="1080">
+                        <text id="109">
                             <property name="fontWeight">bold</property>
-                            <text-property name="text">Sale Plan Day</text-property>
-                        </label>
+                            <property name="borderBottomStyle">none</property>
+                            <property name="borderLeftStyle">none</property>
+                            <property name="borderRightStyle">none</property>
+                            <property name="borderTopStyle">none</property>
+                            <property name="contentType">auto</property>
+                            <text-property name="content"><![CDATA[Sale Plan Day]]></text-property>
+                        </text>
                     </cell>
                     <cell id="27">
                         <property name="borderBottomStyle">solid</property>
@@ -2325,10 +2380,15 @@ from total_effective te,total_visit tv,total_plan_outlet tpl]]></xml-property>
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <label id="1081">
+                        <text id="110">
                             <property name="fontWeight">bold</property>
-                            <text-property name="text">Tablet ID</text-property>
-                        </label>
+                            <property name="borderBottomStyle">none</property>
+                            <property name="borderLeftStyle">none</property>
+                            <property name="borderRightStyle">none</property>
+                            <property name="borderTopStyle">none</property>
+                            <property name="contentType">auto</property>
+                            <text-property name="content"><![CDATA[Tablet ID]]></text-property>
+                        </text>
                     </cell>
                     <cell id="28">
                         <property name="borderBottomStyle">solid</property>
@@ -2339,10 +2399,15 @@ from total_effective te,total_visit tv,total_plan_outlet tpl]]></xml-property>
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <label id="1082">
+                        <text id="111">
                             <property name="fontWeight">bold</property>
-                            <text-property name="text">Reason</text-property>
-                        </label>
+                            <property name="borderBottomStyle">none</property>
+                            <property name="borderLeftStyle">none</property>
+                            <property name="borderRightStyle">none</property>
+                            <property name="borderTopStyle">none</property>
+                            <property name="contentType">auto</property>
+                            <text-property name="content"><![CDATA[Reason]]></text-property>
+                        </text>
                     </cell>
                     <cell id="29">
                         <property name="borderBottomStyle">solid</property>
@@ -2353,10 +2418,15 @@ from total_effective te,total_visit tv,total_plan_outlet tpl]]></xml-property>
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <label id="1083">
+                        <text id="112">
                             <property name="fontWeight">bold</property>
-                            <text-property name="text">Far</text-property>
-                        </label>
+                            <property name="borderBottomStyle">none</property>
+                            <property name="borderLeftStyle">none</property>
+                            <property name="borderRightStyle">none</property>
+                            <property name="borderTopStyle">none</property>
+                            <property name="contentType">auto</property>
+                            <text-property name="content"><![CDATA[Far]]></text-property>
+                        </text>
                     </cell>
                     <cell id="30">
                         <property name="borderBottomStyle">solid</property>
@@ -2367,10 +2437,15 @@ from total_effective te,total_visit tv,total_plan_outlet tpl]]></xml-property>
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <label id="1084">
+                        <text id="113">
                             <property name="fontWeight">bold</property>
-                            <text-property name="text">Time Diff:</text-property>
-                        </label>
+                            <property name="borderBottomStyle">none</property>
+                            <property name="borderLeftStyle">none</property>
+                            <property name="borderRightStyle">none</property>
+                            <property name="borderTopStyle">none</property>
+                            <property name="contentType">auto</property>
+                            <text-property name="content"><![CDATA[Time Diff:]]></text-property>
+                        </text>
                     </cell>
                     <cell id="31">
                         <property name="borderBottomStyle">solid</property>
@@ -2381,10 +2456,15 @@ from total_effective te,total_visit tv,total_plan_outlet tpl]]></xml-property>
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <label id="1085">
+                        <text id="114">
                             <property name="fontWeight">bold</property>
-                            <text-property name="text">Image</text-property>
-                        </label>
+                            <property name="borderBottomStyle">none</property>
+                            <property name="borderLeftStyle">none</property>
+                            <property name="borderRightStyle">none</property>
+                            <property name="borderTopStyle">none</property>
+                            <property name="contentType">auto</property>
+                            <text-property name="content"><![CDATA[Image]]></text-property>
+                        </text>
                     </cell>
                     <cell id="32">
                         <property name="borderBottomStyle">solid</property>
@@ -2395,17 +2475,22 @@ from total_effective te,total_visit tv,total_plan_outlet tpl]]></xml-property>
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <label id="1086">
+                        <text id="115">
                             <property name="fontWeight">bold</property>
-                            <text-property name="text">Remark</text-property>
-                        </label>
+                            <property name="borderBottomStyle">none</property>
+                            <property name="borderLeftStyle">none</property>
+                            <property name="borderRightStyle">none</property>
+                            <property name="borderTopStyle">none</property>
+                            <property name="contentType">auto</property>
+                            <text-property name="content"><![CDATA[Remark]]></text-property>
+                        </text>
                     </cell>
                 </row>
             </header>
             <detail>
                 <row id="42">
                     <property name="height">0.3541666666666667in</property>
-                    <cell id="1058">
+                    <cell id="1055">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
@@ -2414,7 +2499,7 @@ from total_effective te,total_visit tv,total_plan_outlet tpl]]></xml-property>
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <data id="1062">
+                        <data id="1058">
                             <property name="textAlign">center</property>
                             <property name="resultSetColumn">Aggregation</property>
                         </data>
@@ -2429,13 +2514,14 @@ from total_effective te,total_visit tv,total_plan_outlet tpl]]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="956">
+                            <property name="fontWeight">normal</property>
                             <property name="borderBottomStyle">none</property>
                             <property name="borderLeftStyle">none</property>
                             <property name="borderRightStyle">none</property>
                             <property name="borderTopStyle">none</property>
                             <structure name="dateTimeFormat">
                                 <property name="category">Custom</property>
-                                <property name="pattern">dd-MM-yyy</property>
+                                <property name="pattern">dd-MM-yyyy</property>
                             </structure>
                             <property name="textAlign">center</property>
                             <property name="resultSetColumn">date</property>
@@ -2451,26 +2537,13 @@ from total_effective te,total_visit tv,total_plan_outlet tpl]]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="957">
+                            <property name="fontWeight">normal</property>
                             <property name="borderBottomStyle">none</property>
                             <property name="borderLeftStyle">none</property>
                             <property name="borderRightStyle">none</property>
                             <property name="borderTopStyle">none</property>
                             <property name="textAlign">center</property>
                             <property name="resultSetColumn">time</property>
-                        </data>
-                    </cell>
-                    <cell id="1149">
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <data id="1152">
-                            <property name="textAlign">center</property>
-                            <property name="resultSetColumn">customer_code</property>
                         </data>
                     </cell>
                     <cell id="129">
@@ -2483,6 +2556,7 @@ from total_effective te,total_visit tv,total_plan_outlet tpl]]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="958">
+                            <property name="fontWeight">normal</property>
                             <property name="borderBottomStyle">none</property>
                             <property name="borderLeftStyle">none</property>
                             <property name="borderRightStyle">none</property>
@@ -2490,6 +2564,16 @@ from total_effective te,total_visit tv,total_plan_outlet tpl]]></xml-property>
                             <property name="textAlign">center</property>
                             <property name="resultSetColumn">name</property>
                         </data>
+                    </cell>
+                    <cell id="44">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
                     </cell>
                     <cell id="45">
                         <property name="borderBottomStyle">solid</property>
@@ -2501,6 +2585,7 @@ from total_effective te,total_visit tv,total_plan_outlet tpl]]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="959">
+                            <property name="fontWeight">normal</property>
                             <property name="borderBottomStyle">none</property>
                             <property name="borderLeftStyle">none</property>
                             <property name="borderRightStyle">none</property>
@@ -2519,6 +2604,7 @@ from total_effective te,total_visit tv,total_plan_outlet tpl]]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="960">
+                            <property name="fontWeight">normal</property>
                             <property name="borderBottomStyle">none</property>
                             <property name="borderLeftStyle">none</property>
                             <property name="borderRightStyle">none</property>
@@ -2537,6 +2623,7 @@ from total_effective te,total_visit tv,total_plan_outlet tpl]]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="961">
+                            <property name="fontWeight">normal</property>
                             <property name="borderBottomStyle">none</property>
                             <property name="borderLeftStyle">none</property>
                             <property name="borderRightStyle">none</property>
@@ -2555,6 +2642,7 @@ from total_effective te,total_visit tv,total_plan_outlet tpl]]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="962">
+                            <property name="fontWeight">normal</property>
                             <property name="borderBottomStyle">none</property>
                             <property name="borderLeftStyle">none</property>
                             <property name="borderRightStyle">none</property>
@@ -2573,6 +2661,7 @@ from total_effective te,total_visit tv,total_plan_outlet tpl]]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="963">
+                            <property name="fontWeight">normal</property>
                             <property name="borderBottomStyle">none</property>
                             <property name="borderLeftStyle">none</property>
                             <property name="borderRightStyle">none</property>
@@ -2600,7 +2689,7 @@ from total_effective te,total_visit tv,total_plan_outlet tpl]]></xml-property>
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <data id="1063">
+                        <data id="1053">
                             <property name="textAlign">center</property>
                             <property name="resultSetColumn">difference</property>
                         </data>
@@ -2615,6 +2704,7 @@ from total_effective te,total_visit tv,total_plan_outlet tpl]]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="964">
+                            <property name="fontWeight">normal</property>
                             <property name="borderBottomStyle">none</property>
                             <property name="borderLeftStyle">none</property>
                             <property name="borderRightStyle">none</property>
@@ -2633,6 +2723,7 @@ from total_effective te,total_visit tv,total_plan_outlet tpl]]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="965">
+                            <property name="fontWeight">normal</property>
                             <property name="borderBottomStyle">none</property>
                             <property name="borderLeftStyle">none</property>
                             <property name="borderRightStyle">none</property>

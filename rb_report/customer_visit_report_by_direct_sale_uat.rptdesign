@@ -104,7 +104,7 @@ teamList = params["sale_team_id"].value.join(",");]]></method>
             </structure>
         </scalar-parameter>
         <scalar-parameter name="user_id" id="12">
-            <property name="hidden">false</property>
+            <property name="hidden">true</property>
             <text-property name="promptText">User</text-property>
             <property name="valueType">dynamic</property>
             <property name="isRequired">true</property>
@@ -126,8 +126,23 @@ teamList = params["sale_team_id"].value.join(",");]]></method>
         </scalar-parameter>
     </parameters>
     <data-sources>
-        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="1088"
- extends="rb_testing_report_library.Data Source">
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="1088">
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>metadataBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledMetadataBidiFormatStr</name>
+                </ex-property>
+                <ex-property>
+                    <name>contentBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledContentBidiFormatStr</name>
+                </ex-property>
+            </list-property>
             <property name="odaDriverClass">org.postgresql.Driver</property>
             <property name="odaURL">jdbc:postgresql://localhost:5433/rbd_testing</property>
             <property name="odaUser">odoo</property>
