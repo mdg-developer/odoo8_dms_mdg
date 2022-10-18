@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_mobile_sync_woo_form" model="ir.ui.view">
+            <field name="name">mobile_sync_woo_form</field>
+            <field name="model">mobile.sync</field>
+            <field name="arch"  type="xml">
+                <form>
+                    <group col="4" colspan="6">
+                       <span class="o_form_label">All selected partners' mobile sync to Woo</span>
+                    </group>
+                    <footer>
+                        <button name="partner_mobile_sync_to_woo" string="Sync to Woo" type="object" class="oe_highlight"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_mobile_sync_woo" model="ir.actions.act_window">
+            <field name="name">Mobile Sync to Woo</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mobile.sync</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record model="ir.values" id="mobile_sync_to_woo_value">
+            <field name="name">Mobile Sync to Woo</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_mobile_sync_woo'))" />
+            <field name="key">action</field>
+            <field name="model">res.partner</field>
+        </record>
+
+    </data>
+</openerp>
