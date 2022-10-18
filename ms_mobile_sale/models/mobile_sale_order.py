@@ -3644,8 +3644,8 @@ class mobile_sale_order(osv.osv):
                     stock_id = stock_return_obj.create(cursor, user, mso_result, context=context)                  
                     for srl in stock_line:  # return_quantity=  float(srl['return_quantity']) - (float(srl['sale_quantity'])+float(srl['foc_quantity'] ))          
                             return_quantity = srl['return_quantity']
-                            product = self.pool.get('product.product').browse(cursor, user, srl['product_id'], context=context)
-                            if product.type!='service':
+                            # product = self.pool.get('product.product').browse(cursor, user, srl['product_id'], context=context)
+                            if stock_id:
                                 mso_line_res = {                                                            
                                       'line_id':stock_id,
                                       'return_quantity':return_quantity,
