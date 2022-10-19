@@ -142,6 +142,18 @@
 
 						<hr />
 						<div class="row">
+						<div class="col-md-2">  <label for="image5" string="Customer Image"/>
+								<div id="image5">
+									<field name="image5" widget='image' class="oe_avatar"
+										options='{"preview_image": "image_medium5"}' />
+								</div>
+								<p class="btn btn-default source" data-toggle="modal"
+									data-target=".bs-example-modal-lg" data-backdrop="false"
+									onclick="var list =document.getElementById('image5'); var imageName =list.id ; var link = list.getElementsByTagName('img')[0].src;link = link.replace('image_medium5','image5');var zoom=document.getElementById('zoom'); zoom.src=link;">
+									Zoom
+									<i class="fa fa-plus"></i>
+								</p>
+							</div>			
 							<div class="col-md-2">
 								<div id="image">
 									<field name="image" widget='image' class="oe_avatar"
@@ -204,18 +216,7 @@
 									<i class="fa fa-plus"></i>
 								</p>
 							</div>
-							<div class="col-md-2">
-								<div id="image5">
-									<field name="image5" widget='image' class="oe_avatar"
-										options='{"preview_image": "image_medium5"}' />
-								</div>
-								<p class="btn btn-default source" data-toggle="modal"
-									data-target=".bs-example-modal-lg" data-backdrop="false"
-									onclick="var list =document.getElementById('image5'); var imageName =list.id ; var link = list.getElementsByTagName('img')[0].src;link = link.replace('image_medium5','image5');var zoom=document.getElementById('zoom'); zoom.src=link;">
-									Zoom
-									<i class="fa fa-plus"></i>
-								</p>
-							</div>							
+											
 						</div>
 
 						<widget type="gmap_marker" lat="latitude" lng="longitude"
