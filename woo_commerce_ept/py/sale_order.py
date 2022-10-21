@@ -614,6 +614,13 @@ class sale_order(models.Model):
                 user_obj = self.env['res.users'].search([('default_section_id','=',delivery_id)], limit=1)  
                 if user_obj:
                     sales_person = user_obj.id
+            if partner:
+                partner_obj = self.env['res.partner'].search([('id','=',partner.id)])
+                if partner_obj:
+                    if partner_obj.township:
+                        if partner_obj.township.delivery_team_id:
+                            if partner_obj.township.delivery_team_id.branch_id:
+                                branch_id = partner_obj.township.delivery_team_id.branch_id.id
             #pricelist_id = woo_config.pricelist_id.id                             
             ordervals = {
                 'name' :name,                
@@ -647,6 +654,7 @@ class sale_order(models.Model):
                 'barcode':barcode_value,
                 'ecommerce':True,
                 'tb_ref_no':woo_order_number,
+                'branch_id':branch_id,
             }            
             return ordervals
 
