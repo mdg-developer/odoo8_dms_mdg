@@ -42,16 +42,16 @@
             </structure>
         </scalar-parameter>
         <scalar-parameter name="main_group" id="2301">
-            <text-property name="promptText">Choose Main Group(null value='All main group')</text-property>
+            <text-property name="promptText">Choose Main Group</text-property>
             <property name="valueType">dynamic</property>
-            <property name="isRequired">false</property>
+            <property name="isRequired">true</property>
             <property name="dataSetName">main_group</property>
             <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
             <expression name="labelExpr" type="javascript">dataSetRow["name"]</expression>
             <property name="dataType">integer</property>
             <property name="distinct">true</property>
             <list-property name="selectionList"/>
-            <property name="paramType">simple</property>
+            <property name="paramType">multi-value</property>
             <property name="controlType">list-box</property>
             <property name="mustMatch">true</property>
             <property name="fixedOrder">true</property>
@@ -60,16 +60,16 @@
             </structure>
         </scalar-parameter>
         <scalar-parameter name="branch" id="2494">
-            <text-property name="promptText">Choose Branch(null value='All Branches')</text-property>
+            <text-property name="promptText">Choose Branch</text-property>
             <property name="valueType">dynamic</property>
-            <property name="isRequired">false</property>
+            <property name="isRequired">true</property>
             <property name="dataSetName">branch</property>
             <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
             <expression name="labelExpr" type="javascript">dataSetRow["branch_code"]</expression>
             <property name="dataType">integer</property>
             <property name="distinct">true</property>
             <list-property name="selectionList"/>
-            <property name="paramType">simple</property>
+            <property name="paramType">multi-value</property>
             <property name="controlType">list-box</property>
             <property name="mustMatch">true</property>
             <property name="fixedOrder">true</property>
@@ -78,7 +78,7 @@
             </structure>
         </scalar-parameter>
         <scalar-parameter name="sales_teams" id="2676">
-            <text-property name="promptText">Choose Teams(null value='All Teams')</text-property>
+            <text-property name="promptText">Choose Teams</text-property>
             <property name="valueType">dynamic</property>
             <property name="isRequired">true</property>
             <property name="dataSetName">sales_teams</property>
@@ -87,7 +87,7 @@
             <property name="dataType">integer</property>
             <property name="distinct">true</property>
             <list-property name="selectionList"/>
-            <property name="paramType">simple</property>
+            <property name="paramType">multi-value</property>
             <property name="controlType">list-box</property>
             <property name="mustMatch">true</property>
             <property name="fixedOrder">true</property>
@@ -96,7 +96,7 @@
             </structure>
         </scalar-parameter>
         <scalar-parameter name="user_id" id="2683">
-            <property name="hidden">false</property>
+            <property name="hidden">true</property>
             <text-property name="promptText">User</text-property>
             <property name="valueType">dynamic</property>
             <property name="isRequired">true</property>
@@ -782,23 +782,6 @@ order by code]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
-  <DataSetParameters>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>1</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-  </DataSetParameters>
   <design:ResultSets derivedMetaData="true">
     <design:resultSetDefinitions>
       <design:resultSetColumns>
@@ -1425,21 +1408,21 @@ order by login]]></xml-property>
 }
 else
 {     
-   this.queryText =this.queryText.replace("--$main_group$", "and t.main_group="+params["main_group"])
+   this.queryText =this.queryText.replace("--$main_group$", "and t.main_group in ("+params["main_group"].value.join(",")+")")
 }
 if (params["sales_teams"].value == null ){     
    this.queryText =this.queryText.replace("--$sales_team$", "")
 }
 else
 {     
-   this.queryText =this.queryText.replace("--$sales_team$", "and c.id="+params["sales_teams"])
+   this.queryText =this.queryText.replace("--$sales_team$", "and c.id in ("+params["sales_teams"].value.join(",")+")")
 }
 if (params["branch"].value == null ){     
    this.queryText =this.queryText.replace("--$branch$", "")
 }
 else
 {     
-   this.queryText =this.queryText.replace("--$branch$", "and branch.id="+params["branch"])
+   this.queryText =this.queryText.replace("--$branch$", "and branch.id in ("+params["branch"].value.join(",")+")")
 }]]></method>
             <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
