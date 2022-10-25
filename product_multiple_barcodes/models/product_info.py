@@ -52,7 +52,7 @@ class product_info(osv.osv):
 
     def confirm(self, cr, uid, ids, context=None):
         for flag in self.browse(cr, uid, ids, context=context):
-            flag.product_tmpl_id.update({
+            flag.product_tmpl_id.sudo().update({
                 'ti':flag.ti,
                 'hi':flag.hi,
                 'viss_value':flag.viss_value,
