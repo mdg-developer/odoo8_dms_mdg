@@ -533,6 +533,7 @@ class sale_order(models.Model):
             barcode_value = None
             sales_person = None
             term_id = False
+            branch_id = None
             if not shipping_address:
                 shipping_address = partner
             if instance.woo_version == 'old':
