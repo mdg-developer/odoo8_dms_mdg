@@ -13,6 +13,7 @@ from openerp import netsvc
 # from openerp.exceptions import UserError
 
 import openerp.addons.decimal_precision as dp
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
 
 class sale_order(osv.osv):
     _inherit = "sale.order"
@@ -187,6 +188,25 @@ class sale_order(osv.osv):
         if not res:
             return [('id', '=', 0)]
         return [('id', 'in', [x[0] for x in res])]
+
+    def get_due_date(self, cursor, user, ids, name, arg, context=None):
+        res = {}
+        #date_order_str = datetime.strptime(date_order, DEFAULT_SERVER_DATETIME_FORMAT).strftime(DEFAULT_SERVER_DATE_FORMAT)
+
+        for sale in self.browse(cursor, user, ids, context=context):
+            res[sale.id] = False
+            if sale.date_order and sale.payment_term:
+                from datetime import datetime
+                date_invoice=datetime.strptime(sale.date_order, DEFAULT_SERVER_DATETIME_FORMAT).strftime(DEFAULT_SERVER_DATE_FORMAT)
+                print  'date_invoice ',date_invoice
+                pterm = self.pool.get('account.payment.term').browse(cursor, user, sale.payment_term.id, context=context)
+                pterm_list = pterm.compute(value=1, date_ref=date_invoice)[0]
+                if pterm_list:
+                    date_due=max(line[0] for line in pterm_list)
+                else:
+                    date_due=date_invoice
+                res[sale.id] = date_due
+        return res
       
     _columns = {
         'state': fields.selection([
@@ -217,7 +237,8 @@ class sale_order(osv.osv):
                     ('delivered', 'Delivered'),
                     ('none', 'None')
                ], 'Deliver Remark', readonly=True, default='none'),
-               'due_date':fields.date('Due Date', readonly=True),
+               # 'due_date':fields.date('Due Date', readonly=True),
+               'due_date': fields.function(get_due_date, type='date', string='Due Date', readonly=True, store=True),
                'so_latitude':fields.float('Geo Latitude'),
                'so_longitude':fields.float('Geo Longitude'),
                'customer_code':fields.char('Customer Code'),
