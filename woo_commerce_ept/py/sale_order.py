@@ -656,6 +656,7 @@ class sale_order(models.Model):
                 'ecommerce':True,
                 'tb_ref_no':woo_order_number,
                 'branch_id':branch_id,
+                'additional_discount':0,
             }            
             return ordervals
 
