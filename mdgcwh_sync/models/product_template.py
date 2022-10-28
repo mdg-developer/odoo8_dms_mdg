@@ -46,7 +46,7 @@ class product_template(osv.osv):
                 uom_ids=models.execute_kw(db, sd_uid, password, 'uom.uom', 'search',  [[('name', '=',data.uom_id.name)]],
                                                          {'limit': 1})
                 uom_id = uom_ids[0]
-                uom_po_ids=models.execute_kw(db, sd_uid, password, 'uom.uom', 'search',  [[('name', '=',data.uom_po_id.name)]],
+                uom_po_ids=models.execute_kw(db, sd_uid, password, 'uom.uom', 'search',  [[('name', '=',data.report_uom_id.name)]],
                                                          {'limit': 1})
                 uom_po_id = uom_po_ids[0]
                 
@@ -76,6 +76,9 @@ class product_template(osv.osv):
                                 'pallet_quantity': data.ctn_pallet,
                                 'ti': data.ti,
                                 'hi': data.hi,
+                                'tracking' : 'lot',
+                                'use_expiration_date' : True,
+
                                  }
                 if product_ids:
                     print("product write")
