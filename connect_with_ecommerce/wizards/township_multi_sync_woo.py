@@ -17,7 +17,7 @@ class township_multi_sync_woo(osv.osv_memory):
          'sync':True,         
     }
         
-    def towship_sync_woo(self, cr, uid, ids, context=None):
+    def township_sync_woo(self, cr, uid, ids, context=None):
         
         data = self.read(cr, uid, ids, context=context)[0]
         township_obj = self.pool.get('res.township')        

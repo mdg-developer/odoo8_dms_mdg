@@ -11,7 +11,7 @@
                        <span class="o_form_label">All selected townships sync to Woo</span>
                     </group>
                     <footer>
-                        <button name="towship_sync_woo" string="Sync to Woo" type="object" class="oe_highlight"/>
+                        <button name="township_sync_woo" string="Sync to Woo" type="object" class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel"/>
                     </footer>
