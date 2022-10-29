@@ -1,6 +1,7 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.osv.orm import except_orm
+import logging
 
 class res_township(osv.osv):
     _inherit = "res.township"
@@ -35,8 +36,13 @@ class res_township(osv.osv):
                     raise except_orm(_('UserError'), _("Please define branch for %s!") % (township.name,))                               
                 township_info = township.code + "," + township.name + "," + township.branch_id.name + "," + township.city.name                                         
                 response = wcapi.post('insert-odoo-township',str(township_info)) 
-                if response.status_code in [200,201]:                                  
+                if response.status_code not in [200,201]:
+                    message = "Error in township syncing:%s"%(response.content)
+                    raise except_orm(_('UserError'), _("%s!") % (message,))
+                township_data = township.city.state_id.name + "," + township.city.name + "," + township.name
+                township_response = wcapi.put('add-odoo-state-city-township', str(township_data))
+                if township_response.status_code not in [200, 201]:
+                    message = "Error in township syncing:%s" % (township_response.content)
+                    raise except_orm(_('UserError'), _("%s!") % (message,))
+                if response.status_code in [200,201] and township_response.status_code in [200, 201]:
                     self.write(cr, uid, ids, {'is_sync_woo': True}, context=context)
-                else:
-                    message = "Error in township syncing:%s"%(response.content)                        
-                    raise except_orm(_('UserError'), _("%s!") % (message,))                
