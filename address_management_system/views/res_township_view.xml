@@ -10,6 +10,7 @@
 					<field name="name" />
 					<field name="code"/>
 					<field name="city" />
+					<field name="state_id" />
 				</tree>
 			</field>
 		</record>
@@ -29,6 +30,7 @@
 						</group>						
 						<group>
 							<field name="city" options='{"no_open": True}'/>
+							<field name="state_id" />
 						</group>
 					</group>
 				</form>
