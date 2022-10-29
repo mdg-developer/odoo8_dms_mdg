@@ -24,6 +24,8 @@ class res_township(osv.osv):
     def sync_to_woo(self, cr, uid, ids, context=None):
         
         data = self.browse(cr,uid,ids[0])
+        township_multi_data = ""
+        state_multi_data = ""
         if data.is_sync_woo != True:        
             woo_instance_obj = self.pool.get('woo.instance.ept')
             township_obj = self.pool.get('res.township')
@@ -34,15 +36,26 @@ class res_township(osv.osv):
                 township = township_obj.browse(cr,uid,data.id)
                 if not township.branch_id:
                     raise except_orm(_('UserError'), _("Please define branch for %s!") % (township.name,))                               
-                township_info = township.code + "," + township.name + "," + township.branch_id.name + "," + township.city.name                                         
-                response = wcapi.post('insert-odoo-township',str(township_info)) 
-                if response.status_code not in [200,201]:
-                    message = "Error in township syncing:%s"%(response.content)
+                township_info = township.code + "," + township.name + "," + township.branch_id.name + "," + township.city.name
+                if township_multi_data == "":
+                    township_multi_data = township_info
+                else:
+                    township_multi_data = township_multi_data + "/ " + township_info
+
+                state_data = township.city.state_id.name + "," + township.city.name + "," + township.name
+                if state_multi_data == "":
+                    state_multi_data = state_data
+                else:
+                    state_multi_data = state_multi_data + "/ " + state_data
+            if township_multi_data:
+                response = wcapi.post('insert-odoo-township', str(township_multi_data))
+                if response.status_code not in [200, 201]:
+                    message = "Error in township syncing:%s" % (response.content)
                     raise except_orm(_('UserError'), _("%s!") % (message,))
-                township_data = township.city.state_id.name + "," + township.city.name + "," + township.name
-                township_response = wcapi.put('add-odoo-state-city-township', str(township_data))
-                if township_response.status_code not in [200, 201]:
-                    message = "Error in township syncing:%s" % (township_response.content)
+            if state_multi_data:
+                state_response = wcapi.put('add-odoo-state-city-township', str(state_multi_data))
+                if state_response.status_code not in [200, 201]:
+                    message = "Error in state,city and township syncing:%s" % (state_response.content)
                     raise except_orm(_('UserError'), _("%s!") % (message,))
-                if response.status_code in [200,201] and township_response.status_code in [200, 201]:
-                    self.write(cr, uid, ids, {'is_sync_woo': True}, context=context)
+            if response.status_code in [200,201] and state_response.status_code in [200, 201]:
+                self.write(cr, uid, ids, {'is_sync_woo': True}, context=context)
