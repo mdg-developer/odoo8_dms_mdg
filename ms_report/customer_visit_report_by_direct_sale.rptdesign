@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.6.0.v201606072122</property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.10.0.v202204260816</property>
     <list-property name="propertyBindings">
         <structure>
             <property name="name">queryText</property>
@@ -372,7 +372,7 @@ else
             <xml-property name="queryText"><![CDATA[select ((cv.date at time zone 'utc') at time zone 'asia/rangoon')::date as date,
 cast (cv.date::timestamp
    at time zone 'UTC' at time zone 'asia/rangoon' as time) as time,ti.mac_address tablet_id,
-res.name,ccs.name sale_team,spd.name sale_plan_day,cv.visit_reason reason,rt.name township,
+res.name,ccs.name sale_team,spd.name sale_plan_day,vr.name reason,rt.name township,
 case when is_image1 = 'False' then 'No'
 	 when is_image1 = 'True'  then 'Yes'
 end as image,cv.date -LAG(cv.date)OVER (ORDER BY cv.date ) as difference,
@@ -384,6 +384,7 @@ left join res_branch rb on rb.id = cv.branch_id
 left join sale_plan_day spd on spd.id = cv.sale_plan_day_id
 left join tablets_information ti on ti.id=cv.tablet_id
 left join res_township rt on rt.id=res.township
+left join visit_reason vr on cv.visit_reason_id=vr.id
 where cv.date::date between ? and ?
 --$branch_id$
 --$sales_team$
@@ -1528,6 +1529,171 @@ select *, case when total_visit > 0 then (total_effective/total_visit::float)*10
   </design:ResultSets>
 </model:DesignValues>]]></xml-property>
         </oda-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="branch_param" id="1090">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">branch</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">branch</text-property>
+                    <text-property name="heading">branch</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters"/>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">branch</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <method name="beforeOpen"><![CDATA[if (params["branch_id"].value == null ){     
+   this.queryText =this.queryText.replace("--$branch$", "")
+}
+else
+{     
+   this.queryText =this.queryText.replace("--$branch$", "where id in ("+params["branch_id"].value.join(",")+")")
+}]]></method>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">branch</property>
+                    <property name="nativeName">branch</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select string_agg(name, ',') branch
+from res_branch
+--$branch$]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>id</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+            <design:precision>10</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>id</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>id</design:label>
+            <design:formattingHints>
+              <design:displaySize>11</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>name</design:name>
+              <design:position>2</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>2147483647</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>name</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>name</design:label>
+            <design:formattingHints>
+              <design:displaySize>2147483647</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="team_param" id="1092">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">team</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">team</text-property>
+                    <text-property name="heading">team</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters"/>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">team</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <method name="beforeOpen"><![CDATA[if (params["sale_team_id"].value == null ){     
+   this.queryText =this.queryText.replace("--$team$", "")
+}
+else
+{     
+   this.queryText =this.queryText.replace("--$team$", "where id in ("+params["sale_team_id"].value.join(",")+")")
+}]]></method>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">team</property>
+                    <property name="nativeName">team</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select string_agg(name, ',') team
+from crm_case_section
+--$team$]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>team</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>2147483647</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>team</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>team</design:label>
+            <design:formattingHints>
+              <design:displaySize>2147483647</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
     </data-sets>
     <page-setup>
         <simple-master-page name="Simple MasterPage" id="2">
@@ -1565,128 +1731,36 @@ select *, case when total_visit > 0 then (total_effective/total_visit::float)*10
             <property name="textAlign">center</property>
             <text-property name="text">Customer Visit Report By Delivery,Direct Sales Team</text-property>
         </label>
-        <table id="904">
-            <property name="dataSet">branch</property>
+        <data id="1093">
+            <property name="fontSize">12pt</property>
+            <property name="fontWeight">bold</property>
+            <property name="textAlign">center</property>
+            <property name="dataSet">branch_param</property>
             <list-property name="boundDataColumns">
                 <structure>
-                    <property name="name">id</property>
-                    <text-property name="displayName">id</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["id"]</expression>
-                    <property name="dataType">integer</property>
-                </structure>
-                <structure>
-                    <property name="name">name</property>
-                    <text-property name="displayName">name</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["name"]</expression>
+                    <property name="name">branch</property>
+                    <text-property name="displayName">branch</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["branch"]</expression>
                     <property name="dataType">string</property>
                 </structure>
             </list-property>
-            <column id="914"/>
-            <column id="915"/>
-            <header>
-                <row id="941">
-                    <cell id="942">
-                        <data id="944">
-                            <list-property name="visibility">
-                                <structure>
-                                    <property name="format">all</property>
-                                    <expression name="valueExpr" type="javascript">true</expression>
-                                </structure>
-                            </list-property>
-                            <property name="resultSetColumn">id</property>
-                        </data>
-                    </cell>
-                    <cell id="943">
-                        <data id="945">
-                            <list-property name="visibility">
-                                <structure>
-                                    <property name="format">all</property>
-                                    <expression name="valueExpr" type="javascript">true</expression>
-                                </structure>
-                            </list-property>
-                            <property name="resultSetColumn">name</property>
-                        </data>
-                    </cell>
-                </row>
-            </header>
-            <footer>
-                <row id="911">
-                    <cell id="912">
-                        <property name="colSpan">2</property>
-                        <property name="rowSpan">1</property>
-                        <text-data id="646">
-                            <property name="fontFamily">serif</property>
-                            <property name="fontSize">12pt</property>
-                            <property name="fontWeight">bold</property>
-                            <property name="textAlign">center</property>
-                            <expression name="valueExpr">branchList;</expression>
-                            <property name="contentType">html</property>
-                        </text-data>
-                    </cell>
-                </row>
-            </footer>
-        </table>
-        <table id="924">
-            <property name="dataSet">saleteam</property>
+            <property name="resultSetColumn">branch</property>
+        </data>
+        <data id="1094">
+            <property name="fontSize">12pt</property>
+            <property name="fontWeight">bold</property>
+            <property name="textAlign">center</property>
+            <property name="dataSet">team_param</property>
             <list-property name="boundDataColumns">
                 <structure>
-                    <property name="name">id</property>
-                    <text-property name="displayName">id</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["id"]</expression>
-                    <property name="dataType">integer</property>
-                </structure>
-                <structure>
-                    <property name="name">name</property>
-                    <text-property name="displayName">name</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["name"]</expression>
+                    <property name="name">team</property>
+                    <text-property name="displayName">team</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["team"]</expression>
                     <property name="dataType">string</property>
                 </structure>
             </list-property>
-            <column id="934"/>
-            <column id="935"/>
-            <header>
-                <row id="946">
-                    <cell id="947">
-                        <data id="949">
-                            <list-property name="visibility">
-                                <structure>
-                                    <property name="format">all</property>
-                                    <expression name="valueExpr" type="javascript">true</expression>
-                                </structure>
-                            </list-property>
-                            <property name="resultSetColumn">id</property>
-                        </data>
-                    </cell>
-                    <cell id="948">
-                        <data id="950">
-                            <list-property name="visibility">
-                                <structure>
-                                    <property name="format">all</property>
-                                    <expression name="valueExpr" type="javascript">true</expression>
-                                </structure>
-                            </list-property>
-                            <property name="resultSetColumn">name</property>
-                        </data>
-                    </cell>
-                </row>
-            </header>
-            <footer>
-                <row id="931">
-                    <cell id="932">
-                        <property name="colSpan">2</property>
-                        <property name="rowSpan">1</property>
-                        <text-data id="951">
-                            <property name="fontFamily">serif</property>
-                            <property name="fontSize">12pt</property>
-                            <property name="fontWeight">bold</property>
-                            <property name="textAlign">center</property>
-                            <expression name="valueExpr">teamList;</expression>
-                            <property name="contentType">html</property>
-                        </text-data>
-                    </cell>
-                </row>
-            </footer>
-        </table>
+            <property name="resultSetColumn">team</property>
+        </data>
         <label id="1013"/>
         <grid id="1014">
             <property name="width">14.395833333333334in</property>
