@@ -140,6 +140,7 @@ class AccountMoveLineImport(models.TransientModel):
             'tax account': {'method': self._handle_tax_code},
             'tax_code': {'method': self._handle_tax_code},
             'analytic account': {'method': self._handle_analytic_account},
+            'branch': {'method': self._handle_branch},
         }
         return res
 
@@ -317,6 +318,30 @@ class AccountMoveLineImport(models.TransientModel):
             credit = str2float(line[field], self.decimal_separator)
             aml_vals['credit'] = credit
             self._sum_credit += credit
+
+    def _handle_branch(self, field, line, move, aml_vals):
+        if not aml_vals.get('branch_id'):
+            input = line[field]
+            branch_mod = self.env['res.branch']
+            # dom = ['|', ('parent_id', '=', False), ('is_company', '=', True)]
+            # dom_ref = dom + [('ref', '=', input)]
+            dom_ref = [('name', '=', input)]
+            branches = branch_mod.search(dom_ref)
+            if not branches:
+                dom_name = [('name', '=', input)]
+                partners = branch_mod.search(dom_name)
+            if not branches:
+                msg = _("Branch '%s' not found !") % input
+                self._log_line_error(line, msg)
+                return
+            elif len(branches) > 1:
+                msg = _("Multiple branches with Reference "
+                        "or Name '%s' found !") % input
+                self._log_line_error(line, msg)
+                return
+            else:
+                branch = branches[0]
+                aml_vals['branch_id'] = branch.id
 
     def _handle_partner(self, field, line, move, aml_vals):
         if not aml_vals.get('partner_id'):
