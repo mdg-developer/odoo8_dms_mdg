@@ -411,8 +411,8 @@ class sale_order(models.Model):
         else:
             sale_foc = False 
         
-        if woo_product_uom and product.product_tmpl_id.type == 'product':
-            product_uom = self.env['product.uom'].search([('name', '=', woo_product_uom)])
+        if product.product_tmpl_id.type == 'product':
+            product_uom = self.env['product.uom'].search([('id', '=', product.product_tmpl_id.ecommerce_uom_id.id)])
             if product_uom:
                 if product.product_tmpl_id.uom_id.id != product_uom.id:
                     quantity = quantity * product_uom.factor_inv
@@ -426,6 +426,7 @@ class sale_order(models.Model):
                             {
                             'name':sol_name,
                             'product_id':sol_product_id,
+                            'product_code': product.default_code,
                             'product_variant':product_variant,
                             'order_id':order.id,
                             'product_uom_qty':quantity,
