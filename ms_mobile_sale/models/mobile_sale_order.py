@@ -3021,6 +3021,41 @@ class mobile_sale_order(osv.osv):
                 list.append(product_data)
         return list
 
+
+    def get_product_id(self, cr, uid, sale_team_id, last_date, context=None):
+        list = []
+        # cr.execute('''select pt.id
+        #               from product_template pt
+        #               where pt.write_date > %s::timestamp
+        #                             ''', (last_date,))
+
+        cr.execute('''
+                    select pt.id
+                    from product_template pt,product_product pp,product_sale_group_rel rel, crm_case_section ccs  
+                    where pp.id = rel.product_id and
+                    pt.id = pp.product_tmpl_id and
+                    pt.active = true and
+                    pp.active = true and
+                    ccs.sale_group_id = rel.sale_group_id and
+                    ccs.id = %s and
+                    pt.write_date > %s::timestamp 
+        ''', (sale_team_id,last_date,))
+
+        datas = cr.fetchall()
+
+        # for data in datas:
+        #     product = self.pool.get('product.template').browse(cr, uid, data[0], context=None)
+        #     if product.image:
+        #         product_data = [data[0], product.image]
+        #         list.append(product_data)
+        return datas
+
+
+
+
+
+
+
     def get_competitor_stock_check(self, cr, uid, sale_team_id , context=None, **kwargs):
         cr.execute('''select cline.id,outlet_type,prel.competitor_product_id,product_uom_qty as qty,available,facing,chiller,cp.sequence
                     from crm_case_section ccs,sales_group sg,competitor_product_sales_group_rel prel,competitor_product cp,stock_check_setting_competitor_line cline,stock_check_setting scs
