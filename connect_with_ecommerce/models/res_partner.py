@@ -299,10 +299,10 @@ class res_partner(osv.osv):
             if sale_channel:
                 sale_channel_data = sale_channel_obj.browse(cr, uid, sale_channel, context=context)
                 vals['sales_channel'] = sale_channel_data.id  
-            cr.execute("select split_part(max(rb_code), 'RB', 2)::int+1 rb_code from res_partner")
-            rb_code=cr.fetchone()      
-            if rb_code:    
-                vals['rb_code'] = 'RB' + "%06d" % (rb_code[0],)
+            # cr.execute("select split_part(max(rb_code), 'RB', 2)::int+1 rb_code from res_partner")
+            # rb_code=cr.fetchone()
+            # if rb_code:
+            #     vals['rb_code'] = 'RB' + "%06d" % (rb_code[0],)
 #             if sale_channel:
 #                 vals['channel'] = sale_channel.lower()                 
                  
@@ -358,10 +358,10 @@ class res_partner(osv.osv):
                 vals['birthday'] = birthday                
                 vals['woo_register_date'] = datetime.today()
                 vals['temp_customer'] = name    
-                cr.execute("select split_part(max(rb_code), 'RB', 2)::int+1 rb_code from res_partner")
-                rb_code=cr.fetchone()    
-                if rb_code: 
-                    vals['rb_code'] = 'RB' + "%06d" % (rb_code[0],)
+                # cr.execute("select split_part(max(rb_code), 'RB', 2)::int+1 rb_code from res_partner")
+                # rb_code=cr.fetchone()
+                # if rb_code:
+                #     vals['rb_code'] = 'RB' + "%06d" % (rb_code[0],)
                 if customer_type:
                     vals['customer_type'] = customer_type.lower() 
                     if customer_type.lower() == 'shop':
