@@ -6,6 +6,7 @@ import requests
 from datetime import timedelta,datetime
 import dateutil.parser
 import logging
+from openerp.exceptions import Warning as UserError
 
 class sale_order(models.Model):
     _inherit="sale.order"
@@ -87,6 +88,7 @@ class sale_order(models.Model):
     delivery_address=fields.Text('Delivery Address')
     delivery_contact_no=fields.Char('Delivery Contact No')
     delivery_township_id=fields.Many2one("res.township","Delivery Township")
+    cancel_noti_message = fields.Text('Cancel Notification Message')
             
     @api.multi
     def create_or_update_woo_customer(self,woo_cust_id,vals,is_company=False,parent_id=False,type=False,instance=False):
@@ -1408,10 +1410,12 @@ class sale_order(models.Model):
                 wcapi = woo_instance.connect_for_point_in_woo()   
             for sale in self.browse(cr, uid, ids, context=context):                
                 if sale.woo_order_number:
+                    if not sale.cancel_noti_message:
+                        raise UserError(_("Please fill cancel notification message."))
                     update = sale.update_woo_order_status_action('cancelled')
                     one_signal_values = {
                                             'partner_id': sale.partner_id.id,
-                                            'contents': "Your order " + sale.name + " is cancelled.",
+                                            'contents': sale.cancel_noti_message,
                                             'headings': "RB"
                                         }     
                     self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)

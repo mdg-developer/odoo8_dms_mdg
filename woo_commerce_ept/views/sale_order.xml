@@ -59,6 +59,7 @@
 					     <field name="delivery_address"/>
 					     <field name="delivery_contact_no"/>
 					     <field name="delivery_township_id"/>
+                         <field name="cancel_noti_message"/>
 					 </xpath>
 					 <xpath expr="//form/sheet/notebook/page/field/tree/field[@name='product_id']" position="after">
 						<field name="product_variant" />
