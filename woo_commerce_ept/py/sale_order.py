@@ -441,7 +441,7 @@ class sale_order(models.Model):
                             'discount_product':discount_product,
                             'fees_product':fees_product,   
                             'promotion_id':promotion_id,
-                            'discount_amt':0,   
+                            'discount_amt':float(line.get('discount_amount',0.0)),
                             'sale_foc':sale_foc,                              
                             }                                    
                             )
@@ -1071,7 +1071,7 @@ class sale_order(models.Model):
 #                         self.create_woo_sale_order_line({},fee_line_tax_ids,instance.fee_line_id,woo_product_uom,1,fiscal_position,partner,pricelist_id,fee,sale_order,fee_value)
                 
                 if abs(total_discount_amount) > 0:
-                    amount_total = sale_order.amount_untaxed - abs(total_discount_amount)
+                    amount_total = sale_order.amount_untaxed
                     self.env.cr.execute('update sale_order so set amount_total=%s,total_dis=%s where so.id=%s',(amount_total,abs(total_discount_amount),sale_order.id))
                 
                 if sale_order:

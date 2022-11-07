@@ -288,12 +288,8 @@ class account_invoice(models.Model):
         self.amount_untaxed = sum(line.price_subtotal for line in self.invoice_line)
         self.amount_tax = sum(line.amount for line in self.tax_line)
         total_discount_amt=sum(line.discount_amt for line in self.invoice_line)
-        if total_discount_amt == 0 and self.origin:
-            sale_order = self.env['sale.order'].search([('name', '=', self.origin)])
-            if sale_order and sale_order.total_dis > 0:
-                total_discount_amt = sale_order.total_dis
         self.discount_total =total_discount_amt
-        self.amount_total = self.amount_untaxed + self.amount_tax - self.deduct_amt -(self.amount_untaxed *(self.additional_discount/100)) - total_discount_amt
+        self.amount_total = self.amount_untaxed + self.amount_tax - self.deduct_amt -(self.amount_untaxed *(self.additional_discount/100))
          
     _columns={'deduct_amt':fields.float('Deduction Amount'),
                      'additional_discount':fields.float('Additional Discount(%)'),

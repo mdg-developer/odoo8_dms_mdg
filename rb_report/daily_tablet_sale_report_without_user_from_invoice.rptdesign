@@ -1210,7 +1210,7 @@ order by login]]></xml-property>
                     <structure>
                         <property name="position">15</property>
                         <property name="name">discount_amt</property>
-                        <property name="dataType">decimal</property>
+                        <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">16</property>
@@ -1449,8 +1449,8 @@ else
                     <property name="position">15</property>
                     <property name="name">discount_amt</property>
                     <property name="nativeName">discount_amt</property>
-                    <property name="dataType">decimal</property>
-                    <property name="nativeDataType">2</property>
+                    <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">16</property>
@@ -1614,9 +1614,7 @@ inv.mobile_order_ref as vr_no,r.customer_code,r.id as customerid,r.name as custo
 invl.price_unit,
 (invl.price_subtotal-((invl.price_subtotal) * (inv.additional_discount))) as sub_total,
 invl.discount,
-case when LAG(inv.number,1) OVER (ORDER BY inv.date_invoice) = inv.number and invl.discount_amt=0 and inv.discount_total!=0 then 0
-else inv.discount_total
-end as discount_amt,
+invl.discount_amt,
 (invl.price_unit *invl.quantity) as net_total,
 c.name as sale_group ,inv.state m_status,payment_type type ,tp.name as township,r.village as village,ci.name as city,sc.name as channel, rs.name as state,inv.delivery_remark ,inv.additional_discount,
 case when s.void_flag = 'none' then 'Unvoid'
@@ -1653,8 +1651,7 @@ and t.main_group in (select mrel.main_group from res_main_group_rel mrel where m
 and c.id in(select trel.team_id from res_sale_teams_rel trel where trel.user_id=?) 
 --$sales_team$
 and branch.id in (select brel.bid from res_branch_users_rel brel where brel.user_id=?)  
---$branch$
-order by inv.date_invoice]]></xml-property>
+--$branch$]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
