@@ -1612,7 +1612,7 @@ inv.number as invoice_no,
 (select name from res_partner rp,res_users ru where rp.id=ru.partner_id and ru.id=inv.user_id) salesman_name,term.name payment_term,
 inv.mobile_order_ref as vr_no,r.customer_code,r.id as customerid,r.name as customer , p.name_template as product,invl.quantity product_uos_qty,
 invl.price_unit,
-(invl.price_subtotal-((invl.price_subtotal) * (inv.additional_discount))) as sub_total,
+(invl.price_subtotal-((invl.price_subtotal) * (inv.additional_discount/100))) as sub_total,
 invl.discount,
 invl.discount_amt,
 (invl.price_unit *invl.quantity) as net_total,
@@ -1626,7 +1626,7 @@ spd.name sale_plan_day_name,
 case when inv.additional_discount > 0 then 2
 else 1 end as seq,
 spt.name sale_plan_trip_name,
-((invl.price_subtotal) * (inv.additional_discount)) additional_discount_amt
+((invl.price_subtotal) * (inv.additional_discount/100)) additional_discount_amt
 from account_invoice inv
 left join account_invoice_line invl on inv.id = invl.invoice_id
 left join mobile_sale_order s on (inv.mobile_order_ref=s.name)
