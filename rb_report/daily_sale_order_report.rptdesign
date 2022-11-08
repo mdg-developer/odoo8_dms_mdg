@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.24" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 4.10.0.v202206011605</property>
     <list-property name="propertyBindings">
         <structure>
             <property name="name">queryText</property>
@@ -14,6 +14,18 @@
             <property name="name">rowFetchSize</property>
             <property name="id">264</property>
         </structure>
+        <structure>
+            <property name="name">queryText</property>
+            <property name="id">419</property>
+        </structure>
+        <structure>
+            <property name="name">queryTimeOut</property>
+            <property name="id">419</property>
+        </structure>
+        <structure>
+            <property name="name">rowFetchSize</property>
+            <property name="id">419</property>
+        </structure>
     </list-property>
     <property name="units">in</property>
     <property name="iconFile">/templates/blank_report.gif</property>
@@ -24,6 +36,10 @@
         <structure>
             <property name="fileName">rb_report_library.rptlibrary</property>
             <property name="namespace">rb_report_library</property>
+        </structure>
+        <structure>
+            <property name="fileName">rb_testing_report_library.rptlibrary</property>
+            <property name="namespace">rb_testing_report_library</property>
         </structure>
     </list-property>
     <parameters>
@@ -58,14 +74,14 @@
         <scalar-parameter name="saleteam" id="426">
             <text-property name="promptText">Sale Team</text-property>
             <property name="valueType">dynamic</property>
-            <property name="isRequired">false</property>
+            <property name="isRequired">true</property>
             <property name="dataSetName">SaleTeam</property>
             <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
             <expression name="labelExpr" type="javascript">dataSetRow["code"]</expression>
             <property name="dataType">integer</property>
             <property name="distinct">true</property>
             <list-property name="selectionList"/>
-            <property name="paramType">simple</property>
+            <property name="paramType">multi-value</property>
             <property name="controlType">list-box</property>
             <property name="mustMatch">true</property>
             <property name="fixedOrder">true</property>
@@ -76,7 +92,7 @@
         <scalar-parameter name="branch" id="629">
             <text-property name="promptText">Branch</text-property>
             <property name="valueType">dynamic</property>
-            <property name="isRequired">false</property>
+            <property name="isRequired">true</property>
             <property name="dataSetName">BranchDS</property>
             <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
             <expression name="labelExpr" type="javascript">dataSetRow["branch_code"]</expression>
@@ -85,7 +101,7 @@
             <property name="dataType">integer</property>
             <property name="distinct">true</property>
             <list-property name="selectionList"/>
-            <property name="paramType">simple</property>
+            <property name="paramType">multi-value</property>
             <property name="controlType">list-box</property>
             <property name="mustMatch">true</property>
             <property name="fixedOrder">false</property>
@@ -99,7 +115,7 @@
             <parameters>
                 <scalar-parameter name="Maingroup" id="637">
                     <property name="valueType">dynamic</property>
-                    <property name="isRequired">false</property>
+                    <property name="isRequired">true</property>
                     <property name="dataSetName">maingroupDS</property>
                     <expression name="valueExpr">row["id"]</expression>
                     <expression name="labelExpr">row["name"]</expression>
@@ -111,21 +127,43 @@
                 </scalar-parameter>
                 <scalar-parameter name="Product" id="638">
                     <property name="valueType">dynamic</property>
-                    <property name="isRequired">false</property>
+                    <property name="isRequired">true</property>
                     <property name="dataSetName">productDS</property>
                     <expression name="valueExpr">row["id"]</expression>
                     <expression name="labelExpr">row["name"]</expression>
                     <property name="dataType">integer</property>
+                    <property name="paramType">multi-value</property>
                     <property name="controlType">list-box</property>
                     <property name="fixedOrder">true</property>
                     <structure name="format"/>
                 </scalar-parameter>
             </parameters>
         </cascading-parameter-group>
+        <scalar-parameter name="user_id" id="1089">
+            <property name="hidden">true</property>
+            <text-property name="promptText">User</text-property>
+            <property name="valueType">dynamic</property>
+            <property name="isRequired">true</property>
+            <property name="dataSetName">user</property>
+            <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
+            <expression name="labelExpr" type="javascript">dataSetRow["login"]</expression>
+            <expression name="sortByColumn">dataSetRow["login"]</expression>
+            <property name="sortDirection">asc</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">list-box</property>
+            <property name="mustMatch">true</property>
+            <property name="fixedOrder">false</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
     </parameters>
     <data-sources>
-        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="1044"
- extends="rb_report_library.Data Source"/>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="1090"
+ extends="rb_testing_report_library.Data Source"/>
     </data-sources>
     <data-sets>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="SaleDS" id="264">
@@ -133,204 +171,238 @@
             <list-property name="columnHints">
                 <structure>
                     <property name="columnName">tax_id</property>
+                    <property name="alias">tax_id</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">tax_id</text-property>
                     <text-property name="heading">tax_id</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">reference_no</property>
+                    <property name="alias">reference_no</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">reference_no</text-property>
                     <text-property name="heading">reference_no</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">order_date</property>
+                    <property name="alias">order_date</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">order_date</text-property>
                     <text-property name="heading">order_date</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">vr_no</property>
+                    <property name="alias">vr_no</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">vr_no</text-property>
                     <text-property name="heading">vr_no</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">customer_code</property>
+                    <property name="alias">customer_code</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">customer_code</text-property>
                     <text-property name="heading">customer_code</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">customer</property>
+                    <property name="alias">customer</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">customer</text-property>
                     <text-property name="heading">customer</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">village</property>
+                    <property name="alias">village</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">village</text-property>
                     <text-property name="heading">village</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">outlet_type</property>
+                    <property name="alias">outlet_type</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">outlet_type</text-property>
                     <text-property name="heading">outlet_type</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">product_code</property>
+                    <property name="alias">product_code</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">product_code</text-property>
                     <text-property name="heading">product_code</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">product_name</property>
+                    <property name="alias">product_name</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">product_name</text-property>
                     <text-property name="heading">product_name</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">qty</property>
+                    <property name="alias">qty</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">qty</text-property>
                     <text-property name="heading">qty</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">price_unit</property>
+                    <property name="alias">price_unit</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">price_unit</text-property>
                     <text-property name="heading">price_unit</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">discount</property>
+                    <property name="alias">discount</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">discount</text-property>
                     <text-property name="heading">discount</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">sale_plan_day_name</property>
+                    <property name="alias">sale_plan_day_name</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">sale_plan_day_name</text-property>
                     <text-property name="heading">sale_plan_day_name</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">sale_plan_trip_name</property>
+                    <property name="alias">sale_plan_trip_name</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">sale_plan_trip_name</text-property>
                     <text-property name="heading">sale_plan_trip_name</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">division</property>
+                    <property name="alias">division</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">division</text-property>
                     <text-property name="heading">division</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">total_amount</property>
+                    <property name="alias">total_amount</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">total_amount</text-property>
                     <text-property name="heading">total_amount</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">after_discount_amount</property>
+                    <property name="alias">after_discount_amount</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">after_discount_amount</text-property>
                     <text-property name="heading">after_discount_amount</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">additional_discount</property>
+                    <property name="alias">additional_discount</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">additional_discount</text-property>
                     <text-property name="heading">additional_discount</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">deduction_amt</property>
+                    <property name="alias">deduction_amt</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">deduction_amt</text-property>
                     <text-property name="heading">deduction_amt</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">tax</property>
+                    <property name="alias">tax</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">tax</text-property>
                     <text-property name="heading">tax</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">net_amount</property>
+                    <property name="alias">net_amount</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">net_amount</text-property>
                     <text-property name="heading">net_amount</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">sale_team</property>
+                    <property name="alias">sale_team</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">sale_team</text-property>
                     <text-property name="heading">sale_team</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">payment_type</property>
+                    <property name="alias">payment_type</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">payment_type</text-property>
                     <text-property name="heading">payment_type</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">payment_term</property>
+                    <property name="alias">payment_term</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">payment_term</text-property>
                     <text-property name="heading">payment_term</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">city</property>
+                    <property name="alias">city</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">city</text-property>
                     <text-property name="heading">city</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">township</property>
+                    <property name="alias">township</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">township</text-property>
                     <text-property name="heading">township</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">channel</property>
+                    <property name="alias">channel</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">channel</text-property>
                     <text-property name="heading">channel</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">state</property>
+                    <property name="alias">state</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">state</text-property>
                     <text-property name="heading">state</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">delivery_remark</property>
+                    <property name="alias">delivery_remark</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">delivery_remark</text-property>
                     <text-property name="heading">delivery_remark</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">status</property>
+                    <property name="alias">status</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">status</text-property>
                     <text-property name="heading">status</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">branch</property>
+                    <property name="alias">branch</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">branch</text-property>
                     <text-property name="heading">branch</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">main_group</property>
+                    <property name="alias">main_group</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">main_group</text-property>
                     <text-property name="heading">main_group</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">product_category</property>
+                    <property name="alias">product_category</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">product_category</text-property>
                     <text-property name="heading">product_category</text-property>
@@ -540,7 +612,7 @@ this.queryText =this.queryText.replace("--$branch_id$", "")
 }
 else
 {
-this.queryText =this.queryText.replace("--$branch_id$", " and h.branch_id="+params["branch"])
+this.queryText =this.queryText.replace("--$branch_id$", "and h.branch_id in ("+params["branch"].value.join(",")+")")
 }
 
 if (params["saleteam"].value == null )
@@ -549,7 +621,7 @@ this.queryText =this.queryText.replace("--$saleteam_id$", "")
 }
 else
 {
-this.queryText =this.queryText.replace("--$saleteam_id$", " and st.id="+params["saleteam"])
+this.queryText =this.queryText.replace("--$saleteam_id$", "and st.id in ("+params["saleteam"].value.join(",")+")")
 }
 
 if (params["Maingroup"].value == null )
@@ -560,15 +632,16 @@ else
 {
 this.queryText =this.queryText.replace("--$maingroup$", " and pt.main_group="+params["Maingroup"])
 }
-
 if (params["Product"].value == null )
 {
 this.queryText =this.queryText.replace("--$product$", "")
 }
 else
 {
-this.queryText =this.queryText.replace("--$product$", " and pp.id="+params["Product"])
-}]]></method>
+this.queryText =this.queryText.replace("--$product$", "and pp.id in ("+params["Product"].value.join(",")+")")
+}
+
+]]></method>
             <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
                 <structure>
@@ -873,8 +946,8 @@ end )))-((((d.product_uom_qty *d.price_unit)-d.discount_amt)*(h.additional_disco
 ((h.deduct_amt/h.amount_untaxed)*sum((d.product_uom_qty * d.price_unit)- d.discount_amt)) 
 end)))
    else
-   (((sum((d.product_uom_qty * d.price_unit)- d.discount_amt)))-((((d.product_uom_qty *d.price_unit)-d.discount_amt)*(h.additional_discount/100))+(case 
-    when 
+   (((sum((d.product_uom_qty * d.price_unit)- d.discount_amt)))-((((d.product_uom_qty *d.price_unit)-d.discount_amt)*(h.additional_discount/100)) +(case 
+     when 
     h.deduct_amt = 0 then 0 
     else
 ((h.deduct_amt/h.amount_untaxed)*sum((d.product_uom_qty * d.price_unit)- d.discount_amt)) 
@@ -917,38 +990,6 @@ group by h.tb_ref_no,h.date_order,h.name,h.code,c.name,pp.default_code,pt.name,d
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
-  <DataSetParameters>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>1</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>2</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-  </DataSetParameters>
   <design:ResultSets derivedMetaData="true">
     <design:resultSetDefinitions>
       <design:resultSetColumns>
@@ -1540,6 +1581,18 @@ group by h.tb_ref_no,h.date_order,h.name,h.code,c.name,pp.default_code,pt.name,d
                     <text-property name="heading">name</text-property>
                 </structure>
             </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">user_id</property>
+                    <property name="paramName">user_id</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">1</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
                     <structure>
@@ -1571,10 +1624,29 @@ group by h.tb_ref_no,h.date_order,h.name,h.code,c.name,pp.default_code,pt.name,d
                     <property name="nativeDataType">12</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select id,name from product_maingroup]]></xml-property>
+            <xml-property name="queryText"><![CDATA[select id,name from product_maingroup pmg
+left join res_main_group_rel mgr on mgr.main_group = pmg.id
+where user_id = ?]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
   <design:ResultSets derivedMetaData="true">
     <design:resultSetDefinitions>
       <design:resultSetColumns>
@@ -1642,6 +1714,16 @@ group by h.tb_ref_no,h.date_order,h.name,h.code,c.name,pp.default_code,pt.name,d
                     <text-property name="heading">branch_code</text-property>
                 </structure>
             </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">user_id</property>
+                    <property name="paramName">user_id</property>
+                    <property name="dataType">integer</property>
+                    <property name="position">1</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
                     <structure>
@@ -1673,12 +1755,31 @@ group by h.tb_ref_no,h.date_order,h.name,h.code,c.name,pp.default_code,pt.name,d
                     <property name="nativeDataType">12</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select id,branch_code 
-from res_branch 
-order by branch_code]]></xml-property>
+            <xml-property name="queryText"><![CDATA[select res.id,res.branch_code 
+from res_branch res,res_branch_users_rel rel
+where res.id=rel.bid
+and rel.user_id=?
+order by res.branch_code]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
   <design:ResultSets derivedMetaData="true">
     <design:resultSetDefinitions>
       <design:resultSetColumns>
@@ -1734,15 +1835,29 @@ order by branch_code]]></xml-property>
             <list-property name="columnHints">
                 <structure>
                     <property name="columnName">id</property>
+                    <property name="alias">id</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">id</text-property>
                     <text-property name="heading">id</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">code</property>
+                    <property name="alias">code</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">code</text-property>
                     <text-property name="heading">code</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">user_id</property>
+                    <property name="paramName">user_id</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">1</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
                 </structure>
             </list-property>
             <structure name="cachedMetaData">
@@ -1777,11 +1892,30 @@ order by branch_code]]></xml-property>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select id,code 
-from crm_case_section 
+from crm_case_section crm,res_sale_teams_rel rel
+where crm.id=rel.team_id
+and rel.user_id=?
 order by code]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
   <design:ResultSets derivedMetaData="true">
     <design:resultSetDefinitions>
       <design:resultSetColumns>
@@ -1955,6 +2089,110 @@ where pp.product_tmpl_id=pt.id and pp.active='t' and pt.main_group=?]]></xml-pro
             <design:label>default_code</design:label>
             <design:formattingHints>
               <design:displaySize>2147483647</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="user" id="11">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">id</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">id</text-property>
+                    <text-property name="heading">id</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">login</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">login</text-property>
+                    <text-property name="heading">login</text-property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">login</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">id</property>
+                    <property name="nativeName">id</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">login</property>
+                    <property name="nativeName">login</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select id,login
+from res_users
+where active='true'
+order by login]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>id</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+            <design:precision>10</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>id</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>id</design:label>
+            <design:formattingHints>
+              <design:displaySize>11</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>login</design:name>
+              <design:position>2</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>64</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>login</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>login</design:label>
+            <design:formattingHints>
+              <design:displaySize>64</design:displaySize>
             </design:formattingHints>
           </design:usageHints>
         </design:resultColumnDefinitions>
