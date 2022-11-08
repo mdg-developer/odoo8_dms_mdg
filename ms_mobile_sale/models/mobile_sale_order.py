@@ -3198,7 +3198,13 @@ class mobile_sale_order(osv.osv):
     def get_suv_report_link(self, cr, uid, context=None, **kwargs):    
         cr.execute("""select value from ir_config_parameter where key ='quick_sight_report_link_sv_team' """)
         datas = cr.fetchall()        
-        return datas        
+        return datas    
+
+    def get_customer_visit_distance(self, cr, uid, context=None, **kwargs):    
+        cr.execute("""select value from ir_config_parameter where key ='customer_visit_distance' """)
+        datas = cr.fetchall()        
+        return datas     
+            
     def get_uom(self, cr, uid, context=None, **kwargs):    
         cr.execute("""select id,name,floor(round(1/factor,2))  as ratio from product_uom where active = true""")
         datas = cr.fetchall()
