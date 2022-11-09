@@ -1030,6 +1030,7 @@ class mobile_sale_order(osv.osv):
                     image3 =False
                     image4 =False
                     image5 =False
+                    distance_status = None
                     if customer_id:  
                         if vs['image1_reference']:
                                 is_image1 =True
@@ -1055,7 +1056,9 @@ class mobile_sale_order(osv.osv):
                                 is_image5=True    
 #                                 url =baseUrlPrefix + vs['image5_reference'] + baseUrlPostFix
 #                                 response = requests.get(url).content
-#                                 image5 = base64.b64encode(response)                                                                                               
+#                                 image5 = base64.b64encode(response)
+                        if vs['distance_status']:
+                                distance_status=vs['distance_status']                                                                                           
                         visit_result = {
                             'customer_code':vs['customer_code'],
                             'branch_id':branch_id,
@@ -1088,6 +1091,7 @@ class mobile_sale_order(osv.osv):
                             'image3_reference':vs['image3_reference'],
                             'image4_reference':vs['image4_reference'],
                             'image5_reference':vs['image5_reference'],
+                            'distance_status':distance_status,
 
                         }
                         visit_id=customer_visit_obj.create(cursor, user, visit_result, context=context)
