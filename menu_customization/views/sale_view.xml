@@ -458,6 +458,7 @@
             <field name="view_mode">kanban,tree,form</field>
             <field name="context">{"search_default_customer":1,'default_mobile_customer':
 				True}</field>
+			<field name="domain">[('parent_id','=',False)]</field>
             <field name="search_view_id" ref="base.view_res_partner_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
@@ -468,7 +469,29 @@
                 documents, etc.
               </p>
             </field>
-        </record>		
+        </record>
+
+		<record id="action_partner_delivery_address_form" model="ir.actions.act_window">
+            <field name="name">Delivery Address</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{"search_default_customer":1,'default_mobile_customer':
+				True}</field>
+			<field name="domain">[('parent_id','!=',False)]</field>
+            <field name="search_view_id" ref="base.view_res_partner_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a contact in your address book.
+              </p><p>
+                Odoo helps you easily track all activities related to
+                a customer; discussions, history of business opportunities,
+                documents, etc.
+              </p>
+            </field>
+        </record>
+
 		<menuitem id="menu_partner_form1" parent="menu_customer_customization_menu"
 			action="action_partner_form1" sequence="1" />
 		<menuitem id="menu_partner_form2" parent="menu_customer_customization_menu"
@@ -482,6 +505,8 @@
 		<menuitem id="crm_management.config_partner_update_data"
 			parent="menu_customer_customization_menu" action="crm_management.action_partner_update_data_view"
 			sequence="6" />
+		<menuitem id="menu_partner_delivery_address" parent="menu_customer_customization_menu"
+			action="action_partner_delivery_address_form" name="Delivery Address" sequence="7" />
 		<!-- Sales targets -->
 		<menuitem id="menu_sales_target_menu" parent="base.menu_base_partner"
 			name="Sales Targets" sequence="6" />
