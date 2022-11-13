@@ -398,8 +398,9 @@ class branch_stock_requisition(osv.osv):
                                         'product_viss':request_line_data.viss_value,
                                         'product_cbm':request_line_data.cbm_value,
                                       }, context=context) 
-        return self.write(cr, uid, ids, {'approve_by':uid})
-        
+        # return self.write(cr, uid, ids, {'approve_by':uid})
+        self.write(cr, uid, ids, {'approve_by': uid})
+        return good_id
                         
     def approve(self, cr, uid, ids, context=None):
         product_line_obj = self.pool.get('branch.stock.requisition.line')
