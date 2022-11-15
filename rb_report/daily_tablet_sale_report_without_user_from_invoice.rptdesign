@@ -127,7 +127,7 @@
         <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="3227"
  extends="rb_testing_report_library.Data Source">
             <property name="odaDriverClass">org.postgresql.Driver</property>
-            <property name="odaURL">jdbc:postgresql://52.221.83.116:5433/rbd_testing</property>
+            <property name="odaURL">jdbc:postgresql://localhost:5433/rbd_testing</property>
             <property name="odaUser">odoo</property>
             <encrypted-property name="odaPassword" encryptionID="base64">amFjazEyMyQ=</encrypted-property>
         </oda-data-source>
