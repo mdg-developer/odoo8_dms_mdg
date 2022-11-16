@@ -235,10 +235,15 @@ class sale_order(osv.osv):
         detailObj = None
         so_value = self.browse(cr, uid, ids[0], context=context)
         so_no=so_value.name
+        so_state = so_value.state
         reverse_date=so_value.reverse_date    
         if not reverse_date:
             raise osv.except_osv(_('Warning'),
-                     _('Please Insert Reverse Date'))            
+                     _('Please Insert Reverse Date'))
+            
+        if so_state=='reversed':
+            raise osv.except_osv(_('Warning'),
+                                 _('You cannot Reverse Again Record in Reversed State'))                          
         pick_ids = []
         pick_ids = pick_obj.search(cr, uid, [('origin', '=', so_no),('state','=','done')], context=context)
         invoice_ids = invoice_obj.search(cr, uid, [('origin', '=', so_no),('state','in',('open','credit_state'))], context=context)
