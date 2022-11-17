@@ -6,6 +6,8 @@ from datetime import datetime
 import datetime
 from openerp.osv.orm import BaseModel, Model, MAGIC_COLUMNS, except_orm
 from openerp.tools.translate import _
+from requests.structures import CaseInsensitiveDict
+import base64
 
 class woo_minimum_stock(osv.osv):
     _name = "woo.minimum.stock"
@@ -43,11 +45,17 @@ class woo_minimum_stock(osv.osv):
         error_msg = None
         error_log = None
 
-        headers = {
-            'Accept': 'application/json',
-            'Authorization': 'Basic YWRtaW5pc3RyYXRvcjpzSnclJWpxc2tBJHd5V3draio4UiE3UjI=',
-        }
-        url = 'https://uat.burmart.com/wp-json/auth-api/v1/odoo/stocks/stock_data_update'
+        woo_instance_obj = self.pool.get('woo.instance.ept')
+        instance = woo_instance_obj.search(cr, uid, [('state', '=', 'confirmed')], limit=1)
+        if instance:
+            instance_obj = woo_instance_obj.browse(cr, uid, instance)
+            url = instance_obj.host + "/wp-json/auth-api/v1/odoo/stocks/stock_data_update"
+            headers = CaseInsensitiveDict()
+            login_info = instance_obj.admin_username + ":" + instance_obj.admin_password
+            login_info_bytes = login_info.encode('ascii')
+            base64_bytes = base64.b64encode(login_info_bytes)
+            headers["Authorization"] = "Basic " + base64_bytes
+            headers["Content-Type"] = "application/json"
         if record:
             p_list = []
             for line in record.stock_line:
