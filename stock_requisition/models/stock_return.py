@@ -391,7 +391,8 @@ class stock_return(osv.osv):
                                               'name':name,
                                                'origin':origin,
                                               'state':'confirmed'}, context=context)     
-                move_obj.action_done(cr, uid, move_id, context=context)             
+                move_obj.action_done(cr, uid, move_id, context=context)         
+        cr.execute("update stock_move set date=((%s::date)::text || ' ' || date::time(0))::timestamp where origin=%s", (return_date, origin,))
         return self.write(cr, uid, ids, {'state':'received'})    
 
             
