@@ -1634,6 +1634,24 @@ class mobile_sale_order(osv.osv):
                 list.append(product_data)
         return list
 
+    def get_product_id(self, cr, uid, sale_team_id, last_date, context=None):
+        list = []
+        cr.execute('''
+                    select pt.id
+                    from product_template pt,product_product pp,crm_case_section_product_product_rel rel, crm_case_section ccs  
+                    where pp.id = rel.product_product_id and
+                    pt.id = pp.product_tmpl_id and
+                    pt.active = true and
+                    pp.active = true and
+                    ccs.id = rel.crm_case_section_id and
+                    ccs.id = %s and
+                    pt.write_date > %s::timestamp 
+        ''', (sale_team_id,last_date,))
+
+        datas = cr.fetchall()
+        return datas
+
+
     def get_competitor_stock_check(self, cr, uid, sale_team_id , context=None, **kwargs):
         cr.execute('''select cline.id,outlet_type,prel.competitor_product_id,product_uom_qty as qty,available,facing,chiller,cp.sequence
                     from crm_case_section ccs,competitor_product_crm_case_section_rel prel,competitor_product cp,stock_check_setting_competitor_line cline,stock_check_setting scs
