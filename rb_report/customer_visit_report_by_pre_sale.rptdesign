@@ -92,7 +92,7 @@ teamList = params["sale_team_id"].value.join(",");]]></method>
             </structure>
         </scalar-parameter>
         <scalar-parameter name="user_id" id="12">
-            <property name="hidden">false</property>
+            <property name="hidden">true</property>
             <text-property name="promptText">User</text-property>
             <property name="valueType">dynamic</property>
             <property name="isRequired">true</property>
@@ -372,8 +372,8 @@ else
 cast (cv.date::timestamp
    at time zone 'UTC' at time zone 'asia/rangoon' as time) as time,ti.mac_address tablet_id,
 res.name,ccs.name sale_team,spd.name sale_plan_day,cv.visit_reason reason,rt.name township,
-case when is_image1 = 'False' then 'No'
-	 when is_image1 = 'True'  then 'Yes'
+case when cv.image is null and cv.image1 is  null and cv.image2 is  null and cv.image3 is  null and cv.image4 is null  then 'No'
+	 when cv.image is  not null or cv.image1 is  not null or cv.image2 is  not null or cv.image3 is  not null or cv.image4 is  not null  then 'Yes'
 end as image,cv.date -LAG(cv.date)OVER (ORDER BY cv.date ) as difference,
 cv.other_reason remark
 from customer_visit cv
