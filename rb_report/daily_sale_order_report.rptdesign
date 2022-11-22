@@ -109,36 +109,6 @@
                 <property name="category">Unformatted</property>
             </structure>
         </scalar-parameter>
-        <cascading-parameter-group name="NewCascadingParameterGroup" id="636">
-            <property name="dataSet">maingroupDS</property>
-            <property name="dataSetMode">multiple</property>
-            <parameters>
-                <scalar-parameter name="Maingroup" id="637">
-                    <property name="valueType">dynamic</property>
-                    <property name="isRequired">true</property>
-                    <property name="dataSetName">maingroupDS</property>
-                    <expression name="valueExpr">row["id"]</expression>
-                    <expression name="labelExpr">row["name"]</expression>
-                    <property name="dataType">integer</property>
-                    <property name="paramType">simple</property>
-                    <property name="controlType">list-box</property>
-                    <property name="fixedOrder">true</property>
-                    <structure name="format"/>
-                </scalar-parameter>
-                <scalar-parameter name="Product" id="638">
-                    <property name="valueType">dynamic</property>
-                    <property name="isRequired">true</property>
-                    <property name="dataSetName">productDS</property>
-                    <expression name="valueExpr">row["id"]</expression>
-                    <expression name="labelExpr">row["name"]</expression>
-                    <property name="dataType">integer</property>
-                    <property name="paramType">multi-value</property>
-                    <property name="controlType">list-box</property>
-                    <property name="fixedOrder">true</property>
-                    <structure name="format"/>
-                </scalar-parameter>
-            </parameters>
-        </cascading-parameter-group>
         <scalar-parameter name="user_id" id="1089">
             <property name="hidden">true</property>
             <text-property name="promptText">User</text-property>
@@ -160,10 +130,32 @@
                 <property name="category">Unformatted</property>
             </structure>
         </scalar-parameter>
+        <scalar-parameter name="Maingroup" id="1091">
+            <text-property name="promptText">Main Group</text-property>
+            <property name="valueType">dynamic</property>
+            <property name="dataSetName">maingroupDS</property>
+            <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
+            <expression name="labelExpr" type="javascript">dataSetRow["name"]</expression>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">multi-value</property>
+            <property name="controlType">list-box</property>
+            <property name="mustMatch">true</property>
+            <property name="fixedOrder">true</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
     </parameters>
     <data-sources>
         <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="1090"
- extends="rb_testing_report_library.Data Source"/>
+ extends="rb_testing_report_library.Data Source">
+            <property name="odaDriverClass">org.postgresql.Driver</property>
+            <property name="odaURL">jdbc:postgresql://localhost:5433/rbd_testing</property>
+            <property name="odaUser">odoo</property>
+            <encrypted-property name="odaPassword" encryptionID="base64">amFjazEyMyQ=</encrypted-property>
+        </oda-data-source>
     </data-sources>
     <data-sets>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="SaleDS" id="264">
@@ -630,17 +622,8 @@ this.queryText =this.queryText.replace("--$maingroup$", "")
 }
 else
 {
-this.queryText =this.queryText.replace("--$maingroup$", " and pt.main_group="+params["Maingroup"])
+this.queryText =this.queryText.replace("--$maingroup$", "and pt.main_group in ("+params["Maingroup"].value.join(",")+")")
 }
-if (params["Product"].value == null )
-{
-this.queryText =this.queryText.replace("--$product$", "")
-}
-else
-{
-this.queryText =this.queryText.replace("--$product$", "and pp.id in ("+params["Product"].value.join(",")+")")
-}
-
 ]]></method>
             <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
@@ -981,7 +964,6 @@ between ? and ?
 --$branch_id$
 --$saleteam_id$
 --$maingroup$
---$product$
 group by h.tb_ref_no,h.date_order,h.name,h.code,c.name,pp.default_code,pt.name,d.product_uom_qty,d.price_unit,d.discount_amt,st.name,h.payment_type,payment.name,h.delivery_remark,ci.name,tp.name,
 	sc.name,cs.name,h.state,branch.name,pm.name,pc.name,h.additional_discount,h.amount_total,h.deduct_amt,h.amount_untaxed,h.amount_tax,sot.tax_id,c.village,out.name,spd.name,spt.name,pd.name
 	order by h.tb_ref_no
