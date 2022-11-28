@@ -1,6 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.24" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 4.10.0.v202209260944</property>
+    <list-property name="propertyBindings">
+        <structure>
+            <property name="name">odaDriverClass</property>
+            <property name="id">2988</property>
+        </structure>
+        <structure>
+            <property name="name">odaURL</property>
+            <property name="id">2988</property>
+        </structure>
+        <structure>
+            <property name="name">odaUser</property>
+            <property name="id">2988</property>
+        </structure>
+        <structure>
+            <property name="name">odaAutoCommit</property>
+            <property name="id">2988</property>
+        </structure>
+        <structure>
+            <property name="name">odaIsolationMode</property>
+            <property name="id">2988</property>
+        </structure>
+        <structure>
+            <property name="name">odaPassword</property>
+            <property name="id">2988</property>
+        </structure>
+        <structure>
+            <property name="name">odaJndiName</property>
+            <property name="id">2988</property>
+        </structure>
+        <structure>
+            <property name="name">OdaConnProfileName</property>
+            <property name="id">2988</property>
+        </structure>
+        <structure>
+            <property name="name">OdaConnProfileStorePath</property>
+            <property name="id">2988</property>
+        </structure>
+    </list-property>
     <property name="units">in</property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="layoutPreference">auto layout</property>
@@ -117,7 +155,28 @@
     </parameters>
     <data-sources>
         <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="2988"
- extends="rb_report_library.Data Source"/>
+ extends="rb_report_library.Data Source">
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>contentBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledContentBidiFormatStr</name>
+                </ex-property>
+                <ex-property>
+                    <name>disabledMetadataBidiFormatStr</name>
+                </ex-property>
+                <ex-property>
+                    <name>metadataBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+            </list-property>
+            <property name="odaDriverClass">org.postgresql.Driver</property>
+            <property name="odaURL">jdbc:postgresql://localhost:5432/rb_db_2022_11_24</property>
+            <property name="odaUser">stbn</property>
+            <encrypted-property name="odaPassword" encryptionID="base64">YWRtaW4=</encrypted-property>
+        </oda-data-source>
     </data-sources>
     <data-sets>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="branch" id="2492">
@@ -1054,6 +1113,12 @@ order by login]]></xml-property>
                     <text-property name="heading">additional_discount</text-property>
                 </structure>
                 <structure>
+                    <property name="columnName">discount_amount</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">discount_amount</text-property>
+                    <text-property name="heading">discount_amount</text-property>
+                </structure>
+                <structure>
                     <property name="columnName">sale_plan_day_name</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">sale_plan_day_name</text-property>
@@ -1299,21 +1364,26 @@ order by login]]></xml-property>
                     </structure>
                     <structure>
                         <property name="position">34</property>
+                        <property name="name">discount_amount</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">35</property>
                         <property name="name">sale_plan_day_name</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">35</property>
+                        <property name="position">36</property>
                         <property name="name">seq</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">36</property>
+                        <property name="position">37</property>
                         <property name="name">sale_plan_trip_name</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">37</property>
+                        <property name="position">38</property>
                         <property name="name">additional_discount_amt</property>
                         <property name="dataType">float</property>
                     </structure>
@@ -1575,27 +1645,34 @@ else
                 </structure>
                 <structure>
                     <property name="position">34</property>
+                    <property name="name">discount_amount</property>
+                    <property name="nativeName">discount_amount</property>
+                    <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
+                </structure>
+                <structure>
+                    <property name="position">35</property>
                     <property name="name">sale_plan_day_name</property>
                     <property name="nativeName">sale_plan_day_name</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">35</property>
+                    <property name="position">36</property>
                     <property name="name">seq</property>
                     <property name="nativeName">seq</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">36</property>
+                    <property name="position">37</property>
                     <property name="name">sale_plan_trip_name</property>
                     <property name="nativeName">sale_plan_trip_name</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">37</property>
+                    <property name="position">38</property>
                     <property name="name">additional_discount_amt</property>
                     <property name="nativeName">additional_discount_amt</property>
                     <property name="dataType">float</property>
@@ -1615,7 +1692,7 @@ case when s.void_flag = 'none' then 'Unvoid'
 when s.void_flag = 'voided' then 'Voided' end as void,
 p.default_code as product_code,
 branch.name as branch,pm.name as main_group,pc.name as product_category,
-s.net_amount as voucher_net_total,s.additional_discount,
+s.net_amount as voucher_net_total,s.additional_discount,s.deduction_amount as discount_amount,
 spd.name sale_plan_day_name,
 case when additional_discount > 0 then 2
 else 1 end as seq,
@@ -1648,83 +1725,6 @@ and branch.id in (select brel.bid from res_branch_users_rel brel where brel.user
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
-  <DataSetParameters>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>1</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>2</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>3</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>4</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>5</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-  </DataSetParameters>
   <design:ResultSets derivedMetaData="true">
     <design:resultSetDefinitions>
       <design:resultSetColumns>
@@ -3164,6 +3164,12 @@ and branch.id in (select brel.bid from res_branch_users_rel brel where brel.user
                     </list-property>
                     <property name="allowExport">true</property>
                 </structure>
+                <structure>
+                    <property name="name">discount_amount</property>
+                    <text-property name="displayName">discount_amount</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["discount_amount"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
             </list-property>
             <column id="3184"/>
             <column id="3185"/>
@@ -3187,6 +3193,9 @@ and branch.id in (select brel.bid from res_branch_users_rel brel where brel.user
                 <property name="width">1.2395833333333333in</property>
             </column>
             <column id="3197">
+                <property name="width">0.7604166666666666in</property>
+            </column>
+            <column id="3229">
                 <property name="width">0.7604166666666666in</property>
             </column>
             <column id="3198"/>
@@ -3432,6 +3441,22 @@ and branch.id in (select brel.bid from res_branch_users_rel brel where brel.user
                             <property name="fontSize">9pt</property>
                             <property name="fontWeight">bold</property>
                             <text-property name="text">Unit Price</text-property>
+                        </label>
+                    </cell>
+                    <cell id="3224">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="3231">
+                            <property name="fontFamily">"Arial"</property>
+                            <property name="fontSize">9pt</property>
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">Discount Amount</text-property>
                         </label>
                     </cell>
                     <cell id="3019">
@@ -3807,6 +3832,16 @@ Amt</text-property>
                             <property name="borderTopStyle">solid</property>
                             <property name="borderTopWidth">thin</property>
                         </cell>
+                        <cell id="3225">
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">thin</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">thin</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">thin</property>
+                        </cell>
                         <cell id="3062">
                             <property name="borderBottomStyle">solid</property>
                             <property name="borderBottomWidth">thin</property>
@@ -4012,6 +4047,16 @@ Amt</text-property>
                             </data>
                         </cell>
                         <cell id="3082">
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">thin</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">thin</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">thin</property>
+                        </cell>
+                        <cell id="3227">
                             <property name="borderBottomStyle">solid</property>
                             <property name="borderBottomWidth">thin</property>
                             <property name="borderLeftStyle">solid</property>
@@ -4450,6 +4495,20 @@ Amt</text-property>
                             <property name="resultSetColumn">price_unit</property>
                         </data>
                     </cell>
+                    <cell id="3226">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="3233">
+                            <property name="fontFamily">"Arial"</property>
+                            <property name="resultSetColumn">discount_amount</property>
+                        </data>
+                    </cell>
                     <cell id="3130">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -4755,6 +4814,16 @@ Amt</text-property>
                         </data>
                     </cell>
                     <cell id="3165">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                    </cell>
+                    <cell id="3228">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
