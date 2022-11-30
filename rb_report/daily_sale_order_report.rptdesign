@@ -881,7 +881,7 @@ end) after_discount_amount,
 (((d.product_uom_qty *d.price_unit)-d.discount_amt)*(h.additional_discount/100)) additional_discount,
 (case 
     when 
-    h.deduct_amt is NULL then 0 
+    h.deduct_amt is NULL OR h.amount_untaxed = 0 then 0 
     else
 ((h.deduct_amt/h.amount_untaxed)*(case
      when
@@ -924,14 +924,14 @@ end)+(case
         end 
 end )))-((((d.product_uom_qty *d.price_unit)-d.discount_amt)*(h.additional_discount/100))+(case 
     when 
-    h.deduct_amt is NULL then 0 
+    h.deduct_amt is NULL OR h.amount_untaxed = 0 then 0 
     else
 ((h.deduct_amt/h.amount_untaxed)*sum((d.product_uom_qty * d.price_unit)- d.discount_amt)) 
 end)))
    else
    (((sum((d.product_uom_qty * d.price_unit)- d.discount_amt)))-((((d.product_uom_qty *d.price_unit)-d.discount_amt)*(h.additional_discount/100)) +(case 
      when 
-    h.deduct_amt is NULL then 0 
+    h.deduct_amt is NULL OR h.amount_untaxed = 0 then 0 
     else
 ((h.deduct_amt/h.amount_untaxed)*sum((d.product_uom_qty * d.price_unit)- d.discount_amt)) 
 end)))
