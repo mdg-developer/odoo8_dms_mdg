@@ -3054,6 +3054,19 @@ class mobile_sale_order(osv.osv):
         #         list.append(product_data)
         return datas
 
+    def get_customer_id(self, cr, uid, sale_team_id, last_date, context=None):
+        datas = []
+        cr.execute('''
+                    select RP.id
+                    from sale_plan_day SPD, sale_plan_day_line RPS, res_partner RP
+                    where SPD.id = RPS.line_id
+                    and RPS.partner_id = RP.id
+                    and SPD.sale_team = %s
+                    and RP.write_date > %s::timestamp
+                    ''', (sale_team_id, last_date,))
+        datas = cr.fetchall()
+        return datas
+
 
 
 

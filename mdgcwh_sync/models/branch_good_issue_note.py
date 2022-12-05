@@ -5,15 +5,6 @@ from openerp.tools.translate import _
 class branch_good_issue_note(osv.osv):
     _inherit = "branch.good.issue.note"
 
-    # _columns = {
-    #     'not_sync_cwh': fields.boolean("CWH Sync"),
-    #
-    # }
-    #
-    # _defaults = {
-    #     'not_sync_cwh': False,
-    # }
-
     def set_issue_qty_zero(self, cr, uid, ids, context=None):
         note_obj = self.pool.get('branch.good.issue.note')
         if ids:
@@ -46,8 +37,10 @@ class branch_good_issue_note(osv.osv):
                 req_value = gin_id.request_id
                 if not req_value.to_location_id.is_cwh_location:
                     return result
-                # if not not_sync_cwh:
-                #     return result
+                check_brfi = models.execute_kw(db, sd_uid, password, 'sale.order', 'search',[[('origin', '=', req_value.name)]], {'limit': 1})
+                if check_brfi:
+                    return result
+
                 so_vals['client_order_ref'] = req_value.from_location_id.name or ''
                 so_vals['origin'] = req_value.name or ''
                 so_create = False
