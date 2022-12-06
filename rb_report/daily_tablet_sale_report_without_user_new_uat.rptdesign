@@ -3721,11 +3721,10 @@ Amt</text-property>
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <label id="3239">
-                            <property name="fontFamily">"Arial"</property>
-                            <property name="fontSize">9pt</property>
+                        <label id="3247">
                             <property name="fontWeight">bold</property>
-                            <text-property name="text">Discount Amount</text-property>
+                            <text-property name="text">Addi; Dis&#13;
+Amt 2</text-property>
                         </label>
                     </cell>
                     <cell id="3047">
