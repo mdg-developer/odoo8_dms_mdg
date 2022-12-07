@@ -6,6 +6,7 @@ import base64
 import requests
 import hashlib
 from openerp.osv.orm import except_orm
+import logging
 
 class woo_product_template_ept(models.Model):
     _name="woo.product.template.ept"
@@ -611,7 +612,8 @@ class woo_product_template_ept(models.Model):
                     key=hashlib.md5(gallery_img.image).hexdigest()
                     if not key:
                         continue
-                    existing_gallery_img_keys.update({key:gallery_img})                        
+                    existing_gallery_img_keys.update({key:gallery_img})
+            logging.warning("woo_template.woo_product_ids.product_id: %s", woo_template.woo_product_ids.product_id)
             for image in images:                
                 if str(image.get('title').encode('utf-8')) == 'Placeholder' or not image.get('id'):
                     continue
@@ -631,7 +633,7 @@ class woo_product_template_ept(models.Model):
                                 continue
                             if position == 0:
                                 if not instance.is_image_url and not result.get('variations'):                
-                                    woo_template.woo_product_ids.product_id.image = binary_img_data
+                                    #woo_template.woo_product_ids.product_id.image = binary_img_data
                                     continue                                                                                       
                     except Exception:
                         pass                    
