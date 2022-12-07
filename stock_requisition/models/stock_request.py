@@ -531,10 +531,11 @@ class stock_requisition(osv.osv):
             if gin_line_data:
                 for gin_line in gin_line_data:
                     gin_product = self.pool.get('product.product').browse(cr, uid, gin_line[0], context=context)
-                    small_uom = gin_product.uom_id.id
-                    gin_line_id = good_line_obj.search(cr, uid, [('line_id', '=', good_id),('product_id', '=', gin_product.id),('product_uom', '=', small_uom)], context=context)
-                    gin_line_value = good_line_obj.browse(cr, uid, gin_line_id, context=context)
-                    cr.execute("update good_issue_note_line set order_qty=0,ecommerce_qty=0,total_request_qty=0 where id=%s", (gin_line_value.id,))
+                    report_uom_id = gin_product.report_uom_id.id
+                    gin_line_ids = good_line_obj.search(cr, uid, [('line_id', '=', good_id),('product_id', '=', gin_product.id),('product_uom', '!=', report_uom_id)], context=context)
+                    for gin_line_id in gin_line_ids:
+                        gin_line_value = good_line_obj.browse(cr, uid, gin_line_id, context=context)
+                        cr.execute("update good_issue_note_line set order_qty=0,ecommerce_qty=0,total_request_qty=0 where id=%s", (gin_line_value.id,))
             good_obj.approve(cr, uid, good_id, context=context)  
                             
         return self.write(cr, uid, ids, {'state':'approve' , 'approve_by':uid,'good_issue_id':good_id})    
