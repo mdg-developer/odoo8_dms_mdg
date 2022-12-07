@@ -53,11 +53,17 @@ class res_partner(osv.osv):
                            'Accept': 'application/json',
                            'Authorization' : 'Bearer {0}'.format(boom_sms_key),
                            }
-                url = 'https://boomsms.net/api/sms/json'
+                # url = 'https://boomsms.net/api/sms/json'
+                # data = {
+                #         'from' : 'Burmart',
+                #         'text' : message,
+                #         'to'   : mobile_phone,
+                #         }
+                url = 'https://staging-api.boomsms.net/api/sms'
                 data = {
-                        'from' : 'Burmart',
                         'text' : message,
-                        'to'   : mobile_phone,
+                        'sender' : 'Burmart',
+                        'phone' : mobile_phone,
                         }
                 response = requests.post(url,json=data, headers=headers, timeout=60, verify=False)
                 if response.status_code == 200:                

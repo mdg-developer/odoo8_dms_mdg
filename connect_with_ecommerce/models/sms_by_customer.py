@@ -32,15 +32,21 @@ class sms_by_customer(osv.osv):
                    'Accept': 'application/json',
                    'Authorization' : 'Bearer {0}'.format(boom_sms_key),
                    }
-        url = 'https://boomsms.net/api/sms/json'
+        # url = 'https://boomsms.net/api/sms/json'
+        url = 'https://staging-api.boomsms.net/api/sms'
         for partner in record.partner_ids:
             try: 
                 mobile = partner.mobile
+                # data = {
+                #         'from' : 'Burmart',
+                #         'text' : message,
+                #         'to'   : mobile,
+                #         }
                 data = {
-                        'from' : 'Burmart',
-                        'text' : message,
-                        'to'   : mobile,
-                        }
+                    'text': message,
+                    'sender': 'Burmart',
+                    'phone': mobile,
+                }
                 response = requests.post(url,json=data, headers=headers, timeout=60, verify=False)
                 if response.status_code == 200:                
                     sms_status = 'success'  
