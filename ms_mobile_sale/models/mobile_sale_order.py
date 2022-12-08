@@ -989,6 +989,7 @@ class mobile_sale_order(osv.osv):
                     image3 = False
                     image4 = False
                     image5 = False
+                    distance_status = None
                     if customer_id:
                         if vs['image1_reference']:
                                 is_image1 =True
@@ -1000,6 +1001,8 @@ class mobile_sale_order(osv.osv):
                                 is_image4 =True
                         if vs['image5_reference']:
                                 is_image5 =True
+                        if vs['distance_status']:
+                            distance_status = vs['distance_status']
 
 
                         visit_result = {
@@ -1034,8 +1037,11 @@ class mobile_sale_order(osv.osv):
                             'image3_reference': vs['image3_reference'],
                             'image4_reference': vs['image4_reference'],
                             'image5_reference': vs['image5_reference'],
+                            'distance_status': distance_status,
                         }
-                        customer_visit_obj.create(cursor, user, visit_result, context=context)
+                        visit_id = customer_visit_obj.create(cursor, user, visit_result, context=context)
+                        if visit_id and not is_image1 and not is_image2 and not is_image3 and not is_image4 and not is_image5:
+                            customer_visit_obj.is_reject(cursor, user, [visit_id], context=context)
             return True
         except Exception, e:
             print e
