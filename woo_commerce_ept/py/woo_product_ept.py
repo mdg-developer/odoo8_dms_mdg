@@ -36,6 +36,7 @@ class woo_product_template_ept(models.Model):
     short_description=fields.Html("Short Description")
     total_variants_in_woo=fields.Integer("Total Varaints in Woo",default=0,help="Total Variants in WooCommerce,\nDisplay after sync products")
     total_sync_variants=fields.Integer("Total Sync Variants",compute="get_total_sync_variants",store=True)
+    myanmar_name = fields.Char("Woo Product Myanmar Name")
     
     
     @api.onchange("product_tmpl_id")
@@ -1720,7 +1721,7 @@ class woo_product_template_ept(models.Model):
                                          
             data = {'enable_html_description':True,'enable_html_short_description':True,'type': 'variable',
                     'title':woo_template.name,'description':woo_template.description or '','weight':template.weight,
-                    'short_description':woo_template.short_description or '','taxable':woo_template.taxable and 'true' or 'false',
+                    'short_description':woo_template.short_description or '','myanmar_name':woo_template.myanmar_name or '','taxable':woo_template.taxable and 'true' or 'false',
                     'shipping_required':'true'}          
             for woo_categ in woo_template.woo_categ_ids:
                 if not woo_categ.woo_categ_id:
@@ -2057,7 +2058,7 @@ class woo_product_template_ept(models.Model):
                                          
             data = {'enable_html_description':True,'enable_html_short_description':True,'type': 'variable',
                     'name':woo_template.name,'description':woo_template.description or '',
-                    'short_description':woo_template.short_description or '','weight':str(template.weight),
+                    'short_description':woo_template.short_description or '','myanmar_name':woo_template.myanmar_name or '','weight':str(template.weight),
                     'taxable':woo_template.taxable and 'true' or 'false','shipping_required':'true'}          
             for woo_categ in woo_template.woo_categ_ids:
                 if not woo_categ.woo_categ_id:

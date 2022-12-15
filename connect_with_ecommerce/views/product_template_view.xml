@@ -12,6 +12,8 @@
 						<xpath expr="//h1" position="after">
 						    <label class="oe_edit_only" for="short_name" string="Product Short Name"/>
                             <h1><field name="short_name" class="oe_inline"/></h1>
+							<label class="oe_edit_only" for="myanmar_name" string="Product Myanmar Name"/>
+							<h1><field name="myanmar_name" class="oe_inline"/></h1>
 						</xpath>
 					</field>
 		</record>

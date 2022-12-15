@@ -302,8 +302,12 @@ class woo_process_import_export(models.TransientModel):
                     if odoo_template.short_name:
                         product_name = odoo_template.short_name
                     else:
-                        raise except_orm(_('UserError'), _("Please define short name for %s!") % (odoo_template.name,)) 
-                    woo_template=woo_template_obj.create({'woo_instance_id':instance.id,'product_tmpl_id':odoo_template.id,'name':product_name,'description':odoo_template.description_sale,'short_description':odoo_template.description})                
+                        raise except_orm(_('UserError'), _("Please define short name for %s!") % (odoo_template.name,))
+                    if odoo_template.myanmar_name:
+                        myanmar_name = odoo_template.myanmar_name
+                    else:
+                        raise except_orm(_('UserError'), _("Please define Myanmar name for %s!") % (odoo_template.name,))
+                    woo_template=woo_template_obj.create({'woo_instance_id':instance.id,'product_tmpl_id':odoo_template.id,'name':product_name,'myanmar_name':myanmar_name,'description':odoo_template.description_sale,'short_description':odoo_template.description})
                 for variant in odoo_template.product_variant_ids:
                     woo_variant = woo_product_obj.search([('woo_instance_id','=',instance.id),('product_id','=',variant.id)])
                     if not woo_variant:
