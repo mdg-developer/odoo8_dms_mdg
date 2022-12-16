@@ -5572,7 +5572,7 @@ class partner_photo(osv.osv):
         'image_three':fields.binary('image_three'),
         'image_four':fields.binary('image_four'),
         'image_five':fields.binary('image_five'),
-        'partner_latitude': fields.float('Geo Latitude', digits=(16, 5), readonly=True),
-        'partner_longitude': fields.float('Geo Longitude', digits=(16, 5), readonly=True),
+        'partner_latitude': fields.float('Geo Latitude', digits=(16, 8), readonly=True),
+        'partner_longitude': fields.float('Geo Longitude', digits=(16, 8), readonly=True),
        }
 partner_photo()    
