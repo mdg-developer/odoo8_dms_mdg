@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+    <record id="branch_stock_requsition_form_partial_issue" model="ir.ui.view">
+                <field name="name">branch_stock_requsition_form_partial_issue</field>
+                <field name="model">branch.stock.requisition</field>
+                <field name="inherit_id" ref="branch_inventory_transfer.branch_stock_requsition_form" />
+                <field name="arch" type="xml">
+                    <data>
+                        <xpath expr="//header/button[@name='approve']" position="before">
+                            <button name="loaded" string="To Separate RFI" class="oe_highlight"
+							type="object" states="loading_plan" groups="base.group_sale_manager,base.group_no_one" />
+                        </xpath>
+                        <xpath expr="//header/button[@name='approve']" position="replace">
+                            <button name="approve" string="Approve" class="oe_highlight"
+							type="object" states="loading_plan,loaded" groups="base.group_sale_manager,base.group_no_one" />
+                        </xpath>
+
+
+
+                        <xpath expr="//sheet/group/group" position="inside">
+                            <field name="truck_one_type_id"/>
+                            <field name="truck_two_type_id"/>
+                            <field name="truck_three_type_id"/>
+                            <field name="truck_four_type_id"/>
+                            <field name="truck_five_type_id"/>
+                            <field name="original_rfi"/>
+                        </xpath>
+                        <xpath expr="//notebook//page[@string='Stock']//field[@name='recommend_quantity']" position="after">
+                            <field name="truck_one_quantity"/>
+                            <field name="truck_two_quantity"/>
+                            <field name="truck_three_quantity"/>
+                            <field name="truck_four_quantity"/>
+                            <field name="truck_five_quantity"/>
+                        </xpath>
+                    </data>
+                </field>
+            </record>
+    </data>
+</openerp>
