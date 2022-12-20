@@ -298,7 +298,9 @@ class branch_stock_requisition(osv.osv):
                         'product_uom' : product_uom,
                     }
                     requisition_line_obj.create(cr, uid, line_val, context=context)
-
+                requisition_obj.confirm(cr, uid, brfi_one_id, context=context)
+                requisition_obj.loading_plan(cr, uid, brfi_one_id, context=context)
+                requisition_obj.loaded(cr, uid, brfi_one_id, context=context)
             if is_brfi_two == True:
                 values['truck_type_id'] = order.truck_two_type_id.id
                 brfi_two_id = requisition_obj.create(cr, uid, values, context=context)
@@ -314,6 +316,9 @@ class branch_stock_requisition(osv.osv):
                         'product_uom': product_uom,
                     }
                     requisition_line_obj.create(cr, uid, line_val, context=context)
+                requisition_obj.confirm(cr, uid, brfi_two_id, context=context)
+                requisition_obj.loading_plan(cr, uid, brfi_two_id, context=context)
+                requisition_obj.loaded(cr, uid, brfi_two_id, context=context)
 
             if is_brfi_three == True:
                 values['truck_type_id'] = order.truck_three_type_id.id
@@ -330,6 +335,9 @@ class branch_stock_requisition(osv.osv):
                         'product_uom': product_uom,
                     }
                     requisition_line_obj.create(cr, uid, line_val, context=context)
+                requisition_obj.confirm(cr, uid, brfi_three_id, context=context)
+                requisition_obj.loading_plan(cr, uid, brfi_three_id, context=context)
+                requisition_obj.loaded(cr, uid, brfi_three_id, context=context)
 
             if is_brfi_four == True:
                 values['truck_type_id'] = order.truck_four_type_id.id
@@ -346,6 +354,9 @@ class branch_stock_requisition(osv.osv):
                         'product_uom': product_uom,
                     }
                     requisition_line_obj.create(cr, uid, line_val, context=context)
+                requisition_obj.confirm(cr, uid, brfi_four_id, context=context)
+                requisition_obj.loading_plan(cr, uid, brfi_four_id, context=context)
+                requisition_obj.loaded(cr, uid, brfi_four_id, context=context)
 
             if is_brfi_five == True:
                 values['truck_type_id'] = order.truck_five_type_id.id
@@ -362,6 +373,9 @@ class branch_stock_requisition(osv.osv):
                         'product_uom': product_uom,
                     }
                     requisition_line_obj.create(cr, uid, line_val, context=context)
+                requisition_obj.confirm(cr, uid, brfi_five_id, context=context)
+                requisition_obj.loading_plan(cr, uid, brfi_five_id, context=context)
+                requisition_obj.loaded(cr, uid, brfi_five_id, context=context)
 
 
 
