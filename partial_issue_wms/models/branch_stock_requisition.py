@@ -298,7 +298,7 @@ class branch_stock_requisition(osv.osv):
                         'product_uom' : product_uom,
                     }
                     requisition_line_obj.create(cr, uid, line_val, context=context)
-                requisition_obj.confirm(cr, uid, brfi_one_id, context=context)
+                requisition_obj.confirm(cr, uid, [brfi_one_id], context=context)
                 requisition_obj.loading_plan(cr, uid, brfi_one_id, context=context)
                 requisition_obj.loaded(cr, uid, brfi_one_id, context=context)
             if is_brfi_two == True:
@@ -316,7 +316,7 @@ class branch_stock_requisition(osv.osv):
                         'product_uom': product_uom,
                     }
                     requisition_line_obj.create(cr, uid, line_val, context=context)
-                requisition_obj.confirm(cr, uid, brfi_two_id, context=context)
+                requisition_obj.confirm(cr, uid, [brfi_two_id], context=context)
                 requisition_obj.loading_plan(cr, uid, brfi_two_id, context=context)
                 requisition_obj.loaded(cr, uid, brfi_two_id, context=context)
 
@@ -335,7 +335,7 @@ class branch_stock_requisition(osv.osv):
                         'product_uom': product_uom,
                     }
                     requisition_line_obj.create(cr, uid, line_val, context=context)
-                requisition_obj.confirm(cr, uid, brfi_three_id, context=context)
+                requisition_obj.confirm(cr, uid, [brfi_three_id], context=context)
                 requisition_obj.loading_plan(cr, uid, brfi_three_id, context=context)
                 requisition_obj.loaded(cr, uid, brfi_three_id, context=context)
 
@@ -354,7 +354,7 @@ class branch_stock_requisition(osv.osv):
                         'product_uom': product_uom,
                     }
                     requisition_line_obj.create(cr, uid, line_val, context=context)
-                requisition_obj.confirm(cr, uid, brfi_four_id, context=context)
+                requisition_obj.confirm(cr, uid, [brfi_four_id], context=context)
                 requisition_obj.loading_plan(cr, uid, brfi_four_id, context=context)
                 requisition_obj.loaded(cr, uid, brfi_four_id, context=context)
 
@@ -373,7 +373,7 @@ class branch_stock_requisition(osv.osv):
                         'product_uom': product_uom,
                     }
                     requisition_line_obj.create(cr, uid, line_val, context=context)
-                requisition_obj.confirm(cr, uid, brfi_five_id, context=context)
+                requisition_obj.confirm(cr, uid, [brfi_five_id], context=context)
                 requisition_obj.loading_plan(cr, uid, brfi_five_id, context=context)
                 requisition_obj.loaded(cr, uid, brfi_five_id, context=context)
 
