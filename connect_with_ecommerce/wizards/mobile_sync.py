@@ -45,7 +45,7 @@ class mobile_sync(osv.osv_memory):
                 if partner.mobile:
                     woo_customer_id = partner.woo_customer_id.split("_")[1]
                     customer_data = '''{"user_id":"%s","update_phone":"%s"}''' % (str(woo_customer_id), str(partner.mobile))
-                    customer_response = requests.post(url, headers=headers, data=customer_data)
+                    customer_response = requests.post(url, headers=headers, data=customer_data, verify= False)
                     if customer_response.status_code not in [200, 201]:
                         raise except_orm(_('Error'),
                                          _("Error in syncing response mobile for woo customer id %s %s") % (
