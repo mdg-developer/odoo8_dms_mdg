@@ -1029,6 +1029,7 @@ class mobile_sale_order(osv.osv):
                     image3 =False
                     image4 =False
                     image5 =False
+                    distance_status = None
                     if customer_id:  
                         if vs['image1_reference']:
                                 is_image1 =True
@@ -1039,7 +1040,7 @@ class mobile_sale_order(osv.osv):
                                 is_image2=True
 #                                 url =baseUrlPrefix + vs['image2_reference'] + baseUrlPostFix
 #                                 response = requests.get(url).content
-#                                 image2 = base64.b64encode(response)                                                      
+#                                 image2 = base64.b64encode(response)
                         if vs['image3_reference']:
                                 is_image3=True
 #                                 url =baseUrlPrefix + vs['image3_reference'] + baseUrlPostFix
@@ -1054,7 +1055,9 @@ class mobile_sale_order(osv.osv):
                                 is_image5=True    
 #                                 url =baseUrlPrefix + vs['image5_reference'] + baseUrlPostFix
 #                                 response = requests.get(url).content
-#                                 image5 = base64.b64encode(response)                                                                                               
+#                                 image5 = base64.b64encode(response)
+                        if vs['distance_status']:
+                                distance_status=vs['distance_status']
                         visit_result = {
                             'customer_code':vs['customer_code'],
                             'branch_id':branch_id,
@@ -1086,9 +1089,12 @@ class mobile_sale_order(osv.osv):
                             'image3_reference':vs['image3_reference'],
                             'image4_reference':vs['image4_reference'],
                             'image5_reference':vs['image5_reference'],
+                            'distance_status': distance_status,
 
                         }
                         visit_id=customer_visit_obj.create(cursor, user, visit_result, context=context)
+                        if visit_id and not is_image1 and not is_image2 and not is_image3 and not is_image4 and not is_image5:
+                            customer_visit_obj.is_reject(cursor, user, [visit_id], context=context)
                         #customer_visit_obj.generate_image(cursor, user, [visit_id], context=context)
                 return True
         except Exception, e:
@@ -2960,15 +2966,52 @@ class mobile_sale_order(osv.osv):
 #             datas = cr.fetchall()
         cr.execute('''select * from get_customer_target(%s)''', (customer_id,))
         datas = cr.fetchall()
-        return datas    
-        
+        return datas
+
+    def get_all_visit_reason(self, cr, uid, sale_team_id, context=None, **kwargs):
+        cr.execute('''            
+                select id,name,sequence,active from visit_reason
+         ''')
+        datas = cr.fetchall()
+        return datas
     def get_stockcheck(self, cr, uid, sale_team_id , context=None, **kwargs):
         cr.execute('''            
                   select scl.id ,sc.outlet_type,scl.product_id,scl.product_uom_qty as quantity,scl.available,scl.facing, scl.chiller from stock_check_setting sc ,stock_check_setting_line scl where sc.id=scl.stock_setting_ids
          ''')
         datas = cr.fetchall()
         return datas            
-    
+
+    def get_product_id(self, cr, uid, sale_team_id, last_date, context=None):
+        list = []
+        # cr.execute('''select pt.id
+        #               from product_template pt
+        #               where pt.write_date > %s::timestamp
+        #                             ''', (last_date,))
+
+        cr.execute('''
+                    select pt.id
+                    from product_template pt,product_product pp,product_sale_group_rel rel, crm_case_section ccs  
+                    where pp.id = rel.product_id and
+                    pt.id = pp.product_tmpl_id and
+                    pt.active = true and
+                    pp.active = true and
+                    ccs.sale_group_id = rel.sale_group_id and
+                    ccs.id = %s and
+                    pt.write_date > %s::timestamp 
+        ''', (sale_team_id,last_date,))
+
+    def get_customer_id(self, cr, uid, sale_team_id, last_date, context=None):
+        datas = []
+        cr.execute('''
+                    select RP.id
+                    from sale_plan_day SPD, sale_plan_day_line RPS, res_partner RP
+                    where SPD.id = RPS.line_id
+                    and RPS.partner_id = RP.id
+                    and SPD.sale_team = %s
+                    and RP.write_date > %s::timestamp
+                    ''', (sale_team_id, last_date,))
+        datas = cr.fetchall()
+        return datas
     def udpate_credit_notes_issue_status(self, cr, uid, sale_team_id , context=None, **kwargs):
         try:
             cr.execute('''update account_creditnote set m_Status='new' where
@@ -3098,7 +3141,12 @@ class mobile_sale_order(osv.osv):
     def get_suv_report_link(self, cr, uid, context=None, **kwargs):    
         cr.execute("""select value from ir_config_parameter where key ='quick_sight_report_link_sv_team' """)
         datas = cr.fetchall()        
-        return datas        
+        return datas
+
+    def get_customer_visit_distance(self, cr, uid, context=None, **kwargs):
+        cr.execute("""select value from ir_config_parameter where key ='customer_visit_distance' """)
+        datas = cr.fetchall()
+        return datas
     def get_uom(self, cr, uid, context=None, **kwargs):    
         cr.execute("""select id,name,floor(round(1/factor,2))  as ratio from product_uom where active = true""")
         datas = cr.fetchall()
