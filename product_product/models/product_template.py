@@ -73,8 +73,7 @@ class product_template(osv.osv):
                 'uom_ratio':fields.char('Packing Size'),
         'categ_id': fields.many2one('product.category','Product Category', required=True, change_default=True, domain="[('type','=','normal')]" ,help="Select category for the current product"),
          # 'sequence': fields.related('product_variant_ids', 'sequence', type='integer', string='Sequence', required=True),
-        'sequence': fields.integer(string='Sequence', required=True),
-                 
+
          'is_price_diff_product':fields.related('product_variant_ids', 'is_price_diff_product', type='boolean', string='Is Price Diff Product'),
          'standard_price': fields.property(type = 'float', digits_compute=dp.get_precision('Cost Price'), 
                                           help="Cost price of the product template used for standard stock valuation in accounting and used as a base price on purchase orders. "
