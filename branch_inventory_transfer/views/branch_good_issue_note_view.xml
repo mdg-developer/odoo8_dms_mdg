@@ -127,6 +127,8 @@
 											<field name="product_id" on_change="on_change_product_id(product_id)"
 												attrs="{'readonly':[('state','in',('issue','receive','cancel','reversed'))]}" />
 											<field name="req_quantity" />
+											<field name="req_quantity_2"
+												attrs="{'readonly':[('state','in',('issue','receive','cancel','reversed'))]}" />
 											<field name="issue_quantity"
 												attrs="{'readonly':[('state','in',('issue','receive','cancel','reversed'))]}" />
 											<field name="receive_quantity" attrs="{'readonly':[('state','!=','issue')]}" />
