@@ -897,7 +897,7 @@ class sale_order(models.Model):
                                                                     })
                                     continue
                             if woo_partner.sales_channel.code == 'RT':
-                                product_pricelist = self.env['product.pricelist'].sudo().search([('retail','=',True)], limit=1)
+                                product_pricelist = self.env['product.pricelist'].sudo().search([('retail','=',True),('branch_id','=',woo_partner.township.delivery_team_id.branch_id.id)], limit=1)
                                 if product_pricelist:
                                     pricelist_id = product_pricelist.id
                                 else:
