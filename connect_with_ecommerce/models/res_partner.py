@@ -4,6 +4,7 @@ import json
 import logging
 import random
 from datetime import timedelta,datetime
+import base64
 
 class res_partner(osv.osv):
     _inherit = 'res.partner'
@@ -947,3 +948,33 @@ class res_partner(osv.osv):
                                 'headings': "Burmart"
                             }
                             self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)
+
+    def get_customer_addresses_info(self, cr, uid, ids, parent_id=None, type=None, woo_customer_id=None, context=None):
+        records = {}
+        if not type:
+            type = 'delivery'
+        SQL = """
+            SELECT rp.id, rp.name as contact_name, rp.type, rp.address_title as address_title, rp.street as street, rp.street2 as street2,township.name as township, 
+            city.name as city, country.name as country, state.name as state, rp.contact_note as contact_note, rp.image as image
+            FROM res_partner rp 
+            LEFT JOIN res_township township on rp.township = township.id 
+            LEFT JOIN res_city city on rp.city = city.id 
+            LEFT JOIN res_country country on rp.country_id = country.id 
+            LEFT JOIN res_country_state state on rp.state_id = state.id 
+            WHERE(township.code is not null
+                AND rp.parent_id in %s
+                AND rp.type= %s
+                OR rp.woo_customer_id = %s) 
+                AND rp.active= True;
+        """
+        if woo_customer_id:
+            woo_customer = '1_' + woo_customer_id
+            parent_ids = self.pool.get('res.partner').search(cr, uid, [('woo_customer_id', '=', woo_customer)],context=context)
+            cr.execute(SQL,(tuple(parent_ids), str(type), woo_customer))
+            records = cr.dictfetchall()
+            for record in records:
+                image = record.get('image')
+                if image:
+                    image = base64.b64encode(image)
+                    record.update({'image':image})
+        return records
