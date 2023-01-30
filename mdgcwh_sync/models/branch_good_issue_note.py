@@ -37,15 +37,15 @@ class branch_good_issue_note(osv.osv):
                 req_value = gin_id.request_id
                 if not req_value.to_location_id.is_cwh_location:
                     return result
-                check_brfi = models.execute_kw(db, sd_uid, password, 'sale.order', 'search',[[('origin', '=', req_value.name)]], {'limit': 1})
-                if check_brfi:
-                    return result
+                # check_brfi = models.execute_kw(db, sd_uid, password, 'sale.order', 'search',[[('origin', '=', req_value.name)]], {'limit': 1})
+                # if check_brfi:
+                #     return result
 
                 so_vals['client_order_ref'] = req_value.from_location_id.name or ''
                 so_vals['origin'] = req_value.name or ''
                 so_create = False
                 data_line = []
-                cr.execute('''select sum(req_quantity) as req_quantity,l.product_id,l.product_loss,pt.ctn_pallet,pp.name_template,l.product_uom,uom.name
+                cr.execute('''select sum(req_quantity_2) as req_quantity,l.product_id,l.product_loss,pt.ctn_pallet,pp.name_template,l.product_uom,uom.name
                              from branch_good_issue_note s,branch_good_issue_note_line l ,product_uom uom ,product_product pp ,product_template pt
                              where  s.id = l.line_id and l.product_id= pp.id and pp.product_tmpl_id = pt.id and l.product_uom =uom.id and s.id =%s
                              group by product_id ,product_loss,pt.ctn_pallet,pp.name_template,l.product_uom,uom.name''',(ids[0],))
