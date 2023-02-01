@@ -1615,9 +1615,10 @@ class mobile_sale_order(osv.osv):
     def get_all_competitor_products(self, cr, uid, sale_team_id , context=None, **kwargs):
         cr.execute('''            
             select cp.id,cp.name,product_uom_id
-            from crm_case_section ccs,competitor_product_crm_case_section_rel cprel,competitor_product cp,competitor_product_product_uom_rel rel
-            where ccs.id=cprel.crm_case_section_id
-            and cprel.competitor_product_id=cp.id
+            from crm_case_section ccs,sales_group sg,competitor_product_sales_group_rel prel,competitor_product cp,competitor_product_product_uom_rel rel
+            where ccs.sale_group_id=sg.id
+            and prel.sales_group_id=sg.id
+            and prel.competitor_product_id=cp.id
             and cp.id=rel.competitor_product_id
             and ccs.id=%s
          ''', (sale_team_id,))
@@ -1628,8 +1629,9 @@ class mobile_sale_order(osv.osv):
         list = []
         cr.execute('''            
             select competitor_product_id
-            from crm_case_section ccs,competitor_product_crm_case_section_rel rel
-            where ccs.id=rel.crm_case_section_id
+            from crm_case_section ccs,sales_group sg,competitor_product_sales_group_rel rel
+            where ccs.sale_group_id=sg.id
+            and rel.sales_group_id=sg.id
             and ccs.id=%s
          ''', (sale_team_id,))
         datas = cr.fetchall()
@@ -1644,12 +1646,12 @@ class mobile_sale_order(osv.osv):
         list = []
         cr.execute('''
                     select pt.id
-                    from product_template pt,product_product pp,crm_case_section_product_product_rel rel, crm_case_section ccs  
-                    where pp.id = rel.product_product_id and
+                    from product_template pt,product_product pp,product_sale_group_rel rel, crm_case_section ccs  
+                    where pp.id = rel.product_id and
                     pt.id = pp.product_tmpl_id and
                     pt.active = true and
                     pp.active = true and
-                    ccs.id = rel.crm_case_section_id and
+                    ccs.sale_group_id = rel.sale_group_id and
                     ccs.id = %s and
                     pt.write_date > %s::timestamp 
         ''', (sale_team_id,last_date,))
@@ -1672,8 +1674,9 @@ class mobile_sale_order(osv.osv):
 
     def get_competitor_stock_check(self, cr, uid, sale_team_id , context=None, **kwargs):
         cr.execute('''select cline.id,outlet_type,prel.competitor_product_id,product_uom_qty as qty,available,facing,chiller,cp.sequence
-                    from crm_case_section ccs,competitor_product_crm_case_section_rel prel,competitor_product cp,stock_check_setting_competitor_line cline,stock_check_setting scs
-                    where ccs.id=prel.crm_case_section_id
+                    from crm_case_section ccs,sales_group sg,competitor_product_sales_group_rel prel,competitor_product cp,stock_check_setting_competitor_line cline,stock_check_setting scs
+                    where ccs.sale_group_id=sg.id
+                    and prel.sales_group_id=sg.id
                     and prel.competitor_product_id=cp.id
                     and cp.id=cline.competitor_product_id
                     and cline.stock_setting_ids=scs.id
@@ -1692,18 +1695,31 @@ class mobile_sale_order(osv.osv):
     # kzo Edit
     def get_products_by_sale_team(self, cr, uid, section_id , last_date, context=None, **kwargs):
         
-        cr.execute('''select  pp.id,pt.list_price , coalesce(replace(pt.description,',',';'), ' ') as description,pt.categ_id,pc.name as categ_name,pp.default_code, 
-                         pt.name,substring(replace(cast(pt.image_small as text),'/',''),1,5) as image_small,pt.main_group,pt.uom_ratio,
-                         pp.product_tmpl_id,pt.is_foc,pp.sequence,pt.type,pt.uom_id
-                        from crm_case_section_product_product_rel crm_real ,
-                        crm_case_section ccs ,product_template pt, product_product pp , product_category pc
-                        where pp.id = crm_real.product_product_id
-                        and pt.id = pp.product_tmpl_id
-                        and pt.active = true
-                        and pp.active = true
-                        and ccs.id = crm_real.crm_case_section_id
-                        and pc.id = pt.categ_id                        
-                        and ccs.id = %s ''', (section_id,))
+        cr.execute('''select  pp.id,pt.list_price,coalesce(replace(pt.description,',',';'), ' ') as description,pt.categ_id,pc.name as categ_name,pp.default_code, 
+                    pt.name,substring(replace(cast(pt.image_small as text),'/',''),1,5) as image_small,pt.main_group,pt.uom_ratio,
+                    pp.product_tmpl_id,pt.is_foc,pp.sequence,pt.type,pt.uom_id
+                    from product_sale_group_rel rel ,
+                    crm_case_section ccs ,product_template pt, product_product pp , product_category pc
+                    where pp.id = rel.product_id
+                    and pt.id = pp.product_tmpl_id
+                    and pt.active = true
+                    and pp.active = true
+                    and ccs.sale_group_id = rel.sale_group_id
+                    and pc.id = pt.categ_id                        
+                    and ccs.id = %s ''', (section_id,))
+        datas = cr.fetchall()
+        return datas
+
+    def get_products_barcode_by_sale_team(self, cr, uid, section_id, last_date, context=None, **kwargs):
+
+        cr.execute('''select barcode.id ,barcode.name,barcode.product_tmpl_id from product_multi_barcode barcode,product_sale_group_rel rel,product_template pt,product_product pp,crm_case_section ccs 
+                    where pp.id = rel.product_id
+                    and barcode.product_tmpl_id=pt.id
+                    and pt.id = pp.product_tmpl_id
+                    and pt.active = true
+                    and pp.active = true
+                    and ccs.sale_group_id = rel.sale_group_id
+                    and ccs.id = %s ''', (section_id,))
         datas = cr.fetchall()
         return datas
 
@@ -1733,14 +1749,15 @@ class mobile_sale_order(osv.osv):
     # get promotion datas from database
     def get_products_categ_by_sale_team(self, cr, uid, section_id , context=None, **kwargs):
         cr.execute('''select distinct categ_id,categ_name from (
-                        select pp.product_tmpl_id,pt.list_price , pt.description,pt.categ_id,pc.name as categ_name from crm_case_section_product_product_rel crm_real ,
+                        select pp.product_tmpl_id,pt.list_price , pt.description,pt.categ_id,pc.name as categ_name 
+                        from product_sale_group_rel rel,
                         crm_case_section ccs ,product_template pt, product_product pp , product_category pc
-                        where pp.id = crm_real.product_product_id
+                        where pp.id = rel.product_id
                         and pt.id = pp.product_tmpl_id
-                        and ccs.id = crm_real.crm_case_section_id
+                        and ccs.sale_group_id = rel.sale_group_id
                         and pc.id = pt.categ_id
                         and ccs.id = %s
-                        )A ''', (section_id,))
+                )A ''', (section_id,))
         datas = cr.fetchall()
         cr.execute
         return datas
@@ -1748,38 +1765,52 @@ class mobile_sale_order(osv.osv):
     def get_promos_datas(self, cr, uid , branch_id, state, team_id, context=None, **kwargs):
         if state == 'approve':
             status = 'approve'
-            cr.execute('''select id,sequence as seq,from_date ,to_date,active,name as p_name,
+            cr.execute('''select distinct id,sequence as seq,from_date ,to_date,active,name as p_name,
                         logic ,expected_logic_result ,special, special1, special2, special3 ,description,
-                        pr.promotion_count, pr.monthly_promotion ,code as p_code,manual,main_group
-                        from promos_rules pr ,promos_rules_res_branch_rel pro_br_rel
+                        pr.promotion_count, pr.monthly_promotion ,code as p_code,manual,main_group,pr.ecommerce
+                        from promos_rules pr
+                        left join promos_rules_res_branch_rel pro_br_rel on (pr.id = pro_br_rel.promos_rules_id)
+                        left join promos_rules_product_rel pro_pp_rel on (pr.id=pro_pp_rel.promos_rules_id)
                         where pr.active = true                     
-                        and pr.id = pro_br_rel.promos_rules_id
                         and pro_br_rel.res_branch_id = %s
                         and pr.state = %s
-                        and  now()::date  between from_date::date and to_date::date
+                        and now()::date  between from_date::date and to_date::date
                         and pr.id in (
-                        select a.promo_id from promo_sale_channel_rel a
-                        inner join sale_team_channel_rel b
-                        on a.sale_channel_id = b.sale_channel_id
-                        where b.sale_team_id = %s
+                            select a.promo_id from promo_sale_channel_rel a
+                            inner join sale_team_channel_rel b
+                            on a.sale_channel_id = b.sale_channel_id
+                            where b.sale_team_id = %s
+                        )
+                        and pro_pp_rel.product_id in (
+                            select product_id
+                            from crm_case_section ccs,product_sale_group_rel rel
+                            where ccs.sale_group_id=rel.sale_group_id
+                            and ccs.id=%s
                         )
                         ''', (branch_id, status, team_id,))
         else:
             status = 'draft'            
-            cr.execute('''select id,sequence as seq,from_date ,to_date,active,name as p_name,
+            cr.execute('''select distinct id,sequence as seq,from_date ,to_date,active,name as p_name,
                         logic ,expected_logic_result ,special, special1, special2, special3 ,description,
-                        pr.promotion_count, pr.monthly_promotion,code as p_code,manual,main_group
-                        from promos_rules pr ,promos_rules_res_branch_rel pro_br_rel
+                        pr.promotion_count, pr.monthly_promotion,code as p_code,manual,main_group,pr.ecommerce
+                        from promos_rules pr
+                        left join promos_rules_res_branch_rel pro_br_rel on (pr.id = pro_br_rel.promos_rules_id)
+                        left join promos_rules_product_rel pro_pp_rel on (pr.id=pro_pp_rel.promos_rules_id)
                         where pr.active = true                     
-                        and pr.id = pro_br_rel.promos_rules_id
                         and pro_br_rel.res_branch_id = %s
                         and pr.state  = %s
-                        and  now()::date  between from_date::date and to_date::date
+                        and now()::date between from_date::date and to_date::date
                         and pr.id in (
-                        select a.promo_id from promo_sale_channel_rel a
-                        inner join sale_team_channel_rel b
-                        on a.sale_channel_id = b.sale_channel_id
-                        where b.sale_team_id = %s
+                            select a.promo_id from promo_sale_channel_rel a
+                            inner join sale_team_channel_rel b
+                            on a.sale_channel_id = b.sale_channel_id
+                            where b.sale_team_id = %s
+                        )
+                        and pro_pp_rel.product_id in (
+                            select product_id
+                            from crm_case_section ccs,product_sale_group_rel rel
+                            where ccs.sale_group_id=rel.sale_group_id
+                            and ccs.id = %s
                         )
                         ''', (branch_id, status, team_id,))
         datas = cr.fetchall()        
@@ -1913,16 +1944,17 @@ class mobile_sale_order(osv.osv):
 
     def get_product_uoms(self, cr, uid , saleteam_id, context=None, **kwargs):
         cr.execute('''
-                select distinct uom_id,uom_name,ratio,template_id,product_id from(
-                select  pu.id as uom_id,pu.name as uom_name ,floor(round(1/factor,2)) as ratio,
-                pur.product_template_id as template_id,pp.id as product_id
-                from product_uom pu , product_template_product_uom_rel pur ,
-                product_product pp,
-                crm_case_section_product_product_rel crm
-                where pp.product_tmpl_id = pur.product_template_id
-                and crm.product_product_id = pp.id
-                and pu.id = pur.product_uom_id
-                and crm.crm_case_section_id = %s            
+                    select distinct uom_id,uom_name,ratio,template_id,product_id from(
+                    select  pu.id as uom_id,pu.name as uom_name ,floor(round(1/factor,2)) as ratio,
+                    pur.product_template_id as template_id,pp.id as product_id
+                    from product_uom pu , product_template_product_uom_rel pur ,
+                    product_product pp,
+                    product_sale_group_rel rel,crm_case_section ccs
+                    where pp.product_tmpl_id = pur.product_template_id
+                    and rel.product_id = pp.id
+                    and pu.id = pur.product_uom_id
+                    and rel.sale_group_id=ccs.sale_group_id
+                    and ccs.id = %s        
                 )A''' , (saleteam_id,))
         datas = cr.fetchall()
         cr.execute
@@ -1998,12 +2030,12 @@ class mobile_sale_order(osv.osv):
         return datas
     
     def sale_team_return(self, cr, uid, section_id , saleTeamId, context=None, **kwargs):
-        cr.execute('''select DISTINCT cr.id,cr.complete_name,cr.warehouse_id,cr.name,sm.member_id,cr.code,pr.product_product_id,cr.location_id,cr.allow_foc,cr.allow_tax,cr.branch_id,state.name,cr_deli.name as delivery_team,cr.is_supervisor
-                    from crm_case_section cr, sale_member_rel sm,crm_case_section_product_product_rel pr,res_country_state state,crm_case_section cr_deli
-                     where sm.section_id = cr.id and cr.id=pr.crm_case_section_id  
-                     and state.id =cr.default_division 
-                     and cr.delivery_team_id =cr_deli.id
-                     and sm.member_id =%s 
+        cr.execute('''select DISTINCT cr.id,cr.complete_name,cr.warehouse_id,cr.name,sm.member_id,cr.code,rel.product_id,cr.location_id,cr.allow_foc,cr.allow_tax,cr.branch_id,state.name,cr_deli.name as delivery_team,cr.is_supervisor
+                    from crm_case_section cr, sale_member_rel sm,product_sale_group_rel rel,res_country_state state,crm_case_section cr_deli
+                    where sm.section_id = cr.id and cr.sale_group_id=rel.sale_group_id  
+                    and state.id =cr.default_division 
+                    and cr.delivery_team_id =cr_deli.id
+                    and sm.member_id =%s
                     and cr.id = %s
             ''', (section_id, saleTeamId,))
         datas = cr.fetchall()
@@ -2832,8 +2864,13 @@ class mobile_sale_order(osv.osv):
     
     def get_stockcheck(self, cr, uid, sale_team_id , context=None, **kwargs):
         cr.execute('''            
-                  select scl.id ,sc.outlet_type,scl.product_id,scl.product_uom_qty as quantity,scl.available,scl.facing, scl.chiller from stock_check_setting sc ,stock_check_setting_line scl where sc.id=scl.stock_setting_ids
-         ''')
+                select scl.id ,sc.outlet_type,scl.product_id,scl.product_uom_qty as quantity,scl.available,scl.facing, scl.chiller 
+                from stock_check_setting sc ,stock_check_setting_line scl,crm_case_section ccs,product_sale_group_rel rel
+                where sc.id=scl.stock_setting_ids
+                and ccs.sale_group_id = rel.sale_group_id
+                and rel.product_id=scl.product_id
+                and ccs.id=%s
+         ''', (sale_team_id,))
         datas = cr.fetchall()
         return datas            
     
@@ -4335,7 +4372,7 @@ class mobile_sale_order(osv.osv):
 
     def product_qty_in_stock(self, cr, uid, warehouse_id , context=None, **kwargs):
             cr.execute("""
-            select product_id,qty_on_hand,main_group,name_template,price,sequence from
+            select product_id,ROUND(qty_on_hand) as qty_on_hand,main_group,name_template,price,sequence from
               (    
                 select product.id as product_id,sum(qty) as qty_on_hand,product_temp.main_group as main_group,
                          product.name_template as name_template,product_temp.list_price as price,product.sequence
@@ -4344,9 +4381,12 @@ class mobile_sale_order(osv.osv):
                          and quant.product_id = product.id
                          and product.product_tmpl_id = product_temp.id
                          and product.active = true
+                       and main_group in (select principle_id from product_sale_group_principle_rel 
+                        where sale_group_id in (select sale_group_id from crm_case_section where id 
+                        in (select default_section_id from res_users where id =%s)))  
                          group by quant.product_id, main_group,name_template,product.id,price,product.sequence
             )A where qty_on_hand > 0  order by name_template
-            """, (warehouse_id,))   
+            """, (warehouse_id,uid,))
             datas = cr.fetchall()        
             return datas
     

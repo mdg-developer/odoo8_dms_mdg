@@ -57,12 +57,12 @@ class notification_services(osv.TransientModel):
     def  check_sale_team(self, cr, uid, member_id, sale_team_id, context=None, **kwargs):    
         try:
             cr.execute('''
-            select DISTINCT cr.id,cr.complete_name,cr.warehouse_id
-                    from crm_case_section cr, sale_member_rel sm,crm_case_section_product_product_rel pr 
-                    where sm.section_id = cr.id and cr.id=pr.crm_case_section_id  
-                    and cr.write_date::date =  now()::date
-                    and sm.member_id = %s
-                    and cr.id = %s
+                            select DISTINCT cr.id,cr.complete_name,cr.warehouse_id
+                            from crm_case_section cr, sale_member_rel sm,product_sale_group_rel rel 
+                            where sm.section_id = cr.id and cr.sale_group_id=rel.sale_group_id
+                            and cr.write_date::date =  now()::date
+                            and sm.member_id = %s
+                            and cr.id = %s
                             ''', (member_id, sale_team_id,))            
             datas = cr.fetchall()            
             return datas
@@ -101,15 +101,15 @@ class notification_services(osv.TransientModel):
     def check_product(self, cr, uid, sale_team_id, context=None, **kwargs):    
         try:
             cr.execute('''
-                    select  pp.product_tmpl_id,pt.list_price , pt.description
-                        from crm_case_section_product_product_rel crm_real ,
-                        crm_case_section ccs ,product_template pt, product_product pp , product_category pc
-                        where pp.id = crm_real.product_product_id
-                        and pt.id = pp.product_tmpl_id
-                        and ccs.id = crm_real.crm_case_section_id
-                        and pc.id = pt.categ_id
-                        and pp.write_date::date = now()::date
-                        and ccs.id = %s
+                            select  pp.product_tmpl_id,pt.list_price , pt.description
+                            from product_sale_group_rel rel,
+                            crm_case_section ccs ,product_template pt, product_product pp , product_category pc
+                            where pp.id = rel.product_id
+                            and pt.id = pp.product_tmpl_id
+                            and ccs.sale_group_id = rel.sale_group_id
+                            and pc.id = pt.categ_id
+                            and pp.write_date::date = now()::date
+                            and ccs.id = %s
                             ''', (sale_team_id,))            
             datas = cr.fetchall()            
             return datas

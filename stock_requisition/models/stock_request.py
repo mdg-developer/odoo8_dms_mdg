@@ -65,7 +65,7 @@ class stock_requisition(osv.osv):
             issue_to = sale_team.receiver
             location = sale_team.location_id
             vehicle_id = sale_team.vehicle_id
-            product_line = sale_team.product_ids
+            product_line = sale_team.sale_group_id.product_ids
             to_location_id = sale_team.issue_location_id
             order_ids = sale_order_obj.search(cr, uid, [('delivery_id', '=', sale_team_id), ('shipped', '=', False), ('is_generate', '=', False), ('invoiced', '=', False), ('state', 'not in', ['done', 'cancel', 'reversed'])], context=context) 
             for line in product_line:                
