@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+        <record id="view_sales_group_form_inherit" model="ir.ui.view">
+			 <field name="name">sales.group.form</field>
+            <field name="model">sales.group</field>
+			<field name="inherit_id" ref="sale_group.view_sales_group_form" />
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//field[@name='principle_ids']" position="after">
+                        <field name="competitor_product_ids" widget="many2many_tags"/>
+					</xpath>
+				</data>
+			</field>
+		</record>
+
+	</data>
+</openerp>

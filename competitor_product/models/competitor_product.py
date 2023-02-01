@@ -8,5 +8,6 @@ class competitor_product(osv.osv):
         'image': fields.binary("Image"),
         'uom_ids': fields.many2many('product.uom', string='UoM'),
         'description': fields.text(string='Description'),
+        'sales_group_id': fields.many2one('sales.group', 'Sales Group'),
         'sequence': fields.integer(string='Sequence'),
     }

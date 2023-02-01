@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+		<record id="crm_case_section_view_form_sale_group" model="ir.ui.view">
+			<field name="name">crm.case.section.form.inherit</field>
+			<field name="model">crm.case.section</field>
+			<field name="inherit_id" ref="sales_team.crm_case_section_view_form" />
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//field[@name='parent_id']" position="after">
+					    <field name="sale_group_id" />
+					    <field name="sales_person_id" />
+					    <field name="join_date" />
+					    <field name="sales_supervisor_id" />
+					    <field name="sales_manager_id" />
+					    <field name="branch_manager_id" />
+					    <field name="sales_rom_id" />
+					    <field name="sales_csm_id" />
+					    <field name="sales_nsm_id" />
+					</xpath>
+				</data>
+			</field>
+		</record>
+
+		<record id="crm_case_section_view_tree_sale_group" model="ir.ui.view">
+			<field name="name">crm.case.section.tree.inherit</field>
+			<field name="model">crm.case.section</field>
+			<field name="inherit_id" ref="sales_team.crm_case_section_view_tree" />
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//field[@name='user_id']" position="after">
+					    <field name="sale_group_id" />
+					    <field name="sales_person_id" />
+					    <field name="join_date" />
+					    <field name="sales_supervisor_id" />
+					    <field name="sales_manager_id" />
+					    <field name="branch_manager_id" />
+					    <field name="sales_rom_id" />
+					    <field name="sales_csm_id" />
+					    <field name="sales_nsm_id" />
+					</xpath>
+				</data>
+			</field>
+		</record>
+
+		<record model="ir.ui.view"  id="view_sale_team_form_filter_supervisor">
+			<field name="name">Case Sections - Search</field>
+			<field name="model">crm.case.section</field>
+			<field name="inherit_id" ref="sales_team.crm_case_section_salesteams_search" />
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//search/group" position="inside">
+						<filter string="Sales Person Name" domain="[]" context="{'group_by':'sales_person_id'}" />
+						<filter string="Join Date Day" domain="[]" context="{'group_by':'join_date:day'}" />
+						<filter string="Sales Supervisor" domain="[]" context="{'group_by':'sales_supervisor_id'}" />
+						<filter string="Sales Manager" domain="[]" context="{'group_by':'sales_manager_id'}" />
+						<filter string="Branch Manager" domain="[]" context="{'group_by':'branch_manager_id'}" />
+						<filter string="ROM" domain="[]" context="{'group_by':'sales_rom_id'}" />
+						<filter string="CSM" domain="[]" context="{'group_by':'sales_csm_id'}" />
+						<filter string="NSM" domain="[]" context="{'group_by':'sales_nsm_id'}" />
+					</xpath>
+				</data>
+			</field>
+		</record>
+
+	</data>
+</openerp>

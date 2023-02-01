@@ -21,22 +21,30 @@
 ##############################################################################
 
 {
-    'name': 'Competitor Product',
+    'name': 'Sale Group',
     'version': '1.0',
-    'category': 'Product',
+    'category': 'Sale',
     'sequence': 30,
-    'summary': 'Competitor Product',
+    'summary': 'Sale',
     'description': """
-Competitor Product
+Sale Group
 
 """,
-    'author': 'Seventh Computing',
+    'author': 'Seventh Computing Developer Group',
     'website': 'http://www.7thcomputing.com',
-    'depends': ['base','product','sale_group'],
+    'depends': ['base', 'sale'],
     'data': [
-       'views/competitor_product_view.xml',
-       'views/sale_team_view.xml',
-        'views/sales_group_view.xml'
+        'views/sales_group_view.xml',
+        'views/sales_person_name_view.xml',
+        'views/sales_supervisor_view.xml',
+        'views/sales_manager_view.xml',
+        'views/branch_manager_view.xml',
+        'views/sales_rom_view.xml',
+        'views/sales_csm_view.xml',
+        'views/sales_nsm_view.xml',
+        'views/sale_team_view.xml',
+        'views/delivery_group_view.xml',
+
     ],
     'installable': True,
     'auto_install': False,
