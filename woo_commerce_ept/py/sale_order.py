@@ -441,6 +441,7 @@ class sale_order(models.Model):
                             'discount_product':discount_product,
                             'fees_product':fees_product,   
                             'promotion_id':promotion_id,
+                            'discount': float(line.get('discount_percent', 0.0)),
                             'discount_amt':float(line.get('discount_amount',0.0)),
                             'sale_foc':sale_foc,                              
                             }                                    
