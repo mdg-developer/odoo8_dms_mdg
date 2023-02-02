@@ -52,38 +52,39 @@ class branch_good_issue_note(osv.osv):
                 req_record = cr.fetchall()
                 if req_record:
                     for req_data in req_record:
-                        product_id = int(req_data[1])
-                        loose = req_data[2]
-                        pallet_size = int(req_data[3])
-                        if not pallet_size:
-                            raise osv.except_osv(
-                                _('Warning!'),
-                                _('Please Check Ctn/Pallet Value for the product '+ product_obj.browse(cr, uid, product_id).name)
-                            )
-                        req_qty = float(req_data[0])
-                        p_name = req_data[4]
-                        uom_id = req_data[5]
-                        uom_name = req_data[6]
-                        if loose != True:
-                            if req_qty >= pallet_size:
-                                req_quantity = int(req_qty / pallet_size)
-                                pallet_req_qty = req_quantity * pallet_size
-                                ctn_qty = req_qty % pallet_size
-                                data_line.append(
-                                    {'req_quantity': pallet_req_qty, 'product_uom': uom_id, 'product_id': product_id,
-                                     'uom_name': uom_name, 'product_name': p_name, 'loose': loose, 'ctn_line': False})
-                                if ctn_qty > 0:
+                        if not req_data[0] in (None,0):
+                            product_id = int(req_data[1])
+                            loose = req_data[2]
+                            pallet_size = int(req_data[3])
+                            if not pallet_size:
+                                raise osv.except_osv(
+                                    _('Warning!'),
+                                    _('Please Check Ctn/Pallet Value for the product '+ product_obj.browse(cr, uid, product_id).name)
+                                )
+                            req_qty = float(req_data[0])
+                            p_name = req_data[4]
+                            uom_id = req_data[5]
+                            uom_name = req_data[6]
+                            if loose != True:
+                                if req_qty >= pallet_size:
+                                    req_quantity = int(req_qty / pallet_size)
+                                    pallet_req_qty = req_quantity * pallet_size
+                                    ctn_qty = req_qty % pallet_size
                                     data_line.append(
-                                        {'req_quantity': ctn_qty, 'product_uom': uom_id, 'product_id': product_id,
-                                         'uom_name': uom_name, 'product_name': p_name, 'loose': loose, 'ctn_line': True})
+                                        {'req_quantity': pallet_req_qty, 'product_uom': uom_id, 'product_id': product_id,
+                                         'uom_name': uom_name, 'product_name': p_name, 'loose': loose, 'ctn_line': False})
+                                    if ctn_qty > 0:
+                                        data_line.append(
+                                            {'req_quantity': ctn_qty, 'product_uom': uom_id, 'product_id': product_id,
+                                             'uom_name': uom_name, 'product_name': p_name, 'loose': loose, 'ctn_line': True})
+                                else:
+                                    data_line.append({'req_quantity': req_qty, 'product_uom': uom_id, 'product_id': product_id,
+                                                      'uom_name': uom_name, 'product_name': p_name, 'loose': loose,
+                                                      'ctn_line': True})
                             else:
                                 data_line.append({'req_quantity': req_qty, 'product_uom': uom_id, 'product_id': product_id,
                                                   'uom_name': uom_name, 'product_name': p_name, 'loose': loose,
-                                                  'ctn_line': True})
-                        else:
-                            data_line.append({'req_quantity': req_qty, 'product_uom': uom_id, 'product_id': product_id,
-                                              'uom_name': uom_name, 'product_name': p_name, 'loose': loose,
-                                              'ctn_line': False})
+                                                  'ctn_line': False})
 
                 for req_line_value in data_line:
                     # for req_line_id in req_value.p_line:
