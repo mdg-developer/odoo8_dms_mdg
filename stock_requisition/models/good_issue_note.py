@@ -255,7 +255,7 @@ class good_issue_note(osv.osv):
                     if qty_on_hand < total_issue_qty:
                         raise osv.except_osv(_('Warning'),
                                  _('Please Check Qty On Hand For (%s)') % (product_check_data.name_template,))
-
+                move_list_ids = []
                 for id in note_line_id:
                     note_line_value = product_line_obj.browse(cr, uid, id, context=context)
                     product_id = note_line_value.product_id.id
@@ -266,15 +266,6 @@ class good_issue_note(osv.osv):
                     big_qty=note_line_value.big_issue_quantity
                     big_uom=note_line_value.big_uom_id.id
                     lot_id=note_line_value.batch_no.id
-
-                    
-                    #comment by EMTW
-#                     bigger_qty=0
-#                     if big_uom:
-#                         cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (big_uom,))
-#                         bigger_qty=cr.fetchone()
-#                         if bigger_qty:
-#                             bigger_qty=bigger_qty[0]*big_qty
                         
                     move_id=move_obj.create(cr, uid, {'picking_id': picking_id,
                                               'picking_type_id':picking_type_id,
@@ -287,17 +278,19 @@ class good_issue_note(osv.osv):
                                           'location_dest_id':from_location_id,
                                           'name':name,
                                            'origin':origin,
-                                          'state':'confirmed'}, context=context)     
-                    move_obj.action_done(cr, uid, move_id, context=context)  
+                                          'state':'confirmed'}, context=context) 
+                    move_list_ids.append(move_id)
+                if len(move_list_ids) > 0:
+                    move_obj.action_done(cr, uid, move_list_ids, context=context)                        
                     cr.execute('''update stock_move set date=((%s::date)::text || ' ' || date::time(0))::timestamp where state='done' and origin =%s''',(issue_date,origin,))
-        result = self.write(cr, uid, ids, {'state': 'issue'}) 
-        if result:
-            for line in request_order_line:
-                order_ids = sale_order_obj.search(cr, uid, [('name', '=', line.name)], context=context)
-                if order_ids:
-                    current_order = sale_order_obj.browse(cr, uid, order_ids[0], context=context)
-                    if current_order and current_order.woo_order_number:
-                        current_order.update_woo_order_status_action('delivered')                    
+            result = self.write(cr, uid, ids, {'state': 'issue'}) 
+#         if result:
+#             for line in request_order_line:
+#                 order_ids = sale_order_obj.search(cr, uid, [('name', '=', line.name)], context=context)
+#                 if order_ids:
+#                     current_order = sale_order_obj.browse(cr, uid, order_ids[0], context=context)
+#                     if current_order and current_order.woo_order_number:
+#                         current_order.update_woo_order_status_action('delivered')                    
         return result 
                             
 class good_issue_line(osv.osv):  # #prod_pricelist_update_line
