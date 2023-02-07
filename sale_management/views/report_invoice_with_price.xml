@@ -156,7 +156,7 @@
 									<th class="text-center" style="border:1pt solid;border-color:black;">Quantity</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">UOM</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">Unit Price</th>
-									<th class="text-center" style="border:1pt solid;border-color:black;">FOC</th>
+<!--									<th class="text-center" style="border:1pt solid;border-color:black;">FOC</th>-->
 
 									<th class="text-center" style="border:1pt solid;border-color:black;">Total Price</th>
 <!-- 									<th style="border:1pt solid;border-color:black;" class="text-center" groups="sale.group_discount_per_so_line">Disc.(%)</th> -->
@@ -194,11 +194,11 @@
 									<td class="text-right" style="border:1pt solid;border-color:black;">
 										<t t-esc="'{0:,.0f}'.format(l.price_unit)"/>
 									</td>
-									<td class="text-center" style="border:1pt solid;border-color:black;">
-										<t t-if="l.foc==True">
-											✓
-										</t>
-									</td>
+<!--									<td class="text-center" style="border:1pt solid;border-color:black;">-->
+<!--										<t t-if="l.foc==True">-->
+<!--											✓-->
+<!--										</t>-->
+<!--									</td>-->
 									<td class="text-right" style="border:1pt solid;border-color:black;">
 										<span t-esc="'{0:,.0f}'.format(l.net_total)"/>
 									</td>

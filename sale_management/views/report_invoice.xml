@@ -167,7 +167,7 @@
 <!-- 									<th style="border:1pt solid;border-color:black;" class="text-center" -->
 <!-- 										groups="sale.group_discount_per_so_line">Disc.(%)</th> -->
 <!-- 									<th class="text-center" style="border:1pt solid;border-color:black;" groups="sale.group_discount_per_so_line">Disc.(Amt)</th> -->
-									<th class="text-center" style="border:1pt solid;border-color:black;">FOC</th>
+<!--									<th class="text-center" style="border:1pt solid;border-color:black;">FOC</th>-->
 									<th class="text-center" style="border:1pt solid;border-color:black;">Total(excl.tax)</th>
 								</tr>
 							</thead>
@@ -201,11 +201,11 @@
 <!-- 									<td class="text-right" style="border:1pt solid;border-color:black;" groups="sale.group_discount_per_so_line"> -->
 <!-- 										<span t-field="l.discount_amt" /> -->
 <!-- 									</td> -->
-									<td class="text-center" style="border:1pt solid;border-color:black;">
-										<t t-if="l.foc==True">
-											✓
-										</t>
-									</td>
+<!--									<td class="text-center" style="border:1pt solid;border-color:black;">-->
+<!--										<t t-if="l.foc==True">-->
+<!--											✓-->
+<!--										</t>-->
+<!--									</td>-->
 									<td class="text-right" style="border:1pt solid;border-color:black;">
 										<t t-if="l.foc==True">
 											0.00
