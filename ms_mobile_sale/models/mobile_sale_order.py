@@ -1767,7 +1767,7 @@ class mobile_sale_order(osv.osv):
             status = 'approve'
             cr.execute('''select distinct id,sequence as seq,from_date ,to_date,active,name as p_name,
                         logic ,expected_logic_result ,special, special1, special2, special3 ,description,
-                        pr.promotion_count, pr.monthly_promotion ,code as p_code,manual,main_group,pr.ecommerce
+                        pr.promotion_count, pr.monthly_promotion ,code as p_code,manual,main_group
                         from promos_rules pr
                         left join promos_rules_res_branch_rel pro_br_rel on (pr.id = pro_br_rel.promos_rules_id)
                         left join promos_rules_product_rel pro_pp_rel on (pr.id=pro_pp_rel.promos_rules_id)
@@ -1787,12 +1787,12 @@ class mobile_sale_order(osv.osv):
                             where ccs.sale_group_id=rel.sale_group_id
                             and ccs.id=%s
                         )
-                        ''', (branch_id, status, team_id,))
+                        ''', (branch_id, status, team_id, team_id,))
         else:
             status = 'draft'            
             cr.execute('''select distinct id,sequence as seq,from_date ,to_date,active,name as p_name,
                         logic ,expected_logic_result ,special, special1, special2, special3 ,description,
-                        pr.promotion_count, pr.monthly_promotion,code as p_code,manual,main_group,pr.ecommerce
+                        pr.promotion_count, pr.monthly_promotion,code as p_code,manual,main_group
                         from promos_rules pr
                         left join promos_rules_res_branch_rel pro_br_rel on (pr.id = pro_br_rel.promos_rules_id)
                         left join promos_rules_product_rel pro_pp_rel on (pr.id=pro_pp_rel.promos_rules_id)
@@ -1812,7 +1812,7 @@ class mobile_sale_order(osv.osv):
                             where ccs.sale_group_id=rel.sale_group_id
                             and ccs.id = %s
                         )
-                        ''', (branch_id, status, team_id,))
+                        ''', (branch_id, status, team_id, team_id,))
         datas = cr.fetchall()        
         return datas
     
