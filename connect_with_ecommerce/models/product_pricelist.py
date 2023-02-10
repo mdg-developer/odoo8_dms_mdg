@@ -61,7 +61,7 @@ class product_pricelist(osv.osv):
                                         branch_code = line.branch_code
                                         limit_data = '''[{"branch_code":"%s","product_lists":[{"product_sku":"%s","product_price":%s}]}]''' % (
                                         str(branch_code), str(product_code), price)
-                                        response = requests.post(url, headers=headers, data=limit_data)
+                                        response = requests.post(url, headers=headers, data=limit_data, verify=False)
                                         if response.status_code not in [200, 201]:
                                             raise except_orm(_('Error'),
                                                              _("Error in syncing response for product %s %s") % (
