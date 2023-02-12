@@ -5,7 +5,7 @@ from openerp import SUPERUSER_ID
 class product_product(osv.osv):
     _inherit = "product.product"
     _columns = {
-        'sequence': fields.integer('Sequence', size=3, default=0),
+        # 'sequence': fields.integer('Sequence', size=3, default=0),
         'default_code' : fields.char('Internal Reference', select=True),
          'is_price_diff_product':fields.boolean('Is Price Diff Product'),
 
