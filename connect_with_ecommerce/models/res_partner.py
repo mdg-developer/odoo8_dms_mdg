@@ -5,6 +5,19 @@ import logging
 import random
 from datetime import timedelta,datetime
 import base64
+from openerp.addons.connector.queue.job import job, related_action
+from openerp.addons.connector.session import ConnectorSession
+from openerp.addons.connector.exception import FailedJobError
+from openerp.addons.connector.jobrunner.runner import ConnectorRunner
+
+@job(default_channel='root.woosaleorder')
+def automation_woo_sale_order(session, original_pre_sale_order_no):
+    res_partner_obj = session.pool['res.partner']
+    context = session.context.copy()
+    cr = session.cr
+    uid = session.uid
+    res_partner_obj.create_woo_sale_order(cr, uid, original_pre_sale_order_no, context=None)
+    return True
 
 class res_partner(osv.osv):
     _inherit = 'res.partner'
@@ -935,6 +948,19 @@ class res_partner(osv.osv):
                         }
                         create_order_response = wcapi.post("orders", data)
                         logging.warning("Check create_order_response status code: %s", create_order_response.status_code)
+                        if create_order_response.status_code not in [200, 201]:
+                            one_signal_values = {
+                                'partner_id': sale_order.partner_id.id,
+                                'contents': "Your order " + sale_order.name + " does not create properly.Please Check!",
+                                'headings': "Burmart"
+                            }
+                            self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)
+                            # put to queue.job
+                            session = ConnectorSession(cr, uid, context)
+                            # this code will try after priority 30 , if success , it will succes, if not it will fail
+                            jobid = automation_woo_sale_order.delay(session, original_pre_sale_order_no , priority=30)
+                            runner = ConnectorRunner()
+                            runner.run_jobs()
                         if create_order_response.status_code in [200, 201]:
                             one_signal_values = {
                                 'partner_id': sale_order.partner_id.id,
