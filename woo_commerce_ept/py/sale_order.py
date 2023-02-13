@@ -554,6 +554,7 @@ class sale_order(models.Model):
             getting_point = 0
             barcode_value = None
             branch_id = None
+            sales_person = None
             
             if instance.woo_version == 'old':
                 woo_order_number = result.get('order_number')
