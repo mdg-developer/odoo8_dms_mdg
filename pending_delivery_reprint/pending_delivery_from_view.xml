@@ -22,6 +22,7 @@
 							<field name="order_id" class="oe_inline" />
 							<field name="delivery_team_id" class="oe_inline" />
 							<field name="miss" />
+							<field name="is_revised" />
 							<field name="state" />
 							<field name="latitude" />
 							<field name="longitude" />
@@ -47,6 +48,7 @@
 					<field name="delivery_team_id" />
 					<field name="order_id" />
 					<field name="miss" />
+					<field name="is_revised" />
 					<field name="payment_ref" class="oe_inline"/>							
 					<field name="state" />
 				</tree>

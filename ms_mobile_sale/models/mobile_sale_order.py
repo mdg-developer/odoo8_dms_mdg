@@ -161,6 +161,9 @@ class mobile_sale_order(osv.osv):
       'order_team':fields.many2one('crm.case.section', 'Order Team'),
       'rebate_later':fields.boolean('Rebate Later', readonly=True),
       'order_saleperson': fields.many2one('res.users', 'Order Saleperson'),
+      'pre_sale_order_id': fields.many2one('sale.order', 'Pre Sale Order'),
+      'revise_reason_id': fields.many2one('revise.reason', 'Revise Reason'),
+      'cancel_reason_id': fields.many2one('cancel.reason', 'Cancel Reason'),
    #     'journal_id'  : fields.many2one('account.journal', 'Journal' ,domain=[('type','in',('cash','bank'))]),   
     }
     _order = 'id desc'
@@ -1159,6 +1162,8 @@ class mobile_sale_order(osv.osv):
                                             'rebate_later':ms_ids.rebate_later,
                                              'ignore_credit_limit':True,
                                              'credit_history_ids':[],
+                                            'revise_reason_id': ms_ids.revise_reason_id.id if ms_ids.revise_reason_id else None,
+                                            'cancel_reason_id': ms_ids.cancel_reason_id.id if ms_ids.cancel_reason_id else None,
 
 
                                         }
@@ -3197,6 +3202,7 @@ class mobile_sale_order(osv.osv):
                         delivery = {                                                            
                                   'order_id':So_id[0],
                                   'miss':True,
+                                  'is_revised': False,
                                   'delivery_date':datetime.now(),
                                   'due_date':deli['due_date'],
                                   'state':'draft',
@@ -3217,6 +3223,7 @@ class mobile_sale_order(osv.osv):
                         delivery = {                                                            
                                   'order_id':So_id[0],
                                   'miss':False,
+                                  'is_revised': False,
                                   'due_date':deli['due_date'],
                                   'delivery_date':datetime.now(),
                                   'state':'draft',
@@ -3370,6 +3377,10 @@ class mobile_sale_order(osv.osv):
                                                    , ('name', '=', so_ref_no)], context=context)
                     if So_id:
                         print 'Sale Order Id', So_id[0]
+                        if deli['revised'] == 'true':
+                            is_revised =True
+                        else :
+                            is_revised=False
                         if deli['cancel_reason_id'] != 'null' and deli['cancel_reason_id']:
                             cancel_reason_id = deli['cancel_reason_id']
                         else:
@@ -3379,7 +3390,7 @@ class mobile_sale_order(osv.osv):
                         else:
                             revise_reason_id = None
 
-                        cr.execute('''update sale_order set state ='cancel',cancel_user_id=%s,cancel_reason_id=%s,revise_reason_id=%s where id = %s ''', (uid, cancel_reason_id, revise_reason_id, So_id[0],))
+                        cr.execute('''update sale_order set state ='cancel',cancel_user_id=%s,is_revised=%s,cancel_reason_id=%s,revise_reason_id=%s where id = %s ''', (uid, is_revised, cancel_reason_id, revise_reason_id, So_id[0],))
                         cr.execute('select tb_ref_no from sale_order where id=%s', (So_id[0],))
                         ref_no = cr.fetchone()[0]
                         cr.execute("update pre_sale_order set void_flag = 'voided' where name=%s", (ref_no,))                                                                                                                                                                                                                            

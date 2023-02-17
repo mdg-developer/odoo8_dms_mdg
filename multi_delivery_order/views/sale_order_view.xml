@@ -8,6 +8,7 @@
 			<field name="arch" type="xml">
 				<xpath expr="//field[@name='invoiced']" position="after">
 					<field name="is_confirm"  />
+					<field name="is_revised" />
 				</xpath>
 			</field>
 		</record>
@@ -19,6 +20,7 @@
 			<field name="arch" type="xml">
 				<xpath expr="//field[@name='is_entry']" position="after">
 					<field name="is_confirm"  />
+					<field name="is_revised" />
 				</xpath>
 			</field>
 		</record>
