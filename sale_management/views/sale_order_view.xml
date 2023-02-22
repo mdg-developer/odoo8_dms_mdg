@@ -106,6 +106,7 @@
 
 				<field name="pricelist_id" position="after">
 					<field name="tb_ref_no" attrs="{'readonly':[('state','!=','draft')]}"></field>
+					<field name="pre_sale_order_id" attrs="{'readonly':[('state','!=','draft')]}"/>
 					<field name="delivery_remark" />
 					<field name="rebate_later" />
 					<field name="ignore_credit_limit" />

@@ -277,10 +277,20 @@ class mobile_sale_order(osv.osv):
                     if so['order_saleperson'] != 'null' and so['order_saleperson']:
                        # so['user_id']=so['order_saleperson']
                         so['user_id'] = so['user_id']
-                        so['order_saleperson'] = None
+                        order_saleperson =so['order_saleperson']
                     else:
-                        so['order_saleperson'] = None
-                        
+                        order_saleperson = None
+                    if so['presaleorderid'] != 'null' and so['presaleorderid']:
+                        presaleorderid = so['presaleorderid'].replace('\\', '').replace('\\', '')
+                        cursor.execute("select id from sale_order where name = %s ", (presaleorderid,))
+                        sale_order_data = cursor.fetchone()
+                        if sale_order_data:
+                            pre_sale_order_id = sale_order_data[0]
+                        else:
+                            pre_sale_order_id = None
+                    else:
+                        pre_sale_order_id = None
+
                     cursor.execute('select branch_id from crm_case_section where id=%s', (so['sale_team'],))
                     branch_id = cursor.fetchone()[0]     
                     cursor.execute('select id From res_partner where customer_code  = %s ', (so['customer_code'],))
@@ -347,7 +357,8 @@ class mobile_sale_order(osv.osv):
                         'void_print_count':so['void_print_count'],
                         'order_team':order_team,
                         'rebate_later':rebate,
-                        'order_saleperson':so['order_saleperson'],
+                        'order_saleperson':order_saleperson,
+                        'pre_sale_order_id':pre_sale_order_id,
                         'payment_ref':payment_ref,
                         'revise_reason_id':revise_reason_id,
                         
@@ -1125,7 +1136,15 @@ class mobile_sale_order(osv.osv):
                     cr.execute("select company_id from res_users where id=%s", (ms_ids.user_id.id,))
                     company_id = cr.fetchone()[0]
                     date = datetime.strptime(ms_ids.date, '%Y-%m-%d %H:%M:%S')
-                    de_date = date.date()       
+                    de_date = date.date()
+                    if  ms_ids.pre_sale_order_id:
+                        pre_sale_order_id=ms_ids.pre_sale_order_id.id
+                    else:
+                        pre_sale_order_id= False
+                    if ms_ids.order_team:
+                        order_team=ms_ids.order_team.id
+                    else:
+                        order_team=sale_team_id
                     soResult = {
                                           'date_order':ms_ids.date,
                                            'partner_id':ms_ids.partner_id.id,
@@ -1162,6 +1181,7 @@ class mobile_sale_order(osv.osv):
                                             'rebate_later':ms_ids.rebate_later,
                                              'ignore_credit_limit':True,
                                              'credit_history_ids':[],
+                                            'pre_sale_order_id':pre_sale_order_id,
                                             'revise_reason_id': ms_ids.revise_reason_id.id if ms_ids.revise_reason_id else None,
                                             'cancel_reason_id': ms_ids.cancel_reason_id.id if ms_ids.cancel_reason_id else None,
 

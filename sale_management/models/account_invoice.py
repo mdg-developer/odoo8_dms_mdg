@@ -149,6 +149,7 @@ class account_invoice(osv.osv):
                                       ('mis_claim', 'Mis Claim'),
                                       ('gid_loss', 'Gid Loss/Damage'),
                                       ('expired', 'Expired/Damage')], 'Type'),
+                    'pre_sale_order_id': fields.many2one('sale.order', 'Original Pre Sale Order No', readonly=True),
               }
 
     

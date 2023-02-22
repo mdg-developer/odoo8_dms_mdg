@@ -433,6 +433,11 @@ class sale_order(osv.osv):
         if not journal_ids:
             raise osv.except_osv(_('Error!'),
                 _('Please define sales journal for this company: "%s" (id:%d).') % (order.company_id.name, order.company_id.id))
+
+        if  order.pre_sale_order_id:
+            pre_sale_order_id=order.pre_sale_order_id.id
+        else:
+            pre_sale_order_id = None
         
         invoice_vals = {
             'name': order.client_order_ref or '',
@@ -464,6 +469,7 @@ class sale_order(osv.osv):
             'credit_balance' :   order.credit_balance,  
             'latitude':order.so_latitude,
             'longitude':order.so_longitude,
+            'pre_sale_order_id': pre_sale_order_id,
         }
 
         # Care for deprecated _inv_get() hook - FIXME: to be removed after 6.1
