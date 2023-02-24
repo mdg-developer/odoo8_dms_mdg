@@ -270,7 +270,41 @@ class branch_good_issue_note(osv.osv):
                 else:
                     qty_on_hand = 0
                 cr.execute("update branch_good_issue_note_line set qty_on_hand=%s where product_id=%s and id=%s", (qty_on_hand, product_id,line_id,))
-                 
+    def recompute_cbm_viss(self, cr, uid, ids, context=None):
+        total_cbm = total_viss = cbm = viss = val1 = val2 = 0.0
+        product_cbm = product_viss = posm_viss = 0
+        uom_ratio = 1
+        good_obj = self.pool.get('branch.good.issue.note')
+        line_obj = self.pool.get('branch.good.issue.note.line')
+        if ids:
+            note_data = good_obj.browse(cr, uid, ids[0], context=context)
+            for note in note_data:
+                posm_viss = note.total_posm_viss
+                for line in note.p_line:
+                    product = line.product_id
+                    if product.product_tmpl_id.uom_id.id == line.product_uom.id:
+                        cr.execute(
+                            "select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s",
+                            (product.product_tmpl_id.report_uom_id.id,))
+                        bigger_qty = cr.fetchone()[0]
+                        uom_ratio = bigger_qty
+                    if line.issue_quantity > 0:
+                        product_cbm = line.issue_quantity * (product.cbm_value / uom_ratio)
+                        product_viss = line.issue_quantity * (product.viss_value / uom_ratio)
+                    val1 += line.product_cbm
+                    val2 += line.product_viss
+                    line.write({'product_cbm': product_cbm, 'product_viss': product_viss})
+                total_viss = val2+posm_viss
+                total_cbm = val1
+                cbm = note.max_cbm - note.total_cbm
+                viss = note.max_weight - note.total_viss
+                note.write({
+                    'bal_cbm':cbm,
+                    'bal_viss':viss,
+                    'total_viss':total_viss,
+                    'total_cbm':total_cbm
+                })
+
     def approve(self, cr, uid, ids, context=None):
         if ids:
             request_data=self.browse(cr, uid, ids[0], context=context)

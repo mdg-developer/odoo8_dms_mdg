@@ -72,6 +72,7 @@
 <!--								<field name="partner_id" domain="[('customer','=',True)]" />-->
 <!--								<field name="section_id" />-->
 								<field name="sale_order_id" readonly="1"/>
+								<button name="recompute_cbm_viss" string="Recompute" type="object"/>
 							</group>
 							<group>
 								<field name="request_id" readonly="1" />
