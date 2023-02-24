@@ -50,7 +50,7 @@
 									<field name="allow_rental" />
 									<field name="allow_visit_photo_taken" />
 									<field name="allow_customer_edit" />
-									
+									<field name="is_burmart_team" />
 
 
 								</group>

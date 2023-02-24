@@ -35,6 +35,18 @@
 										</tree>
 									</field>
 								</page>
+								<page string="Competitor Product Lines">
+									<field name="competitor_product_lines">
+										<tree string="Competitor Product Lines" editable="bottom" default_order="sequence asc">
+											<field name="sequence" invisible="1" />
+											<field name="competitor_product_id" />
+											<field name="available" />
+											<field name="product_uom_qty" />
+											<field name="facing" />
+											<field name="chiller" />
+										</tree>
+									</field>
+								</page>
 							</notebook>
 						</group>								
 					</sheet>

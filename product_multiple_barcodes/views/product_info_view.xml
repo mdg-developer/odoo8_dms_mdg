@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+	<!-- Product Info Form -->
+		<record id="view_product_info_form" model="ir.ui.view">
+			<field name="name">product.info.form</field>
+			<field name="model">product.info</field>
+			<field name="arch" type="xml">
+				<form string="Product Information Form">
+					<header>
+						<button name="confirm" string="Confirm" type="object"
+							class="oe_highlight" attrs="{'invisible':[('state','not in',('draft'))]}"/>
+						<field name="state" widget="statusbar" statusbar_visible="draft,done" />
+					</header>
+
+					<sheet>
+						<group>
+							<field name="product_tmpl_id" attrs="{'readonly': [('state','=','done')]}"/>
+							<field name="description" attrs="{'readonly': [('state','=','done')]}"/>
+							<field name="default_code" attrs="{'readonly': [('state','=','done')]}"/>
+							<field name="ti" attrs="{'readonly': [('state','=','done')]}"/>
+							<field name="hi" attrs="{'readonly': [('state','=','done')]}"/>
+							<field name="viss_value" attrs="{'readonly': [('state','=','done')]}"/>
+							<field name="kg_value" string='Weight (Kg)' attrs="{'readonly': [('state','=','done')]}"/>
+							<field name="cbm_value" string='CBM(cm)' attrs="{'readonly': [('state','=','done')]}"/>
+							<field name="ctn_pallet" attrs="{'readonly': [('state','=','done')]}"/>
+							<field name="barcode_no" attrs="{'readonly': [('state','=','done')]}"/>
+							<field name="ctn_weight" attrs="{'readonly': [('state','=','done')]}"/>
+							<field name="ctn_height" attrs="{'readonly': [('state','=','done')]}"/>
+							<field name="inbound_shelf_life" attrs="{'readonly': [('state','=','done')]}"/>
+							<field name="image_medium" widget="image" class="oe_avatar oe_left" attrs="{'readonly': [('state','=','done')]}"/>
+							<field name="carton_image" widget="image" class="oe_avatar oe_left" attrs="{'readonly': [('state','=','done')]}"/>
+							<field name="barcode_ids">
+								<tree editable="bottom">
+									<field name="name" />
+								</tree>
+							</field>
+						</group>
+					</sheet>
+
+				</form>
+			</field>
+		</record>
+
+		<!-- Product Info Tree -->
+		<record id="view_product_info_tree" model="ir.ui.view">
+			<field name="name">product.info.tree</field>
+			<field name="model">product.info</field>
+			<field name="arch" type="xml">
+				<tree string="Product Information">
+					<field name="product_tmpl_id" />
+					<field name="state" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- Product Info Action -->
+		<record id="action_product_info_view" model="ir.actions.act_window">
+			<field name="name">Product Information Form</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">product.info</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" eval="view_product_info_tree" />
+		</record>
+
+		<!-- Product Info Menu -->
+		<menuitem id="product_info_menu" parent="base.menu_base_config"
+			name="Product Information Update" action="action_product_info_view" groups="base.group_user" />
+
+	</data>
+</openerp>

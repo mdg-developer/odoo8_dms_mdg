@@ -2154,7 +2154,7 @@ class mobile_sale_order(osv.osv):
             (select uid from res_groups_users_rel where gid in (select id from res_groups  
             where name='Allow To Active') and uid=%s) allow_to_active,allow_collection_team,allow_product,allow_promotion,allow_customer,allow_sale_plan_day,
             allow_sale_plan_trip,allow_stock_request,allow_stock_exchange,allow_visit_record,allow_pending_delivery,allow_credit_collection,allow_daily_order_report,
-            allow_daily_sale_report,allow_pre_sale,allow_direct_sale,allow_assets,allow_customer_location_update,allow_stock_check,allow_rental,allow_feedback,allow_customer_create,allow_customer_edit,allow_visit_photo_taken
+            allow_daily_sale_report,allow_pre_sale,allow_direct_sale,allow_assets,allow_customer_location_update,allow_stock_check,allow_rental,allow_feedback,allow_customer_create,allow_customer_edit,allow_visit_photo_taken,is_burmart_team
             from res_users 
             where id = %s
             ''', (user_id,user_id,))
@@ -2979,7 +2979,37 @@ class mobile_sale_order(osv.osv):
                   select scl.id ,sc.outlet_type,scl.product_id,scl.product_uom_qty as quantity,scl.available,scl.facing, scl.chiller from stock_check_setting sc ,stock_check_setting_line scl where sc.id=scl.stock_setting_ids
          ''')
         datas = cr.fetchall()
-        return datas            
+        return datas
+
+    def get_all_competitor_products(self, cr, uid, sale_team_id , context=None, **kwargs):
+        cr.execute('''            
+            select cp.id,cp.name,product_uom_id
+            from crm_case_section ccs,sales_group sg,competitor_product_sales_group_rel prel,competitor_product cp,competitor_product_product_uom_rel rel
+            where ccs.sale_group_id=sg.id
+            and prel.sales_group_id=sg.id
+            and prel.competitor_product_id=cp.id
+            and cp.id=rel.competitor_product_id
+            and ccs.id=%s
+         ''', (sale_team_id,))
+        datas = cr.fetchall()
+        return datas
+
+    def get_all_competitor_product_images(self, cr, uid, sale_team_id, context=None, **kwargs):
+        list = []
+        cr.execute('''            
+            select competitor_product_id
+            from crm_case_section ccs,sales_group sg,competitor_product_sales_group_rel rel
+            where ccs.sale_group_id=sg.id
+            and rel.sales_group_id=sg.id
+            and ccs.id=%s
+         ''', (sale_team_id,))
+        datas = cr.fetchall()
+        for data in datas:
+            product = self.pool.get('competitor.product').browse(cr, uid, data[0], context=context)
+            if product.image:
+                product_data = [data[0], product.image]
+                list.append(product_data)
+        return list
 
     def get_product_id(self, cr, uid, sale_team_id, last_date, context=None):
         list = []
@@ -3232,7 +3262,15 @@ class mobile_sale_order(osv.osv):
     def get_delivery_datas(self, cr, uid, saleTeamId, soList, context=None, **kwargs):
         
         sale_order_obj = self.pool.get('sale.order')
-        list_val = None        
+        list_val = None
+        if soList:
+            for list in range(len(soList)):
+                content = soList[list]
+                if 'EC-SONo' in content:
+                    content = content.replace('EC-SONo', 'EC-SONo/')
+                    content = content[:-9] + "/" + content[-9:]
+                    soList[list] = content
+
         list_val = sale_order_obj.search(cr, uid, [('pre_order', '=', True), ('is_generate', '=', True),('state', '=', 'manual'), ('delivery_id', '=', saleTeamId), ('shipped', '=', False), ('invoiced', '=', False) , ('tb_ref_no', 'not in', soList)], context=context)
         print 'list_val', list_val
         list = []
@@ -3951,9 +3989,11 @@ class mobile_sale_order(osv.osv):
                             else:
                                 sequence = None
                             if srl['avail'] == 'false':
-                                avaliable = False
+                                avaliable = 'no'
+                            elif srl['avail'] == 'true':
+                                avaliable = 'yes'
                             else:
-                                avaliable = True
+                                avaliable = srl['avail']
                         
                             mso_line_res = {                                                            
                                       'stock_check_ids':stock_id,
@@ -3972,8 +4012,98 @@ class mobile_sale_order(osv.osv):
             return True       
         except Exception, e:
             print 'False'
-            return False    
-        
+            return False
+    def create_competitor_stock_check_from_mobile(self, cursor, user, vals, context=None):
+        print 'vals', vals
+
+        try:
+            stock_check_obj = self.pool.get('partner.stock.check')
+            competitor_stock_check_line_obj = self.pool.get('partner.stock.check.competitor.line')
+            str = "{" + vals + "}"
+            str = str.replace(":''", ":'")  # change Order_id
+            str = str.replace("'',", "',")  # null
+            str = str.replace(":',", ":'',")  # due to order_id
+            str = str.replace(":'}", ":''}")
+            str = str.replace("}{", "}|{")
+
+            new_arr = str.split('|')
+            result = []
+            for data in new_arr:
+                x = ast.literal_eval(data)
+                result.append(x)
+            stock = []
+            competitor_stock_line = []
+            for r in result:
+                print "length", len(r)
+                if len(r) >= 10:
+                    stock.append(r)
+                else:
+                    competitor_stock_line.append(r)
+            if stock:
+                for sr in stock:
+                    cursor.execute('select id ,township ,outlet_type from res_partner where customer_code = %s ',
+                                   (sr['customer_code'],))
+                    customer_data = cursor.fetchone()
+                    if customer_data:
+                        customer_id = customer_data[0]
+                        township_id = customer_data[1]
+                        outlet_type = customer_data[2]
+
+                    else:
+                        customer_id = None
+                        township_id = None
+                        outlet_type = None
+
+                    if sr['date']:
+                        check_date_time = sr['date'].replace('\\', '').replace('\\', '').replace('/', '-')
+                        date = datetime.strptime(check_date_time, '%Y-%m-%d %H:%M:%S') - timedelta(hours=6, minutes=30)
+                        check_date = date.date()
+                    cursor.execute("select id from partner_stock_check where check_datetime =%s and partner_id=%s",
+                                   (date, customer_id,))
+                    stock_check_data = cursor.fetchone()
+                    if stock_check_data:
+                        stock_id =stock_check_data[0]
+                    else:
+                        mso_result = {
+                            'partner_id': customer_id,
+                            'sale_team_id': sr['sale_team_id'],
+                            'user_id': sr['user_id'],
+                            'township_id': township_id,
+                            'outlet_type': outlet_type,
+                            'date': check_date,
+                            'check_datetime': date,
+                            'customer_code': sr['customer_code'],
+                            'branch_id': sr['branch'],
+                            'latitude': sr['latitude'],
+                            'longitude': sr['longitude'],
+                        }
+                        stock_id = stock_check_obj.create(cursor, user, mso_result, context=context)
+                    for csl in competitor_stock_line:
+                        if (sr['st_id'] == csl['stock_check_no']):
+                            cursor.execute("select sequence from competitor_product where id =%s",(csl['product_id'],))
+                            competitor_product_data = cursor.fetchone()
+                            if competitor_product_data:
+                                sequence = competitor_product_data[0]
+                            else:
+                                sequence = None
+                            csl_line_res = {
+                                'stock_check_ids': stock_id,
+                                'sequence': sequence,
+                                'competitor_product_id': (csl['product_id']),
+                                'product_uom': int(csl['uom_id']),
+                                'available': (csl['avail']),
+                                'product_uom_qty': (csl['qty']),
+                                'facing': (csl['facing']),
+                                'chiller': (csl['chiller']),
+                                'remark_id': (csl['remark_id']),
+                                'description': (csl['description']),
+                            }
+                            competitor_stock_check_line_obj.create(cursor, user, csl_line_res, context=context)
+            print 'True'
+            return True
+        except Exception, e:
+            print 'False'
+            return False
     def get_promos_outlet(self, cr, uid, context=None, **kwargs):    
         cr.execute("""select rel.promos_rules_id,rel.outlettype_id from promos_rules_outlettype_rel rel,promos_rules rule where rule.id =rel.promos_rules_id  and now()::date between from_date::date and to_date::date""")
         datas = cr.fetchall()        

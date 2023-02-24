@@ -35,6 +35,7 @@ class customer_stock_check(osv.osv):
     
     def retrieve_stock(self, cr, uid, ids, context=None):  
         stock_line_obj = self.pool.get('partner.stock.check.line')
+        competitor_line_obj = self.pool.get('partner.stock.check.competitor.line')
         if ids:
             stock_check_data = self.browse(cr, uid, ids[0], context=context) 
             sale_team_id = stock_check_data.sale_team_id.id
@@ -48,6 +49,33 @@ class customer_stock_check(osv.osv):
                                         'product_id': p_line.id,
                                         'product_uom': p_line.product_tmpl_id.uom_id.id,
                                         }, context=context)
+            cr.execute(
+                """select cpp.id,cpp.sequence,(select product_uom_id as bigger_uom
+                from
+                (
+                    select 1/factor ratio,product_uom_id
+                    from competitor_product cp,competitor_product_product_uom_rel rel,product_uom uom
+                    where cp.id=rel.competitor_product_id
+                    and rel.product_uom_id=uom.id
+                    and cp.id=cpp.id
+                    and uom_type='bigger'
+                )A
+                order by ratio desc limit 1) 
+                from competitor_product cpp 
+                where cpp.id not in (select competitor_product_id from partner_stock_check_competitor_line where stock_check_ids =%s) 
+                order by cpp.sequence asc""",
+                (ids[0],))
+            competitor_product_data = cr.fetchall()
+            for cp_line in competitor_product_data:
+                if cp_line:
+                    competitor_product_id = cp_line[0]
+                    cp_sequence = cp_line[1]
+                    cp_uom = cp_line[2]
+                    competitor_line_obj.create(cr, uid, {'stock_check_ids': ids[0],
+                                                         'sequence': cp_sequence,
+                                                         'competitor_product_id': competitor_product_id,
+                                                         'product_uom': cp_uom,
+                                                         }, context=context)
         return True 
 
 
@@ -70,9 +98,27 @@ class customer_stock_check_line(osv.osv):
                 'description':fields.char( 'Description'),                
                           
                 }
+class customer_stock_check_competitor_line(osv.osv):
+    _name = 'partner.stock.check.competitor.line'
+
+    _columns = {
+        'stock_check_ids': fields.many2one('partner.stock.check', 'Partner Stock Check Line'),
+        'sequence': fields.integer('Sequence'),
+        'competitor_product_id': fields.many2one('competitor.product', 'Product Name'),
+        'product_uom': fields.many2one('product.uom', 'UOM'),
+        'available': fields.selection([('none', '-'),
+                                       ('yes', 'Yes'),
+                                       ('no', 'No')], string='Available', default='none'),
+        'product_uom_qty': fields.float('QTY'),
+        'facing': fields.float('Facing', default=False),
+        'chiller': fields.float('Chiller Qty'),
+        'remark_id': fields.many2one('partner.stock.check.remark', 'Remark'),
+        'description': fields.char('Description'),
+
+    }
 
 
-customer_stock_check_line()    
+customer_stock_check_line()
 
 class customer_stock_check_remark(osv.osv):    
     _name = 'partner.stock.check.remark'      
