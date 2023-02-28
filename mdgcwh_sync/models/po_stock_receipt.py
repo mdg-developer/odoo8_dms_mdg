@@ -101,14 +101,14 @@ class stock_transfer_details(models.TransientModel):
                 if picking_code == 'incoming' and is_cwh_location and po_obj and location in ('MDGCWH1-Sellable','MDGCWH2-Sellable','MDGCWHA-Sellable','MDGCWHB-Sellable'):
                     sd_uid, url, db, password = self.env['cwh.connection'].get_connection_data()
                     models = xmlrpclib.ServerProxy('{}/xmlrpc/2/object'.format(url))
-                    if location == 'MDGCWH1-Sellable':
+                    if location in ('MDGCWH1-Sellable','MDGCWHA-Sellable'):
                         warehouse_ids = models.execute_kw(db, sd_uid, password, 'stock.warehouse', 'search',
                                                             [[['name', '=', 'MDGCentralWHA']]], {'limit': 1})
                         type_ids = models.execute_kw(db, sd_uid, password, 'stock.picking.type', 'search',
                                                        [[['warehouse_id', '=', warehouse_ids[0]],
                                                          ['name', '=', 'Receipts']]],
                                                        {'limit': 1})
-                    if location == 'MDGCWH2-Sellable':
+                    if location in ('MDGCWH2-Sellable','MDGCWHB-Sellable'):
                         warehouse_ids = models.execute_kw(db, sd_uid, password, 'stock.warehouse', 'search',
                                                             [[['name', '=', 'MDGCentralWHB']]], {'limit': 1})
                         type_ids = models.execute_kw(db, sd_uid, password, 'stock.picking.type', 'search',
