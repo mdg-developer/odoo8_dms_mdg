@@ -188,16 +188,16 @@ class mobile_sale_order(osv.osv):
                                 (select id from product_uom where id=pt.report_uom_id) bigger_uom_id,
                                 (select name from product_uom where id=pt.uom_id) smaller_uom,
                                 (select id from product_uom where id=pt.uom_id) smaller_uom_id,
-                                product_product_id product_id,
+                                product_id product_id,
                                 (select floor(round(1/factor,2)) from product_uom where id=pt.report_uom_id) bigger_uom_ratio 
-                                from crm_case_section_product_product_rel rel    
-                                left join product_product pp on (rel.product_product_id=pp.id)
+                                from product_sale_group_rel rel    
+                                left join product_product pp on (rel.product_id=pp.id)
                                 left join product_template pt on (pp.product_tmpl_id=pt.id)
                                 left join product_category categ on (pt.categ_id=categ.id)
                                 left join product_maingroup pm on (pt.main_group=pm.id)
                                 left join product_uom uom on (pt.report_uom_id=uom.id)     
-                                where crm_case_section_id=%s
-                                group by pm.name,pm.id,categ.name,categ.id,name_template,pp.sequence,pt.report_uom_id,pt.uom_id,uom.factor,product_product_id
+                                where sale_group_id=%s
+                                group by pm.name,pm.id,categ.name,categ.id,name_template,pp.sequence,pt.report_uom_id,pt.uom_id,uom.factor,product_id
                                 order by pp.sequence
                             )A
                         ),
