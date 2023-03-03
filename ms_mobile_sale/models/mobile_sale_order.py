@@ -175,8 +175,9 @@ class mobile_sale_order(osv.osv):
     } 
     
     def get_inventory_adjustment_lines(self, cr, uid, location_id, section_id, context=None, **kwargs):
-                
-        if location_id and section_id:        
+        sale_team_id = self.pool.get('crm.case.section').browse(cr,uid,section_id,context=context)
+        sale_group_id = sale_team_id.sale_group_id.id
+        if location_id and sale_group_id:
             cr.execute('''                                
                         with product_data as 
                         (
@@ -232,7 +233,7 @@ class mobile_sale_order(osv.osv):
                         pd.principal_id,pd.category_id,pd.bigger_uom_id,pd.smaller_uom_id
                         from product_data pd
                         left join on_hand_data ohd on (pd.product_id=ohd.product_id)
-                    ''', (section_id,location_id,))
+                    ''', (sale_group_id,location_id,))
             datas = cr.fetchall()            
             return datas
         
