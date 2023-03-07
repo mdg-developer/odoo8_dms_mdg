@@ -377,7 +377,7 @@ res.name,ccs.name sale_team,spd.name sale_plan_day,vr.name reason,rt.name townsh
 case when cv.image is null then 'No'
 	 when cv.image is not null  then 'Yes'
 end as image,cv.date -LAG(cv.date)OVER (ORDER BY cv.date ) as difference,
-cv.other_reason remark,res.code,res.street
+cv.other_reason remark
 from customer_visit cv
 left join res_partner res on res.id = cv.customer_id 
 left join crm_case_section ccs on  ccs.id = cv.sale_team_id
