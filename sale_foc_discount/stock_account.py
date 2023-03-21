@@ -142,7 +142,7 @@ class stock_quant(osv.osv):
         return journal_id, acc_src, acc_dest, acc_valuation 
 
     # cutomize stock journal clearance
-    def _prepare_account_move_line(self, cr, uid, move, qty, cost, credit_account_id, debit_account_id, context=None):
+    def _prepare_account_move_line_remove(self, cr, uid, move, qty, cost, credit_account_id, debit_account_id, context=None):
         """
         Generate the account.move.line values to post to track the stock valuation difference due to the
         processing of the given quant.
@@ -316,6 +316,183 @@ class stock_quant(osv.osv):
                         
             }
             return [(0, 0, debit_line_vals), (0, 0, credit_line_vals)]
+        
+            
+    # Remove cutomize stock journal clearance
+    def _prepare_account_move_line(self, cr, uid, move, qty, cost, credit_account_id, debit_account_id, context=None):
+        """
+        Generate the account.move.line values to post to track the stock valuation difference due to the
+        processing of the given quant.
+        """
+        if context is None:
+            context = {}
+        currency_obj = self.pool.get('res.currency')
+        if context.get('force_valuation_amount'):
+            valuation_amount = context.get('force_valuation_amount')
+        else:
+            if move.product_id.cost_method == 'average':
+                valuation_amount = cost if move.location_id.usage != 'internal' and move.location_dest_id.usage == 'internal' else move.product_id.standard_price
+            else:
+                valuation_amount = cost if move.product_id.cost_method == 'real' else move.product_id.standard_price
+        # the standard_price of the product may be in another decimal precision, or not compatible with the coinage of
+        # the company currency... so we need to use round() before creating the accounting entries.
+        valuation_amount = currency_obj.round(cr, uid, move.company_id.currency_id, valuation_amount * qty)
+        partner_id = (move.picking_id.partner_id and self.pool.get('res.partner')._find_accounting_partner(move.picking_id.partner_id).id) or False
+        note=False        
+
+        if move.picking_id:
+            if move.picking_id.partner_ref:
+                note=move.picking_id.partner_ref
+            else:
+                note =move.picking_id.origin        
+#         if move.foc:
+#             # type = self.get_foc_cashorcredit(cr, uid, move, context)
+#             type = 'cash'
+#             if type == 'cash':
+#                 credit_account_id_1 = move.product_id.categ_id.property_account_foc_cash.id 
+#                 debit_account_id_1 = move.product_id.categ_id.property_account_foc_principle_receivable.id
+#                 if credit_account_id_1 is False:
+#                     raise orm.except_orm(_('Error :'), _("Please select FOC Cash Account in Product Category %s!")) % move.product_id.categ_id.name 
+#                 
+#                 if debit_account_id_1 is False:
+#                     raise orm.except_orm(_('Error :'), _("Please select FOC Principle Account Receivable in Product Category %s!")) % move.product_id.categ_id.name          
+# #                 debit_account_id_1 = move.product_id.categ_id.property_account_foc_cash.id 
+# #                 credit_account_id_1 =move.product_id.categ_id.property_account_foc_principle_receivable.id                
+#             elif type == 'credit':
+#                 credit_account_id_1 = move.product_id.categ_id.property_account_foc_credit.id 
+#                 debit_account_id_1 = move.product_id.categ_id.property_account_foc_principle_receivable.id  
+#                 if credit_account_id_1 is False:
+#                     raise orm.except_orm(_('Error :'), _("Please select FOC Credit Account in Product Category %s!")) % move.product_id.categ_id.name 
+#                 
+#                 if debit_account_id_1 is False:
+#                     raise orm.except_orm(_('Error :'), _("Please select FOC Principle Account Receivable in Product Category %s!")) % move.product_id.categ_id.name                  
+# #                 debit_account_id_1 = move.product_id.categ_id.property_account_foc_credit.id 
+# #                 credit_account_id_1 = move.product_id.categ_id.property_account_foc_principle_receivable.id
+#             income_account_id_1 = move.product_id.categ_id.property_account_foc_income.id 
+#             if income_account_id_1 is False:
+#                 raise orm.except_orm(_('Error :'), _("Please select FOC Income Account  in Product Category %s!")) % move.product_id.categ_id.name                  
+#             pricelist_id = move.product_id.product_tmpl_id.main_group.pricelist_id.id  
+#             principle_partner_id = move.product_id.product_tmpl_id.main_group.partner_id.id  
+#             if principle_partner_id is False:
+#                 raise orm.except_orm(_('Error :'), _("Please select Partner in Product Principle %s!")) % move.product_id.product_tmpl_id.main_group.name                  
+#             
+#             
+#             product_price = 0
+#             income_price=0
+#             if pricelist_id:
+#                 product = self.pool.get('product.product').browse(cr, uid, move.product_id.id, context=context)
+#                 cr.execute("select new_price from product_pricelist_item where price_version_id in ( select id from product_pricelist_version where pricelist_id=%s) and product_id=%s and product_uom_id=%s", (pricelist_id, product.id, product.product_tmpl_id.uom_id.id,))
+#                 product_price_data = cr.fetchone()[0]     
+#                 product_price =qty * product_price_data
+#                 if valuation_amount >=0:
+#                     income_price = product_price - valuation_amount
+#                 if valuation_amount < 0:
+#                     income_price =  - product_price + (-1*valuation_amount)
+#                  
+#               
+#                 
+#             debit_line_vals = {
+#                         'name': move.name,
+#                         'product_id': move.product_id.id,
+#                         'quantity': qty,
+#                         'product_uom_id': move.product_id.uom_id.id,
+#                         'ref': move.picking_id and move.picking_id.name or False,
+#                         'date': move.date,
+#                         'partner_id': partner_id,
+#                         'debit': valuation_amount > 0 and valuation_amount or 0,
+#                         'credit': valuation_amount < 0 and -valuation_amount or 0,
+#                         'account_id': debit_account_id,
+#                         'note': note or False,
+# 
+#             }
+#             credit_line_vals = {
+#                         'name': move.name,
+#                         'product_id': move.product_id.id,
+#                         'quantity': qty,
+#                         'product_uom_id': move.product_id.uom_id.id,
+#                         'ref': move.picking_id and move.picking_id.name or False,
+#                         'date': move.date,
+#                         'partner_id': partner_id,
+#                         'credit': valuation_amount > 0 and valuation_amount or 0,
+#                         'debit': valuation_amount < 0 and -valuation_amount or 0,
+#                         'account_id': credit_account_id,
+#                                                 'note': note or False,
+# 
+#             }    
+#             debit_line_vals1 = {
+#                     'name': move.name,
+#                     'product_id': move.product_id.id,
+#                     'quantity': qty,
+#                     'product_uom_id': move.product_id.uom_id.id,
+#                     'ref': move.picking_id and move.picking_id.name or False,
+#                     'date': move.date,
+#                     'partner_id': principle_partner_id,
+#                     'debit': product_price > 0 and product_price or 0,
+#                     'credit': product_price < 0 and -product_price or 0,
+#                     'account_id': debit_account_id_1,
+#                     'note': note or False,
+# 
+#                 }
+#           
+#             credit_line_vals1 = {
+#                     'name': move.name,
+#                     'product_id': move.product_id.id,
+#                     'quantity': qty,
+#                     'product_uom_id': move.product_id.uom_id.id,
+#                     'ref': move.picking_id and move.picking_id.name or False,
+#                     'date': move.date,
+#                     'partner_id': partner_id,
+#                     'credit': valuation_amount > 0 and valuation_amount or 0,
+#                     'debit': valuation_amount < 0 and -valuation_amount or 0,
+#                     'account_id': credit_account_id_1,
+#                     'note': note or False,
+# 
+#             }
+#             credit_line_vals2 = {
+#                     'name': move.name,
+#                     'product_id': move.product_id.id,
+#                     'quantity': qty,
+#                     'product_uom_id': move.product_id.uom_id.id,
+#                     'ref': move.picking_id and move.picking_id.name or False,
+#                     'date': move.date,
+#                     'partner_id': principle_partner_id,
+#                     'credit': income_price > 0 and income_price or 0,
+#                     'debit': income_price < 0 and -income_price or 0,
+#                     'account_id': income_account_id_1,
+#                     'note': note or False,
+# 
+#             }            
+#             return [(0, 0, debit_line_vals), (0, 0, credit_line_vals), (0, 0, debit_line_vals1), (0, 0, credit_line_vals1), (0, 0, credit_line_vals2)]    
+#         else:
+        debit_line_vals = {
+                    'name': move.name,
+                    'product_id': move.product_id.id,
+                    'quantity': qty,
+                    'product_uom_id': move.product_id.uom_id.id,
+                    'ref': move.picking_id and move.picking_id.name or False,
+                    'date': move.date,
+                    'partner_id': partner_id,
+                    'debit': valuation_amount > 0 and valuation_amount or 0,
+                    'credit': valuation_amount < 0 and -valuation_amount or 0,
+                    'account_id': debit_account_id,
+                    'note': note or False,
+                    
+        }
+        credit_line_vals = {
+                    'name': move.name,
+                    'product_id': move.product_id.id,
+                    'quantity': qty,
+                    'product_uom_id': move.product_id.uom_id.id,
+                    'ref': move.picking_id and move.picking_id.name or False,
+                    'date': move.date,
+                    'partner_id': partner_id,
+                    'credit': valuation_amount > 0 and valuation_amount or 0,
+                    'debit': valuation_amount < 0 and -valuation_amount or 0,
+                    'account_id': credit_account_id,
+                    'note': note or False,
+                    
+        }
+        return [(0, 0, debit_line_vals), (0, 0, credit_line_vals)]
         
             
     
