@@ -142,7 +142,7 @@ class stock_quant(osv.osv):
         return journal_id, acc_src, acc_dest, acc_valuation 
 
     # cutomize stock journal clearance
-    def _prepare_account_move_line(self, cr, uid, move, qty, cost, credit_account_id, debit_account_id, context=None):
+    def _prepare_account_move_line_remove(self, cr, uid, move, qty, cost, credit_account_id, debit_account_id, context=None):
         """
         Generate the account.move.line values to post to track the stock valuation difference due to the
         processing of the given quant.
@@ -324,7 +324,61 @@ class stock_quant(osv.osv):
             }
             return [(0, 0, debit_line_vals), (0, 0, credit_line_vals)]
         
-            
+    # Remove cutomize stock journal clearance
+    def _prepare_account_move_line(self, cr, uid, move, qty, cost, credit_account_id, debit_account_id, context=None):
+        """
+        Generate the account.move.line values to post to track the stock valuation difference due to the
+        processing of the given quant.
+        """
+        if context is None:
+            context = {}
+        currency_obj = self.pool.get('res.currency')
+        if context.get('force_valuation_amount'):
+            valuation_amount = context.get('force_valuation_amount')
+        else:
+            if move.product_id.cost_method == 'average':
+                valuation_amount = cost if move.location_id.usage != 'internal' and move.location_dest_id.usage == 'internal' else move.product_id.standard_price
+            else:
+                valuation_amount = cost if move.product_id.cost_method == 'real' else move.product_id.standard_price
+        # the standard_price of the product may be in another decimal precision, or not compatible with the coinage of
+        # the company currency... so we need to use round() before creating the accounting entries.
+        valuation_amount = currency_obj.round(cr, uid, move.company_id.currency_id, valuation_amount * qty)
+        partner_id = (move.picking_id.partner_id and self.pool.get('res.partner')._find_accounting_partner(move.picking_id.partner_id).id) or False
+        note=False        
+        if move.picking_id:
+            if move.picking_id.partner_ref:
+                note=move.picking_id.partner_ref
+            else:
+                note =move.picking_id.origin        
+        debit_line_vals = {
+                    'name': move.name,
+                    'product_id': move.product_id.id,
+                    'quantity': qty,
+                    'product_uom_id': move.product_id.uom_id.id,
+                    'ref': move.picking_id and move.picking_id.name or False,
+                    'date': move.date,
+                    'partner_id': partner_id,
+                    'debit': valuation_amount > 0 and valuation_amount or 0,
+                    'credit': valuation_amount < 0 and -valuation_amount or 0,
+                    'account_id': debit_account_id,
+                    'note': note or False,
+                    
+        }
+        credit_line_vals = {
+                    'name': move.name,
+                    'product_id': move.product_id.id,
+                    'quantity': qty,
+                    'product_uom_id': move.product_id.uom_id.id,
+                    'ref': move.picking_id and move.picking_id.name or False,
+                    'date': move.date,
+                    'partner_id': partner_id,
+                    'credit': valuation_amount > 0 and valuation_amount or 0,
+                    'debit': valuation_amount < 0 and -valuation_amount or 0,
+                    'account_id': credit_account_id,
+                    'note': note or False,
+                    
+        }
+        return [(0, 0, debit_line_vals), (0, 0, credit_line_vals)]            
     
                  
     def _get_accounting_data_for_valuation(self, cr, uid, move, context=None):
