@@ -51,6 +51,7 @@ Branch Inventory Transfer Module
         'reports/report_receive_note.xml',
         'reports/report_branch_request_loose.xml',
         'views/stock_warehouse_view.xml',
+        'views/product_uom_view.xml'
     ],
     'test': [
 

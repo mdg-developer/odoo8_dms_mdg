@@ -6,3 +6,4 @@ import transport_route
 import branch_good_issue_note
 import branch
 import stock
+import product_uom
