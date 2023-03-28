@@ -823,14 +823,13 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
             product = self.pool.get('product.product').browse(cr, uid, order.product_id.id, context=context)
             if product.uom_lines:
                 if len(product.uom_lines.ids) == 3:
-                    if product.product_tmpl_id.uom_id.id == order.product_uom.id:
-                        cr.execute("select weight_ratio from product_uom where active = true and id=%s",(product.product_tmpl_id.report_uom_id.id,))
-                        weight_ratio = cr.fetchone()[0]
-                        if weight_ratio:
-                            if order.issue_quantity > 0:
-                                val1 = order.issue_quantity * (product.viss_value / weight_ratio)
-                            else:
-                                val1 = 0
+                    cr.execute("select weight_ratio from product_uom where active = true and id=%s",(product.product_tmpl_id.report_uom_id.id,))
+                    weight_ratio = cr.fetchone()[0]
+                    if weight_ratio:
+                        if order.issue_quantity > 0:
+                            val1 = order.issue_quantity * (product.viss_value / weight_ratio)
+                        else:
+                            val1 = 0
                 else:
                     if product.product_tmpl_id.uom_id.id ==order.product_uom.id:
                         cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (product.product_tmpl_id.report_uom_id.id,))
@@ -854,14 +853,13 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
             product = self.pool.get('product.product').browse(cr, uid, order.product_id.id, context=context)
             if product.uom_lines:
                 if len(product.uom_lines.ids) == 3:
-                    if product.product_tmpl_id.uom_id.id == order.product_uom.id:
-                        cr.execute("select weight_ratio from product_uom where active = true and id=%s",(product.product_tmpl_id.report_uom_id.id,))
-                        weight_ratio = cr.fetchone()[0]
-                        if weight_ratio:
-                            if order.issue_quantity > 0:
-                                val1 = order.issue_quantity * (product.cbm_value / weight_ratio)
-                            else:
-                                val1 = 0
+                    cr.execute("select weight_ratio from product_uom where active = true and id=%s",(product.product_tmpl_id.report_uom_id.id,))
+                    weight_ratio = cr.fetchone()[0]
+                    if weight_ratio:
+                        if order.issue_quantity > 0:
+                            val1 = order.issue_quantity * (product.cbm_value / weight_ratio)
+                        else:
+                            val1 = 0
                 else:
                     if product.product_tmpl_id.uom_id.id ==order.product_uom.id:
                         cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (product.product_tmpl_id.report_uom_id.id,))
