@@ -183,7 +183,13 @@ class res_partner(osv.osv):
                                      'contents': "Thank you for registration in Burmart E-commerce.",
                                      'headings': "Burmart"
                                     }     
-                self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)     
+                self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)
+                fcm_noti_values = {
+                    'partner_id': result,
+                    'title': "Burmart",
+                    'body': "Thank you for registration in Burmart E-commerce.",
+                }
+                self.pool.get('fcm.notification.messages').create(cr, uid, fcm_noti_values, context=context)
             partner = partner_obj.search(cr, uid, [('id', '=', result)])
             if partner:
                 partner_data = partner_obj.browse(cr, uid, partner, context=context)
@@ -284,7 +290,13 @@ class res_partner(osv.osv):
                                          'contents': "Thank you for registration in Burmart E-commerce.",
                                          'headings': "Burmart"
                                         }     
-                    self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)  
+                    self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)
+                    fcm_noti_values = {
+                        'partner_id': partner_data.id,
+                        'title': "Burmart",
+                        'body': "Thank you for registration in Burmart E-commerce.",
+                    }
+                    self.pool.get('fcm.notification.messages').create(cr, uid, fcm_noti_values, context=context)
                 return result          
 
     def create_or_update_woo_customer_with_city(self, cr, uid, ids, mdg_customer=False, customer_code=None, name=None,street=None,street2=None,township=None,city=None,state=None,mobile=None,phone=None,gender=None,birthday=None,email=None,partner_latitude=None,partner_longitude=None,sms=None,viber=None,shop_name=None,woo_customer_id=None,image=None,sale_channel=None,is_email_generated=None,context=None):
@@ -370,7 +382,13 @@ class res_partner(osv.osv):
                                      'contents': "Thank you for registration in Burmart E-commerce.",
                                      'headings': "Burmart"
                                     }     
-                self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)     
+                self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)
+                fcm_noti_values = {
+                    'partner_id': result,
+                    'title': "Burmart",
+                    'body': "Thank you for registration in Burmart E-commerce."
+                }
+                self.pool.get('fcm.notification.messages').create(cr, uid, fcm_noti_values, context=context)
             partner = partner_obj.search(cr, uid, [('id', '=', result)])
             if partner:
                 partner_data = partner_obj.browse(cr, uid, partner, context=context)
@@ -477,6 +495,12 @@ class res_partner(osv.osv):
                                          'headings': "Burmart"
                                         }     
                     self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)
+                    fcm_noti_values = {
+                        'partner_id': partner_data.id,
+                        'title': "Burmart",
+                        'body': "Thank you for registration in Burmart E-commerce.",
+                    }
+                    self.pool.get('fcm.notification.messages').create(cr, uid, fcm_noti_values, context=context)
                     partner_data = partner_obj.browse(cr, uid, partner_data.id, context=context)
                     if not partner_data.woo_customer_id or partner_data.woo_customer_id is None:
                         return False
@@ -719,6 +743,12 @@ class res_partner(osv.osv):
                                             'headings': "Burmart"
                                         }     
                     self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)
+                    fcm_noti_values = {
+                        'partner_id': sale_order.partner_id.id,
+                        'title': "Burmart",
+                        'body': "Your order " + sale_order.name + " is shipped.",
+                    }
+                    self.pool.get('fcm.notification.messages').create(cr, uid, fcm_noti_values, context=context)
                     sale_order.update_woo_order_status_action('completed')      
                     return True
         else:
@@ -955,6 +985,12 @@ class res_partner(osv.osv):
                                 'headings': "Burmart"
                             }
                             self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)
+                            fcm_noti_values = {
+                                'partner_id': sale_order.partner_id.id,
+                                'title': "Burmart",
+                                'body': "Your order " + sale_order.name + " does not create properly.Please Check!",
+                            }
+                            self.pool.get('fcm.notification.messages').create(cr, uid, fcm_noti_values, context=context)
                             # put to queue.job
                             session = ConnectorSession(cr, uid, context)
                             # this code will try after priority 30 , if success , it will succes, if not it will fail
@@ -968,12 +1004,24 @@ class res_partner(osv.osv):
                                 'headings': "Burmart"
                             }
                             self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)
+                            fcm_noti_values = {
+                                'partner_id': sale_order.partner_id.id,
+                                'title': "Burmart",
+                                'body': "Your order " + sale_order.name + " is created successfully.",
+                            }
+                            self.pool.get('fcm.notification.messages').create(cr, uid, fcm_noti_values, context=context)
                             one_signal_values = {
                                 'partner_id': sale_order.partner_id.id,
                                 'contents': "Your order " + sale_order.name + " is completed.",
                                 'headings': "Burmart"
                             }
                             self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)
+                            fcm_noti_values = {
+                                'partner_id': sale_order.partner_id.id,
+                                'title': "Burmart",
+                                'body': "Your order " + sale_order.name + " is completed.",
+                            }
+                            self.pool.get('fcm.notification.messages').create(cr, uid, fcm_noti_values, context=context)
 
     def get_customer_addresses_info(self, cr, uid, ids, parent_id=None, type=None, woo_customer_id=None, context=None):
         records = {}
