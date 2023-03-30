@@ -1085,21 +1085,23 @@ class sale_order(models.Model):
                 if sale_order:
                     noti_message = "Your order " + sale_order.name + " is created successfully."
                     messages =self.env['one.signal.notification.messages'].search([('contents','=', noti_message)])
-                    if not messages:           
-                        one_signal_values = {
-                                             'partner_id': sale_order.partner_id.id,
-                                             'contents': noti_message,
-                                             'headings': "Burmart"
-                                            }                          
-                        self.env['one.signal.notification.messages'].create(one_signal_values)
-                        fcm_messages = self.env['fcm.notification.messages'].search([('contents', '=', noti_message)])
-                        if not fcm_messages:
-                            fcm_noti_values = {
-                                'partner_id': sale_order.partner_id.id,
-                                'title': "Burmart",
-                                'body': noti_message,
-                            }
-                            self.env['fcm.notification.messages'].create(fcm_noti_values)
+                    # if not messages:
+                    #     one_signal_values = {
+                    #                          'partner_id': sale_order.partner_id.id,
+                    #                          'contents': noti_message,
+                    #                          'headings': "Burmart"
+                    #                         }
+                    #     self.env['one.signal.notification.messages'].create(one_signal_values)
+                    fcm_messages = self.env['fcm.notification.messages'].search([('body', '=', noti_message)])
+                    if not fcm_messages:
+                        device_token = None
+                        fcm_noti_values = {
+                            'partner_id': sale_order.partner_id.id,
+                            'title': "Burmart",
+                            'body': noti_message,
+                            'device_token': device_token,
+                        }
+                        self.env['fcm.notification.messages'].create(fcm_noti_values)
             if import_order_ids:
                 self.env['sale.workflow.process.ept'].auto_workflow_process(ids=import_order_ids)
         return True
@@ -1459,16 +1461,19 @@ class sale_order(models.Model):
                 if sale_order_obj:
                     sale_order = self.pool.get('sale.order').browse(cr, uid, sale_order_obj, context=context)
                     sale_order.update_woo_order_status_action('revised')
-                    one_signal_values = {
-                                            'partner_id': sale_order.partner_id.id,
-                                            'contents': "Your order " + sale_order.name + " has been revised.",
-                                            'headings': "Burmart"
-                                        }    
-                    self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)
+                    # one_signal_values = {
+                    #                         'partner_id': sale_order.partner_id.id,
+                    #                         'contents': "Your order " + sale_order.name + " has been revised.",
+                    #                         'headings': "Burmart"
+                    #                     }
+                    # self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)
+                    partner_id = sale_order.partner_id.id
+                    device_token = self.pool.get('fcm.notification.messages').get_device_token(cr, uid, partner_id)
                     fcm_noti_values = {
                         'partner_id': sale_order.partner_id.id,
                         'title': "Burmart",
                         'body': "Your order " + sale_order.name + " has been revised.",
+                        'device_token': device_token
                     }
                     self.pool.get('fcm.notification.messages').create(cr, uid, fcm_noti_values, context=context)
                 
@@ -1674,28 +1679,32 @@ class sale_order(models.Model):
                         created_order_data = create_order_response.json()                        
                         order.write({'woo_order_id': created_order_data.get('id'),
                                      'woo_order_number': created_order_data.get('number')})
-                        one_signal_values = {
-                                            'partner_id': order.partner_id.id,
-                                            'contents': "Your order " + order.name + " is created successfully.",
-                                            'headings': "Burmart"
-                                        }     
-                        self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)
+                        # one_signal_values = {
+                        #                     'partner_id': order.partner_id.id,
+                        #                     'contents': "Your order " + order.name + " is created successfully.",
+                        #                     'headings': "Burmart"
+                        #                 }
+                        # self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)
+                        partner_id = order.partner_id.id
+                        device_token = self.pool.get('fcm.notification.messages').get_device_token(cr, uid, partner_id)
                         fcm_noti_values = {
                             'partner_id': order.partner_id.id,
                             'title': "Burmart",
                             'body': "Your order " + order.name + " is created successfully.",
+                            'device_token': device_token
                         }
                         self.pool.get('fcm.notification.messages').create(cr, uid, fcm_noti_values, context=context)
-                        one_signal_values = {
-                                            'partner_id': order.partner_id.id,
-                                            'contents': "Your order " + order.name + " is completed.",
-                                            'headings': "Burmart"
-                                        }     
-                        self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)
+                        # one_signal_values = {
+                        #                     'partner_id': order.partner_id.id,
+                        #                     'contents': "Your order " + order.name + " is completed.",
+                        #                     'headings': "Burmart"
+                        #                 }
+                        # self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)
                         fcm_noti_values = {
                             'partner_id': order.partner_id.id,
                             'title': "Burmart",
                             'body': "Your order " + order.name + " is completed.",
+                            'device_token': device_token
                         }
                         self.pool.get('fcm.notification.messages').create(cr, uid, fcm_noti_values, context=context)
     
@@ -1712,16 +1721,19 @@ class sale_order(models.Model):
             for sale in self.browse(cr, uid, ids, context=context):                
                 if sale.woo_order_number:
                     update = sale.update_woo_order_status_action('cancelled')                    
-                    one_signal_values = {
-                                            'partner_id': sale.partner_id.id,
-                                            'contents': "Your order " + sale.name + " is cancelled.",
-                                            'headings': "Burmart"
-                                        }     
-                    self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)
+                    # one_signal_values = {
+                    #                         'partner_id': sale.partner_id.id,
+                    #                         'contents': "Your order " + sale.name + " is cancelled.",
+                    #                         'headings': "Burmart"
+                    #                     }
+                    # self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)
+                    partner_id = order.partner_id.id
+                    device_token = self.pool.get('fcm.notification.messages').get_device_token(cr, uid, partner_id)
                     fcm_noti_values = {
                         'partner_id': sale.partner_id.id,
                         'title': "Burmart",
                         'body': "Your order " + sale.name + " is cancelled.",
+                        'device_token': device_token
                     }
                     self.pool.get('fcm.notification.messages').create(cr, uid, fcm_noti_values, context=context)
                 if sale.getting_point > 0:

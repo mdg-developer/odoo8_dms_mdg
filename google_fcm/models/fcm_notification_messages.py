@@ -8,14 +8,13 @@ from pyfcm import FCMNotification
 class FCMNotificationMessages(models.Model):
 
     _name = "fcm.notification.messages"
+    _rec_name = "title"
     _description = 'one signal notification messages'
 
     partner_id = fields.Many2one(comodel_name="res.partner", string="Customer")
-    topic_name = fields.Char(string="Topic Name")
-    message_title = fields.Char(string="Message Title")
-    message_body = fields.Char(string="Message Body")
-    fcm_message_id = fields.Char(string="Message ID")
-    devie_token = fields.Char(string="Device Token")
+    title = fields.Char(string="Message Title")
+    body = fields.Char(string="Message Body")
+    device_token = fields.Char(string="Device Token")
     reason = fields.Text(string="Reason")
     woo_customer_id = fields.Char("Woo Customer Id")
     state = fields.Selection([
@@ -35,25 +34,55 @@ class FCMNotificationMessages(models.Model):
                     vals['woo_customer_id'] = woo_customer_id
         data['title'] = vals['title']
         data['body'] = vals['body']
+        data['device_token'] = vals['device_token']
         response = self.send_notification(cr,uid,data)
         response_json = response.json()
-        if response == 200:
-            if response_json['success'] == 1:
-                vals['state'] = "sent"
+        if response:
+            response_json = response.json()
+            if response_json['results'][0]:
+                vals['reason'] = response_json['results'][0]
+            if response.status_code == 200:
+                if response_json['success'] == 1:
+                    vals['state'] = "send"
+                else:
+                    vals['state'] = "failed"
         else:
-            vals['state'] = "fail"
-            if 'results' in response_json:
-                vals['reason'] += " " + str(response_json['results'])
+            vals['state'] = "failed"
 
         return super(FCMNotificationMessages, self).create(cr, uid, vals, context=context)
 
     def send_notification(self, cr, uid, data, context=None):
-        fcm_api_key = self.pool.get('ir.config_parameter').get_param(cr, uid, 'fcm_api_key', default=False, context=context)
-        push_service = FCMNotification(api_key=fcm_api_key)
-        title = data.message_title
-        body = data.message_body
-        tag = data.reason
-        device_token = data.device_token
         result = {}
-        result = push_service.notify_single_device(registration_id=device_token,message_title= title, message_body= body, tag=tag)
+        header = {}
+        payload = {}
+        fcm_api_key = self.pool.get('ir.config_parameter').get_param(cr, uid, 'fcm_api_key', default=False,
+                                                                     context=context)
+        header = {"Content-Type": "application/json", "Authorization": "key=%s" % fcm_api_key}
+        if data:
+            title = data['title'] or None
+            body = data['body'] or None
+            device_token = data['device_token'] or None
+            payload['to'] = device_token
+            payload['notification'] = {}
+            payload['notification'].update({'title': title})
+            payload['notification'].update({'body': body})
+            payload['notification'].update({'device_token': device_token})
+        if header and payload:
+            payload = json.dumps(payload)
+            result = requests.post("https://fcm.googleapis.com/fcm/send", headers=header, data=payload)
         return result
+
+    def get_device_token(self, cr, uid, partner_id, context=None):
+        device_token=""
+        api_key = ""
+        header = {"Content-Type": "application/json", "Authorization": "key=%s" % api_key}
+        payload = ""
+        if partner_id:
+            partner_obj = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
+            for partner in partner_obj:
+                if partner.woo_customer_id:
+                    woo_customer_id = partner.woo_customer_id
+        response = requests.get("https://", headers=header, data=payload)
+        if response:
+            device_token = response['device_token']
+        return device_token
