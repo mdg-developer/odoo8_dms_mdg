@@ -7,16 +7,15 @@
 			<field name="model">product.template</field>
 			<field name="inherit_id" ref="product.product_template_form_view" />
 			<field name="arch" type="xml">
-
 				<field name="weight_net" position="after">
-					<field name="viss_value" />
-					<field name="cbm_value" />
-					<field name="ctn_pallet" />
-					<field name="ti" />
-					<field name="hi" />
 					<field name="ctn_weight" />
 					<field name="ctn_height" />
-					<field name="inbound_shelf_life" />
+					<field name="cbm_value" string="CBM (cm)"/>
+					<field name="kg_value" on_change='on_change_kg_value(kg_value)' string="Weight (Kg)"/>
+					<field name="viss_value" string="Weight (Viss)" readonly="True"/>
+					<field name="ctn_pallet" />
+					<field name="inbound_shelf_life" string="Inbound Shelf Life (Days)"/>
+					<field name="inbound_shelf_life_min" string="Inbound Shelf Life (Minimum)"/>
 				</field>
 				<field name="volume" position="replace">
 					<field digits="(14, 3)" name="volume" invisible="1"/>					

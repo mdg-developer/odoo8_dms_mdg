@@ -46,7 +46,13 @@
                         <button name="update_stock_in_woo" invisible="context.get('process','') != 'update_stock'" string="Update Stock" type="object" class="oe_highlight"/>
                         <button name="sync_selective_products" invisible="context.get('process','') != 'sync_selective_products'" string="Sync Products" type="object" class="oe_highlight"/>
                         <button name="export_product_tags" invisible="context.get('process','') != 'export_product_tags'" string="Export Product Tags" type="object" class="oe_highlight"/>
-                        <button name="update_product_tags" invisible="context.get('process','') != 'update_product_tags'" string="Update Product Tags" type="object" class="oe_highlight"/>                                                
+                        <button name="update_product_tags" invisible="context.get('process','') != 'update_product_tags'" string="Update Product Tags" type="object" class="oe_highlight"/>
+						<button name="export_product_brands" invisible="context.get('process','') != 'export_product_brands'" string="Export Product Brands" type="object" class="oe_highlight"/>
+						<button name="update_product_brands" invisible="context.get('process','') != 'update_product_brands'" string="Update Product Brands" type="object" class="oe_highlight"/>
+						<button name="export_product_suppliers" invisible="context.get('process','') != 'export_product_suppliers'" string="Export Product Suppliers" type="object" class="oe_highlight"/>
+                        <button name="update_product_suppliers" invisible="context.get('process','') != 'update_product_suppliers'" string="Update Product Suppliers" type="object" class="oe_highlight"/>
+						<button name="export_product_departments" invisible="context.get('process','') != 'export_product_departments'" string="Export Product Departments" type="object" class="oe_highlight"/>
+                        <button name="update_product_departments" invisible="context.get('process','') != 'update_product_departments'" string="Update Product Departments" type="object" class="oe_highlight"/>
                         <button name="export_product_categ" invisible="context.get('process','') != 'export_product_categ'" string="Export Product Categories" type="object" class="oe_highlight"/>                                              
                         <button name="update_product_categ" invisible="context.get('process','') != 'update_product_categ'" string="Update Product Categories" type="object" class="oe_highlight"/>
                         <button name="export_coupons" invisible="context.get('process','') != 'export_coupons'" string="Export Coupons" type="object" class="oe_highlight"/>
@@ -140,6 +146,48 @@
 		id="action_wizard_woo_update_product_tags"
 		view_id="view_woo_process_import_export_from_more_ept"			
 		context="{'process':'update_product_tags'}"/>
+
+		<act_window name="Export Product Brands" res_model="woo.process.import.export"
+		src_model="woo.brands.ept" view_mode="form" view_type="form"
+		target="new" multi="True" key2="client_action_multi"
+		id="action_wizard_woo_export_product_brands"
+		view_id="view_woo_process_import_export_from_more_ept"
+		context="{'process':'export_product_brands'}"/>
+
+		<act_window name="Update Product Brands" res_model="woo.process.import.export"
+		src_model="woo.brands.ept" view_mode="form" view_type="form"
+		target="new" multi="True" key2="client_action_multi"
+		id="action_wizard_woo_update_product_brands"
+		view_id="view_woo_process_import_export_from_more_ept"
+		context="{'process':'update_product_brands'}"/>
+
+		<act_window name="Export Product Suppliers" res_model="woo.process.import.export"
+		src_model="woo.suppliers.ept" view_mode="form" view_type="form"
+		target="new" multi="True" key2="client_action_multi"
+		id="action_wizard_woo_export_product_suppliers"
+		view_id="view_woo_process_import_export_from_more_ept"
+		context="{'process':'export_product_suppliers'}"/>
+
+		<act_window name="Update Product Suppliers" res_model="woo.process.import.export"
+		src_model="woo.suppliers.ept" view_mode="form" view_type="form"
+		target="new" multi="True" key2="client_action_multi"
+		id="action_wizard_woo_update_product_suppliers"
+		view_id="view_woo_process_import_export_from_more_ept"
+		context="{'process':'update_product_suppliers'}"/>
+
+		<act_window name="Export Product Departments" res_model="woo.process.import.export"
+		src_model="woo.departments.ept" view_mode="form" view_type="form"
+		target="new" multi="True" key2="client_action_multi"
+		id="action_wizard_woo_export_product_departments"
+		view_id="view_woo_process_import_export_from_more_ept"
+		context="{'process':'export_product_departments'}"/>
+
+		<act_window name="Update Product Departments" res_model="woo.process.import.export"
+		src_model="woo.departments.ept" view_mode="form" view_type="form"
+		target="new" multi="True" key2="client_action_multi"
+		id="action_wizard_woo_update_product_departments"
+		view_id="view_woo_process_import_export_from_more_ept"
+		context="{'process':'update_product_departments'}"/>
 		
 		<act_window name="Export Product Categories" res_model="woo.process.import.export"
 		src_model="woo.product.categ.ept" view_mode="form" view_type="form"
@@ -199,7 +247,10 @@
 		                				<field name="is_export_product_categ"/>
 		                				<!--  <field name="is_update_product_categ"/>-->
 		                				<field name="is_export_product_tags"/>
-		                				<!--  <field name="is_update_product_tags"/>-->                						                					                													
+		                				<!--  <field name="is_update_product_tags"/>-->
+										<field name="is_export_product_brand"/>
+										<field name="is_export_product_supplier"/>
+										<field name="is_export_product_department"/>
 									</group>
 									<group name="op_order" string="Shipment Status">
 		                				<field name="is_update_order_status"/>                				

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+<!--shl-->
+		<record id="view_product_group_form_inherit" model="ir.ui.view">
+			<field name="name">product.group.form.view.inherit</field>
+			<field name="model">product.group</field>
+			<field name="type">form</field>
+			<field name="inherit_id" ref="product_product.view_product_group_form"/>
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='name']" position='after'>
+					<field name="category_id"/>
+				</xpath>
+			</field>
+		</record>
+
+		<!-- Product Group Tree -->
+		<record id="view_product_group_tree_inherit" model="ir.ui.view">
+			<field name="name">product.group.tree.view.inherit</field>
+			<field name="model">product.group</field>
+			<field name="type">tree</field>
+			<field name="inherit_id" ref="product_product.view_product_group_tree"/>
+			<field name="arch" type="xml">
+				<field name="name" position="after">
+					<field name="category_id"/>
+				</field>
+			</field>
+		</record>
+	</data>
+</openerp>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record id="product_template_sequence" model="ir.sequence.type">
+			<field name="name">Product Template Sequence</field>
+			<field name="code">product.template.code</field>
+		</record>
+
+		<record id="product_template_seq" model="ir.sequence">
+			<field name="name">Product Template Sequence</field>
+			<field name="code">product.template.code</field>
+			<field name="prefix">P-</field>
+			<field name="padding">10</field>
+		</record>
+
+	</data>
+</openerp>

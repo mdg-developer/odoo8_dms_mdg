@@ -29,8 +29,21 @@ class woo_process_import_export(models.TransientModel):
     
     is_export_product_categ=fields.Boolean("Export Product Category")
     is_update_product_categ=fields.Boolean("Update Product Category")
+
+    is_export_product_brand = fields.Boolean("Export Product Brand")
+    is_update_product_brand = fields.Boolean("Update Product Brand")
+
+    is_export_product_supplier = fields.Boolean("Export Product Supplier")
+    is_update_product_supplier = fields.Boolean("Update Product Supplier")
+
+    is_export_product_department = fields.Boolean("Export Product Department")
+    is_update_product_department = fields.Boolean("Update Product Department")
+
     sync_product_category_from_woo=fields.Boolean("Sync/Import Product Category")    
     sync_product_tags_from_woo=fields.Boolean("Sync/Import Product Tags")
+    sync_product_brands_from_woo=fields.Boolean("Sync/Import Product Brands")
+    sync_product_suppliers_from_woo=fields.Boolean("Sync/Import Product Suppliers")
+    sync_product_departments_from_woo = fields.Boolean("Sync/Import Product Departments")
     
     sync_woo_coupons=fields.Boolean("Sync Coupons")
     is_export_coupons=fields.Boolean("Export Coupons")
@@ -76,6 +89,12 @@ class woo_process_import_export(models.TransientModel):
             self.update_product_categ()
         if self.sync_product_category_from_woo:
             self.sync_product_category()
+        if self.sync_product_brands_from_woo:
+            self.sync_product_brands()
+        if self.sync_product_suppliers_from_woo:
+            self.sync_product_suppliers()
+        if self.sync_product_departments_from_woo:
+            self.sync_product_departments()
         if self.sync_product_tags_from_woo:
             self.sync_product_tags()      
         if self.sync_woo_coupons:
@@ -276,17 +295,32 @@ class woo_process_import_export(models.TransientModel):
     
     @api.multi
     def prepare_product_for_export(self):
+        woo_product_tag_ids = []
         woo_template_obj=self.env['woo.product.template.ept']
         woo_product_obj=self.env['woo.product.product.ept']
         woo_product_categ=self.env['woo.product.categ.ept']
+        woo_product_tag_obj=self.env['woo.tags.ept']
         template_ids=self._context.get('active_ids',[])
         odoo_templates=self.env['product.template'].search([('id','in',template_ids),('type','!=','service')])
         for instance in self.instance_ids:
             for odoo_template in odoo_templates:
                 woo_categ_ids = [(6, 0, [])]
+                final_tag_ids = [(6, 0, [])]
                 woo_template = woo_template_obj.search([('woo_instance_id','=',instance.id),('product_tmpl_id','=',odoo_template.id)])                
                 if not woo_template:
                     categ_name = odoo_template.categ_id.name or ''
+                    if odoo_template.tag_ids:
+                        for tag_id in odoo_template.tag_ids:
+                            tag_name = tag_id.name
+                            self._cr.execute("select id from woo_tags_ept where LOWER(name) = '%s' and woo_instance_id = %s limit 1" %(tag_name,instance.id))
+                            woo_tag_id = self._cr.dictfetchall()
+                            woo_tag_id_id = False
+                            if woo_tag_id:
+                                woo_tag_id_id = woo_product_tag_obj.browse(woo_tag_id[0])
+                            if not woo_tag_id_id:
+                                woo_tag_id_id = woo_product_tag_obj.create({'name':tag_name,'woo_instance_id':instance.id})
+                            woo_product_tag_ids.append(woo_tag_id_id.id)
+                        final_tag_ids = [(6, 0, woo_product_tag_ids)]
                     if categ_name:
                         ctg = categ_name.lower().replace('\'','\'\'')
                         self._cr.execute("select id from woo_product_categ_ept where LOWER(name) = '%s' and woo_instance_id = %s limit 1"%(ctg,instance.id))
@@ -307,7 +341,7 @@ class woo_process_import_export(models.TransientModel):
                         myanmar_name = odoo_template.myanmar_name
                     else:
                         raise except_orm(_('UserError'), _("Please define Myanmar name for %s!") % (odoo_template.name,))
-                    woo_template=woo_template_obj.create({'woo_instance_id':instance.id,'product_tmpl_id':odoo_template.id,'name':product_name,'myanmar_name':myanmar_name,'description':odoo_template.description_sale,'short_description':odoo_template.description})
+                    woo_template=woo_template_obj.create({'woo_instance_id':instance.id,'product_tmpl_id':odoo_template.id,'name':product_name,'myanmar_name':myanmar_name,'description':odoo_template.description_sale,'short_description':odoo_template.description,'woo_tag_ids':final_tag_ids})
                 for variant in odoo_template.product_variant_ids:
                     woo_variant = woo_product_obj.search([('woo_instance_id','=',instance.id),('product_id','=',variant.id)])
                     if not woo_variant:

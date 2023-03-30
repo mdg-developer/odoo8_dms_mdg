@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+        <record id="view_product_supplier_form" model="ir.ui.view">
+            <field name="name">product.supplier.form</field>
+            <field name="model">product.supplier</field>
+            <field name="arch" type="xml">
+                <form string="Product Supplier" version="7.0">
+                    <group>
+                        <field name="name" />
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_product_supplier_tree" model="ir.ui.view">
+            <field name="name">product.supplier.tree</field>
+            <field name="name">product.supplier</field>
+            <field name="arch" type="xml">
+                <tree string="Product Supplier" version="7.0">
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_product_supplier_view" model="ir.actions.act_window">
+			<field name="name">Product Supplier</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">product.supplier</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" eval="view_product_supplier_tree" />
+		</record>
+
+        <menuitem id="product_supplier_menu" parent="product_product.product_menu"
+			name="Product Supplier" action="action_product_supplier_view" groups="base.group_system" />
+    </data>
+</openerp>

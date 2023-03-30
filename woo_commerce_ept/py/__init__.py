@@ -1,5 +1,8 @@
 import woo_instance_ept
 import woo_tags_ept
+import woo_brands_ept
+import woo_suppliers_ept
+import woo_departments_ept
 import woo_product_categ_ept
 import woo_product_ept
 import woo_product_image_ept

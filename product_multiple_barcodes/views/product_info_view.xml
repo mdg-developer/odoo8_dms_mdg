@@ -16,18 +16,20 @@
 
 					<sheet>
 						<group>
-							<field name="product_tmpl_id" attrs="{'readonly': [('state','=','done')]}"/>
+							<field name="product_tmpl_id" string="Product Name" attrs="{'readonly': [('state','=','done')]}"/>
 							<field name="description" attrs="{'readonly': [('state','=','done')]}"/>
 							<field name="default_code" attrs="{'readonly': [('state','=','done')]}"/>
 							<field name="ti" attrs="{'readonly': [('state','=','done')]}"/>
 							<field name="hi" attrs="{'readonly': [('state','=','done')]}"/>
-							<field name="viss_value" attrs="{'readonly': [('state','=','done')]}"/>
-							<field name="cbm_value" attrs="{'readonly': [('state','=','done')]}"/>
+							<field name="kg_value" string='Weight (Kg)' on_change='on_change_kg_value(kg_value)' attrs="{'readonly': [('state','=','done')]}"/>
+							<field name="viss_value" string='Weight (Viss)' readonly="1"/>
+							<field name="cbm_value" string='CBM(cm)' attrs="{'readonly': [('state','=','done')]}"/>
 							<field name="ctn_pallet" attrs="{'readonly': [('state','=','done')]}"/>
 							<field name="barcode_no" attrs="{'readonly': [('state','=','done')]}"/>
 							<field name="ctn_weight" attrs="{'readonly': [('state','=','done')]}"/>
 							<field name="ctn_height" attrs="{'readonly': [('state','=','done')]}"/>
-							<field name="inbound_shelf_life" attrs="{'readonly': [('state','=','done')]}"/>
+							<field name="inbound_shelf_life" string="Inbound Shelf Life (Days)" attrs="{'readonly': [('state','=','done')]}"/>
+							<field name="inbound_shelf_life_min" string="Inbound Shelf Life (Minimum)" attrs="{'readonly': [('state','=','done')]}"/>
 							<field name="image_medium" widget="image" class="oe_avatar oe_left" attrs="{'readonly': [('state','=','done')]}"/>
 							<field name="carton_image" widget="image" class="oe_avatar oe_left" attrs="{'readonly': [('state','=','done')]}"/>
 							<field name="barcode_ids">

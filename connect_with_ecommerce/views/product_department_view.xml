@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="view_product_department_form" model="ir.ui.view">
+			<field name="name">prodcut.department.form</field>
+			<field name="model">product.department</field>
+			<field name="arch" type="xml">
+				<form string="Product Department" version="7.0">
+					<group>
+						<field name="name" />
+					</group>
+				</form>
+			</field>
+		</record>
+		<record id="view_product_department_tree" model="ir.ui.view">
+			<field name="name">product.department.tree</field>
+			<field name="model">product.department</field>
+			<field name="arch" type="xml">
+				<tree string="Product Department" version="7.0">
+					<field name="name" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="action_product_department_view" model="ir.actions.act_window">
+			<field name="name">Product department</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">product.department</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" eval="view_product_department_tree" />
+		</record>
+
+		<menuitem id="product_department_menu" parent="product_product.product_menu"
+			name="Product Department" action="action_product_department_view" groups="base.group_system" />
+
+	</data>
+</openerp>

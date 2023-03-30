@@ -23,7 +23,7 @@
 			<field name="model">product.template</field>
 			<field name="inherit_id" ref="product_product.product_template_form_view_inherit" />
 			<field name="arch" type="xml">				
-				<xpath expr="//page[@name='uoms_price']" position="after">
+				<xpath expr="//page[@name='uoms']" position="after">
 					<page name="city" string="City">
 						<field name="city_lines"/>
 					</page>
@@ -31,6 +31,10 @@
 					    <group>					        
 						    <group>
 						        <field name="ecommerce_uom_id"/>
+  								<field name="tag_ids" widget="many2many_tags"/>
+								<field name="brand_id"/>
+								<field name="ecommerce_supplier_id"/>
+								<field name="ecommerce_department_id"/>
 						    </group>
 						    <group>	
 						        <field name="delivery_id"/>
@@ -51,6 +55,49 @@
 			<field name="arch" type="xml">		
 					<xpath expr="//field[@name='uom_price_lines']/tree/field[@name='per_pallet']" position="after">
 						<field name="for_ecommerce"/>
+					</xpath>
+					<xpath expr="//field[@name='company_id']" position="after">
+						<label for="description" string="Product Description"/>
+					</xpath>
+					<xpath expr="//page[@string='UOM Info']" position="replace">
+					</xpath>
+					<xpath expr="//page[@string='Information']" position="after">
+						<page name="uoms_price" string="UOM Info">
+							<field name="uom_price_lines">
+								<form string="UOM Price Lines">
+									<group>
+										<field name="name" on_change="onchange_product_uom(name)" />
+										<field name="category_id" />
+										<field name="factor" />
+										<field name="price" />
+										<field name="uom_ratio" />
+										<field name="weight" />
+										<field name="length" />
+										<field name="width" />
+										<field name="height" />
+										<field name="per_pallet" />
+									</group>
+								</form>
+								<tree string="UOM Price Lines" editable="bottom">
+									<field name="name" on_change="onchange_product_uom(name)" />
+									<field name="category_id" />
+									<field name="factor" />
+									<field name="price" />
+									<field name="uom_ratio" />
+									<field name="weight" />
+									<field name="length" />
+									<field name="width" />
+									<field name="height" />
+									<field name="per_pallet" />
+								</tree>
+							</field>
+						</page>
+					</xpath>
+					<xpath expr="//page[@string='Accounting']/group/label[@string='Sub Group']" position="replace">
+						<label for="group" string="Product Sub Category" />
+					</xpath>
+					<xpath expr="//page[@string='Inventory']/group[@name='inventory']/group[@name='weight']" position="attributes">
+						<attribute name="string">Carton, Weights and Dimensions</attribute>
 					</xpath>
 			</field>
 		</record>

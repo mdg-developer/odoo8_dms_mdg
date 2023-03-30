@@ -16,3 +16,9 @@ import push_image_app
 import noti_by_customer
 import sms_by_customer
 import woo_minimum_stock
+import product_brand
+import product_group
+import product_tag
+import product_uom
+import product_supplier
+import product_department

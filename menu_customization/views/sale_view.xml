@@ -856,6 +856,22 @@
 			name="Product Sub Group" action="product_product.action_product_group_view"
 			groups="base.group_system" />
 
+		<menuitem id="product_brand_menu" parent="product_menu_sale"
+			name="Product Brands" action="connect_with_ecommerce.action_product_brand_view"
+			sequence="51" groups="base.group_system" />
+
+		<menuitem id="product_tag_menu" parent="product_menu_sale"
+			name="Product Tags" action="connect_with_ecommerce.action_product_tag_view"
+			sequence="52" groups="base.group_system" />
+
+		<menuitem id="product_supplier_menu" parent="product_menu_sale"
+			name="Product Suppliers" action="connect_with_ecommerce.action_product_supplier_view"
+			sequence="53" groups="base.group_system" />
+
+		<menuitem id="product_department_menu" parent="product_menu_sale"
+			name="Product Department" action="connect_with_ecommerce.action_product_department_view"
+			sequence="54" groups="base.group_system" />
+
 		<!-- Product Category -->
 		<menuitem id="product_product.product_menu" name="Products Configuration"
 			parent="account.menu_finance_configuration" sequence="2" />
