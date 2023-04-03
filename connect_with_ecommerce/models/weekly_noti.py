@@ -51,4 +51,13 @@ class WeeklyNotification(osv.osv):
                                                     'headings': "Burmart"
                                                 }     
                             self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)
+                            partner_id = partner.id
+                            device_token = self.pool.get('fcm.notification.messages').get_device_token(cr, uid, partner_id)
+                            fcm_noti_values = {
+                                'partner_id': partner_id,
+                                'title': "Burmart",
+                                'body': weekly_noti.message,
+                                'device_token': device_token
+                            }
+                            self.pool.get('fcm.notification.messages').create(cr, uid, fcm_noti_values, context=context)
                 

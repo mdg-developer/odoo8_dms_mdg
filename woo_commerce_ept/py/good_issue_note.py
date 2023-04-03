@@ -30,7 +30,16 @@ class good_issue_note(osv.osv):
                                              'headings': "Burmart"
                                             }   
                         print 'one_signal_values',one_signal_values
-                        self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)    
+                        self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)
+                        partner_id = sale_order.partner_id.id
+                        device_token = self.pool.get('fcm.notification.messages').get_device_token(cr, uid, partner_id)
+                        fcm_noti_values = {
+                            'partner_id': partner_id,
+                            'title': "Burmart",
+                            'body': "Your order " + sale_order.name + " is on the way.",
+                            'device_token': device_token
+                        }
+                        self.pool.get('fcm.notification.messages').create(cr, uid, fcm_noti_values, context=context)
         return res
      
         

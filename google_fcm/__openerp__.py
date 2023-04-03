@@ -36,6 +36,8 @@ Firebase Cloud Messaging
     ],
     'data': [             
              'views/fcm_notification_view.xml',
+             'views/fcm_notification_messages_view.xml',
+             'views/menu.xml',
     ],
     'installable': True,
     'auto_install': False,

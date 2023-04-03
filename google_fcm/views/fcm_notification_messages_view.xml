@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="fcm_notification_messages_tree_view" model="ir.ui.view">
+            <field name="name">Messages</field>
+            <field name="model">fcm.notification.messages</field>
+            <field name="arch" type="xml">
+                <tree string="Firebase Messages" default_order='create_date desc'>
+                    <field name="partner_id"/>
+                    <field name="title"/>
+                    <field name="body"/>
+                    <field name="create_date" />
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="fcm_notification_messages_form_view" model="ir.ui.view">
+            <field name="name">Messages</field>
+            <field name="model">fcm.notification.messages</field>
+            <field name="arch" type="xml">
+                <form string="Messages">
+                    <header>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="partner_id" readonly="1"/>
+                                <field name="woo_customer_id" readonly="1"/>
+                                <field name="create_date" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="title" readonly="1"/>
+                                <field name="body" readonly="1"/>
+                                <field name="device_token" readonly="1"/>
+                                <field name="reason" readonly="1"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_fcm_notification_messages" model="ir.actions.act_window">
+            <field name="name">Messages</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">fcm.notification.messages</field>
+            <field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+            <field name="view_id" eval="fcm_notification_messages_tree_view"/>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to create new message.
+				</p>
+			</field>
+        </record>
+
+    </data>
+</openerp>

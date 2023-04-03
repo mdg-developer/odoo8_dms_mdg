@@ -3588,6 +3588,15 @@ class mobile_sale_order(osv.osv):
                                                         'headings': "Burmart"
                                                     }     
                                 self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)
+                                partner_id = sale.partner_id.id
+                                device_token = self.pool.get('fcm.notification.messages').get_device_token(cr, uid, partner_id)
+                                fcm_noti_values = {
+                                    'partner_id': partner_id,
+                                    'title': "Burmart",
+                                    'body': "Your order " + sale.name + " is cancelled.",
+                                    'device_token': device_token
+                                }
+                                self.pool.get('fcm.notification.messages').create(cr, uid, fcm_noti_values, context=context)
                             if sale.getting_point > 0:
                                 getting_point = -sale.getting_point
                                 sale.write({'getting_point':getting_point})

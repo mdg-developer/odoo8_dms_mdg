@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+        <menuitem name="Firebase Notification" id="menu_firebase_notification_main" sequence="20"/>
+
+        <menuitem name="Firebase" id="menu_firebase_configuration_menu" parent="menu_firebase_notification_main" sequence="100"/>
+
+        <menuitem name="Messages" id="menu_firebase_message" parent="menu_firebase_configuration_menu" action="action_fcm_notification_messages" sequence="3"/>
+
+    </data>
+</openerp>

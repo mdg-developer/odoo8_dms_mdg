@@ -16,5 +16,14 @@ class stock_transfer_details(models.TransientModel):
                                         'headings': "Burmart"
                                     }     
                 self.env['one.signal.notification.messages'].create(one_signal_values)
+                partner_id = sale_order.partner_id.id
+                device_token = self.env['fcm.notification.messages'].get_device_token(partner_id)
+                fcm_noti_values = {
+                    'partner_id': partner_id,
+                    'title': "Burmart",
+                    'body': "Your order " + sale_order.name + " is shipped.",
+                    'device_token': device_token
+                }
+                self.env['fcm.notification.messages'].create(fcm_noti_values)
         return res
     
