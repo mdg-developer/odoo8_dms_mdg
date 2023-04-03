@@ -102,7 +102,7 @@ class res_partner(osv.osv):
                         values(%s,%s,%s,%s,%s,%s,%s)""",('Burmart OTP',mobile_phone,message,error_log,sms_status,current_datetime,1,))  
             return data   
         
-    def create_or_update_woo_customer(self, cr, uid, ids, mdg_customer=False, customer_code=None, name=None,street=None,street2=None,township=None,state=None,mobile=None,phone=None,gender=None,birthday=None,email=None,partner_latitude=None,partner_longitude=None,sms=None,viber=None,shop_name=None,woo_customer_id=None,image=None,sale_channel=None,context=None):
+    def create_or_update_woo_customer(self, cr, uid, ids, device_token=None,mdg_customer=False, customer_code=None, name=None,street=None,street2=None,township=None,state=None,mobile=None,phone=None,gender=None,birthday=None,email=None,partner_latitude=None,partner_longitude=None,sms=None,viber=None,shop_name=None,woo_customer_id=None,image=None,sale_channel=None,context=None):
         vals = {}
         contact_township = contact_city = contact_state = None
         township_obj = self.pool.get('res.township')
@@ -178,16 +178,17 @@ class res_partner(osv.osv):
                  
             result = partner_obj.create(cr, uid, vals, context=context)                    
             if result:           
-                # one_signal_values = {
-                #                      'partner_id': result,
-                #                      'contents': "Thank you for registration in Burmart E-commerce.",
-                #                      'headings': "Burmart"
-                #                     }
-                # self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)
+                one_signal_values = {
+                                     'partner_id': result,
+                                     'contents': "Thank you for registration in Burmart E-commerce.",
+                                     'headings': "Burmart"
+                                    }
+                self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)
                 fcm_noti_values = {
                     'partner_id': result,
                     'title': "Burmart",
                     'body': "Thank you for registration in Burmart E-commerce.",
+                    'device_token': device_token,
                 }
                 self.pool.get('fcm.notification.messages').create(cr, uid, fcm_noti_values, context=context)
             partner = partner_obj.search(cr, uid, [('id', '=', result)])
@@ -285,21 +286,35 @@ class res_partner(osv.osv):
                 old_vals['branch_id'] = partner_data.branch_id.id if partner_data.branch_id else None
                 new_one = new_partner_obj.create(cr, uid, old_vals, context=context)                
                 if result:           
-                    # one_signal_values = {
-                    #                      'partner_id': partner_data.id,
-                    #                      'contents': "Thank you for registration in Burmart E-commerce.",
-                    #                      'headings': "Burmart"
-                    #                     }
-                    # self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)
+                    one_signal_values = {
+                                         'partner_id': partner_data.id,
+                                         'contents': "Thank you for registration in Burmart E-commerce.",
+                                         'headings': "Burmart"
+                                        }
+                    self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)
                     fcm_noti_values = {
                         'partner_id': partner_data.id,
                         'title': "Burmart",
                         'body': "Thank you for registration in Burmart E-commerce.",
+                        'device_token': device_token,
                     }
                     self.pool.get('fcm.notification.messages').create(cr, uid, fcm_noti_values, context=context)
-                return result          
+                return result
 
-    def create_or_update_woo_customer_with_city(self, cr, uid, ids, mdg_customer=False, customer_code=None, name=None,street=None,street2=None,township=None,city=None,state=None,mobile=None,phone=None,gender=None,birthday=None,email=None,partner_latitude=None,partner_longitude=None,sms=None,viber=None,shop_name=None,woo_customer_id=None,image=None,sale_channel=None,is_email_generated=None,context=None):
+    def save_device_token(self, cr, uid, ids, user_id=None, token=None, context=None):
+        if user_id:
+            token_id = self.pool.get('fcm.devicetoken').search(cr, uid, [('woo_customer_id','=','1_'+ str(user_id))], context=context)
+            if token_id:
+                self.pool.get('fcm.devicetoken').write(cr, uid, token_id, {'device_token':token})
+            else:
+                vals = {
+                    'woo_customer_id':'1_' + str(user_id),
+                    'device_token':token
+                }
+                token_id = self.pool.get('fcm.devicetoken').create(cr, uid, vals, context=context)
+        return True
+
+    def create_or_update_woo_customer_with_city(self, cr, uid, ids, device_token=None,mdg_customer=False, customer_code=None, name=None,street=None,street2=None,township=None,city=None,state=None,mobile=None,phone=None,gender=None,birthday=None,email=None,partner_latitude=None,partner_longitude=None,sms=None,viber=None,shop_name=None,woo_customer_id=None,image=None,sale_channel=None,is_email_generated=None,context=None):
         vals = {}
         contact_township = contact_city = contact_state = None
         township_obj = self.pool.get('res.township')
@@ -377,16 +392,17 @@ class res_partner(osv.osv):
                  
             result = partner_obj.create(cr, uid, vals, context=context)                    
             if result:           
-                # one_signal_values = {
-                #                      'partner_id': result,
-                #                      'contents': "Thank you for registration in Burmart E-commerce.",
-                #                      'headings': "Burmart"
-                #                     }
-                # self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)
+                one_signal_values = {
+                                     'partner_id': result,
+                                     'contents': "Thank you for registration in Burmart E-commerce.",
+                                     'headings': "Burmart"
+                                    }
+                self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)
                 fcm_noti_values = {
                     'partner_id': result,
                     'title': "Burmart",
-                    'body': "Thank you for registration in Burmart E-commerce."
+                    'body': "Thank you for registration in Burmart E-commerce.",
+                    'device_token': device_token,
                 }
                 self.pool.get('fcm.notification.messages').create(cr, uid, fcm_noti_values, context=context)
             partner = partner_obj.search(cr, uid, [('id', '=', result)])
@@ -489,16 +505,17 @@ class res_partner(osv.osv):
                 old_vals['branch_id'] = partner_data.branch_id.id if partner_data.branch_id else None
                 new_one = new_partner_obj.create(cr, uid, old_vals, context=context)                
                 if result:           
-                    # one_signal_values = {
-                    #                      'partner_id': partner_data.id,
-                    #                      'contents': "Thank you for registration in Burmart E-commerce.",
-                    #                      'headings': "Burmart"
-                    #                     }
-                    # self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)
+                    one_signal_values = {
+                                         'partner_id': partner_data.id,
+                                         'contents': "Thank you for registration in Burmart E-commerce.",
+                                         'headings': "Burmart"
+                                        }
+                    self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)
                     fcm_noti_values = {
                         'partner_id': partner_data.id,
                         'title': "Burmart",
                         'body': "Thank you for registration in Burmart E-commerce.",
+                        'device_token': device_token,
                     }
                     self.pool.get('fcm.notification.messages').create(cr, uid, fcm_noti_values, context=context)
                     partner_data = partner_obj.browse(cr, uid, partner_data.id, context=context)
@@ -730,23 +747,24 @@ class res_partner(osv.osv):
                 })
             return partner_id  
         
-    def send_delivered_noti(self, cr, uid, sale_order_number, context=None, **kwargs):
+    def send_delivered_noti(self, cr, uid, device_token=None, sale_order_number=None, context=None, **kwargs):
         
         if sale_order_number:            
             sale_order_obj = self.pool.get('sale.order').search(cr, uid, [('woo_order_id', '=', sale_order_number)],context=context)
             if sale_order_obj:
                 sale_order = self.pool.get('sale.order').browse(cr, uid, sale_order_obj, context=context)
                 if sale_order and sale_order.woo_order_number:                
-                    # one_signal_values = {
-                    #                         'partner_id': sale_order.partner_id.id,
-                    #                         'contents': "Your order " + sale_order.name + " is shipped.",
-                    #                         'headings': "Burmart"
-                    #                     }
-                    # self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)
+                    one_signal_values = {
+                                            'partner_id': sale_order.partner_id.id,
+                                            'contents': "Your order " + sale_order.name + " is shipped.",
+                                            'headings': "Burmart"
+                                        }
+                    self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)
                     fcm_noti_values = {
                         'partner_id': sale_order.partner_id.id,
                         'title': "Burmart",
                         'body': "Your order " + sale_order.name + " is shipped.",
+                        'device_token': device_token,
                     }
                     self.pool.get('fcm.notification.messages').create(cr, uid, fcm_noti_values, context=context)
                     sale_order.update_woo_order_status_action('completed')      
@@ -754,7 +772,7 @@ class res_partner(osv.osv):
         else:
             return False
 
-    def create_woo_sale_order(self, cr, uid, ids, original_pre_sale_order_no=None, context=None):
+    def create_woo_sale_order(self, cr, uid, ids, original_pre_sale_order_no=None, device_token=None,context=None):
 
         product_lists = []
         shipping_lists = []
@@ -979,16 +997,17 @@ class res_partner(osv.osv):
                         create_order_response = wcapi.post("orders", data)
                         logging.warning("Check create_order_response status code: %s", create_order_response.status_code)
                         if create_order_response.status_code not in [200, 201]:
-                            # one_signal_values = {
-                            #     'partner_id': sale_order.partner_id.id,
-                            #     'contents': "Your order " + sale_order.name + " does not create properly.Please Check!",
-                            #     'headings': "Burmart"
-                            # }
-                            # self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)
+                            one_signal_values = {
+                                'partner_id': sale_order.partner_id.id,
+                                'contents': "Your order " + sale_order.name + " does not create properly.Please Check!",
+                                'headings': "Burmart"
+                            }
+                            self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)
                             fcm_noti_values = {
                                 'partner_id': sale_order.partner_id.id,
                                 'title': "Burmart",
                                 'body': "Your order " + sale_order.name + " does not create properly.Please Check!",
+                                'device_token': device_token,
                             }
                             self.pool.get('fcm.notification.messages').create(cr, uid, fcm_noti_values, context=context)
                             # put to queue.job
@@ -998,28 +1017,30 @@ class res_partner(osv.osv):
                             runner = ConnectorRunner()
                             runner.run_jobs()
                         if create_order_response.status_code in [200, 201]:
-                            # one_signal_values = {
-                            #     'partner_id': sale_order.partner_id.id,
-                            #     'contents': "Your order " + sale_order.name + " is created successfully.",
-                            #     'headings': "Burmart"
-                            # }
-                            # self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)
+                            one_signal_values = {
+                                'partner_id': sale_order.partner_id.id,
+                                'contents': "Your order " + sale_order.name + " is created successfully.",
+                                'headings': "Burmart"
+                            }
+                            self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)
                             fcm_noti_values = {
                                 'partner_id': sale_order.partner_id.id,
                                 'title': "Burmart",
                                 'body': "Your order " + sale_order.name + " is created successfully.",
+                                'device_token': device_token,
                             }
                             self.pool.get('fcm.notification.messages').create(cr, uid, fcm_noti_values, context=context)
-                            # one_signal_values = {
-                            #     'partner_id': sale_order.partner_id.id,
-                            #     'contents': "Your order " + sale_order.name + " is completed.",
-                            #     'headings': "Burmart"
-                            # }
-                            # self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)
+                            one_signal_values = {
+                                'partner_id': sale_order.partner_id.id,
+                                'contents': "Your order " + sale_order.name + " is completed.",
+                                'headings': "Burmart"
+                            }
+                            self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values, context=context)
                             fcm_noti_values = {
                                 'partner_id': sale_order.partner_id.id,
                                 'title': "Burmart",
                                 'body': "Your order " + sale_order.name + " is completed.",
+                                'device_token': device_token,
                             }
                             self.pool.get('fcm.notification.messages').create(cr, uid, fcm_noti_values, context=context)
 

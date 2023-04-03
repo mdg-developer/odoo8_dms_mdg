@@ -5,6 +5,8 @@ import logging
 import ast
 from pyfcm import FCMNotification
 
+_logger = logging.getLogger(__name__)
+
 class FCMNotificationMessages(models.Model):
 
     _name = "fcm.notification.messages"
@@ -70,19 +72,26 @@ class FCMNotificationMessages(models.Model):
         if header and payload:
             payload = json.dumps(payload)
             result = requests.post("https://fcm.googleapis.com/fcm/send", headers=header, data=payload)
+            _logger.info('----------Your message is delivered--------- ')
         return result
 
     def get_device_token(self, cr, uid, partner_id, context=None):
-        device_token=""
-        api_key = ""
-        header = {"Content-Type": "application/json", "Authorization": "key=%s" % api_key}
-        payload = ""
+        device_token = ""
         if partner_id:
             partner_obj = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
             for partner in partner_obj:
                 if partner.woo_customer_id:
-                    woo_customer_id = partner.woo_customer_id
-        response = requests.get("https://", headers=header, data=payload)
-        if response:
-            device_token = response['device_token']
+                    token_value = self.pool.get('fcm.devicetoken').search(cr, uid, [
+                        ('woo_customer_id', '=', partner.woo_customer_id)], context=context)
+        if token_value:
+            token_data = self.pool.get('fcm.devicetoken').browse(cr, uid, token_value, context=context)
+            device_token = token_data.device_token
+            # woo_customer_id = str(partner.woo_customer_id).replace('1_','')
+        # if woo_customer_id:
+        #     response = requests.get("https://www.burmart.com/wp-json/firebasedatas/v3/searchtoken/%s" % woo_customer_id)
+        # if response.status_code == 200:
+        #     response_json = response.json()
+        #     if response_json:
+        #         device_token = response_json[0].get('token', '')
+
         return device_token
