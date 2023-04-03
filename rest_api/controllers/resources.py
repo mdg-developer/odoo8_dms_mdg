@@ -41,3 +41,4 @@ from . import model__stock_inventory_line
 from . import model__product_multi_barcode
 from . import model__one_signal_notification_messages
 from . import model__competitor_product
+from . import model__fcm_notification_messages

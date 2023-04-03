@@ -19,6 +19,7 @@ class FCMNotificationMessages(models.Model):
     device_token = fields.Char(string="Device Token")
     reason = fields.Text(string="Reason")
     woo_customer_id = fields.Char("Woo Customer Id")
+    has_read = fields.Boolean('Has read?', default=False)
     state = fields.Selection([
         ('draft', 'Not Send'),
         ('send', 'Send'),
