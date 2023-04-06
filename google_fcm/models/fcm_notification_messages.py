@@ -39,7 +39,6 @@ class FCMNotificationMessages(models.Model):
         data['body'] = vals['body']
         data['device_token'] = vals['device_token']
         response = self.send_notification(cr,uid,data)
-        response_json = response.json()
         if response:
             response_json = response.json()
             if response_json['results'][0]:
