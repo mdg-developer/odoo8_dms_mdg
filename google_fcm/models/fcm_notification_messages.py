@@ -28,6 +28,7 @@ class FCMNotificationMessages(models.Model):
 
     def create(self, cr, uid, vals, context=None):
         data = {}
+        response = {}
         woo_customer_id = None
         if vals['partner_id']:
             partner_obj = self.pool.get('res.partner').browse(cr, uid, vals['partner_id'], context=context)
