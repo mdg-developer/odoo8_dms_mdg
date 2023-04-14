@@ -9,10 +9,10 @@
 						
 						<field name="active" position="after">
 							
-							<field name="is_sync_sd"/>
+							<field name="is_sync_cellar"/>
 						</field>
 						<field name="product_variant_count" position="after">
-							<button name="sync_to_sd" string="Sync To SD" class="oe_highlight"
+							<button name="sync_to_cellar" string="Sync To Cellar18" class="oe_highlight"
 								type="object" groups="base.group_no_one" />
 		
 						</field>
@@ -25,12 +25,12 @@
             <field name="model">product.template</field>
             <field name="arch" type="xml">
                 <tree string="Product">
-                    <field name="name" fg_color="blue:is_sync_sd==True;"/>
-                    <field name="categ_id" fg_color="blue:is_sync_sd==True;"/>
-                    <field name="type" fg_color="blue:is_sync_sd==True;"/>
-                    <field name="state" fg_color="blue:is_sync_sd==True;"/>
+                    <field name="name" fg_color="blue:is_sync_cellar==True;"/>
+                    <field name="categ_id" fg_color="blue:is_sync_cellar==True;"/>
+                    <field name="type" fg_color="blue:is_sync_cellar==True;"/>
+                    <field name="state" fg_color="blue:is_sync_cellar==True;"/>
                     <field name="uom_id" invisible="1"/>
-                    <field name="is_sync_sd" fg_color="blue:is_sync_sd==True;"/>
+                    <field name="is_sync_cellar" fg_color="blue:is_sync_cellar==True;"/>
                 </tree>
             </field>
         </record>
@@ -41,16 +41,16 @@
 			
 			<field name="arch" type="xml">
 				<field name="categ_id" position="replace">
-					<field name="categ_id" string="Category" fg_color="blue:is_sync_sd==True;"/>
+					<field name="categ_id" string="Category" fg_color="blue:is_sync_cellar==True;"/>
 				</field>
 
 				<field name="categ_id" position="after">
-					<field name="uom_id" string="S.UOM" fg_color="blue:is_sync_sd==True;"/>
-					<field name="list_price" string="S.Price" fg_color="blue:is_sync_sd==True;"/>
+					<field name="uom_id" string="S.UOM" fg_color="blue:is_sync_cellar==True;"/>
+					<field name="list_price" string="S.Price" fg_color="blue:is_sync_cellar==True;"/>
                     <field name="big_uom_id" string="B.UOM"   invisible="1"/>
                     <field name="big_list_price" string="B.Price"   invisible="1"/>
-					<field name="uom_ratio" fg_color="blue:is_sync_sd==True;"/>
-					<field name="sequence" fg_color="blue:is_sync_sd==True;"/>
+					<field name="uom_ratio" fg_color="blue:is_sync_cellar==True;"/>
+					<field name="sequence" fg_color="blue:is_sync_cellar==True;"/>
 
 				</field>
 				<field name="type" position="replace">

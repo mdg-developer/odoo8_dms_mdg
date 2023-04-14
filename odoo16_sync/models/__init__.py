@@ -6,4 +6,4 @@
 import sd_connection
 import stock_picking
 import stock_location
-#import product_template
+import product_template

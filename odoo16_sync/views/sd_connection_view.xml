@@ -47,7 +47,7 @@
 			<field name="view_id" ref="view_odoo16_tree" />
 		</record>
 
-		<menuitem id="menu_odoo16_connection_config" name="SD Connection"
+		<menuitem id="menu_odoo16_connection_config" name="Odoo16 Connection"
 			parent="base.menu_custom" sequence="32" />
 		<menuitem action="odoo16_sync.action_odoo16" id="menu_odoo16_connection"
 			parent="menu_odoo16_connection_config" sequence="11" />

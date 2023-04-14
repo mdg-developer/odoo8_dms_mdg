@@ -35,6 +35,7 @@ MDG SYC TO SD
     'data': [        
              'views/stock_location_view.xml',
              'views/sd_connection_view.xml',
+             'views/product_template_view.xml',
 
     ],
     'installable': True,
