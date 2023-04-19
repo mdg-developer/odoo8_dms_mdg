@@ -436,6 +436,7 @@ class customer_visit(osv.osv):
         return self.write(cr, uid, ids, {'image':image1,'image1':image2,'image2':image3,'image3':image4,'image4':image5,'image5':image6})
 
     def generate_image(self, cr, uid, ids, context=None):
+        customer_image = False
         if ids:
             visit_data = self.browse(cr, uid, ids[0], context=context)
             import base64
@@ -447,7 +448,9 @@ class customer_visit(osv.osv):
                         image = base64.b64encode(response)
                         image_id.write({'image':image})
                         _logger.info('-----------image has been retrieved----------')
-        return True
+            if visit_data.customer_id.image:
+                customer_image = (visit_data.customer_id.image)
+        return self.write(cr, uid, ids, {'image5':customer_image})
     def is_approve(self, cr, uid, ids, context=None):
         
         return self.write(cr, uid, ids, {'state': 'approved','validated_by':uid,'validated_date':datetime.now()})                   
