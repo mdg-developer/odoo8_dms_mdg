@@ -10,7 +10,9 @@ from openerp.osv import osv, fields
 from openerp.osv.expression import get_unaccent_wrapper
 from openerp.tools.translate import _
 import requests
+import logging
 
+_logger = logging.getLogger(__name__)
 baseUrlPrefix = "https://firebasestorage.googleapis.com/v0/b/odoo-8d694.appspot.com/o/finewine_customer_visit%2F"
 baseUrlPostFix = ".png?alt=media"
 class customer_visit(osv.osv):
@@ -38,7 +40,9 @@ class customer_visit(osv.osv):
                 'other_reason':fields.text('Remark'),
         'm_status':fields.selection([('pending', 'Pending'), ('approved', 'Approved'),
                                                       ('reject', 'Reject')], string='Status'),
-     'branch_id': fields.many2one('res.branch', 'Branch',required=True),
+        'state': fields.selection([('pending', 'Pending'), ('approved', 'Validate'),
+                                   ('reject', 'Reject')], string='Status'),
+        'branch_id': fields.many2one('res.branch', 'Branch',required=True),
     'distance_status':fields.char('Distance Status', readonly=True),
         'township_id': fields.related(
                    'customer_id', 'township',
@@ -51,15 +55,22 @@ class customer_visit(osv.osv):
         'image3_reference':fields.char('Image3 Reference'),
         'image4_reference':fields.char('Image4 Reference'),
         'image5_reference':fields.char('Image5 Reference'),
+        'visit_image_ids': fields.many2many('customer.visit.images', 'customer_visit_images_rel', 'customer_visit_id','visit_image_id', string="Customer Images Many2Many"),
         'is_image1':fields.boolean('Is Image1', default=False),   
         'is_image2':fields.boolean('Is Image2', default=False),    
         'is_image3':fields.boolean('Is Image3', default=False),    
         'is_image4':fields.boolean('Is Image4', default=False),    
-        'is_image5':fields.boolean('Is Image5', default=False),    
+        'is_image5':fields.boolean('Is Image5', default=False),
+        'rejected_by': fields.many2one('res.users', "Rejected By"),
+        'validated_by': fields.many2one('res.users', "Validated By"),
+        'rejected_date': fields.datetime('Rejected Date'),
+        'validated_date': fields.datetime('Validated Date'),
+        'visit_reason_id': fields.many2one('visit.reason', 'Visit Reason', required=True),
  
     }
     _defaults = {        
         'm_status' : 'pending',
+        'state': 'pending'
     } 
     # image: all image fields are base64 encoded and PIL-supported
     image = openerp.fields.Binary("Image", attachment=True,
@@ -338,7 +349,7 @@ class customer_visit(osv.osv):
 
         return tools.image_resize_image_big(image.encode('base64'))
 
-    def generate_image(self, cr, uid, ids, context=None):
+    def generate_image_old(self, cr, uid, ids, context=None):
         if ids:
             visit_data = self.browse(cr, uid, ids[0], context=context)
             import base64
@@ -368,6 +379,28 @@ class customer_visit(osv.osv):
                     response = requests.get(url).content
                     image5 = base64.b64encode(response)    
         return self.write(cr, uid, ids, {'image':image1,'image1':image2,'image2':image3,'image3':image4,'image4':image5})
+
+    def generate_image(self, cr, uid, ids, context=None):
+        if ids:
+            visit_data = self.browse(cr, uid, ids[0], context=context)
+            import base64
+            if visit_data.visit_image_ids:
+                for image_id in visit_data.visit_image_ids:
+                    if image_id.name:
+                        url = baseUrlPrefix + image_id.name + baseUrlPostFix
+                        response= requests.get(url).content
+                        image = base64.b64encode(response)
+                        image_id.write({'image':image})
+                        _logger.info('-----------image has been retrieved----------')
+        return True
+
+    def is_approve(self, cr, uid, ids, context=None):
+
+        return self.write(cr, uid, ids, {'state': 'approved', 'validated_by': uid, 'validated_date': datetime.now()})
+
+    def is_reject(self, cr, uid, ids, context=None):
+
+        return self.write(cr, uid, ids, {'state': 'reject', 'rejected_by': uid, 'rejected_date': datetime.now()})
                    
                                         
 customer_visit()

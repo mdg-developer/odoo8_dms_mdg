@@ -45,6 +45,8 @@
 							context="{'group_by':'township_id'}" />
 						<filter name="branch" string="Branch" domain="[]"
 							context="{'group_by':'branch_id'}" />
+						<filter name="state" string="Status" domain="[]"
+							context="{'group_by':'state'}" />
 					</group>
 				</search>
 			</field>
@@ -65,7 +67,15 @@
 					<script src="/static/src/js/fastclick.js"></script>
 
 					<header>
-						<field name="m_status" widget="statusbar" statusbar_visible="pending,approved,rejected"
+
+						<button name="is_approve" string="Validate" class="oe_highlight"
+							type="object" states="pending"
+							 />
+						<button name="is_reject" string="Reject" class="oe_highlight"
+							type="object" states="pending"
+							 />
+
+						<field name="state" widget="statusbar" statusbar_visible="pending,approved,rejected"
 							statusbar_colors='{"pending":"green","approved":"blue","rejected":"red"}' />
 					</header>
 					<sheet>
@@ -85,11 +95,11 @@
 									<field name="is_image3" invisible="1" />
 									<field name="is_image4" invisible="1" />
 									<field name="is_image5" invisible="1" />
-									<field name="image1_reference" readonly="1" />
-									<field name="image2_reference" readonly="1" />
-									<field name="image3_reference" readonly="1" />
-									<field name="image4_reference" readonly="1" />
-									<field name="image5_reference" readonly="1" />
+<!--									<field name="image1_reference" readonly="1" />-->
+<!--									<field name="image2_reference" readonly="1" />-->
+<!--									<field name="image3_reference" readonly="1" />-->
+<!--									<field name="image4_reference" readonly="1" />-->
+<!--									<field name="image5_reference" readonly="1" />-->
 									<div>
 										<button name="generate_image" string="Show Image View"
 											type="object" icon="terp-gtk-jump-to-ltr" />
@@ -101,100 +111,144 @@
 									<field name="sale_plan_day_id" readonly="1" />
 									<field name="sale_plan_trip_id" readonly="1" />
 									<field name="sale_team_id" readonly="1" />
-									<field name="visit_reason" readonly="1" />
-									<field name="is_sync" readonly="1" />
-									<field name="m_status" readonly="1" />
+									<field name="visit_reason_id" readonly="1" />
+									<field name="validated_by" readonly="1" />
+									<field name="validated_date" readonly="1" />
+									<field name="rejected_by" readonly="1" />
+									<field name="rejected_date" readonly="1" />
+<!--									<field name="is_sync" readonly="1" />-->
 
-									<button name="go_image1" string="Show Image1"
-										attrs="{'invisible':[('is_image1','!=',True)]}" type="object"
-										icon="terp-gtk-jump-to-ltr" />
-									<br />
-									<button name="go_image2" string="Show Image2"
-										attrs="{'invisible':[('is_image2','!=',True)]}" type="object"
-										icon="terp-gtk-jump-to-ltr" />
-									<br />
-									<button name="go_image3" string="Show Image3"
-										attrs="{'invisible':[('is_image3','!=',True)]}" type="object"
-										icon="terp-gtk-jump-to-ltr" />
-									<br />
-									<button name="go_image4" string="Show Image4"
-										attrs="{'invisible':[('is_image4','!=',True)]}" type="object"
-										icon="terp-gtk-jump-to-ltr" />
-									<br />
-									<button name="go_image5" string="Show Image5"
-										attrs="{'invisible':[('is_image5','!=',True)]}" type="object"
-										icon="terp-gtk-jump-to-ltr" />
-									<br />
+<!--									<button name="go_image1" string="Show Image1"-->
+<!--										attrs="{'invisible':[('is_image1','!=',True)]}" type="object"-->
+<!--										icon="terp-gtk-jump-to-ltr" />-->
+<!--									<br />-->
+<!--									<button name="go_image2" string="Show Image2"-->
+<!--										attrs="{'invisible':[('is_image2','!=',True)]}" type="object"-->
+<!--										icon="terp-gtk-jump-to-ltr" />-->
+<!--									<br />-->
+<!--									<button name="go_image3" string="Show Image3"-->
+<!--										attrs="{'invisible':[('is_image3','!=',True)]}" type="object"-->
+<!--										icon="terp-gtk-jump-to-ltr" />-->
+<!--									<br />-->
+<!--									<button name="go_image4" string="Show Image4"-->
+<!--										attrs="{'invisible':[('is_image4','!=',True)]}" type="object"-->
+<!--										icon="terp-gtk-jump-to-ltr" />-->
+<!--									<br />-->
+<!--									<button name="go_image5" string="Show Image5"-->
+<!--										attrs="{'invisible':[('is_image5','!=',True)]}" type="object"-->
+<!--										icon="terp-gtk-jump-to-ltr" />-->
+<!--									<br />-->
 									<field name="other_reason" placeholder="Additional Reasons..." />
 								</group>
 							</group>
 						</group>
-
-						<hr />
-						<div class="row">
-							<div class="col-md-2">
-								<div id="image">
-									<field name="image" widget='image' class="oe_avatar"
-										options='{"preview_image": "image_medium"}'>
-
-									</field>
+						<hr/>
+						<group>
+							<label for="visit_image_ids" string="Customer Images"/>
+						</group>
+						<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+							<div class="modal-dialog modal-lg">
+								<div class="modal-content" align="center">
+									<img id="zoom" src="" width="500" height="500" border="1" />
 								</div>
-								<p class="btn btn-default source" data-toggle="modal"
-									data-target=".bs-example-modal-lg" data-backdrop="false"
-									onclick="var list =document.getElementById('image'); var imageName =list.id ; var link = list.getElementsByTagName('img')[0].src;link = link.replace('image_medium','image');var zoom=document.getElementById('zoom'); zoom.src=link;">
-									Zoom
-									<i class="fa fa-plus"></i>
-								</p>
-							</div>
-							<div class="col-md-2">
-								<div id="image1">
-									<field name="image1" widget='image' class="oe_avatar"
-										options='{"preview_image": "image_medium1"}' />
-								</div>
-								<p class="btn btn-default source" data-toggle="modal"
-									data-target=".bs-example-modal-lg" data-backdrop="false"
-									onclick="var list =document.getElementById('image1'); var imageName =list.id ; var link = list.getElementsByTagName('img')[0].src;link = link.replace('image_medium1','image1');var zoom=document.getElementById('zoom'); zoom.src=link;">
-									Zoom
-									<i class="fa fa-plus"></i>
-								</p>
-							</div>
-							<div class="col-md-2">
-								<div id="image2">
-									<field name="image2" widget='image' class="oe_avatar"
-										options='{"preview_image": "image_medium2"}' />
-								</div>
-								<p class="btn btn-default source" data-toggle="modal"
-									data-target=".bs-example-modal-lg" data-backdrop="false"
-									onclick="var list =document.getElementById('image2'); var imageName =list.id ; var link = list.getElementsByTagName('img')[0].src;link = link.replace('image_medium2','image2');var zoom=document.getElementById('zoom'); zoom.src=link;">
-									Zoom
-									<i class="fa fa-plus"></i>
-								</p>
-							</div>
-							<div class="col-md-2">
-								<div id="image3">
-									<field name="image3" widget='image' class="oe_avatar"
-										options='{"preview_image": "image_medium3"}' />
-								</div>
-								<p class="btn btn-default source" data-toggle="modal"
-									data-target=".bs-example-modal-lg" data-backdrop="false"
-									onclick="var list =document.getElementById('image3'); var imageName =list.id ; var link = list.getElementsByTagName('img')[0].src;link = link.replace('image_medium3','image3');var zoom=document.getElementById('zoom'); zoom.src=link;">
-									Zoom
-									<i class="fa fa-plus"></i>
-								</p>
-							</div>
-							<div class="col-md-2">
-								<div id="image4">
-									<field name="image4" widget='image' class="oe_avatar"
-										options='{"preview_image": "image_medium4"}' />
-								</div>
-								<p class="btn btn-default source" data-toggle="modal"
-									data-target=".bs-example-modal-lg" data-backdrop="false"
-									onclick="var list =document.getElementById('image4'); var imageName =list.id ; var link = list.getElementsByTagName('img')[0].src;link = link.replace('image_medium4','image4');var zoom=document.getElementById('zoom'); zoom.src=link;">
-									Zoom
-									<i class="fa fa-plus"></i>
-								</p>
 							</div>
 						</div>
+						<div>
+							<field name="visit_image_ids" widget="many2many_kanban">
+								<kanban quick_create="false" create="false">
+									<field name="image" widget="image"/>
+									<templates>
+										<t t-name="kanban-box">
+											<div style="position: relative">
+												<!-- <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a> -->
+												<div t-att-id="'image_' + Math.random().toString(36).substr(2, 9)" class="oe_module_vignette">
+													<div class="oe_module_desc">
+														<field name="name"/>
+														<img t-att-src="kanban_image('customer.visit.images','image',record.id)"
+														t-att-style="'width: 100%; height: auto; padding: 5px; diplay: inline-block'"
+														class="oe_avatar oe_kanban_image oe_kanban_avatar_smallbox"/>
+													</div>
+													<p class="btn btn-default source" data-toggle="modal"
+													data-target=".bs-example-modal-lg" data-backdrop="false"
+													onclick="var divId = this.parentNode.getAttribute('id'); console.log(divId);
+													var link = document.querySelector('#' + divId + ' img').getAttribute('src');
+													var zoom = document.getElementById('zoom'); zoom.src=link;">
+													Zoom
+													<i class="fa fa-plus"></i>
+													</p>
+												</div>
+											</div>
+										</t>
+									</templates>
+								</kanban>
+							</field>
+						</div>
+
+<!--						<hr />-->
+<!--						<div class="row">-->
+<!--							<div class="col-md-2">-->
+<!--								<div id="image">-->
+<!--									<field name="image" widget='image' class="oe_avatar"-->
+<!--										options='{"preview_image": "image_medium"}'>-->
+
+<!--									</field>-->
+<!--								</div>-->
+<!--								<p class="btn btn-default source" data-toggle="modal"-->
+<!--									data-target=".bs-example-modal-lg" data-backdrop="false"-->
+<!--									onclick="var list =document.getElementById('image'); var imageName =list.id ; var link = list.getElementsByTagName('img')[0].src;link = link.replace('image_medium','image');var zoom=document.getElementById('zoom'); zoom.src=link;">-->
+<!--									Zoom-->
+<!--									<i class="fa fa-plus"></i>-->
+<!--								</p>-->
+<!--							</div>-->
+<!--							<div class="col-md-2">-->
+<!--								<div id="image1">-->
+<!--									<field name="image1" widget='image' class="oe_avatar"-->
+<!--										options='{"preview_image": "image_medium1"}' />-->
+<!--								</div>-->
+<!--								<p class="btn btn-default source" data-toggle="modal"-->
+<!--									data-target=".bs-example-modal-lg" data-backdrop="false"-->
+<!--									onclick="var list =document.getElementById('image1'); var imageName =list.id ; var link = list.getElementsByTagName('img')[0].src;link = link.replace('image_medium1','image1');var zoom=document.getElementById('zoom'); zoom.src=link;">-->
+<!--									Zoom-->
+<!--									<i class="fa fa-plus"></i>-->
+<!--								</p>-->
+<!--							</div>-->
+<!--							<div class="col-md-2">-->
+<!--								<div id="image2">-->
+<!--									<field name="image2" widget='image' class="oe_avatar"-->
+<!--										options='{"preview_image": "image_medium2"}' />-->
+<!--								</div>-->
+<!--								<p class="btn btn-default source" data-toggle="modal"-->
+<!--									data-target=".bs-example-modal-lg" data-backdrop="false"-->
+<!--									onclick="var list =document.getElementById('image2'); var imageName =list.id ; var link = list.getElementsByTagName('img')[0].src;link = link.replace('image_medium2','image2');var zoom=document.getElementById('zoom'); zoom.src=link;">-->
+<!--									Zoom-->
+<!--									<i class="fa fa-plus"></i>-->
+<!--								</p>-->
+<!--							</div>-->
+<!--							<div class="col-md-2">-->
+<!--								<div id="image3">-->
+<!--									<field name="image3" widget='image' class="oe_avatar"-->
+<!--										options='{"preview_image": "image_medium3"}' />-->
+<!--								</div>-->
+<!--								<p class="btn btn-default source" data-toggle="modal"-->
+<!--									data-target=".bs-example-modal-lg" data-backdrop="false"-->
+<!--									onclick="var list =document.getElementById('image3'); var imageName =list.id ; var link = list.getElementsByTagName('img')[0].src;link = link.replace('image_medium3','image3');var zoom=document.getElementById('zoom'); zoom.src=link;">-->
+<!--									Zoom-->
+<!--									<i class="fa fa-plus"></i>-->
+<!--								</p>-->
+<!--							</div>-->
+<!--							<div class="col-md-2">-->
+<!--								<div id="image4">-->
+<!--									<field name="image4" widget='image' class="oe_avatar"-->
+<!--										options='{"preview_image": "image_medium4"}' />-->
+<!--								</div>-->
+<!--								<p class="btn btn-default source" data-toggle="modal"-->
+<!--									data-target=".bs-example-modal-lg" data-backdrop="false"-->
+<!--									onclick="var list =document.getElementById('image4'); var imageName =list.id ; var link = list.getElementsByTagName('img')[0].src;link = link.replace('image_medium4','image4');var zoom=document.getElementById('zoom'); zoom.src=link;">-->
+<!--									Zoom-->
+<!--									<i class="fa fa-plus"></i>-->
+<!--								</p>-->
+<!--							</div>-->
+<!--						</div>-->
 
 						<widget type="gmap_marker" lat="latitude" lng="longitude"
 							description="field_descriptions" />
@@ -230,6 +284,7 @@
 					<field name="sale_team_id" />
 					<field name="visit_reason" />
 					<field name="other_reason" />
+					<field name="state" />
 				</tree>
 			</field>
 		</record>
@@ -237,7 +292,7 @@
 			<field name="name">customer.visit.calendar</field>
 			<field name="model">customer.visit</field>
 			<field name="arch" type="xml">
-				<calendar string="Customer Visit" color="m_status"
+				<calendar string="Customer Visit" color="state"
 					date_start="date">
 					<field name="customer_id" />
 					<field name="user_id" />

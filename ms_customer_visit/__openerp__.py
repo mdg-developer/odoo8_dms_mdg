@@ -33,7 +33,7 @@ Customer Visit
     'website': 'http://www.7thcomputing.com',
     'depends': ['base', 'crm', 'address_management_system', 'ms_sale_plan_setting', 'ms_tablet_info', 'web_gmaps'
     ],
-    'data': ['views/visit_reason_view.xml', 'views/customer_visit_view.xml', 'views/qweb_view.xml', 'views/report_customer_visit.xml'
+    'data': ['views/visit_reason_view.xml', 'views/customer_visit_view.xml', 'views/qweb_view.xml', 'views/report_customer_visit.xml', 'views/customer_visit_images_view.xml'
 
     ],
     'installable': True,

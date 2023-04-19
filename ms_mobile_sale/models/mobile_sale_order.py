@@ -16,6 +16,8 @@ from openerp.addons.connector.jobrunner.runner import ConnectorRunner
 import requests
 import logging
 
+_logger = logging.getLogger(__name__)
+
 @job(default_channel='root.directpending')
 def automation_pending_delivery(session, delivery_mobile):
     delivery_obj = session.pool['pending.delivery']    
@@ -1019,43 +1021,17 @@ class mobile_sale_order(osv.osv):
                     branch_id = cursor.fetchone()[0]
                     cursor.execute('select id from res_partner where customer_code=%s', (vs['customer_code'],))
                     customer_id = cursor.fetchone()  
-                    is_image1 =False
-                    is_image2 =False
-                    is_image3 =False
-                    is_image4 =False
-                    is_image5 =False
-                    image1 =False
-                    image2 =False
-                    image3 =False
-                    image4 =False
-                    image5 =False
+                    is_image = False
                     distance_status = None
-                    if customer_id:  
-                        if vs['image1_reference']:
-                                is_image1 =True
-#                                 url =baseUrlPrefix + vs['image1_reference'] + baseUrlPostFix
-#                                 response = requests.get(url).content
-#                                 image1 = base64.b64encode(response)
-                        if vs['image2_reference']:
-                                is_image2=True
-#                                 url =baseUrlPrefix + vs['image2_reference'] + baseUrlPostFix
-#                                 response = requests.get(url).content
-#                                 image2 = base64.b64encode(response)
-                        if vs['image3_reference']:
-                                is_image3=True
-#                                 url =baseUrlPrefix + vs['image3_reference'] + baseUrlPostFix
-#                                 response = requests.get(url).content
-#                                 image3 = base64.b64encode(response)                                                                
-                        if vs['image4_reference']:
-                                is_image4=True  
-#                                 url =baseUrlPrefix + vs['image4_reference'] + baseUrlPostFix
-#                                 response = requests.get(url).content
-#                                 image4 = base64.b64encode(response)                                                                        
-                        if vs['image5_reference']:
-                                is_image5=True    
-#                                 url =baseUrlPrefix + vs['image5_reference'] + baseUrlPostFix
-#                                 response = requests.get(url).content
-#                                 image5 = base64.b64encode(response)
+                    image_ids = []
+                    if customer_id:
+                        if vs['image_reference_list']:
+                            is_image = True
+                            image_ref_list = vs['image_reference_list']
+                            # image_ref_list = ['KESGMTMVGU','WLTZPEZIHK','NXEOATLOBS','HPFZHHVQQX','GNNZJSYPUW','LBUXNOLSMA','OMOKJFSPRW']
+                            _logger.info('-----------vs[image_reference_list]---------- %s', vs['image_reference_list'])
+                            for ref in image_ref_list:
+                                image_ids += [(0, 0, {'name':ref})]
                         if vs['distance_status']:
                                 distance_status=vs['distance_status']
                         visit_result = {
@@ -1074,26 +1050,13 @@ class mobile_sale_order(osv.osv):
                             'visit_reason':vs['visit_reason'],
                             'latitude':vs['latitude'],
                             'longitude':vs['longitude'],
-#                             'image':image1,
-#                             'image1':image2,
-#                             'image2':image3,
-#                             'image3':image4,
-#                             'image4':image5,
-                             'is_image1':is_image1,
-                              'is_image2':is_image2,
-                              'is_image3':is_image3,
-                              'is_image4':is_image4,
-                              'is_image5':is_image5,                                  
-                             'image1_reference':vs['image1_reference'],
-                            'image2_reference':vs['image2_reference'],
-                            'image3_reference':vs['image3_reference'],
-                            'image4_reference':vs['image4_reference'],
-                            'image5_reference':vs['image5_reference'],
+                            'visit_image_ids': image_ids,
                             'distance_status': distance_status,
 
                         }
                         visit_id=customer_visit_obj.create(cursor, user, visit_result, context=context)
-                        if visit_id and not is_image1 and not is_image2 and not is_image3 and not is_image4 and not is_image5:
+                        # if visit_id and not is_image1 and not is_image2 and not is_image3 and not is_image4 and not is_image5:
+                        if visit_id and not is_image:
                             customer_visit_obj.is_reject(cursor, user, [visit_id], context=context)
                         #customer_visit_obj.generate_image(cursor, user, [visit_id], context=context)
                 return True
