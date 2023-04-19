@@ -62,7 +62,7 @@ class OneSignalNotification(models.Model):
 
             vals['external_id'] = response_json.get('external_id', False) or False
             vals['one_signal_notification_id']  = response_json['id'] or False
-            vals['recipients_count']  = response_json['recipients'] or False
+            vals['recipients_count']  = False
             if 'errors' in response_json:
                 vals['reason']  += " " + str(response_json['errors'])
             if 'warnings' in response_json:
