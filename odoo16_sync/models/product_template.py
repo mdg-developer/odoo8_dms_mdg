@@ -2,7 +2,7 @@ from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
 from openerp.osv.fields import _column
 import xmlrpclib
-
+import logging
 class product_template(osv.osv):
     _inherit = 'product.template' 
         
@@ -36,30 +36,34 @@ class product_template(osv.osv):
 
 
         if data.name:
-            lang_id = models.execute_kw(db, sd_uid, password, 'res.lang', 'search',
-                                        [[('code', '=', 'en_US')]])
 
-            # Get the display name of the UOM with name 'Units' in English
-            uom_name = models.execute_kw(db, sd_uid, password, 'uom.uom', 'name_get',
-                                         [[], {'name': data.uom_id.name, 'lang': lang_id[0]}])[0][1]
-            po_uom_name = models.execute_kw(db, sd_uid, password, 'uom.uom', 'name_get',
-                                         [[], {'name': data.uom_po_id.name, 'lang': lang_id[0]}])[0][1]
-            uom_id = models.execute_kw(db, sd_uid, password,
-                              'uom.uom', 'search',
-                              [[['name', '=', uom_name]]],
-                              {'limit': 1})
+            lang_code = 'en_US'
+            search_term = data.uom_id.name
+
+            # search for the UOM object with the specified name and language
+            uom_search_domain = [('name', '=', {lang_code: search_term})]
+            uom_id = [1]
+            if data.uom_id.name != 'Units':
+                uom_id = models.execute_kw(db, sd_uid, password,
+                                  'uom.uom', 'search',
+                                  [uom_search_domain],
+                                  {'limit': 1})
+
+            search_term = data.uom_po_id.name
+            po_uom_search_domain = [('name', '=', {lang_code: search_term})]
             uom_po_id = models.execute_kw(db, sd_uid, password,
                                        'uom.uom', 'search',
-                                       [[['name', '=',po_uom_name]]],
+                                       [po_uom_search_domain],
                                        {'limit': 1})
             categ_id = models.execute_kw(db, sd_uid, password,
                                           'product.category', 'search',
                                           [[['name', '=', data.categ_id.name]]],
                                           {'limit': 1})
-            uom_categ_id = models.execute_kw(db, sd_uid, password,
-                                       'uom.category', 'search',
-                                       [[['name', '=', data.uom_id.category_id.name]]],
-                                       {'limit': 1})
+            uom_categ_id = [1]
+            # models.execute_kw(db, sd_uid, password,
+            #                            'uom.category', 'search',
+            #                            [[['name', '=', data.uom_id.category_id.name]]],
+            #                            {'limit': 1})
             if not uom_categ_id:
                 value = {
                     'name': data.uom_id.category.name,
@@ -74,9 +78,9 @@ class product_template(osv.osv):
                     'property_cost_method':data.cost_method if data.cost_method in ['standard','average'] else 'fifo'
                 }
                 categ_id = models.execute_kw(db, sd_uid, password, 'product.category', 'create', [value])
-            if not uom_po_id:
+            if not uom_po_id and data.uom_id.id != data.uom_po_id.id:
                 value = {
-                    'name': data.uom_po_id.name,
+                    'name': po_uom_search_domain,
                     'category_id': uom_categ_id[0],
                     'factor': data.uom_po_id.factor,
                     'uom_type': data.uom_po_id.uom_type,
@@ -84,16 +88,17 @@ class product_template(osv.osv):
                 }
                 uom_po_id = models.execute_kw(db, sd_uid, password, 'uom.uom', 'create', [value])
 
-            if not uom_id:
+            if not uom_id and data.uom_id.name != 'Units':
                 value = {
-                    'name': data.uom_id.name,
+                    'name': uom_search_domain,
                     'category_id': uom_categ_id[0],
                     'factor': data.uom_id.factor,
                     'uom_type': data.uom_id.uom_type,
                     'rounding':data.uom_id.rounding,
                 }
                 uom_id = models.execute_kw(db, sd_uid, password, 'uom.uom', 'create', [value])
-
+            if data.uom_id.id == data.uom_po_id.id:
+                uom_po_id = uom_id
             value =  {
                 'name': data.name,
                 'uom_id': uom_id[0],
@@ -104,7 +109,7 @@ class product_template(osv.osv):
                 'sale_ok':data.sale_ok,
                 'purchase_ok':data.purchase_ok,
                 'available_in_pos':True,
-                'categ_id':categ_id,
+                'categ_id':categ_id[0],
                 'detailed_type':data.type,
                 }
             
