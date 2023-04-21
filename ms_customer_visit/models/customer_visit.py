@@ -142,7 +142,20 @@ class customer_visit(osv.osv):
         help="Small-sized image of this contact. It is automatically "\
              "resized as a 64x64px image, with aspect ratio preserved. "\
              "Use this field anywhere a small image is required.")
-    
+
+    image5 = openerp.fields.Binary("Image", attachment=True,
+        help="This field holds the image used as avatar for this contact, limited to 1024x1024px")
+    image_medium5 = openerp.fields.Binary("Medium-sized image",
+        compute='_compute_images5', inverse='_inverse_image_medium5', store=True, attachment=True,
+        help="Medium-sized image of this contact. It is automatically "\
+             "resized as a 128x128px image, with aspect ratio preserved. "\
+             "Use this field in form views or some kanban views.")
+    image_small5 = openerp.fields.Binary("Small-sized image",
+        compute='_compute_images5', inverse='_inverse_image_small5', store=True, attachment=True,
+        help="Small-sized image of this contact. It is automatically "\
+             "resized as a 64x64px image, with aspect ratio preserved. "\
+             "Use this field anywhere a small image is required.")
+
     @api.depends('image')
     def _compute_images(self):
         for rec in self:
@@ -226,7 +239,23 @@ class customer_visit(osv.osv):
     def _inverse_image_small4(self):
         for rec in self:
             rec.image4 = tools.image_resize_image_big(rec.image_small4)
-            
+
+# image5
+    @api.depends('image5')
+    def _compute_images5(self):
+        for rec in self:
+            rec.image_medium5 = tools.image_resize_image_medium(rec.image5)
+            rec.image_small5 = tools.image_resize_image_small(rec.image5)
+
+    def _inverse_image_medium5(self):
+        for rec in self:
+            rec.image5 = tools.image_resize_image_big(rec.image_medium5)
+
+    def _inverse_image_small5(self):
+        for rec in self:
+            rec.image5 = tools.image_resize_image_big(rec.image_small5)
+
+
     def go_image1(self, cr, uid, ids, context=None):
         result =  {
                   'name'     : 'Show Image1',
@@ -349,6 +378,19 @@ class customer_visit(osv.osv):
 
         return tools.image_resize_image_big(image.encode('base64'))
 
+    @api.model
+    def _get_default_image5(self, is_company, colorize=False):
+        img_path = openerp.modules.get_module_resource(
+            'base', 'static/src/img', 'company_image.png' if is_company else 'avatar.png')
+        with open(img_path, 'rb') as f:
+            image = f.read()
+
+        # colorize user avatars
+        if not is_company:
+            image = tools.image_colorize(image)
+
+        return tools.image_resize_image_big(image.encode('base64'))
+
     def generate_image_old(self, cr, uid, ids, context=None):
         if ids:
             visit_data = self.browse(cr, uid, ids[0], context=context)
@@ -381,6 +423,7 @@ class customer_visit(osv.osv):
         return self.write(cr, uid, ids, {'image':image1,'image1':image2,'image2':image3,'image3':image4,'image4':image5})
 
     def generate_image(self, cr, uid, ids, context=None):
+        customer_image = False
         if ids:
             visit_data = self.browse(cr, uid, ids[0], context=context)
             import base64
@@ -392,7 +435,9 @@ class customer_visit(osv.osv):
                         image = base64.b64encode(response)
                         image_id.write({'image':image})
                         _logger.info('-----------image has been retrieved----------')
-        return True
+            if visit_data.customer_id.image:
+                customer_image = (visit_data.customer_id.image)
+        return self.write(cr, uid, ids, {'image5':customer_image})
 
     def is_approve(self, cr, uid, ids, context=None):
 

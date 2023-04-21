@@ -142,10 +142,6 @@
 								</group>
 							</group>
 						</group>
-						<hr/>
-						<group>
-							<label for="visit_image_ids" string="Customer Images"/>
-						</group>
 						<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
 							<div class="modal-dialog modal-lg">
 								<div class="modal-content" align="center">
@@ -153,7 +149,20 @@
 								</div>
 							</div>
 						</div>
+						<hr/>
+						<div class="col-md-2">  <label for="image5" string="Customer Image"/>
+							<div id="image5">
+								<field name="image5" widget='image' class="oe_avatar" options='{"preview_image": "image_medium5"}' />
+							</div>
+							<p class="btn btn-default source" data-toggle="modal"
+								data-target=".bs-example-modal-lg" data-backdrop="false"
+								onclick="var list =document.getElementById('image5'); var imageName =list.id ; var link = list.getElementsByTagName('img')[0].src;link = link.replace('image_medium5','image5');var zoom=document.getElementById('zoom'); zoom.src=link;">
+								Zoom
+								<i class="fa fa-plus"></i>
+							</p>
+						</div>
 						<div>
+							<label for="visit_image_ids" string="Customer Visit Images"/>
 							<field name="visit_image_ids" widget="many2many_kanban">
 								<kanban quick_create="false" create="false">
 									<field name="image" widget="image"/>
@@ -250,20 +259,24 @@
 <!--							</div>-->
 <!--						</div>-->
 
-						<widget type="gmap_marker" lat="latitude" lng="longitude"
-							description="field_descriptions" />
+						<group>
+							<div>
+								<widget type="gmap_marker" lat="latitude" lng="longitude"
+									description="field_descriptions" />
 
-						<div class="modal fade bs-example-modal-lg" tabindex="-1"
-							role="dialog" aria-hidden="true">
-							<div class="modal-dialog modal-lg">
-								<div class="modal-content" align="center">
-									<img id="zoom" src="" width="500" height="500" border="1" />
-									<!-- <div class="modal-footer"> <button type="button" class="close" 
-										data-dismiss="modal"> <span>Close</span> </button> </div> -->
+								<div class="modal fade bs-example-modal-lg" tabindex="-1"
+									role="dialog" aria-hidden="true">
+									<div class="modal-dialog modal-lg">
+										<div class="modal-content" align="center">
+											<img id="zoom" src="" width="500" height="500" border="1" />
+											<!-- <div class="modal-footer"> <button type="button" class="close"
+												data-dismiss="modal"> <span>Close</span> </button> </div> -->
 
+										</div>
+									</div>
 								</div>
 							</div>
-						</div>
+						</group>
 					</sheet>
 
 				</form>
@@ -282,7 +295,7 @@
 					<field name="sale_plan_trip_id" />
 					<field name="tablet_id" />
 					<field name="sale_team_id" />
-					<field name="visit_reason" />
+					<field name="visit_reason_id" />
 					<field name="other_reason" />
 					<field name="state" />
 				</tree>
