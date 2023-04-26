@@ -36,6 +36,7 @@ class customer_visit(osv.osv):
                 ('shop_closed', 'Shop Closed'),
                 ('Sold', 'Sold'),
                 ('has_sufficient_stock_holding_for_all_listed_skus', 'Has sufficient stock holding for ALL listed SKUs'),
+                ('other_reason', 'Other Reasons'),
             ], 'Reason'),
                 'other_reason':fields.text('Remark'),
         'm_status':fields.selection([('pending', 'Pending'), ('approved', 'Approved'),

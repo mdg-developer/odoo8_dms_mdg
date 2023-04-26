@@ -1047,7 +1047,8 @@ class mobile_sale_order(osv.osv):
                             'date':vs['date'],
                             'tablet_id':vs['tablet_id'],
                             'other_reason':vs['other_reason'],
-                            'visit_reason':vs['visit_reason'],
+                            'visit_reason':'other_reason',
+                            'visit_reason_id': vs['visit_reason_id'],
                             'latitude':vs['latitude'],
                             'longitude':vs['longitude'],
                             'visit_image_ids': image_ids,
@@ -1061,7 +1062,8 @@ class mobile_sale_order(osv.osv):
                         #customer_visit_obj.generate_image(cursor, user, [visit_id], context=context)
                 return True
         except Exception, e:
-            print e            
+            print e
+            _logger.info('exception>>> %s', e)
             return False
                 
     def geo_location(self, cr, uid, ids, context=None):
