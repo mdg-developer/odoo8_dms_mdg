@@ -28,6 +28,7 @@ class FCMNotificationMessages(models.Model):
 
     def create(self, cr, uid, vals, context=None):
         data = {}
+        response = {}
         woo_customer_id = None
         if vals['partner_id']:
             partner_obj = self.pool.get('res.partner').browse(cr, uid, vals['partner_id'], context=context)
@@ -39,7 +40,6 @@ class FCMNotificationMessages(models.Model):
         data['body'] = vals['body']
         data['device_token'] = vals['device_token']
         response = self.send_notification(cr,uid,data)
-        response_json = response.json()
         if response:
             response_json = response.json()
             if response_json['results'][0]:
