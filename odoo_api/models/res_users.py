@@ -464,9 +464,10 @@ class res_users(osv.osv):
         
         if stock_issue_id and barcode_no:
             cursor.execute('''select line.id
-                            from good_issue_note_line line,product_product pp,product_multi_barcode barcode
+                            from good_issue_note_line line,product_product pp,product_multi_barcode barcode,good_issue_note gin
                             where line.product_id=pp.id
                             and pp.product_tmpl_id=barcode.product_tmpl_id
+                            and line.line_id=gin.id
                             and line_id=%s
                             and barcode.name=%s''',(stock_issue_id,barcode_no,))
             data = cursor.dictfetchall() 
@@ -477,9 +478,10 @@ class res_users(osv.osv):
         
         if stock_return_id and barcode_no:
             cursor.execute('''select line.id
-                            from stock_return_line line,product_product pp,product_multi_barcode barcode
+                            from stock_return_line line,product_product pp,product_multi_barcode barcode,stock_return sr
                             where line.product_id=pp.id
                             and pp.product_tmpl_id=barcode.product_tmpl_id
+                            and line.line_id=sr.id
                             and line_id=%s
                             and barcode.name=%s''',(stock_return_id,barcode_no,))
             data = cursor.dictfetchall() 
@@ -490,9 +492,10 @@ class res_users(osv.osv):
         
         if goods_receipt_id and barcode_no:
             cursor.execute('''select line.id
-                            from branch_good_issue_note_line line,product_product pp,product_multi_barcode barcode
+                            from branch_good_issue_note_line line,product_product pp,product_multi_barcode barcode,branch_good_issue_note bgin
                             where line.product_id=pp.id
                             and pp.product_tmpl_id=barcode.product_tmpl_id
+                            and line.line_id=bgin.id
                             and line_id=%s
                             and barcode.name=%s''',(goods_receipt_id,barcode_no,))
             data = cursor.dictfetchall() 
