@@ -78,6 +78,16 @@ class product_template(osv.osv):
                     'property_cost_method':data.cost_method if data.cost_method in ['standard','average'] else 'fifo'
                 }
                 categ_id = models.execute_kw(db, sd_uid, password, 'product.category', 'create', [value])
+
+            pos_categ_id = models.execute_kw(db, sd_uid, password,
+                                         'pos.category', 'search',
+                                         [[['name', '=', data.categ_id.name]]],
+                                         {'limit': 1})
+            if not pos_categ_id:
+                value = {
+                    'name':data.categ_id.name
+                }
+                pos_categ_id = models.execute_kw(db, sd_uid, password, 'pos.category', 'create', [value])
             if not uom_po_id and data.uom_id.id != data.uom_po_id.id:
                 value = {
                     'name': po_uom_search_domain,
@@ -111,6 +121,8 @@ class product_template(osv.osv):
                 'available_in_pos':True,
                 'categ_id':categ_id[0],
                 'detailed_type':data.type,
+                'barcode':data.barcode_no,
+                'pos_categ_id':pos_categ_id[0],
                 }
             
             product_ids = models.execute_kw(db, sd_uid, password,
