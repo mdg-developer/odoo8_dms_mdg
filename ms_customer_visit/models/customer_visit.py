@@ -3,6 +3,7 @@ from lxml import etree
 import math
 import pytz
 import urlparse
+from datetime import datetime
 
 import openerp
 from openerp import tools, api
