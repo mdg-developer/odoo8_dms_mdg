@@ -9,4 +9,5 @@ class res_city(osv.osv):
                'branch_id':fields.many2one('res.branch', 'Branch',required=False),
                'pick_up':fields.boolean('Pick Up', default=False),
                'description': fields.text('Description'),
+                'myanmar_name': fields.char('Myanmar Name', size=128),
                }

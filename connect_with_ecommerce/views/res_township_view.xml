@@ -13,6 +13,9 @@
 					<field name="pick_up"/>
 					<field name="description"/>
 				</field>
+				<xpath expr="//field[@name='city']" position="before">
+					<field name="myanmar_name" />
+				</xpath>
 			</field>
 		</record>
 

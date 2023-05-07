@@ -44,9 +44,11 @@ OUT__res_country_state__read_all__SCHEMA = (                 # editable
     'id',
     'name',
     'code',
+    'myanmar_name',
     ('country_id', (
         'id',
         'name',
+        'myanmar_name',
     )),
 )
 #           ]

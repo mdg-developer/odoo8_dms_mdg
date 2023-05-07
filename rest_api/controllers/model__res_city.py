@@ -44,9 +44,11 @@ OUT__res_city__read_all__SCHEMA = (                 # editable
     'id',
     'name',
     'code',
+    'myanmar_name',
     ('state_id', (
         'id',
         'name',
+        'myanmar_name',
     )),
     ('delivery_team_id', (
         'id',

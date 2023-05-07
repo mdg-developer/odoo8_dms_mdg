@@ -10,6 +10,9 @@
 				<field name="state_id" position="after">
 					<field name="delivery_team_id" />
 				</field>
+				<xpath expr="//field[@name='state_id']" position="before">
+					<field name="myanmar_name" />
+				</xpath>
 			</field>
 		</record>
 		<record id="inherit_view_res_city_tree" model="ir.ui.view">

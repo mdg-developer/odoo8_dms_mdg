@@ -44,9 +44,11 @@ OUT__res_township__read_all__SCHEMA = (                 # editable
     'id',
     'name',
     'code',
+    'myanmar_name',
     ('city', (
         'id',
         'name',
+        'myanmar_name',
     )),
     ('delivery_team_id', (
         'id',

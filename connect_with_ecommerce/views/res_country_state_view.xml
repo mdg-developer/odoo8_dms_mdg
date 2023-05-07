@@ -7,12 +7,15 @@
 			<field name="model">res.country.state</field>
 			<field name="inherit_id" ref="base.view_country_state_form" />
 			<field name="arch" type="xml">
-				<field name="country_id" position="after">
+				<!-- <field name="country_id" position="after">
 					<field name="delivery_team_id" />
-				</field>
+				</field> -->
+				<xpath expr="//field[@name='code']" position="after">
+					<field name="myanmar_name" />
+				</xpath>
 			</field>
 		</record>
-		<record id="inherit_view_country_state_tree" model="ir.ui.view">
+		<!-- <record id="inherit_view_country_state_tree" model="ir.ui.view">
 			<field name="name">res.country.state.form</field>
 			<field name="model">res.country.state</field>
 			<field name="inherit_id" ref="base.view_country_state_tree" />
@@ -21,7 +24,7 @@
 					<field name="delivery_team_id" />
 				</field>
 			</field>
-		</record>
+		</record> -->
 
 
 

@@ -7,6 +7,7 @@ class res_city(osv.osv):
     
     _columns = {
                'delivery_team_id':fields.many2one('crm.case.section', 'Delivery Team',required=False),
+                'myanmar_name': fields.char('Myanmar Name', size=128),
                }
 
     def get_stock_status_label(self, cr, uid, ids, city_name=None, township_name=None, woo_customer_id=None, context=None):
