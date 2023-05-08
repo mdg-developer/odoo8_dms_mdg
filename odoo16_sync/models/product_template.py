@@ -43,7 +43,7 @@ class product_template(osv.osv):
             # search for the UOM object with the specified name and language
             uom_search_domain = [('name', '=', {lang_code: search_term})]
             uom_id = [1]
-            if data.uom_id.name != 'Units':
+            if data.uom_id.name not in ['Units','Bottle']:
                 uom_id = models.execute_kw(db, sd_uid, password,
                                   'uom.uom', 'search',
                                   [uom_search_domain],
@@ -98,7 +98,7 @@ class product_template(osv.osv):
                 }
                 uom_po_id = models.execute_kw(db, sd_uid, password, 'uom.uom', 'create', [value])
 
-            if not uom_id and data.uom_id.name != 'Units':
+            if not uom_id and data.uom_id.name not in ['Units','Bottle']:
                 value = {
                     'name': uom_search_domain,
                     'category_id': uom_categ_id[0],

@@ -192,7 +192,7 @@ class stock_picking(osv.osv):
                     reverse_name = str(picking.name)
                     picking_vals = {}
                     picking_vals['move_ids'] = []
-                    if picking.location_id.is_cellar_location == True or picking.location_dest_id.is_cellar_location == True:
+                    if (picking.location_id.is_cellar_location == True and picking.picking_type_id.name == 'Internal Transfers') or (picking.location_dest_id.is_cellar_location == True and picking.picking_type_id.name == 'Internal Transfers'):
                         logging.warning("picking location>>>> sss15: %s", picking.location_id.is_cellar_location)
                         if picking.location_id.is_cellar_location == True:
 
@@ -201,7 +201,7 @@ class stock_picking(osv.osv):
                             #                            [[['usage', '=', 'customer']]],
                             #                            {'limit': 1})
                             loc_id = [8]
-                            dest_loc_id = 5
+                            dest_loc_id = 17
                             picking_type_id = [2]
                             # models.execute_kw(db, sd_uid, password,
                             #                                     'stock.picking.type', 'search',
@@ -215,7 +215,7 @@ class stock_picking(osv.osv):
                             #                            'stock.location', 'search',
                             #                            [[['usage', '=', 'customer']]],
                             #                            {'limit': 1})
-                            loc_id = [5]
+                            loc_id = [17]
                             dest_loc_id = 8
                             picking_type_id =[1]
                             # models.execute_kw(db, sd_uid, password,
