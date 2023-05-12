@@ -71,7 +71,7 @@ class woo_minimum_stock(osv.osv):
                     elif line.product_id.uom_id.factor < product_id.product_tmpl_id.ecommerce_uom_id.factor:
                         stock_qty = line.qty * (1 / product_id.product_tmpl_id.ecommerce_uom_id.factor)
                 p_list.append({
-                        "product_sku": product_id.name,
+                        "product_sku": product_id.default_code,
                         "stock_qty": stock_qty,
                         "stock_status": stock_status,
                         "min_stock": stock_qty,
