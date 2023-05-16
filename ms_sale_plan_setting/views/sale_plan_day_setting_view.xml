@@ -42,7 +42,13 @@
 					</group>
 					    <button name="retrieve_data"  type="object"  string="Retrieve"  states="draft" class="oe_highlight"/>		    
 					
-					    <button name="refresh_customer"  type="object"  string="Refresh Customer" class="oe_highlight"/>		    
+					    <button name="refresh_customer"  type="object"  string="Refresh Customer" class="oe_highlight"/>
+						<button name="click_monday" type="object" string="Click all Monday(Blanks)"
+							class="oe_highlight" />
+						<button name="unclick_monday" type="object" string="Unclick Monday(only Mon)"
+							class="oe_highlight" />
+						<button name="purge_unassigned_customer" type="object" string="Purge Unassigned Customer"
+							class="oe_highlight" />
 
 					<notebook>
 						<page string="Plan Setting">

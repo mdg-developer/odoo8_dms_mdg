@@ -1216,7 +1216,35 @@ class sale_plan_for_day_setting(osv.osv):
                         sale_plan_obj.write(cr, uid, ids, {'partner_count':  partner_count+count})  
         cr.execute("delete from sale_plan_day_setting_line where partner_id in (select id from res_partner where active=False)")
         cr.execute("delete from sale_plan_day_line where partner_id in (select id from res_partner where active=False)")
-        return True   
+        return True
+
+    def click_monday(self, cr, uid, ids, context=None):
+        plan = self.browse(cr, uid, ids, context=context)
+        plan_line = plan.plan_line
+        for plan_line_id in plan_line:
+            if plan_line_id.w1_tue == False and plan_line_id.w1_wed == False and plan_line_id.w1_thur == False and plan_line_id.w1_fri == False and plan_line_id.w1_sat == False:
+                plan_line_id.w1_mon = True
+
+    def unclick_monday(self, cr, uid, ids, context=None):
+        plan = self.browse(cr, uid, ids, context=context)
+        plan_line = plan.plan_line
+        for plan_line_id in plan_line:
+            if plan_line_id.w1_tue == False and plan_line_id.w1_wed == False and plan_line_id.w1_thur == False and plan_line_id.w1_fri == False and plan_line_id.w1_sat == False:
+                plan_line_id.w1_mon = False
+
+    def purge_unassigned_customer(self, cr, uid, ids, context=None):
+        plan = self.browse(cr, uid, ids, context=context)
+        team_obj = self.pool.get('crm.case.section')
+        plan_line = plan.plan_line
+        for plan_line_id in plan_line:
+            team_list = []
+            customer_team_ids = plan_line_id.partner_id.section_id.ids
+            for team in plan.sale_team_id:
+                if team.id not in customer_team_ids:
+                    team_list.append(team.id)
+            if len(team_list) == len(plan.sale_team_id):
+                plan_line_id.unlink()
+
 sale_plan_for_day_setting()
     
 class sale_plan_setting_line(osv.osv):  # #prod_pricelist_update_line
