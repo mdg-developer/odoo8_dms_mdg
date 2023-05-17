@@ -262,6 +262,9 @@ class stock_picking(osv.osv):
                                                                     'product.product', 'search',
                                                                     [[['default_code', '=', line.product_id.default_code]]],
                                                                     {'limit': 1})
+                                if not product_id or len(product_id) == 0:
+                                    raise osv.except_osv(_('Error!'), _('product code %s doesn\'t exist in Cellar18!') % (
+                                    line.product_id.default_code,))
                                 logging.warning("picking product_id search>>>> sss15: %s", product_id[0])
                                 if product_id:
                                     move_val = {
