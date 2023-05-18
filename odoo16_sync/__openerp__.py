@@ -36,6 +36,7 @@ MDG SYC TO SD
              'views/stock_location_view.xml',
              'views/sd_connection_view.xml',
              'views/product_template_view.xml',
+             'wizard/delivery_order_multi_sync_view.xml',
 
     ],
     'installable': True,
