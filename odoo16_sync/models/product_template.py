@@ -115,7 +115,7 @@ class product_template(osv.osv):
                 'uom_po_id': uom_po_id[0],
                 'default_code':data.default_code,
                 'list_price':data.list_price,
-                'standard_price':data.standard_price,
+                #'standard_price':data.standard_price,
                 'sale_ok':data.sale_ok,
                 'purchase_ok':data.purchase_ok,
                 'available_in_pos':True,
