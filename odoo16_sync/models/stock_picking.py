@@ -296,16 +296,18 @@ class stock_picking(osv.osv):
                         #models.execute_kw(db, sd_uid, password, 'stock.picking', 'action_done_custom', [picking_id])
                         models.execute_kw(db, sd_uid, password, 'stock.picking', 'write',
                                           [[picking_id], {'date_done': picking.date_done or picking.min_date,
-                                                          'scheduled_date': picking.min_date,
+                                                          #'scheduled_date': picking.min_date,
                                                           'date_deadline': picking.min_date}])
                         self.write(cr, uid, picking.id, {'is_sync_odoo16': True}, context=context)
         except Exception as error:
             logging.warning("picking create value post error>>>> sss15: %s", error)
+            logging.warning("picking create value post error picking_id>>>> sss15: %s", picking_id)
             if picking_id:
                 try:
                     models.execute_kw(db, sd_uid, password, 'stock.picking', 'unlink', [picking_id])
                 except Exception, e:
-                    logging.warning("picking cancel unlink >>>> sss15: %s", e)
+                    models.execute_kw(db, sd_uid, password, 'stock.picking', 'unlink', [picking_id])
+                    logging.warning("picking cancel unlink >>>> sss15: %s", error)
                     raise osv.except_osv(_('Error!'), _(error))
             raise osv.except_osv(_('Error!'), _(error))
         return result
