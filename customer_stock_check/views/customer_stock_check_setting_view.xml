@@ -10,8 +10,8 @@
 					<sheet>
 						<group>
 							<group>
-								<field name="date"/>
-								<field name="outlet_type"/>
+								<field name="name"/>
+								<field name="sale_group_id" widget="many2many_tags"/>
 							</group>
 							<group>
 							</group>
@@ -31,7 +31,8 @@
 											<field name="available" />
 											<field name="product_uom_qty" />
 											<field name="facing" />
-											<field name="chiller" />																						
+											<field name="chiller" />
+											<field name="expiry" />
 										</tree>
 									</field>
 								</page>

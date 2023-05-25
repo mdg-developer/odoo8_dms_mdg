@@ -9,6 +9,8 @@ class customer_stock_check(osv.osv):
                 'date': fields.date('Checked Date'),   
                 'stock_setting_line':fields.one2many('stock.check.setting.line', 'stock_setting_ids', string='Product',copy=True),
                 'competitor_product_lines': fields.one2many('stock.check.setting.competitor.line', 'stock_setting_ids', string='Competitor Products', copy=True),
+                'name': fields.char('Name'),
+                'sale_group_id': fields.many2many('sales.group', string='Sale Group'),
     }    
     
     def retrieve_stock(self, cr, uid, ids, context=None):  
@@ -50,9 +52,9 @@ class customer_stock_check_line(osv.osv):
                 'available': fields.boolean('Available',default=False),
                 'product_uom_qty':fields.boolean('QTY',default=False),
                 'facing':fields.boolean('Facing',default=False),    
-                'chiller':fields.boolean('Chiller',default=False),          
-      
-                }
+                'chiller':fields.boolean('Chiller',default=False),
+                'expiry': fields.boolean('Expiry', default=False),
+    }
 customer_stock_check_line()
 
 class stock_check_setting_competitor_line(osv.osv):
