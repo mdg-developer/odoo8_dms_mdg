@@ -45,6 +45,7 @@
 											<field name="product_uom_qty" />
 											<field name="facing" />
 											<field name="chiller" />
+											<field name="expiry" />
 										</tree>
 									</field>
 								</page>

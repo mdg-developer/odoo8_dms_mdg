@@ -68,6 +68,7 @@ class stock_check_setting_competitor_line(osv.osv):
         'product_uom_qty': fields.boolean('QTY', default=False),
         'facing': fields.boolean('Facing', default=False),
         'chiller': fields.boolean('Chiller', default=False),
+        'expiry': fields.boolean('Expiry', default=False),
     }
 
 stock_check_setting_competitor_line()

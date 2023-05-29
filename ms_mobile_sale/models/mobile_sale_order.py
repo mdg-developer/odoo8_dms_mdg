@@ -2954,7 +2954,7 @@ class mobile_sale_order(osv.osv):
 
     def get_stockcheck(self, cr, uid, sale_team_id , context=None, **kwargs):
         cr.execute('''            
-                select scl.id ,sc.outlet_type,scl.product_id,scl.product_uom_qty as quantity,scl.available,scl.facing, scl.chiller,scl.expiry 
+                select scl.id ,sc.outlet_type,scl.product_id,scl.product_uom_qty as quantity,scl.available,scl.facing, scl.chiller,scl.expiry,sc.id template_id,sc.name template_name
                 from stock_check_setting sc ,stock_check_setting_line scl,crm_case_section ccs,product_sale_group_rel rel
                 where sc.id=scl.stock_setting_ids
                 and ccs.sale_group_id = rel.sale_group_id
@@ -3043,7 +3043,7 @@ class mobile_sale_order(osv.osv):
 
 
     def get_competitor_stock_check(self, cr, uid, sale_team_id , context=None, **kwargs):
-        cr.execute('''select cline.id,outlet_type,prel.competitor_product_id,product_uom_qty as qty,available,facing,chiller,cp.sequence
+        cr.execute('''select cline.id,outlet_type,prel.competitor_product_id,product_uom_qty as qty,available,facing,chiller,cp.sequence,expiry
                     from crm_case_section ccs,sales_group sg,competitor_product_sales_group_rel prel,competitor_product cp,stock_check_setting_competitor_line cline,stock_check_setting scs
                     where ccs.sale_group_id=sg.id
                     and prel.sales_group_id=sg.id
