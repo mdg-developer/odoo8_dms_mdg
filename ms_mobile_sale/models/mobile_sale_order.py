@@ -2965,6 +2965,17 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()
         return datas
 
+    def get_stock_check_template(self, cr, uid, sale_team_id , context=None, **kwargs):
+        cr.execute('''            
+                select sc.id template_id,sc.name template_name
+                from stock_check_setting sc,stock_check_sale_group_rel sg_rel,crm_case_section ccs
+                where sc.id=sg_rel.stock_check_id
+                and sg_rel.sale_group_id=ccs.sale_group_id
+                and ccs.id=%s
+         ''', (sale_team_id,))
+        datas = cr.fetchall()
+        return datas
+
     def get_all_competitor_products(self, cr, uid, sale_team_id , context=None, **kwargs):
         cr.execute('''            
             select cp.id,cp.name,product_uom_id
