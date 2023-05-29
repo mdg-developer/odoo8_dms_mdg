@@ -10,7 +10,8 @@ class customer_stock_check(osv.osv):
                 'stock_setting_line':fields.one2many('stock.check.setting.line', 'stock_setting_ids', string='Product',copy=True),
                 'competitor_product_lines': fields.one2many('stock.check.setting.competitor.line', 'stock_setting_ids', string='Competitor Products', copy=True),
                 'name': fields.char('Name'),
-                'sale_group_id': fields.many2many('sales.group', string='Sale Group'),
+                'sale_group_id': fields.many2many('sales.group', 'stock_check_sale_group_rel', id1='stock_check_id',
+                                                    id2='sale_group_id', string='Sale Group'),
     }    
     
     def retrieve_stock(self, cr, uid, ids, context=None):  
