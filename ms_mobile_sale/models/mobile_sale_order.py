@@ -3044,7 +3044,7 @@ class mobile_sale_order(osv.osv):
 
 
     def get_competitor_stock_check(self, cr, uid, sale_team_id , context=None, **kwargs):
-        cr.execute('''select cline.id,outlet_type,prel.competitor_product_id,product_uom_qty as qty,available,facing,chiller,cp.sequence,expiry
+        cr.execute('''select cline.id,outlet_type,prel.competitor_product_id,product_uom_qty as qty,available,facing,chiller,cp.sequence,expiry,scs.id template_id,scs.name template_name
                     from crm_case_section ccs,sales_group sg,competitor_product_sales_group_rel prel,competitor_product cp,stock_check_setting_competitor_line cline,stock_check_setting scs
                     where ccs.sale_group_id=sg.id
                     and prel.sales_group_id=sg.id
