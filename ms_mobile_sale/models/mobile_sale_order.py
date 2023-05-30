@@ -4048,6 +4048,7 @@ class mobile_sale_order(osv.osv):
                                       'chiller':(srl['chiller']),
                                       'remark_id':(srl['remark_id']),
                                       'description':(srl['description']),
+                                      'expiry_date': (srl['expiry_date']),
                                       }
                             stock_check_line_obj.create(cursor, user, mso_line_res, context=context)
             print 'True'
