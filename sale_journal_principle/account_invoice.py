@@ -704,7 +704,7 @@ class account_invoice(models.Model):
             product = self.env['product.product'].browse(line.get('product_id', False))
             product_code = product.default_code
             print 'product_code', product_code
-            if line['price'] < 0 or line['is_discount'] == True or product_code == 'disc-cash-antoni-kanonkop' or product_code == 'disc-cash-dbr' or  product_code == 'disc-cash-lvmh' or product_code == 'disc-cash-other-import' or  product_code == 'disc-cash-silveroak' or  product_code == 'disc-cash-twins-jonanne' or product_code=='disc-cash-other-local' or product_code=='fw-disc':
+            if line['price'] < 0 or line['is_discount'] == True or product_code == 'disc-cash-antoni-kanonkop' or product_code == 'disc-cash-dbr' or  product_code == 'disc-cash-lvmh' or product_code == 'disc-cash-other-import' or  product_code == 'disc-cash-silveroak' or  product_code == 'disc-cash-twins-jonanne' or product_code=='disc-cash-other-local' or product_code=='fw-disc' or product_code=='c18-disc':
                 product = self.env['product.product'].browse(line.get('product_id', False))
                 print 'product>>>', product.id
                 print 'line.get>>>', line.get('product_id', False)
@@ -727,7 +727,7 @@ class account_invoice(models.Model):
                     line['price'] = line['price'] + discount_amt - total_tax_amt                            
                     cr.execute("UPDATE account_invoice_line SET line_paid =True FROM account_invoice  WHERE account_invoice_line.invoice_id = account_invoice.id AND account_invoice.origin = %s and   account_invoice_line.product_id=%s and account_invoice_line.id=%s", (origin, product.id,invoice_line_id,))
                 if  line['is_discount'] == True:
-                    if product_code == 'disc-cash-antoni-kanonkop' or product_code == 'disc-cash-dbr' or  product_code == 'disc-cash-lvmh' or product_code == 'disc-cash-other-import' or  product_code == 'disc-cash-silveroak' or  product_code == 'disc-cash-twins-jonanne'  or product_code=='disc-cash-other-local' or product_code=='fw-disc':
+                    if product_code == 'disc-cash-antoni-kanonkop' or product_code == 'disc-cash-dbr' or  product_code == 'disc-cash-lvmh' or product_code == 'disc-cash-other-import' or  product_code == 'disc-cash-silveroak' or  product_code == 'disc-cash-twins-jonanne'  or product_code=='disc-cash-other-local' or product_code=='fw-disc' or product_code=='c18-disc':
                         cr.execute("select avl.id from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s and avl.foc!=true and avl.price_unit = %s", (origin, product.id,line['price_unit'],))
                         invoice_line_id = cr.fetchone()
                         total_tax_amt=0
@@ -783,7 +783,7 @@ class account_invoice(models.Model):
         if type == 'in_refund' and line.get('product_id', False) != False:
             product = self.env['product.product'].browse(line.get('product_id', False))
             product_code = product.default_code
-            if line['price'] < 0 or line['is_discount'] == True or product_code == 'disc-cash-antoni-kanonkop' or product_code == 'disc-cash-dbr' or  product_code == 'disc-cash-lvmh' or product_code == 'disc-cash-other-import' or  product_code == 'disc-cash-silveroak' or  product_code == 'disc-cash-twins-jonanne' or product_code=='disc-cash-other-local' or product_code=='fw-disc':
+            if line['price'] < 0 or line['is_discount'] == True or product_code == 'disc-cash-antoni-kanonkop' or product_code == 'disc-cash-dbr' or  product_code == 'disc-cash-lvmh' or product_code == 'disc-cash-other-import' or  product_code == 'disc-cash-silveroak' or  product_code == 'disc-cash-twins-jonanne' or product_code=='disc-cash-other-local' or product_code=='fw-disc' or product_code=='c18-disc':
                 product = self.env['product.product'].browse(line.get('product_id', False))
                 print 'product>>>', product.id
                 print 'line.get>>>', line.get('product_id', False)
@@ -867,7 +867,7 @@ class account_invoice(models.Model):
         if type == 'out_refund' and line.get('product_id', False) != False:
             product = self.env['product.product'].browse(line.get('product_id', False))
             product_code = product.default_code            
-            if line['price'] > 0 or line['is_discount'] == True or  product_code == 'disc-cash-antoni-kanonkop' or product_code == 'disc-cash-dbr' or  product_code == 'disc-cash-lvmh' or product_code == 'disc-cash-other-import' or  product_code == 'disc-cash-silveroak' or  product_code == 'disc-cash-twins-jonanne'  or product_code=='disc-cash-other-local' or product_code=='fw-disc':
+            if line['price'] > 0 or line['is_discount'] == True or  product_code == 'disc-cash-antoni-kanonkop' or product_code == 'disc-cash-dbr' or  product_code == 'disc-cash-lvmh' or product_code == 'disc-cash-other-import' or  product_code == 'disc-cash-silveroak' or  product_code == 'disc-cash-twins-jonanne'  or product_code=='disc-cash-other-local' or product_code=='fw-disc' or product_code=='c18-disc':
                 product = self.env['product.product'].browse(line.get('product_id', False))
                 print 'product>>>', product.id
                 print 'line.get>>>', line.get('product_id', False)
@@ -891,7 +891,7 @@ class account_invoice(models.Model):
                     line['price'] = line['price'] - discount_amt + total_tax_amt                            
                     cr.execute("UPDATE account_invoice_line SET line_paid =True FROM account_invoice  WHERE account_invoice_line.invoice_id = account_invoice.id AND account_invoice.origin = %s and   account_invoice_line.product_id=%s and  account_invoice_line.id=%s", (origin, product.id,invoice_line_id,))
                 if  line['is_discount'] == True:
-                    if product_code == 'disc-cash-antoni-kanonkop' or product_code == 'disc-cash-dbr' or  product_code == 'disc-cash-lvmh' or product_code == 'disc-cash-other-import' or  product_code == 'disc-cash-silveroak' or  product_code == 'disc-cash-twins-jonanne' or product_code=='disc-cash-other-local' or product_code=='fw-disc':
+                    if product_code == 'disc-cash-antoni-kanonkop' or product_code == 'disc-cash-dbr' or  product_code == 'disc-cash-lvmh' or product_code == 'disc-cash-other-import' or  product_code == 'disc-cash-silveroak' or  product_code == 'disc-cash-twins-jonanne' or product_code=='disc-cash-other-local' or product_code=='fw-disc' or product_code=='c18-disc':
                         cr.execute("select avl.id from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s and avl.foc!=true and avl.price_unit = %s", (origin, product.id,line['price_unit'],))
                         invoice_line_id = cr.fetchone()
                         if invoice_line_id:
@@ -948,7 +948,7 @@ class account_invoice(models.Model):
         if type == 'in_invoice'  and line.get('product_id', False) != False: 
             product = self.env['product.product'].browse(line.get('product_id', False))
             product_code = product.default_code            
-            if line['price'] > 0  or line['is_discount'] == True or product_code == 'disc-cash-antoni-kanonkop' or product_code == 'disc-cash-dbr' or  product_code == 'disc-cash-lvmh' or product_code == 'disc-cash-other-import' or  product_code == 'disc-cash-silveroak' or  product_code == 'disc-cash-twins-jonanne' or product_code=='disc-cash-other-local' or product_code=='fw-disc':
+            if line['price'] > 0  or line['is_discount'] == True or product_code == 'disc-cash-antoni-kanonkop' or product_code == 'disc-cash-dbr' or  product_code == 'disc-cash-lvmh' or product_code == 'disc-cash-other-import' or  product_code == 'disc-cash-silveroak' or  product_code == 'disc-cash-twins-jonanne' or product_code=='disc-cash-other-local' or product_code=='fw-disc' or product_code=='c18-disc':
                 product = self.env['product.product'].browse(line.get('product_id', False))
                 print 'product>>>', product.id
                 print 'line.get>>>', line.get('product_id', False)
@@ -1158,7 +1158,7 @@ class account_invoice(models.Model):
                 origin = res['ref']
                 product = self.env['product.product'].browse(res.get('product_id', False))
                 product_code = product.default_code                
-                if product_code == 'disc-cash-antoni-kanonkop' or product_code == 'disc-cash-dbr' or  product_code == 'disc-cash-lvmh' or product_code == 'disc-cash-other-import' or  product_code == 'disc-cash-silveroak' or  product_code == 'disc-cash-twins-jonanne' or product_code=='disc-cash-other-local' or product_code=='fw-disc':
+                if product_code == 'disc-cash-antoni-kanonkop' or product_code == 'disc-cash-dbr' or  product_code == 'disc-cash-lvmh' or product_code == 'disc-cash-other-import' or  product_code == 'disc-cash-silveroak' or  product_code == 'disc-cash-twins-jonanne' or product_code=='disc-cash-other-local' or product_code=='fw-disc' or product_code=='c18-disc':
                     res['debit'] = -1 * res['debit']
                     res['credit'] = -1 * res['credit']
                 if origin:
@@ -1234,7 +1234,7 @@ class account_invoice(models.Model):
                 origin = res['ref']
                 product = self.env['product.product'].browse(res.get('product_id', False))
                 product_code = product.default_code                
-                if product_code == 'disc-cash-antoni-kanonkop' or product_code == 'disc-cash-dbr' or  product_code == 'disc-cash-lvmh' or product_code == 'disc-cash-other-import' or  product_code == 'disc-cash-silveroak' or  product_code == 'disc-cash-twins-jonanne' or product_code=='disc-cash-other-local' or product_code=='fw-disc':
+                if product_code == 'disc-cash-antoni-kanonkop' or product_code == 'disc-cash-dbr' or  product_code == 'disc-cash-lvmh' or product_code == 'disc-cash-other-import' or  product_code == 'disc-cash-silveroak' or  product_code == 'disc-cash-twins-jonanne' or product_code=='disc-cash-other-local' or product_code=='fw-disc' or product_code=='c18-disc':
                     res['debit'] = res['debit']
                     res['credit'] = res['credit']
                 if origin:
