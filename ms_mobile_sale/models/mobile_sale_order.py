@@ -3979,11 +3979,12 @@ class mobile_sale_order(osv.osv):
             for data in new_arr:
                 x = ast.literal_eval(data)
                 result.append(x)
+
             stock = []
             stock_line = []
             for r in result:
                 print "length", len(r)
-                if len(r) >= 10:
+                if len(r) >= 11:
                     stock.append(r)
                 else:
                     stock_line.append(r)
@@ -4020,7 +4021,6 @@ class mobile_sale_order(osv.osv):
                             'longitude':sr['longitude'],
                     }
                     stock_id = stock_check_obj.create(cursor, user, mso_result, context=context)
-                    
                     for srl in stock_line:
                         if (sr['st_id'] == srl['stock_check_no']):
                             cursor.execute("select sequence from product_product where id =%s", (srl['product_id'],))
