@@ -4010,15 +4010,16 @@ class mobile_sale_order(osv.osv):
                     mso_result = {
                         'partner_id':customer_id,
                         'sale_team_id':sr['sale_team_id'] ,
-                         'user_id':sr['user_id'] ,
+                        'user_id':sr['user_id'] ,
                         'township_id': township_id,
                         'outlet_type':outlet_type,
                         'date':check_date,
                         'check_datetime':date,
                         'customer_code':sr['customer_code'],
                         'branch_id':sr['branch'],
-                                                    'latitude':sr['latitude'],
-                            'longitude':sr['longitude'],
+                        'latitude':sr['latitude'],
+                        'longitude':sr['longitude'],
+                        'template_id': sr['template_id'],
                     }
                     stock_id = stock_check_obj.create(cursor, user, mso_result, context=context)
                     for srl in stock_line:
