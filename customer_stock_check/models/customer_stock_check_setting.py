@@ -3,7 +3,7 @@ from openerp.osv import fields , osv
 class customer_stock_check(osv.osv):
     _name = "stock.check.setting"
     _description = "Customer Stock Check Setting"
-    _rec_name = "outlet_type"
+    _rec_name = "name"
     _columns = {      
                 'outlet_type': fields.many2one('outlettype.outlettype', 'Outlet Type'), 
                 'date': fields.date('Checked Date'),   
