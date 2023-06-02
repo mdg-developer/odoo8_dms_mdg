@@ -3,12 +3,15 @@ from openerp.osv import fields , osv
 class customer_stock_check(osv.osv):
     _name = "stock.check.setting"
     _description = "Customer Stock Check Setting"
-    _rec_name = "outlet_type"
+    _rec_name = "name"
     _columns = {      
                 'outlet_type': fields.many2one('outlettype.outlettype', 'Outlet Type'), 
                 'date': fields.date('Checked Date'),   
                 'stock_setting_line':fields.one2many('stock.check.setting.line', 'stock_setting_ids', string='Product',copy=True),
                 'competitor_product_lines': fields.one2many('stock.check.setting.competitor.line', 'stock_setting_ids', string='Competitor Products', copy=True),
+                'name': fields.char('Name'),
+                'sale_group_id': fields.many2many('sales.group', 'stock_check_sale_group_rel', id1='stock_check_id',
+                                                  id2='sale_group_id', string='Sale Group'),
     }    
     
     def retrieve_stock(self, cr, uid, ids, context=None):  
@@ -50,8 +53,8 @@ class customer_stock_check_line(osv.osv):
                 'available': fields.boolean('Available',default=False),
                 'product_uom_qty':fields.boolean('QTY',default=False),
                 'facing':fields.boolean('Facing',default=False),    
-                'chiller':fields.boolean('Chiller',default=False),          
-      
+                'chiller':fields.boolean('Chiller',default=False),
+                'expiry': fields.boolean('Expiry', default=False),
                 }
 customer_stock_check_line()
 
@@ -66,6 +69,7 @@ class stock_check_setting_competitor_line(osv.osv):
         'product_uom_qty': fields.boolean('QTY', default=False),
         'facing': fields.boolean('Facing', default=False),
         'chiller': fields.boolean('Chiller', default=False),
+        'expiry': fields.boolean('Expiry', default=False),
     }
 
 stock_check_setting_competitor_line()

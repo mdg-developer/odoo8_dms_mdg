@@ -16,6 +16,7 @@
 								<field name="user_id" />
 								<field name="township_id" />
 								<field name="outlet_type" />
+								<field name="template_id" />
 							</group>
 							<group>
 								<field name="date" />
@@ -44,6 +45,7 @@
 											<field name="product_uom" />
 											<field name="available" />
 											<field name="product_uom_qty" />
+											<field name="expiry_date" />
 											<field name="facing" />
 											<field name="chiller" />
 											<field name="remark_id" />

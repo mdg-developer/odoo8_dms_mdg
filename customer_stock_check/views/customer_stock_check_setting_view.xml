@@ -10,8 +10,8 @@
 					<sheet>
 						<group>
 							<group>
-								<field name="date"/>
-								<field name="outlet_type"/>
+								<field name="name"/>
+								<field name="sale_group_id" widget="many2many_tags"/>
 							</group>
 							<group>
 							</group>
@@ -59,8 +59,8 @@
 			<field name="model">stock.check.setting</field>
 			<field name="arch" type="xml">
 				<tree string="Stock Check Setting Tree">
-					<field name="date"/>
-					<field name="outlet_type"/>
+					<field name="name"/>
+					<field name="sale_group_id" widget="many2many_tags"/>
 				</tree>
 			</field>
 		</record>

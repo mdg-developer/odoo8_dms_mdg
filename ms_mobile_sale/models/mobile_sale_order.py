@@ -3683,7 +3683,7 @@ class mobile_sale_order(osv.osv):
             stock_line = []
             for r in result:
                 print "length", len(r)
-                if len(r) >= 10:
+                if len(r) >= 11:
                     stock.append(r)
                 else:
                     stock_line.append(r)
@@ -3720,6 +3720,7 @@ class mobile_sale_order(osv.osv):
                         'branch_id': sr['branch'],
                         'latitude': sr['latitude'],
                         'longitude': sr['longitude'],
+                        'template_id': sr['template_id'],
                     }
                     stock_id = stock_check_obj.create(cursor, user, mso_result, context=context)
 
@@ -3750,6 +3751,7 @@ class mobile_sale_order(osv.osv):
                                 'chiller': (srl['chiller']),
                                 'remark_id': (srl['remark_id']),
                                 'description': (srl['description']),
+                                'expiry_date': (srl['expiry_date']),
                             }
                             stock_check_line_obj.create(cursor, user, mso_line_res, context=context)
             print 'True'
