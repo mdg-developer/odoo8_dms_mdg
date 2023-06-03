@@ -2979,11 +2979,14 @@ class mobile_sale_order(osv.osv):
     def get_all_competitor_products(self, cr, uid, sale_team_id , context=None, **kwargs):
         cr.execute('''            
             select cp.id,cp.name,product_uom_id
-            from crm_case_section ccs,sales_group sg,competitor_product_sales_group_rel prel,competitor_product cp,competitor_product_product_uom_rel rel
-            where ccs.sale_group_id=sg.id
-            and prel.sales_group_id=sg.id
-            and prel.competitor_product_id=cp.id
-            and cp.id=rel.competitor_product_id
+            from stock_check_setting_competitor_line line,stock_check_setting sc,
+            stock_check_sale_group_rel rel,crm_case_section ccs,competitor_product cp,
+            competitor_product_product_uom_rel uom_rel
+            where line.stock_setting_ids=sc.id
+            and rel.stock_check_id=sc.id
+            and rel.sale_group_id=ccs.sale_group_id
+            and line.competitor_product_id=cp.id
+            and cp.id=uom_rel.competitor_product_id
             and ccs.id=%s
          ''', (sale_team_id,))
         datas = cr.fetchall()
@@ -2993,9 +2996,11 @@ class mobile_sale_order(osv.osv):
         list = []
         cr.execute('''            
             select competitor_product_id
-            from crm_case_section ccs,sales_group sg,competitor_product_sales_group_rel rel
-            where ccs.sale_group_id=sg.id
-            and rel.sales_group_id=sg.id
+            from stock_check_setting_competitor_line line,stock_check_setting sc,
+            stock_check_sale_group_rel rel,crm_case_section ccs
+            where line.stock_setting_ids=sc.id
+            and rel.stock_check_id=sc.id
+            and rel.sale_group_id=ccs.sale_group_id
             and ccs.id=%s
          ''', (sale_team_id,))
         datas = cr.fetchall()
@@ -4080,7 +4085,7 @@ class mobile_sale_order(osv.osv):
             competitor_stock_line = []
             for r in result:
                 print "length", len(r)
-                if len(r) >= 10:
+                if len(r) >= 11:
                     stock.append(r)
                 else:
                     competitor_stock_line.append(r)
@@ -4121,6 +4126,7 @@ class mobile_sale_order(osv.osv):
                             'branch_id': sr['branch'],
                             'latitude': sr['latitude'],
                             'longitude': sr['longitude'],
+                            'template_id': sr['template_id'],
                         }
                         stock_id = stock_check_obj.create(cursor, user, mso_result, context=context)
                     for csl in competitor_stock_line:
@@ -4142,6 +4148,7 @@ class mobile_sale_order(osv.osv):
                                 'chiller': (csl['chiller']),
                                 'remark_id': (csl['remark_id']),
                                 'description': (csl['description']),
+                                'expiry_date': (srl['expiry_date']),
                             }
                             competitor_stock_check_line_obj.create(cursor, user, csl_line_res, context=context)
             print 'True'
