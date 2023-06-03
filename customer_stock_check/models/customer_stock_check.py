@@ -121,7 +121,7 @@ class customer_stock_check_competitor_line(osv.osv):
         'chiller': fields.float('Chiller Qty'),
         'remark_id': fields.many2one('partner.stock.check.remark', 'Remark'),
         'description': fields.char('Description'),
-
+        'expiry_date': fields.date('Expiry Date'),
     }
 
 
