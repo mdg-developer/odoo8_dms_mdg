@@ -28,6 +28,7 @@
 								<field name="amount" />
 								<field name="principle_id" />
 								<field name="to_date" />
+								<field name="return_claim" />
 							</group>							
 						</group>
 					</sheet>

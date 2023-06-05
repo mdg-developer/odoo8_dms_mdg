@@ -810,6 +810,8 @@ class mobile_sale_order(osv.osv):
                                 }
                                 product_trans_line_obj.create(cursor, user, mso_line_res, context=context)
                     product_trans_obj.action_convert_ep(cursor, user, [s_order_id], context=context)
+                    if pt['exchange_type'] == 'Sale Return with Credit Note':
+                        product_trans_obj.create_credit_note(cursor, user, [s_order_id], context=context)
 
             print 'Truwwwwwwwwwwwwwwwwwwwwwe'
             return True       
