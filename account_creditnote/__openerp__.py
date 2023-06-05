@@ -43,6 +43,7 @@ Account Credit Note
        'views/custom_layout.xml',
        'views/report_credit_note.xml',
        'views/qweb_view.xml',
+       'views/pricelist_view.xml'
     ],
     'installable': True,
     'auto_install': False,
