@@ -9,8 +9,7 @@
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field name="view_id" ref="ms_exchange.view_sale_return_tree" />
-			<field name="domain">[('exchange_type','=','Sale Return with Credit
-				Note')]</field>
+			<field name="domain">[('exchange_type','=','Sale Return with Credit Note')]</field>
 			<field name="help" type="html">
 				<p class="oe_view_nocontent_create">
 					Click to create new Sale return Product.
@@ -19,9 +18,9 @@
 		</record>
 
 		<!-- Sale Return With Credit Note Menu Item -->
-		<menuitem id="menu_sale_return_with_cn" parent="base.menu_sales"
-			name="Sale Return With Credit Note" action="action_sale_return_with_cn"
-			sequence="15" />
+		<menuitem id="menu_sale_return_with_cn" parent="menu_customization.menu_sale_return_conf"
+			name="Sales Return With Credit Note" action="action_sale_return_with_cn"
+			sequence="3" />
 	</data>
 </openerp>
 		
