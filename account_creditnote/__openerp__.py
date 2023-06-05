@@ -32,7 +32,7 @@ Account Credit Note
 """,
     'author': 'Seventh Computing',
     'website': 'http://www.7thcomputing.com',
-    'depends': ['base','account'
+    'depends': ['base','account','ms_exchange'
     ],
     'data': [
        'views/account_creditnote_view.xml',
@@ -43,7 +43,8 @@ Account Credit Note
        'views/custom_layout.xml',
        'views/report_credit_note.xml',
        'views/qweb_view.xml',
-       'views/pricelist_view.xml'
+       'views/pricelist_view.xml',
+       'views/exchange_product.xml'
     ],
     'installable': True,
     'auto_install': False,
