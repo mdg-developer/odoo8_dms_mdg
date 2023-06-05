@@ -4042,7 +4042,12 @@ class mobile_sale_order(osv.osv):
                                 avaliable = 'yes'
                             else:
                                 avaliable =srl['avail']
-                        
+
+                            if srl['expiry_date'] == 'none':
+                                expiry_date = None
+                            else:
+                                expiry_date = srl['expiry_date']
+
                             mso_line_res = {                                                            
                                       'stock_check_ids':stock_id,
                                       'sequence':sequence,
@@ -4054,7 +4059,7 @@ class mobile_sale_order(osv.osv):
                                       'chiller':(srl['chiller']),
                                       'remark_id':(srl['remark_id']),
                                       'description':(srl['description']),
-                                      'expiry_date': (srl['expiry_date']),
+                                      'expiry_date': expiry_date,
                                       }
                             stock_check_line_obj.create(cursor, user, mso_line_res, context=context)
             print 'True'
@@ -4137,6 +4142,12 @@ class mobile_sale_order(osv.osv):
                                 sequence = competitor_product_data[0]
                             else:
                                 sequence = None
+
+                            if srl['expiry_date'] == 'none':
+                                expiry_date = None
+                            else:
+                                expiry_date = srl['expiry_date']
+
                             csl_line_res = {
                                 'stock_check_ids': stock_id,
                                 'sequence': sequence,
@@ -4148,7 +4159,7 @@ class mobile_sale_order(osv.osv):
                                 'chiller': (csl['chiller']),
                                 'remark_id': (csl['remark_id']),
                                 'description': (csl['description']),
-                                'expiry_date': (srl['expiry_date']),
+                                'expiry_date': expiry_date,
                             }
                             competitor_stock_check_line_obj.create(cursor, user, csl_line_res, context=context)
             print 'True'
