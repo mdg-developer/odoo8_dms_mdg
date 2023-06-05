@@ -4143,10 +4143,10 @@ class mobile_sale_order(osv.osv):
                             else:
                                 sequence = None
 
-                            if srl['expiry_date'] == 'none':
+                            if csl['expiry_date'] == 'none':
                                 expiry_date = None
                             else:
-                                expiry_date = srl['expiry_date']
+                                expiry_date = csl['expiry_date']
 
                             csl_line_res = {
                                 'stock_check_ids': stock_id,
