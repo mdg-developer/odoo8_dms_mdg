@@ -157,7 +157,7 @@
 				</field>
 				<button name="action_convert_ep" position="after">
 					<button name="create_credit_note" string="Create Credit Note"
-							type="object" class="oe_highlight" attrs="{'invisible':[('credit_note_id', '!=', False)]}"/>
+							type="object" class="oe_highlight" attrs="{'invisible':['|',('exchange_type', '!=', 'Sale Return with Credit Note'),('credit_note_id', '!=', False)]}"/>
 				</button>
 			</field>
 		</record>
