@@ -3060,13 +3060,13 @@ class mobile_sale_order(osv.osv):
 
 
     def get_competitor_stock_check(self, cr, uid, sale_team_id , context=None, **kwargs):
-        cr.execute('''select cline.id,outlet_type,prel.competitor_product_id,product_uom_qty as qty,available,facing,chiller,cp.sequence,expiry,scs.id template_id,scs.name template_name
-                    from crm_case_section ccs,sales_group sg,competitor_product_sales_group_rel prel,competitor_product cp,stock_check_setting_competitor_line cline,stock_check_setting scs
-                    where ccs.sale_group_id=sg.id
-                    and prel.sales_group_id=sg.id
-                    and prel.competitor_product_id=cp.id
-                    and cp.id=cline.competitor_product_id
-                    and cline.stock_setting_ids=scs.id
+        cr.execute('''select cline.id,outlet_type,competitor_product_id,product_uom_qty as qty,available,facing,chiller,cp.sequence,expiry,sc.id template_id,sc.name template_name
+                    from stock_check_setting_competitor_line cline,stock_check_setting sc,stock_check_sale_group_rel rel,
+                    crm_case_section ccs,competitor_product cp
+                    where cline.stock_setting_ids=sc.id
+                    and rel.stock_check_id=sc.id
+                    and rel.sale_group_id=ccs.sale_group_id
+                    and cline.competitor_product_id=cp.id
                     and ccs.id=%s
                     ''', (sale_team_id,))
         datas = cr.fetchall()
