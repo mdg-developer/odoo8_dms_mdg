@@ -23,3 +23,4 @@ import product_tag
 import product_uom
 import product_supplier
 import product_department
+import product_approval

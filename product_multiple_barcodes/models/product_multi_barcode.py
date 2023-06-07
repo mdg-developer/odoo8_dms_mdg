@@ -7,6 +7,7 @@ class ProductMultiBarcode(osv.osv):
                 'name' : fields.char('Barcode', required=True),
                 'product_tmpl_id' : fields.many2one('product.template', string="Product", required=True, ondelete='cascade'),
                 'product_info_id': fields.many2one('product.info', string="Product Info", ondelete='cascade'),
+                'product_approval_id': fields.many2one('product.approval', string="Product Approval", ondelete='cascade'),
     }
 
     def create(self, cursor, user, vals, context=None):

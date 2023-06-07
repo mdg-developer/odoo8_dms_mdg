@@ -68,7 +68,8 @@ Connect With Ecommerce
         'views/product_tag_view.xml',
         'views/product_uom_view.xml',
         'views/product_supplier_view.xml',
-        'views/product_department_view.xml'
+        'views/product_department_view.xml',
+        'views/product_approval_view.xml'
                 ],
     'installable': True,
     'auto_install': False,
