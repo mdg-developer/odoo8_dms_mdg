@@ -1651,7 +1651,7 @@ class mobile_sale_order(osv.osv):
 
     def get_all_competitor_products(self, cr, uid, sale_team_id , context=None, **kwargs):
         cr.execute('''            
-            select cp.id,cp.name,product_uom_id
+            select cp.id,cp.name,product_uom_id,sc.id template_id
             from stock_check_setting_competitor_line line,stock_check_setting sc,
             stock_check_sale_group_rel rel,crm_case_section ccs,competitor_product cp,
             competitor_product_product_uom_rel uom_rel
