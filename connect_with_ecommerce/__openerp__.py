@@ -30,7 +30,7 @@
                     "base",
                     "address_management_system",
                     "product",
-                    "product_product",
+                    "product_product","warehouse_application",
                     "woo_commerce_ept",'sale_group'
                 ],
     'description': """
@@ -69,7 +69,8 @@ Connect With Ecommerce
         'views/product_uom_view.xml',
         'views/product_supplier_view.xml',
         'views/product_department_view.xml',
-        'views/product_approval_view.xml'
+        'views/product_approval_view.xml',
+        'security/ir.model.access.csv',
                 ],
     'installable': True,
     'auto_install': False,
