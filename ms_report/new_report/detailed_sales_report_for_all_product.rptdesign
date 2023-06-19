@@ -178,6 +178,7 @@ order by payment_type]]></xml-property>
                     <property name="columnName">customer_name</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">customer_name</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">customer_name</text-property>
                 </structure>
                 <structure>
@@ -198,6 +199,7 @@ order by payment_type]]></xml-property>
                     <property name="columnName">payment_type</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">payment_type</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">payment_type</text-property>
                 </structure>
                 <structure>
@@ -211,18 +213,21 @@ order by payment_type]]></xml-property>
                     <property name="columnName">section_id</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">section_id</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">section_id</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">sales_team</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">sales_team</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">sales_team</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">branch_id</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">branch_id</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">branch_id</text-property>
                 </structure>
                 <structure>
@@ -290,6 +295,7 @@ order by payment_type]]></xml-property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">1</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -300,6 +306,7 @@ order by payment_type]]></xml-property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">2</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -310,6 +317,7 @@ order by payment_type]]></xml-property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">3</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -320,6 +328,7 @@ order by payment_type]]></xml-property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">4</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -330,6 +339,7 @@ order by payment_type]]></xml-property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">5</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -340,6 +350,7 @@ order by payment_type]]></xml-property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">6</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -350,6 +361,7 @@ order by payment_type]]></xml-property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">7</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -360,6 +372,7 @@ order by payment_type]]></xml-property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">8</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -370,6 +383,7 @@ order by payment_type]]></xml-property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">9</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -380,6 +394,7 @@ order by payment_type]]></xml-property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">10</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -638,6 +653,7 @@ foc_qty as (
 	and ai.section_id=ccs.id
 	and foc='true'
 	and date_invoice between ? and ?
+	and ai.state !='cancel'
 	group by rp.id,rp.name,rt.code,number,payment_type,date_invoice,ai.section_id,ccs.name,ai.branch_id,product_id,name_template,pp.sequence,ail.uos_id,pt.uom_id,big_uom_id
 	order by seq),
 sale_qty as (
@@ -652,6 +668,7 @@ sale_qty as (
 	and pp.product_tmpl_id=pt.id
 	and ai.section_id=ccs.id			
 	and foc='false'
+	and ai.state !='cancel'
 	and date_invoice between ? and ?
 	group by rp.id,rp.name,rt.code,number,payment_type,date_invoice,ai.section_id,ccs.name,ai.branch_id,product_id,name_template,pp.sequence,ail.uos_id,pt.uom_id,big_uom_id
 	order by seq),
@@ -662,6 +679,7 @@ total_amt as (
 	where ai.partner_id=rp.id	
 	and rp.township=rt.id	
 	and ai.section_id=ccs.id
+	and ai.state !='cancel'
 	and date_invoice between ? and ?
 	order by rp.name
 ),
@@ -672,6 +690,7 @@ total_discount as (
 	where ai.partner_id=rp.id
 	and rp.township=rt.id	
 	and ai.section_id=ccs.id
+	and ai.state !='cancel'
 	and date_invoice between ? and ?
 	order by rp.name
 ),
@@ -682,6 +701,7 @@ net_amt as (
 	where ai.partner_id=rp.id
 	and rp.township=rt.id	
 	and ai.section_id=ccs.id
+	and ai.state !='cancel'
 	and date_invoice between ? and ?
 	order by rp.name
 ),
@@ -730,6 +750,9 @@ order by number]]></xml-property>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
         </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes/>
+        </design:inputAttributes>
       </design:ParameterDefinition>
     </parameter>
     <parameter>
@@ -745,6 +768,9 @@ order by number]]></xml-property>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
         </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes/>
+        </design:inputAttributes>
       </design:ParameterDefinition>
     </parameter>
     <parameter>
@@ -760,6 +786,9 @@ order by number]]></xml-property>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
         </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes/>
+        </design:inputAttributes>
       </design:ParameterDefinition>
     </parameter>
     <parameter>
@@ -775,6 +804,9 @@ order by number]]></xml-property>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
         </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes/>
+        </design:inputAttributes>
       </design:ParameterDefinition>
     </parameter>
     <parameter>
@@ -790,6 +822,9 @@ order by number]]></xml-property>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
         </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes/>
+        </design:inputAttributes>
       </design:ParameterDefinition>
     </parameter>
     <parameter>
@@ -805,6 +840,9 @@ order by number]]></xml-property>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
         </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes/>
+        </design:inputAttributes>
       </design:ParameterDefinition>
     </parameter>
     <parameter>
@@ -820,6 +858,9 @@ order by number]]></xml-property>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
         </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes/>
+        </design:inputAttributes>
       </design:ParameterDefinition>
     </parameter>
     <parameter>
@@ -835,6 +876,9 @@ order by number]]></xml-property>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
         </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes/>
+        </design:inputAttributes>
       </design:ParameterDefinition>
     </parameter>
     <parameter>
@@ -850,6 +894,9 @@ order by number]]></xml-property>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
         </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes/>
+        </design:inputAttributes>
       </design:ParameterDefinition>
     </parameter>
     <parameter>
@@ -865,6 +912,9 @@ order by number]]></xml-property>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
         </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes/>
+        </design:inputAttributes>
       </design:ParameterDefinition>
     </parameter>
   </DataSetParameters>
