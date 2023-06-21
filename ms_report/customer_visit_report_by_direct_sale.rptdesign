@@ -369,9 +369,9 @@ else
                     <property name="nativeDataType">12</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select ((cv.date at time zone 'utc') at time zone 'asia/rangoon')::date as date,
+            <xml-property name="queryText"><![CDATA[select (cv.date at time zone 'utc')::date as date,
 cast (cv.date::timestamp
-   at time zone 'UTC' at time zone 'asia/rangoon' as time) as time,ti.mac_address tablet_id,
+   at time zone 'UTC' as time) as time,ti.mac_address tablet_id,
 res.name,ccs.name sale_team,spd.name sale_plan_day,vr.name reason,rt.name township,
 case when is_image1 = 'False' then 'No'
 	 when is_image1 = 'True'  then 'Yes'

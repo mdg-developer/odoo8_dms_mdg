@@ -1379,10 +1379,13 @@ class sale_plan_for_day_setting(osv.osv):
         team_obj = self.pool.get('crm.case.section')
         plan_line = plan.plan_line
         for plan_line_id in plan_line:
+            team_list = []
             customer_team_ids = plan_line_id.partner_id.section_id.ids
             for team in plan.sale_team_id:
                 if team.id not in customer_team_ids:
-                    plan_line_id.unlink()
+                    team_list.append(team.id)
+            if len(team_list) == len(plan.sale_team_id):
+                plan_line_id.unlink()
 
 sale_plan_for_day_setting()
     

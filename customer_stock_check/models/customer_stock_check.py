@@ -20,6 +20,7 @@ class customer_stock_check(osv.osv):
                 'latitude':fields.float('Geo Latitude', digits=(16, 5), readonly=True),
                     'longitude':fields.float('Geo Longitude', digits=(16, 5), readonly=True),
                     'distance_status':fields.char('Distance Status', readonly=True),
+                'template_id': fields.many2one('stock.check.setting', 'Stock Check Setting', readonly=True),
                 }    
     
     def on_change_partner_id(self, cr, uid, ids, partner_id, context=None):
@@ -99,7 +100,8 @@ class customer_stock_check_line(osv.osv):
                 'facing':fields.float('Facing', default=False),
                 'chiller':fields.float('Chiller Qty'),
                 'remark_id':fields.many2one('partner.stock.check.remark', 'Remark'),      
-                'description':fields.char( 'Description'),                
+                'description':fields.char( 'Description'),
+                'expiry_date':fields.date('Expiry Date'),
                           
                 }
 
@@ -120,7 +122,7 @@ class customer_stock_check_competitor_line(osv.osv):
         'chiller': fields.float('Chiller Qty'),
         'remark_id': fields.many2one('partner.stock.check.remark', 'Remark'),
         'description': fields.char('Description'),
-
+        'expiry_date': fields.date('Expiry Date'),
     }
 
 

@@ -774,9 +774,9 @@ class mobile_sale_order(osv.osv):
                                 }
 
                     transaction = pt['transaction_id']
-                    existing_exchange = product_trans_obj.search(cursor, user, [('transaction_id', '=', transaction)])
-                    if existing_exchange:
-                        continue
+#                     existing_exchange = product_trans_obj.search(cursor, user, [('transaction_id', '=', transaction)])
+#                     if existing_exchange:
+#                         continue
                     s_order_id = product_trans_obj.create(cursor, user, mso_result, context=context)
                     
                     for ptl in product_trans_line:
@@ -810,6 +810,8 @@ class mobile_sale_order(osv.osv):
                                 }
                                 product_trans_line_obj.create(cursor, user, mso_line_res, context=context)
                     product_trans_obj.action_convert_ep(cursor, user, [s_order_id], context=context)
+                    if pt['exchange_type'] == 'Sale Return with Credit Note':
+                        product_trans_obj.create_credit_note(cursor, user, [s_order_id], context=context)
 
             print 'Truwwwwwwwwwwwwwwwwwwwwwe'
             return True       
@@ -1892,7 +1894,7 @@ class mobile_sale_order(osv.osv):
         return list    
 
     def get_pricelist_datas(self, cr, uid , section_id, context=None, **kwargs):
-        cr.execute('''select ppl.id,ppl.name,ppl.type, ppl.active , cpr.is_default,consumer
+        cr.execute('''select ppl.id,ppl.name,ppl.type, ppl.active , cpr.is_default,consumer,ppl.is_credit_claim_price
                  from price_list_line cpr , product_pricelist ppl
                  where ppl.id = cpr.property_product_pricelist 
                  and ppl.active = true
@@ -2954,11 +2956,23 @@ class mobile_sale_order(osv.osv):
 
     def get_stockcheck(self, cr, uid, sale_team_id , context=None, **kwargs):
         cr.execute('''            
-                select scl.id ,sc.outlet_type,scl.product_id,scl.product_uom_qty as quantity,scl.available,scl.facing, scl.chiller 
-                from stock_check_setting sc ,stock_check_setting_line scl,crm_case_section ccs,product_sale_group_rel rel
+                select scl.id ,sc.outlet_type,scl.product_id,scl.product_uom_qty as quantity,scl.available,scl.facing, scl.chiller,scl.expiry,sc.id template_id,sc.name template_name
+                from stock_check_setting sc ,stock_check_setting_line scl,crm_case_section ccs,product_sale_group_rel rel,stock_check_sale_group_rel sg_rel
                 where sc.id=scl.stock_setting_ids
                 and ccs.sale_group_id = rel.sale_group_id
                 and rel.product_id=scl.product_id
+                and sg_rel.sale_group_id=ccs.sale_group_id
+                and ccs.id=%s
+         ''', (sale_team_id,))
+        datas = cr.fetchall()
+        return datas
+
+    def get_stock_check_template(self, cr, uid, sale_team_id , context=None, **kwargs):
+        cr.execute('''            
+                select sc.id template_id,sc.name template_name
+                from stock_check_setting sc,stock_check_sale_group_rel sg_rel,crm_case_section ccs
+                where sc.id=sg_rel.stock_check_id
+                and sg_rel.sale_group_id=ccs.sale_group_id
                 and ccs.id=%s
          ''', (sale_team_id,))
         datas = cr.fetchall()
@@ -2966,12 +2980,15 @@ class mobile_sale_order(osv.osv):
 
     def get_all_competitor_products(self, cr, uid, sale_team_id , context=None, **kwargs):
         cr.execute('''            
-            select cp.id,cp.name,product_uom_id
-            from crm_case_section ccs,sales_group sg,competitor_product_sales_group_rel prel,competitor_product cp,competitor_product_product_uom_rel rel
-            where ccs.sale_group_id=sg.id
-            and prel.sales_group_id=sg.id
-            and prel.competitor_product_id=cp.id
-            and cp.id=rel.competitor_product_id
+            select cp.id,cp.name,product_uom_id,sc.id template_id
+            from stock_check_setting_competitor_line line,stock_check_setting sc,
+            stock_check_sale_group_rel rel,crm_case_section ccs,competitor_product cp,
+            competitor_product_product_uom_rel uom_rel
+            where line.stock_setting_ids=sc.id
+            and rel.stock_check_id=sc.id
+            and rel.sale_group_id=ccs.sale_group_id
+            and line.competitor_product_id=cp.id
+            and cp.id=uom_rel.competitor_product_id
             and ccs.id=%s
          ''', (sale_team_id,))
         datas = cr.fetchall()
@@ -2981,9 +2998,11 @@ class mobile_sale_order(osv.osv):
         list = []
         cr.execute('''            
             select competitor_product_id
-            from crm_case_section ccs,sales_group sg,competitor_product_sales_group_rel rel
-            where ccs.sale_group_id=sg.id
-            and rel.sales_group_id=sg.id
+            from stock_check_setting_competitor_line line,stock_check_setting sc,
+            stock_check_sale_group_rel rel,crm_case_section ccs
+            where line.stock_setting_ids=sc.id
+            and rel.stock_check_id=sc.id
+            and rel.sale_group_id=ccs.sale_group_id
             and ccs.id=%s
          ''', (sale_team_id,))
         datas = cr.fetchall()
@@ -3043,13 +3062,13 @@ class mobile_sale_order(osv.osv):
 
 
     def get_competitor_stock_check(self, cr, uid, sale_team_id , context=None, **kwargs):
-        cr.execute('''select cline.id,outlet_type,prel.competitor_product_id,product_uom_qty as qty,available,facing,chiller,cp.sequence
-                    from crm_case_section ccs,sales_group sg,competitor_product_sales_group_rel prel,competitor_product cp,stock_check_setting_competitor_line cline,stock_check_setting scs
-                    where ccs.sale_group_id=sg.id
-                    and prel.sales_group_id=sg.id
-                    and prel.competitor_product_id=cp.id
-                    and cp.id=cline.competitor_product_id
-                    and cline.stock_setting_ids=scs.id
+        cr.execute('''select cline.id,outlet_type,competitor_product_id,product_uom_qty as qty,available,facing,chiller,cp.sequence,expiry,sc.id template_id,sc.name template_name
+                    from stock_check_setting_competitor_line cline,stock_check_setting sc,stock_check_sale_group_rel rel,
+                    crm_case_section ccs,competitor_product cp
+                    where cline.stock_setting_ids=sc.id
+                    and rel.stock_check_id=sc.id
+                    and rel.sale_group_id=ccs.sale_group_id
+                    and cline.competitor_product_id=cp.id
                     and ccs.id=%s
                     ''', (sale_team_id,))
         datas = cr.fetchall()
@@ -3967,11 +3986,12 @@ class mobile_sale_order(osv.osv):
             for data in new_arr:
                 x = ast.literal_eval(data)
                 result.append(x)
+
             stock = []
             stock_line = []
             for r in result:
                 print "length", len(r)
-                if len(r) >= 10:
+                if len(r) >= 11:
                     stock.append(r)
                 else:
                     stock_line.append(r)
@@ -3997,18 +4017,18 @@ class mobile_sale_order(osv.osv):
                     mso_result = {
                         'partner_id':customer_id,
                         'sale_team_id':sr['sale_team_id'] ,
-                         'user_id':sr['user_id'] ,
+                        'user_id':sr['user_id'] ,
                         'township_id': township_id,
                         'outlet_type':outlet_type,
                         'date':check_date,
                         'check_datetime':date,
                         'customer_code':sr['customer_code'],
                         'branch_id':sr['branch'],
-                                                    'latitude':sr['latitude'],
-                            'longitude':sr['longitude'],
+                        'latitude':sr['latitude'],
+                        'longitude':sr['longitude'],
+                        'template_id': sr['template_id'],
                     }
                     stock_id = stock_check_obj.create(cursor, user, mso_result, context=context)
-                    
                     for srl in stock_line:
                         if (sr['st_id'] == srl['stock_check_no']):
                             cursor.execute("select sequence from product_product where id =%s", (srl['product_id'],))
@@ -4024,7 +4044,12 @@ class mobile_sale_order(osv.osv):
                                 avaliable = 'yes'
                             else:
                                 avaliable =srl['avail']
-                        
+
+                            if srl['expiry_date'] == 'none':
+                                expiry_date = None
+                            else:
+                                expiry_date = srl['expiry_date']
+
                             mso_line_res = {                                                            
                                       'stock_check_ids':stock_id,
                                       'sequence':sequence,
@@ -4036,6 +4061,7 @@ class mobile_sale_order(osv.osv):
                                       'chiller':(srl['chiller']),
                                       'remark_id':(srl['remark_id']),
                                       'description':(srl['description']),
+                                      'expiry_date': expiry_date,
                                       }
                             stock_check_line_obj.create(cursor, user, mso_line_res, context=context)
             print 'True'
@@ -4066,7 +4092,7 @@ class mobile_sale_order(osv.osv):
             competitor_stock_line = []
             for r in result:
                 print "length", len(r)
-                if len(r) >= 10:
+                if len(r) >= 11:
                     stock.append(r)
                 else:
                     competitor_stock_line.append(r)
@@ -4107,6 +4133,7 @@ class mobile_sale_order(osv.osv):
                             'branch_id': sr['branch'],
                             'latitude': sr['latitude'],
                             'longitude': sr['longitude'],
+                            'template_id': sr['template_id'],
                         }
                         stock_id = stock_check_obj.create(cursor, user, mso_result, context=context)
                     for csl in competitor_stock_line:
@@ -4117,6 +4144,12 @@ class mobile_sale_order(osv.osv):
                                 sequence = competitor_product_data[0]
                             else:
                                 sequence = None
+
+                            if csl['expiry_date'] == 'none':
+                                expiry_date = None
+                            else:
+                                expiry_date = csl['expiry_date']
+
                             csl_line_res = {
                                 'stock_check_ids': stock_id,
                                 'sequence': sequence,
@@ -4128,6 +4161,7 @@ class mobile_sale_order(osv.osv):
                                 'chiller': (csl['chiller']),
                                 'remark_id': (csl['remark_id']),
                                 'description': (csl['description']),
+                                'expiry_date': expiry_date,
                             }
                             competitor_stock_check_line_obj.create(cursor, user, csl_line_res, context=context)
             print 'True'

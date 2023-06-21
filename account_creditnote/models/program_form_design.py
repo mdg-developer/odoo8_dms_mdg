@@ -10,7 +10,7 @@ class program_form_design(osv.osv):
                 'to_date': fields.date('To Date'),
                 'term_and_condition': fields.text('Terms and Conditions'),                
                 'amount': fields.float('Amount'),
-                
+                'return_claim': fields.boolean('For Return Claim', default=False),
                 }
     _defaults = {
         'from_date': lambda self,cr,uid,context={}: context.get('from_date', fields.date.context_today(self,cr,uid,context=context)),

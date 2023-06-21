@@ -693,9 +693,10 @@ class sale_order(models.Model):
             return response.get('orders')
         elif instance.woo_version == 'new':
             return response
-    
+
     @api.model
     def auto_import_woo_sale_order_ept(self):
+        logging.warning("***Starting woo order auto import***")
         woo_instance_obj=self.env['woo.instance.ept']
         ctx = dict(self._context) or {}
         woo_instance_id = ctx.get('woo_instance_id',False)
@@ -705,8 +706,9 @@ class sale_order(models.Model):
             self.import_woo_orders(instance)
         elif instance and instance.woo_version == 'new':
             self.import_new_woo_orders(instance)
+        logging.warning("***Ended woo order auto import***")
         return True
-    
+
     @api.model
     def update_woo_cancel_sale_order_ept(self):
         woo_instance_obj=self.env['woo.instance.ept']
@@ -1060,6 +1062,8 @@ class sale_order(models.Model):
                     self.create_woo_sale_order_line({},tax_ids,instance.discount_product_id,woo_product_uom,1,fiscal_position,partner,pricelist_id,instance.discount_product_id.name,sale_order,discount_value*-1)
                 fee_lines = order.get("fee_lines",[])
                 fee_discount_id = None
+                fee_product_id = None
+                fee_product_uom_id = None
                 for fee_line in fee_lines:
                     fee_value = fee_line.get("total")
                     fee = fee_line.get("title")

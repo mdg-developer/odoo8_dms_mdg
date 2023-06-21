@@ -54,6 +54,7 @@
 								<field name="approved_user_id" />
 								<field name="from_date" readonly="1" />
 								<field name="to_date" readonly="1" />
+								<field name="sales_return_id" />
 							</group>
 						</group>
 						<group>
@@ -145,6 +146,21 @@
 
 		<menuitem action="action_creditnote" id="menu_creditnote"
 			parent="account.menu_finance_receivables" sequence="100" />
+
+		<record model="ir.ui.view" id="view_exchange_product_form_inherit_credit_note">
+			<field name="name">Exchange Product</field>
+			<field name="model">product.transactions</field>
+			<field name="inherit_id" ref="ms_exchange.view_exchange_product_form" />
+			<field name="arch" type="xml">
+				<field name="balance_total" position="after">
+					<field name="credit_note_id" />
+				</field>
+				<button name="action_convert_ep" position="after">
+					<button name="create_credit_note" string="Create Credit Note"
+							type="object" class="oe_highlight" attrs="{'invisible':['|',('exchange_type', '!=', 'Sale Return with Credit Note'),('credit_note_id', '!=', False)]}"/>
+				</button>
+			</field>
+		</record>
 
 	</data>
 </openerp>
