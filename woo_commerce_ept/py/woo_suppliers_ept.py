@@ -1,5 +1,10 @@
 from openerp import models,fields,api
+from requests.structures import CaseInsensitiveDict
 import requests
+import logging
+
+
+_logger = logging.getLogger(__name__)
 
 class woo_suppliers_ept(models.Model):
     _name="woo.suppliers.ept"
@@ -25,50 +30,16 @@ class woo_suppliers_ept(models.Model):
                 data = {'product_supplier': row_data}
             elif instance.woo_version == 'new':
                 data = row_data
-            res = wcapi.post("products/suppliers", data)
-            if not isinstance(res,requests.models.Response):
-                transaction_log_obj.create({'message':"Export Product Suppliers \nResponse is not in proper format :: %s"%(res),
-                                             'mismatch_details':True,
-                                             'type':'tags',
-                                             'woo_instance_id':instance.id
-                                            })
-                continue
-            if res.status_code not in [200,201]:
-                if res.status_code == 500:
-                    response = res.json()
-                    if isinstance(response,dict) and response.get('code')=='term_exists':
-                        woo_product_supplier.write({'woo_supplier_id':response.get('data'),'exported_in_woo':True})
-                        continue
-                    else:
-                        message = res.content
-                        transaction_log_obj.create(
-                                                    {'message':message,
-                                                     'mismatch_details':True,
-                                                     'type':'suppliers',
-                                                     'woo_instance_id':instance.id
-                                                    })
-                        continue
-            response = res.json()
-            product_supplier = False
-            if instance.woo_version == 'old':
-                errors = response.get('errors','')
-                if errors:
-                    message = errors[0].get('message')
-                    message = "%s :: %s"%(message,woo_product_supplier.name)
-                    transaction_log_obj.create(
-                                                {'message':message,
-                                                 'mismatch_details':True,
-                                                 'type':'tags',
-                                                 'woo_instance_id':instance.id
-                                                })
-                    continue
-                product_supplier=response.get('product_supplier',False)
-            elif instance.woo_version == 'new':
-                product_supplier =response
-            product_supplier_id = product_supplier and product_supplier.get('id', False)
-            slug = product_supplier and product_supplier.get('slug', '')
-            if product_supplier_id:
-                woo_product_supplier.write({'woo_supplier_id': product_supplier_id, 'exported_in_woo': True, 'slug': slug})
+            url = instance.host+"/wp-json/product/v1/supplier"
+            headers = CaseInsensitiveDict()
+            headers["Content-Type"] = "application/json"
+            res = requests.post(url, json=row_data)
+            if res:
+                response = res.json()
+                woo_supplier_id = response.get('id',False)
+                slug = response.get('slug',False)
+            if woo_supplier_id:
+                woo_product_supplier.write({'woo_supplier_id': woo_supplier_id, 'exported_in_woo': True, 'slug':slug})
         return True
 
     @api.model
@@ -76,56 +47,20 @@ class woo_suppliers_ept(models.Model):
         transaction_log_obj=self.env['woo.transaction.log']
         wcapi = instance.connect_in_woo()
         for woo_supplier in woo_product_suppliers:
-            row_data = {'name':woo_supplier.name,'description':str(woo_supplier.description or '')}
+            row_data = {'id':woo_supplier.woo_supplier_id,'name':woo_supplier.name,'description':str(woo_supplier.description or '')}
             if woo_supplier.slug:
                 row_data.update({'slug':str(woo_supplier.slug)})
             if instance.woo_version == 'old':
                 data = {"product_supplier": row_data}
             elif instance.woo_version == 'new':
                 data = row_data
-            res = wcapi.put('products/suppliers/%s' % (woo_supplier.woo_supplier_id), data)
-            if not isinstance(res, requests.models.Response):
-                transaction_log_obj.create({'message':"Get Product Suppliers \nResponse is not in proper format :: %s"%(res),
-                                             'mismatch_details':True,
-                                             'type':'suppliers',
-                                             'woo_instance_id':instance.id
-                                            })
-                continue
-            if res.status_code not in [200,201]:
-                transaction_log_obj.create(
-                                                {'message':res.content,
-                                                 'mismatch_details':True,
-                                                 'type':'suppliers',
-                                                 'woo_instance_id':instance.id
-                                                })
-                continue
+            url = instance.host+"/wp-json/product/v1/supplier_update/"
+            headers = CaseInsensitiveDict()
+            headers["Content-Type"] = "application/json"
+            res = requests.post(url, json=row_data)
             response = res.json()
-            response_data = {}
-            if not isinstance(response, dict):
-                transaction_log_obj.create(
-                                            {'message':"Response is not in proper format,Please Check Details",
-                                             'mismatch_details':True,
-                                             'type':'suppliers',
-                                             'woo_instance_id':instance.id
-                                            })
-                continue
-            if instance.woo_version == 'old':
-                errors = response.get('errors','')
-                if errors:
-                    message = errors[0].get('message')
-                    transaction_log_obj.create(
-                                                {'message':message,
-                                                 'mismatch_details':True,
-                                                 'type':'suppliers',
-                                                 'woo_instance_id':instance.id
-                                                })
-                    continue
-                else:
-                    response_data = response.get('product_suppliers')
-            else:
-                response_data = response
-            if response_data:
-                woo_supplier.write({'slug':response_data.get('slug')})
+            if response:
+                _logger.info('woo supplier update complete')
         return True
 
     def import_all_suppliers(self,wcapi,instance,transaction_log_obj,page):
@@ -248,18 +183,3 @@ class woo_suppliers_ept(models.Model):
                     self.create({'woo_supplier_id':supplier_id,'name':name,'description':description,
                                  'slug':slug,'woo_instance_id':instance.id,'exported_in_woo':True})
         return True
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

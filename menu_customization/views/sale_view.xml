@@ -845,32 +845,32 @@
 			parent="base.menu_base_config" sequence="2" />
 
 		<menuitem action="product.product_category_action_form"
-			groups="base.group_no_one" id="menu_product_category_action_form_sale"
-			parent="product_menu_sale" sequence="1" />
+			name="MDG Category" groups="base.group_no_one" id="menu_product_category_action_form_sale"
+			parent="product_menu_sale" sequence="50" />
 
 		<menuitem id="product_maingroup_menu_sale" parent="product_menu_sale"
-			name="Product Principal" action="product_product.action_product_maingroup_view"
-			sequence="50" groups="base.group_system" />
+			name="MDG Principal" action="product_product.action_product_maingroup_view"
+			sequence="1" groups="base.group_system" />
 
 		<menuitem id="product_group_menu_sale" parent="product_menu_sale"
-			name="Product Sub Group" action="product_product.action_product_group_view"
-			groups="base.group_system" />
+			name="Burmart" action="product_product.action_product_group_view"
+			sequence="54" groups="base.group_system" />
 
 		<menuitem id="product_brand_menu" parent="product_menu_sale"
 			name="Product Brands" action="connect_with_ecommerce.action_product_brand_view"
-			sequence="51" groups="base.group_system" />
+			sequence="52" groups="base.group_system" />
 
 		<menuitem id="product_tag_menu" parent="product_menu_sale"
 			name="Product Tags" action="connect_with_ecommerce.action_product_tag_view"
-			sequence="52" groups="base.group_system" />
+			sequence="55" groups="base.group_system" />
 
 		<menuitem id="product_supplier_menu" parent="product_menu_sale"
 			name="Product Suppliers" action="connect_with_ecommerce.action_product_supplier_view"
-			sequence="53" groups="base.group_system" />
+			sequence="51" groups="base.group_system" />
 
 		<menuitem id="product_department_menu" parent="product_menu_sale"
-			name="Product Department" action="connect_with_ecommerce.action_product_department_view"
-			sequence="54" groups="base.group_system" />
+			name="Burmart Departments" action="connect_with_ecommerce.action_product_department_view"
+			sequence="53" groups="base.group_system" />
 
 		<!-- Product Category -->
 		<menuitem id="product_product.product_menu" name="Products Configuration"

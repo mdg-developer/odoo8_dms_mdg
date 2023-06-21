@@ -45,6 +45,7 @@
                    <div class="oe_title" style="width: 390px;">
                        <label class="oe_edit_only" for="name" string="Title"/>
                        <h1><field name="name" class="oe_inline"/></h1>
+					   <h1><field name="myanmar_name" class="oe_inline"/></h1>
                    </div>
                    <field name="website_published" invisible="1"/>
                    <button name="woo_published" class="pull-right"  type="object" string="Click to Publish" attrs="{'invisible': ['|',('exported_in_woo','=',False),('website_published','=',True)]}"/>
@@ -59,6 +60,9 @@
 							<group>								
 								<field name="woo_categ_ids" widget="many2many_tags"/>
 								<field name="woo_tag_ids" widget="many2many_tags"/>
+								<field name="woo_brand_id"/>
+								<field name="woo_supplier_id"/>
+								<field name="woo_department_id"/>
 							</group>
 							<group>
 								<field name="created_at" readonly="1"/>

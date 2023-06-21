@@ -4,6 +4,7 @@ import requests
 import json
 import logging
 import ast
+import re
 from pyfcm import FCMNotification
 
 _logger = logging.getLogger(__name__)
@@ -11,6 +12,7 @@ _logger = logging.getLogger(__name__)
 class product_approval(models.Model):
     _name = "product.approval"
     _description = "Product Approval"
+    _inherit = ['mail.thread']
 
     state = fields.Selection([('draft', 'Draft'),('pending','Pending'),('approved','Approved'),('done','Done')], 'State', default='draft')
     product_name = fields.Char('Product Name',size=45)
@@ -25,10 +27,10 @@ class product_approval(models.Model):
     default_code = fields.Char('Internal Reference')
     sequence = fields.Integer('Sequence')
     product_principal_id = fields.Many2one('product.maingroup','Product Principal')
-    product_group_id = fields.Many2one('product.group','Burmart Categories')
-    product_category_id = fields.Many2one('product.category','MDG Categories')
+    product_group_id = fields.Many2one('product.group','Burmart')
+    product_category_id = fields.Many2one('product.category','MDG Category')
     barcode_no = fields.Char('Barcode')
-    barcode_ids = fields.One2many('product.multi.barcode', 'product_approval_id', string='Barcodes')
+    # barcode_ids = fields.One2many('product.multi.barcode', 'product_approval_id', string='Barcodes')
     uom_ratio = fields.Char('Packing Size')
     ctn_height = fields.Float('Carton Height')
     cbm_value = fields.Float('Big UOM (cm3)')
@@ -51,15 +53,59 @@ class product_approval(models.Model):
     brand_id = fields.Many2one('product.brand','Product Brand')
     supplier_id = fields.Many2one('product.supplier','Product Supplier')
     department_id = fields.Many2one('product.department','Product Department')
-    uom_price_lines = fields.One2many('product.uom.price','product_id','Uom Price Lines')
+    uom_price_lines = fields.One2many('product.uom.price','product_approval_id','Uom Price Lines')
     uom_lines = fields.Many2many('product.uom')
     purchase_uom_id = fields.Many2one('product.uom','Purchase UOM')
+    updated_by = fields.Many2one('res.users', string="Last Updated By")
+    updated_time = fields.Datetime(string='Last Updated On')
+
+
+    def create(self, cr, uid, vals, context=None):
+        pattern = r"^\S[^!@#$%^&*={}|[\]:';<>,.?/\\]*\S$"
+        product_name = vals.get('product_name')
+        short_name = vals.get('product_short_name')
+        barcode = vals.get('barcode_no')
+        if product_name:
+            # approval_prod_name = self.env['product.approval'].search([('product_name','=',product_name)])
+            # if product_name == approval_prod_name:
+            #     raise osv.except_osv(_('Product Name Error!'), _('Cannot create Product because of duplicate Product Name!!!'))
+            if not re.match(pattern, product_name):
+                raise osv.except_osv(_('Product Name Error!'), _('Product Name Contains front/rear spaces and special characters%s!!!'% (product_name)))
+        if short_name:
+            if not re.match(pattern, short_name):
+                raise osv.except_osv(_('Product Short Name Error!'), _('Product Short Name Contains front/rear spaces and special characters%s!!!'% (short_name)))
+        if barcode:
+            if not re.match(pattern, barcode):
+                raise osv.except_osv(_('Barcode Error!'), _('Barcode Contains front/rear spaces and special characters%s!!!'% (barcode)))
+
+        vals['updated_time'] = fields.datetime.now()
+        vals['updated_by'] = uid
+        return super(product_approval, self).create(cr, uid, vals, context=context)
+    
+    def write(self, cr, uid, ids, vals, context=None):
+        pattern = r"^\S[^!@#$%^&*={}|[\]:';<>,.?/\\]*\S$"
+        product_name = vals.get('product_name')
+        short_name = vals.get('product_short_name')
+        barcode = vals.get('barcode_no')
+        if product_name:
+            if not re.match(pattern, product_name):
+                raise osv.except_osv(_('Product Name Error!'), _('Product Name Contains front/rear spaces and special characters%s!!!'% (product_name)))
+        if short_name:
+            if not re.match(pattern, short_name):
+                raise osv.except_osv(_('Product Short Name Error!'), _('Product Short Name Contains front/rear spaces and special characters%s!!!'% (short_name)))
+        if barcode:
+            if not re.match(pattern, barcode):
+                raise osv.except_osv(_('Barcode Error!'), _('Barcode Contains front/rear spaces and special characters%s!!!'% (barcode)))
+
+        vals['updated_time'] = fields.datetime.now()
+        vals['updated_by'] = uid
+        return super(product_approval, self).write(cr, uid, ids, vals, context=context)
 
     @api.one
-    @api.onchange('uom_id')
+    @api.onchange('base_uom_id')
     def on_change_uom_id(self):
-        if self.uom_id:
-            self.uom_po_id = self.uom_id
+        if self.base_uom_id:
+            self.purchase_uom_id = self.base_uom_id
 
     @api.one
     @api.onchange('ctn_weight')
@@ -90,7 +136,19 @@ class product_approval(models.Model):
     @api.multi
     def action_done(self):
         vals = {}
+        tag_list = []
+        price_line_list = []
+        uom_list = []
+        barcode_list = []
         for item in self:
+            for tag_id in item.tag_ids:
+                tag_list.append(tag_id.id)
+            for price_line in item.uom_price_lines:
+                price_line_list.append(price_line.id)
+            for uom in item.uom_lines:
+                uom_list.append(uom.id)
+            # for barcode in item.barcode_ids:
+            #     barcode_list.append(barcode.id)
             vals.update({
                 'name': item.product_name or '',
                 'short_name': item.product_short_name or '',
@@ -106,7 +164,7 @@ class product_approval(models.Model):
                 'group': item.product_group_id.id or '',
                 'categ_id': item.product_category_id.id or '',
                 'barcode_no': item.barcode_no or '',
-                'barcode_ids': item.barcode_ids or '',
+                'barcode_ids': [(6, 0, barcode_list)],
                 'uom_ratio': item.uom_ratio or '',
                 'ctn_weight': item.ctn_weight or '',
                 'ctn_height': item.ctn_height or '',
@@ -122,12 +180,15 @@ class product_approval(models.Model):
                 'big_uom_breadth': item.big_uom_breadth or '',
                 'ctn_height': item.big_uom_height or '',
                 'ctn_pallet_pickface': item.ctn_pallet_pickface or '',
-                'ecommerce_uom_id': item.ecommerce_uom_id or '',
-                'tag_ids': item.tag_ids or '',
+                'ecommerce_uom_id': item.ecommerce_uom_id.id or '',
+                'tag_ids': [(6, 0, tag_list)],
                 'brand_id': item.brand_id.id,
                 'ecommerce_supplier_id': item.supplier_id.id,
                 'ecommerce_department_id': item.department_id.id,
                 'weight': 0.0,
+                'uom_price_lines':[(6,0,price_line_list)],
+                'uom_lines': [(6, 0, uom_list)],
+                'uom_po_id': item.purchase_uom_id.id,
             })
 
             if not item.is_prod_changed:
@@ -164,3 +225,14 @@ class product_approval(models.Model):
     def action_approved(self):
         self.state = 'approved'
 
+    
+class product_multi_barcode(models.Model):
+    _inherit = 'product.multi.barcode'
+
+    product_approval_id = fields.Many2one('product.approval', string="Product Approval")
+
+
+class product_uom_price(models.Model):
+    _inherit = 'product.uom.price'
+
+    product_approval_id = fields.Many2one('product.approval', string="Product Approval")

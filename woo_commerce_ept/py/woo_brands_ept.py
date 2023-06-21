@@ -1,5 +1,10 @@
 from openerp import models,fields,api
 import requests
+import logging
+from requests.structures import CaseInsensitiveDict
+
+
+_logger = logging.getLogger(__name__)
 
 class woo_brands_ept(models.Model):
     _name="woo.brands.ept"
@@ -25,14 +30,10 @@ class woo_brands_ept(models.Model):
                 data = {'product_brand': row_data}
             elif instance.woo_version == 'new':
                 data = row_data
-            res = wcapi.post("products/brands", data)
-            if not isinstance(res,requests.models.Response):
-                transaction_log_obj.create({'message':"Export Product Brands \nResponse is not in proper format :: %s"%(res),
-                                             'mismatch_details':True,
-                                             'type':'brands',
-                                             'woo_instance_id':instance.id
-                                            })
-                continue
+            url = instance.host+"/wp-json/product/v1/brands"
+            headers = CaseInsensitiveDict()
+            headers["Content-Type"] = "application/json"
+            res = requests.post(url, json=row_data, headers=headers)
             if res.status_code not in [200,201]:
                 if res.status_code == 500:
                     response = res.json()
@@ -44,31 +45,16 @@ class woo_brands_ept(models.Model):
                         transaction_log_obj.create(
                                                     {'message':message,
                                                      'mismatch_details':True,
-                                                     'type':'brands',
+                                                     'type':'tags',
                                                      'woo_instance_id':instance.id
                                                     })
                         continue
             response = res.json()
-            product_brand = False
-            if instance.woo_version == 'old':
-                errors = response.get('errors','')
-                if errors:
-                    message = errors[0].get('message')
-                    message = "%s :: %s"%(message,woo_product_brand.name)
-                    transaction_log_obj.create(
-                                                {'message':message,
-                                                 'mismatch_details':True,
-                                                 'type':'brands',
-                                                 'woo_instance_id':instance.id
-                                                })
-                    continue
-                product_brand=response.get('product_brand',False)
-            elif instance.woo_version == 'new':
-                product_brand =response
-            product_brand_id = product_brand and product_brand.get('id', False)
-            slug = product_brand and product_brand.get('slug', '')
+            if response:
+                product_brand_id =response.get('id',False)
+                slug = response.get('slug',False)
             if product_brand_id:
-                woo_product_brand.write({'woo_brand_id': product_brand_id, 'exported_in_woo': True, 'slug': slug})
+                woo_product_brand.write({'woo_brand_id': product_brand_id, 'exported_in_woo': True, 'slug':slug})
         return True
 
     @api.model
@@ -76,56 +62,20 @@ class woo_brands_ept(models.Model):
         transaction_log_obj=self.env['woo.transaction.log']
         wcapi = instance.connect_in_woo()
         for woo_brand in woo_product_brands:
-            row_data = {'name':woo_brand.name,'description':str(woo_brand.description or '')}
+            row_data = {'id':woo_brand.woo_brand_id,'name':woo_brand.name,'description':str(woo_brand.description or '')}
             if woo_brand.slug:
                 row_data.update({'slug':str(woo_brand.slug)})
             if instance.woo_version == 'old':
                 data = {"product_brand": row_data}
             elif instance.woo_version == 'new':
                 data = row_data
-            res = wcapi.put('products/brands/%s' % (woo_brand.woo_brand_id), data)
-            if not isinstance(res, requests.models.Response):
-                transaction_log_obj.create({'message':"Get Product Brands \nResponse is not in proper format :: %s"%(res),
-                                             'mismatch_details':True,
-                                             'type':'brands',
-                                             'woo_instance_id':instance.id
-                                            })
-                continue
-            if res.status_code not in [200,201]:
-                transaction_log_obj.create(
-                                                {'message':res.content,
-                                                 'mismatch_details':True,
-                                                 'type':'brands',
-                                                 'woo_instance_id':instance.id
-                                                })
-                continue
+            url = instance.host+"/wp-json/product/v1/brands_update/"
+            headers = CaseInsensitiveDict()
+            headers["Content-Type"] = "application/json"
+            res = requests.post(url, json=row_data)
             response = res.json()
-            response_data = {}
-            if not isinstance(response, dict):
-                transaction_log_obj.create(
-                                            {'message':"Response is not in proper format,Please Check Details",
-                                             'mismatch_details':True,
-                                             'type':'brands',
-                                             'woo_instance_id':instance.id
-                                            })
-                continue
-            if instance.woo_version == 'old':
-                errors = response.get('errors','')
-                if errors:
-                    message = errors[0].get('message')
-                    transaction_log_obj.create(
-                                                {'message':message,
-                                                 'mismatch_details':True,
-                                                 'type':'brands',
-                                                 'woo_instance_id':instance.id
-                                                })
-                    continue
-                else:
-                    response_data = response.get('product_brands')
-            else:
-                response_data = response
-            if response_data:
-                woo_brand.write({'slug':response_data.get('slug')})
+            if response:
+                _logger.info('woo brand update complete')
         return True
 
     def import_all_brands(self,wcapi,instance,transaction_log_obj,page):
@@ -167,16 +117,16 @@ class woo_brands_ept(models.Model):
         transaction_log_obj=self.env["woo.transaction.log"]
         wcapi = instance.connect_in_woo()
         if woo_product_brand and woo_product_brand.exported_in_woo:
-            res = wcapi.get("products/brands/%s"%(woo_product_brand.woo_brand_id))
+            res = wcapi.get("products/brands/%s"%(woo_product_brand.woo_tag_id))
             if not isinstance(res,requests.models.Response):
                 transaction_log_obj.create({'message':"Get Product Brands \nResponse is not in proper format :: %s"%(res),
                                                  'mismatch_details':True,
-                                                 'type':'brands',
+                                                 'type':'tags',
                                                  'woo_instance_id':instance.id
                                                 })
                 return True
             if res.status_code == 404:
-                self.export_product_brands(instance, [woo_product_brand])
+                self.export_product_tags(instance, [woo_product_brand])
                 return True
             if res.status_code not in [200,201]:
                 transaction_log_obj.create(
@@ -205,7 +155,7 @@ class woo_brands_ept(models.Model):
             if res.status_code  not in [200,201]:
                 transaction_log_obj.create({'message':"Get Product Brands \nResponse is not in proper format :: %s"%(res.content),
                                                  'mismatch_details':True,
-                                                 'type':'brands',
+                                                 'type':'tags',
                                                  'woo_instance_id':instance.id
                                                 })
                 return True
@@ -229,7 +179,7 @@ class woo_brands_ept(models.Model):
                 results = res
             if total_pages >=2:
                 for page in range(2,int(total_pages)+1):
-                    results = results + self.import_all_brands(wcapi,instance,transaction_log_obj,page)
+                    results = results + self.import_all_tags(wcapi,instance,transaction_log_obj,page)
 
             for res in results:
                 if not isinstance(res, dict):
@@ -248,18 +198,3 @@ class woo_brands_ept(models.Model):
                     self.create({'woo_brand_id':brand_id,'name':name,'description':description,
                                  'slug':slug,'woo_instance_id':instance.id,'exported_in_woo':True})
         return True
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

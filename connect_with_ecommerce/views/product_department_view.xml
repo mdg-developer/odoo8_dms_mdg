@@ -23,7 +23,7 @@
 		</record>
 
 		<record id="action_product_department_view" model="ir.actions.act_window">
-			<field name="name">Product department</field>
+			<field name="name">Burmart Departments</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">product.department</field>
 			<field name="view_type">form</field>
@@ -32,7 +32,7 @@
 		</record>
 
 		<menuitem id="product_department_menu" parent="product_product.product_menu"
-			name="Product Department" action="action_product_department_view" groups="base.group_system" />
+			name="Burmart Departments" action="action_product_department_view" groups="base.group_system" />
 
 	</data>
 </openerp>

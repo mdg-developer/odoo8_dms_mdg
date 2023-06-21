@@ -11,7 +11,7 @@
 						<field name="name" />
 					</group>
 				</form>
-			</field>
+			</field> 
 		</record>
 
 		<!-- Product Brand Tree -->
@@ -27,7 +27,7 @@
 
 		<!-- Product Group Action -->
 		<record id="action_product_brand_view" model="ir.actions.act_window">
-			<field name="name">Product Brand</field>
+			<field name="name">Product Brands</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">product.brand</field>
 			<field name="view_type">form</field>
@@ -37,7 +37,7 @@
 
 		<!-- Product Brand Menu -->
 		<menuitem id="product_brand_menu" parent="product_product.product_menu"
-			name="Product Brand" action="action_product_brand_view" groups="base.group_system" />
+			name="Product Brands" action="action_product_brand_view" groups="base.group_system" />
 
 	</data>
 </openerp>

@@ -26,7 +26,7 @@
             </field>
         </record>
         <record id="product_woo_brands_tree_view_ept" model="ir.ui.view">
-            <field name="name">Woo Brands</field>
+            <field name="name">woo Brands</field>
             <field name="model">woo.brands.ept</field>
             <field name="arch" type="xml">
                 <tree string="Product Product Categories">
@@ -49,11 +49,11 @@
 					<filter string="Exported In Woo" icon="terp-accessories-archiver" domain="[('exported_in_woo','=','True')]"/>
                 	<filter string="Not Exported In Woo" icon="terp-accessories-archiver" domain="[('exported_in_woo','=','False')]"/>
 					<group expand="0" string="Group By...">
-						 <filter string="Instance" icon="terp-personal"  context="{'group_by':'woo_instance_id'}"/>
-					</group>
+						 <filter string="Instance" icon="terp-personal"  context="{'group_by':'woo_instance_id'}"/>						 						 
+					</group>  					
 				</search>
 			</field>
-	    </record>
+	    </record> 
         <record id="product_brands_action_ept" model="ir.actions.act_window">
             <field name="name">Product Brands</field>
             <field name="type">ir.actions.act_window</field>

@@ -7,15 +7,23 @@ class ProductMultiBarcode(osv.osv):
                 'name' : fields.char('Barcode', required=True),
                 'product_tmpl_id' : fields.many2one('product.template', string="Product", required=True, ondelete='cascade'),
                 'product_info_id': fields.many2one('product.info', string="Product Info", ondelete='cascade'),
-                'product_approval_id': fields.many2one('product.approval', string="Product Approval", ondelete='cascade'),
+                'product_approval_id' : fields.many2one('product.approval', string="Product Approval",ondelete='cascade')
     }
 
     def create(self, cursor, user, vals, context=None):
-        if not "product_tmpl_id" in vals and "product_info_id" in vals:
+        if not "product_tmpl_id" in vals and "product_info_id" in vals and "product_approval_id" in vals:
             product_info_id = vals['product_info_id']
             product_tmpl_id = self.pool('product.info').browse(cursor,user,product_info_id).product_tmpl_id.id
             vals['product_tmpl_id']=product_tmpl_id
 
+            product_approval_id =  vals['product_approval_id']
+            approval_obj = self.pool('product.approval').browse(cursor,user,product_approval_id)
+            if approval_obj.product_tmpl_id:
+                approval_tmpl_id = approval_obj.product_tmpl_id.id
+                vals['product_tmpl_id'] = approval_tmpl_id
+
+
+            
         return super(ProductMultiBarcode, self).create(cursor, user, vals, context=context)
 
 

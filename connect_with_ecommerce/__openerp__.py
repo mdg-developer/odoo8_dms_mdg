@@ -64,7 +64,6 @@ Connect With Ecommerce
         'wizards/mobile_sync_view.xml',
         'views/product_brand_view.xml',
         'views/product_group_view.xml',
-        'views/product_template_sequence.xml',
         'views/product_tag_view.xml',
         'views/product_uom_view.xml',
         'views/product_supplier_view.xml',

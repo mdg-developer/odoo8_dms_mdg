@@ -1,5 +1,10 @@
 from openerp import models,fields,api
 import requests
+from requests.structures import CaseInsensitiveDict
+import logging
+
+_logger = logging.getLogger(__name__)
+
 
 class woo_departments_ept(models.Model):
     _name="woo.departments.ept"
@@ -25,50 +30,14 @@ class woo_departments_ept(models.Model):
                 data = {'product_department': row_data}
             elif instance.woo_version == 'new':
                 data = row_data
-            res = wcapi.post("products/departments", data)
-            if not isinstance(res,requests.models.Response):
-                transaction_log_obj.create({'message':"Export Product Departments \nResponse is not in proper format :: %s"%(res),
-                                             'mismatch_details':True,
-                                             'type':'tags',
-                                             'woo_instance_id':instance.id
-                                            })
-                continue
-            if res.status_code not in [200,201]:
-                if res.status_code == 500:
-                    response = res.json()
-                    if isinstance(response,dict) and response.get('code')=='term_exists':
-                        woo_product_department.write({'woo_department_id':response.get('data'),'exported_in_woo':True})
-                        continue
-                    else:
-                        message = res.content
-                        transaction_log_obj.create(
-                                                    {'message':message,
-                                                     'mismatch_details':True,
-                                                     'type':'tags',
-                                                     'woo_instance_id':instance.id
-                                                    })
-                        continue
-            response = res.json()
-            product_department = False
-            if instance.woo_version == 'old':
-                errors = response.get('errors','')
-                if errors:
-                    message = errors[0].get('message')
-                    message = "%s :: %s"%(message,woo_product_department.name)
-                    transaction_log_obj.create(
-                                                {'message':message,
-                                                 'mismatch_details':True,
-                                                 'type':'tags',
-                                                 'woo_instance_id':instance.id
-                                                })
-                    continue
-                product_department=response.get('product_department',False)
-            elif instance.woo_version == 'new':
-                product_department =response
-            product_department_id = product_department and product_department.get('id', False)
-            slug = product_department and product_department.get('slug', '')
-            if product_department_id:
-                woo_product_department.write({'woo_department_id': product_department_id, 'exported_in_woo': True, 'slug': slug})
+            url = instance.host+"/wp-json/product/v1/department"
+            res = requests.post(url, json=row_data)
+            if res:
+                response = res.json()
+                woo_department_id = response.get('id',False)
+                slug = response.get('slug',False)
+            if woo_department_id:
+                woo_product_department.write({'woo_department_id': woo_department_id, 'exported_in_woo': True, 'slug':slug})
         return True
 
     @api.model
@@ -83,49 +52,13 @@ class woo_departments_ept(models.Model):
                 data = {"product_department": row_data}
             elif instance.woo_version == 'new':
                 data = row_data
-            res = wcapi.put('products/departments/%s' % (woo_department.woo_department_id), data)
-            if not isinstance(res, requests.models.Response):
-                transaction_log_obj.create({'message':"Get Product Departments \nResponse is not in proper format :: %s"%(res),
-                                             'mismatch_details':True,
-                                             'type':'departments',
-                                             'woo_instance_id':instance.id
-                                            })
-                continue
-            if res.status_code not in [200,201]:
-                transaction_log_obj.create(
-                                                {'message':res.content,
-                                                 'mismatch_details':True,
-                                                 'type':'departments',
-                                                 'woo_instance_id':instance.id
-                                                })
-                continue
+            url = instance.host+"/wp-json/product/v1/department_update/"
+            headers = CaseInsensitiveDict()
+            headers["Content-Type"] = "application/json"
+            res = requests.post(url, json=row_data)
             response = res.json()
-            response_data = {}
-            if not isinstance(response, dict):
-                transaction_log_obj.create(
-                                            {'message':"Response is not in proper format,Please Check Details",
-                                             'mismatch_details':True,
-                                             'type':'departments',
-                                             'woo_instance_id':instance.id
-                                            })
-                continue
-            if instance.woo_version == 'old':
-                errors = response.get('errors','')
-                if errors:
-                    message = errors[0].get('message')
-                    transaction_log_obj.create(
-                                                {'message':message,
-                                                 'mismatch_details':True,
-                                                 'type':'departments',
-                                                 'woo_instance_id':instance.id
-                                                })
-                    continue
-                else:
-                    response_data = response.get('product_departments')
-            else:
-                response_data = response
-            if response_data:
-                woo_department.write({'slug':response_data.get('slug')})
+            if response:
+                _logger.info('woo department update complete')
         return True
 
     def import_all_departments(self,wcapi,instance,transaction_log_obj,page):

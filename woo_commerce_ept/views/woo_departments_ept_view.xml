@@ -55,12 +55,12 @@
 			</field>
 	    </record>
         <record id="product_departments_action_ept" model="ir.actions.act_window">
-            <field name="name">Product departments</field>
+            <field name="name">Product Departments</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">woo.departments.ept</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem action="product_departments_action_ept" id="product_departments_menu_ept" parent="woo_commerce_ept.menu_item_parent_woo_products_ept" sequence="11" />
+        <menuitem action="product_departments_action_ept" id="product_departments_menu_ept" parent="woo_commerce_ept.menu_item_parent_woo_products_ept" sequence="13" />
     </data>
 </openerp>

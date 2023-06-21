@@ -1,6 +1,9 @@
 from openerp import models, fields, api, _
 from openerp.exceptions import Warning
 from openerp.osv.orm import except_orm
+import logging
+
+_logger = logging.getLogger(__name__)
 
 class woo_process_import_export(models.TransientModel):
     _name = 'woo.process.import.export'   
@@ -83,6 +86,10 @@ class woo_process_import_export(models.TransientModel):
             self.export_product_tags()
         if self.is_update_product_tags:
             self.update_product_tags()
+        if self.is_export_product_brand:
+            self.export_product_brands()
+        if self.is_export_product_supplier:
+            self.export_product_suppliers()
         if self.is_export_product_categ:
             self.export_product_categ()
         if self.is_update_product_categ:
@@ -150,6 +157,144 @@ class woo_process_import_export(models.TransientModel):
             if woo_product_tags:
                 product_tag_obj.update_product_tags_in_woo(instance,woo_product_tags)
         return True    
+    
+    @api.multi
+    def export_product_brands(self):
+        product_brands_obj = self.env['woo.brands.ept']
+        instances = []
+        woo_brand_ids = []
+        if self._context.get('process')=='export_product_brands':
+            woo_brand_ids = self._context.get('active_ids')
+            instances = self.env['woo.instance.ept'].search([('state','=','confirmed')])
+        else:                       
+            instances=self.instance_ids
+             
+        for instance in instances:
+            woo_product_brands=[]
+
+            if woo_brand_ids:
+                woo_product_brands=product_brands_obj.search([('woo_instance_id','=',instance.id),('id','in',woo_brand_ids),('exported_in_woo','=',False)])                
+            else:
+                woo_product_brands=product_brands_obj.search([('woo_instance_id','=',instance.id),('exported_in_woo','=',False)])                
+                
+            if woo_product_brands:
+                product_brands_obj.export_product_brands(instance,woo_product_brands)
+        return True   
+
+    @api.multi
+    def update_product_brands(self):
+        product_brands_obj = self.env['woo.brands.ept']
+        instances = []
+        woo_brand_ids = []
+        if self._context.get('process')=='update_product_brands':
+            woo_brand_ids = self._context.get('active_ids')
+            instances = self.env['woo.instance.ept'].search([('state','=','confirmed')])
+        else:                       
+            instances=self.instance_ids
+             
+        for instance in instances:
+            woo_product_brands=[]
+
+            if woo_brand_ids:
+                woo_product_brands=product_brands_obj.search([('woo_instance_id','=',instance.id),('id','in',woo_brand_ids),('exported_in_woo','=',True)])                
+            else:
+                woo_product_brands=product_brands_obj.search([('woo_instance_id','=',instance.id),('exported_in_woo','=',True)])                
+            
+            if woo_product_brands:
+                product_brands_obj.update_product_brands_in_woo(instance,woo_product_brands)
+        return True   
+
+    @api.multi
+    def export_product_suppliers(self):
+        product_suppliers_obj = self.env['woo.suppliers.ept']
+        instances = []
+        woo_supplier_ids = []
+        if self._context.get('process')=='export_product_suppliers':
+            woo_supplier_ids = self._context.get('active_ids')
+            instances = self.env['woo.instance.ept'].search([('state','=','confirmed')])
+        else:                       
+            instances=self.instance_ids
+             
+        for instance in instances:
+            woo_product_suppliers=[]
+
+            if woo_supplier_ids:
+                woo_product_suppliers=product_suppliers_obj.search([('woo_instance_id','=',instance.id),('id','in',woo_supplier_ids),('exported_in_woo','=',False)])                
+            else:
+                woo_product_suppliers=product_suppliers_obj.search([('woo_instance_id','=',instance.id),('exported_in_woo','=',False)])                
+                
+            if woo_product_suppliers:
+                product_suppliers_obj.export_product_suppliers(instance,woo_product_suppliers)
+        return True   
+
+    @api.multi
+    def update_product_suppliers(self):
+        product_suppliers_obj = self.env['woo.suppliers.ept']
+        instances = []
+        woo_supplier_ids = []
+        if self._context.get('process')=='update_product_suppliers':
+            woo_supplier_ids = self._context.get('active_ids')
+            instances = self.env['woo.instance.ept'].search([('state','=','confirmed')])
+        else:                       
+            instances=self.instance_ids
+             
+        for instance in instances:
+            woo_product_suppliers=[]
+
+            if woo_supplier_ids:
+                woo_product_suppliers=product_suppliers_obj.search([('woo_instance_id','=',instance.id),('id','in',woo_supplier_ids),('exported_in_woo','=',True)])                
+            else:
+                woo_product_suppliers=product_suppliers_obj.search([('woo_instance_id','=',instance.id),('exported_in_woo','=',True)])                
+                
+            if woo_product_suppliers:
+                product_suppliers_obj.update_product_suppliers_in_woo(instance,woo_product_suppliers)
+        return True   
+    
+    @api.multi
+    def export_product_departments(self):
+        product_departments_obj = self.env['woo.departments.ept']
+        instances = []
+        woo_department_ids = []
+        if self._context.get('process')=='export_product_departments':
+            woo_department_ids = self._context.get('active_ids')
+            instances = self.env['woo.instance.ept'].search([('state','=','confirmed')])
+        else:                       
+            instances=self.instance_ids
+             
+        for instance in instances:
+            woo_product_departments=[]
+
+            if woo_department_ids:
+                woo_product_departments=product_departments_obj.search([('woo_instance_id','=',instance.id),('id','in',woo_department_ids),('exported_in_woo','=',False)])                
+            else:
+                woo_product_departments=product_departments_obj.search([('woo_instance_id','=',instance.id),('exported_in_woo','=',False)])                
+                
+            if woo_product_departments:
+                product_departments_obj.export_product_departments(instance,woo_product_departments)
+        return True  
+
+    @api.multi
+    def update_product_departments(self):
+        product_departments_obj = self.env['woo.departments.ept']
+        instances = []
+        woo_department_ids = []
+        if self._context.get('process')=='update_product_departments':
+            woo_department_ids = self._context.get('active_ids')
+            instances = self.env['woo.instance.ept'].search([('state','=','confirmed')])
+        else:                       
+            instances=self.instance_ids
+             
+        for instance in instances:
+            woo_product_departments=[]
+
+            if woo_department_ids:
+                woo_product_departments=product_departments_obj.search([('woo_instance_id','=',instance.id),('id','in',woo_department_ids),('exported_in_woo','=',True)])                
+            else:
+                woo_product_departments=product_departments_obj.search([('woo_instance_id','=',instance.id),('exported_in_woo','=',True)])                
+                
+            if woo_product_departments:
+                product_departments_obj.update_product_departments_in_woo(instance,woo_product_departments)
+        return True  
     
     """This method is used to export coupons from odoo to woocommerce"""
     @api.multi
@@ -270,6 +415,28 @@ class woo_process_import_export(models.TransientModel):
         return True         
     
     @api.multi
+    def sync_product_brands(self):
+        product_brands_obj = self.env['woo.brands.ept']
+        for instance in self.instance_ids:
+            product_brands_obj.sync_product_brands(instance)
+        return True
+
+    @api.multi
+    def sync_product_suppliers(self):
+        product_suppliers_obj = self.env['woo.suppliers.ept']
+        for instance in self.instance_ids:
+            product_suppliers_obj.sync_product_suppliers(instance)
+        return True
+
+    @api.multi
+    def sync_product_departments(self):
+        product_departments_obj = self.env['woo.departments.ept']
+        for instance in self.instance_ids:
+            product_departments_obj.sync_product_departments(instance)
+        return True
+
+    
+    @api.multi
     def import_sale_orders(self):
         sale_order_obj=self.env['sale.order']        
         for instance in self.instance_ids:
@@ -300,12 +467,18 @@ class woo_process_import_export(models.TransientModel):
         woo_product_obj=self.env['woo.product.product.ept']
         woo_product_categ=self.env['woo.product.categ.ept']
         woo_product_tag_obj=self.env['woo.tags.ept']
+        woo_product_brand_obj=self.env['woo.brands.ept']
+        woo_product_supplier_obj=self.env['woo.suppliers.ept']
+        woo_product_department_obj=self.env['woo.departments.ept']
         template_ids=self._context.get('active_ids',[])
         odoo_templates=self.env['product.template'].search([('id','in',template_ids),('type','!=','service')])
         for instance in self.instance_ids:
             for odoo_template in odoo_templates:
                 woo_categ_ids = [(6, 0, [])]
                 final_tag_ids = [(6, 0, [])]
+                woo_brand_id_id = ''
+                woo_supplier_id_id = ''
+                woo_department_id_id = ''
                 woo_template = woo_template_obj.search([('woo_instance_id','=',instance.id),('product_tmpl_id','=',odoo_template.id)])                
                 if not woo_template:
                     categ_name = odoo_template.categ_id.name or ''
@@ -333,6 +506,36 @@ class woo_process_import_export(models.TransientModel):
                         else:
                             woo_categ_id.write({'name':categ_name})
                         woo_categ_ids = [(6, 0, woo_categ_id.ids)]
+                    if odoo_template.brand_id:
+                        brand_name = odoo_template.brand_id.name
+                        self._cr.execute("select id from woo_brands_ept where LOWER(name) = '%s' and woo_instance_id = %s limit 1" %(brand_name,instance.id))
+                        woo_brand_id = self._cr.dictfetchall()
+                        woo_brand_id_id = False
+                        if woo_brand_id:
+                            woo_brand_id_id = woo_product_brand_obj.browse(woo_brand_id)
+                        if not woo_brand_id_id:
+                            woo_brand_data = woo_product_brand_obj.create({'name':brand_name,'woo_instance_id':instance.id})
+                            woo_brand_id_id = woo_brand_data.id
+                    if odoo_template.ecommerce_supplier_id:
+                        supplier_name = odoo_template.ecommerce_supplier_id.name
+                        self._cr.execute("select id from woo_suppliers_ept where LOWER(name) = '%s' and woo_instance_id = %s limit 1" %(supplier_name,instance.id))
+                        woo_supplier_id = self._cr.dictfetchall()
+                        woo_supplier_id_id = False
+                        if woo_supplier_id:
+                            woo_supplier_id_id = woo_product_supplier_obj.browse(woo_supplier_id)
+                        if not woo_supplier_id_id:
+                            woo_supplier_data = woo_product_supplier_obj.create({'name':supplier_name,'woo_instance_id':instance.id})
+                            woo_supplier_id_id = woo_supplier_data.id
+                    if odoo_template.ecommerce_department_id:
+                        department_name = odoo_template.ecommerce_department_id.name
+                        self._cr.execute("select id from woo_departments_ept where LOWER(name) = '%s' and woo_instance_id = %s limit 1" %(department_name,instance.id))
+                        woo_department_id = self._cr.dictfetchall()
+                        woo_department_id_id = False
+                        if woo_department_id:
+                            woo_department_id_id = woo_product_department_obj.browse(woo_department_id)
+                        if not woo_department_id_id:
+                            woo_department_data = woo_product_department_obj.create({'name':department_name,'woo_instance_id':instance.id})
+                            woo_department_id_id = woo_department_data.id
                     if odoo_template.short_name:
                         product_name = odoo_template.short_name
                     else:
@@ -341,7 +544,7 @@ class woo_process_import_export(models.TransientModel):
                         myanmar_name = odoo_template.myanmar_name
                     else:
                         raise except_orm(_('UserError'), _("Please define Myanmar name for %s!") % (odoo_template.name,))
-                    woo_template=woo_template_obj.create({'woo_instance_id':instance.id,'product_tmpl_id':odoo_template.id,'name':product_name,'myanmar_name':myanmar_name,'description':odoo_template.description_sale,'short_description':odoo_template.description,'woo_tag_ids':final_tag_ids})
+                    woo_template=woo_template_obj.create({'woo_instance_id':instance.id,'product_tmpl_id':odoo_template.id,'name':product_name,'myanmar_name':myanmar_name,'description':odoo_template.description_sale,'short_description':odoo_template.description,'woo_tag_ids':final_tag_ids,'woo_brand_id':woo_brand_id_id,'woo_supplier_id':woo_supplier_id_id,'woo_department_id':woo_department_id_id})
                 for variant in odoo_template.product_variant_ids:
                     woo_variant = woo_product_obj.search([('woo_instance_id','=',instance.id),('product_id','=',variant.id)])
                     if not woo_variant:

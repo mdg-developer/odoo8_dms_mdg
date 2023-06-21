@@ -29,7 +29,7 @@
             <field name="name">Woo Suppliers</field>
             <field name="model">woo.suppliers.ept</field>
             <field name="arch" type="xml">
-                <tree string="Product Product Categories">
+                <tree string="Product Suppliers">
                     <field name="name"/>
                     <field name="slug"/>
                     <field name="woo_instance_id"/>
@@ -61,6 +61,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem action="product_suppliers_action_ept" id="product_suppliers_menu_ept" parent="woo_commerce_ept.menu_item_parent_woo_products_ept" sequence="11" />
+        <menuitem action="product_suppliers_action_ept" id="product_suppliers_menu_ept" parent="woo_commerce_ept.menu_item_parent_woo_products_ept" sequence="12" />
     </data>
 </openerp>

@@ -61,7 +61,7 @@ For more information about us, visit www.emiprotechnologies.com \n
              'views/woo_tags_ept.xml',
              'views/woo_brands_ept_view.xml',
              'views/woo_suppliers_ept_view.xml',
-             'views/woo_departments_ept_view.xml',
+             'views/woo_deparments_ept_view.xml',
              'views/woo_product_categ_view.xml',
              'views/account_invoice_view.xml',
              'views/woo_process_job.xml',
