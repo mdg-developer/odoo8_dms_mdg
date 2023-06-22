@@ -25,7 +25,7 @@ class product_approval(models.Model):
     report_uom_id = fields.Many2one('product.uom','Report UOM')
     ecommerce_uom_id = fields.Many2one('product.uom','Ecommerce UOM')
     default_code = fields.Char('Internal Reference')
-    sequence = fields.Integer('Sequence')
+    # sequence = fields.Integer('Sequence')
     product_principal_id = fields.Many2one('product.maingroup','Product Principal')
     product_group_id = fields.Many2one('product.group','Burmart')
     product_category_id = fields.Many2one('product.category','MDG Category')
@@ -58,6 +58,7 @@ class product_approval(models.Model):
     purchase_uom_id = fields.Many2one('product.uom','Purchase UOM')
     updated_by = fields.Many2one('res.users', string="Last Updated By")
     updated_time = fields.Datetime(string='Last Updated On')
+    sale_description =fields.Text('Sale Description')
 
 
     def create(self, cr, uid, vals, context=None):
@@ -153,13 +154,14 @@ class product_approval(models.Model):
                 'name': item.product_name or '',
                 'short_name': item.product_short_name or '',
                 'description': item.description or '',
+                'description_sale': item.sale_description or '',
                 'type': item.product_type or '',
                 'image_medium': item.image_medium or '',
                 'carton_image': item.carton_image or '',
                 'uom_id': item.base_uom_id.id or '',
                 'report_uom_id': item.report_uom_id.id or '',
                 'default_code': item.default_code or '',
-                'sequence': item.sequence or '',
+                # 'sequence': item.sequence or '',
                 'main_group': item.product_principal_id.id or '',
                 'group': item.product_group_id.id or '',
                 'categ_id': item.product_category_id.id or '',

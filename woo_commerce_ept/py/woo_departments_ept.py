@@ -45,7 +45,7 @@ class woo_departments_ept(models.Model):
         transaction_log_obj=self.env['woo.transaction.log']
         wcapi = instance.connect_in_woo()
         for woo_department in woo_product_departments:
-            row_data = {'name':woo_department.name,'description':str(woo_department.description or '')}
+            row_data = {'id':woo_department.woo_department_id,'name':woo_department.name,'description':str(woo_department.description or '')}
             if woo_department.slug:
                 row_data.update({'slug':str(woo_department.slug)})
             if instance.woo_version == 'old':

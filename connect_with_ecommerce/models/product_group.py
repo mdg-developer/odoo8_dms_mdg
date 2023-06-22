@@ -66,6 +66,10 @@ class product_category(osv.osv):
                             'Code should not be same to others!')
             ]
 
+    _defaults = {
+        'code':False
+    }
+
     def action_generate_category_code(self, cr, uid, ids, context=None):
         vals = {}
         code = False
