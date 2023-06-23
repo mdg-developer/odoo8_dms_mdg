@@ -30,7 +30,8 @@ class product_approval(models.Model):
     product_group_id = fields.Many2one('product.group','Burmart')
     product_category_id = fields.Many2one('product.category','MDG Category')
     barcode_no = fields.Char('Barcode')
-    # barcode_ids = fields.One2many('product.multi.barcode', 'product_approval_id', string='Barcodes')
+    barcode_ids = fields.One2many('product.multi.barcode', 'product_approval_id', string='Barcodes')
+    barcode_approval_ids = fields.One2many('product.multi.barcode.approval', 'product_approval_id', string="Product Multi Barcodes")
     uom_ratio = fields.Char('Packing Size')
     ctn_height = fields.Float('Carton Height')
     cbm_value = fields.Float('Big UOM (cm3)')
@@ -56,13 +57,14 @@ class product_approval(models.Model):
     uom_price_lines = fields.One2many('product.uom.price','product_approval_id','Uom Price Lines')
     uom_lines = fields.Many2many('product.uom')
     purchase_uom_id = fields.Many2one('product.uom','Purchase UOM')
-    updated_by = fields.Many2one('res.users', string="Last Updated By")
-    updated_time = fields.Datetime(string='Last Updated On')
+    # updated_by = fields.Many2one('res.users', string="Last Updated By")
+    # updated_time = fields.Datetime(string='Last Updated On')
     sale_description =fields.Text('Sale Description')
 
 
     def create(self, cr, uid, vals, context=None):
-        pattern = r"^\S[^!@#$%^&*={}|[\]:';<>,.?/\\]*\S$"
+        # pattern = r"^\S[^!@#$%^*={}|[\]:';<>,.?/\\]*\S$"
+        pattern = r'^(?!\s|\S.*\s$).+$'
         product_name = vals.get('product_name')
         short_name = vals.get('product_short_name')
         barcode = vals.get('barcode_no')
@@ -71,35 +73,36 @@ class product_approval(models.Model):
             # if product_name == approval_prod_name:
             #     raise osv.except_osv(_('Product Name Error!'), _('Cannot create Product because of duplicate Product Name!!!'))
             if not re.match(pattern, product_name):
-                raise osv.except_osv(_('Product Name Error!'), _('Product Name Contains front/rear spaces and special characters%s!!!'% (product_name)))
+                raise osv.except_osv(_('Product Name Error!'), _('Product Name Contains front/rear spaces %s!!!'% (product_name)))
         if short_name:
             if not re.match(pattern, short_name):
-                raise osv.except_osv(_('Product Short Name Error!'), _('Product Short Name Contains front/rear spaces and special characters%s!!!'% (short_name)))
+                raise osv.except_osv(_('Product Short Name Error!'), _('Product Short Name Contains front/rear spaces %s!!!'% (short_name)))
         if barcode:
             if not re.match(pattern, barcode):
-                raise osv.except_osv(_('Barcode Error!'), _('Barcode Contains front/rear spaces and special characters%s!!!'% (barcode)))
+                raise osv.except_osv(_('Barcode Error!'), _('Barcode Contains front/rear spaces %s!!!'% (barcode)))
 
-        vals['updated_time'] = fields.datetime.now()
-        vals['updated_by'] = uid
+        # vals['updated_time'] = fields.datetime.now()
+        # vals['updated_by'] = uid
         return super(product_approval, self).create(cr, uid, vals, context=context)
     
     def write(self, cr, uid, ids, vals, context=None):
-        pattern = r"^\S[^!@#$%^&*={}|[\]:';<>,.?/\\]*\S$"
+        # pattern = r"^\S[^!@#$%^*={}|[\]:';<>,.?/\\]*\S$"
+        pattern = r'^(?!\s|\S.*\s$).+$'
         product_name = vals.get('product_name')
         short_name = vals.get('product_short_name')
         barcode = vals.get('barcode_no')
         if product_name:
             if not re.match(pattern, product_name):
-                raise osv.except_osv(_('Product Name Error!'), _('Product Name Contains front/rear spaces and special characters%s!!!'% (product_name)))
+                raise osv.except_osv(_('Product Name Error!'), _('Product Name Contains front/rear spaces %s!!!'% (product_name)))
         if short_name:
             if not re.match(pattern, short_name):
-                raise osv.except_osv(_('Product Short Name Error!'), _('Product Short Name Contains front/rear spaces and special characters%s!!!'% (short_name)))
+                raise osv.except_osv(_('Product Short Name Error!'), _('Product Short Name Contains front/rear spaces %s!!!'% (short_name)))
         if barcode:
             if not re.match(pattern, barcode):
-                raise osv.except_osv(_('Barcode Error!'), _('Barcode Contains front/rear spaces and special characters%s!!!'% (barcode)))
+                raise osv.except_osv(_('Barcode Error!'), _('Barcode Contains front/rear spaces %s!!!'% (barcode)))
 
-        vals['updated_time'] = fields.datetime.now()
-        vals['updated_by'] = uid
+        # vals['updated_time'] = fields.datetime.now()
+        # vals['updated_by'] = uid
         return super(product_approval, self).write(cr, uid, ids, vals, context=context)
 
     @api.one
@@ -141,15 +144,15 @@ class product_approval(models.Model):
         price_line_list = []
         uom_list = []
         barcode_list = []
+        old_barcode_list = []
+        new_barcode_list = []
         for item in self:
             for tag_id in item.tag_ids:
                 tag_list.append(tag_id.id)
             for price_line in item.uom_price_lines:
                 price_line_list.append(price_line.id)
             for uom in item.uom_lines:
-                uom_list.append(uom.id)
-            # for barcode in item.barcode_ids:
-            #     barcode_list.append(barcode.id)
+                uom_list.append(uom.id)   
             vals.update({
                 'name': item.product_name or '',
                 'short_name': item.product_short_name or '',
@@ -161,13 +164,13 @@ class product_approval(models.Model):
                 'uom_id': item.base_uom_id.id or '',
                 'report_uom_id': item.report_uom_id.id or '',
                 'default_code': item.default_code or '',
-                # 'sequence': item.sequence or '',
+                'sequence': 0,
                 'main_group': item.product_principal_id.id or '',
                 'group': item.product_group_id.id or '',
                 'categ_id': item.product_category_id.id or '',
                 'barcode_no': item.barcode_no or '',
-                'barcode_ids': [(6, 0, barcode_list)],
-                'uom_ratio': item.uom_ratio or '',
+                # 'barcode_ids': [(6, 0, item.barcode_ids.ids)],
+                'uom_ratio': item.uom_ratio or '', 
                 'ctn_weight': item.ctn_weight or '',
                 'ctn_height': item.ctn_height or '',
                 'cbm_value': item.cbm_value or '',
@@ -200,13 +203,28 @@ class product_approval(models.Model):
                         self.state = 'done'
                         self.product_tmpl_id = product_id
                         self.is_prod_created = True
+                        for barcode in item.barcode_approval_ids:
+                            barcode_list.append((0,0,{'name':barcode.name,'product_tmpl_id':item.product_tmpl_id.id,'product_approval_id':item.id}))
+                            item.write({'barcode_ids':barcode_list})
+                            vals['barcode_ids'] = [(6, 0, item.barcode_ids.ids)]
+                            product_tmpl_obj = self.env['product.template'].browse(product_id.id)
+                            product_tmpl_obj.sudo().update({'barcode_ids':[(6, 0, item.barcode_ids.ids)]})
                 except Exception as e:
                     raise osv.except_osv(_('Product Creation Failed!'), _('Here is why:  %s!!!'% (e)))
             else:
                 try:
+                    # remove existing
+                    for org_barcode in item.barcode_ids:
+                        old_barcode_list.append((2,org_barcode.id))
+                    item.write({'barcode_ids':old_barcode_list})
+                    # add new
+                    for barcode in item.barcode_approval_ids:
+                        new_barcode_list.append((0,0,{'name':barcode.name,'product_tmpl_id':item.product_tmpl_id.id,'product_approval_id':item.id}))
+                    item.write({'barcode_ids':new_barcode_list})
+                    vals['barcode_ids'] = [(6, 0, item.barcode_ids.ids)]
                     product_id = item.product_tmpl_id.sudo().update(vals)
                     self.state = 'done'
-                    self.is_prod_created = True
+                    self.is_prod_changed = True
                 except Exception as e:
                     raise osv.except_osv(_('Product Updating Failed!'), _('Here is why:  %s!!!'% (e)))
 
@@ -227,12 +245,13 @@ class product_approval(models.Model):
     def action_approved(self):
         self.state = 'approved'
 
+class product_multi_barcode_approval(models.Model):
+    _name = 'product.multi.barcode.approval'
+    _description = 'Product Multi Barcode Approval'
+
+    name = fields.Char(string='Barcode',required=True)
+    product_approval_id = fields.Many2one('product.approval', string='Product Approval Id', ondelete='cascade')
     
-class product_multi_barcode(models.Model):
-    _inherit = 'product.multi.barcode'
-
-    product_approval_id = fields.Many2one('product.approval', string="Product Approval")
-
 
 class product_uom_price(models.Model):
     _inherit = 'product.uom.price'

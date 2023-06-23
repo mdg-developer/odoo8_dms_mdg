@@ -32,8 +32,8 @@
 								<field name="sale_description" attrs="{'readonly': [('state','=','done')]}"/>
 								<field name="is_prod_created" readonly="1"/>
 								<field name="is_prod_changed" readonly="1"/>
-								<field name="updated_by" readonly="1"/>
-								<field name="updated_time" readonly="1"/>
+								<field name="write_uid" readonly="1"/>
+								<field name="write_date" readonly="1"/>
 							</group>
 							<group>
 								<h1>
@@ -56,14 +56,14 @@
 											<field name="report_uom_id" attrs="{'readonly': [('state','=','done')]}" required="1" style="width: 30%%"/>
 											<field name="purchase_uom_id" attrs="{'readonly': [('state','=','done')]}" required="1" style="width: 30%%"/>
 											<field name="product_principal_id" attrs="{'readonly': [('state','=','done')]}" required="1" style="width: 30%%"/>
-											<field name="product_category_id" attrs="{'readonly': [('state','=','done')]}" domain="[('product_principal_id', '=', main_group)]" required="1" style="width: 30%%"/>
+											<field name="product_category_id" attrs="{'readonly': [('state','=','done')]}" domain="[('principal_id', '=', product_principal_id)]" required="1" style="width: 30%%"/>
 											<field name="product_group_id" attrs="{'readonly': [('state','=','done')]}" required="1" style="width: 30%%"/>
 											<field name="barcode_no" attrs="{'readonly': [('state','=','done')]}" style="width: 30%%"/>
-											<!-- <field name="barcode_ids" attrs="{'readonly': ['|',('state','!=','done'),('is_prod_created','!=','True')]}" style="width: 30%%">
+											<field name="barcode_approval_ids" attrs="{'readonly': [('state','=','done')]}" style="width: 30%%">
 												<tree editable="bottom">
 	                            					<field name="name" />
 	                        					</tree>
-											</field> -->
+											</field>
 										</group>
 									</group>
 								</page>

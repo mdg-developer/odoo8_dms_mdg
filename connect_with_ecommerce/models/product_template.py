@@ -90,30 +90,25 @@ class product_template(osv.osv):
     
     def generate_product_code(self, cr, uid, ids, context=None):
         vals = {}
-        product_code = ''
-        sequence = 0
-        _logger.info('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+        product_code = 0
         for rec in self.browse(cr, uid, ids, context=None):
             categ_id = rec.categ_id.id
             categ_code = rec.categ_id.code
-            _logger.info('bbbbbbbbbbbbbbbbbbbbbbbbbb')
-            _logger.info('categ_id--------------%s',rec.categ_id)
-            _logger.info('categ_id--------------%s',categ_id)
             if categ_code:
                 _logger.info('categ_id--------------%s',categ_id)
                 cr.execute(""" select id,sequence from product_template where categ_id = %s and is_generated_code=True order by sequence desc limit 1;""",(categ_id,))
                 records = cr.dictfetchall()
-                _logger.info('cccccccccccccccccccccccccccccccc')
-                sequence = '001'
+                # sequence = '001'
+                sku_code = '001'
                 if records:
                     for rec in records:
                         if rec['sequence'] != None:
                             sequence = rec['sequence']
+                            _logger.info('sequence--------------%s',sequence)
                             sequence = int(sequence) + 1
-                            sequence = "%03d" % sequence
-                        product_code = categ_code + sequence
+                        product_code = sequence
                 else:
-                    product_code = categ_code + sequence
+                    product_code = categ_code + sku_code
         vals.update({'sequence':product_code,'is_generated_code':True})
         return self.write(cr, uid, ids, vals)
 
