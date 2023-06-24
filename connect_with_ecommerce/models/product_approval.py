@@ -132,7 +132,8 @@ class product_approval(models.Model):
             domain['ecommerce_uom_id'] = [('id','in',(base_uom,report_uom))]
         return {'domain':domain}
 
-    @api.onchange('big_uom_height')
+    @api.one
+    @api.onchange('ctn_height')
     def on_change_lenght_breadth_height(self):
         cbm_value = self.big_uom_length * self.big_uom_breadth * self.ctn_height
         self.cbm_value = cbm_value

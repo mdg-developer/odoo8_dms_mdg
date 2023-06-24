@@ -24,8 +24,8 @@
 							<group>
 								<field name="image_medium" widget="image" class="oe_avatar oe_left" attrs="{'readonly': [('state','=','done')]}" style="width: 55%%"/>
 								<field name="carton_image" widget="image" class="oe_avatar oe_left" attrs="{'readonly': [('state','=','done')]}" style="width: 55%%"/>
-								<field name="product_name" attrs="{'readonly': ['|',('is_prod_created','=',True),('state','=','done')]}" required="1"  style="width: 80%%"/>
-								<field name="product_short_name" attrs="{'readonly': [('state','=','done')]}" required="1" style="width: 80%%"/>
+								<field name="product_name" attrs="{'readonly': ['|',('is_prod_created','=',True),('state','=','done')]}" required="1"  style="width: 90%%"/>
+								<field name="product_short_name" attrs="{'readonly': [('state','=','done')]}" required="1" style="width: 90%%"/>
 								<field name="default_code" attrs="{'readonly': [('state','=','done')]}" required="1" style="width: 55%%"/>
 								<!-- <field name="sequence" attrs="{'readonly': [('state','=','done')]}" required="1" style="width: 55%%"/> -->
 								<field name="description" attrs="{'readonly': [('state','=','done')]}"/>
@@ -118,14 +118,14 @@
 										<group>
 											<field name="small_uom_weight" attrs="{'readonly': [('state','=','done')]}" style="width: 55%%"/>
 											<field name="ctn_weight"  attrs="{'readonly': [('state','=','done')]}" style="width: 55%%"/>
-											<field name="viss_value" string='Weight (Viss)' readonly="1" style="width: 55%%"/>
+											<field name="viss_value" attrs="{'readonly': [('state','=','done')]}" string='Big UOM Weight (Viss)' style="width: 55%%"/>
 											<field name="big_uom_length" attrs="{'readonly': [('state','=','done')]}" style="width: 55%%"/>
 											<field name="big_uom_breadth" attrs="{'readonly': [('state','=','done')]}" style="width: 55%%"/>
 											<field name="ctn_height" string='Big UOM (H) cm' attrs="{'readonly': [('state','=','done')]}" style="width: 55%%"/>
-											<field name="cbm_value" string='Big UOM CBM(cm3)' readonly="1" style="width: 55%%"/>
+											<field name="cbm_value" string='Big UOM CBM(cm3)' attrs="{'readonly': [('state','=','done')]}" style="width: 55%%"/>
 											<field name="ti" attrs="{'readonly': [('state','=','done')]}" style="width: 55%%"/>
 											<field name="hi" attrs="{'readonly': [('state','=','done')]}" style="width: 55%%"/>
-											<field name="ctn_pallet" readonly="1" style="width: 55%%"/>
+											<field name="ctn_pallet" attrs="{'readonly': [('state','=','done')]}" style="width: 55%%"/>
 											<field name="ctn_pallet_pickface" attrs="{'readonly': [('state','=','done')]}" style="width: 55%%"/>
 											<field name="inbound_shelf_life" string="Inbound Shelf Life (Maximum Days)" attrs="{'readonly': [('state','=','done')]}" style="width: 55%%"/>
 											<field name="inbound_shelf_life_min" string="Inbound Shelf Life (Minimum Days)" attrs="{'readonly': [('state','=','done')]}" style="width: 55%%"/>
