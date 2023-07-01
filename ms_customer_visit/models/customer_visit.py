@@ -72,6 +72,8 @@ class customer_visit(osv.osv):
         'rejected_date':fields.datetime('Rejected Date'),
         'validated_date':fields.datetime('Validated Date'),
         'visit_reason_id': fields.many2one('visit.reason', 'Visit Reason', required=True),
+        'offline': fields.boolean('Is Offline', default=False),
+        'date_difference': fields.char('Difference Date'),
     }
     _defaults = {        
         'm_status' : 'pending',
@@ -160,6 +162,27 @@ class customer_visit(osv.osv):
         help="Small-sized image of this contact. It is automatically "\
              "resized as a 64x64px image, with aspect ratio preserved. "\
              "Use this field anywhere a small image is required.")    
+    
+    def create(self, cr, uid, vals, context=None):
+        device_date = vals.get('date') or ''
+        device_date = datetime.strptime(device_date, '%Y-%m-%d %H:%M:%S %p')
+        device_date = device_date.strftime('%Y-%m-%d %H:%M:%S')
+        create_date = datetime.now(pytz.timezone('Asia/Rangoon')).replace(tzinfo=None)
+        create_date = create_date.replace(microsecond=0)    
+        date_format = '%Y-%m-%d %H:%M:%S'
+        device_date = datetime.strptime(device_date, date_format)
+        if device_date and create_date:
+            date_difference = create_date - device_date
+            if date_difference:
+                total_seconds = int(date_difference.total_seconds())
+                days = date_difference.days
+                hours = ( total_seconds // 3600 ) % 24
+                minutes = (total_seconds % 3600) // 60
+                seconds = total_seconds % 60
+                time_difference = str(days) + ' Days ' + str(hours) + ' Hr ' + str(minutes) + ' Min ' + str(seconds) + ' Sec'
+                vals['date_difference'] = time_difference
+        return super(customer_visit, self).create(cr, uid, vals, context=context)
+
     
     @api.depends('image')
     def _compute_images(self):

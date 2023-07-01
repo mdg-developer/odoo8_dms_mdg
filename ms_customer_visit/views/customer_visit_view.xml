@@ -46,7 +46,9 @@
 						<filter name="branch" string="Branch" domain="[]"
 							context="{'group_by':'branch_id'}" />
 						<filter name="state" string="Status" domain="[]"
-							context="{'group_by':'state'}" />							
+							context="{'group_by':'state'}" />	
+						<filter name="offline" string="Offline" domain="[]"
+							context="{'group_by':'offline'}" />
 					</group>
 				</search>
 			</field>
@@ -107,6 +109,9 @@
 								</group>
 								<group>
 									<field name="date" readonly="1" />
+									<field name="create_date" readonly="1" />
+									<field name="offline" readonly="1" />
+									<field name="date_difference" readonly="1" />
 									<field name="sale_plan_day_id" readonly="1" />
 									<field name="sale_plan_trip_id" readonly="1" />
 									<field name="sale_team_id" readonly="1" />
@@ -285,6 +290,8 @@
 			<field name="arch" type="xml">
 				<tree default_order="date desc" string="Customer Visit">
 					<field name="date" />
+					<field name="create_date" />
+					<field name="offline" />
 					<field name="customer_id" />
 					<field name="customer_code" />
 					<field name="sale_plan_day_id" />

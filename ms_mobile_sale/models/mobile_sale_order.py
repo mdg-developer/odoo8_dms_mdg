@@ -1040,6 +1040,10 @@ class mobile_sale_order(osv.osv):
                             _logger.info('-----------vs[image_reference_list]---------- %s', vs['image_reference_list'])
                             for ref in image_ref_list:
                                 image_ids += [(0, 0, {'name':ref})]
+                    if vs['offline'] == 'true':
+                        offline = True
+                    else:
+                        offline = False
                     if customer_id:
                         if vs['distance_status']:
                                 distance_status=vs['distance_status']                                                                                           
@@ -1062,6 +1066,7 @@ class mobile_sale_order(osv.osv):
                             'longitude':vs['longitude'],
                               'visit_image_ids':image_ids,
                             'distance_status':distance_status,
+                            'offline':offline,
 
                         }
                         visit_id=customer_visit_obj.create(cursor, user, visit_result, context=context)
