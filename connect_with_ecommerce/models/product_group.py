@@ -12,7 +12,7 @@ class product_group(osv.osv):
     _inherit = 'product.group'
 
     _columns={
-        'code':fields.integer('Code'),
+        'code':fields.integer('Code',copy=False),
     }
 
     _sql_constraints = [('code_uniq', 'unique(code)',
@@ -23,7 +23,7 @@ class product_principal(osv.osv):
     _inherit = 'product.maingroup'
 
     _columns = {
-        'code': fields.char('Code')
+        'code': fields.char('Code',copy=False)
     }
     _sql_constraints = [('code_uniq', 'unique(code)',
                             'Code should not be same to others!')
@@ -37,8 +37,9 @@ class product_principal(osv.osv):
 
         code = vals.get('code')
         max_size = 3
-        if len(code) > max_size:
-            raise osv.except_osv(_('Warning!'),_('Code should be 3 digits!'))
+        if code:
+            if len(code) > max_size:
+                raise osv.except_osv(_('Warning!'),_('Code should be 3 digits!'))
         return super(product_principal, self).create(cursor, user, vals, context=context)
 
     def write(self, cursor, user, ids, vals, context=None):
@@ -49,8 +50,9 @@ class product_principal(osv.osv):
 
         code = vals.get('code')
         max_size = 3
-        if len(code) > max_size:
-            raise osv.except_osv(_('Warning!'),_('Code should be 3 digits!'))
+        if code:
+            if len(code) > max_size:
+                raise osv.except_osv(_('Warning!'),_('Code should be 3 digits!'))
 
         return super(product_principal, self).write(cursor, user, ids, vals, context=context)
     
@@ -59,7 +61,7 @@ class product_category(osv.osv):
 
     _columns = {
         'principal_id': fields.many2one('product.maingroup','Product Principal'),
-        'code': fields.char('Code'),
+        'code': fields.char('Code',copy=False),
         'is_code_generated': fields.boolean('Is Code Generated')
     }
     _sql_constraints = [('code_uniq', 'unique(code)',
