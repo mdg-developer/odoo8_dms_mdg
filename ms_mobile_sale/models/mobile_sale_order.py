@@ -774,9 +774,9 @@ class mobile_sale_order(osv.osv):
                                 }
 
                     transaction = pt['transaction_id']
-#                     existing_exchange = product_trans_obj.search(cursor, user, [('transaction_id', '=', transaction)])
-#                     if existing_exchange:
-#                         continue
+                    existing_exchange = product_trans_obj.search(cursor, user, [('transaction_id', '=', transaction)])
+                    if not existing_exchange:
+                        continue
                     s_order_id = product_trans_obj.create(cursor, user, mso_result, context=context)
                     
                     for ptl in product_trans_line:
