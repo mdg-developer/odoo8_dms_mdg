@@ -707,13 +707,13 @@ class mobile_sale_order(osv.osv):
                 result.append(x)
             product_trans = []
             product_trans_line = []
+            transaction_list = []
             for r in result:
                 print "length", len(r)
                 if len(r) ==15:
                     product_trans_line.append(r)                   
                 else:
                     product_trans.append(r)
-            
             if product_trans:
                 for pt in product_trans:
                     exchange_type = pt['exchange_type']
@@ -774,44 +774,47 @@ class mobile_sale_order(osv.osv):
                                 }
 
                     transaction = pt['transaction_id']
+                    if transaction not in transaction_list:
+                        transaction_list.append(transaction)
+
                     # existing_exchange = product_trans_obj.search(cursor, user, [('transaction_id', '=', transaction)])
                     # if not existing_exchange:
                     #     continue
-                    s_order_id = product_trans_obj.create(cursor, user, mso_result, context=context)
-                    
-                    for ptl in product_trans_line:
-                        if ptl['transaction_id'] == pt['transaction_id']:
-                            
-                                if ptl['exp_date'] is None:
-                                    exp_date = None
-                                else:
-                                    exp_date = ptl['exp_date']
-                                
-                                if exp_date == '' :
-                                    exp_date = None
-                                else:
-                                    exp_date = exp_date
-                                
-                                cursor.execute('select uom_id from product_product pp,product_template pt where pp.product_tmpl_id=pt.id and pp.id=%s', (ptl['product_id'],))
-                                uom_id = cursor.fetchone()[0]
-                                total_price =ptl['total_price']
-                                mso_line_res = {                                                            
-                                  'transaction_id':s_order_id,
-                                  'product_id':ptl['product_id'],
-                                  'product_qty':ptl['product_qty'],
-                                  'uom_id':ptl['uom_id'],
-                                  'so_No':ptl['so_No'],
-                                  'trans_type':ptl['trans_type'],
-                                  'transaction_name':ptl['transaction_name'],
-                                  'note':ptl['note'],
-                                  'exp_date':exp_date,
-                                  'total_price':total_price,
-                                  'batchno':ptl['batchno'],
-                                }
-                                product_trans_line_obj.create(cursor, user, mso_line_res, context=context)
-                    product_trans_obj.action_convert_ep(cursor, user, [s_order_id], context=context)
-                    if pt['exchange_type'] == 'Sale Return with Credit Note':
-                        product_trans_obj.create_credit_note(cursor, user, [s_order_id], context=context)
+                        s_order_id = product_trans_obj.create(cursor, user, mso_result, context=context)
+                        
+                        for ptl in product_trans_line:
+                            if ptl['transaction_id'] == pt['transaction_id']:
+
+                                    if ptl['exp_date'] is None:
+                                        exp_date = None
+                                    else:
+                                        exp_date = ptl['exp_date']
+
+                                    if exp_date == '' :
+                                        exp_date = None
+                                    else:
+                                        exp_date = exp_date
+
+                                    cursor.execute('select uom_id from product_product pp,product_template pt where pp.product_tmpl_id=pt.id and pp.id=%s', (ptl['product_id'],))
+                                    uom_id = cursor.fetchone()[0]
+                                    total_price =ptl['total_price']
+                                    mso_line_res = {
+                                      'transaction_id':s_order_id,
+                                      'product_id':ptl['product_id'],
+                                      'product_qty':ptl['product_qty'],
+                                      'uom_id':ptl['uom_id'],
+                                      'so_No':ptl['so_No'],
+                                      'trans_type':ptl['trans_type'],
+                                      'transaction_name':ptl['transaction_name'],
+                                      'note':ptl['note'],
+                                      'exp_date':exp_date,
+                                      'total_price':total_price,
+                                      'batchno':ptl['batchno'],
+                                    }
+                                    product_trans_line_obj.create(cursor, user, mso_line_res, context=context)
+                        product_trans_obj.action_convert_ep(cursor, user, [s_order_id], context=context)
+                        if pt['exchange_type'] == 'Sale Return with Credit Note':
+                            product_trans_obj.create_credit_note(cursor, user, [s_order_id], context=context)
 
             print 'Truwwwwwwwwwwwwwwwwwwwwwe'
             return True       
