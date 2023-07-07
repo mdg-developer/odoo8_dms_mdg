@@ -775,7 +775,9 @@ class mobile_sale_order(osv.osv):
 
                     transaction = pt['transaction_id']
                     if transaction not in transaction_list:
-                        transaction_list.append(transaction)
+                        existing_product_trans = product_trans_obj.search(cursor, user, [('transaction_id', '=', transaction)], context=context)
+                        if not existing_product_trans:
+                            transaction_list.append(transaction)
 
                     # existing_exchange = product_trans_obj.search(cursor, user, [('transaction_id', '=', transaction)])
                     # if not existing_exchange:
