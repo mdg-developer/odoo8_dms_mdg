@@ -5,7 +5,7 @@
             <field name="name">product.supplier.form</field>
             <field name="model">product.supplier</field>
             <field name="arch" type="xml">
-                <form string="Product Supplier" version="7.0">
+                <form string="Burmart Supplier" version="7.0">
                     <group>
                         <field name="name" />
                     </group>
@@ -17,14 +17,14 @@
             <field name="name">product.supplier.tree</field>
             <field name="model">product.supplier</field>
             <field name="arch" type="xml">
-                <tree string="Product Supplier" version="7.0">
+                <tree string="Burmart Supplier" version="7.0">
                     <field name="name" />
                 </tree>
             </field>
         </record>
 
         <record id="action_product_supplier_view" model="ir.actions.act_window">
-			<field name="name">Product Suppliers</field>
+			<field name="name">Burmart Supplier</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">product.supplier</field>
 			<field name="view_type">form</field>
@@ -33,6 +33,6 @@
 		</record>
 
         <menuitem id="product_supplier_menu" parent="product_product.product_menu"
-			name="Product Suppliers" action="action_product_supplier_view" groups="base.group_system" />
+			name="Burmart Supplier" action="action_product_supplier_view" groups="base.group_system" />
     </data>
 </openerp>
