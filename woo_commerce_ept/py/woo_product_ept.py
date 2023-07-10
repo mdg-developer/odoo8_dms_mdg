@@ -44,6 +44,8 @@ class woo_product_template_ept(models.Model):
     woo_brand_id = fields.Many2one("woo.brands.ept","Woo Brand")
     woo_supplier_id = fields.Many2one("woo.suppliers.ept","Woo Supplier")
     woo_department_id = fields.Many2one("woo.departments.ept","Woo Department")
+    product_image = fields.Binary("Woo Product Image")
+    carton_image = fields.Binary("Woo Carton image")
     
     
     @api.onchange("product_tmpl_id")
@@ -998,7 +1000,7 @@ class woo_product_template_ept(models.Model):
                         product_barcode_wcapi = instance.connect_for_point_in_woo() 
                         product_barcode_wcapi.put('add-product-multi-barcode/%s'%(template.woo_tmpl_id),product_barcodes)
             data = {'title':template.product_tmpl_id.short_name,'enable_html_description':True,'enable_html_short_description':True,'description':template.description or '',
-                    'weight':template.product_tmpl_id.weight,'short_description':template.short_description or '','taxable':template.taxable and 'true' or 'false','_product_name_mm':template.myanmar_name or ''}
+                    'weight':template.product_tmpl_id.weight,'short_description':template.short_description or '','taxable':template.taxable and 'true' or 'false','_product_name_mm':template.myanmar_name or '','_thumbnail_id':template.product_image,'_product_image_gallery':template.carton_image}
             
             tmpl_images=[]                           
             position = 0
@@ -1844,7 +1846,7 @@ class woo_product_template_ept(models.Model):
             data = {'enable_html_description':True,'enable_html_short_description':True,'type': 'variable',
                     'title':woo_template.name,'description':woo_template.description or '','weight':template.weight,
                     'short_description':woo_template.short_description or '','_product_name_mm':woo_template.myanmar_name or '','taxable':woo_template.taxable and 'true' or 'false',
-                    'shipping_required':'true'}          
+                    'shipping_required':'true','_thumbnail_id':woo_template.product_image,'_product_image_gallery':woo_template.carton_image}          
             for woo_categ in woo_template.woo_categ_ids:
                 if not woo_categ.woo_categ_id:
                     woo_categ.sync_product_category(instance,woo_product_categ=woo_categ)
