@@ -1204,6 +1204,20 @@ class woo_product_template_ept(models.Model):
                         woo_department_name = woo_department.name
                         data.update({'department_id':woo_department_id,'department_name':woo_department_name})
 
+            if odoo_template.barcode_no:
+                data.update({'barcode_2':odoo_template.barcode_no})
+            
+            if odoo_template.barcode_ids:
+                self.env.cr.execute('''select name
+                                    from product_multi_barcode 
+                                    where product_tmpl_id=%s;''', (odoo_template.id,))
+                product_barcodes_data = self.env.cr.fetchall()
+                i = 3
+                for product_barcode in product_barcodes_data:
+                    barcode_str = 'barcode_' + str(i)
+                    i = i + 1
+                    data.update({barcode_str:product_barcode[0]})
+
             tmpl_res = wcapi.put('products/%s'%(template.woo_tmpl_id),{'product':data})
             if not isinstance(tmpl_res,requests.models.Response):
                 transaction_log_obj.create({'message': "Update Products\nResponse is not in proper format :: %s"%(tmpl_res),
@@ -2008,6 +2022,20 @@ class woo_product_template_ept(models.Model):
                         woo_department_name = woo_department.name
                         data.update({'department_id':woo_department_id,'department_name':woo_department_name})
 
+            if template.barcode_no:
+                data.update({'barcode_2':template.barcode_no})
+            
+            if template.barcode_ids:
+                self.env.cr.execute('''select name
+                                    from product_multi_barcode 
+                                    where product_tmpl_id=%s;''', (template.id,))
+                product_barcodes_data = self.env.cr.fetchall()
+                i = 3
+                for product_barcode in product_barcodes_data:
+                    barcode_str = 'barcode_' + str(i)
+                    i = i + 1
+                    data.update({barcode_str:product_barcode[0]})
+       
             if publish:
                 data.update({'status':'publish'})                
             else:
