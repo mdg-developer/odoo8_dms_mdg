@@ -26,6 +26,7 @@
 								<field name="carton_image" widget="image" class="oe_avatar oe_left" attrs="{'readonly': [('state','=','done')]}" style="width: 55%%"/>
 								<field name="product_name" attrs="{'readonly': ['|',('is_prod_created','=',True),('state','=','done')]}" required="1"  style="width: 90%%"/>
 								<field name="product_short_name" attrs="{'readonly': [('state','=','done')]}" required="1" style="width: 90%%"/>
+								<field name="product_myanmar_name" attrs="{'readonly': [('state','=','done')]}" required="1" style="width: 90%%"/>
 								<field name="default_code" attrs="{'readonly': [('state','=','done')]}" required="1" style="width: 55%%"/>
 								<!-- <field name="sequence" attrs="{'readonly': [('state','=','done')]}" required="1" style="width: 55%%"/> -->
 								<field name="description" attrs="{'readonly': [('state','=','done')]}"/>
@@ -53,13 +54,14 @@
 										<group>
 											<field name="product_type" attrs="{'readonly': [('state','=','done')]}" required="1"  style="width: 30%%"/>
 											<field name="base_uom_id" attrs="{'readonly': [('state','=','done')]}" required="1" style="width: 30%%"/>
-											<field name="report_uom_id" attrs="{'readonly': [('state','=','done')]}" required="1" style="width: 30%%"/>
 											<field name="purchase_uom_id" attrs="{'readonly': [('state','=','done')]}" required="1" style="width: 30%%"/>
+											<field name="report_uom_id" attrs="{'readonly': [('state','=','done')]}" required="1" style="width: 30%%"/>
 											<field name="product_principal_id" attrs="{'readonly': [('state','=','done')]}" required="1" style="width: 30%%"/>
 											<field name="product_category_id" attrs="{'readonly': [('state','=','done')]}" domain="[('principal_id', '=', product_principal_id)]" required="1" style="width: 30%%"/>
-											<field name="product_group_id" attrs="{'readonly': [('state','=','done')]}" required="1" style="width: 30%%"/>
+											<field name="product_group_id" string="Burmart Category" attrs="{'readonly': [('state','=','done')]}" required="1" style="width: 30%%"/>
+											<field name="uom_ratio" attrs="{'readonly': [('state','=','done')]}" required="1" style="width: 30%%"/>
 											<field name="barcode_no" attrs="{'readonly': [('state','=','done')]}" style="width: 30%%"/>
-											<field name="barcode_approval_ids" attrs="{'readonly': [('state','=','done')]}" style="width: 30%%">
+											<field name="barcode_approval_ids" string="Additional Barcodes" attrs="{'readonly': [('state','=','done')]}" style="width: 30%%">
 												<tree editable="bottom">
 	                            					<field name="name" />
 	                        					</tree>
@@ -76,9 +78,13 @@
 	                            					<field name="name" />
 	                        					</tree>
 											</field> -->
+											<field name="brand_id" string="Burmart Brand" attrs="{'readonly': [('state','=','done')]}" style="width: 30%%"/>
+											<field name="supplier_id" string="Burmart Supplier" attrs="{'readonly': [('state','=','done')]}" style="width: 30%%"/>
+											<field name="department_id" string="Burmart Department" attrs="{'readonly': [('state','=','done')]}" style="width: 30%%"/>
+											<field name="tag_ids" string="Burmart Tag" attrs="{'readonly': [('state','=','done')]}" />
 											<field name="uom_lines" attrs="{'readonly': [('state','=','done')]}">
 											</field>
-											<field name="uom_price_lines">
+											<field name="uom_price_lines" attrs="{'readonly': [('state','=','done')]}">
 												<form string="UOM Price Lines" attrs="{'readonly': [('state','=','done')]}">
 													<group>
 														<field name="name" on_change="onchange_product_uom(name)" />
@@ -106,10 +112,6 @@
 													<field name="per_pallet" />
 												</tree>
 											</field>
-											<field name="tag_ids" attrs="{'readonly': [('state','=','done')]}" style="width: 30%%"/>
-											<field name="brand_id" attrs="{'readonly': [('state','=','done')]}" style="width: 30%%"/>
-											<field name="supplier_id" attrs="{'readonly': [('state','=','done')]}" style="width: 30%%"/>
-											<field name="department_id" attrs="{'readonly': [('state','=','done')]}" style="width: 30%%"/>
 										</group>
 									</group>
 								</page>
@@ -129,9 +131,6 @@
 											<field name="ctn_pallet_pickface" attrs="{'readonly': [('state','=','done')]}" style="width: 55%%"/>
 											<field name="inbound_shelf_life" string="Inbound Shelf Life (Maximum Days)" attrs="{'readonly': [('state','=','done')]}" style="width: 55%%"/>
 											<field name="inbound_shelf_life_min" string="Inbound Shelf Life (Minimum Days)" attrs="{'readonly': [('state','=','done')]}" style="width: 55%%"/>
-										</group>
-										<group>
-											<field name="uom_ratio" attrs="{'readonly': [('state','=','done')]}" required="1" style="width: 30%%"/>
 										</group>
 									</group>
 								</page>
