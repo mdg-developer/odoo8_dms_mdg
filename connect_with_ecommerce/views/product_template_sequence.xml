@@ -10,8 +10,8 @@
 		<record id="product_template_seq" model="ir.sequence">
 			<field name="name">Product Template Sequence</field>
 			<field name="code">product.template.code</field>
-			<field name="prefix">P-</field>
-			<field name="padding">10</field>
+			<field name="prefix">PDT-%(year)s-</field>
+			<field name="padding">6</field>
 		</record>
 
 	</data>

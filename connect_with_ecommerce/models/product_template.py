@@ -32,9 +32,9 @@ class product_template(osv.osv):
         'ecommerce_supplier_id': fields.many2one('product.supplier', 'Product Supplier'),
         'ecommerce_department_id': fields.many2one('product.department', 'Product Department'),
         'is_generated_code':fields.boolean('Is Generated Code'),
+        'is_generated_int_ref': fields.boolean('Is Generated Internal Reference',default=False),
             }
 
-    
     def default_get(self, cr, uid, fields, context=None):
         res = super(product_template, self).default_get(cr, uid, fields, context=context)
         res['type'] = 'product'
@@ -43,7 +43,6 @@ class product_template(osv.osv):
         # not work
         res['taxes_id'] = [(6, 0, [1])] 
         return res
-
     # helper function
     def generate_product_code_old(self, cr, uid, ids, context=None):
         records = []
@@ -112,13 +111,19 @@ class product_template(osv.osv):
         vals.update({'sequence':product_code,'is_generated_code':True})
         return self.write(cr, uid, ids, vals)
 
+    # Generate product internal reference only with ir.sequence
+    # this button disappear when is_generated_int_ref True
+    def generate_internal_ref(self, cr, uid, ids, context=None):
+        vals = {}
+        internal_ref = self.pool.get('ir.sequence').get(cr, uid, 'product.template.code') or '/'
+        vals.update({'default_code':internal_ref,'is_generated_int_ref':True})
+        return self.write(cr, uid, ids, vals)
 
     def on_change_uom_id(self, cr, uid, ids, uom_id, context=None):
         if uom_id:
             return {'value':{'uom_po_id': uom_id}}
     
     def onchange_report_uom_id(self, cr, uid, ids, uom_id, report_uom_id, context=None):
-        _logger.info('-----------------------------')
         domain = { }
         if uom_id and report_uom_id:
             base_uom = uom_id

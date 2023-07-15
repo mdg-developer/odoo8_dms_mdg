@@ -23,8 +23,13 @@
 							<field name='uom_ratio'/>
 						</xpath>
 						<xpath expr="//form/sheet" position="before">
-							<button name="generate_product_code" string="Generate Code" attrs="{'invisible':[('is_generated_code','=',True)]}" type="object" class="oe_highlight"/>
+							<button name="generate_product_code" string="Generate Sequence" attrs="{'invisible':[('is_generated_code','=',True)]}" type="object" class="oe_highlight"/>
 							<field name="is_generated_code" invisible="1"/>
+						</xpath>
+						<!-- this button disappear when is_generated_int_ref True -->
+						<xpath expr="//form/sheet" position="before">
+							<button name="generate_internal_ref" string="Generate Product Code" attrs="{'invisible':[('is_generated_int_ref','=',True)]}" type="object" class="oe_highlight"/>
+							<field name="is_generated_int_ref" invisible="1"/>
 						</xpath>
 						<xpath expr="//field[@name='categ_id']" position="attributes"> 
                         	<attribute name="domain">[('principal_id', '=', main_group)]</attribute>
