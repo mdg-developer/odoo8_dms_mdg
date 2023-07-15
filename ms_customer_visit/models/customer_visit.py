@@ -73,6 +73,7 @@ class customer_visit(osv.osv):
         'validated_date':fields.datetime('Validated Date'),
         'visit_reason_id': fields.many2one('visit.reason', 'Visit Reason', required=True),
         'offline': fields.boolean('Is Offline', default=False),
+        'online': fields.boolean('Is Online', default=False),
         'date_difference': fields.char('Difference Date'),
     }
     _defaults = {        
@@ -165,7 +166,7 @@ class customer_visit(osv.osv):
     
     def create(self, cr, uid, vals, context=None):
         device_date = vals.get('date') or ''
-        device_date = datetime.strptime(device_date, '%Y-%m-%d %H:%M:%S %p')
+        device_date = datetime.strptime(device_date, '%Y-%m-%d %I:%M:%S %p')
         device_date = device_date.strftime('%Y-%m-%d %H:%M:%S')
         create_date = datetime.now(pytz.timezone('Asia/Rangoon')).replace(tzinfo=None)
         create_date = create_date.replace(microsecond=0)    
