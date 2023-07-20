@@ -202,7 +202,7 @@ class good_issue_note(osv.osv):
                 note_line_value = product_line_obj.browse(cr, uid, data, context=context)
                 line_id= note_line_value.id
                 product_id = note_line_value.product_id.id
-                cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (location_id, product_id,))
+                cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s group by product_id', (location_id, product_id,))
                 qty_on_hand = cr.fetchone()
                 if qty_on_hand:
                     qty_on_hand = qty_on_hand[0]
