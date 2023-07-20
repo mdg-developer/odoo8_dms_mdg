@@ -112,7 +112,7 @@ class stock_requisition(osv.osv):
             order_ids = sale_order_obj.search(cr, uid, [('delivery_id', '=', sale_team_id), ('shipped', '=', False), ('is_generate', '=', False), ('invoiced', '=', False), ('state', 'not in', ['draft','done', 'cancel', 'reversed'])], context=context) 
             for line in product_line:                              
                 product = self.pool.get('product.product').browse(cr, uid, line.id, context=context)   
-                cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (to_location_id.id, product.id,))
+                cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s group by product_id', (to_location_id.id, product.id,))
                 qty_on_hand = cr.fetchone()
                 if qty_on_hand:
                     qty_on_hand = qty_on_hand[0]
@@ -247,7 +247,7 @@ class stock_requisition(osv.osv):
                                 sale_product_uom = int(sale_data[2])
                                 product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
                                 sequence=product.sequence
-                                cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (location_id, product_id,))
+                                cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s  group by product_id', (location_id, product_id,))
                                 qty_on_hand = cr.fetchone()
                                 if qty_on_hand:
                                     qty_on_hand = qty_on_hand[0]
@@ -333,7 +333,7 @@ class stock_requisition(osv.osv):
                 req_line_value = product_line_obj.browse(cr, uid, data, context=context)
                 line_id= req_line_value.id
                 product_id = req_line_value.product_id.id
-                cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (location_id, product_id,))
+                cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s group by product_id', (location_id, product_id,))
                 qty_on_hand = cr.fetchone()
                 if qty_on_hand:
                     qty_on_hand = qty_on_hand[0]
@@ -592,7 +592,7 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
         location_id=requisition.to_location_id.id
         product=data['product_id']
         product_data= self.pool.get('product.product').browse(cr, uid, product, context=context)
-        cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (location_id, product,))
+        cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s  group by product_id', (location_id, product,))
         qty_on_hand = cr.fetchone()
         if qty_on_hand:
             qty_on_hand = qty_on_hand[0]
@@ -610,7 +610,7 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
         domain={}
         qty_on_hand=0
         if to_location_id and product_id:
-            cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (to_location_id, product_id,))
+            cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s  group by product_id', (to_location_id, product_id,))
             qty_on_hand = cr.fetchone()
             if qty_on_hand:
                 qty_on_hand = qty_on_hand[0]
