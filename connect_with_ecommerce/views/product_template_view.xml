@@ -15,8 +15,8 @@
 							<label class="oe_edit_only" for="myanmar_name" string="Product Myanmar Name"/>
 							<h1><field name="myanmar_name" class="oe_inline" style="width: 100%%"/></h1>
 						</xpath>
-						<xpath expr="//field[@name='list_price']" position="replace">
-						</xpath>
+						<!-- <xpath expr="//field[@name='list_price']" position="replace">
+						</xpath> -->
 						<xpath expr="//field[@name='uom_ratio']" position="replace">
 						</xpath>
 						<xpath expr="//field[@name='report_uom_id']" position="after">
