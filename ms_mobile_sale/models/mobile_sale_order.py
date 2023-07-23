@@ -714,6 +714,8 @@ class mobile_sale_order(osv.osv):
                     product_trans_line.append(r)                   
                 else:
                     product_trans.append(r)
+            logging.warning("Check create_exchange_product")
+            logging.warning("Check product_trans_line: %s", product_trans_line)
             if product_trans:
                 for pt in product_trans:
                     exchange_type = pt['exchange_type']
@@ -775,28 +777,38 @@ class mobile_sale_order(osv.osv):
 
                     transaction = pt['transaction_id']
                     existing_product_trans = product_trans_obj.search(cursor, user, [('transaction_id', '=', transaction)], context=context)
+                    logging.warning("Check existing_product_trans: %s", existing_product_trans)
+                    logging.warning("Check transaction: %s", transaction)
                     if not existing_product_trans:
                         if transaction not in transaction_list:
                             transaction_list.append(transaction)
+
+                        logging.warning("Check transaction_list: %s", transaction_list)
 
                     # existing_exchange = product_trans_obj.search(cursor, user, [('transaction_id', '=', transaction)])
                     # if not existing_exchange:
                     #     continue
                         s_order_id = product_trans_obj.create(cursor, user, mso_result, context=context)
-                        
+                        logging.warning("Check product txn id: %s", s_order_id)
+                        logging.warning("Check product_trans_line: %s", product_trans_line)
                         for ptl in product_trans_line:
+                            logging.warning("Check ptl: %s", ptl)
+                            logging.warning("Check ptl['transaction_id']: %s", ptl['transaction_id'])
+                            logging.warning("Check pt['transaction_id']: %s", pt['transaction_id'])
                             if ptl['transaction_id'] == pt['transaction_id']:
-
+                                    logging.warning("Check ptl['exp_date']: %s", ptl['exp_date'])
                                     if ptl['exp_date'] is None:
-                                        exp_date = None
+                                        from_date = None
                                     else:
-                                        exp_date = ptl['exp_date']
+                                        from_date = datetime.strptime(ptl['exp_date'], "%d\/%m\/%Y").date()
+                                        #exp_date = ptl['exp_date'].replace('\\', "")
+                                        #from_date = datetime.datetime.strptime(exp_date, "%d/%m/%Y").strftime("%Y-%m-%d")
 
-                                    if exp_date == '' :
-                                        exp_date = None
+                                    if from_date == '':
+                                        from_date = None
                                     else:
-                                        exp_date = exp_date
-
+                                        from_date = from_date
+                                    logging.warning("Check from_date: %s", from_date)
                                     cursor.execute('select uom_id from product_product pp,product_template pt where pp.product_tmpl_id=pt.id and pp.id=%s', (ptl['product_id'],))
                                     uom_id = cursor.fetchone()[0]
                                     total_price =ptl['total_price']
@@ -809,11 +821,12 @@ class mobile_sale_order(osv.osv):
                                       'trans_type':ptl['trans_type'],
                                       'transaction_name':ptl['transaction_name'],
                                       'note':ptl['note'],
-                                      'exp_date':exp_date,
+                                      'exp_date':from_date,
                                       'total_price':total_price,
                                       'batchno':ptl['batchno'],
                                     }
                                     product_trans_line_obj.create(cursor, user, mso_line_res, context=context)
+                                    logging.warning("Created product_trans_line_obj")
                         product_trans_obj.action_convert_ep(cursor, user, [s_order_id], context=context)
                         if pt['exchange_type'] == 'Sale Return with Credit Note':
                             product_trans_obj.create_credit_note(cursor, user, [s_order_id], context=context)
