@@ -544,7 +544,7 @@ class woo_process_import_export(models.TransientModel):
                         myanmar_name = odoo_template.myanmar_name
                     else:
                         raise except_orm(_('UserError'), _("Please define Myanmar name for %s!") % (odoo_template.name,))
-                    woo_template=woo_template_obj.create({'woo_instance_id':instance.id,'product_tmpl_id':odoo_template.id,'name':product_name,'myanmar_name':myanmar_name,'description':odoo_template.description_sale,'short_description':odoo_template.description,'woo_tag_ids':final_tag_ids,'woo_brand_id':woo_brand_id_id,'woo_supplier_id':woo_supplier_id_id,'woo_department_id':woo_department_id_id})
+                    woo_template=woo_template_obj.create({'woo_instance_id':instance.id,'product_tmpl_id':odoo_template.id,'name':product_name,'myanmar_name':myanmar_name,'description':odoo_template.description_sale,'short_description':odoo_template.description,'woo_tag_ids':final_tag_ids,'woo_brand_id':woo_brand_id_id,'woo_supplier_id':woo_supplier_id_id,'woo_department_id':woo_department_id_id,'product_image':odoo_template.image_medium,'carton_image':odoo_template.carton_image})
                 for variant in odoo_template.product_variant_ids:
                     woo_variant = woo_product_obj.search([('woo_instance_id','=',instance.id),('product_id','=',variant.id)])
                     if not woo_variant:

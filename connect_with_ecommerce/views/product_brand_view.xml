@@ -6,7 +6,7 @@
 			<field name="name">prodcut.brand.form</field>
 			<field name="model">product.brand</field>
 			<field name="arch" type="xml">
-				<form string="Product Brand" version="7.0">
+				<form string="Burmart Brand" version="7.0">
 					<group>
 						<field name="name" />
 					</group>
@@ -19,7 +19,7 @@
 			<field name="name">product.brand.tree</field>
 			<field name="model">product.brand</field>
 			<field name="arch" type="xml">
-				<tree string="Product Brand" version="7.0">
+				<tree string="Burmart Brand" version="7.0">
 					<field name="name" />
 				</tree>
 			</field>
@@ -27,7 +27,7 @@
 
 		<!-- Product Group Action -->
 		<record id="action_product_brand_view" model="ir.actions.act_window">
-			<field name="name">Product Brands</field>
+			<field name="name">Burmart Brand</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">product.brand</field>
 			<field name="view_type">form</field>
@@ -37,7 +37,7 @@
 
 		<!-- Product Brand Menu -->
 		<menuitem id="product_brand_menu" parent="product_product.product_menu"
-			name="Product Brands" action="action_product_brand_view" groups="base.group_system" />
+			name="Burmart Brand" action="action_product_brand_view" groups="base.group_system" />
 
 	</data>
 </openerp>

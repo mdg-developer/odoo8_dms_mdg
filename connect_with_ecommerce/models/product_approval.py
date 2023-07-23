@@ -17,6 +17,7 @@ class product_approval(models.Model):
     state = fields.Selection([('draft', 'Draft'),('pending','Pending'),('approved','Approved'),('done','Done')], 'State', default='draft')
     product_name = fields.Char('Product Name',size=45)
     product_short_name = fields.Char('Product Short Name',size=45)
+    product_myanmar_name = fields.Char('Product Myanmar Name', size=45)
     description =fields.Text('Product Description')
     product_type = fields.Selection([('product','Stockable'),('consu','Consumable'),('service','Service')], 'Product Type', default='product')
     image_medium =  fields.Binary('Product Image')
@@ -157,6 +158,7 @@ class product_approval(models.Model):
             vals.update({
                 'name': item.product_name or '',
                 'short_name': item.product_short_name or '',
+                'myanmar_name': item.product_myanmar_name or '',
                 'description': item.description or '',
                 'description_sale': item.sale_description or '',
                 'type': item.product_type or '',
@@ -195,6 +197,8 @@ class product_approval(models.Model):
                 'uom_price_lines':[(6,0,price_line_list)],
                 'uom_lines': [(6, 0, uom_list)],
                 'uom_po_id': item.purchase_uom_id.id,
+                'write_uid': item.write_uid,
+                'write_date': item.write_date,
             })
 
             if not item.is_prod_changed:
@@ -252,7 +256,6 @@ class product_multi_barcode_approval(models.Model):
 
     name = fields.Char(string='Barcode',required=True)
     product_approval_id = fields.Many2one('product.approval', string='Product Approval Id', ondelete='cascade')
-    
 
 class product_uom_price(models.Model):
     _inherit = 'product.uom.price'

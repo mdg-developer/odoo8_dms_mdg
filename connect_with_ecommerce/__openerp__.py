@@ -44,6 +44,7 @@ Connect With Ecommerce
         'views/credit_application_view.xml',
         'views/res_city_view.xml',
         'views/product_template_view.xml',
+        'views/product_template_sequence.xml',
         'views/res_country_view.xml',
         'views/res_country_state_view.xml',
         'views/res_partner_view.xml',

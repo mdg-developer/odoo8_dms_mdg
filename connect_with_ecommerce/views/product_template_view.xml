@@ -15,20 +15,27 @@
 							<label class="oe_edit_only" for="myanmar_name" string="Product Myanmar Name"/>
 							<h1><field name="myanmar_name" class="oe_inline" style="width: 100%%"/></h1>
 						</xpath>
-						<xpath expr="//field[@name='list_price']" position="replace">
-						</xpath>
+						<!-- <xpath expr="//field[@name='list_price']" position="replace">
+						</xpath> -->
 						<xpath expr="//field[@name='uom_ratio']" position="replace">
 						</xpath>
 						<xpath expr="//field[@name='report_uom_id']" position="after">
 							<field name='uom_ratio'/>
 						</xpath>
 						<xpath expr="//form/sheet" position="before">
-							<button name="generate_product_code" string="Generate Code" attrs="{'invisible':[('is_generated_code','=',True)]}" type="object" class="oe_highlight"/>
+							<button name="generate_product_code" string="Generate Sequence" attrs="{'invisible':[('is_generated_code','=',True)]}" type="object" class="oe_highlight"/>
 							<field name="is_generated_code" invisible="1"/>
+						</xpath>
+						<!-- this button disappear when is_generated_int_ref True -->
+						<xpath expr="//form/sheet" position="before">
+							<button name="generate_internal_ref" string="Generate Product Code" attrs="{'invisible':[('is_generated_int_ref','=',True)]}" type="object" class="oe_highlight"/>
+							<field name="is_generated_int_ref" invisible="1"/>
 						</xpath>
 						<xpath expr="//field[@name='categ_id']" position="attributes"> 
                         	<attribute name="domain">[('principal_id', '=', main_group)]</attribute>
                     	</xpath>
+						<xpath expr="//field[@name='categ_id']" position="replace">
+						</xpath>
 						<xpath expr="//field[@name='uom_id']" position ="attributes">
 							<attribute name="on_change">on_change_uom_id(uom_id)</attribute>
 						</xpath>
@@ -50,14 +57,15 @@
 					<page name="ecommerce" string="Ecommerce">
 					    <group>					        
 						    <group>
-						        <field name="ecommerce_uom_id"/>
-								<field name="tag_ids" widget="many2many_tags"/>
-								<field name="brand_id"/>
-								<field name="ecommerce_supplier_id"/>
-								<field name="ecommerce_department_id"/>
+						        <field name="ecommerce_uom_id" style="width: 90%%" />
+								<field name="tag_ids" widget="many2many_tags" string="Burmart Tag" style="width: 90%%" />
+								<field name="brand_id" string="Burmart Brand" style="width: 90%%" />
+								<field name="ecommerce_supplier_id" string="Burmart Supplier" style="width: 90%%" />
 						    </group>
 						    <group>	
 						        <field name="delivery_id"/>
+								<field name="group" string="Burmart Category"/>
+								<field name="ecommerce_department_id" domain="[('group_id', '=', group)]" string="Burmart Department"/>
 						        
 						        <!-- <field name="ecommerce_price"/> -->
 						    </group>
@@ -135,36 +143,41 @@
 							</field>
 						</page>
 					</xpath>
-					<!-- <xpath expr="//page[@string='Accounting']">
-						<copy position="after">
-							<page string="Ecommerce" position="replace">
-							</page>
-						</copy>
-					</xpath> -->
-					<!-- Remove original Accounting tab -->
-					<!-- <xpath expr="//page[@string='Accounting']" position="replace">
-						<page string="Accounting"> -->
-							<!-- Content of the Accounting page goes here -->
-						<!-- </page>
-					</xpath> -->
-					<!-- Move Accounting tab after Ecommerce tab -->
-					<!-- <xpath expr="//page[@string='Ecommerce']" position="after" copy="True">
-					
 
-					</xpath> -->
-					<!-- shl -->
 					<xpath expr="//page[@string='Accounting']/group/label[@string='Product Principal']" position="replace">
-						<label for="main_group" string="MDG Principal" />
 					</xpath>
-					<xpath expr="//page[@string='Accounting']/group/label[@string='Sub Group']" position="replace">
-						<label for="group" string="Burmart" />
+					<xpath expr="//field[@name='main_group']" position="replace">
 					</xpath>
 					<xpath expr="//page[@string='Accounting']/group/label[@string='Product Category']" position="replace">
-						<label for="categ_id" string="MDG Category" />
 					</xpath>
+					<xpath expr="//page[@string='Accounting']/group/label[@string='Sub Group']" position="replace">
+					</xpath>
+					<xpath expr="//field[@name='group']" position="replace">
+					</xpath>
+
+					<xpath expr="//page[@string='Accounting']/group" position="after">
+						<group>
+							<label for="main_group" string="MDG Principal" />
+							<field name="main_group" nolabel="1"/>
+							<label for="categ_id" string="MDG Category"/>
+							<field name="categ_id" domain="[('principal_id', '=', main_group)]" nolabel="1"/>
+						</group>
+					</xpath>
+
+
 					<xpath expr="//page[@string='Inventory']/group[@name='inventory']/group[@name='weight']" position="attributes">
 						<attribute name="string">Carton, Weights and Dimensions</attribute>
 					</xpath>
+			</field>
+		</record>
+		<record id="product_template_search_view_inherit_for_filter" model="ir.ui.view">
+			<field name="name">product.template.search.inherit.for.filter</field>
+			<field name="model">product.template</field>
+			<field name="inherit_id" ref="product_product.product_template_search_view_inherit" />
+			<field name="arch" type="xml">
+				<xpath expr="//filter[@string='Product Principle']" position="attributes">
+					<attribute name="string">Product Principal</attribute>
+				</xpath>
 			</field>
 		</record>
 	</data>

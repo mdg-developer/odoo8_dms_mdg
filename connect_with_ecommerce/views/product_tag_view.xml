@@ -6,7 +6,7 @@
 			<field name="name">prodcut.tag.form</field>
 			<field name="model">product.tag</field>
 			<field name="arch" type="xml">
-				<form string="Product Tag" version="7.0">
+				<form string="Burmart Tag" version="7.0">
 					<group>
 						<field name="name" />
 
@@ -19,14 +19,14 @@
 			<field name="name">product.tag.tree</field>
 			<field name="model">product.tag</field>
 			<field name="arch" type="xml">
-				<tree string="Product Tag" version="7.0">
+				<tree string="Burmart Tag" version="7.0">
 					<field name="name" />
 				</tree>
 			</field>
 		</record>
 		<!-- Product Tag Action -->
 		<record id="action_product_tag_view" model="ir.actions.act_window">
-			<field name="name">Product Tag</field>
+			<field name="name">Burmart Tag</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">product.tag</field>
 			<field name="view_type">form</field>
@@ -36,7 +36,7 @@
 
 		<!-- Product Tag Menu -->
 		<menuitem id="product_tag_menu" parent="product_product.product_menu"
-			name="Product Tag" action="action_product_tag_view" sequence="4" groups="base.group_system" />
+			name="Burmart Tag" action="action_product_tag_view" sequence="4" groups="base.group_system" />
 
 	</data>
 </openerp>

@@ -44,8 +44,14 @@ class res_partner(osv.osv):
                 'woo_register_date': fields.date('Woo Register Date'),
                 'is_email_generated':fields.boolean('Is email generated' , default=False),
                 'deleted': fields.boolean('Delete from app', default=False),
-            }   
-          
+            }
+
+    def create(self, cr, uid, vals, context=None):
+        if vals.get('woo_customer_id'):
+            category_id = [(0,0,{'name':'Burmart'})]
+            vals['category_id'] = category_id
+        return super(res_partner, self).create(cr, uid, vals, context=context)
+
     def check_maintenance_mode(self, cr, uid, ids, context=None):
         
         maintenance_mode = self.pool.get('ir.config_parameter').get_param(cr, uid, 'maintenance_mode')

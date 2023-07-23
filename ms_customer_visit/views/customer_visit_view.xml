@@ -108,10 +108,11 @@
 									</div>
 								</group>
 								<group>
-									<field name="date" readonly="1" />
-									<field name="create_date" readonly="1" />
-									<field name="offline" readonly="1" />
-									<field name="date_difference" readonly="1" />
+									<field name="create_date" string="Create Date" readonly="1" />
+									<field name="date" string="Device Date" readonly="1" />
+									<field name="offline" string="Offline" readonly="1" />
+									<field name="online" string="Online" readonly="1" />
+									<field name="date_difference" string="Time Difference" readonly="1" />
 									<field name="sale_plan_day_id" readonly="1" />
 									<field name="sale_plan_trip_id" readonly="1" />
 									<field name="sale_team_id" readonly="1" />
@@ -289,9 +290,11 @@
 			<field name="model">customer.visit</field>
 			<field name="arch" type="xml">
 				<tree default_order="date desc" string="Customer Visit">
-					<field name="date" />
-					<field name="create_date" />
-					<field name="offline" />
+					<field name="create_date" string="Create Date" />
+					<field name="date" string="Device Date" />
+					<field name="date_difference" string="Time Difference" />
+					<field name="offline" string="Offline" />
+					<field name="online" string="Online" />
 					<field name="customer_id" />
 					<field name="customer_code" />
 					<field name="sale_plan_day_id" />

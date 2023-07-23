@@ -7,7 +7,10 @@
 			<field name="arch" type="xml">
 				<form string="Product Department" version="7.0">
 					<group>
-						<field name="name" />
+						<field name="name" style="width: 30%%"/>
+						<field name="group_id" style="width: 30%%"/>
+					</group>
+					<group>
 					</group>
 				</form>
 			</field>

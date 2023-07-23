@@ -45,8 +45,11 @@
                    <div class="oe_title" style="width: 390px;">
                        <label class="oe_edit_only" for="name" string="Title"/>
                        <h1><field name="name" class="oe_inline"/></h1>
+					   <label class="oe_edit_only" for="name" string="Product Myanmar Name"/>
 					   <h1><field name="myanmar_name" class="oe_inline"/></h1>
                    </div>
+				   <field name="product_image" widget="image" class="oe_avatar oe_left" />
+				   <field name="carton_image" widget="image" class="oe_avatar oe_right" />
                    <field name="website_published" invisible="1"/>
                    <button name="woo_published" class="pull-right"  type="object" string="Click to Publish" attrs="{'invisible': ['|',('exported_in_woo','=',False),('website_published','=',True)]}"/>
                    <button name="woo_unpublished" class="pull-right"  type="object" string="Click to Unpublish" attrs="{'invisible': ['|',('exported_in_woo','=',False),('website_published','=',False)]}"/>                   

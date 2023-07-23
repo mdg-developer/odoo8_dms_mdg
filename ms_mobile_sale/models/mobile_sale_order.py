@@ -1047,8 +1047,10 @@ class mobile_sale_order(osv.osv):
                                 image_ids += [(0, 0, {'name':ref})]
                     if vs['offline'] == 'true':
                         offline = True
+                        online = False
                     else:
                         offline = False
+                        online = True
                     if customer_id:
                         if vs['distance_status']:
                                 distance_status=vs['distance_status']                                                                                           
@@ -1072,6 +1074,7 @@ class mobile_sale_order(osv.osv):
                               'visit_image_ids':image_ids,
                             'distance_status':distance_status,
                             'offline':offline,
+                            'online':online,
 
                         }
                         visit_id=customer_visit_obj.create(cursor, user, visit_result, context=context)
