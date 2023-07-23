@@ -5254,7 +5254,7 @@ class mobile_sale_order(osv.osv):
         return datas
 
     def push_credit_job(self, cr, uid,date, context=None, **kwargs):
-        cr.execute('''update queue_job set is_credit_invoice=False where user_id=%s and date_created::date=%s''', (uid,date,))
+        #cr.execute('''update queue_job set is_credit_invoice=False where user_id=%s and date_created::date=%s''', (uid,date,))
         return True    
         
     def get_partner_category_rel(self, cr, uid, section_id , context=None):  
