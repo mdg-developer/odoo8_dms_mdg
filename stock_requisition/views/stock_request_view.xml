@@ -46,6 +46,7 @@
 								<field name="request_by" />
 								<field name="approve_by" />
 								<field name="issue_from_optional_location" attrs="{'readonly':[('state','=','approve')]}" />
+								<field name="township_ids" widget="many2many_tags"/>
 							</group>
 						</group>
 						<button name="so_list" string="Refresh" type="object" icon="terp-gtk-jump-to-ltr" attrs="{'invisible':['|',('state','not in',('draft',)),('pre_order','=',False)]}"/>

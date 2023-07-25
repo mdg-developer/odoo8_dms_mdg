@@ -157,7 +157,7 @@ class stock_requisition(osv.osv):
                  'from_location_id':location,
                  'to_location_id':to_location_id ,
                  'vehicle_id':vehicle_id,
-                'p_line': data_line,
+                # 'p_line': data_line,
                 'order_line':order_line,
                 'issue_to':issue_to,
             }
@@ -194,6 +194,7 @@ class stock_requisition(osv.osv):
     'issue_from_optional_location':fields.boolean('Issue from Optional Location'),
     'sub_d_customer_id':fields.many2one('sub.d.customer', 'Sub-D Customer'),
     'principle_id'    :fields.many2one('product.maingroup', 'Principle'),
+    'township_ids': fields.many2many('res.township', string='Township'),
 }
     _defaults = {
         'state' : 'draft',
@@ -275,7 +276,10 @@ class stock_requisition(osv.osv):
                 issue_from_optional_location=stock_request_data.issue_from_optional_location
                 if issue_from_optional_location==True:
                     cr.execute("update stock_requisition set to_location_id=%s where id =%s",(optional_issue_location_id,stock_request_data))
-                order_ids = sale_order_obj.search(cr, uid, [('delivery_id', '=', sale_team_id), ('shipped', '=', False), ('is_generate', '=', False), ('invoiced', '=', False), ('state', 'not in', ['draft','done', 'cancel', 'reversed'])], context=context) 
+                domain = [('delivery_id', '=', sale_team_id), ('shipped', '=', False), ('is_generate', '=', False), ('invoiced', '=', False), ('state', 'not in', ['draft','done', 'cancel', 'reversed'])]
+                if stock_request_data.township_ids:
+                    domain += [('delivery_township_id', 'in', stock_request_data.township_ids.ids)]
+                order_ids = sale_order_obj.search(cr, uid, domain, context=context)
                 cr.execute("delete from stock_requisition_order where  stock_line_id=%s", (stock_request_data.id,))
                 cr.execute("update stock_requisition_line set sale_req_quantity=0 where line_id=%s", (stock_request_data.id,))
 #                 order_list = str(tuple(order_ids))
@@ -558,8 +562,55 @@ class stock_requisition(osv.osv):
     def update_data(self, cr, uid, ids, context=None):
         product_line_obj = self.pool.get('stock.requisition.line')
         request_obj = self.pool.get('stock.requisition')
-        req_line_id = product_line_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context)
+        sale_order_obj = self.pool.get('sale.order')
+        data_line = []
+        big_req_quantity = 0
+        req_quantity = 0
+        sale_req_quantity = 0
+        addtional_req_quantity = 0
+        order_qty = 0
+        ecommerce_qty = 0
         req_value = self.browse(cr, uid, ids[0], context=context)
+        product_line = req_value.sale_team_id.sale_group_id.product_ids
+        to_location_id = req_value.sale_team_id.issue_location_id
+        for line in product_line:
+            product = self.pool.get('product.product').browse(cr, uid, line.id, context=context)
+            cr.execute(
+                'select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s group by product_id',
+                (to_location_id.id, product.id,))
+            qty_on_hand = cr.fetchone()
+            if qty_on_hand:
+                qty_on_hand = qty_on_hand[0]
+            else:
+                qty_on_hand = 0
+            if product.product_tmpl_id.type == 'product':
+                if req_value.pre_order == True:
+                    cr.execute("""select array_agg(so.id)
+                                from stock_requisition_order req,sale_order so
+                                where req.name=so.name
+                                and stock_line_id=%s""", (req_value.id,))
+                    order_ids = cr.fetchone()[0]
+                    order_qty = self.get_order_qty(cr, uid, product_id=product.id, order_ids=order_ids)
+                    ecommerce_qty = self.get_ecommerce_qty(cr, uid, product_id=product.id, order_ids=order_ids)
+                else:
+                    order_qty = 0
+                    ecommerce_qty = 0
+                data_line.append({
+                    'sequence': product.sequence,
+                    'product_id': line.id,
+                    'product_uom': product.product_tmpl_id.uom_id and product.product_tmpl_id.uom_id.id or False,
+                    'uom_ratio': product.product_tmpl_id.uom_ratio,
+                    'req_quantity': order_qty + ecommerce_qty,
+                    'big_uom_id': product.product_tmpl_id.big_uom_id and product.product_tmpl_id.big_uom_id.id or False,
+                    'big_req_quantity': req_quantity,
+                    'sale_req_quantity': sale_req_quantity,
+                    'addtional_req_quantity': addtional_req_quantity,
+                    'qty_on_hand': qty_on_hand,
+                    'order_qty': order_qty,
+                    'ecommerce_qty': ecommerce_qty,
+                })
+        req_value.update({'p_line': data_line})
+        req_line_id = product_line_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context)
         if req_value.pre_order==True:
             request_obj.refresh_so_pending_list(cr, uid, ids, context=context)
         for data in req_line_id:
