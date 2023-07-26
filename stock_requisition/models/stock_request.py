@@ -571,10 +571,22 @@ class stock_requisition(osv.osv):
         order_qty = 0
         ecommerce_qty = 0
         req_value = self.browse(cr, uid, ids[0], context=context)
-        product_line = req_value.sale_team_id.sale_group_id.product_ids
+        req_value.update({'p_line': None})
         to_location_id = req_value.sale_team_id.issue_location_id
+        domain = [('delivery_id', '=', req_value.sale_team_id.id), ('shipped', '=', False), ('is_generate', '=', False),
+                  ('invoiced', '=', False), ('state', 'not in', ['draft', 'done', 'cancel', 'reversed'])]
+        if req_value.township_ids:
+            domain += [('delivery_township_id', 'in', req_value.township_ids.ids)]
+        sale_order_ids = sale_order_obj.search(cr, uid, domain, context=context)
+        cr.execute("""select array_agg(distinct sol.product_id)
+                    from sale_order_line sol,product_product pp,product_template pt
+                    where sol.product_id=pp.id
+                    and pp.product_tmpl_id=pt.id
+                    and pt.type='product'
+                    and order_id in %s""", (tuple(sale_order_ids),))
+        product_line = cr.fetchone()[0]
         for line in product_line:
-            product = self.pool.get('product.product').browse(cr, uid, line.id, context=context)
+            product = self.pool.get('product.product').browse(cr, uid, line, context=context)
             cr.execute(
                 'select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s group by product_id',
                 (to_location_id.id, product.id,))
@@ -597,7 +609,7 @@ class stock_requisition(osv.osv):
                     ecommerce_qty = 0
                 data_line.append({
                     'sequence': product.sequence,
-                    'product_id': line.id,
+                    'product_id': line,
                     'product_uom': product.product_tmpl_id.uom_id and product.product_tmpl_id.uom_id.id or False,
                     'uom_ratio': product.product_tmpl_id.uom_ratio,
                     'req_quantity': order_qty + ecommerce_qty,
