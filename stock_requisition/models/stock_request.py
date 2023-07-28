@@ -152,15 +152,25 @@ class stock_requisition(osv.osv):
                                         'date':sale_date,
                                         'sale_team_id':order.section_id.id,
                                         'state':order.state,
-                                                  }) 
-            values = {
-                 'from_location_id':location,
-                 'to_location_id':to_location_id ,
-                 'vehicle_id':vehicle_id,
-                # 'p_line': data_line,
-                'order_line':order_line,
-                'issue_to':issue_to,
-            }
+                                                  })
+            if pre_order == True:
+                values = {
+                     'from_location_id':location,
+                     'to_location_id':to_location_id ,
+                     'vehicle_id':vehicle_id,
+                    # 'p_line': data_line,
+                    'order_line':order_line,
+                    'issue_to':issue_to,
+                }
+            else:
+                values = {
+                    'from_location_id': location,
+                    'to_location_id': to_location_id,
+                    'vehicle_id': vehicle_id,
+                    'p_line': data_line,
+                    'order_line': order_line,
+                    'issue_to': issue_to,
+                }
         return {'value': values}    
     _columns = {
         'sale_team_id':fields.many2one('crm.case.section', 'Delivery Team', required=True),
