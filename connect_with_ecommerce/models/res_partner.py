@@ -10,15 +10,6 @@ from openerp.addons.connector.session import ConnectorSession
 from openerp.addons.connector.exception import FailedJobError
 from openerp.addons.connector.jobrunner.runner import ConnectorRunner
 
-@job(default_channel='root.woosaleorder')
-def automation_woo_sale_order(session, original_pre_sale_order_no):
-    res_partner_obj = session.pool['res.partner']
-    context = session.context.copy()
-    cr = session.cr
-    uid = session.uid
-    res_partner_obj.create_woo_sale_order(cr, uid, original_pre_sale_order_no, context=None)
-    return True
-
 class res_partner(osv.osv):
     _inherit = 'res.partner'
 
@@ -194,7 +185,7 @@ class res_partner(osv.osv):
                     'partner_id': result,
                     'title': "Burmart",
                     'body': "Thank you for registration in Burmart E-commerce.",
-                    'device_token': device_token,
+                    'device_token':device_token,
                 }
                 self.pool.get('fcm.notification.messages').create(cr, uid, fcm_noti_values, context=context)
             partner = partner_obj.search(cr, uid, [('id', '=', result)])
@@ -1016,12 +1007,6 @@ class res_partner(osv.osv):
                                 'device_token': device_token,
                             }
                             self.pool.get('fcm.notification.messages').create(cr, uid, fcm_noti_values, context=context)
-                            # put to queue.job
-                            session = ConnectorSession(cr, uid, context)
-                            # this code will try after priority 30 , if success , it will succes, if not it will fail
-                            jobid = automation_woo_sale_order.delay(session, original_pre_sale_order_no , priority=30)
-                            runner = ConnectorRunner()
-                            runner.run_jobs()
                         if create_order_response.status_code in [200, 201]:
                             one_signal_values = {
                                 'partner_id': sale_order.partner_id.id,

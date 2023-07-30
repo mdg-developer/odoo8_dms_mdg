@@ -33,7 +33,22 @@ from openerp.exceptions import except_orm, Warning, RedirectWarning
 from openerp.tools import float_compare
 import openerp.addons.decimal_precision as dp
 import logging
+from openerp.addons.connector.queue.job import job, related_action
+from openerp.addons.connector.session import ConnectorSession
+from openerp.addons.connector.exception import FailedJobError
+from openerp.addons.connector.jobrunner.runner import ConnectorRunner
 #from celery.worker.strategy import default
+
+#when cancel to direct sale, create new order to woo job
+@job(default_channel='root.woonewsaleorder')
+def automation_woo_new_sale_order(session):
+    sale_order_obj = session.pool['sale.order']
+    context = session.context.copy()
+    cr = session.cr
+    uid = session.uid
+    sale_order_obj.create_sale_order_in_woo(cr, uid, context=None)
+    return True
+
 class sale_order_line(osv.osv):
 
     _inherit='sale.order.line'
@@ -501,7 +516,15 @@ class sale_order(osv.osv):
 #             self.pool.get('one.signal.notification.messages').create(cr, uid, one_signal_values)
             order.update_sale_order_point()
             logging.warning("Creating sale order in woo")
-            order.create_sale_order_in_woo()
+            #when cancel to direct sale, create new order to woo job
+            # put to queue.job
+            session = ConnectorSession(cr, uid, context)
+            # this code will try after priority 30 , if success , it will succes, if not it will fail
+            jobid = automation_woo_new_sale_order.delay(session , priority=35)
+            runner = ConnectorRunner()
+            runner.run_jobs()
+            # comment this because this already includes in automation_woo_new_sale_order()
+            # order.create_sale_order_in_woo()
                     
         # Care for deprecated _inv_get() hook - FIXME: to be removed after 6.1
         invoice_vals.update(self._inv_get(cr, uid, order, context=context))
