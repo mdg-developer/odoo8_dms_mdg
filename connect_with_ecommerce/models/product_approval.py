@@ -227,6 +227,8 @@ class product_approval(models.Model):
                         new_barcode_list.append((0,0,{'name':barcode.name,'product_tmpl_id':item.product_tmpl_id.id,'product_approval_id':item.id}))
                     item.write({'barcode_ids':new_barcode_list})
                     vals['barcode_ids'] = [(6, 0, item.barcode_ids.ids)]
+                    sequence = item.product_tmpl_id.sequence or 0
+                    vals['sequence'] = sequence
                     product_id = item.product_tmpl_id.sudo().update(vals)
                     self.state = 'done'
                     self.is_prod_changed = True

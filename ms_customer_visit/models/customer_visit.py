@@ -469,12 +469,15 @@ class customer_visit(osv.osv):
                     if image_id.name:
                         url = baseUrlPrefix + image_id.name + baseUrlPostFix
                         response= requests.get(url).content
+                        status_code = requests.get(url).status_code
+                        if status_code == 404:
+                            raise osv.except_osv(_('Warning'),_('Photoes from Firebase not exist!')) 
                         image = base64.b64encode(response)
                         image_id.write({'image':image})
-                        _logger.info('-----------image has been retrieved----------')
             if visit_data.customer_id.image:
                 customer_image = (visit_data.customer_id.image)
         return self.write(cr, uid, ids, {'image5':customer_image})
+    
     def is_approve(self, cr, uid, ids, context=None):
         
         return self.write(cr, uid, ids, {'state': 'approved','validated_by':uid,'validated_date':datetime.now()})                   
