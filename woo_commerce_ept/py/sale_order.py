@@ -1484,6 +1484,7 @@ class sale_order(models.Model):
                 
                 woo_instance_obj = self.pool.get('woo.instance.ept')
                 instance_obj = woo_instance_obj.search(cr, uid, [('state', '=', 'confirmed')], limit=1)
+                logging.info("Check create_order instance_obj: %s", instance_obj)
                 if instance_obj:
                     instance = woo_instance_obj.browse(cr, uid, instance_obj, context=context)
                     wcapi = instance.connect_for_product_in_woo()  
@@ -1497,7 +1498,8 @@ class sale_order(models.Model):
                     getting_points = int(round(order.amount_total / float(money),0))
                     
                     #find free shipping to add shipping_lines
-                    shipping_info = point_data.get('shipping_info')                    
+                    shipping_info = point_data.get('shipping_info')
+                    logging.info("Check create_order shipping_info: %s", shipping_info)
                     if shipping_info:
                         shipping_title = shipping_info[1].get('title')
                         min_amount = shipping_info[1].get('min_amount')
@@ -1532,6 +1534,7 @@ class sale_order(models.Model):
                     discount_lines = self.pool.get('sale.order.line').search(cr, uid, [('order_id', '=', order.id),
                                                                                        ('promotion_id', '!=', False),
                                                                                        ('price_unit', '<', 0)],context=context)
+                    logging.info("Check create_order discount_lines: %s", discount_lines)
                     for discount_line in discount_lines:
                         discount_sol = self.pool.get('sale.order.line').browse(cr, uid, discount_line, context=context)
                         promotion_wcapi = instance.connect_for_point_in_woo()
@@ -1586,6 +1589,7 @@ class sale_order(models.Model):
                     #find woo products to add line_items 
                     product_lines = self.pool.get('sale.order.line').search(cr, uid, [('order_id', '=', order.id),
                                                                                       ('service_product', '=', False)],context=context)
+                    logging.info("Check create_order product_lines: %s", product_lines)
                     for p_line in product_lines:
                         line = self.pool.get('sale.order.line').browse(cr, uid, p_line, context=context) 
                         product_code = line.product_id.default_code
@@ -1594,6 +1598,7 @@ class sale_order(models.Model):
                             product_code = product_code + "!" 
                                        
                         product_response = product_wcapi.put('get-product-id-by-sku',product_code)
+                        logging.info("Check product_response status code: %s", product_response.status_code)
                         if product_response.status_code in [200,201]:                         
                             product_data = product_response.json()  
                             if product_data:                                
@@ -1604,6 +1609,7 @@ class sale_order(models.Model):
                                     woo_product_name = line.product_id.name_template + "(" + woo_product_uom_name + ")"
                                 woo_product_wcapi = instance.connect_in_woo()
                                 woo_product_response = woo_product_wcapi.get('products/%s' %woo_product_id)
+                                logging.info("Check woo_product_response status code: %s", woo_product_response.status_code)
                                 if woo_product_response.status_code in [200,201]:                  
                                     woo_product_data = woo_product_response.json()                             
                                     if woo_product_data != False:                                        
@@ -1617,7 +1623,7 @@ class sale_order(models.Model):
                                                       "subtotal": str(line.product_uom_qty * line.price_unit),
                                                       "total": str(line.product_uom_qty * line.price_unit)
                                                     })
-                    
+                    logging.info("Check product_lists: %s", product_lists)
                     data = { 
                             "status": "completed",
                             "currency": "MMK",
@@ -1677,9 +1683,11 @@ class sale_order(models.Model):
                             "line_items": product_lists,
                             "shipping_lines": shipping_lists,    
                             "fee_lines": fee_lines_lists,                                                                                                       
-                        }       
+                        }
+                    logging.info("Check create_order data: %s", data)
                     create_order_response = wcapi.post("orders", data)                    
-                    logging.warning("Check create_order_response status code: %s", create_order_response.status_code)
+                    logging.info("Check create_order_response status code: %s", create_order_response.status_code)
+                    logging.info("Check create_order_response content: %s", create_order_response.content)
                     if create_order_response.status_code in [200,201]:     
                         created_order_data = create_order_response.json()                        
                         order.write({'woo_order_id': created_order_data.get('id'),
