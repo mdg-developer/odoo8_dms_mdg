@@ -425,7 +425,7 @@ class branch_stock_requisition(osv.osv):
             pricelist_id = req_value.pricelist_id.id  
             internal_reference = req_value.internal_reference
             check_gin_ids= []
-            for check_gin_id in good_obj.search(cr,uid,[('request_id','=',request_id),('state','in',('pending'))]):
+            for check_gin_id in good_obj.search(cr,uid,[('request_id','=',request_id),('state','=','pending')]):
                 gin_name = good_obj.browse(cr,uid,check_gin_id,context=context)
                 check_gin_ids.append(gin_name.name)
             if len(check_gin_ids) > 0:
