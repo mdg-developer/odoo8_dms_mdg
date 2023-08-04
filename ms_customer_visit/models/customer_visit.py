@@ -165,14 +165,25 @@ class customer_visit(osv.osv):
              "Use this field anywhere a small image is required.")    
     
     def create(self, cr, uid, vals, context=None):
+        # NEED TO CALL SUPER FIRST
+        customer_visit_id = super(customer_visit, self).create(cr, uid, vals, context=context)
+        from_zone = pytz.utc
+        to_zone = pytz.timezone('Asia/Rangoon')
+        
+        # NEED TO RETRIEVE CREATED RECORD CREATE_DATE
+        create_date = self.pool.get('customer.visit').browse(cr, uid, customer_visit_id).create_date
+        create_date = datetime.strptime(create_date, '%Y-%m-%d %H:%M:%S')
+        # NEED TO CONVERT UTC TO ASIA/RANGOON TIMEZONE
+        create_date = from_zone.localize(create_date).astimezone(to_zone).replace(tzinfo=None).replace(microsecond=0) 
+
         device_date = vals.get('date') or ''
+        # NEED TO CONVERT 12-HR FORMAT TO 24-HR FORMAT
         device_date = datetime.strptime(device_date, '%Y-%m-%d %I:%M:%S %p')
         device_date = device_date.strftime('%Y-%m-%d %H:%M:%S')
-        create_date = datetime.now(pytz.timezone('Asia/Rangoon')).replace(tzinfo=None)
-        create_date = create_date.replace(microsecond=0)    
-        date_format = '%Y-%m-%d %H:%M:%S'
-        device_date = datetime.strptime(device_date, date_format)
-        if device_date and create_date:
+        # NEED TO CONVERT STRING OBJ
+        device_date = datetime.strptime(device_date, '%Y-%m-%d %H:%M:%S') 
+
+        if create_date and device_date:
             date_difference = create_date - device_date
             if date_difference:
                 total_seconds = int(date_difference.total_seconds())
@@ -181,8 +192,8 @@ class customer_visit(osv.osv):
                 minutes = (total_seconds % 3600) // 60
                 seconds = total_seconds % 60
                 time_difference = str(days) + ' Days ' + str(hours) + ' Hr ' + str(minutes) + ' Min ' + str(seconds) + ' Sec'
-                vals['date_difference'] = time_difference
-        return super(customer_visit, self).create(cr, uid, vals, context=context)
+                self.write(cr, uid, customer_visit_id, {'date_difference':time_difference})
+        return customer_visit_id
 
     
     @api.depends('image')
