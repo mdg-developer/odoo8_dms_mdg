@@ -423,7 +423,15 @@ class branch_stock_requisition(osv.osv):
                     tansit_location=branch.transit_location_id.id
             receiver = req_value.issue_to      
             pricelist_id = req_value.pricelist_id.id  
-            internal_reference = req_value.internal_reference 
+            internal_reference = req_value.internal_reference
+            check_gin_ids= []
+            for check_gin_id in good_obj.search(cr,uid,[('request_id','=',request_id),('state','=','pending')]):
+                gin_name = good_obj.browse(cr,uid,check_gin_id,context=context)
+                check_gin_ids.append(gin_name.name)
+            if len(check_gin_ids) > 0:
+                raise osv.except_osv(_('Warning'),
+                                 _('Please make the first GIN %s to Issued state') % (check_gin_ids[0],))             
+            
             good_id = good_obj.create(cr, uid, {
                                           'issue_date': request_date,
                                           'pricelist_id':pricelist_id,
