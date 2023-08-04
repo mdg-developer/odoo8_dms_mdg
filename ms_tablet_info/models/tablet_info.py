@@ -35,7 +35,7 @@ class tablet_information(osv.osv):
                except Exception, e:
                    device_imei = datas[0]
                if device_imei:
-                   if long(device_imei) == device_id:
+                   if device_imei == device_id:
                        return True
                    else:
                        return False
