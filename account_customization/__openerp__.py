@@ -35,7 +35,8 @@ Account Customization
     'depends': ['base','account'
     ],
     'data': [
-       'wizard/account_wizatd_view.xml'
+       'wizard/account_wizatd_view.xml',
+       'views/account_invoice_view.xml',
     ],
     'installable': True,
     'auto_install': False,
