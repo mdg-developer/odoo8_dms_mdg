@@ -65,8 +65,13 @@ class purchase_order(osv.osv):
 #                                                                  'approved':[('readonly', True)],
 #                                                                  'done':[('readonly', True)]},),
       
-
+             'is_burmart_order': fields.boolean('Is Burmart Order'),
  }
+    
+    
+    _defaults = {
+        'is_burmart_order': False,
+    }
 #     _defaults = {
 #         'is_agreed': False,
 #         'is_margin':False,
