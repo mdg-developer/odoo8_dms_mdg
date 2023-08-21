@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record id="purchase_payment_approval_form" model="ir.ui.view">
+			<field name="name">purchase.payment.approval.form</field>
+			<field name="model">purchase.payment.approval</field>
+			<field name="arch" type="xml">
+				<form string="Purchase Payment Approval" version="7.0">
+					<header>
+						<button name="confirm" string="Confirm" type="object"
+							class="oe_highlight" attrs="{'invisible':[('state','not in',('draft'))]}"
+							groups="base.group_cashier_confirm" />
+						<button name="approve" string="Approve"
+							type="object" class="oe_highlight" groups="base.group_cashier_confirm"
+							attrs="{'invisible':[('state','not in',('pending'))]}" />
+						<button name="set_to_draft" string="Set to draft" type="object"
+							class="oe_highlight" attrs="{'invisible':[('state','in',('done','draft'))]}"
+							groups="base.group_cashier_confirm" />
+						<field name="state" widget="statusbar" statusbar_visible="draft,pending,done" />
+					</header>
+					<sheet>
+						<group col="1" string="Purchase Payment Approval">
+							<group col="2">
+								<group>
+									<field name="name" />
+									<field name="date" attrs="{'readonly':[('state','=','done')]}" />
+									<field name="partner_id" domain="[('supplier','=', True)]" />
+								</group>
+								<group>
+									<field name="write_date" readonly="1" />
+									<field name="to_date" attrs="{'readonly':[('state','=','done')]}" />
+								</group>
+							</group>
+							<group>
+								<button name="retrieve" string="Retrieve"
+									attrs="{'invisible':[('state','in',('pending','done'))]}" type="object"
+									class="oe_highlight" groups="base.group_user"/>
+							</group>
+						</group>
+						<notebook>
+							<page string="Invoice">
+								<field name="invoice_line" attrs="{'readonly':[('state','=','done')]}">
+									<form string="Invoice Lines">
+										<field name="invoice_id" />
+										<field name="date" />
+										<field name="date_due" />
+										<field name="amount" />
+										<field name="selected" />
+									</form>
+									<tree string="Invoice Lines" editable="bottom">
+										<field name="invoice_id" />
+										<field name="date" />
+										<field name="date_due" />
+										<field name="amount" />
+										<field name="selected" />
+									</tree>
+								</field>
+								<group col="3">
+									<group></group>
+									<group />
+									<group>
+										<label string="Total" class="oe_inline" />
+										<field name="cash_sub_total" nolabel="1" class="oe_inline" />
+									</group>
+								</group>
+							</page>
+							<page string="Denomination">
+								<field name="denomination_line" attrs="{'readonly':[('state','=','done')]}">
+									<form string="Denomination Lines">
+										<field name="notes" />
+										<field name="note_qty" />
+									</form>
+									<tree string="Denomination Lines" editable="bottom">
+										<field name="notes" />
+										<field name="note_qty" />
+									</tree>
+								</field>
+								<group col="3">
+									<group />
+									<group />
+									<group>
+										<label string="Total" class="oe_inline" />
+										<field name="denomination_sub_total" nolabel="1" class="oe_inline" />
+									</group>
+								</group>
+							</page>
+							<page string="Payment">
+								<field name="payment_line" attrs="{'readonly':[('state','=','done')]}">
+									<form string="Payment Lines">
+										<field name="invoice_id" on_change="onchange_invoice_id(invoice_id)"
+											domain="[('section_id', '=',parent.sale_team_id)]" />
+										<field name="date_invoice" />
+										<field name="type" />
+										<field name="journal_id" />
+										<field name="amount" sum="Payment Total"/>
+										<field name="selected" invisible="0" />
+									</form>
+									<tree string="Payment Lines" editable="bottom">
+										<field name="invoice_id" on_change="onchange_invoice_id(invoice_id)"
+											domain="[('section_id', '=',parent.sale_team_id)]" />
+										<field name="date_invoice" />
+										<field name="type" />
+										<field name="journal_id" />
+										<field name="amount" sum="Payment Total"/>
+										<field name="selected" invisible="0" readonly="1" />
+									</tree>
+								</field>
+							</page>
+						</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_purchase_payment_approval_tree">
+			<field name="name">purchase.payment.approval.tree</field>
+			<field name="model">purchase.payment.approval</field>
+			<field name="arch" type="xml">
+				<tree string="Invoices">
+					<field name="name" />
+					<field name="date" />
+					<field name="to_date" />
+					<field name="partner_id" />
+					<field name="state" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="view_purchase_payment_approval_filter" model="ir.ui.view">
+			<field name="name">Purchase Payment Approval Filter</field>
+			<field name="model">purchase.payment.approval</field>
+			<field name="arch" type="xml">
+				<search string="Search Purchase Payment Approval">
+					<group expand="0" string="Group By...">
+						<filter string="Supplier" icon="terp-partner" domain="[]"
+							context="{'group_by':'partner_id'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<record id="action_purchase_payment_approval_view" model="ir.actions.act_window">
+			<field name="name">Purchase Payment Approval</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">purchase.payment.approval</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" eval="view_purchase_payment_approval_tree" />
+			<field name="search_view_id" ref="view_purchase_payment_approval_filter" />
+		</record>
+
+		<menuitem id="menu_purchase_payment_approval" action="action_purchase_payment_approval_view"
+			parent="account.menu_finance_bank_and_cash" name="Purchase Payment Approval"
+			sequence="14" />
+
+	</data>
+</openerp>
