@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record id="purchase_payment_approval_code_sequence" model="ir.sequence.type">
+			<field name="name">Purchase Payment Approval Sequence</field>
+			<field name="code">purchase.payment.approval</field>
+		</record>
+
+		<record id="purchase_payment_approval_code_seq"  model="ir.sequence">
+			<field name="name">Purchase Payment Approval Code Sequence</field>
+			<field name="code">purchase.payment.approval</field>
+			<field name="company_id" eval="False" />
+			<field name="prefix">PA/%(year)s/</field>
+			<field name="padding">7</field>
+		</record>
+		
+<!--		<record id="manual_cashier_code_sequence" model="ir.sequence.type">-->
+<!--			<field name="name">Manual Cashier Approval Sequence</field>-->
+<!--			<field name="code">manual.cashier.approval</field>-->
+<!--		</record>-->
+
+<!--		<record id="manual_cashier_code_seq"  model="ir.sequence">-->
+<!--			<field name="name">Manual Cashier Code Sequence</field>-->
+<!--			<field name="code">manual.cashier.approval</field>-->
+<!--			<field name="company_id" eval="False" />-->
+<!--			<field name="prefix">MCash/%(year)s/</field>-->
+<!--			<field name="padding">7</field>-->
+<!--		</record>-->
+<!--		-->
+
+<!--		<record id="manual_denomination_code_sequence" model="ir.sequence.type">-->
+<!--			<field name="name">Manual Denomination Sequence</field>-->
+<!--			<field name="code">manual.sales.denomination</field>-->
+<!--		</record>-->
+
+<!--		<record id="manual_denomination_code_seq" model="ir.sequence">-->
+<!--			<field name="name">Manual Denomination Code Sequence</field>-->
+<!--			<field name="code">manual.sales.denomination</field>-->
+<!--			<field name="company_id" eval="False" />-->
+<!--			<field name="prefix">MDSR</field>-->
+<!--			<field name="padding">6</field>-->
+<!--		</record>		-->
+		
+	</data>
+</openerp>
