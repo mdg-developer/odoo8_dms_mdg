@@ -1,0 +1,1 @@
+import promos_rules

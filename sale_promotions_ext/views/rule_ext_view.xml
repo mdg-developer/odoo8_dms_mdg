@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<record id="view_promotion_rules_ext_form_inherit" model="ir.ui.view">
+			<field name="name">promos.rules.form.ext.inherit</field>
+			<field name="model">promos.rules</field>
+			<field name="type">form</field>
+			<field name="inherit_id" ref="sale_promotions.view_promotion_rules_form" />
+			<field name="arch" type="xml">
+                <data>
+<!--					Hide Original Condition View-->
+					<xpath expr="//page[@string='Conditions']" position="replace">
+					</xpath>
+<!--					Make my own Condition view-->
+                    <xpath expr="//notebook/page[@string='Actions']" position="before">
+						<page string="Conditions">
+							<group>
+								<label string="If" />
+								<field name="logic" nolabel="1" colspan="1" />
+								<label string="expressions are" />
+								<field name="expected_logic_result" nolabel="1" />
+							</group>
+							<separator string="Expressions" />
+							<br />
+							<field name="expressions">
+								<tree string="Expressions" >
+									<field name="sequence" />
+									<field name="attribute" on_change="on_change(attribute, value)" />
+									<field name="comparator" />
+									<field name="value" />
+								</tree>
+								<form>
+									<sheet>
+										<group>
+											<field name="sequence" />
+											<field name="attribute" string="Promotion Type" on_change="on_change(attribute, value)" />
+											<field name="comparator" />
+											<field name="value"  />
+										</group>
+										<group attrs="{'invisible': [('attribute', '!=', 'prods_multi_uom_qty')]}">
+											<field name="condition_line_ids" >
+												<tree string = "Lines" editable="bottom">
+<!--													<field name="category_id" />-->
+													<field name="product_id" />
+													<field name="default_code"  />
+													<field name="uom_id" />
+												</tree>
+											</field>
+											<field name="quantity_total" />
+										</group>
+										<group attrs="{'invisible': [('attribute', '!=', 'prod_qty')]}">
+											<field name="product_id" />
+											<field name="uom_id" />
+											<field name="qty" />
+										</group>
+										<group attrs="{'invisible': [('attribute', '!=', 'cat_total')]}">
+											<field name="category_id" />
+											<field name="sale_total" />
+										</group>
+										<group attrs="{'invisible': [('attribute', '!=', 'fix_categ_qty')]}">
+											<field name="category_ids" widget="many2many_tags"/>
+											<field name="minimum_qty" />
+											<field name="sale_total_for_fix_categ" />
+										</group>
+										<group attrs="{'invisible': [('attribute', '!=', 'multi_prod_sale_amt')]}">
+											<field name="product_ids" widget="many2many_tags" />
+											<field name="sale_total_for_multi_prod" />
+										</group>
+										<group attrs="{'invisible': [('attribute', '!=', 'prod_sub_total')]}">
+											<field name="product_id_sub_total" />
+											<field name="sale_total_for_sub_total" />
+										</group>
+									</sheet>
+								</form>
+							</field>
+						</page>
+					</xpath>
+<!--					Hide Original Action View-->
+					<xpath expr="//page[@string='Actions']" position="replace">
+					</xpath>
+<!--					Make my own Action View-->
+					<xpath expr="//notebook/page[@string='Customers']" position="before">
+						<page string="Actions">
+							<field name="actions" >
+								<tree string="Actions">
+									<field name="sequence" />
+									<field name="action_type" on_change="on_change(action_type, product_code, arguments)" />
+									<field name="product_code" />
+									<field name="arguments" />
+									<field name="discount_product_code" />
+								</tree>
+								<form>
+									<sheet>
+										<group>
+<!--											user inputs-->
+											<field name="sequence" />
+											<field name="action_type" on_change="on_change(action_type, product_code, arguments)" />
+<!--											auto inputs-->
+											<field name="product_code"  />
+											<field name="arguments"  />
+<!--											user input-->
+											<field name="discount_product_code"  attrs="{'invisible': [('action_type', '=', 'foc_any_prod_fix')]}"/>
+										</group>
+										<group>
+											<field name="product_id" attrs="{'invisible': [('action_type', '!=', 'prod_disc_perc'), ('action_type', '!=', 'qty_disc_fix')]}"/>
+											<field name="product_ids" widget="many2many_tags" attrs="{'invisible': [('action_type', '!=', 'any_product_qty_disc_fix'), ('action_type', '!=', 'foc_any_product')]}" />
+											<field name="qty" attrs="{'invisible': [('action_type', '!=', 'foc_any_product'), ('action_type', '!=', 'qty_disc_fix') ,('action_type', '!=', 'any_product_qty_disc_fix')]}"/>
+											<field name="discount_percentage" attrs="{'invisible': [('action_type', '!=', 'prod_disc_perc')]}"/>
+											<field name="discount_product" domain="[('type','=','service')]" attrs="{'invisible': [('action_type', '!=', 'prod_disc_perc'), ('action_type', '!=', 'qty_disc_fix'),('action_type','!=','any_product_qty_disc_fix')]}"/>
+											<field name="discount_amount" attrs="{'invisible': [('action_type', '!=', 'qty_disc_fix'), ('action_type', '!=', 'any_product_qty_disc_fix')]}"/>
+											<field name="foc_qty" attrs="{'invisible': [('action_type', '!=', 'foc_any_product')]}"/>
+										</group>
+
+									</sheet>
+								</form>
+							</field>
+							</page>
+					</xpath>
+
+                </data>
+            </field>
+        </record>
+    </data>
+</openerp>
