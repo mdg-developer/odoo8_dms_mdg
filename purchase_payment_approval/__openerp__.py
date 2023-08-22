@@ -27,7 +27,7 @@
     'sequence': 30,
     'summary': 'Account',
     'description': """
-Sale Cashier Approval
+Purchase Payment Approval
 
 """,
     'author': 'Seventh Computing Developer Group',
@@ -35,16 +35,9 @@ Sale Cashier Approval
     'depends': ['base','account','account_accountant',
     ],
     'data': [
-        # 'views/code_sequence.xml',
+        'views/code_sequence.xml',
         'views/purchase_payment_approval_view.xml',
-        # 'views/qweb_view.xml',
-        # 'views/report_cashier_approval.xml',
-        # 'views/custom_layout.xml',
-        # 'views/manual_cashier_approval_view.xml',
-        # 'views/advanced_payment_view.xml',
-        # 'reports/qweb_view.xml',
-        # 'reports/report_denomination.xml',
-        # 'reports/custom_layout.xml',
+
     ],
     'installable': True,
     'auto_install': False,
