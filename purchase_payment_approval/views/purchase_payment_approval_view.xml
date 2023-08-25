@@ -8,10 +8,10 @@
 			<field name="arch" type="xml">
 				<form string="Purchase Payment Approval" version="7.0">
 					<header>
-						<button name="confirm" string="Confirm" type="object"
+						<button name="confirm_" string="Confirm" type="object"
 							class="oe_highlight" attrs="{'invisible':[('state','not in',('draft'))]}"
 							groups="base.group_cashier_confirm" />
-						<button name="approve" string="Approve"
+						<button name="cashier_approve" string="Approve"
 							type="object" class="oe_highlight" groups="base.group_cashier_confirm"
 							attrs="{'invisible':[('state','not in',('pending'))]}" />
 						<button name="set_to_draft" string="Set to draft" type="object"
@@ -30,7 +30,10 @@
 								<group>
 									<field name="write_date" readonly="1" />
 									<field name="to_date" attrs="{'readonly':[('state','=','done')]}" />
-								</group>
+									<field name="confirm_by" readonly="1" />
+									<field name="confirm_date" readonly="1" />
+									<field name="approve_by" readonly="1" />
+									<field name="approve_date" readonly="1" />								</group>
 							</group>
 							<group>
 								<button name="retrieve" string="Retrieve"
@@ -89,20 +92,22 @@
 								<field name="payment_line" attrs="{'readonly':[('state','=','done')]}">
 									<form string="Payment Lines">
 										<field name="invoice_id" on_change="onchange_invoice_id(invoice_id)"
-											domain="[('section_id', '=',parent.sale_team_id)]" />
+											domain="[('partner_id', '=',parent.partner_id)]" />
 										<field name="date_invoice" />
 										<field name="type" />
 										<field name="journal_id" />
 										<field name="amount" sum="Payment Total"/>
+										<field name="notes" />
 										<field name="selected" invisible="0" />
 									</form>
 									<tree string="Payment Lines" editable="bottom">
 										<field name="invoice_id" on_change="onchange_invoice_id(invoice_id)"
-											domain="[('section_id', '=',parent.sale_team_id)]" />
+											domain="[('partner_id', '=',parent.partner_id)]" />
 										<field name="date_invoice" />
 										<field name="type" />
 										<field name="journal_id" />
 										<field name="amount" sum="Payment Total"/>
+										<field name="notes" />
 										<field name="selected" invisible="0" readonly="1" />
 									</tree>
 								</field>
