@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record id="price_change_form" model="ir.ui.view">
+			<field name="name">price.change.form</field>
+			<field name="model">price.change</field>
+			<field name="arch" type="xml">
+				<form string="Price Change Form">
+					<header>
+						<button name="request" string="Request" type="object"
+							class="oe_highlight" attrs="{'invisible':[('state','!=','draft')]}" />
+						<button name="confirm" string="Confirm"
+							type="object" class="oe_highlight"
+							attrs="{'invisible':[('state','!=','request')]}" />
+						<button name="approve" string="Approve"
+							type="object" class="oe_highlight"
+							attrs="{'invisible':[('state','!=','confirm')]}" />
+                        <button name="cancel" string="Cancel"
+							type="object" class="oe_highlight"
+							attrs="{'invisible':[('state','!=','confirm')]}" />
+						<field name="state" widget="statusbar" statusbar_visible="draft,requested,confirmed,approved,cancelled" />
+					</header>
+					<sheet>
+						<group col="1" string="Price Change Form">
+							<group col="2">
+								<group>
+									<field name="name" />
+									<field name="requested_date" />
+                                    <field name="requested_by" />
+                                    <field name="confirmed_by" />
+                                    <field name="confirmed_date" />
+                                    <field name="sale_pricelist_id" />
+								</group>
+								<group>
+                                    <field name="description" />
+                                    <field name="approved_by" />
+                                    <field name="approved_date" />
+                                    <field name="cost_pricelist_id" />
+                                </group>
+							</group>
+							<group>
+								<button name="retrieve" string="Retrieve"
+									attrs="{'invisible':[('state','!=','draft')]}" type="object"
+									class="oe_highlight" groups="base.group_user"/>
+							</group>
+						</group>
+						<notebook>
+							<page string="Lines">
+								<field name="line_ids" attrs="{'readonly':[('state','!=','draft')]}">
+									<form string="Lines">
+										<field name="product_id" />
+										<field name="product_code" />
+										<field name="uom_ratio" />
+										<field name="uom_id" />
+										<field name="cost_price" />
+										<field name="current_price" />
+										<field name="new_price" />
+										<field name="current_margin" />
+										<field name="new_margin" />
+									</form>
+									<tree string="Lines" editable="bottom">
+										<field name="product_id" on_change="onchange_product_id(product_id)"/>
+										<field name="product_code" readonly="True"/>
+										<field name="uom_ratio" readonly="True"/>
+										<field name="uom_id" readonly="True"/>
+										<field name="cost_price" readonly="True"/>
+										<field name="current_price" readonly="True"/>
+										<field name="new_price" />
+										<field name="current_margin" readonly="True"/>
+										<field name="new_margin" readonly="True"/>
+									</tree>
+								</field>
+							</page>
+						</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_price_change_tree">
+			<field name="name">price.change.tree</field>
+			<field name="model">price.change</field>
+			<field name="arch" type="xml">
+				<tree string="Price Change">
+					<field name="name" />
+					<field name="requested_date" />
+                    <field name="requested_by" />
+                    <field name="approved_by" />
+                    <field name="approved_date" />
+                    <field name="sale_pricelist_id" />
+                    <field name="cost_pricelist_id" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="view_price_change_filter" model="ir.ui.view">
+			<field name="name">Price Change Filter</field>
+			<field name="model">price.change</field>
+			<field name="arch" type="xml">
+				<search string="Search Price Change">
+					<group expand="0" string="Group By...">
+						<filter string="Requested By" icon="terp-partner" domain="[]"
+							context="{'group_by':'requested_by'}" />
+                        <filter string="Requested Date" icon="terp-partner" domain="[]"
+							context="{'group_by':'requested_date'}" />
+                        <filter string="Confirmed By" icon="terp-partner" domain="[]"
+							context="{'group_by':'confirmed_by'}" />
+                        <filter string="Confirmed Date" icon="terp-partner" domain="[]"
+							context="{'group_by':'confirmed_date'}" />
+                        <filter string="Approved By" icon="terp-partner" domain="[]"
+							context="{'group_by':'approved_by'}" />
+                        <filter string="Approved Date" icon="terp-partner" domain="[]"
+							context="{'group_by':'approved_date'}" />
+                        <filter string="Sale Pricelist" icon="terp-partner" domain="[]"
+							context="{'group_by':'sale_pricelist_id'}" />
+                        <filter string="Cost Pricelist" icon="terp-partner" domain="[]"
+							context="{'group_by':'cost_pricelist_id'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<record id="action_price_change_view" model="ir.actions.act_window">
+			<field name="name">Price Change</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">price.change</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" eval="view_price_change_tree" />
+			<field name="search_view_id" ref="view_price_change_filter" />
+		</record>
+
+		<menuitem id="menu_price_change" action="action_price_change_view"
+			parent="product.menu_product_pricelist_main" name="Price Change"
+			sequence="5" />
+
+	</data>
+</openerp>
