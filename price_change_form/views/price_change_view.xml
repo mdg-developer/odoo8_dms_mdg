@@ -12,13 +12,13 @@
 							class="oe_highlight" attrs="{'invisible':[('state','!=','draft')]}" />
 						<button name="confirm" string="Confirm"
 							type="object" class="oe_highlight"
-							attrs="{'invisible':[('state','!=','request')]}" />
+							attrs="{'invisible':[('state','!=','requested')]}" />
 						<button name="approve" string="Approve"
 							type="object" class="oe_highlight"
-							attrs="{'invisible':[('state','!=','confirm')]}" />
+							attrs="{'invisible':[('state','!=','confirmed')]}" />
                         <button name="cancel" string="Cancel"
 							type="object" class="oe_highlight"
-							attrs="{'invisible':[('state','!=','confirm')]}" />
+							attrs="{'invisible':[('state','!=','confirmed')]}" />
 						<field name="state" widget="statusbar" statusbar_visible="draft,requested,confirmed,approved,cancelled" />
 					</header>
 					<sheet>
@@ -30,13 +30,13 @@
                                     <field name="requested_by" />
                                     <field name="confirmed_by" />
                                     <field name="confirmed_date" />
-                                    <field name="sale_pricelist_id" />
+                                    <field name="sale_pricelist_id" domain="[('state','=','sale')]"/>
 								</group>
 								<group>
                                     <field name="description" />
                                     <field name="approved_by" />
                                     <field name="approved_date" />
-                                    <field name="cost_pricelist_id" />
+                                    <field name="cost_pricelist_id" domain="[('state','=','purchase')]"/>
                                 </group>
 							</group>
 							<group>
@@ -60,7 +60,7 @@
 										<field name="new_margin" />
 									</form>
 									<tree string="Lines" editable="bottom">
-										<field name="product_id" on_change="onchange_product_id(product_id)"/>
+										<field name="product_id" on_change="onchange_product_id(product_id,parent.sale_pricelist_id,parent.cost_pricelist_id)"/>
 										<field name="product_code" readonly="True"/>
 										<field name="uom_ratio" readonly="True"/>
 										<field name="uom_id" readonly="True"/>
