@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record id="price_change_code_sequence" model="ir.sequence.type">
+			<field name="name">Price Change Sequence</field>
+			<field name="code">price.change</field>
+		</record>
+
+		<record id="price_change_code_seq"  model="ir.sequence">
+			<field name="name">Price Change Code Sequence</field>
+			<field name="code">price.change</field>
+			<field name="company_id" eval="False" />
+			<field name="prefix">PC/%(year)s/</field>
+			<field name="padding">7</field>
+		</record>
+
+	</data>
+</openerp>

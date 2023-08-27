@@ -9,6 +9,7 @@
 Price Change Form
     """,
     'data': [
+        'views/code_sequence.xml',
         'views/price_change_view.xml',
 	],
     'installable': True,

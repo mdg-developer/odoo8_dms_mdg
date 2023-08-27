@@ -7,7 +7,13 @@ import datetime
 
 class price_change(osv.osv):
     _name = "price.change"
-    
+
+    def create(self, cursor, user, vals, context=None):
+        price_change_no = self.pool.get('ir.sequence').get(cursor, user,
+            'price.change') or '/'
+        vals['name'] = price_change_no
+        return super(price_change, self).create(cursor, user, vals, context=context)
+
     _columns = {  
         'name': fields.char('Txn', size=64, readonly=True),
         'requested_date': fields.date('Requested Date', readonly=True),
@@ -138,15 +144,11 @@ class price_change_line(osv.osv):
             vals['product_code'] = product_code
             vals['uom_ratio'] = uom_ratio
             vals['uom_id'] = uom_id
-            logging.info("Check create price_change_id: %s", vals.get('price_change_id'))
             if vals.get('price_change_id'):
                 price_change_obj = self.pool.get('price.change').browse(cursor, user, vals.get('price_change_id'), context=context)
-                logging.info("Check create price_change_obj: %s", price_change_obj)
                 if price_change_obj:
                     sale_pricelist_id = price_change_obj.sale_pricelist_id.id
                     cost_pricelist_id = price_change_obj.cost_pricelist_id.id
-                    logging.info("Check create price_change_obj.sale_pricelist_id: %s", price_change_obj.sale_pricelist_id)
-                    logging.info("Check create price_change_obj.cost_pricelist_id: %s", price_change_obj.cost_pricelist_id)
                     if sale_pricelist_id:
                         cursor.execute("""select new_price
                                         from product_pricelist_item item,product_pricelist_version ppv,product_pricelist pp
@@ -222,7 +224,6 @@ class price_change_line(osv.osv):
         uom_id = None
         current_price = 0
         cost_price = 0
-        logging.info("Check onchange_product_id sale_pricelist_id: %s", sale_pricelist_id)
         if product_id and sale_pricelist_id and cost_pricelist_id:
             product_obj = product_obj.browse(cr, uid, product_id, context=context)
             product_code = product_obj.default_code

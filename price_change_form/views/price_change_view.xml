@@ -30,13 +30,13 @@
                                     <field name="requested_by" />
                                     <field name="confirmed_by" />
                                     <field name="confirmed_date" />
-                                    <field name="sale_pricelist_id" domain="[('state','=','sale')]"/>
+                                    <field name="sale_pricelist_id" domain="[('type','=','sale')]"/>
 								</group>
 								<group>
                                     <field name="description" />
                                     <field name="approved_by" />
                                     <field name="approved_date" />
-                                    <field name="cost_pricelist_id" domain="[('state','=','purchase')]"/>
+                                    <field name="cost_pricelist_id" domain="[('type','=','purchase')]"/>
                                 </group>
 							</group>
 							<group>
