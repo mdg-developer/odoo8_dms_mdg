@@ -10,16 +10,14 @@
 					<header>
 						<button name="request" string="Request" type="object"
 							class="oe_highlight" attrs="{'invisible':[('state','!=','draft')]}" />
-						<button name="confirm" string="Confirm"
-							type="object" class="oe_highlight"
-							attrs="{'invisible':[('state','!=','requested')]}" />
-						<button name="approve" string="Approve"
-							type="object" class="oe_highlight"
+						<button name="confirm" string="Confirm" type="object"
+							class="oe_highlight" attrs="{'invisible':[('state','!=','requested')]}" />
+						<button name="approve" string="Approve" type="object"
+							class="oe_highlight" attrs="{'invisible':[('state','!=','confirmed')]}" />
+						<button name="cancel" string="Cancel" type="object" class="oe_highlight"
 							attrs="{'invisible':[('state','!=','confirmed')]}" />
-                        <button name="cancel" string="Cancel"
-							type="object" class="oe_highlight"
-							attrs="{'invisible':[('state','!=','confirmed')]}" />
-						<field name="state" widget="statusbar" statusbar_visible="draft,requested,confirmed,approved,cancelled" />
+						<field name="state" widget="statusbar"
+							statusbar_visible="draft,requested,confirmed,approved,cancelled" />
 					</header>
 					<sheet>
 						<group col="1" string="Price Change Form">
@@ -27,27 +25,30 @@
 								<group>
 									<field name="name" />
 									<field name="requested_date" />
-                                    <field name="requested_by" />
-                                    <field name="confirmed_by" />
-                                    <field name="confirmed_date" />
-                                    <field name="sale_pricelist_id" domain="[('type','=','sale')]"/>
+									<field name="requested_by" />
+									<field name="confirmed_by" />
+									<field name="confirmed_date" />
+									<field name="sale_pricelist_id" domain="[('type','=','sale')]"
+										attrs="{'readonly':[('state','!=','draft')]}" />
 								</group>
 								<group>
-                                    <field name="description" />
-                                    <field name="approved_by" />
-                                    <field name="approved_date" />
-                                    <field name="cost_pricelist_id" domain="[('type','=','purchase')]"/>
-                                </group>
+									<field name="description" />
+									<field name="approved_by" />
+									<field name="approved_date" />
+									<field name="cost_pricelist_id" domain="[('type','=','purchase')]"
+										attrs="{'readonly':[('state','!=','draft')]}" />
+								</group>
 							</group>
 							<group>
 								<button name="retrieve" string="Retrieve"
 									attrs="{'invisible':[('state','!=','draft')]}" type="object"
-									class="oe_highlight" groups="base.group_user"/>
+									class="oe_highlight" groups="base.group_user" />
 							</group>
 						</group>
 						<notebook>
 							<page string="Lines">
-								<field name="line_ids" attrs="{'readonly':[('state','!=','draft')]}">
+								<field name="line_ids"
+									attrs="{'readonly':[('state','not in',('draft','requested'))]}">
 									<form string="Lines">
 										<field name="product_id" />
 										<field name="product_code" />
@@ -60,15 +61,16 @@
 										<field name="new_margin" />
 									</form>
 									<tree string="Lines" editable="bottom">
-										<field name="product_id" on_change="onchange_product_id(product_id,parent.sale_pricelist_id,parent.cost_pricelist_id)"/>
-										<field name="product_code" readonly="True"/>
-										<field name="uom_ratio" readonly="True"/>
-										<field name="uom_id" readonly="True"/>
-										<field name="cost_price" readonly="True"/>
-										<field name="current_price" readonly="True"/>
+										<field name="product_id"
+											on_change="onchange_product_id(product_id,parent.sale_pricelist_id,parent.cost_pricelist_id)" />
+										<field name="product_code" readonly="True" />
+										<field name="uom_ratio" readonly="True" />
+										<field name="uom_id" readonly="True" />
+										<field name="cost_price" readonly="True" />
+										<field name="current_price" readonly="True" />
 										<field name="new_price" />
-										<field name="current_margin" readonly="True"/>
-										<field name="new_margin" readonly="True"/>
+										<field name="current_margin" readonly="True" />
+										<field name="new_margin" readonly="True" />
 									</tree>
 								</field>
 							</page>
@@ -85,11 +87,14 @@
 				<tree string="Price Change">
 					<field name="name" />
 					<field name="requested_date" />
-                    <field name="requested_by" />
-                    <field name="approved_by" />
-                    <field name="approved_date" />
-                    <field name="sale_pricelist_id" />
-                    <field name="cost_pricelist_id" />
+					<field name="requested_by" />
+				    <field name="confirmed_by"/>
+					<field name="confirmed_date"/>
+					<field name="approved_by" />
+					<field name="approved_date" />
+					<field name="sale_pricelist_id" />
+					<field name="cost_pricelist_id" />
+					<field name="state" />
 				</tree>
 			</field>
 		</record>
@@ -102,19 +107,19 @@
 					<group expand="0" string="Group By...">
 						<filter string="Requested By" icon="terp-partner" domain="[]"
 							context="{'group_by':'requested_by'}" />
-                        <filter string="Requested Date" icon="terp-partner" domain="[]"
+						<filter string="Requested Date" icon="terp-partner" domain="[]"
 							context="{'group_by':'requested_date'}" />
-                        <filter string="Confirmed By" icon="terp-partner" domain="[]"
+						<filter string="Confirmed By" icon="terp-partner" domain="[]"
 							context="{'group_by':'confirmed_by'}" />
-                        <filter string="Confirmed Date" icon="terp-partner" domain="[]"
+						<filter string="Confirmed Date" icon="terp-partner" domain="[]"
 							context="{'group_by':'confirmed_date'}" />
-                        <filter string="Approved By" icon="terp-partner" domain="[]"
+						<filter string="Approved By" icon="terp-partner" domain="[]"
 							context="{'group_by':'approved_by'}" />
-                        <filter string="Approved Date" icon="terp-partner" domain="[]"
+						<filter string="Approved Date" icon="terp-partner" domain="[]"
 							context="{'group_by':'approved_date'}" />
-                        <filter string="Sale Pricelist" icon="terp-partner" domain="[]"
+						<filter string="Sale Pricelist" icon="terp-partner" domain="[]"
 							context="{'group_by':'sale_pricelist_id'}" />
-                        <filter string="Cost Pricelist" icon="terp-partner" domain="[]"
+						<filter string="Cost Pricelist" icon="terp-partner" domain="[]"
 							context="{'group_by':'cost_pricelist_id'}" />
 					</group>
 				</search>
@@ -122,7 +127,7 @@
 		</record>
 
 		<record id="action_price_change_view" model="ir.actions.act_window">
-			<field name="name">Price Change</field>
+			<field name="name">Sale Price Change</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">price.change</field>
 			<field name="view_type">form</field>
@@ -132,8 +137,11 @@
 		</record>
 
 		<menuitem id="menu_price_change" action="action_price_change_view"
-			parent="product.menu_product_pricelist_main" name="Price Change"
+			parent="product.menu_product_pricelist_main" name="Sale Price Change"
 			sequence="5" />
 
+		<menuitem id="woo_menu_price_change" name="Sale Price Change"
+			parent="woo_commerce_ept.woo_menu_item_sales" action="action_price_change_view"
+			sequence="11" />
 	</data>
 </openerp>

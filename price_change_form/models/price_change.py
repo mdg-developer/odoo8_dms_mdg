@@ -4,7 +4,8 @@ import openerp.addons.decimal_precision as dp
 import logging
 from datetime import datetime
 import datetime
-
+from openerp.tools.translate import _
+ 
 class price_change(osv.osv):
     _name = "price.change"
 
@@ -16,15 +17,15 @@ class price_change(osv.osv):
 
     _columns = {  
         'name': fields.char('Txn', size=64, readonly=True),
-        'requested_date': fields.date('Requested Date', readonly=True),
+        'requested_date': fields.datetime('Requested Date', readonly=True),
         'requested_by': fields.many2one('res.users', 'Requested By', readonly=True),
         'confirmed_by': fields.many2one('res.users', 'Confirmed By', readonly=True),
-        'confirmed_date': fields.date('Confirmed Date', readonly=True),
-        'sale_pricelist_id': fields.many2one('product.pricelist', 'Sale Pricelist'),
+        'confirmed_date': fields.datetime('Confirmed Date', readonly=True),
+        'sale_pricelist_id': fields.many2one('product.pricelist', 'Sale Pricelist', required =True),
         'description': fields.text('Description'),
         'approved_by': fields.many2one('res.users', 'Approved By', readonly=True),
-        'approved_date': fields.date('Approved Date', readonly=True),
-        'cost_pricelist_id': fields.many2one('product.pricelist', 'Cost Pricelist'),
+        'approved_date': fields.datetime('Approved Date', readonly=True),
+        'cost_pricelist_id': fields.many2one('product.pricelist', 'Cost Pricelist', required =True),
         'line_ids': fields.one2many('price.change.line', 'price_change_id', 'Price Change Lines'),
         'state': fields.selection([('draft', 'Draft'), ('requested', 'Requested'), ('confirmed', 'Confirmed'), ('approved', 'Approved'), ('cancelled', 'Cancelled')], 'Status'),
     }
@@ -34,8 +35,22 @@ class price_change(osv.osv):
         'requested_date': fields.datetime.now,
         'state': 'draft',
     }
-
+    def unlink(self, cr, uid, ids, context=None):
+        for data in self.browse(cr, uid, ids, context=context):
+            if data.state not in ('draft', 'requested'):
+                raise osv.except_osv(
+                    _('Warning!'),
+                    _('You cannot delete an record which is not draft or requested')
+                )                                     
+        return super(price_change, self).unlink(cr, uid, ids, context=context)
+    
     def request(self, cr, uid, ids, context=None):
+        for rec in self.browse(cr, uid, ids, context=context):
+            exist_product_list = []
+            for line in rec.line_ids:
+                if line.product_id.id in exist_product_list:
+                    raise osv.except_osv(_('Warning!'), _('(%s) Product should be one per line .')%(line.product_id.name_template,))     
+                exist_product_list.append(line.product_id.id)            
         return self.write(cr, uid, ids, {'requested_date': datetime.datetime.now(),'requested_by': uid, 'state': 'requested'})
 
     def confirm(self, cr, uid, ids, context=None):
@@ -223,7 +238,7 @@ class price_change_line(osv.osv):
         uom_ratio = None
         uom_id = None
         current_price = 0
-        cost_price = 0
+        cost_price = 0     
         if product_id and sale_pricelist_id and cost_pricelist_id:
             product_obj = product_obj.browse(cr, uid, product_id, context=context)
             product_code = product_obj.default_code
