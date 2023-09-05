@@ -2,12 +2,28 @@
 <openerp>
 	<data>
 
+		<!-- Load css File -->
+		<template id="my_custom_css_asset" name="my_custom_css assets" inherit_id="web.assets_backend">
+		  <xpath expr="." position="inside">
+			<link rel="stylesheet" href="/purchase_order/static/src/css/my_custom_style.css"/>
+		  </xpath>
+		</template>
+
+		<template id="my_custom_css_asset_frontend" name="my_custom_css_front assets" inherit_id="website.assets_frontend">
+		  <xpath expr="." position="inside">
+			<link rel="stylesheet" href="/purchase_order/static/src/css/my_custom_style.css"/>
+		  </xpath>
+		</template>
+
 		<!-- Purchase Form View -->
 		<record id="view_purchase_form_inherit_ext" model="ir.ui.view">
 			<field name="name">view.purchase.form.inherit.ext</field>
 			<field name="model">purchase.order</field>
 			<field name="inherit_id" ref="purchase.purchase_order_form" />
 			<field name="arch" type="xml">
+				<xpath expr="//field[@name='order_line']" position="attributes">
+					<attribute name="class">oe_form_shl</attribute>
+				</xpath>
 				<xpath expr="//button[@name='wkf_send_rfq']" position="after">
 					<button name="wkf_po_done" states="approved" string="Set To Done"
 						type="object" />
@@ -34,6 +50,22 @@
 				</xpath>
 				<xpath expr="//field[@name='date_approve']" position="after">
 					<field name="is_burmart_order" />
+				</xpath>
+
+				<xpath expr="//field[@name='order_line']/tree//field[@name='gross_margin']" position="after">
+<!--				<xpath expr="//field[@name='order_line']" position="inside">-->
+					<field name="market_selling_price" invisible="context.get('default_burmart_order_field_hide')" />
+					<field name="previous_buying_price" invisible="context.get('default_burmart_order_field_hide')" />
+					<field name="current_buying_price" invisible="context.get('default_burmart_order_field_hide')" />
+					<field name="difference_amount" invisible="context.get('default_burmart_order_field_hide')" />
+					<field name="difference_status" invisible="context.get('default_burmart_order_field_hide')" />
+					<field name="sku_status" invisible="context.get('default_burmart_order_field_hide')" />
+					<field name="estimated_expiration_date" invisible="context.get('default_burmart_order_field_hide')" />
+					<field name="margin" string="Margin(%)" invisible="context.get('default_burmart_order_field_hide')" />
+					<field name="shelf_life" string="Shelf Life(Months)" invisible="context.get('default_burmart_order_field_hide')" />
+				</xpath>
+
+				<xpath expr="//field[@name='order_line']/tree//field[@name='company_id']" position="replace">
 				</xpath>
 
 			</field>

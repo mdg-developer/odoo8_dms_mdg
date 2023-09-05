@@ -5,6 +5,7 @@ from dateutil.relativedelta import relativedelta
 from operator import attrgetter
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.osv import fields, osv
+from openerp import api
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 from openerp.osv.orm import browse_record_list, browse_record, browse_null
@@ -18,6 +19,15 @@ class stock_location(osv.osv):
                 }     
 class purchase_order(osv.osv):
     _inherit = 'purchase.order'
+    def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
+        if context is None:
+            context = {}
+        new_context = dict(context)
+        if not context.get('default_is_burmart_order'):
+            new_context.update({
+                'default_burmart_order_field_hide': True
+            })
+        return super(purchase_order, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type,context=new_context, toolbar=toolbar, submenu=submenu)
     
     def action_picking_create(self, cr, uid, ids, context=None):
         for order in self.browse(cr, uid, ids):
@@ -53,7 +63,20 @@ class purchase_order(osv.osv):
             'agreed_price':order_line.agreed_price,
             'gross_margin':order_line.gross_margin,
         }
-    
+
+    def write(self, cr, uid, ids, vals, context=None):
+        state = vals.get('state')
+        if state == 'approved':
+            vals.update({
+                'check_user':uid,
+            })
+        if state == 'confirmed':
+            vals.update({
+                'verify_user':uid
+            })
+        po_id = super(purchase_order, self).write(cr, uid, ids, vals, context=context)
+        return po_id
+
     _columns = {
            'inword':fields.char('Amount In Words'),     
           'incoterm_id': fields.many2one('stock.incoterms', 'Incoterm', help="International Commercial Terms are a series of predefined commercial terms used in international transactions.", required=True),
@@ -66,6 +89,9 @@ class purchase_order(osv.osv):
 #                                                                  'done':[('readonly', True)]},),
       
              'is_burmart_order': fields.boolean('Is Burmart Order'),
+            'payment_method_id': fields.many2one('payment.method', string="Payment Method"),
+            'check_user': fields.many2one('res.users', string="Check User"),
+            'verify_user': fields.many2one('res.users', string="Verify User"),
  }
     
     
@@ -76,7 +102,16 @@ class purchase_order(osv.osv):
 #         'is_agreed': False,
 #         'is_margin':False,
 #         }
-#     
+#
+
+class payment_method(osv.osv):
+    _name = 'payment.method'
+    _description = 'Payment Method'
+
+    _columns = {
+        'name': fields.char('name'),
+    }
+
 class purchase_order_line(osv.osv): 
     _inherit = 'purchase.order.line'
     
@@ -103,10 +138,38 @@ class purchase_order_line(osv.osv):
                 'agreed_price': fields.float('Agreed Price', required=False, digits_compute=dp.get_precision('Cost Price')),
                 'gross_margin': fields.function(_amount_margin, string='Gross Margin', digits_compute=dp.get_precision('Cost Price'), store=True),
                 'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Cost Price')),
-               
-                
-                }     
-    
+
+                'market_selling_price': fields.float('Market Price', digits_compute=dp.get_precision('Cost Price')),
+                'previous_buying_price': fields.float('Previous Purchased Price',digits_compute=dp.get_precision('Cost Price')),
+                'current_buying_price': fields.float('Current Purchase Price', digits_compute=dp.get_precision('Cost Price')),
+                'difference_amount': fields.float('Difference Amount', digits_compute=dp.get_precision('Cost Price')),
+                'difference_status': fields.selection([('increased', 'Increased'), ('decreased', 'Decreased')],'Difference Status'),
+                'sku_status': fields.selection([('old_sku', 'Old SKU'), ('new_sku', 'New SKU')], 'SKU Status'),
+                'estimated_expiration_date': fields.char('Expiration Date(months)'),
+                'margin': fields.char('Margin'),
+                'shelf_life': fields.char('Shelf Life'),
+                }
+    @api.one
+    @api.onchange('current_buying_price', 'previous_buying_price')
+    def onchange_current_previouse_price(self):
+        vals = {}
+        amt = 0.0
+        status = 'increased'
+        current_buying_price = self.current_buying_price
+        previous_buying_price = self.previous_buying_price
+        if current_buying_price and previous_buying_price:
+            amt = current_buying_price - previous_buying_price
+            if amt < 0:
+                status = 'decreased'
+            self.difference_amount = amt
+            self.difference_status = status
+
+    @api.one
+    @api.onchange('market_selling_price', 'current_buying_price')
+    def onchange_for_margin(self):
+        if self.market_selling_price and self.current_buying_price:
+            margin = (self.market_selling_price - self.current_buying_price) / self.market_selling_price
+            self.margin = margin
     def onchange_product_uom(self, cr, uid, ids, pricelist_id, product_id, qty, uom_id,
             partner_id, date_order=False, fiscal_position_id=False, date_planned=False,
             name=False, price_unit=False, state='draft',currency_id=False, context=None):
@@ -261,4 +324,4 @@ class account_invoice_line(osv.osv):
     _columns = {
                 'agreed_price': fields.float('Agreed Price', required=False, digits_compute=dp.get_precision('Cost Price')),
                 'gross_margin': fields.function(_amount_margin, string='Gross Margin', digits_compute=dp.get_precision('Cost Price'), store=True),
-                }   
+                }

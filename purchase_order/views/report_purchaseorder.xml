@@ -117,6 +117,16 @@
 									<th style="border:1pt solid;border-color:black;">Price</th>
 									<th style="border:1pt solid;border-color:black;">Total</th>
 									<th style="border:1pt solid;border-color:black;">Delivery Date</th>
+									<th style="border:1pt solid;border-color:black;">Market Price</th>
+									<th style="border:1pt solid;border-color:black;">Previous Price</th>
+									<th style="border:1pt solid;border-color:black;">Current Price</th>
+									<th style="border:1pt solid;border-color:black;">Difference Amt</th>
+									<th style="border:1pt solid;border-color:black;">Difference Status</th>
+									<th style="border:1pt solid;border-color:black;">Margin</th>
+									<th style="border:1pt solid;border-color:black;">Shelf Life</th>
+									<th style="border:1pt solid;border-color:black;">Expiration Date</th>
+									<th style="border:1pt solid;border-color:black;">SKU Status</th>
+									<th style="border:1pt solid;border-color:black;">Payment Method</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -153,6 +163,36 @@
 									</td>
 									<td style="border:1pt solid;border-color:black;">
 										<span t-field="line.date_planned" />
+									</td>
+									<td style="border:1pt solid;border-color:black;">
+										<span t-field="line.market_selling_price" />
+									</td>
+									<td style="border:1pt solid;border-color:black;">
+										<span t-field="line.previous_buying_price" />
+									</td>
+									<td style="border:1pt solid;border-color:black;">
+										<span t-field="line.current_buying_price" />
+									</td>
+									<td style="border:1pt solid;border-color:black;">
+										<span t-field="line.difference_amount" />
+									</td>
+									<td style="border:1pt solid;border-color:black;">
+										<span t-field="line.difference_status" />
+									</td>
+									<td style="border:1pt solid;border-color:black;">
+										<span t-field="line.margin" />
+									</td>
+									<td style="border:1pt solid;border-color:black;">
+										<span t-field="line.shelf_life" />
+									</td>
+									<td style="border:1pt solid;border-color:black;">
+										<span t-field="line.estimated_expiration_date" />
+									</td>
+									<td style="border:1pt solid;border-color:black;">
+										<span t-field="line.sku_status" />
+									</td>
+									<td style="border:1pt solid;border-color:black;">
+										<span t-field="o.payment_method_id.name" />
 									</td>
 								</tr>
 							</tbody>
@@ -191,6 +231,70 @@
 								</table>
 							</div>
 						</div>
+						<div class="row">
+							<div class="col-xs-6">
+								<div>
+									<strong>Bank Info:</strong>
+									<div t-foreach="o.partner_id.bank_ids" t-as="b_line">
+										<span>
+											<span t-field="b_line.acc_number" />
+										</span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-3">
+								<br />
+								<br />
+								<br />
+								<div>
+									<strong>Prepared By:</strong>
+									<br />
+									<span t-field="o.create_uid.name" />								</div>
+							</div >
+							<div class="col-xs-3">
+ 								<br />
+								<br />
+								<br />
+								<div>
+									<strong>Checked By:</strong>
+									<br />
+									<span t-field="o.check_user.name" />
+								</div>
+
+							</div>
+							<div class="col-xs-3">
+								<br />
+								<br />
+								<br />
+								<div>
+									<strong>Verified By:</strong>
+									<br />
+									<span t-field="o.verify_user.name" />
+								</div>
+
+							</div>
+							<div class="col-xs-3">
+								<br />
+								<br />
+								<br />
+								<div>
+									<strong>Approved By:</strong>
+									<br />
+									<span>Ma Thidar Khin</span>
+									<br />
+									<span>General Manager</span>
+									<br />
+									<span>Myanmar Distribution Group</span>
+								</div>
+
+							</div>
+
+						</div>
+						<br/>
+						<br/>
+						<br/>
 						<strong>Amount In Words:</strong>
 						<p t-field="o.inword" />
 						<div class="oe_structure" />
