@@ -41,6 +41,11 @@ class purchase_order(osv.osv):
             picking_id = self.pool.get('stock.picking').create(cr, uid, picking_vals, context=context)
             self._create_stock_moves(cr, uid, order, order.order_line, picking_id, context=context)
         return picking_id
+    def action_paid(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'state': 'paid'}, context=context)
+
+    def action_partial_complete(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'state': 'partial_complete'}, context=context)
 
     def _prepare_inv_line(self, cr, uid, account_id, order_line, context=None):
         """Collects require data from purchase order line that is used to create invoice line
@@ -92,6 +97,21 @@ class purchase_order(osv.osv):
             'payment_method_id': fields.many2one('payment.method', string="Payment Method"),
             'check_user': fields.many2one('res.users', string="Check User"),
             'verify_user': fields.many2one('res.users', string="Verify User"),
+            'state': fields.selection([('draft', 'Draft'), ('sent', 'RFQ'),
+                                       ('bid', 'Bid Received'), ('confirmed', 'Waiting Approval'),
+                                       ('approved', 'Purchase Confirmed'), ('except_picking', 'Shipping Exception'),
+                                       ('paid', 'Paid'), ('partial_complete', 'Partial Complete'),
+                                       ('except_invoice', 'Invoice Exception'), ('done', 'Done'),
+                                       ('cancel', 'Cancelled')], 'Status', readonly=True,
+                                      help="The status of the purchase order or the quotation request. "
+                                           "A request for quotation is a purchase order in a 'Draft' status. "
+                                           "Then the order has to be confirmed by the user, the status switch "
+                                           "to 'Confirmed'. Then the supplier must confirm the order to change "
+                                           "the status to 'Approved'. When the purchase order is paid and "
+                                           "received, the status becomes 'Done'. If a cancel action occurs in "
+                                           "the invoice or in the receipt of goods, the status becomes "
+                                           "in exception.",
+                                      select=True, copy=False),
  }
     
     
@@ -141,35 +161,38 @@ class purchase_order_line(osv.osv):
 
                 'market_selling_price': fields.float('Market Price', digits_compute=dp.get_precision('Cost Price')),
                 'previous_buying_price': fields.float('Previous Purchased Price',digits_compute=dp.get_precision('Cost Price')),
-                'current_buying_price': fields.float('Current Purchase Price', digits_compute=dp.get_precision('Cost Price')),
-                'difference_amount': fields.float('Difference Amount', digits_compute=dp.get_precision('Cost Price')),
+                'difference_amount': fields.float('Difference Amount'),
                 'difference_status': fields.selection([('increased', 'Increased'), ('decreased', 'Decreased')],'Difference Status'),
                 'sku_status': fields.selection([('old_sku', 'Old SKU'), ('new_sku', 'New SKU')], 'SKU Status'),
-                'estimated_expiration_date': fields.char('Expiration Date(months)'),
+                'estimated_expiration_date': fields.char('Expiration Date(Days)'),
                 'margin': fields.char('Margin'),
-                'shelf_life': fields.char('Shelf Life'),
+                'shelf_life': fields.char('Shelf Life(Days)'),
                 }
+
+    # Formula:: unit price - previous buying price
+    # unit price > previous buying price  = increased
     @api.one
-    @api.onchange('current_buying_price', 'previous_buying_price')
+    @api.onchange('price_unit', 'previous_buying_price')
     def onchange_current_previouse_price(self):
         vals = {}
         amt = 0.0
         status = 'increased'
-        current_buying_price = self.current_buying_price
+        price_unit = self.price_unit
         previous_buying_price = self.previous_buying_price
-        if current_buying_price and previous_buying_price:
-            amt = current_buying_price - previous_buying_price
+        if price_unit and previous_buying_price:
+            amt = price_unit - previous_buying_price
             if amt < 0:
                 status = 'decreased'
             self.difference_amount = amt
             self.difference_status = status
 
     @api.one
-    @api.onchange('market_selling_price', 'current_buying_price')
+    @api.onchange('market_selling_price', 'price_unit')
     def onchange_for_margin(self):
-        if self.market_selling_price and self.current_buying_price:
-            margin = (self.market_selling_price - self.current_buying_price) / self.market_selling_price
-            self.margin = margin
+        if self.market_selling_price and self.price_unit:
+            margin = (( self.market_selling_price - self.price_unit ) / self.market_selling_price)*100
+            formatted_margin = "%.2f" % margin
+            self.margin = str(formatted_margin) + '%'
     def onchange_product_uom(self, cr, uid, ids, pricelist_id, product_id, qty, uom_id,
             partner_id, date_order=False, fiscal_position_id=False, date_planned=False,
             name=False, price_unit=False, state='draft',currency_id=False, context=None):
@@ -286,6 +309,20 @@ class purchase_order_line(osv.osv):
         taxes = account_tax.browse(cr, uid, map(lambda x: x.id, product.supplier_taxes_id))
         fpos = fiscal_position_id and account_fiscal_position.browse(cr, uid, fiscal_position_id, context=context) or False
         taxes_ids = account_fiscal_position.map_tax(cr, uid, fpos, taxes)
+
+        if product.report_uom_id:
+            cr.execute("""select new_price
+                        from product_pricelist_item item,product_pricelist_version ppv,product_pricelist pp
+                        where item.price_version_id=ppv.id
+                        and ppv.pricelist_id=pp.id
+                        and pp.id=%s
+                        and product_id=%s
+                        and product_uom_id=%s""",
+                       (pricelist_id, product.id, product.report_uom_id.id,))
+            cost_price_data = cr.fetchall()
+            if cost_price_data:
+                cost_price = cost_price_data[0][0]
+                res['value'].update({'previous_buying_price': cost_price})
         
         if partner_id and currency_id and product_id:
             order = 'date desc'
@@ -299,7 +336,7 @@ class purchase_order_line(osv.osv):
                         if agree_line.agreed_price !=0:
                             res['value'].update({'price_unit': agree_line.agreed_price / product_agree.rate, 'agreed_price': agree_line.agreed_price / product_agree.rate, 'taxes_id': taxes_ids, 'price_subtotal':(agree_line.agreed_price/ product_agree.rate) * qty})
                             return res
-        res['value'].update({'price_unit': price, 'agreed_price': price, 'taxes_id': taxes_ids, 'price_subtotal':price * qty})
+        res['value'].update({'price_unit': price, 'agreed_price': price, 'taxes_id': taxes_ids, 'price_subtotal':price * qty })
 
         return res
 class account_invoice_line(osv.osv): 

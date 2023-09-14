@@ -42,6 +42,7 @@ Purchase Order
             'views/report_purchasequotation.xml',
             'wizard/due_date_assign_view.xml',
             'views/account_invoice_view.xml',
+            'security/account_security.xml',
     ],
     'installable': True,
     'auto_install': False,

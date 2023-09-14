@@ -1,3 +1,4 @@
-.oe_form_shl {
-    overflow: auto;
+.oe_list_custom {
+        overflow: auto;
+        white-space: nowrap;
 }

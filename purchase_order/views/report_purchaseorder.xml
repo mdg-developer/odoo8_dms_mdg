@@ -91,7 +91,9 @@
 							</div>
 							<div class="col-xs-6">
 								<div>
-
+									<strong>Payment Method</strong>
+									<span t-field="o.payment_method_id.name" />
+									<br />
 									<strong>Payment Term:</strong>
 									<span t-field="o.payment_term_id.name" />
 									after
@@ -111,22 +113,18 @@
 									<th style="border:1pt solid;border-color:black;">No</th>
 									<th style="border:1pt solid;border-color:black;">Product Code</th>
 									<th style="border:1pt solid;border-color:black;">Product Description</th>
-									<th style="border:1pt solid;border-color:black;">Pack Size</th>
 									<th style="border:1pt solid;border-color:black;">Unit</th>
 									<th style="border:1pt solid;border-color:black;">Quantity</th>
 									<th style="border:1pt solid;border-color:black;">Price</th>
 									<th style="border:1pt solid;border-color:black;">Total</th>
-									<th style="border:1pt solid;border-color:black;">Delivery Date</th>
 									<th style="border:1pt solid;border-color:black;">Market Price</th>
 									<th style="border:1pt solid;border-color:black;">Previous Price</th>
-									<th style="border:1pt solid;border-color:black;">Current Price</th>
-									<th style="border:1pt solid;border-color:black;">Difference Amt</th>
-									<th style="border:1pt solid;border-color:black;">Difference Status</th>
+									<th style="border:1pt solid;border-color:black;">Diff Amt</th>
+									<th style="border:1pt solid;border-color:black;">Diff Status</th>
 									<th style="border:1pt solid;border-color:black;">Margin</th>
 									<th style="border:1pt solid;border-color:black;">Shelf Life</th>
 									<th style="border:1pt solid;border-color:black;">Expiration Date</th>
 									<th style="border:1pt solid;border-color:black;">SKU Status</th>
-									<th style="border:1pt solid;border-color:black;">Payment Method</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -141,9 +139,6 @@
 									</td>
 									<td style="border:1pt solid;border-color:black;">
 										<span t-field="line.name" />
-									</td>
-									<td style="border:1pt solid;border-color:black;">
-										<span t-field="line.product_id.uom_ratio" />
 									</td>
 
 									<td style="border:1pt solid;border-color:black;">
@@ -162,16 +157,10 @@
 											t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}' />
 									</td>
 									<td style="border:1pt solid;border-color:black;">
-										<span t-field="line.date_planned" />
-									</td>
-									<td style="border:1pt solid;border-color:black;">
 										<span t-field="line.market_selling_price" />
 									</td>
 									<td style="border:1pt solid;border-color:black;">
 										<span t-field="line.previous_buying_price" />
-									</td>
-									<td style="border:1pt solid;border-color:black;">
-										<span t-field="line.current_buying_price" />
 									</td>
 									<td style="border:1pt solid;border-color:black;">
 										<span t-field="line.difference_amount" />
@@ -190,9 +179,6 @@
 									</td>
 									<td style="border:1pt solid;border-color:black;">
 										<span t-field="line.sku_status" />
-									</td>
-									<td style="border:1pt solid;border-color:black;">
-										<span t-field="o.payment_method_id.name" />
 									</td>
 								</tr>
 							</tbody>
