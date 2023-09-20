@@ -75,6 +75,8 @@ class customer_visit(osv.osv):
         'offline': fields.boolean('Is Offline', default=False),
         'online': fields.boolean('Is Online', default=False),
         'date_difference': fields.char('Difference Date'),
+        'detail_status': fields.selection([('1', 'Direct Sync'), ('2', 'Internet Connection Available,Sync Fail'),
+                                           ('3', 'Internet Connection Unavailable ,Sync Success')])
     }
     _defaults = {        
         'm_status' : 'pending',

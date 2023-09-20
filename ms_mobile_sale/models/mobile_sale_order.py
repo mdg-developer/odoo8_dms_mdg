@@ -1088,6 +1088,7 @@ class mobile_sale_order(osv.osv):
                             'distance_status':distance_status,
                             'offline':offline,
                             'online':online,
+                            'detail_status': vs['is_send_status'],
 
                         }
                         visit_id=customer_visit_obj.create(cursor, user, visit_result, context=context)

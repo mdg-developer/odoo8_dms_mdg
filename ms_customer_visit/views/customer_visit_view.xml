@@ -113,6 +113,7 @@
 									<field name="offline" string="Offline" readonly="1" />
 									<field name="online" string="Online" readonly="1" />
 									<field name="date_difference" string="Time Difference" readonly="1" />
+									<field name="detail_status" string="Detail Status" readonly="1" />
 									<field name="sale_plan_day_id" readonly="1" />
 									<field name="sale_plan_trip_id" readonly="1" />
 									<field name="sale_team_id" readonly="1" />
