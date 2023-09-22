@@ -43,6 +43,9 @@ OUT__product_uom__read_all__SUCCESS_CODE = 200       # editable
 OUT__product_uom__read_all__SCHEMA = (                 # editable
     'id',
     'name',
+    'factor_inv',
+    'factor',
+    'factor_value',
 )
 #           ]
 #       }
@@ -71,6 +74,9 @@ OUT__product_uom__read_one__SCHEMA = (                 # editable
     # simple fields (non relational):
     'id',
     'name',
+    'factor_inv',
+    'factor',
+    'factor_value',
 )
 
 # /api/product.uom  POST  - Create one

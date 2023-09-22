@@ -84,6 +84,8 @@ OUT__product_product__read_all__SCHEMA = (                 # editable
     ('uom_lines', [(
         'name',
         'factor_inv',
+        'factor',
+        'factor_value',
         'rounding',
         'is_sync_woo',
         'uom_type'
@@ -157,6 +159,8 @@ OUT__product_product__read_one__SCHEMA = (                 # editable
     ('uom_lines', [(
         'name',
         'factor_inv',
+        'factor',
+        'factor_value',
         'rounding',
         'is_sync_woo',
         'uom_type'
