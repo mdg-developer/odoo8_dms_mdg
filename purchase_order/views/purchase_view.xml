@@ -88,6 +88,12 @@
 					<field name="is_burmart_order" />
 				</xpath>
 
+				<xpath expr="//notebook/page[@string='Deliveries &amp; Invoices']" position="after">
+					<page string="Account Info" name="account_info" attrs="{'invisible':[('is_burmart_order','!=',True)]}">
+						<field name='bank_ids' />
+					</page>
+				</xpath>
+
 				<!--add columns in line-->
 				<xpath expr="//field[@name='order_line']/tree//field[@name='gross_margin']" position="after">
 <!--				<xpath expr="//field[@name='order_line']" position="inside">-->
@@ -100,6 +106,8 @@
 					<field name="previous_buying_price" invisible="context.get('default_burmart_order_field_hide')" />
 					<field name="difference_amount" readonly="1" invisible="context.get('default_burmart_order_field_hide')" />
 					<field name="difference_status" readonly="1" invisible="context.get('default_burmart_order_field_hide')" />
+					<field name="discount" invisible="context.get('default_burmart_order_field_hide')" />
+					<field name="discount_amt" invisible="context.get('default_burmart_order_field_hide')" />
 				</xpath>
 				<xpath expr="//field[@name='order_line']/tree//field[@name='price_unit']" position="before">
 					<field name="market_selling_price" invisible="context.get('default_burmart_order_field_hide')" />

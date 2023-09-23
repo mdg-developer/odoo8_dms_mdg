@@ -67,7 +67,16 @@ class purchase_order(osv.osv):
             'purchase_line_id': order_line.id,
             'agreed_price':order_line.agreed_price,
             'gross_margin':order_line.gross_margin,
+            # second_phase
+            # 'discount_amt':order_line.discount_amt,
+            # 'discount':order_line.discount,
         }
+
+    def _get_bank_ids(self, cr, uid, ids, field_name, args, context=None):
+        res = {}
+        for record in self.browse(cr, uid, ids, context=context):
+            res[record.id] = [(6, 0, record.partner_id.bank_ids.ids)]
+        return res
 
     def write(self, cr, uid, ids, vals, context=None):
         state = vals.get('state')
@@ -97,6 +106,7 @@ class purchase_order(osv.osv):
             'payment_method_id': fields.many2one('payment.method', string="Payment Method"),
             'check_user': fields.many2one('res.users', string="Check User"),
             'verify_user': fields.many2one('res.users', string="Verify User"),
+            'bank_ids': fields.function(_get_bank_ids, type='one2many', relation='res.partner.bank', string='Banks'),
             'state': fields.selection([('draft', 'Draft'), ('sent', 'RFQ'),
                                        ('bid', 'Bid Received'), ('confirmed', 'Waiting Approval'),
                                        ('approved', 'Purchase Confirmed'), ('except_picking', 'Shipping Exception'),
@@ -151,7 +161,29 @@ class purchase_order_line(osv.osv):
 #                 res[line.id] = 0
 
         return res    
-    
+
+    def _amount_line(self, cr, uid, ids, prop, arg, context=None):
+        res = {}
+        cur_obj=self.pool.get('res.currency')
+        tax_obj = self.pool.get('account.tax')
+        for line in self.browse(cr, uid, ids, context=context):
+            line_price = self._calc_line_base_price(cr, uid, line,
+                                                    context=context)
+            line_qty = self._calc_line_quantity(cr, uid, line,
+                                                context=context)
+            taxes = tax_obj.compute_all(cr, uid, line.taxes_id, line_price,
+                                        line_qty, line.product_id,
+                                        line.order_id.partner_id)
+            cur = line.order_id.pricelist_id.currency_id
+            res[line.id] = cur_obj.round(cr, uid, cur, taxes['total'])
+            if line.discount_amt:
+                res[line.id] -= line.discount_amt
+            if line.discount:
+                if line.price_unit:
+                    discount_amt = line.discount * (line.price_unit * line.product_qty) / 100
+                    res[line.id] -= discount_amt
+        return res
+
     _columns = {
 #                 'is_agreed': fields.related('order_id', 'is_agreed', type='boolean', string='Agreed', store=True, readonly=True),
 #                 'is_margin': fields.related('order_id', 'is_margin', type='boolean', string='Margin', store=True, readonly=True),
@@ -159,15 +191,18 @@ class purchase_order_line(osv.osv):
                 'gross_margin': fields.function(_amount_margin, string='Gross Margin', digits_compute=dp.get_precision('Cost Price'), store=True),
                 'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Cost Price')),
 
-                'market_selling_price': fields.float('Market Price', digits_compute=dp.get_precision('Cost Price')),
-                'previous_buying_price': fields.float('Previous Purchased Price',digits_compute=dp.get_precision('Cost Price')),
-                'difference_amount': fields.float('Difference Amount'),
-                'difference_status': fields.selection([('increased', 'Increased'), ('decreased', 'Decreased')],'Difference Status'),
-                'sku_status': fields.selection([('old_sku', 'Old SKU'), ('new_sku', 'New SKU')], 'SKU Status'),
-                'estimated_expiration_date': fields.char('Expiration Date(Days)'),
-                'margin': fields.char('Margin'),
-                'shelf_life': fields.char('Shelf Life(Days)'),
-                }
+        'market_selling_price': fields.float('Market Selling Price'),
+        'previous_buying_price': fields.float('Previous Purchased Price'),
+        'difference_amount': fields.float('Difference Amount'),
+        'difference_status': fields.selection([('foc','FOC'),('increased', 'Increased'), ('decreased', 'Decreased')],'Difference Status'),
+        'sku_status': fields.selection([('old_sku', 'Old SKU'), ('new_sku', 'New SKU'),('foc', 'FOC')], 'SKU Status'),
+        'estimated_expiration_date': fields.char('Expiration Date(Days)'),
+        'margin': fields.char('Margin'),
+        'shelf_life': fields.char('Shelf Life(Days)'),
+        'discount_amt': fields.float('Dis(amt)'),
+        'discount': fields.float('Dis(%)'),
+        'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute=dp.get_precision('Account')),
+    }
 
     # Formula:: unit price - previous buying price
     # unit price > previous buying price  = increased
@@ -277,7 +312,6 @@ class purchase_order_line(osv.osv):
         if not date_order:
             date_order = fields.datetime.now()
 
-
         supplierinfo = False
         precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Product Unit of Measure')
         for supplier in product.seller_ids:
@@ -310,7 +344,7 @@ class purchase_order_line(osv.osv):
         fpos = fiscal_position_id and account_fiscal_position.browse(cr, uid, fiscal_position_id, context=context) or False
         taxes_ids = account_fiscal_position.map_tax(cr, uid, fpos, taxes)
 
-        if product.report_uom_id:
+        if product_id and uom_id:
             cr.execute("""select new_price
                         from product_pricelist_item item,product_pricelist_version ppv,product_pricelist pp
                         where item.price_version_id=ppv.id
@@ -318,7 +352,7 @@ class purchase_order_line(osv.osv):
                         and pp.id=%s
                         and product_id=%s
                         and product_uom_id=%s""",
-                       (pricelist_id, product.id, product.report_uom_id.id,))
+                       (pricelist_id, product.id, uom_id,))
             cost_price_data = cr.fetchall()
             if cost_price_data:
                 cost_price = cost_price_data[0][0]

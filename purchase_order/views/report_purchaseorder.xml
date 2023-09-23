@@ -112,11 +112,7 @@
 								<tr style="background-color:#0052cc;color:#ffffff;" height="10pt;">
 									<th style="border:1pt solid;border-color:black;">No</th>
 									<th style="border:1pt solid;border-color:black;">Product Code</th>
-									<th style="border:1pt solid;border-color:black;">Product Description</th>
-									<th style="border:1pt solid;border-color:black;">Unit</th>
-									<th style="border:1pt solid;border-color:black;">Quantity</th>
-									<th style="border:1pt solid;border-color:black;">Price</th>
-									<th style="border:1pt solid;border-color:black;">Total</th>
+									<th style="border:1pt solid;border-color:black;">Product Descript:</th>
 									<th style="border:1pt solid;border-color:black;">Market Price</th>
 									<th style="border:1pt solid;border-color:black;">Previous Price</th>
 									<th style="border:1pt solid;border-color:black;">Diff Amt</th>
@@ -125,6 +121,12 @@
 									<th style="border:1pt solid;border-color:black;">Shelf Life</th>
 									<th style="border:1pt solid;border-color:black;">Expiration Date</th>
 									<th style="border:1pt solid;border-color:black;">SKU Status</th>
+									<th style="border:1pt solid;border-color:black;">Unit</th>
+									<th style="border:1pt solid;border-color:black;">Quantity</th>
+									<th style="border:1pt solid;border-color:black;">Price</th>
+									<th style="border:1pt solid;border-color:black;">Dis(Amt)</th>
+									<th style="border:1pt solid;border-color:black;">Dis(%)</th>
+									<th style="border:1pt solid;border-color:black;">Total(MMK)</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -143,18 +145,6 @@
 
 									<td style="border:1pt solid;border-color:black;">
 										<span t-field="line.product_uom.name" groups="product.group_uom" />
-									</td>
-									<td style="border:1pt solid;border-color:black;">
-
-										<span t-field="line.product_qty" />
-									</td>
-
-									<td style="border:1pt solid;border-color:black;">
-										<span t-field="line.price_unit" />
-									</td>
-									<td style="border:1pt solid;border-color:black;">
-										<span t-field="line.price_subtotal"
-											t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}' />
 									</td>
 									<td style="border:1pt solid;border-color:black;">
 										<span t-field="line.market_selling_price" />
@@ -179,6 +169,21 @@
 									</td>
 									<td style="border:1pt solid;border-color:black;">
 										<span t-field="line.sku_status" />
+									</td>
+									<td style="border:1pt solid;border-color:black;">
+										<span t-field="line.product_qty" />
+									</td>
+									<td style="border:1pt solid;border-color:black;">
+										<span t-field="line.price_unit" />
+									</td>
+									<td style="border:1pt solid;border-color:black;">
+										<span t-field="line.discount_amt" />
+									</td>
+									<td style="border:1pt solid;border-color:black;">
+										<span t-field="line.discount" />
+									</td>
+									<td style="border:1pt solid;border-color:black;">
+										<span t-field="line.price_subtotal" />
 									</td>
 								</tr>
 							</tbody>
