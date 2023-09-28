@@ -12,8 +12,17 @@ class customer_stock_check(osv.osv):
                 'name': fields.char('Name'),
                 'sale_group_id': fields.many2many('sales.group', 'stock_check_sale_group_rel', id1='stock_check_id',
                                                     id2='sale_group_id', string='Sale Group'),
-    }    
-    
+                'is_show_specific_categ': fields.boolean(string='Is Show Specific Categ'),
+    }
+    def action_is_product_categ_show(self, cr, uid, ids, context=None):
+        vals = {}
+        is_show_specific_categ = True
+        for rec in self.browse(cr, uid, ids, context=None):
+            if rec.is_show_specific_categ == True:
+                is_show_specific_categ = False
+        vals.update({'is_show_specific_categ':is_show_specific_categ})
+        return self.write(cr, uid, ids, vals)
+
     def retrieve_stock(self, cr, uid, ids, context=None):  
         stock_line_obj = self.pool.get('stock.check.setting.line')
         competitor_line_obj = self.pool.get('stock.check.setting.competitor.line')

@@ -2981,18 +2981,31 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()
         return datas
 
-    def get_stockcheck(self, cr, uid, sale_team_id , context=None, **kwargs):
-        cr.execute('''            
-                select scl.id ,sc.outlet_type,scl.product_id,scl.product_uom_qty as quantity,scl.available,scl.facing, scl.chiller,scl.expiry,sc.id template_id,sc.name template_name,pt.categ_id as categ_id,pt.id as product_template_id
-                from stock_check_setting sc ,stock_check_setting_line scl,crm_case_section ccs,product_sale_group_rel rel,stock_check_sale_group_rel sg_rel, product_product pp, product_template pt
+    def get_stockcheck(self, cr, uid, sale_team_id, context=None, **kwargs):
+        SQL1 = ''' select is_show_specific_categ as is_shown
+                    from stock_check_setting where id = (select stock_check_id 
+                    from stock_check_sale_group_rel where sale_group_id = (select id 
+                    from sales_group where id = (select sale_group_id 
+                    from crm_case_section where id=%s limit 1)limit 1)limit 1); '''
+        cr.execute(SQL1, (sale_team_id,))
+        data = cr.fetchall()
+        SQL2 = '''            
+                select scl.id ,sc.outlet_type,scl.product_id,scl.product_uom_qty as quantity,scl.available,scl.facing, scl.chiller,scl.expiry,sc.id template_id,sc.name template_name,pt.categ_id as categ_id,pt.id as product_template_id,pc.name as categ_name,pc.code
+                from stock_check_setting sc ,stock_check_setting_line scl,crm_case_section ccs,product_sale_group_rel rel,stock_check_sale_group_rel sg_rel, product_product pp, product_template pt, product_category pc, product_category pc_parent
                 where sc.id=scl.stock_setting_ids
                 and ccs.sale_group_id = rel.sale_group_id
                 and rel.product_id=scl.product_id
                 and scl.product_id=pp.id
                 and pp.product_tmpl_id = pt.id
                 and sg_rel.sale_group_id=ccs.sale_group_id
+                AND pt.categ_id = pc.id
+                AND pc.parent_id = pc_parent.id
                 and ccs.id=%s
-         ''', (sale_team_id,))
+         '''
+        if data[0][0]:
+            SQL2 += " and pc_parent.name != 'Non Sellable' "
+        SQL2 += " order by pc.code asc"
+        cr.execute(SQL2, (sale_team_id,))
         datas = cr.fetchall()
         return datas
 
@@ -3009,7 +3022,7 @@ class mobile_sale_order(osv.osv):
 
     def get_all_competitor_products(self, cr, uid, sale_team_id , context=None, **kwargs):
         cr.execute('''            
-            select cp.id,cp.name,product_uom_id,sc.id template_id
+            select cp.id,cp.name,product_uom_id,sc.id template_id,cp.description,cp.sequence
             from stock_check_setting_competitor_line line,stock_check_setting sc,
             stock_check_sale_group_rel rel,crm_case_section ccs,competitor_product cp,
             competitor_product_product_uom_rel uom_rel
@@ -3019,6 +3032,7 @@ class mobile_sale_order(osv.osv):
             and line.competitor_product_id=cp.id
             and cp.id=uom_rel.competitor_product_id
             and ccs.id=%s
+            order by cp.sequence asc
          ''', (sale_team_id,))
         datas = cr.fetchall()
         return datas

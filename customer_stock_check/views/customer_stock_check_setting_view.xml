@@ -6,12 +6,16 @@
 			<field name="name">partner.stock.check.setting.form</field>
 			<field name="model">stock.check.setting</field>
 			<field name="arch" type="xml">
-				<form string="Stock Check Setting">					
+				<form string="Stock Check Setting">
+					<header>
+						<button name="action_is_product_categ_show" string="ON/OFF" class="oe_highlight" type="object"/>
+					</header>
 					<sheet>
 						<group>
 							<group>
 								<field name="name"/>
 								<field name="sale_group_id" widget="many2many_tags"/>
+								<field name="is_show_specific_categ" />
 							</group>
 							<group>
 							</group>
