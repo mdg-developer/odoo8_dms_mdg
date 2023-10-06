@@ -10,14 +10,14 @@
 				<field name="weight_net" position="after">
 					<field name="small_uom_weight"/>
 					<field name="ctn_weight" on_change='on_change_ctn_value(ctn_weight)' />
-					<field name="viss_value" string="Weight (Viss)" readonly="True"/>
+					<field name="viss_value" string="Weight (Viss)"/>
 					<field name="big_uom_length" />
 					<field name="big_uom_breadth" />
 					<field name="ctn_height" on_change="on_change_lenght_breadth_height(big_uom_length,big_uom_breadth,ctn_height)"/>
-					<field name="cbm_value" readonly="1"/>
+					<field name="cbm_value"/>
 					<field name="ti"/>
 					<field name="hi" on_change="on_change_ti_hi(ti,hi)"/>
-					<field name="ctn_pallet" readonly="1"/>
+					<field name="ctn_pallet"/>
 					<field name="ctn_pallet_pickface" />
 					<field name="inbound_shelf_life" string="Inbound Shelf Life (Maximum Days)"/>
 					<field name="inbound_shelf_life_min" string="Inbound Shelf Life (Minimum Days)"/>
