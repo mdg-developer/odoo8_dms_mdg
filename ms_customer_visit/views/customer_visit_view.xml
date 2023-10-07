@@ -114,6 +114,7 @@
 									<field name="online" string="Online" readonly="1" />
 									<field name="date_difference" string="Time Difference" readonly="1" />
 									<field name="detail_status" string="Online-Offline Status" readonly="1" />
+									<field name="customer_verify" string="Is Verify"/>
 									<field name="sale_plan_day_id" readonly="1" />
 									<field name="sale_plan_trip_id" readonly="1" />
 									<field name="sale_team_id" readonly="1" />
@@ -297,6 +298,7 @@
 					<field name="offline" string="Offline" />
 					<field name="online" string="Online" />
 					<field name="detail_status" string="Online-Offline Status"/>
+					<field name="customer_verify" string="Is Verify"/>
 					<field name="customer_id" />
 					<field name="customer_code" />
 					<field name="sale_plan_day_id" />

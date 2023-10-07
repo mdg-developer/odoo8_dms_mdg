@@ -24,6 +24,17 @@ class customer_visit(osv.osv):
     _name = "customer.visit"
     _description = "Customer Visit"
 
+    def _get_cust_verify(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        if context is None:
+            context = {}
+        for visit in self.browse(cr, uid, ids, context=context):
+            val = False
+            if visit.customer_id.verify:
+                val=True
+            res[visit.id] = val
+        return res
+
     _columns = {       
         'customer_id':fields.many2one('res.partner', 'Customer', domain="[('customer','=',True)]"),
         'customer_code':fields.char('Customer Code'),
@@ -76,7 +87,8 @@ class customer_visit(osv.osv):
         'online': fields.boolean('Is Online', default=False),
         'date_difference': fields.char('Difference Date'),
         'detail_status': fields.selection([('1', 'Direct Sync'), ('2', 'Internet Connection Available,Sync Fail'),
-                                           ('3', 'Internet Connection Unavailable ,Sync Success')])
+                                           ('3', 'Internet Connection Unavailable ,Sync Success')]),
+        'customer_verify': fields.function(_get_cust_verify, string='Is Verify', type='boolean', readonly=True),
     }
     _defaults = {        
         'm_status' : 'pending',
