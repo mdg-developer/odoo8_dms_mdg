@@ -88,11 +88,13 @@ class customer_visit(osv.osv):
         'date_difference': fields.char('Difference Date'),
         'detail_status': fields.selection([('1', 'Direct Sync'), ('2', 'Internet Connection Available,Sync Fail'),
                                            ('3', 'Internet Connection Unavailable ,Sync Success')]),
-        'customer_verify': fields.function(_get_cust_verify, string='Is Verify', type='boolean', readonly=True),
+        'customer_verify': fields.function(_get_cust_verify, string='Is Customer Verify', type='boolean', readonly=True),
+        'auto_validated': fields.boolean(string='Auto Validated'),
     }
     _defaults = {        
         'm_status' : 'pending',
-        'state': 'pending'
+        'state': 'pending',
+        'auto_validated': False,
     } 
     # image: all image fields are base64 encoded and PIL-supported
     image = openerp.fields.Binary("Image", attachment=True,
@@ -181,6 +183,7 @@ class customer_visit(osv.osv):
     def create(self, cr, uid, vals, context=None):
         # NEED TO CALL SUPER FIRST
         customer_visit_id = super(customer_visit, self).create(cr, uid, vals, context=context)
+        self._auto_validation_process(cr, uid, customer_visit_id, vals)
         from_zone = pytz.utc
         to_zone = pytz.timezone('Asia/Rangoon')
         
@@ -209,7 +212,29 @@ class customer_visit(osv.osv):
                 self.write(cr, uid, customer_visit_id, {'date_difference':time_difference})
         return customer_visit_id
 
-    
+    def _auto_validation_process(self, cr, uid, customer_visit_id, vals):
+        photo_ok = distance_ok = verify_ok = False
+        distance_status = vals.get('distance_status') or ''
+        visit_image_ids = vals.get('visit_image_ids')
+        customer_id = vals.get('customer_id')
+        if distance_status:
+            if distance_status == 'normal':
+                distance_ok = True
+        if customer_id:
+            customer_obj = self.pool.get('res.partner').browse(cr, uid, customer_id, context=None)
+            cust_verify = customer_obj.verify
+            if cust_verify:
+                verify_ok = True
+        if visit_image_ids:
+            if len(visit_image_ids) >= 3:
+                photo_ok = True
+        if distance_ok and verify_ok and photo_ok:
+            self.is_approve(cr, 1, customer_visit_id, context=None)
+            self.write(cr, uid, customer_visit_id, {'auto_validated': True})
+        if photo_ok == False:
+            self.is_reject(cr, 1, customer_visit_id, context=None)
+            self.write(cr, uid, customer_visit_id, {'auto_validated': True})
+        return vals
     @api.depends('image')
     def _compute_images(self):
         for rec in self:

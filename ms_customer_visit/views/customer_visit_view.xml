@@ -114,13 +114,14 @@
 									<field name="online" string="Online" readonly="1" />
 									<field name="date_difference" string="Time Difference" readonly="1" />
 									<field name="detail_status" string="Online-Offline Status" readonly="1" />
-									<field name="customer_verify" string="Is Verify"/>
+									<field name="customer_verify" string="Is Customer Verify"/>
 									<field name="sale_plan_day_id" readonly="1" />
 									<field name="sale_plan_trip_id" readonly="1" />
 									<field name="sale_team_id" readonly="1" />
 									<field name="visit_reason_id" readonly="1" />
 									<field name="validated_by" readonly="1" />
 									<field name="validated_date" readonly="1" />
+									<field name="auto_validated" readonly="1" />
 									<field name="rejected_by" readonly="1" />
 									<field name="rejected_date" readonly="1" />
 									<field name="other_reason" placeholder="Additional Reasons..." />
@@ -298,7 +299,7 @@
 					<field name="offline" string="Offline" />
 					<field name="online" string="Online" />
 					<field name="detail_status" string="Online-Offline Status"/>
-					<field name="customer_verify" string="Is Verify"/>
+					<field name="customer_verify" string="Is Customer Verify"/>
 					<field name="customer_id" />
 					<field name="customer_code" />
 					<field name="sale_plan_day_id" />
@@ -308,6 +309,8 @@
 					<field name="visit_reason_id" />
 					<field name="other_reason" />
 					<field name="state" />
+					<field name="validated_by" />
+					<field name="auto_validated" readonly="1" />
 				</tree>
 			</field>
 		</record>
