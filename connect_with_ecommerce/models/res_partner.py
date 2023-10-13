@@ -38,10 +38,20 @@ class res_partner(osv.osv):
             }
 
     def create(self, cr, uid, vals, context=None):
+        partner_id = super(res_partner, self).create(cr, uid, vals, context=context)
         if vals.get('woo_customer_id'):
-            category_id = [(0,0,{'name':'Burmart'})]
-            vals['category_id'] = category_id
-        return super(res_partner, self).create(cr, uid, vals, context=context)
+            cat_id = self.pool.get('res.partner.category').search(cr, uid, [('name', '=', 'Burmart')], limit=1)
+            category_id = [(6, 0, cat_id)]
+            self.write(cr, uid, partner_id, {'category_id': category_id})
+        return partner_id
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if vals.get('woo_customer_id'):
+            cat_id = self.pool.get('res.partner.category').search(cr, uid, [('name', '=', 'Burmart')], limit=1)
+            category_id = [(6, 0, cat_id)]
+            vals.update({'category_id': category_id})
+        partner_id = super(res_partner, self).write(cr, uid, ids, vals, context=context)
+        return partner_id
 
     def check_maintenance_mode(self, cr, uid, ids, context=None):
         
