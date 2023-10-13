@@ -30,9 +30,22 @@ class customer_visit(osv.osv):
             context = {}
         for visit in self.browse(cr, uid, ids, context=context):
             val = False
-            if visit.customer_id.verify:
-                val=True
+            if visit.customer_id:
+                if visit.customer_id.verify:
+                    val=True
             res[visit.id] = val
+        return res
+
+    def _get_photo_verify(self, cr, uid ,ids, field_name, arg, context=None):
+        res = {}
+        if context is None:
+            context = {}
+        for v in self.browse(cr, uid, ids, context=None):
+            val = False
+            if v.visit_image_ids:
+                if len(v.visit_image_ids) >= 3:
+                    val = True
+            res[v.id] = val
         return res
 
     _columns = {       
@@ -90,6 +103,7 @@ class customer_visit(osv.osv):
                                            ('3', 'Internet Connection Unavailable ,Sync Success')]),
         'customer_verify': fields.function(_get_cust_verify, string='Is Customer Verify', type='boolean', readonly=True),
         'auto_validated': fields.boolean(string='Auto Validated'),
+        'photo_validated': fields.function(_get_photo_verify, string='Is Photo Verify', type='boolean', readonly=True),
     }
     _defaults = {        
         'm_status' : 'pending',
